@@ -58,6 +58,7 @@ import elementTypes from './../Sidebar/elementTypes.js';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import ElementDialogue from '../ElementDialogue';
+import PdfSlateComponent from '../PdfSlate/PdfSlateComponent.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -1490,7 +1491,7 @@ class ElementContainer extends Component {
                         labelText = 'PS'
                         break;
                     case elementTypeConstant.PDF_SLATE:
-                        editor = <PdfSlateComonent
+                        editor = <PdfSlateComponent
                             permissions={permissions}
                             btnClassName={this.state.btnClassName}
                             borderToggle={this.state.borderToggle}

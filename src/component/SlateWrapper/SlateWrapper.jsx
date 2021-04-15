@@ -20,7 +20,7 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE,
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_PDF_SLATE
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -48,6 +48,17 @@ import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
 
 let random = guid();
+const elementPdf = {
+            "id": "urn:pearson:work:4e507e6c-b7a2-4f2c-9790-eb9f3bfhyt57",
+            "type": "element-pdf",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "elementdata": {
+                "assetid": "urn:pearson:work:a21adc27-022c-4886-b856-d526be4c23c6",
+                "path": "the_path_to_the_pdf_asset"
+            },
+            "contentUrn": "urn:pearson:entity:2818d92b-9768-4801-8629-4c24f71hbr48",
+            "versionUrn": "urn:pearson:work:4e507e6c-b7a2-4f2c-9790-eb9f3bfhyt57"
+        }
 
 class SlateWrapper extends Component {
     constructor(props) {
@@ -913,10 +924,12 @@ class SlateWrapper extends Component {
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
-                if (_elements.length === 0 && _slateType == "assessment" && config.isDefaultElementInProgress) {
+                const typeOfSlate = (_slateType == "assessment" || _slateType === "pdfslate")
+                if (_elements.length === 0 && typeOfSlate && config.isDefaultElementInProgress) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', () => {
+                    const typeOfEle = _slateType === "assessment" ? ELEMENT_ASSESSMENT : ELEMENT_PDF_SLATE;
+                    this.props.createElement(typeOfEle, "0", '', '', '', '', () => {
                         config.isDefaultElementInProgress = true;
                     });
                 }
