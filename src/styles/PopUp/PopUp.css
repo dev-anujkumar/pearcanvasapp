@@ -110,18 +110,18 @@
    .cancel-button,.lo-save-button{
     border-radius: 2px;
     float: right;
-    margin: 0 0 0 .5em;
+    margin: 0 0 0 16px;
     font-family: inherit;
     background: #FFFFFF;
     color: #005a70;
-    cursor: pointer;
-    border: 1px solid #dcdcdc;
     animation: blink 1.1s infinite;
     padding: 8px 20px;
     font-size: 14px;
-    line-height: 18.5px;
+    line-height: 1.43;
     letter-spacing: normal;
     text-align: center;
+    font-weight: 500;
+    border: solid 1px #dcdcdc;
   }
 
   .cancel-button:hover,.lo-save-button:hover{
@@ -406,13 +406,16 @@
 .dialog-input-poc .tox .tox-edit-area {
   border-top:0 !important;
 }
-
 .lo-warning-txt {
-    padding-top: 20px;
-  }
-  .loPopupHeader {
-    font-size: 16px;
-    font-weight: 600;
-    margin-top: 6px;
-    color: #007fa3;
-  }
+  padding-top: 16px;
+  font-size: 16px;
+  line-height: 1.38;
+  color: #000000;
+  width: 94%;
+}
+.loPopupHeader {
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 2px;
+  color: #005a70;
+}
