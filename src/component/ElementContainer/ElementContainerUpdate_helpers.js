@@ -76,8 +76,7 @@ export const updateElementInStore = (paramsObj) => {
         newslateData
     } = paramsObj
 
-    let slateVersionURN = updatedData?.loData?.length ? updatedData.loData[0].slateVersionUrn : updatedData?.slateVersionUrn
-    let _slateObject = newslateData[slateVersionURN],
+    let _slateObject = newslateData[updatedData.slateVersionUrn],
         { contents: _slateContent } = _slateObject,
         { bodymatter: _slateBodyMatter } = _slateContent,
         elementId = updatedData.id;

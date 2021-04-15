@@ -533,9 +533,7 @@ function CommunicationChannel(WrappedComponent) {
                     },
                     "metaDataAnchorID": LOElements,
                     "elementVersionType": "element-learningobjectivemapping",
-                    "loIndex": loIndex,
-                    "slateVersionUrn": config.slateManifestURN,
-                    "projectUrn": config.projectUrn
+                    "loIndex": loIndex
                 }
                 if (LOElements.length) {
                     let requestPayload = {

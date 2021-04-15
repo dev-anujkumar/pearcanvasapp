@@ -152,9 +152,7 @@ export const prepareLO_WIP_Data = (type, loUrn, metadataElems, slateManifestURN)
         },
         "metaDataAnchorID": metadataIDs,
         "elementVersionType": elementConstants.METADATA_ANCHOR,
-        "loIndex": metadataIndexes,
-        "slateVersionUrn": slateManifestURN,
-        "projectUrn": config.projectUrn
+        "loIndex": metadataIndexes
     }
 }
 
