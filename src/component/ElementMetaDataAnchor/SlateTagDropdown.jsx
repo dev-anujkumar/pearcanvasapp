@@ -36,6 +36,7 @@ class SlateTagDropdown extends React.Component {
         this.node1.style.width='310px';
         this.node1.style.height='84px';
       }
+      this.setDropdownPosition();
     }
     handleClick = (e) => {
         if (this.closestByClass(e.target, 'leaningobjective-block')) {
@@ -127,8 +128,12 @@ class SlateTagDropdown extends React.Component {
     toggleLoOptionsDropdown = () => {
       sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
       sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
-        this.setState({showLoOptions:!this.state.showLoOptions});
-        //this.setDropdownPosition();
+      if(this.node2.style.display=='block'){
+        this.node2.style.display='none'
+      }
+      else{
+        this.node2.style.display='block'
+      }
     }
 
     setDropdownPosition(){
@@ -242,8 +247,6 @@ class SlateTagDropdown extends React.Component {
                 </div>
               </ul>
             </div>
-            {
-                this.state.showLoOptions &&  
                 <div className="learningobjectivedropdown2" ref={node2 => this.node2 = node2}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
@@ -257,7 +260,6 @@ class SlateTagDropdown extends React.Component {
                         <li className={liOptionStatus.unlinkLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
             </div> 
-            }
         </div>            
         )
     }
