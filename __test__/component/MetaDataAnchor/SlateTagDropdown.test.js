@@ -120,6 +120,7 @@ describe('Test Rendering of metadaanchor on slate', () => {
         slateTagInstance.learningObjectiveDropdown(event);
         // expect(event.target.innerText).toEqual(data);
     })
+    config.slateType = 'section'
     it('on innerText=AddLearningObjectiveSlateDropdown ', () => {
         document.cookie= "?,projectUrn=urn:pearson:distributable:04518dba-76ef-4da3-924c-46cdf7e496b7,&projectEntityUrn=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e,projectTitle:ElmDevTest&slateEntityURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&slateManifestURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&ssoToken=THO1MDfgOpKowwW6ETpiNmYhSaQ.*AAJTSQACMDIAAlNLABxFQ1N2TytSQU9sWWMrcmVjMU8vOWc3RldqZlk9AAJTMQACMDE.*";
         let event = { target: { innerText: "Add a New Learning Objective" } };
@@ -140,5 +141,87 @@ describe('Test Rendering of metadaanchor on slate', () => {
         let data = "Add From Existing";
         slateTagInstance.learningObjectiveDropdown(event);
         expect(event.target.innerText).toEqual(data);
+    })
+});
+/** External LO Test Cases */
+describe('External LO - Test Rendering of metadaanchor on slate', () => {
+    const newStore = mockStore({
+        metadataReducer: {
+            slateTagEnable: false,
+            currentSlateLF: 'externalLF',
+            projectLearningFrameworks: {
+                externalLF: [{ urn: "urn:ext" }]
+            },
+            currentSlateLOData: [{ id: 'id:here', label: { en: "labeldata" } }]
+        },
+        slateLockReducer: {
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: "c5test01"
+            },
+        },
+        appStore: {
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying", "lo_edit_metadata"
+            ]
+        }
+    });
+    let extLOprops = {
+        slateLockInfo: {
+            isLocked: false,
+            timestamp: "",
+            userId: "c5test01"
+        },
+        permissions: ["lo_edit_metadata"],
+        closeLODropdown: jest.fn(),
+        showSlateLockPopup: jest.fn(),
+        toggleLOWarningPopup: jest.fn()
+    }
+
+
+    let wrapper = mount(<Provider store={newStore}><SlateTagDropdown {...extLOprops} /> </Provider>)
+    let slateTagInstance = wrapper.find('SlateTagDropdown').instance();
+    it('render component', () => {
+        expect(wrapper.find('SlateTagDropdown')).toHaveLength(1);
+    })
+    it('on innerText=AlignToExternalFrameworkSlateDropdown ', () => {
+        document.cookie = "?,projectUrn=urn:pearson:distributable:04518dba-76ef-4da3-924c-46cdf7e496b7,&projectEntityUrn=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e,projectTitle:ElmDevTest&slateEntityURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&slateManifestURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&ssoToken=THO1MDfgOpKowwW6ETpiNmYhSaQ.*AAJTSQACMDIAAlNLABxFQ1N2TytSQU9sWWMrcmVjMU8vOWc3RldqZlk9AAJTMQACMDE.*";
+        let event = { target: { innerText: "Align to External Framework" } };
+        let data = "Align to External Framework";
+        slateTagInstance.learningObjectiveDropdown(event);
+        expect(event.target.innerText).toEqual(data);
+    })
+    it('handleclick', () => {
+        wrapper.find('div.learningobjectivedropdown ul li').at(1).simulate('click')
+        let event = { target: { innerText: "Align to External Framework" } };
+        const spyFunction = jest.spyOn(slateTagInstance, 'launchExternalFrameworkPopup');
+        slateTagInstance.launchExternalFrameworkPopup(event);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    })
+    it('handleclick-warning Popup', () => {
+        slateTagInstance.setState({
+            showLoOptions: true
+        })
+        wrapper.update()
+        slateTagInstance.forceUpdate();
+        wrapper.find('div.learningobjectivedropdown2 li').at(0).simulate('click')
+        expect(wrapper.find('div.learningobjectivedropdown2 ul')).toHaveLength(1);
+    })
+    it('handleWarningPopup', () => {
+        let event = { target: { innerText: "Add a New Learning Objective" }, preventDefault: () => { } };
+        const spyFunction = jest.spyOn(slateTagInstance, 'handleWarningPopup');
+        slateTagInstance.handleWarningPopup(event);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    })
+    it('toggleLoOptionsDropdown', () => {
+        const spyFunction = jest.spyOn(slateTagInstance, 'toggleLoOptionsDropdown');
+        slateTagInstance.toggleLoOptionsDropdown();
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
     })
 });

@@ -10,12 +10,12 @@ export default function Tooltip(props) {
     /**
      * Hooks declearation
      */
-    const {direction, tooltipText, children} = props
+    const {direction, tooltipText, children, showClass, showDetails} = props
     
     return(
         <div className="tooltip">
             {children}
-            <span className={`tooltiptext tooltip-${direction}`}>{tooltipText}</span>
+            <span className={`${(showClass == true || showDetails == true)? 'hide': `tooltiptext tooltip-${direction}`}`}>{tooltipText}</span>
         </div>
     )
 }

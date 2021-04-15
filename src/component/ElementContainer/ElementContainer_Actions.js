@@ -12,7 +12,7 @@ import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContaine
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
 export const addComment = (commentString, elementId) => (dispatch) => {
-    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
+    let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
         commentCreator: config.userName || config.userId,

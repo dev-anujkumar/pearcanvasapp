@@ -84,6 +84,10 @@ export const pastePreProcess = (data) => {
  */
 export const pastePostProcess = (data, props) => {
   if (data.node) {
+    // if you dont click inside the editor after pasting data first time and try to paste again by 
+    // pressing ctrl + v then this condition runs again so clearing the previous data of editor
+    tinyMCE.activeEditor.setContent('');
+
     const childNodes = data.node.children;
     const elements = [];
     createPastedElements(childNodes, elements);
@@ -102,6 +106,9 @@ export const pastePostProcess = (data, props) => {
     const parentIndex = props.index;
     elements.length && props.toggleWordPasteProceed(true)
     props.onPowerPaste(elements, parentIndex);
+
+    // if valid data has been pasted in to editor once then make editor non-editable
+    elements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
   }
 }
 

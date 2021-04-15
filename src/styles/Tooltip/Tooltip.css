@@ -150,9 +150,9 @@
 }
 
 .tooltip .tooltip-picker {
-    width: 78px;
+    width: 90px;
     top: 135%;
-    left: 50%;
+    left: 13%;
     margin-left: -55px;
     font-size: 10px;
     font-weight: 600;
@@ -166,7 +166,9 @@
     position: absolute;
     transition: opacity 1s;
 }
-
+.tooltip .hide{
+    display: none;
+}
 .tooltip .tooltip-picker::after {
     content: " ";
     position: absolute;
@@ -178,10 +180,16 @@
     border-color: transparent transparent black transparent;
 }
 
+/* .tooltip .tooltip-picker:hover,
+.tooltip .tooltip-paste:hover,
+.tooltip .tooltip-poc:hover {
+    display: none;
+} */
+
 .tooltip .tooltip-paste {
-    width: 85px;
+    width: 88px;
     top: 135%;
-    left: 85%;
+    left: 80%;
     margin-left: -55px;
     font-size: 10px;
     font-weight: 600;
