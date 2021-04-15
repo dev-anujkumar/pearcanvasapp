@@ -431,9 +431,8 @@ export const processAndStoreUpdatedResponse = async (params) => {
         collectDataAndPrepareTCMSnapshot(snapshotArgs)
     }
 
-    const checkForMA_Elements = updatedData?.loData?.length ? true : false
     /** Check applied so that element does not gets copied to next slate while navigating */
-    if ((checkForMA_Elements && (config.slateManifestURN === updatedData.loData[0].slateVersionUrn)) || config.slateManifestURN === updatedData.slateVersionUrn) {
+    if (config.slateManifestURN === updatedData.slateVersionUrn) {
         const argObj = {
             ...commonArgs,
             showHideType,
