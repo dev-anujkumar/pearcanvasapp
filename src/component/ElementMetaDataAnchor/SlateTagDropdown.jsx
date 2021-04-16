@@ -15,7 +15,7 @@ import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../
 import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { loNextIcon } from './../../images/ElementButtons/ElementButtons.jsx';
+import { loNextIcon, tickIcon } from './../../images/ElementButtons/ElementButtons.jsx';
 import { CYPRESS_LF, EXTERNAL_LF } from '../../constants/Element_Constants';
 class SlateTagDropdown extends React.Component {
     constructor(props) {
@@ -29,7 +29,14 @@ class SlateTagDropdown extends React.Component {
    
     
     componentWillMount() {
-        document.addEventListener('mousedown', this.handleClick, false)
+        document.addEventListener('mousedown', this.handleClick, false);
+    }
+    componentDidMount(){
+      if(this.props.isLOExist){
+        this.node1.style.width='310px';
+        this.node1.style.height='84px';
+      }
+      this.setDropdownPosition();
     }
     handleClick = (e) => {
         if (this.closestByClass(e.target, 'leaningobjective-block')) {
@@ -121,7 +128,22 @@ class SlateTagDropdown extends React.Component {
     toggleLoOptionsDropdown = () => {
       sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
       sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
-        this.setState({showLoOptions:!this.state.showLoOptions})
+      if(this.node2.style.display=='block'){
+        this.node2.style.display='none'
+      }
+      else{
+        this.node2.style.display='block'
+      }
+    }
+
+    setDropdownPosition(){
+      let element = this.node1;
+      let elementInfo = element.getBoundingClientRect();
+      if(elementInfo.x < 800){
+        setTimeout(() => {
+          this.node2.style.left = '10px';
+        }, 0);
+      }
     }
 
   /** Prepare data for Post-message in case of External LO*/
@@ -213,15 +235,19 @@ class SlateTagDropdown extends React.Component {
       const liOptionStatus = this.handleCypressLODropdownOptions()
         return (
         <div>
-          <div className="learningobjectivedropdown" ref={node => this.node = node}>
+          <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
               <ul>
-                <li onClick={this.toggleLoOptionsDropdown}>{AlignToCypressSlateDropdown}<span className='lo-navigation-icon'>{loNextIcon}</span></li>
-                <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO === true ? '' : 'disable-buttton'}>{AlignToExternalFrameworkSlateDropdown}</li>
+                <div>
+               {this.props.isLOExist&&this.props.currentSlateLF !== EXTERNAL_LF && <span className='tick-icon'>{tickIcon}</span>}
+                <li onClick={this.toggleLoOptionsDropdown}><span className={this.props.isLOExist&&"dropdown-option"}>{AlignToCypressSlateDropdown}</span><span className='lo-navigation-icon'>{loNextIcon}</span></li>
+                </div>
+                <div >
+                {this.props.isLOExist&&this.props.currentSlateLF === EXTERNAL_LF && <span className='tick-icon'>{tickIcon}</span>}
+                <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO === true ? '' : 'disable-buttton'}><span className={this.props.isLOExist &&"dropdown-option"}>{AlignToExternalFrameworkSlateDropdown}</span></li>
+                </div>
               </ul>
             </div>
-            {
-                this.state.showLoOptions &&  
-                <div  className="learningobjectivedropdown2" ref={node => this.node = node}>
+                <div className="learningobjectivedropdown2" ref={node2 => this.node2 = node2}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
                         <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}> {AddLearningObjectiveSlateDropdown}</li>}
@@ -234,7 +260,6 @@ class SlateTagDropdown extends React.Component {
                         <li className={liOptionStatus.unlinkLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
             </div> 
-            }
         </div>            
         )
     }

@@ -61,18 +61,21 @@ export const getSlateMetadataAnchorElem = (slateElements = [], existingSlateMeta
             switch (element.type) {
                 case elementConstants.METADATA_ANCHOR: /** MA on Slate */
                     metadataAnchorElement = { id: element.id, loUrn: element?.elementdata?.loref ?? "", index: index };
+                    metadataAnchorElement && existingSlateMetadataAnchors.push(metadataAnchorElement);
                     break;
                 case elementConstants.ELEMENT_ASIDE:
                     element.elementdata.bodymatter.map((nestedElem, nestedIndex) => {
                         /** MA inside Aside/WE:HEAD */
                         if (nestedElem.type == elementConstants.METADATA_ANCHOR) {
                             metadataAnchorElement = { id: nestedElem.id, loUrn: nestedElem?.elementdata?.loref ?? "", index: `${index}-${nestedIndex}` };
+                            metadataAnchorElement && existingSlateMetadataAnchors.push(metadataAnchorElement);
                         }
                         /** MA inside Aside/WE:BODY */
                         else if (nestedElem.type == elementConstants.ELEMENT_SECTION_BREAK) {
                             nestedElem.contents.bodymatter.map((weBodyElem, weIndex) => {
                                 if (weBodyElem.type == elementConstants.METADATA_ANCHOR) {
                                     metadataAnchorElement = { id: weBodyElem.id, loUrn: weBodyElem?.elementdata?.loref ?? "", index: `${index}-${nestedIndex}-${weIndex}` };
+                                    metadataAnchorElement && existingSlateMetadataAnchors.push(metadataAnchorElement);
                                 }
                             })
                         }
@@ -82,7 +85,6 @@ export const getSlateMetadataAnchorElem = (slateElements = [], existingSlateMeta
                     metadataAnchorElement = {};
                     break;
             }
-            metadataAnchorElement && existingSlateMetadataAnchors.push(metadataAnchorElement);
         })
     }
     return existingSlateMetadataAnchors;
@@ -150,8 +152,7 @@ export const prepareLO_WIP_Data = (type, loUrn, metadataElems, slateManifestURN)
         },
         "metaDataAnchorID": metadataIDs,
         "elementVersionType": elementConstants.METADATA_ANCHOR,
-        "loIndex": metadataIndexes,
-        "slateVersionUrn": slateManifestURN
+        "loIndex": metadataIndexes
     }
 }
 

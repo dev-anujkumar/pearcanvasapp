@@ -1,4 +1,4 @@
-import { currentSlateLO, isLOExist, setCurrentModule, currentSlateLOMath,reRenderLO } from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { currentSlateLO, isLOExist, setCurrentModule, currentSlateLOMath,reRenderLO, currentSlateLOType, toggleLOWarningPopup } from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 
@@ -94,6 +94,105 @@ describe('Testing Actions', () => {
       }]
     let store = mockStore();
     store.dispatch(reRenderLO(isRenderLO));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
+  it('testing currentSlateLOType function', () => {
+    const learningFrameWork = 'cypressLF'
+    const expectedActions =
+      [{
+        'payload': { "currentSlateLF": learningFrameWork},
+        'type': "CURRENT_SLATE_LF",
+      }]
+    let store = mockStore();
+    store.dispatch(currentSlateLOType(learningFrameWork));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
+  it('testing toggleLOWarningPopup function', () => {
+    const toggleValue = true, warningActionIntiator = 'Align to External Framework'
+    const expectedActions =
+      [{
+        'payload': { toggleValue, warningActionIntiator },
+        'type': "TOGGLE_LO_WARNING_POPUP",
+      }]
+    let store = mockStore();
+    store.dispatch(toggleLOWarningPopup(toggleValue, warningActionIntiator));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
+  it('testing isLOExist function for Cypress LO - has loId', () => {
+    const message = { loObj: { id: 'loID1' } };
+    const expectedActions =
+      [{
+        'payload': true,
+        'type': "SLATE_TAG_ENABLE",
+      }]
+    let store = mockStore();
+    store.dispatch(isLOExist(message));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
+  it('testing isLOExist function for Cypress LO - has loUrn', () => {
+    const message = { loObj: { loUrn: 'loUrn1' } };
+    const expectedActions =
+      [{
+        'payload': true,
+        'type': "SLATE_TAG_ENABLE",
+      }]
+    let store = mockStore();
+    store.dispatch(isLOExist(message));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
+  it('testing isLOExist function for External LO - has LOList', () => {
+    const message = { LOList: [{ id: 'loID1' }] };
+    const expectedActions =
+      [{
+        'payload': true,
+        'type': "SLATE_TAG_ENABLE",
+      }]
+    let store = mockStore();
+    store.dispatch(isLOExist(message));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
+  it('testing isLOExist function for External LO - has LOList', () => {
+    const message = { LOList: [{ id: 'loID1' }] };
+    const expectedActions =
+      [{
+        'payload': true,
+        'type': "SLATE_TAG_ENABLE",
+      }]
+    let store = mockStore();
+    store.dispatch(isLOExist(message));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
+  it('testing isLOExist function for External LO - has statusForExtLOSave', () => {
+    const message = { statusForExtLOSave: true, LOList: [{ id: 'loID1' }] };
+    const expectedActions =
+      [{
+        'payload': true,
+        'type': "SLATE_TAG_ENABLE",
+      }]
+    let store = mockStore();
+    store.dispatch(isLOExist(message));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
+  it('testing isLOExist function for External LO - has LO_Link_Status', () => {
+    const message = { statusForExtLOSave: true, LO_Link_Status: true };
+    const expectedActions =
+      [{
+        'payload': true,
+        'type': "SLATE_TAG_ENABLE",
+      }]
+    let store = mockStore();
+    store.dispatch(isLOExist(message));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
+  it('testing isLOExist function for assessmentResponseMsg', () => {
+    const message = { assessmentResponseMsg: true };
+    const expectedActions =
+      [{
+        'payload': true,
+        'type': "SLATE_TAG_ENABLE",
+      }]
+    let store = mockStore();
+    store.dispatch(isLOExist(message));
     expect(store.getActions()).toEqual(expectedActions);
   })
 });

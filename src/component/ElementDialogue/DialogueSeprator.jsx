@@ -29,7 +29,7 @@ const DialogueSeprator = (props) => {
                 <hr className='horizontalLine' />
             </div>
             <div style={{ position: 'relative' }}>
-                <Tooltip tooltipText="Element Picker">
+                <Tooltip direction='picker' tooltipText="Element Picker" showDetails={showDetails}>
                     <Button
                         onClick={(event) => {
                             setDetails(!showDetails)

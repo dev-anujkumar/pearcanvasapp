@@ -388,6 +388,7 @@ function CommunicationChannel(WrappedComponent) {
                 const newSlateData = JSON.parse(JSON.stringify(slateData));
                 const bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
                 let slateLOElems = getSlateMetadataAnchorElem(bodymatter);
+                let lOsToUpdate=[]
                 message?.unlinkedLOs.forEach((loItem, index) => {
                     let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem);
                     if (metadataElems.length) {
@@ -395,9 +396,14 @@ function CommunicationChannel(WrappedComponent) {
                         if (index == 0) {
                             LOWipData.elementdata.loref = message.loObj ? message.loObj.id ? message.loObj.id : message.loObj.loUrn : "";
                         }
-                        this.props.updateElement(LOWipData);
+                        lOsToUpdate.push(LOWipData);
+
                     }
                 })
+                let requestPayload = {
+                    "loData": lOsToUpdate
+                }
+                this.props.updateElement(requestPayload);
                 this.props.isLOExist(message);
                 this.props.currentSlateLOType(CYPRESS_LF);
                 this.props.currentSlateLO([message.loObj ?? {}]);
@@ -414,16 +420,20 @@ function CommunicationChannel(WrappedComponent) {
             const newSlateData = JSON.parse(JSON.stringify(slateData));
             const bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter;
             let slateLOElems = getSlateMetadataAnchorElem(bodymatter);
-            let loDataToUpdate = [];
+            let loDataToUpdate = [], lOsUpdated=[];
             /** Update All Metadata Anchor Elements for LOs Unlinked */
             message?.unlinkedLOs?.forEach(loItem => {
                 let metadataElems = slateLOElems.filter(metadataElem => metadataElem.loUrn === loItem);
                 if (metadataElems.length) {
                     let LOWipData = prepareLO_WIP_Data("unlink", "", metadataElems, config.slateManifestURN);
                     loDataToUpdate = loDataToUpdate.concat(metadataElems)
-                    this.props.updateElement(LOWipData);
+                    lOsUpdated.push(LOWipData);
                 }
             })
+            let requestPayload = {
+                "loData": lOsUpdated
+            }
+            this.props.updateElement(requestPayload)
             /** When All Slate LOs unlinked but no new LO linked */
             if (message && message.unlinkStatus === true && message.currentSlateLF === "") {
                 this.props.isLOExist(message);
@@ -463,9 +473,10 @@ function CommunicationChannel(WrappedComponent) {
                 let loDataToUpdate = prepareLODataForUpdate(bodymatter, message);
                 /** Update Existing Metadata Anchors on the Slate */
                 if (loDataToUpdate?.length) {
-                    loDataToUpdate.forEach(loUpdate => {
-                        this.props.updateElement(loUpdate)
-                    });
+                    let requestPayload = {
+                        "loData": loDataToUpdate
+                    }
+                    this.props.updateElement(requestPayload)
                 }
                 let updatedSlateLOs = []
                 if (message?.loUnlinked?.length && typeof message.loUnlinked[0] === 'string') {
@@ -522,11 +533,13 @@ function CommunicationChannel(WrappedComponent) {
                     },
                     "metaDataAnchorID": LOElements,
                     "elementVersionType": "element-learningobjectivemapping",
-                    "loIndex": loIndex,
-                    "slateVersionUrn": config.slateManifestURN
+                    "loIndex": loIndex
                 }
                 if (LOElements.length) {
-                    this.props.updateElement(LOWipData)
+                    let requestPayload = {
+                        "loData": [LOWipData]
+                    }
+                    this.props.updateElement(requestPayload)
                 }
 
             }

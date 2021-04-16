@@ -108,10 +108,14 @@ export const updateElementInStore = (paramsObj) => {
             tcm: _slateObject.tcm ? true : false
         }
     } 
-    else if (updatedData.elementVersionType === ElementConstants.METADATA_ANCHOR) {
-        for (let i = 0; i < updatedData.metaDataAnchorID.length; i++) {
-            _slateBodyMatter = updateLOInCanvasStore({ updatedData, _slateBodyMatter, activeIndex: i });
-        }
+    else if (updatedData?.loData?.length) {
+        updatedData.loData.forEach((updatedLO) => {
+            if (updatedLO.elementVersionType === ElementConstants.METADATA_ANCHOR) {
+                for (let i = 0; i < updatedLO.metaDataAnchorID.length; i++) {
+                    _slateBodyMatter = updateLOInCanvasStore({ updatedLO, _slateBodyMatter, activeIndex: i });
+                }
+            }
+        })
     }
     else {
         _slateBodyMatter = _slateBodyMatter.map(element => {
@@ -428,7 +432,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
     }
 
     /** Check applied so that element does not gets copied to next slate while navigating */
-    if (config.slateManifestURN === updatedData.slateVersionUrn) {  
+    if (config.slateManifestURN === updatedData.slateVersionUrn) {
         const argObj = {
             ...commonArgs,
             showHideType,
@@ -472,16 +476,9 @@ export const updateStore = (paramObj) => {
     const commonArgs = {
         updatedData, responseData, getState, dispatch
     }
-    if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
-        for(let i = 0; i < updatedData.metaDataAnchorID.length; i++){
-            if(updatedData.metaDataAnchorID[i] !==  responseData.metaDataAnchorID[i]){
-                if (currentSlateData.status === 'wip') {
-                    updateLOInStore(commonArgs);
-                } else if (currentSlateData.status === 'approved') {
-                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-                }
-                break;
-            }
+    if ((updatedData?.loData) || updatedData.elementVersionType === "element-generateLOlist") {
+        if (updatedData?.loData?.length && responseData?.loData?.length) {
+            updateMetadataAnchorLOsinStore({...commonArgs,currentSlateData})
         }
     } else if (responseData.id !== updatedData.id) {
         if (currentSlateData.status === 'wip') {
@@ -581,22 +578,6 @@ export const updateStoreInCanvas = (params) => {
     }
 }
 
-export const updateLOInStore = ({ updatedData, versionedData, getState, dispatch }) => {
-    const parentData = getState().appStore.slateLevelData;
-    let newslateData = JSON.parse(JSON.stringify(parentData));
-    if (versionedData) {
-        for (let i = 0; i < updatedData.loIndex.length; i++) {
-            newslateData[config.slateManifestURN].contents.bodymatter[i].id = versionedData.metaDataAnchorID[i];
-        }
-    }
-    return dispatch({
-        type: AUTHORING_ELEMENT_UPDATE,
-        payload: {
-            slateLevelData: newslateData
-        }
-    })
-}
-
 export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, versionedData, updatedData }) => {
     if (updatedData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(updatedData.figuretype)) {
         return false
@@ -640,32 +621,82 @@ export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, ver
  * This function updated the LO in Metadata Anchor elements on slate
  * @returns updated Slate Bodymatter
  */
-export const updateLOInCanvasStore = ({ updatedData, _slateBodyMatter, activeIndex }) => {
-    const indexes = updatedData.loIndex[activeIndex].toString().split("-");
+export const updateLOInCanvasStore = ({ updatedLO, _slateBodyMatter, activeIndex }) => {
+    const indexes = updatedLO.loIndex[activeIndex].toString().split("-");
     let bodyMatterContent = [..._slateBodyMatter];
     switch (indexes.length) {
         case 1: /** Metadata Anchor on Slate */
             bodyMatterContent[indexes[0]] = {
                 ...bodyMatterContent[indexes[0]],
-                elementdata: updatedData.elementdata
+                elementdata: updatedLO.elementdata
             }
             break;
         case 2: /** Metadata Anchor in Aside | WE:HEAD */
             let element = bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]]
             bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]] = {
                 ...element,
-                elementdata: updatedData.elementdata
+                elementdata: updatedLO.elementdata
             }
             break;
         case 3: /** Metadata Anchor in WE:BODY */
             let weElement = bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
             bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = {
                 ...weElement,
-                elementdata: updatedData.elementdata
+                elementdata: updatedLO.elementdata
             }
             break;
         default:
             break;
     }
     return bodyMatterContent;
+}
+
+const updateMetadataAnchorLOsinStore = ({ updatedData, responseData, getState, dispatch, currentSlateData }) => {
+    updatedData.loData.forEach((loUpdate) => {
+        let responseLOData = responseData.loData.find(loItem => loItem.elementdata.loref === loUpdate.elementdata.loref)
+        const updatedArgs = {
+            oldLO_Data: loUpdate,
+            newLO_Data: responseLOData,
+            getState, dispatch
+        }
+        for (let i = 0; i < loUpdate.metaDataAnchorID.length; i++) {
+            if (loUpdate.metaDataAnchorID[i] !== responseLOData.metaDataAnchorID[i]) {
+                if (currentSlateData.status === 'wip') {
+                    updateLOInStore({ ...updatedArgs, activeIndex: i });
+                } else if (currentSlateData.status === 'approved') {
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                }
+                break;
+            }
+        }
+    })
+}
+
+const updateLOInStore = ({ oldLO_Data, newLO_Data, getState, dispatch, activeIndex }) => {
+    const parentData = getState().appStore.slateLevelData;
+    let newslateData = JSON.parse(JSON.stringify(parentData));
+    let bodyMatterContent = newslateData[config.slateManifestURN].contents.bodymatter;
+    if (newLO_Data) {
+        const indexes = oldLO_Data?.loIndex[activeIndex]?.toString().split("-");
+        switch (indexes.length) {
+            case 1: /** Metadata Anchor on Slate */
+                bodyMatterContent[indexes[0]].id = newLO_Data.metaDataAnchorID[activeIndex]
+                break;
+            case 2: /** Metadata Anchor in Aside | WE:HEAD */
+                bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]].id = newLO_Data.metaDataAnchorID[activeIndex]
+                break;
+            case 3: /** Metadata Anchor in WE:BODY */
+                bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id = newLO_Data.metaDataAnchorID[activeIndex]
+                break;
+            default:
+                break;
+        }
+    }
+    newslateData[config.slateManifestURN].contents.bodymatter =  bodyMatterContent;
+    return dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: newslateData
+        }
+    })
 }

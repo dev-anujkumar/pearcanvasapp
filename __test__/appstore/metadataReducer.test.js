@@ -5,9 +5,14 @@ const INIT_STATE = {
     slateTagEnable: false,
     showModule:false,
     currentSlateLODataMath:"",
-    showSlateLockPopup: false,
-    isRenderMetdataLO:false
-
+    showSlateLockPopup:false,
+    isRenderMetdataLO:false,
+    projectLearningFrameworks:{
+        cypressLF:{},
+        externalLF:[]
+    },
+    currentSlateLF:"",
+    loWarningPopupData: {}
 }
 
 const currentSlateLOData = { currentSlateLOData: "",
@@ -16,6 +21,11 @@ showModule:false,
 currentSlateLODataMath:"",
 showSlateLockPopup: false,
 isRenderMetdataLO:false
+}
+
+const getLOState = { 
+    ...INIT_STATE,
+    currentSlateLOData: ""
 }
 
 describe('testing meta data Reducer cases --', () => {
@@ -29,7 +39,7 @@ describe('testing meta data Reducer cases --', () => {
             payload: 
                  currentSlateLOData
             
-        })).toEqual(currentSlateLOData);
+        })).toEqual(getLOState);
     })
     it('SLATE_TAG_ENABLE', () => {
         let state1 = INIT_STATE;
