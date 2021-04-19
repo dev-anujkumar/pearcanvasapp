@@ -75,6 +75,7 @@ export const checkTCM = element => {
         case "citations": return CITATION;
         case "groupedcontent": return MULTI_COLUMN;
         case "group": return MULTI_COLUMN_GROUP;
+        case "workedexample" : return WORKED_EXAMPLE;
         default: return TEXT;
     }
 }
