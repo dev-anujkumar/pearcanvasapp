@@ -58,6 +58,7 @@ import elementTypes from './../Sidebar/elementTypes.js';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import ElementDialogue from '../ElementDialogue';
+import ElementDiscussion from '../ElementDiscussion';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -1489,7 +1490,32 @@ class ElementContainer extends Component {
                         />;
                         labelText = 'PS'
                         break;
-
+                    case elementTypeConstant.ELEMENT_DISCUSSION:
+                        editor = <ElementDiscussion
+                            permissions={permissions}
+                            btnClassName={this.state.btnClassName}
+                            borderToggle={this.state.borderToggle}
+                            elemBorderToggle={this.props.elemBorderToggle}
+                            elementSepratorProps={elementSepratorProps}
+                            index={index}
+                            element={element}
+                            elementId={element.id}
+                            slateLockInfo={slateLockInfo}
+                            // splithandlerfunction={splithandlerfunction}
+                            userRole={this.props.userRole}
+                            activeElement={this.props.activeElement}
+                            onClickCapture={this.props.onClickCapture}
+                            showBlocker={this.props.showBlocker}
+                            setActiveElement={this.props.setActiveElement}
+                            parentElement={this.props.parentElement}
+                            showDeleteElemPopup={this.showDeleteElemPopup}
+                            handleBlur={this.handleBlur}
+                            handleFocus={this.handleFocus}
+                            deleteElement={this.deleteElement}
+                        />
+                        labelText = 'DE'
+                        break;
+                    
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;

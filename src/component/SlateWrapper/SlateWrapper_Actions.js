@@ -30,6 +30,8 @@ import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.j
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
+import DE_DATA  from './de_api'
+
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -179,6 +181,21 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }   
     }).catch(error => {
         // Opener Element mock creation
+
+        if (type === 'ELEMENT_DISCUSSION') {
+            
+            const parentData = getState().appStore.slateLevelData;
+            const newParentData = JSON.parse(JSON.stringify(parentData));
+            const createdElementData = DE_DATA;
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+            dispatch({
+                type: AUTHORING_ELEMENT_CREATED,
+                payload: {
+                    slateLevelData: newParentData
+                }
+            })
+        }
+
         if (type == "OPENER") {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;

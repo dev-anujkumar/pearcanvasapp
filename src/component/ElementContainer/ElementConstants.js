@@ -56,7 +56,8 @@ export default {
 /****************Element Dialogue************************ */  
     ELEMENT_DIALOGUE: "element-dialogue",
     DIALOGUE_SD: "stagedirection",
-    DIALOGUE_DE: "lines"
+    DIALOGUE_DE: "lines",
+    ELEMENT_DISCUSSION: 'element-discussion'
 }
 
 export const LABELS = {
