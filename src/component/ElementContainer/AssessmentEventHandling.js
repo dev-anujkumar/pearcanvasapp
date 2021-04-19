@@ -143,6 +143,8 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                         /**@function to update data display in interactive  */
                         intObj.callFrom = "fromEventHandling";
                         addPufFunction(intObj);
+                        /* Remove EventListener */
+                        window.removeEventListener("message", getMsgafterAddAssessment, false);
                     }
                 }  
                 if(action === "remove"){
