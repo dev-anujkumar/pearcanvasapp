@@ -339,7 +339,8 @@ describe('Tests ElementContainer Actions', () => {
                 "tcm": true,
                 "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                 "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                "loData": true
             }
 
             //Mocking axios put request
@@ -361,7 +362,7 @@ describe('Tests ElementContainer Actions', () => {
                 hasReviewerRole: () => {return true}
             }))
             const spyupdateElement = jest.spyOn(actions, 'updateElement')
-            actions.updateElement(updatedData, 0, parentUrn, asideData)(store.dispatch, store.getState)
+            actions.updateElement(updatedData, 0, parentUrn, asideData, "postertextobject")(store.dispatch, store.getState)
             expect(spyupdateElement).toHaveBeenCalled()
         })
     })
@@ -1216,7 +1217,7 @@ describe('Tests ElementContainer Actions', () => {
             expect(spyShowError).toHaveReturnedWith(undefined);
             spyShowError.mockClear()
         })
-        it("contentEditableFalse helper method", () => {
+        describe("contentEditableFalse helper method", () => {
             const dataToUpdate = {
                 "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                 "type": "element-blockfeature",
@@ -1234,27 +1235,25 @@ describe('Tests ElementContainer Actions', () => {
                 "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                 "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
             }
-    
-            const spycontentEditableFalse  = jest.spyOn(actions, 'contentEditableFalse')
-            actions.contentEditableFalse(dataToUpdate)
-            expect(spycontentEditableFalse).toHaveReturnedWith(dataToUpdate)
-            spycontentEditableFalse.mockClear()
+            it(" updatedData.type == element-blockfeature ", () => {
+                const spycontentEditableFalse  = jest.spyOn(actions, 'contentEditableFalse')
+                actions.contentEditableFalse(dataToUpdate)
+                expect(spycontentEditableFalse).toHaveReturnedWith(dataToUpdate)
+                spycontentEditableFalse.mockClear()
+            })
+            it(" updatedData.type !== element-blockfeature ", () => {
+                const newDataToUpdate = {
+                    ...dataToUpdate, 
+                    "type": "element-pdf", 
+                    "html": {}
+                };
+                const spycontentEditableFalse  = jest.spyOn(actions, 'contentEditableFalse')
+                actions.contentEditableFalse(newDataToUpdate)
+                expect(spycontentEditableFalse).toHaveBeenCalled();
+                spycontentEditableFalse.mockClear()
+            })
         })
-        //it("updateFigureData helper method - simple figure", () => {
-        //    let store = mockStore(() => initialState3);
-
-        //    const figureData = {},
-        //        elementIndex = 6,
-        //        elementId = "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4eb",
-        //        dispatch = jest.fn(),
-        //        getState = store.getState;
-
-        //    const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData')
-        //    actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
-        //    expect(spyupdateFigureData).toHaveBeenCalled()
-        //    spyupdateFigureData.mockClear()
-        //})
-
+        
         describe(' Testing updateFigureData ',() => {
             describe('1. Testing updateFigureData ',() => {
                 const initialSt = { 
@@ -1285,20 +1284,6 @@ describe('Tests ElementContainer Actions', () => {
                 })
             })
             describe('2. Testing updateFigureData ',() => {
-                //it("2.1. updateFigureData helper method - simple figure", () => {
-                //    let store = mockStore(() => initialState3);
-
-                //    const figureData = {},
-                //        elementIndex = 6,
-                //        elementId = "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4eb",
-                //        dispatch = jest.fn(),
-                //        getState = store.getState;
-                //    config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-                //    const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData')
-                //    actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
-                //    expect(spyupdateFigureData).toHaveBeenCalled()
-                //    spyupdateFigureData.mockClear()
-                //})
                 it("2.2. condition.versionUrn === elementId; ...figuretype === assessment", () => {
                     const initialSt = { 
                         appStore: {
@@ -1312,8 +1297,6 @@ describe('Tests ElementContainer Actions', () => {
                         dispatch = jest.fn(),
                         getState = store.getState;
                     config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";   
-                        console.log("----",defaultSlateDataFigure.slateLevelData[config.slateManifestURN].contents.bodymatter[4].elementdata.bodymatter[2]);
-
                     const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData')
                     actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
                     expect(spyupdateFigureData).toHaveBeenCalled()
@@ -1338,35 +1321,57 @@ describe('Tests ElementContainer Actions', () => {
                     spyupdateFigureData.mockClear()
                 })
             })
-            describe('3. Testing updateFigureData L-3 ',() => {
+            describe('3. Testing updateFigureData Index Length-3 ',() => {
                 const initialSt = { 
                         appStore: {
                             slateLevelData : defaultSlateDataFigure.slateLevelData
                         }
                     }
-                    let store = mockStore(() => initialSt);
-
-                    const figureData = {},
+                let store = mockStore(() => initialSt);
+                const figureData = {},
                         dispatch = jest.fn(),
                         getState = store.getState;
+                const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData');
+                config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
 
-                    const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData');
-
-                it("1.1. If type === groupedcontent ", () => {
-                    const elementId = "urn:pearson:work:yca6096b-d0b6-4358-a2c7-313188665d230",
-                        elementIndex = "5-0-0";
-                    config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
-                    actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
-                    expect(spyupdateFigureData).toHaveBeenCalled()
-                    spyupdateFigureData.mockClear()
+                describe("1.1. Else type === groupedcontent ", () => {
+                    it("1.1. condition.versionUrn == elementId ", () => {
+                        const elementId = "urn:pearson:work:yca6096b-d0b6-4358-a2c7-313188665d230",
+                            elementIndex = "5-0-0";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
+                    it("1.1. condition.versionUrn !== elementId ", () => {
+                        const elementId = "urn:pearson:work:yca6096b-d0b6-4358-a2c7-313188665d231",
+                            elementIndex = "5-0-0";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
                 })
-                it("1.1. Else type !== groupedcontent ", () => {
-                    const elementId = "urn:pearson:work:zca6096b-d0b6-4358-a2c7-313188665d230",
-                        elementIndex = "6-0-0";
-                    config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
-                    actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
-                    expect(spyupdateFigureData).toHaveBeenCalled()
-                    spyupdateFigureData.mockClear()
+                describe("1.1. Else type !== groupedcontent ", () => {
+                    it("1.1. condition.versionUrn == elementId ", () => {
+                        const elementId = "urn:pearson:work:zca6096b-d0b6-4358-a2c7-313188665d230",
+                            elementIndex = "6-0-0";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
+                    it("1.1. condition.versionUrn !== elementId ", () => {
+                        const elementId = "urn:pearson:work:zca6096b-d0b6-4358-a2c7-313188665d231",
+                            elementIndex = "6-0-0";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
+                    it('4. Testing updateFigureData Index Length - 4 ',() => {
+                         const elementId = "urn:pearson:work:zca6096b-d0b6-4358-a2c7-313188665d231",
+                            elementIndex = "6-0-0-0";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
                 })
             })
         })
