@@ -50,7 +50,7 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigure} from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata} from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -1501,7 +1501,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigure(element);
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element);
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1747,15 +1747,16 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
-    handleFigurePopup = (data,url) =>{
-        this.props.showBlocker(data);
-        showTocBlocker();
+    handleFigurePopup = (togglePopup,url) =>{
+        this.props.showBlocker(togglePopup);
         this.setState({
-          isfigurePopup:data,
-          figureUrl:url
-        })
-        if(data==false){
-          hideBlocker();
+            isfigurePopup:togglePopup,
+            figureUrl:url
+          })
+        if(togglePopup){
+            showTocBlocker();
+        }else{
+            hideBlocker();
         }
     }
 
@@ -1767,13 +1768,14 @@ class ElementContainer extends Component {
         event.stopPropagation();
         let { element } = this.props;
         let id = `${element.figuredata.imageid}`
-        let data = id.replace('urn:pearson:alfresco:','');
-        const Url = `https://usppewip.cms.pearson.com/share/page/document-details?nodeRef=workspace://SpacesStore/${data}`
+        let metadataUrl = id.replace('urn:pearson:alfresco:','');
+        const Url = `https://usppewip.cms.pearson.com/share/page/document-details?nodeRef=workspace://SpacesStore/${metadataUrl}`
        
         if(element?.type === 'figure' && element.figuretype === 'image'){
-        this.handleFigurePopup(true,Url);
-        window.open(Url);
-        }else{
+             this.handleFigurePopup(true,Url);
+            //  window.open(Url);
+        }
+        else{
             let fullAssessment = checkFullElmAssessment(element);
             let embeddedAssessment = checkEmbeddedElmAssessment(element);
             const isInteractive = checkInteractive(element);
