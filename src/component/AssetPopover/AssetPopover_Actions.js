@@ -122,6 +122,8 @@ export const assetIdForSnapshot = (assetID) => {
 export const searchForFiguresAction = (searchTerm, stateImageData) => {
   
   searchterm = searchTerm;
+  console.log("searchterm>>>>>",searchterm)
+  console.log("stateImageData>>>>>",stateImageData)
   if (stateImageData && stateImageData.length > 0) { // hit api and store data in imageData
     //We have image data now dispatch an action for render filter data 
     return store.dispatch({

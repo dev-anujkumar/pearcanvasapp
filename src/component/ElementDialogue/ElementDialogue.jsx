@@ -115,6 +115,9 @@ class ElementDialogue extends React.PureComponent {
                                     userRole={_props.userRole}
                                     slateLockInfo={_props.slateLockInfo}
                                     updatePageNumber={_props.updatePageNumber}
+                                    glossaryFootnoteValue={_props.glossaryFootnoteValue}
+                                    glossaaryFootnotePopup={_props.glossaaryFootnotePopup}
+                                    openGlossaryFootnotePopUp={_props.openGlossaryFootnotePopUp}
                                 />
                             </div>
                         </div>
@@ -283,7 +286,10 @@ class ElementDialogue extends React.PureComponent {
             element: this.props.element,
             slateLockInfo: this.props.slateLockInfo,
             elementId: this.props.elementId,
-            handleEditorFocus: this.handleOuterFocus
+            handleEditorFocus: this.handleOuterFocus,
+            glossaryFootnoteValue:this.props.glossaryFootnoteValue,
+            glossaaryFootnotePopup:this.props.glossaaryFootnotePopup,
+            openGlossaryFootnotePopUp:this.props.openGlossaryFootnotePopUp,
         }
         return (
             (this.props !== null && this.props !== undefined) ?
