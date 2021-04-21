@@ -56,11 +56,7 @@ export default {
 /****************Element Dialogue************************ */  
     ELEMENT_DIALOGUE: "element-dialogue",
     DIALOGUE_SD: "stagedirection",
-    DIALOGUE_DE: "lines",
-
-/**************** PDF Slate Element ************************ */  
-    PDF_SLATE : "element-pdf",
-    //ELEMENT_PDF : "ELEMENT_PDF ",
+    DIALOGUE_DE: "lines"
 }
 
 export const LABELS = {

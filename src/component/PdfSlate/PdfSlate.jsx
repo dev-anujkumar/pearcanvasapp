@@ -22,7 +22,7 @@ class PdfSlate extends Component {
 	}
 
 	componentDidMount() {
-		const elementId = "urn:pearson:work:81ee4cba-f16e-473a-9582-c6ccfec8c3ae" //this.props.elementId;
+		const elementId = this.props?.element?.id;
 		getAlfrescositeResponse(elementId, (response) => {
 			this.setState({
 				//alfrescoSite: response.repositoryFolder,

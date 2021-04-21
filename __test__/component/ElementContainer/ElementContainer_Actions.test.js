@@ -1254,5 +1254,6 @@ describe('Tests ElementContainer Actions', () => {
             expect(spyupdateFigureData).toHaveBeenCalled()
             spyupdateFigureData.mockClear()
         })
+
     })
 })
