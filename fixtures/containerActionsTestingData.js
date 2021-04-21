@@ -1136,14 +1136,6 @@ export const defaultSlateDataFigure = {
                                             "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231"
                                         }]
                                     }
-                                },
-                                {
-                                    "id": "urn:pearson:manifest:8a99b86d-54ba-4059-ad0c-2683005c0b54",
-                                    "figuretype": "assessment",
-                                    "figuredata": {
-                                        "elementdata" : {}
-                                    },
-                                    "versionUrn": "urn:pearson:manifest:8a99b86d-54ba-4059-ad0c-2683005c0b12"
                                 }
                             ]
                         }

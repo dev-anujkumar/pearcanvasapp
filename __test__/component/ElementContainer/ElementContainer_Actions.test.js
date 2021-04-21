@@ -1240,72 +1240,19 @@ describe('Tests ElementContainer Actions', () => {
             expect(spycontentEditableFalse).toHaveReturnedWith(dataToUpdate)
             spycontentEditableFalse.mockClear()
         })
-        describe(' Testing updateFigureData ',() => {
-            
-            describe('1. Testing updateFigureData ',() => {
-                    const initialSt = { 
-                        appStore: {
-                            slateLevelData : defaultSlateDataFigure.slateLevelData
-                        }
-                    }
-                    let store = mockStore(() => initialSt);
+        it("updateFigureData helper method - simple figure", () => {
+            let store = mockStore(() => initialState3);
 
-                    const figureData = {},
-                        elementId = "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231",
-                        dispatch = jest.fn(),
-                        getState = store.getState;
+            const figureData = {},
+                elementIndex = 6,
+                elementId = "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4eb",
+                dispatch = jest.fn(),
+                getState = store.getState;
 
-                    const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData');
-
-                it("1.1. updateFigureData If ", () => {
-                    config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
-                    actions.updateFigureData(figureData, 3, elementId, cb)(dispatch, getState)
-                    expect(spyupdateFigureData).toHaveBeenCalled()
-                    spyupdateFigureData.mockClear()
-                })
-                it("1.2. updateFigureData Else ", () => { 
-                    config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
-                    actions.updateFigureData(figureData, 2, elementId, cb)(dispatch, getState)
-                    expect(spyupdateFigureData).toHaveBeenCalled()
-                    spyupdateFigureData.mockClear()
-                })
-            })
-            describe('2. Testing updateFigureData ',() => {
-                it("2.1. updateFigureData helper method - simple figure", () => {
-                    let store = mockStore(() => initialState3);
-
-                    const figureData = {},
-                        elementIndex = 6,
-                        elementId = "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4eb",
-                        dispatch = jest.fn(),
-                        getState = store.getState;
-                    config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-                    const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData')
-                    actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
-                    expect(spyupdateFigureData).toHaveBeenCalled()
-                    spyupdateFigureData.mockClear()
-                })
-                it("2.2. updateFigureData helper method - simple figure", () => {
-                    const initialSt = { 
-                        appStore: {
-                            slateLevelData : defaultSlateDataFigure.slateLevelData
-                        }
-                    }
-                    let store = mockStore(() => initialSt);
-
-                    const figureData = {},
-                        elementIndex = "4-2",
-                        elementId = "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231",
-                        dispatch = jest.fn(),
-                        getState = store.getState;
-                    
-                    config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
-                    const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData')
-                    actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
-                    expect(spyupdateFigureData).toHaveBeenCalled()
-                    spyupdateFigureData.mockClear()
-                })
-            })
+            const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData')
+            actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+            expect(spyupdateFigureData).toHaveBeenCalled()
+            spyupdateFigureData.mockClear()
         })
     })
 })
