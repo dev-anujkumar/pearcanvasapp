@@ -85,7 +85,7 @@ class PdfSlate extends Component {
 			"inputSubType": "NA",
 			"slateVersionUrn": config.slateManifestURN,
 			"index": index,
-			"elementParentEntityUrn": "urn:pearson:entity:937f01cc-b1f5-4e0b-a84e-43562d4e4b72",
+			"elementParentEntityUrn": config.slateEntityURN, //"urn:pearson:entity:937f01cc-b1f5-4e0b-a84e-43562d4e4b72",
 			"projectUrn": config.projectUrn
 		}
 
