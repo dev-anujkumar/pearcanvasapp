@@ -5,6 +5,9 @@ import { dropdownArrow } from "../../images/ElementButtons/ElementButtons.jsx";
 import { UsageTypeDropdown } from "../AssessmentSlateCanvas/UsageTypeDropdown/UsageTypeDropdown.jsx";
 import "../../styles/ElementDiscussion/ElementDiscussion.css";
 
+const USAGE_TYPES = ['Standard Discussion', 'Self Reflection First', ' Self Reflection Second'];
+
+
 const ElementDiscussion = (props) => {
   const {
     title = "Preflight Decouple Migration",
@@ -13,6 +16,7 @@ const ElementDiscussion = (props) => {
     selectedUsageType = null,
   } = props;
   const [showUsageTypeOptions, setshowUsageTypeOptions ] = useState(false);
+  const [usageType, setUsageType] = useState(selectedUsageType);
   return (
     <header class="container">
       <Fragment>
@@ -49,8 +53,8 @@ const ElementDiscussion = (props) => {
             onClick={() => {setshowUsageTypeOptions(!showUsageTypeOptions)}}
           >
             <span className="singleAssessment_Dropdown_currentLabel">
-              {selectedUsageType !== null
-                ? selectedUsageType
+              {usageType !== null
+                ? usageType
                 : "Select"}
             </span>
             <span className="singleAssessment_Dropdown_arrow">
@@ -60,10 +64,10 @@ const ElementDiscussion = (props) => {
               <ul className="slate_assessment_type_dropdown_options">
                 {
                   <UsageTypeDropdown
-                    usageTypeList={['Concept Check', 'Concept Check']}
-                    clickHandlerFn={(usageType, event) => {
-                        console.log("the clicked type is ", usageType, event);
+                    usageTypeList={USAGE_TYPES}
+                    clickHandlerFn={(usageType) => {
                         setshowUsageTypeOptions(false);
+                        setUsageType(usageType)
 
                     }}
                   />
