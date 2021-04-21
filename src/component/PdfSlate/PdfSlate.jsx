@@ -30,6 +30,14 @@ class PdfSlate extends Component {
 		//		alfrescoSiteData: { ...response }
 		//	})
 		//})
+		const pdfId = this.props?.element?.elementdata?.assetid;
+		if(pdfId){
+			this.setState({
+				showDetails: true,
+				title: "",
+				pdfId: pdfId
+			})
+		}
     }
 
 	/* --- */
@@ -45,7 +53,6 @@ class PdfSlate extends Component {
 		const that = this;
 		!hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(locationData, function (data_2) {
 			c2MediaModule.AddanAssetCallBack(data_2, function (pdfData) {
-
 				const isPdf = JSON.parse(pdfData?.desc)?.smartLinkType === "PDF";
 				if (pdfData?.desc.toLowerCase() !== "eps media" && isPdf) {
 				const results = pdfData?.body?.results || [] ;
@@ -71,10 +78,11 @@ class PdfSlate extends Component {
 	/* ------------- */
 	sumbitElement = () => {
 		const { index, element } = this.props;
-		const { id, contentUrn, versionUrn } = element || {};
+		const { id, contentUrn, versionUrn, schema } = element || {};
 		const reqBody = {
 			"id": id,
 			"type": ELEMENT_TYPE_PDF,
+			"schema": schema,
 			"elementdata": {
 				"assetid": this.state.pdfId,
 				"path": this.state.path,
