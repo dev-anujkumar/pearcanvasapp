@@ -27,7 +27,7 @@ const API =
 		}
 	},
 	"html": {
-		"title": "<p><br></p>",
+		"label": "<p><br></p>",
 		"subtitle": "<p><br></p>",
 		"text": "",
 		"postertext": "",
