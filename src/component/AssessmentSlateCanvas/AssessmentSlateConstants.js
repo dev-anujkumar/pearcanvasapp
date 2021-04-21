@@ -59,7 +59,10 @@ export const PRIMARY_SLATE_ASSESSMENT = 'primary-assessment-slate'
 export const SECONDARY_SLATE_ASSESSMENT = 'secondary-assessment-'
 export const FIGURE_INTERACTIVE = "interactive"
 export const SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY = 'secondary-single-assessment-learnosity'
-export const ELEMENT_PDF_SLATE = "element-pdf";
+
+/*--------------- PDF Slate ----------------*/
+export const ELEMENT_TYPE_PDF = "element-pdf";
+export const SLATE_TYPE_PDF = "pdfslate";
 
 export const ASSESSMENT_PICKER_OPENERS = Object.freeze({
     FULL_ASSESSMENT:'slateAssessment',

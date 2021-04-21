@@ -20,7 +20,7 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_PDF_SLATE
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_PDF
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -46,19 +46,9 @@ import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
+import { SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 
 let random = guid();
-const elementPdf = {
-            "id": "urn:pearson:work:4e507e6c-b7a2-4f2c-9790-eb9f3bfhyt57",
-            "type": "element-pdf",
-            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata": {
-                "assetid": "urn:pearson:work:a21adc27-022c-4886-b856-d526be4c23c6",
-                "path": "the_path_to_the_pdf_asset"
-            },
-            "contentUrn": "urn:pearson:entity:2818d92b-9768-4801-8629-4c24f71hbr48",
-            "versionUrn": "urn:pearson:work:4e507e6c-b7a2-4f2c-9790-eb9f3bfhyt57"
-        }
 
 class SlateWrapper extends Component {
     constructor(props) {
@@ -924,11 +914,11 @@ class SlateWrapper extends Component {
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
-                const typeOfSlate = (_slateType == "assessment" || _slateType === "pdfslate")
-                if (_elements.length === 0 && typeOfSlate && config.isDefaultElementInProgress) {
+                const isPdf_Assess = (_slateType == "assessment" || _slateType === SLATE_TYPE_PDF)
+                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    const typeOfEle = _slateType === "assessment" ? ELEMENT_ASSESSMENT : ELEMENT_PDF_SLATE;
+                    const typeOfEle = _slateType === "assessment" ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
                     this.props.createElement(typeOfEle, "0", '', '', '', '', () => {
                         config.isDefaultElementInProgress = true;
                     });
@@ -967,7 +957,7 @@ class SlateWrapper extends Component {
                                         userRole={this.props.userRole}
                                         openCustomPopup = {this.openCustomPopup}
                                         slateType={_slateType}
-                                        element={elementPdf}
+                                        element={element}
                                         index={index}
                                         handleCommentspanel={this.props.handleCommentspanel}
                                         elementSepratorProps={this.elementSepratorProps}

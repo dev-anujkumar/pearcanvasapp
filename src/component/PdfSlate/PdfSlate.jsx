@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { hasReviewerRole } from '../../constants/utility.js';
 import { c2MediaModule } from '../../js/c2_media_module.js';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js';
 import { handleC2MediaClick } from './Alfresco.js';
 import PdfSlateComponent from "./PdfSlateComponent.jsx"
+import { updateElement } from "../ElementContainer/ElementContainer_Actions.js";
+import { ELEMENT_PDF } from '../SlateWrapper/SlateWrapperConstants.js';
+import { ELEMENT_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import config from '../../config/config.js';
 
 class PdfSlate extends Component {
     constructor(props) {
@@ -11,7 +16,8 @@ class PdfSlate extends Component {
         this.state = {
 			showDetails: false,
 			uniqueID: "",
-			displayName: ""
+			displayName: "",
+			path: ""
 		}
 	}
 
@@ -38,20 +44,53 @@ class PdfSlate extends Component {
 		const that = this;
 		!hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(locationData, function (data_2) {
 			c2MediaModule.AddanAssetCallBack(data_2, function (pdfData) {
-				console.log("data---",pdfData);
-				if(pdfData?.uniqueID && pdfData.displayName) {
-					that.setState({
-						showDetails: true,
-						title: pdfData?.displayName,
-						pdfId: pdfData?.uniqueID
-					})
+
+				const isPdf = JSON.parse(pdfData?.desc)?.smartLinkType === "PDF";
+				if (pdfData?.desc.toLowerCase() !== "eps media" && isPdf) {
+				const results = pdfData?.body?.results || [] ;
+        		const smartLinkPath = results[0]?.properties['s.avs:url']?.value ?
+					 results[0].properties['s.avs:url'].value : [""];
+
+					if (pdfData?.uniqueID && pdfData.displayName) {
+						that.setState({
+							showDetails: true,
+							title: pdfData?.displayName,
+							pdfId: "urn:pearson:alfresco:" + pdfData?.uniqueID,
+							path: smartLinkPath[0]
+						})
+						that.sumbitElement();
+					} 
 				} else {
-					console.log("Error while getting data...");
-				}
+					console.log("Error please import pdf");
+				} 
 			})
 		})
 	}
 
+	/* ------------- */
+	sumbitElement = () => {
+		const { index, element } = this.props;
+		const { id, contentUrn, versionUrn } = element || {};
+		const reqBody = {
+			"id": id,
+			"type": ELEMENT_TYPE_PDF,
+			"elementdata": {
+				"assetid": this.state.pdfId,
+				"path": this.state.path,
+			},
+			"versionUrn": versionUrn,
+			"contentUrn": contentUrn,
+			"status": "wip",
+			"inputType": ELEMENT_PDF,
+			"inputSubType": "NA",
+			"slateVersionUrn": config.slateManifestURN,
+			"index": index,
+			"elementParentEntityUrn": "urn:pearson:entity:937f01cc-b1f5-4e0b-a84e-43562d4e4b72",
+			"projectUrn": config.projectUrn
+		}
+
+		this.props.updateElement(reqBody, this.props.index, "", "", null, "", null)
+	}
 	
 	render(){
 		return(
@@ -67,4 +106,7 @@ class PdfSlate extends Component {
 	}
 }
 
-export default PdfSlate;
+const dispatchActions = {
+    updateElement
+}
+export default connect(null, dispatchActions)(PdfSlate);
