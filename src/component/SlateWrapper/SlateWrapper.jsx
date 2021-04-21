@@ -926,6 +926,8 @@ class SlateWrapper extends Component {
                 else if (_elements.length === 0 && _slateType != "assessment") {
                     return this.renderBlankSlate(this.props)
                 }
+                /* @hideSapratorFor@ List of slates where seprator is hidden */
+                const hideSapratorFor = ['assessment', SLATE_TYPE_PDF];
                 return _elements.map((element, index) => {
                         return (
                             
@@ -935,7 +937,7 @@ class SlateWrapper extends Component {
                                     placeholder={<div data-id={element.id}><LargeLoader /></div>}
                                 >
                                     {
-                                        index === 0 && _slateType !== 'assessment' && config.isCO === false ?
+                                        index === 0 && !(hideSapratorFor.includes(_slateType)) && config.isCO === false ?
                                             <ElementSaprator
                                                 userRole={this.props.userRole}
                                                 firstOne={index === 0}
@@ -981,7 +983,7 @@ class SlateWrapper extends Component {
                                             )
                                         }
                                     </ElementContainer>
-                                    {_slateType !== 'assessment' ?
+                                    {!(hideSapratorFor.includes(_slateType)) ?
                                         <ElementSaprator
                                             userRole={this.props.userRole}
                                             index={index}
