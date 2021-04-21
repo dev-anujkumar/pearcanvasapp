@@ -835,7 +835,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         
-        const acceptedTypes=["element-aside","citations","poetry","groupedcontent"]
+        const acceptedTypes=["element-aside","citations","poetry","groupedcontent",'showhide','popup']
         if(acceptedTypes.includes(selection.element.type) && selection.element.subtype !== "workedexample") {
             const payloadParams = {
                 ...params,
@@ -857,6 +857,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
 
         try {
             let url = `${config.REACT_APP_API_URL}v1/projects/${config.projectUrn}/containers/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
+            console.log('Data@@@',JSON.stringify(_requestData), selection)
             const createdElemData = await axios.post(
                 url,
                 JSON.stringify(_requestData),
