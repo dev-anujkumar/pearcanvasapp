@@ -27,7 +27,7 @@ function PdfSlateComponent(props)  {
 				showDetails ? showPDFDetails() :
 				<div 
 					className = "slate_assessment_type_button add-pdf-button"
-					onClick = {OpenAlfresco}
+					onClick = { OpenAlfresco }
 				>
 					Add PDF
 				</div>

@@ -17,18 +17,19 @@ class PdfSlate extends Component {
 			showDetails: false,
 			uniqueID: "",
 			displayName: "",
-			path: ""
+			path: "",
+			alfrescoSiteData: {}
 		}
 	}
 
 	componentDidMount() {
-		const elementId = this.props?.element?.id;
-		getAlfrescositeResponse(elementId, (response) => {
-			this.setState({
-				//alfrescoSite: response.repositoryFolder,
-				alfrescoSiteData: { ...response }
-			})
-		})
+		//const elementId = this.props?.element?.id;
+		//getAlfrescositeResponse(elementId, (response) => {
+		//	this.setState({
+		//		//alfrescoSite: response.repositoryFolder,
+		//		alfrescoSiteData: { ...response }
+		//	})
+		//})
     }
 
 	/* --- */
