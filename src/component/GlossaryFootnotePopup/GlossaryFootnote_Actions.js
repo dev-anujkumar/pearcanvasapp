@@ -13,6 +13,7 @@ const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockf
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
 
+    console.log(":::::::::::::", status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField)
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
@@ -35,6 +36,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             return false;
         }
         let newBodymatter = newParentData[slateId].contents.bodymatter;
+        console.log("newBodymatter newBodymatter newBodymatter newBodymatter", newBodymatter)
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
@@ -91,9 +93,11 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 }
             } else {
                 let indexes = index.split('-');
+                console.log("indexessssssssssssssssssssssssssssssss", indexes);
                 let indexesLen = indexes.length, condition;
                 if (indexesLen == 2) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                    condition = newBodymatter[indexes[0]]
+                    // condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == elementWorkId) {
                         glossaryFootElem = condition
                     }
@@ -104,8 +108,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     else if (newBodymatter[indexes[0]].type === "groupedcontent") { //All elements inside multi-column except figure
                         condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     } else {
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                        // condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                        condition = newBodymatter[indexes[0]]
                     }
+                    console.log(";;;;;;;;;;;;;;;", elementType, newBodymatter[indexes[0]].type);
                     if (condition.versionUrn == elementWorkId) {
                         glossaryFootElem = condition
                     }
@@ -113,6 +119,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
 
             }
         }
+        console.log("glossaryFootElem glossaryFootElem", glossaryFootElem)
 
         switch (semanticType) {
             case 'FOOTNOTE':
@@ -122,6 +129,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 tempGlossaryContentText = glossaryFootElem && glossaryFootElem.html['glossaryentries'] && glossaryFootElem.html['glossaryentries'][glossaryfootnoteid]
                 footnoteContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).definition
                 glossaryContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).term || glossaryTermText
+                console.log("tempGlossaryContentText tempGlossaryContentText", tempGlossaryContentText);
         }
     }
     if(glossaryContentText && glossaryContentText.includes('audio-id')){

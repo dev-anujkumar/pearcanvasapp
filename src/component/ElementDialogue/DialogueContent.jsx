@@ -40,6 +40,7 @@ function DialogueContent(props) {
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
+                    console.log("eveeeeeeeeeeeeeeeeeeeeeeeeeentttttttttttttt", eventTarget);
                     const obj = { 
                          ...props.model[props.index],
                         text:`<p>${eventTarget?.innerHTML}</p>`
@@ -64,9 +65,14 @@ function DialogueContent(props) {
             elementId={props.elementId}
             handleEditorFocus={props.handleFocus}
             handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
+                let activeEditorId = eIndex ? `cypress-${eIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
+                let node = document.getElementById(activeEditorId);
+                console.log("eveeeeeeeeeeeeeeeeeeeeeeeeeentttttttttttttt", eIndex, activeEditorId, node);
+                console.log("tinymce editorrrrrrrrrrrrrrrr", tinymce.activeEditor.getContent());
                     const obj = { 
                          ...props.model[props.index],
                         text: eventTarget?.innerHTML,
+                        // text: '<p>first <dfn data-uri="urn:pearson:work:b0cdf2a5-27e8-48fc-bdb8-8342b300fad0" class="Pearson-Component GlossaryTerm">second</dfn></p>',
                     }
                     props.handleBlur("text", obj, props.index)
             }}

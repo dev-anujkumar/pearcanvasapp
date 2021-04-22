@@ -2258,6 +2258,7 @@ export class TinyMceEditor extends Component {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
             editor.selection.setContent(insertionText);
+            console.log("add Glossaryyyyyyyyyyyy", editor.getContent())
             this.handleGlossaryForItalic(activeElement, res.data.id);
             this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
@@ -2283,7 +2284,11 @@ export class TinyMceEditor extends Component {
             saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
             customEvent.unsubscribe('glossaryFootnoteSave');
         })
-        this.handleBlur(null, true); //element saving before creating G/F (as per java team)
+        console.log("inside savecontent", this.props.element);
+        setTimeout(() => {
+            this.handleBlur(null, true); //element saving before creating G/F (as per java team)
+        }, 200)
+        
         //this.handleBlur(null, true);
     }
 
@@ -3315,6 +3320,7 @@ export class TinyMceEditor extends Component {
             } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML.replace(/<br>/g, "").replace(/<p><\/p>/g, "") !== "") {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
+                console.log(forceupdate, this.props.currentElement, this.props.index, showHideType, eventTarget)
                 setTimeout(() => {
                     this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType, eventTarget)
                 }, 0)
