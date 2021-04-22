@@ -14,6 +14,7 @@ export default {
     FIGURE_AUDIO : "audio",
     FIGURE_VIDEO : "video",
     FIGURE_ASSESSMENT : "assessment",
+    FIGURE_ELEMENT_DISCUSSION : "element-discussion",
  
 /****************Figure Interactive Element************************ */
     INTERACTIVE : "interactive",

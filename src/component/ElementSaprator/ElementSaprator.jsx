@@ -41,7 +41,8 @@ const { TEXT,
     SINGLE_COLUMN,
     BLOCK_TEXT_BUTTON,
     TABLE_EDITOR,
-    TOC_PARENT_TYPES
+    TOC_PARENT_TYPES,
+    ELEMENT_DISCUSSION
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
