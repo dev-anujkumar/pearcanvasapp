@@ -651,7 +651,7 @@ export const updateLOInCanvasStore = ({ updatedLO, _slateBodyMatter, activeIndex
     return bodyMatterContent;
 }
 
-const updateMetadataAnchorLOsinStore = ({ updatedData, responseData, getState, dispatch, currentSlateData }) => {
+export const updateMetadataAnchorLOsinStore = ({ updatedData, responseData, getState, dispatch, currentSlateData }) => {
     updatedData.loData.forEach((loUpdate) => {
         let responseLOData = responseData.loData.find(loItem => loItem.elementdata.loref === loUpdate.elementdata.loref)
         const updatedArgs = {
@@ -672,7 +672,7 @@ const updateMetadataAnchorLOsinStore = ({ updatedData, responseData, getState, d
     })
 }
 
-const updateLOInStore = ({ oldLO_Data, newLO_Data, getState, dispatch, activeIndex }) => {
+export const updateLOInStore = ({ oldLO_Data, newLO_Data, getState, dispatch, activeIndex }) => {
     const parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
     let bodyMatterContent = newslateData[config.slateManifestURN].contents.bodymatter;
