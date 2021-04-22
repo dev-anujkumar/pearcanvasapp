@@ -33,7 +33,6 @@ class SlateTagDropdown extends React.Component {
     }
     componentDidMount(){
       if(this.props.isLOExist){
-        // this.node1.style.width='310px';
         this.node1.style.height='84px';
       }
       this.setDropdownPosition();
@@ -238,11 +237,9 @@ class SlateTagDropdown extends React.Component {
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
               <ul>
                 <div className={enableExtLO &&"option-disabled"}>
-               {/* {this.props.isLOExist&&this.props.currentSlateLF !== EXTERNAL_LF && <span className='tick-icon'>{tickIcon}</span>} */}
                 <li onClick={this.toggleLoOptionsDropdown}><span>{AlignToCypressSlateDropdown}</span><span className='lo-navigation-icon'>{loNextIcon}</span></li>
                 </div>
-                <div >
-                {/* {this.props.isLOExist&&this.props.currentSlateLF === EXTERNAL_LF && <span className='tick-icon'>{tickIcon}</span>} */}
+                <div>
                 <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO === true ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
                 </div>
               </ul>
