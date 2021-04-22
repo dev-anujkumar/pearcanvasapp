@@ -2,7 +2,7 @@ import React from 'react';
 
 function PdfSlateComponent(props)  {
 
-	const { showDetails, pdfId, title, OpenAlfresco } = props;
+	const { showDetails, pdfId, filetitle, OpenAlfresco } = props;
 
 	function showPDFDetails() {
 		return (
@@ -11,7 +11,7 @@ function PdfSlateComponent(props)  {
 					<div className="slate_assessment_data_content">
 						<div className="slate_assessment_data_label">PDF Slate</div>
 						<div className="slate_assessment_data_details">
-							<div className="slate_assessment_data_title">{ title }</div>
+							<div className="slate_assessment_data_title">{ filetitle }</div>
 							<div className="slate_assessment_data_id">ID: { pdfId }</div>
 							<div className="slate_assessment_change_button" onClick={ OpenAlfresco }>Change PDF</div>
 						</div>

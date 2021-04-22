@@ -395,6 +395,6 @@ span.approved-button.enable svg path#path2 {
   position: absolute;
   top: 40%;
   left: 35%;
-  cursor: pointer;
+  cursor: pointer !important;
 }
 /* Begins - PDF Slate Canvas css */
