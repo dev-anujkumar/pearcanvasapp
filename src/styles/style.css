@@ -267,7 +267,7 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
     font-family: 'Open Sans',sans-serif;
     cursor: pointer;
 }
-.learningobjectivedropdown li.disable-buttton, .learningobjectivedropdown2 li.disable-buttton{
+.learningobjectivedropdown li.disable-buttton, .learningobjectivedropdown2 li.disable-buttton, .option-disabled{
     pointer-events: none;
     opacity: 0.6;
     cursor: not-allowed;
@@ -364,11 +364,4 @@ table:not([cellpadding]) td, table:not([cellpadding]) th {
 
 .tox.tox-tinymce--toolbar-bottom .tox-editor-header, .tox.tox-tinymce-inline .tox-editor-header {
     border: none !important;
-}
-
-.option-disabled{
-    pointer-events: none;
-    opacity: 0.6;
-    cursor: not-allowed;
-    color: gray;
 }
