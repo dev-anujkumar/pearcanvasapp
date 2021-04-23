@@ -275,6 +275,24 @@ export const fetchElementTag = (element, index = 0) => {
         return findElementType(element, index).tag || "";
     }
 }
+
+export const getLOB = () => (dispatch, getState) => {
+    let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
+    // /${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}
+    
+    return axios.get(lobURL, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then (response => {
+        alert("herllo");
+        console.log("the response for lob is ", response)
+    }).catch(error => {
+        console.log("cannnow proceed")
+    })  
+}
+
 export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload) => (dispatch, getState) => {
     // if(config.isFetchSlateInProgress){
     //  return false;
