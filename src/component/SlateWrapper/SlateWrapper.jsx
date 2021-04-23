@@ -46,7 +46,7 @@ import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
-import { SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 
 let random = guid();
 
@@ -914,7 +914,8 @@ class SlateWrapper extends Component {
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
-                const isPdf_Assess = (_slateType == "assessment" || _slateType === SLATE_TYPE_PDF)
+                /* @-isPdf_Assess-@ - TO check TYPE of current slate  */
+                const isPdf_Assess = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(config.slateType);
                 if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -927,7 +928,7 @@ class SlateWrapper extends Component {
                     return this.renderBlankSlate(this.props)
                 }
                 /* @hideSapratorFor@ List of slates where seprator is hidden */
-                const hideSapratorFor = ['assessment', SLATE_TYPE_PDF];
+                const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(_slateType);
                 return _elements.map((element, index) => {
                         return (
                             
@@ -937,7 +938,7 @@ class SlateWrapper extends Component {
                                     placeholder={<div data-id={element.id}><LargeLoader /></div>}
                                 >
                                     {
-                                        index === 0 && !(hideSapratorFor.includes(_slateType)) && config.isCO === false ?
+                                        index === 0 && !hideSapratorFor && config.isCO === false ?
                                             <ElementSaprator
                                                 userRole={this.props.userRole}
                                                 firstOne={index === 0}
@@ -983,7 +984,7 @@ class SlateWrapper extends Component {
                                             )
                                         }
                                     </ElementContainer>
-                                    {!(hideSapratorFor.includes(_slateType)) ?
+                                    {!hideSapratorFor ?
                                         <ElementSaprator
                                             userRole={this.props.userRole}
                                             index={index}
