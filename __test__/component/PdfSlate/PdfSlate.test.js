@@ -4,6 +4,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
+import axios from 'axios';
 import config from '../../../src/config/config';
 import PdfSlate from '../../../src/component/PdfSlate/PdfSlate';
 
@@ -59,6 +60,22 @@ const event = {
 	stopPropagation: jest.fn(),
 	preventDefault: jest.fn()
 }
+jest.mock('axios');
+jest.mock('../../../src/js/c2_media_module.js', () => {
+    return {
+        c2MediaModule: {
+            productLinkOnsaveCallBack: (data, cb) => {
+                cb({desc:"eps media"});
+            },
+            AddanAssetCallBack: (data, cb) => {
+                cb({desc:"eps media"});
+            },
+            onLaunchAddAnAsset: (cb) => {
+                cb()
+            }
+        }
+    }
+});
 
 const pdfSlateInstance = (props, initialSt = initialState) => {
     const store = mockStore(initialSt);
@@ -163,6 +180,7 @@ describe('1. PDF Slate test cases', () => {
 			config.alfrescoMetaData = { ...alfresco, alfresco:{} };
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
+			axios.patch = jest.fn(() => Promise.resolve({ data: { name: "test" } }));
 			const spy = jest.spyOn(compInstance, 'OpenAlfresco');
 			compInstance.OpenAlfresco();
 			expect(spy).toHaveBeenCalled();
@@ -198,46 +216,6 @@ describe('1. PDF Slate test cases', () => {
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});
-		it('1.4.6 Test - permissions.includes(add_multimedia_via_alfresco); data according to new project api', () => {
-			config.alfrescoMetaData = {
-				 ...alfresco,
-				 "alfresco": {
-					"currentAsset":{},
-					"nodeRef":"ebaaf975-a68b-4ca6-9604-3d37111b847a",
-					"repositoryFolder":"001_C5 Media POC - AWS US ",
-					"repositoryName":"AWS US",
-					"repositoryUrl":"https://staging.api.pearson.com/content/cmis/uswip-aws",
-					"siteId":"c5-media-poc",
-					"visibility":"MODERATED"
-				}
-			};
-			const compInstance = pdfSlateInstance(props);
-			expect(compInstance).toBeDefined();
-			const spy = jest.spyOn(compInstance, 'OpenAlfresco');
-			compInstance.OpenAlfresco();
-			expect(spy).toHaveBeenCalled();
-			spy.mockClear();
-		});
-		it('1.4.7 Test - permissions.includes(add_multimedia_via_alfresco); data according to old core api and c2media', () => {
-			config.alfrescoMetaData = {
-				 ...alfresco,
-				 "alfresco": {
-					"currentAsset":{},
-					"nodeRef":"ebaaf975-a68b-4ca6-9604-3d37111b847a",
-					"name":"",
-					"repoName":"",
-					"repoInstance":"",
-					"siteId":"c5-media-poc",
-					"siteVisibility":""
-				}
-			};
-			const compInstance = pdfSlateInstance(props);
-			expect(compInstance).toBeDefined();
-			const spy = jest.spyOn(compInstance, 'OpenAlfresco');
-			compInstance.OpenAlfresco();
-			expect(spy).toHaveBeenCalled();
-			spy.mockClear();
-		});
 	});
 	it('1.5 Test handleC2ExtendedClick Function', () => {
 		const locationData = {
@@ -251,7 +229,8 @@ describe('1. PDF Slate test cases', () => {
 			repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
 			siteId: "c5-media-poc",
 			siteVisibility: "MODERATED",
-			visibility: "MODERATED"
+			visibility: "MODERATED",
+			desc: "eps media"
 		}
         const compInstance = pdfSlateInstance(props);
         expect(compInstance).toBeDefined();
