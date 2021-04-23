@@ -14,7 +14,7 @@ import {
 import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
-import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX, SLATE_TYPE_PDF, SLATE_TYPE_SECTION } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { loNextIcon, tickIcon } from './../../images/ElementButtons/ElementButtons.jsx';
 import { CYPRESS_LF, EXTERNAL_LF } from '../../constants/Element_Constants';
 class SlateTagDropdown extends React.Component {
@@ -233,6 +233,8 @@ class SlateTagDropdown extends React.Component {
     render = () => {
       const enableExtLO =this.checkExternalFramework();
       const liOptionStatus = this.handleCypressLODropdownOptions()
+      /* @-isLoOption4Slate-@ - TO check is LO dropdown options allowed for current slate or not */
+      const isLoOption4Slate = [SLATE_TYPE_SECTION, SLATE_TYPE_PDF].includes(config.slateType);
         return (
         <div>
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
@@ -249,14 +251,14 @@ class SlateTagDropdown extends React.Component {
             </div>
                 <div className="learningobjectivedropdown2" ref={node2 => this.node2 = node2}>
                 <ul>
-                    {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
+                    {this.props.permissions.includes('lo_edit_metadata') && isLoOption4Slate &&
                         <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}> {AddLearningObjectiveSlateDropdown}</li>}
-                    {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
+                    {this.props.permissions.includes('lo_edit_metadata') && isLoOption4Slate &&
                         <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}>{AddEditLearningObjectiveDropdown}</li>}
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'assessment' &&
                         <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveAssessmentDropdown}</li>}
                     <li className={liOptionStatus.viewLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{ViewLearningObjectiveSlateDropdown}</li>
-                    {config.slateType === 'section' && !hasReviewerRole() &&
+                    {isLoOption4Slate && !hasReviewerRole() &&
                         <li className={liOptionStatus.unlinkLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
             </div> 
