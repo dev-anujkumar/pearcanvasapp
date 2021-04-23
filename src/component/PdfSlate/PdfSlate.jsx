@@ -23,13 +23,6 @@ class PdfSlate extends Component {
 	}
 
 	componentDidMount() {
-		//const elementId = this.props?.element?.id;
-		//getAlfrescositeResponse(elementId, (response) => {
-		//	this.setState({
-		//		//alfrescoSite: response.repositoryFolder,
-		//		alfrescoSiteData: { ...response }
-		//	})
-		//})
 		/* if already pdf is selected from alfresco than show pdf data on UI */
 		const { assetid, filetitle } = this.props?.element?.elementdata || {};
 		if(assetid){
@@ -57,27 +50,31 @@ class PdfSlate extends Component {
 	}
 	/* Getting data from alfresco picker */
 	getAlfrescoData = (pdfData) => {
-		/* Check "desc" property should not be other than "PDF" */
-		const isPdf = pdfData?.desc.toLowerCase() !== "eps media" ? 
-			JSON.parse(pdfData?.desc)?.smartLinkType === "PDF" : false;
-		if (isPdf) {
-			/* Get data from alfresco and save to react state to update UI and call API */
-			const results = pdfData?.body?.results || [] ;
-			const smartLinkPath = results[0]?.properties['s.avs:url']?.value ?
-					results[0].properties['s.avs:url'].value : [""];
-			if (pdfData?.uniqueID && pdfData.displayName) {
-				this.setState({
-					showDetails: true,
-					filetitle: pdfData?.displayName,
-					pdfId: "urn:pearson:alfresco:" + pdfData?.uniqueID,
-					path: smartLinkPath[0]
-				})
-				/* Send retrived data to server to save */
-				this.sumbitElement();
+		try {
+			/* Check "desc" property should not be other than "PDF" */
+			const isPdf = pdfData && pdfData.desc && pdfData.desc.toLowerCase() !== "eps media" ? 
+				JSON.parse(pdfData.desc)?.smartLinkType === "PDF" : false;
+			if (isPdf) {
+				/* Get data from alfresco and save to react state to update UI and call API */
+				const results = pdfData?.body?.results || [] ;
+				const smartLinkPath = results[0]?.properties['s.avs:url']?.value ?
+						results[0].properties['s.avs:url'].value : [""];
+				if (pdfData?.uniqueID && pdfData.displayName) {
+					this.setState({
+						showDetails: true,
+						filetitle: pdfData?.displayName,
+						pdfId: "urn:pearson:alfresco:" + pdfData?.uniqueID,
+						path: smartLinkPath[0]
+					})
+					/* Send retrived data to server to save */
+					this.sumbitElement();
+				} 
+			} else {
+				console.info("Please import pdf");
 			} 
-		} else {
-			console.log("Error please import pdf");
-		} 
+		} catch (error){
+			console.error("Error - ",error);
+		}
 	}
 
 	sumbitElement = () => {
