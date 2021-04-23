@@ -384,3 +384,17 @@ span.approved-button.enable svg path#path2 {
   color: darkgray;
   background-color: #fff;
 }
+/* ----------------------------- */
+/* Begins - PDF Slate Canvas css */
+/* ----------------------------- */
+.div-position-relative {
+  position: relative;
+}
+.add-pdf-button {
+  margin: 0;
+  position: absolute;
+  top: 40%;
+  left: 35%;
+  cursor: pointer !important;
+}
+/* Ends - PDF Slate Canvas css */
