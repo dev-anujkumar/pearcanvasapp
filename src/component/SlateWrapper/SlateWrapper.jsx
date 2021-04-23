@@ -919,7 +919,7 @@ class SlateWrapper extends Component {
                 if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    const typeOfEle = _slateType === "assessment" ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
+                    const typeOfEle = _slateType === SLATE_TYPE_ASSESSMENT ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
                     this.props.createElement(typeOfEle, "0", '', '', '', '', () => {
                         config.isDefaultElementInProgress = true;
                     });
