@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { hasReviewerRole } from '../../constants/utility.js';
 import { c2MediaModule } from '../../js/c2_media_module.js';
-import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js';
+//import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js';
 import { handleC2MediaClick } from './Alfresco.js';
 import PdfSlateComponent from "./PdfSlateComponent.jsx"
 import { updateElement } from "../ElementContainer/ElementContainer_Actions.js";
@@ -42,10 +42,7 @@ class PdfSlate extends Component {
     }
 	/* --- Open alfresco Picker --- */
 	OpenAlfresco = () => {
-		const locationData = handleC2MediaClick(this.props, this.state.alfrescoSiteData);
-		if(locationData){
-			this.handleC2ExtendedClick(locationData);
-		}
+		handleC2MediaClick(this.props, this.handleC2ExtendedClick);
 	}
 	/** @description Open C2 module with predefined Alfresco location
 	* @param {*} locationData alfresco locationData

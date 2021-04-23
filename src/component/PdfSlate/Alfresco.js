@@ -1,20 +1,19 @@
-//import axios from "axios";
+import axios from "axios";
 import config from "../../config/config";
 import { hasReviewerRole } from "../../constants/utility";
 import { c2MediaModule } from "../../js/c2_media_module";
 
-let projectMetadata;
+var projectMetadata;
 
 /**
 * @description function will be called on image src add and fetch resources from Alfresco
 */
-export const handleC2MediaClick = (props, alfrescoSiteData) => {
+export const handleC2MediaClick = (props, handleC2ExtendedClick) => {
     props.handleFocus();
     if (hasReviewerRole()) {
         return true
     }
     const currentAsset = {};
-
     let alfrescoPath = config.alfrescoMetaData;
     if (alfrescoPath && projectMetadata) {
         alfrescoPath.alfresco = projectMetadata.alfresco;
@@ -40,9 +39,8 @@ export const handleC2MediaClick = (props, alfrescoSiteData) => {
             data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
-            return data_1;
-        }
-        else {
+            handleC2ExtendedClick(data_1);
+        } else {
             props.accessDenied(true)
         }
     }} else {
@@ -52,7 +50,6 @@ export const handleC2MediaClick = (props, alfrescoSiteData) => {
                     ...alfrescoData,
                     currentAsset: currentAsset,
                 };
-
                 let request = {
                     eTag: alfrescoPath.etag,
                     projectId: alfrescoPath.id,
@@ -72,33 +69,25 @@ export const handleC2MediaClick = (props, alfrescoSiteData) => {
                 request.alfresco['repositoryFolder'] = data_1['name'];
                 request.alfresco['repositoryUrl'] = data_1['repoInstance'];
                 request.alfresco['visibility'] = data_1['siteVisibility'];
-
-                return data_1;
                 /*
                     API to set alfresco location on dashboard
                 */
-                //let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
-                //let SSOToken = request.ssoToken;
-                //return axios.patch(url, request.alfresco,
-                //    {
-                //        headers: {
-                //            'Accept': 'application/json',
-                //            'ApiKey': config.STRUCTURE_APIKEY,
-                //            'Content-Type': 'application/json',
-                //            'PearsonSSOSession': SSOToken,
-                //            'If-Match': request.eTag
-                //        }
-                //    })
-                //    .then(function (response) {
-                //        let tempData = { alfresco: alfrescoData };
-                //        //that.setState({
-                //        //    projectMetadata: tempData
-                //        //})
-                //        projectMetadata = tempData;
-                //    })
-                //    .catch(function (error) {
-                //        console.log("error", error)
-                //    });
+                const url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
+                const SSOToken = request.ssoToken;
+                return axios.patch(url, request.alfresco, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'ApiKey': config.STRUCTURE_APIKEY,
+                        'Content-Type': 'application/json',
+                        'PearsonSSOSession': SSOToken,
+                        'If-Match': request.eTag
+                    }
+                }).then(function (response) {
+                    projectMetadata = { alfresco: alfrescoData };
+                    handleC2ExtendedClick(data_1);
+                }).catch(function (error) {
+                    console.log("error--", error)
+                });
             })
         } else {
             props.accessDenied(true)
