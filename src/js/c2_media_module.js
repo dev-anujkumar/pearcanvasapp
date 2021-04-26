@@ -7,6 +7,8 @@ const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
 const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true,"epsUrl":true,"defaulttab":"search"}';
+/* @-tab_visibilityPDFSalte-@ for PDF Slate */
+const tab_visibilityPDFSalte = '{"audio" : false,"image": false,"other":true,"video": false,"epsUrl":true,"defaulttab":"search"}';
 var uname = config_object['userId'];
 const renderderedTagSelector = '#c2-modal';
 var patternBroker;
@@ -39,8 +41,8 @@ export const c2MediaModule = {
         };
         return setConfig
     },
-    productLinkOnsaveCallBack: function (data, callback) {
-        this.launchAssetBrowser(data.nodeRef, data.repoInstance, data.repoName, callback, data.currentAsset);
+    productLinkOnsaveCallBack: function (data, callback, source) {
+        this.launchAssetBrowser(data.nodeRef, data.repoInstance, data.repoName, callback, data.currentAsset, source);
 
     },
 
@@ -130,7 +132,7 @@ export const c2MediaModule = {
         callback(data);
     },
 
-    launchAssetBrowser: function (product, server, repo, callback, currentAsset) {
+    launchAssetBrowser: function (product, server, repo, callback, currentAsset, source) {
 		patternBroker = PatternBroker.default;
         patternProductLink = PatternProductLink.default;
         patternAddAnAsset = PatternAddAnAsset.default;
@@ -147,7 +149,9 @@ export const c2MediaModule = {
         addAnAssetConfig.language = 'en';// YS
         addAnAssetConfig.nodeRef = productRef;
         addAnAssetConfig.alfserver = serverRef; //data.repoInstance;
-        addAnAssetConfig.tabVisibility = tab_visibility;
+        /* --- @ - showTab - @ to hide audio, vedio, Image tabs for PDF SLATE --- */
+        const showTab = source ? tab_visibilityPDFSalte : tab_visibility;
+        addAnAssetConfig.tabVisibility = showTab;
         addAnAssetConfig.currentAsset = currentAsset;
 
         addAnAssetConfig['cmis'] = '{"wURN":false}';
