@@ -762,6 +762,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         localStorage.setItem('newElement', 1);
 
         let slateEntityUrn = config.slateEntityURN;
+        console.log('slateEntityUrn',slateEntityUrn,params)
         if(parentUrn && 'contentUrn' in parentUrn) {
             slateEntityUrn = parentUrn.contentUrn;
         } else if(poetryData && 'contentUrn' in poetryData) {
@@ -857,7 +858,6 @@ export const pasteElement = (params) => async (dispatch, getState) => {
 
         try {
             let url = `${config.REACT_APP_API_URL}v1/projects/${config.projectUrn}/containers/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
-            console.log('Data@@@',JSON.stringify(_requestData), selection)
             const createdElemData = await axios.post(
                 url,
                 JSON.stringify(_requestData),
