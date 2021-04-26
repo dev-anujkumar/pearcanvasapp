@@ -1136,8 +1136,40 @@ export const defaultSlateDataFigure = {
                                             "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231"
                                         }]
                                     }
+                                },
+                                {
+                                    "figuretype": "assessment",
+                                    "figuredata": { 'elementdata':{} },
+                                    "id": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d20",
+                                    "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d230"
                                 }
                             ]
+                        }
+                    },
+                    {
+                        "type": "groupedcontent",
+                        "groupeddata":{
+                            "bodymatter":[{
+                                "groupdata":{ 
+                                    "bodymatter":[{
+                                        "versionUrn": "urn:pearson:work:yca6096b-d0b6-4358-a2c7-313188665d230" 
+                                    }]
+                                }
+                            }]
+                        }
+                    },
+                    {
+                        "type": "grouped",
+                        "elementdata": {
+                            "bodymatter": [{
+                                "contents":{
+                                    "bodymatter":[{
+                                        "figuredata":{},
+                                        "figuretype": "assessment",
+                                        "versionUrn": "urn:pearson:work:zca6096b-d0b6-4358-a2c7-313188665d230" 
+                                    }]
+                                }
+                            }]
                         }
                     }
 

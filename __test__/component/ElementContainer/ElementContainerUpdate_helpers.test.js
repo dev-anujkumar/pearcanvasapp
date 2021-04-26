@@ -8,7 +8,7 @@ import { stub } from 'sinon';
 import { slateLevelData } from "../../../fixtures/containerActionsTestingData"
 import { AUTHORING_ELEMENT_UPDATE } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
-
+import metadataTestData from '../../../fixtures/ElementMetadataAnchorTestData';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 global.document = (new JSDOM()).window.Element;
@@ -1322,7 +1322,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
     })
     describe("Other helper methods", () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-        it("processAndStoreUpdatedResponse - versioning", async () => {
+        xit("processAndStoreUpdatedResponse - versioning", async () => {
             let store = mockStore(() => initialState);
             let args = {
                 getState: store.getState,
@@ -1344,7 +1344,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyprocessAndStoreUpdatedResponse).toHaveBeenCalled()
             spyprocessAndStoreUpdatedResponse.mockClear()
         })
-        it("processAndStoreUpdatedResponse - non versioning", async () => {
+        xit("processAndStoreUpdatedResponse - non versioning", async () => {
             let store = mockStore(() => initialState);
             let args = {
                 getState: store.getState,
@@ -1379,20 +1379,96 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(toastNode.style.display).toEqual("block")
             spyshowLinkToast.mockClear()
         })
-        it("updateLOInStore", async () => {
-            let store = mockStore(() => initialState);
-            let args = {
+        
+    })
+
+    describe("LO update methods", () => {
+        config.slateManifestURN = "urn:pearson:manifest:8f33291d-4b57-4fab-b890-68aa46a117bd";
+        let initialState3 = {
+            appStore: {
+                slateLevelData: metadataTestData.slateLevelData_1_MainSlate,
+                oldFiguredata: null
+            },
+        };
+        let reqPayload = {
+            loData: [
+                {
+                    "elementdata": {
+                        "loref": "urn:pearson:educationalgoal:f77c17cd-461a-447a-a592-b333eea0109f"
+                    },
+                    "metaDataAnchorID": ["urn:pearson:work:4d966e5e-bf9a-4672-952b-06e354796f95"],
+                    "elementVersionType": "element-learningobjectivemapping",
+                    "loIndex": [0]
+                },
+                {
+                    "elementdata": {
+                        "loref": "urn:pearson:educationalgoal:59169f05-96cd-4f83-acb9-fde0a6d89528"
+                    },
+                    "metaDataAnchorID": ["urn:pearson:work:13c99072-413a-4d59-85a2-3f4f4dce3b80"],
+                    "elementVersionType": "element-learningobjectivemapping",
+                    "loIndex": ["1-0"]
+                },
+                {
+                    "elementdata": {
+                        "loref": "urn:pearson:educationalgoal:ada3bee3-2e41-4c74-8817-509842cbc8b7"
+                    },
+                    "metaDataAnchorID": ["urn:pearson:work:77c5d6c0-fd0c-4e27-a94b-e2f39e3b743d"],
+                    "elementVersionType": "element-learningobjectivemapping",
+                    "loIndex": ["1-2-0"]
+                }
+            ],
+            slateVersionUrn: "urn:pearson:manifest:8f33291d-4b57-4fab-b890-68aa46a117bd",
+            projectUrn: "urn:dURN"
+        }
+        it("UpdateStoreInCanvas - updateLOInCanvasStore", async () => {
+            let store = mockStore(() => initialState3);
+
+            const spyupdateLOInStore = jest.spyOn(updateHelpers, "updateStoreInCanvas")
+            updateHelpers.updateStoreInCanvas({
+                updatedData: reqPayload, getState: store.getState,
+                dispatch: store.dispatch,
+            })
+            expect(spyupdateLOInStore).toHaveBeenCalled()
+            spyupdateLOInStore.mockClear()
+        })
+        it("Test updateMetadataAnchorLOsinStore - updateLOInStore", async () => {
+            let store = mockStore(() => initialState3);
+            let responseData = {
+                loData: [
+                    {
+                        "elementdata": {
+                            "loref": "urn:pearson:educationalgoal:f77c17cd-461a-447a-a592-b333eea0109f"
+                        },
+                        "metaDataAnchorID": ["urn:pearson:work:4d966e5e-bf9a-4672-952b-06e354796f96"],
+                        "loIndex": [0]
+                    },
+                    {
+                        "elementdata": {
+                            "loref": "urn:pearson:educationalgoal:59169f05-96cd-4f83-acb9-fde0a6d89528"
+                        },
+                        "metaDataAnchorID": ["urn:pearson:work:13c99072-413a-4d59-85a2-3f4f4dce3b81"],
+                        "loIndex": ["1-0"]
+                    },
+                    {
+                        "elementdata": {
+                            "loref": "urn:pearson:educationalgoal:ada3bee3-2e41-4c74-8817-509842cbc8b7"
+                        },
+                        "metaDataAnchorID": ["urn:pearson:work:77c5d6c0-fd0c-4e27-a94b-e2f39e3b743e"],
+                        "loIndex": ["1-2-0"]
+                    }
+                ]
+            }
+            const spyupdateLOInStore = jest.spyOn(updateHelpers, "updateMetadataAnchorLOsinStore")
+            updateHelpers.updateMetadataAnchorLOsinStore({
+                updatedData: reqPayload,
+                responseData: responseData,
                 getState: store.getState,
                 dispatch: store.dispatch,
-                updatedData: {
-                    loIndex: [0,1]
-                },
-                versionedData: {
-                    metaDataAnchorID: ["2", "3"]
+                currentSlateData: {
+                    ...metadataTestData.slateLevelData_1_MainSlate["urn:pearson:manifest:8f33291d-4b57-4fab-b890-68aa46a117bd"],
+                    status: "wip"
                 }
-            }
-            const spyupdateLOInStore = jest.spyOn(updateHelpers, "updateLOInStore")
-            updateHelpers.updateLOInStore(args)
+            })
             expect(spyupdateLOInStore).toHaveBeenCalled()
             spyupdateLOInStore.mockClear()
         })
