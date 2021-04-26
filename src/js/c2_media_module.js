@@ -149,7 +149,7 @@ export const c2MediaModule = {
         addAnAssetConfig.language = 'en';// YS
         addAnAssetConfig.nodeRef = productRef;
         addAnAssetConfig.alfserver = serverRef; //data.repoInstance;
-        /* --- @ - showTab - @ to hide audio, vedio, Image tabs for PDF SLATE --- */
+        /* --- @ - showTab - @ to hide audio, video, Image tabs for PDF SLATE --- */
         const showTab = source ? tab_visibilityPDFSalte : tab_visibility;
         addAnAssetConfig.tabVisibility = showTab;
         addAnAssetConfig.currentAsset = currentAsset;
