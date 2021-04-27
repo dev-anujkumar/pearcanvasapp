@@ -40,11 +40,19 @@ function DialogueContent(props) {
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
-                    console.log("eveeeeeeeeeeeeeeeeeeeeeeeeeentttttttttttttt", eventTarget);
+                    let activeEditorId = eIndex ? `cypress-${eIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
+                    let currentNode = document.getElementById(activeEditorId);
+                    let previousElement = currentElement ? currentElement : props.element;
+                    console.log("eveeeeeeeeeeeeeeeeeeeeeeeeeentttttttttttttt", currentNode, previousElement);
+                    let innerHTML, innerText;
+                    innerHTML = `<p>${currentNode.innerHTML}</p>`;
+                    innerText = currentNode.innerText
+                    console.log("tempDiv.innerHTML = html;", innerHTML, innerText);
                     const obj = { 
                          ...props.model[props.index],
-                        text:`<p>${eventTarget?.innerHTML}</p>`
+                        text: innerHTML,
                     }
+                    console.log("objjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", obj);
                     props.handleBlur("text", obj, props.index)
             }}
                 placeholder={placeholder}
@@ -66,14 +74,18 @@ function DialogueContent(props) {
             handleEditorFocus={props.handleFocus}
             handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
                 let activeEditorId = eIndex ? `cypress-${eIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
-                let node = document.getElementById(activeEditorId);
-                console.log("eveeeeeeeeeeeeeeeeeeeeeeeeeentttttttttttttt", eIndex, activeEditorId, node);
-                console.log("tinymce editorrrrrrrrrrrrrrrr", tinymce.activeEditor.getContent());
+                let currentNode = document.getElementById(activeEditorId);
+                let previousElement = currentElement ? currentElement : props.element;
+                console.log("eveeeeeeeeeeeeeeeeeeeeeeeeeentttttttttttttt", currentNode, previousElement);
+                let innerHTML, innerText;
+                innerHTML = currentNode.innerHTML
+                innerText = currentNode.innerText
+                console.log("tempDiv.innerHTML = html;", innerHTML, innerText);
                     const obj = { 
                          ...props.model[props.index],
-                        text: eventTarget?.innerHTML,
-                        // text: '<p>first <dfn data-uri="urn:pearson:work:b0cdf2a5-27e8-48fc-bdb8-8342b300fad0" class="Pearson-Component GlossaryTerm">second</dfn></p>',
+                        text: innerHTML,
                     }
+                    console.log("objjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", obj);
                     props.handleBlur("text", obj, props.index)
             }}
             placeholder={placeholder}
