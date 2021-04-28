@@ -208,6 +208,9 @@
   letter-spacing: normal;
   color: #666666;
 }
+.cite-wrapper.main-div th.assessment-row-class, .cite-tdx-wrapper.main-div th.assessment-row-class{
+  padding: 10px 0 !important;
+}
 .assessment-row-class.title {
   width:35%
 }
@@ -226,6 +229,11 @@
 .assesmentfooter-inner{
   float: right; 
   padding: 10px 28px 0 0;
+}
+.cite-tdx-wrapper.main-div table.assessment-table-class tr td,
+.cite-wrapper.main-div table.assessment-table-class tr td {
+  border: none !important;
+  border-bottom: 1px solid #ccc !important;
 }
 
 .assessment-table-class tr td{
