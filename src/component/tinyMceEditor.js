@@ -3026,9 +3026,9 @@ export class TinyMceEditor extends Component {
                 //---------------------------------------------------------------------------------//
                 // if editor contains footnode in the text anywhere then check the condition and if 
                 // footnode lies in the end then remove the superscript mode from the end of text.
-                // if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
-                //     this.removeSupFormat(clickedX, clickedY);
-                // }
+                if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
+                    this.removeSupFormat(clickedX, clickedY);
+                }
 
                 //---------------------------------------------------------------------------------//
                 if (clickedX !== 0 && clickedY !== 0) {     //User generated click event
@@ -3099,9 +3099,12 @@ export class TinyMceEditor extends Component {
                 //---------------------------------------------------------------------------------//
                 // if editor contains footnode in the text anywhere then check the condition and if 
                 // footnode lies in the end then remove the superscript mode from the end of text.
-                // if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
-                //     this.removeSupFormat(clickedX, clickedY);
-                // }
+                
+                if (tinymce.activeEditor.selection.getContent() === "") { // if user is not selecting any text on the editor
+                    if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
+                        this.removeSupFormat(clickedX, clickedY);
+                    }
+                }
 
                 //---------------------------------------------------------------------------------//
 

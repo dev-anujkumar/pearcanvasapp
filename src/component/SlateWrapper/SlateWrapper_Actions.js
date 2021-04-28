@@ -836,8 +836,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         
-        const acceptedTypes=["element-aside","citations","poetry","groupedcontent",'showhide','popup']
-        if(acceptedTypes.includes(selection.element.type) && selection.element.subtype !== "workedexample") {
+        const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample",'showhide','popup']
+        if(acceptedTypes.includes(selection.element.type)) {
             const payloadParams = {
                 ...params,
                 cutIndex,

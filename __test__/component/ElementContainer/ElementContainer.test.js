@@ -20,6 +20,11 @@ if (!global.Element.prototype.hasOwnProperty("innerText")) {
     });
 }
 
+jest.mock('../../../src/component/PopUp', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
 jest.mock('./../../../src/component/SlateWrapper/PageNumberElement', () => {
     return (<div>null</div>)
 })
