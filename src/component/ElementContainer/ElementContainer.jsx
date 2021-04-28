@@ -53,12 +53,13 @@ import {handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContai
 import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
+import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -1516,6 +1517,21 @@ class ElementContainer extends Component {
                         labelText = 'DE'
                         break;
                     
+                    case elementTypeConstant.PDF_SLATE:
+                        editor = <PdfSlate
+                            permissions={permissions}
+                            index={index}
+                            element={element}
+                            slateLockInfo={slateLockInfo}
+                            userRole={this.props.userRole}
+                            activeElement={this.props.activeElement}
+                            showBlocker={this.props.showBlocker}
+                            parentElement={this.props.parentElement}
+                            handleFocus={this.handleFocus}
+                        />;
+                        labelText = 'PDF'
+                        break;
+
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
@@ -1560,13 +1576,15 @@ class ElementContainer extends Component {
             tcm = false;
         }
 
+        /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
+        const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.renderCopyComponent(this.props, index, inContainer)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
-                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
+                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
                     {this.renderColorTextButton(element, permissions)}

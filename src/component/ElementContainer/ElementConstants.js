@@ -58,7 +58,10 @@ export default {
     ELEMENT_DIALOGUE: "element-dialogue",
     DIALOGUE_SD: "stagedirection",
     DIALOGUE_DE: "lines",
-    ELEMENT_DISCUSSION: 'discussion'
+    ELEMENT_DISCUSSION: 'discussion',
+
+/**************** PDF Slate Element ************************ */  
+    PDF_SLATE : "element-pdf"
 }
 
 export const LABELS = {
@@ -79,7 +82,8 @@ export const LABELS = {
     "mmi-elm":"ELM",
     "element-dialogue": "PS",
     "stagedirection": "SD",
-    "lines": "DE"
+    "lines": "DE",
+    "element-pdf": "PDF"
 }
 
 export const elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup', 'figure','showhide'];

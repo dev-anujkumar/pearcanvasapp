@@ -28,6 +28,8 @@ export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have acces
 export const ELEMENT_DIALOGUE = "ELEMENT_DIALOGUE";
 export const ELEMENT_DISCUSSION = 'DISCUSSION';
 
+/* PDF Slate */
+export const ELEMENT_PDF = "ELEMENT_PDF";
 /*-----------------Pop Dialog text-------------------------- */
 export const ALREADY_USED_SLATE = "The following slate is already in use by another member."
 export const ALREADY_USED_SLATE_TOC = "The slate is locked by another user and thus the slate cannot be deleted."
