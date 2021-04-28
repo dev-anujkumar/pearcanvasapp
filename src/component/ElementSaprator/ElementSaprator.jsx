@@ -375,7 +375,7 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
     const firstOne = separatorProps.firstOne || false;
     const insertionIndex = firstOne ? index : index + 1
     const selectedElement = separatorProps.elementSelection.element
-    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN]
+    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,ELEMENT_DISCUSSION]
     if ((acceptedTypes.includes(selectedElement.type)) && type === 'copy'){
         return separatorProps.cloneContainer(insertionIndex, selectedElement.id)
     }
