@@ -520,9 +520,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 let indexes = index.split('-');
                 let indexesLen = indexes.length, condition;
                 if (indexesLen == 2) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                    // condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                    condition = newBodymatter[indexes[0]];
                     if (condition.versionUrn == elementWorkId) {
-                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
+                        // newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
+                        newBodymatter[indexes[0]] = res.data
                     }
                 } else if (indexesLen == 3) {
                     if(elementType==='stanza'){
@@ -532,7 +534,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     }
                     else {
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                        // condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                        condition = newBodymatter[indexes[0]];
                     }
                     if (condition.versionUrn == elementWorkId) {
                         if(elementType==='stanza'){
@@ -542,7 +545,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                             newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
                         }
                         else {
-                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                            // newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                            newBodymatter[indexes[0]] = res.data
                         }
 
                     }
