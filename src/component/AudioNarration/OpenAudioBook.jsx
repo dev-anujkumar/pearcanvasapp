@@ -44,7 +44,7 @@ class OpenAudioBook extends React.Component {
     * @description - handleClick function responsible for closing the dropdown whenever clicked outside.
     */
     handleClick = (e) => {
-        if (this?.node?.contains(e.target)) {
+        if (this.node.contains(e.target)) {
             return;
         }
         this.props.closeAudioBookDialog()
