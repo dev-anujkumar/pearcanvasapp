@@ -234,6 +234,7 @@
 .cite-wrapper.main-div table.assessment-table-class tr td {
   border: none !important;
   border-bottom: 1px solid #ccc !important;
+  padding: 10px 0 10px 0!important;
 }
 
 .assessment-table-class tr td{
