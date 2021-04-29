@@ -17,7 +17,8 @@ import {
     SET_CURRENT_SLATE_DATA,
     GET_TCM_RESOURCES,
     LEARNOSITY_PROJECT_INFO,
-    PROJECT_LEARNING_FRAMEWORKS
+    PROJECT_LEARNING_FRAMEWORKS,
+    UPDATE_PROJECT_INFO
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -276,18 +277,18 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 
-export const getLOB = () => (dispatch, getState) => {
+export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
-    // /${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}
-    
     return axios.get(lobURL, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
     }).then (response => {
-        alert("herllo");
-        console.log("the response for lob is ", response)
+        dispatch({
+            type: UPDATE_PROJECT_INFO,
+            payload: response
+        })
     }).catch(error => {
         console.log("cannnow proceed")
     })  

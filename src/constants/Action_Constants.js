@@ -150,4 +150,7 @@ export const WIRIS_ALT_TEXT_POPUP = 'WIRIS_ALT_TEXT_POPUP';
 export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 
 /* --------------- Learnosity Project ------------------------*/
-export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
+export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO";
+
+/*---------------- Cypress Project Info ------------------------*/
+export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
