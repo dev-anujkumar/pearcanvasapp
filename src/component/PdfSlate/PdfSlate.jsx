@@ -8,7 +8,7 @@ import { updateElement } from "../ElementContainer/ElementContainer_Actions.js";
 import { ELEMENT_PDF } from '../SlateWrapper/SlateWrapperConstants.js';
 import { ELEMENT_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import config from '../../config/config.js';
-import { TinyMceEditor } from '../tinyMceEditor.js';
+import TinyMceEditor from '../tinyMceEditor.js';
 
 class PdfSlate extends Component {
     constructor(props) {

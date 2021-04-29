@@ -76,6 +76,11 @@ jest.mock('../../../src/js/c2_media_module.js', () => {
         }
     }
 });
+jest.mock('../../../src/component/tinyMceEditor', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
 
 const pdfSlateInstance = (props, initialSt = initialState) => {
     const store = mockStore(initialSt);
@@ -101,7 +106,9 @@ describe('1. PDF Slate test cases', () => {
 		},
 		handleFocus: jest.fn(),
 		updateElement: jest.fn(),
-		accessDenied: jest.fn()
+		accessDenied: jest.fn(),
+		handleBlur: jest.fn(),
+        model:{}
 	};
     it('1.1 Pdf Slate render successfully', () => {
 		const store = mockStore(initialState);
