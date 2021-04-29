@@ -1503,7 +1503,6 @@ class ElementContainer extends Component {
                             handleFocus={this.handleFocus}
                             handleBlur={this.handleBlur}
                             model={this.props.model}
-                            className="addLOdata"
                         />;
                         labelText = 'PDF'
                         break;
