@@ -1,19 +1,81 @@
 .title {
-    font-weight: 600;
-    margin-bottom: 20px
+  width: 29px;
+  height: 17px;
+  margin: 32px 80px 16px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #424242;
+}
+
+.row {
+  flex-direction: "row";
+  display: "flex";
+  margin-top: 16px;
+}
+
+.lobTitle {
+  min-width: 100px;
+  height: 18px;
+  margin-left: 10px;
+  margin-right:17px;
+  font-size: 12px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #424242;
+  float: left;
+}
+
+.discussionItemTitle {
+  min-width: 48px;
+  height: 17px;
+  margin: 16px 62px 16px 9px;
+  font-size: 12px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #424242;
+}
+
+.usageTypeTitle {
+  width: 153px;
+    float: left;
+    font-size: 13px;
+    color: #424242;
+    position: relative;
+    top: 6px;
 }
 
 .container {
-    margin-top:20px
+  margin-top: 20px;
+}
+
+.lobNotPresent {
+  height: auto;
+  margin: 16px 9px 24px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #db1158;
+}
+
+.usageTypeContainer {
+  margin-left: 11px;
 }
 
 .bottomMargin {
-    margin-bottom: 20px
+  margin-bottom: 20px;
 }
 
 .discussionImage {
-
-    display: block;
-    width: 100%;
-    margin: 6.5em auto 0.65em auto;
+  display: block;
+  width: 100%;
+  margin: 6.5em auto 0.65em auto;
 }

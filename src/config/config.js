@@ -44,6 +44,8 @@ let config = {
     C6PUB_API_KEY: '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     C6REDIS_SERVER_UPDATE: 'api/projects/',
     C4_API_URL: "./api",
+    USAGE_TYPE: 'usageType/v2',
+    DISCUSSION_URL: 'discussion/discussions',
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {

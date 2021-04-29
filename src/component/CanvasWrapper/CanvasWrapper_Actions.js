@@ -18,7 +18,9 @@ import {
     GET_TCM_RESOURCES,
     LEARNOSITY_PROJECT_INFO,
     PROJECT_LEARNING_FRAMEWORKS,
-    UPDATE_PROJECT_INFO
+    UPDATE_PROJECT_INFO,
+    UPDATE_USAGE_TYPE,
+    UPDATE_DISCUSSION_ITEMS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -287,12 +289,102 @@ export const getProjectDetails = () => (dispatch, getState) => {
     }).then (response => {
         dispatch({
             type: UPDATE_PROJECT_INFO,
-            payload: response
+            payload: response.data
         })
+        const data = JSON.parse(JSON.stringify(response.data))
+        const {lineOfBusiness} = data;
+        if(lineOfBusiness) {
+            // call api to get usage types
+            const usageTypeUrl = `${config.STRUCTURE_API_URL}/${config.USAGE_TYPE}`
+             axios.get(usageTypeUrl, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then (usageTypeResponse => {
+                // dispatch({
+                //     type: UPDATE_USAGE_TYPE,
+                //     payload: usageTypeResponse
+                // })
+                
+            }).catch(error => {
+                dispatch({
+                    type: UPDATE_USAGE_TYPE,
+                    payload: [ {
+                        "usagetype": "conceptcheck",
+                        "label": "Concept Check",
+                        "description": "Used to verify that a learner understands a concept."
+                    },
+                    {
+                        "usagetype": "studytools",
+                        "label": "Study Tools",
+                        "description": "Used to help a learner study."
+                    }
+                  ]
+                })
+                console.log("cannnot proceed with get usage types")
+            }) 
+
+
+
+            // call api to get discussion items
+            const discussionUrl = `${config.NARRATIVE_API_ENDPOINT}/${config.DISCUSSION_URL}`
+            return axios.get(discussionUrl, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then (discussionItems => {
+                // dispatch({
+                //     type: UPDATE_DISCUSSION_ITEMS,
+                //     payload: discussionItems
+                // })
+                
+            }).catch(error => {
+                console.log("cannnot proceed with")
+                 dispatch({
+                    type: UPDATE_DISCUSSION_ITEMS,
+                    payload: [
+                                {
+                                    "discussionUrn": "urn:pearson:gps:discussion:e6bed63c-97ba-432a-8d6b-69a0a8cdc488",
+                                    "title": "Ways to get out of cuurent ",
+                                    "subTitle": "SectionTitle -33",
+                                    "stimulus": "Stimulus",
+                                    "question": "Question prompt",
+                                    "sampleAnswer": "Question prompt",
+                                    "createTimeStamp": "2020-05-15T11:15:10.968Z",
+                                    "updatedTimeStamp": "2020-05-15T11:15:21.497Z"
+                                },
+                                {
+                                    "discussionUrn": "urn:pearson:gps:discussion:cd69be5b-2f1f-43f7-9105-10a766169432",
+                                    "title": "New Title - ",
+                                    "subTitle": "Zelseus Technologies sdfdfdf",
+                                    "stimulus": "Stimulus aaa",
+                                    "question": "Question prompt",
+                                    "sampleAnswer": "TTRWET RETERT 3",
+                                    "createTimeStamp": "2020-05-14T16:32:54.488Z",
+                                    "updatedTimeStamp": "2020-05-14T17:59:20.043Z"
+                                },
+                                {
+                                    "discussionUrn": "urn:pearson:gps:discussion:60688f94-64ea-4c58-b16b-6a584d31c2bd",
+                                    "title": "editReply API service call development completed",
+                                    "subTitle": "Zelseus Technologies",
+                                    "stimulus": "Stimulus d",
+                                    "question": "Question prompt - 1 d",
+                                    "sampleAnswer": "Sample answer - 1 d",
+                                    "createTimeStamp": "2020-05-14T12:33:31.031Z",
+                                    "updatedTimeStamp": "2020-05-14T17:20:07.775Z"
+                                }
+                       ]
+                })
+            }) 
+        }
     }).catch(error => {
         console.log("cannnow proceed")
     })  
 }
+
+
 
 export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload) => (dispatch, getState) => {
     // if(config.isFetchSlateInProgress){
