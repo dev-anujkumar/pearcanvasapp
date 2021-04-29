@@ -1501,6 +1501,9 @@ class ElementContainer extends Component {
                             showBlocker={this.props.showBlocker}
                             parentElement={this.props.parentElement}
                             handleFocus={this.handleFocus}
+                            handleBlur={this.handleBlur}
+                            model={this.props.model}
+                            className="addLOdata"
                         />;
                         labelText = 'PDF'
                         break;
