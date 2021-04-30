@@ -23,7 +23,7 @@ export const onPasteSuccess = async (params) => {
         asideData,
         poetryData,
         slateEntityUrn
-    } = params    
+    } = params  
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
     replaceWirisClassAndAttr(activeEditorId)
@@ -390,7 +390,9 @@ export const fetchStatusAndPaste = async (params) => {
         insertionIndex,
         requestId,
         dispatch,
-        pasteElement
+        pasteElement,
+        parentUrn,
+        asideData
     } = params
 
     let isCloneSucceed = false,
@@ -401,7 +403,7 @@ export const fetchStatusAndPaste = async (params) => {
         if (statusAPICallInProgress) return false
         if (isCloneSucceed) {
             clearInterval(statusCheckInterval)
-            return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch)
+            return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch,parentUrn,asideData)
         }
         try {
             const getStatusApiUrl = `${config.AUDIO_NARRATION_URL}container/request/${requestId}`
@@ -423,7 +425,7 @@ export const fetchStatusAndPaste = async (params) => {
                 isCloneSucceed = true
                 newContainerData = statusResponseData.baseContainer
                 clearInterval(statusCheckInterval)
-                return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch)
+                return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch,parentUrn,asideData)
             }
         }
         catch (error) {
@@ -440,11 +442,14 @@ export const fetchStatusAndPaste = async (params) => {
  * @param {*} pasteElement paste action
  * @param {*} dispatch dispatch action method
  */
-export const prepareAndPasteElement = (newContainerData, insertionIndex, pasteElement, dispatch) => {
+export const prepareAndPasteElement = (newContainerData, insertionIndex, pasteElement, dispatch,parentUrn,asideData) => {
+    console.log('inside prepareAndPasteElement',parentUrn)
     const pasteArgs = {
         index: insertionIndex,
         manifestUrn: newContainerData?.id,
-        containerEntityUrn: newContainerData?.entityUrn
+        containerEntityUrn: newContainerData?.entityUrn,
+        parentUrn: parentUrn,
+        asideData:asideData
     }
     return dispatch(pasteElement(pasteArgs))
 }

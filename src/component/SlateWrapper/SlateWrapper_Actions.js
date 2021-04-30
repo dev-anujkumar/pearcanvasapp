@@ -918,8 +918,7 @@ export const wirisAltTextPopup = (data) => (dispatch) => {
  * @param {*} insertionIndex index of insertion
  * @param {*} manifestUrn container urn
  */
-export const cloneContainer = (insertionIndex, manifestUrn) => async (dispatch) => {
-
+export const cloneContainer = (insertionIndex, manifestUrn,parentUrn,asideData) => async (dispatch) => {
     try {
         //Clone container
         const cloneApiUrl = `${config.AUDIO_NARRATION_URL}container/${manifestUrn}/clone`
@@ -942,7 +941,9 @@ export const cloneContainer = (insertionIndex, manifestUrn) => async (dispatch) 
             insertionIndex,
             requestId,
             dispatch,
-            pasteElement
+            pasteElement,
+            parentUrn,
+            asideData
         }
         await (await import("./slateWrapperAction_helper.js")).fetchStatusAndPaste(fetchAndPasteArgs)  
     }
