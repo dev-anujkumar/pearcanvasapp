@@ -46,7 +46,7 @@ class PdfSlate extends Component {
 			c2MediaModule.AddanAssetCallBack(data_2, function (pdfData) {
 				that.getAlfrescoData(pdfData);
 			})
-		})
+		},"fromPdfSlate")
 	}
 	/* Getting data from alfresco picker */
 	getAlfrescoData = (pdfData) => {
