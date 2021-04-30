@@ -18,7 +18,7 @@ import { resetElmStore } from '../AssessmentSlateCanvas/elm/Actions/ElmActions.j
 import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
-import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX, Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
@@ -253,10 +253,23 @@ class ElementSingleAssessment extends Component {
             if (this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY) {
                 this.toggleAssessmentPopup(e, true)
             } else {
-                this.setState({
-                    showElmComponent: true
-                })
-                sendDataToIframe({ 'type': 'hideToc', 'message': {} });
+                sendDataToIframe({
+                    'type': OPEN_ELM_PICKER,
+                    'message': {
+                        usageType: this.state.activeAssessmentUsageType,
+                        elementType: this.state.activeAssessmentType,
+                        resource_type: Resource_Type.ASSESSMENT_ITEM,
+                        ssoToken: config.ssoToken,
+                        projectURN: config.projectUrn,
+                        ELM_PORTAL_URL: config.ELM_PORTAL_URL,
+                        REACT_APP_API_URL: config.REACT_APP_API_URL,
+                        MANIFEST_API_ENDPOINT: config.ELM_ENDPOINT,
+                        STRUCTURE_APIKEY: config.STRUCTURE_APIKEY,
+                        slateManifestURN: config.tempSlateManifestURN ?? config.slateManifestURN,
+                        slateEntityURN: config.tempSlateEntityURN ?? config.slateEntityURN,
+                        projectTitle: config.book_title
+                    }
+                });
                 showTocBlocker(true);
                 disableHeader(true);
                 this.props.showBlocker(true);
@@ -520,7 +533,7 @@ class ElementSingleAssessment extends Component {
                 {this.state.showElmUpdatePopup && this.showCustomPopup()}
                 {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType== CITE ? CITE : TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                 {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}     
-                {this.state.showElmComponent ? <RootElmComponent activeAssessmentType={this.state.elementType} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addPufAssessment} activeUsageType={this.state.activeAsseessmentUsageType} elementType={model.figuretype} /> : ''}
+                {/* {this.state.showElmComponent ? <RootElmComponent activeAssessmentType={this.state.elementType} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addPufAssessment} activeUsageType={this.state.activeAsseessmentUsageType} elementType={model.figuretype} /> : ''} */}
             </div>
         );
     }

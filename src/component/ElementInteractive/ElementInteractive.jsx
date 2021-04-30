@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { sendDataToIframe } from './../../constants/utility.js';
 import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA } from '../../constants/Element_Constants.js';
 import interactiveTypeData from './interactiveTypes.js';
-import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELM_INT,Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
@@ -353,10 +353,27 @@ class Interactive extends React.Component {
             }
         }
         else if (this.props.model.figuredata.interactiveformat===ELM_INT){
-            this.setState({
-                showElmComponent: true
-            })
-            sendDataToIframe({ 'type': 'hideToc', 'message': {} });
+            // this.setState({
+            //     showElmComponent: true
+            // })
+            // sendDataToIframe({ 'type': 'hideToc', 'message': {} });
+            sendDataToIframe({
+                'type': OPEN_ELM_PICKER,
+                'message': {
+                    usageType: this.state.activeAssessmentUsageType,
+                    elementType: this.state.activeAssessmentType,
+                    resource_type: Resource_Type.INTERACTIVE,
+                    ssoToken: config.ssoToken,
+                    projectURN: config.projectUrn,
+                    ELM_PORTAL_URL: config.ELM_PORTAL_URL,
+                    REACT_APP_API_URL: config.REACT_APP_API_URL,
+                    MANIFEST_API_ENDPOINT: config.ELM_ENDPOINT,
+                    STRUCTURE_APIKEY: config.STRUCTURE_APIKEY,
+                    slateManifestURN: config.tempSlateManifestURN ?? config.slateManifestURN,
+                    slateEntityURN: config.tempSlateEntityURN ?? config.slateEntityURN,
+                    projectTitle: config.book_title
+                }
+            });
             showTocBlocker(true);
             disableHeader(true);
             this.props.showBlocker(true);
@@ -761,7 +778,7 @@ class Interactive extends React.Component {
                             {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                             {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                             {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
-                            {this.state.showElmComponent? <RootElmComponent activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} elementType={model.figuretype}/> : ''}
+                            {/* {this.state.showElmComponent? <RootElmComponent activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} elementType={model.figuretype}/> : ''} */}
                         </div>
                         {this.state.showUpdatePopup && this.showCustomPopup()}
                     </>
