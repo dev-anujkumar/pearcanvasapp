@@ -443,7 +443,6 @@ export const fetchStatusAndPaste = async (params) => {
  * @param {*} dispatch dispatch action method
  */
 export const prepareAndPasteElement = (newContainerData, insertionIndex, pasteElement, dispatch,parentUrn,asideData) => {
-    console.log('inside prepareAndPasteElement',parentUrn)
     const pasteArgs = {
         index: insertionIndex,
         manifestUrn: newContainerData?.id,

@@ -650,6 +650,7 @@ export const getShowHideTag = (showHideType) => {
 export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn, elmFeedback = null) => {
     const {action,status} = actionStatus
     let tcmKeys = {}
+    
     tcmKeys = {
         slateID:  slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.manifestUrn ? cutCopyParentUrn.manifestUrn :config.slateManifestURN,
         slateUrn:   slatePopupManifestUrn ?  slatePopupManifestUrn : inPopupSlate ? config.tempSlateManifestURN: cutCopyParentUrn && cutCopyParentUrn.manifestUrn ? cutCopyParentUrn.manifestUrn :config.slateManifestURN,
