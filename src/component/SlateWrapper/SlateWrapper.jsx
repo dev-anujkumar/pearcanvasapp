@@ -1235,6 +1235,7 @@ class SlateWrapper extends Component {
                     altText={true}
                     isInputDisabled={true}
                     splitSlateClass="split-slate"
+                    wirisAltTextClass="wiris-alt-text-popup"
                 />
             )
         }
