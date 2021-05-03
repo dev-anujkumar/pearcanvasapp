@@ -1,3 +1,5 @@
+import config from "../../config/config"
+
 export const createDiscussionForUpdateAPI = (_props, elementDiscussion) => {
     if (config.elementStatus?.[elementDiscussion.id] === "approved") {
         config.savingInProgress = true

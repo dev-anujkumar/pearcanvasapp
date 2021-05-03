@@ -67,12 +67,12 @@ const DiscussionDialog = ({
               value={searchText}
               onChange={(e) => {
                 console.log("the text is ", e.target.value);
-                const text = e.target.value;
+                const text = e.target.value.trim();
                 setSearchText(text);
                 setFilteredItems(
                   discussionItems.filter(
                     (item) =>
-                      JSON.stringify(item)
+                      JSON.stringify(Object.values(item))
                         .toUpperCase()
                         .indexOf(text.toUpperCase()) > -1
                   )
