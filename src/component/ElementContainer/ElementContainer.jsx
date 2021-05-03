@@ -1769,7 +1769,7 @@ class ElementContainer extends Component {
         let { element } = this.props;
         let id = `${element.figuredata.imageid}`
         let metadataUrl = id.replace('urn:pearson:alfresco:','');
-        const Url = `https://usppewip.cms.pearson.com/share/page/document-details?nodeRef=workspace://SpacesStore/${metadataUrl}`
+        const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${metadataUrl}`
        
         if(element?.type === 'figure' && element.figuretype === 'image'){
              this.handleFigurePopup(true,Url);
