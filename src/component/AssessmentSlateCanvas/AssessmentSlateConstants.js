@@ -74,3 +74,9 @@ export const ASSESSMENT_PICKER_OPENERS = Object.freeze({
     SINGLE_ASSESSMENT_OUTER:'singleSlateAssessment',
     SINGLE_ASSESSMENT_INNER:'singleSlateAssessmentInner'
 })
+
+export const Resource_Type = Object.freeze({
+    ASSESSMENT: 'assessment',
+    ASSESSMENT_ITEM: 'assessmentItem',
+    INTERACTIVE: 'interactive'
+});

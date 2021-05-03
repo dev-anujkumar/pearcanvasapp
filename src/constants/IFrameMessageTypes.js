@@ -34,3 +34,6 @@ export const SlateLockStatus = "SlateLockStatus"
 export const TocRefreshVersioning = "tocRefreshVersioning"
 export const SendMessageForVersioning = "sendMessageForVersioning"
 export const projectPendingTcStatus = "projectPendingTcStatus"
+
+/******************* Elm Picker Message Tyypes ***********************/
+export const OPEN_ELM_PICKER = "OpenElmPicker"
