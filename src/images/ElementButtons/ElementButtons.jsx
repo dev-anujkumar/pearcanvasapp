@@ -404,6 +404,19 @@ export const discussionCloseIcon = (() => {
     )
 })();
 
+export const searchDisussion = (() => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+                <g>
+                    <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-247 -141) translate(235 133) translate(12 8)"/>
+                    <path fill="#A8A8A8" fill-rule="nonzero" d="M15.435 14.063h-.723l-.256-.247c.897-1.043 1.437-2.397 1.437-3.87C15.893 6.662 13.23 4 9.946 4 6.662 4 4 6.662 4 9.946s2.662 5.947 5.946 5.947c1.473 0 2.827-.54 3.87-1.437l.247.256v.723L18.637 20 20 18.637l-4.565-4.574zm-5.489 0c-2.278 0-4.116-1.839-4.116-4.117S7.668 5.83 9.946 5.83c2.278 0 4.117 1.838 4.117 4.116 0 2.278-1.839 4.117-4.117 4.117z" transform="translate(-247 -141) translate(235 133) translate(12 8)"/>
+                </g>
+            </g>
+        </svg>    
+    )
+})()
+
 
 export const learnosityIcon = (() => {
     return (

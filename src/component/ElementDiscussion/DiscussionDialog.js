@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
 import Button from "../ElementButtons";
 
 const getSelectedItemFromId = (id) => {
@@ -22,14 +23,14 @@ const DiscussionDialog = ({
 
   const [filteredItems, setFilteredItems] = useState(discussionItems);
 
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     if (showDialog) {
       console.log("the show dialog is true");
       setSelectedDiscussion(undefined);
       setFilteredItems(discussionItems);
-      setSearchText('');
+      setSearchText("");
     }
   }, [showDialog]);
 
@@ -57,12 +58,7 @@ const DiscussionDialog = ({
             />
           </div>
           <div style={{}} className="searchContainer">
-            <span>
-              <i
-                style={{ fontSize: 18 }}
-                className="searchIcon fa fa-search "
-              ></i>
-            </span>
+              {searchDisussion}
             <input
               value={searchText}
               onChange={(e) => {
