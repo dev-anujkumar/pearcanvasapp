@@ -53,10 +53,10 @@ const ElementDiscussion = (props) => {
           element={props.element}
           slateLockInfo={props.slateLockInfo}
           elementId={props.elementId}
-          index={`${props.index}-DE-Label`}
+          index={`${props.index}-0`}
           placeholder="Enter Label..."
           tagName={"h4"}
-          model={props.element?.html?.label || "<p></p>"}
+          model={props.element?.html?.title || "<p><br></p>"}
           handleBlur={(
             forceupdate,
             currentElement,
@@ -67,8 +67,7 @@ const ElementDiscussion = (props) => {
             callUpdateApi({
               ...props.element,
               html: {
-                ...props.element.html,
-                label: "<p></p>",
+                ...props.element.html
               },
             });
           }}
