@@ -34,9 +34,9 @@ const DiscussionDialog = ({
   return (
     <div
       style={{ display: showDialog ? "block" : "none" }}
-      class="modal-discussion"
+      className="modalDiscussion"
     >
-      <div className="popupContainer">
+      <div className="popupContainerDiscussion">
         <div
           style={{
             height: 592,
@@ -45,8 +45,8 @@ const DiscussionDialog = ({
             backgroundColor: "white",
           }}
         >
-          <div className="headingContainer">
-            <div className="headingText">Select Discussion Items</div>
+          <div className="headingContainerDiscussion">
+            <div className="headingTextDiscussion">Select Discussion Items</div>
             <Button
               type="close-discussion-dialog"
               onClick={() => {
@@ -55,7 +55,7 @@ const DiscussionDialog = ({
             />
           </div>
           {filteredItems.length > 0 && (
-            <div style={{}} className="searchContainer">
+            <div style={{}} className="searchContainerDiscussion">
               {searchDisussion}
               <input
                 value={searchText}
@@ -72,16 +72,16 @@ const DiscussionDialog = ({
                   );
                 }}
                 type="text"
-                className="searchText"
+                className="searchTextDiscussion"
                 placeholder="Search By Discussion ID or Title"
               ></input>
             </div>
           )}
 
           {/* <span className="helpingText">Showing 1-25 of 345 </span> */}
-          <div className="borderDiv"></div>
-          <div className="tableContainer">
-            <table className="discussTable">
+          <div className="borderDivDiscussion"></div>
+          <div className="tableContainerDiscussion">
+            <table className="discussTableDiscussion">
               <tr>
                 <th>
                   <div className="titlePadding">Title</div>

@@ -255,6 +255,16 @@ export const findElementType = (element, index) => {
                     }
                     break;
                 }
+            case "discussion" : {
+                let dialogueType = 'discussion';
+                elementType = {
+                    elementType: elementDataBank[dialogueType]["elementType"],
+                    primaryOption: elementDataBank[dialogueType]["primaryOption"],
+                    secondaryOption: elementDataBank[dialogueType]["secondaryOption"],
+                 
+                }
+                break;
+            }
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
