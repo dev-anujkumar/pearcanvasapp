@@ -868,7 +868,7 @@ export default {
     },
     "discussion" : {
         "primary-element-discussion": {
-            enum: 'ELEMENT_DISCUSSION',
+            enum: 'DISCUSSION',
             toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
             dropdownDisabled: true,
             subtype: {
