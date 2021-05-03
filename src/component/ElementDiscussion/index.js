@@ -33,7 +33,6 @@ const ElementDiscussion = (props) => {
     /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
     const { index, parentUrn, asideData, parentElement } = props;
     const dataToSend = createDiscussionForUpdateAPI(props, elementDiscussion);
-    console.log("the data to send is ", dataToSend);
     sendDataToIframe({ type: "isDirtyDoc", message: { isDirtyDoc: true } });
     config.isSavingElement = true;
     props.updateElement(
@@ -148,7 +147,6 @@ const ElementDiscussion = (props) => {
       </Fragment>
       <DiscussionDialog
         selectItemId={(item) => {
-          console.log("the selected item id is ", item);
         }}
         closeDialog={() => {
           setShowDialog(false);

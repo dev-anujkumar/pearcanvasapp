@@ -27,7 +27,6 @@ const DiscussionDialog = ({
 
   useEffect(() => {
     if (showDialog) {
-      console.log("the show dialog is true");
       setSelectedDiscussion(undefined);
       setFilteredItems(discussionItems);
       setSearchText("");
@@ -62,7 +61,6 @@ const DiscussionDialog = ({
             <input
               value={searchText}
               onChange={(e) => {
-                console.log("the text is ", e.target.value);
                 const text = e.target.value.trim();
                 setSearchText(text);
                 setFilteredItems(
@@ -103,7 +101,6 @@ const DiscussionDialog = ({
                         className="radioIn"
                         onChange={() => {
                           setSelectedDiscussion(item);
-                          console.log("selecting item", item);
                         }}
                         type="radio"
                         id="titleTextId"
