@@ -84,7 +84,7 @@ const DiscussionDialog = ({
             <table className="discussTableDiscussion">
               <tr>
                 <th>
-                  <div className="titlePadding">Title</div>
+                  <div className="titlePaddingDiscussion">Title</div>
                 </th>
                 <th>Discussion ID</th>
                 <th>Section Title</th>
@@ -93,22 +93,21 @@ const DiscussionDialog = ({
               {filteredItems.map((item) => (
                 <tr>
                   <td>
-                    <div className="titleRadioContainer">
+                    <div className="titleRadioContainerDiscussion">
                       <input
                         checked={
                           selectedDiscussion?.discussionUrn ===
                           item.discussionUrn
                         }
-                        className="radioIn"
+                        className="radioInDiscussion"
                         onChange={() => {
                           setSelectedDiscussion(item);
                         }}
                         type="radio"
-                        id="titleTextId"
                         name={item.title}
                         value={item.title}
                       />
-                      <label for={item.title} className="radioLabel">
+                      <label for={item.title} className="radioLabelDiscussion">
                         {item.title}
                       </label>
                     </div>
@@ -124,14 +123,14 @@ const DiscussionDialog = ({
             )}
           </div>
 
-          <div className="footerContainer">
-            <div className="paginationContainer"></div>
+          <div className="footerContainerDiscussion">
+            <div className="paginationContainerDiscussion"></div>
             <div
               onClick={() => {
                 closeDialog();
                 // setSelectedDiscussion(undefined);
               }}
-              className="cancel"
+              className="cancelDiscussion"
             >
               Cancel
             </div>
@@ -144,8 +143,8 @@ const DiscussionDialog = ({
               }}
               className={
                 typeof selectedDiscussion === "undefined"
-                  ? "notSelect"
-                  : "select"
+                  ? "notSelectDiscussion"
+                  : "selectDiscussion"
               }
             >
               Select

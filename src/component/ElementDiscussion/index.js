@@ -46,7 +46,7 @@ const ElementDiscussion = (props) => {
     );
   };
   return (
-    <header class="container">
+    <header className="containerDiscussion">
       <Fragment>
         <TinyMceEditor
           permissions={props.permissions}
@@ -75,20 +75,20 @@ const ElementDiscussion = (props) => {
         />
 
         <div>
-          <span class="discussionItemTitle">Title ID:</span>
+          <span className="discussionItemTitle">Title ID:</span>
           <span></span>
         </div>
 
-        <div className="row">
-          <span class="discussionItemTitle">ITEM ID:</span>
-          <span class="lobNotPresent"></span>
+        <div className="rowDiscussion">
+          <span className="discussionItemTitle">ITEM ID:</span>
+          <span className="lobNotPresentDiscussion"></span>
         </div>
 
-        <div className="row">
-          <span class="lobTitle">Line of business:</span>
+        <div className="rowDiscussion">
+          <span className="lobTitleDiscussion">Line of business:</span>
 
           {LOB === undefined && (
-            <div class="lobNotPresent">
+            <div className="lobNotPresentDiscussion">
               Discussions vary by business. Please select your line of business
               for this project in the Universal Dashboard first
             </div>
@@ -96,12 +96,12 @@ const ElementDiscussion = (props) => {
           {typeof LOB === "string" && <span>{`${LOB}`}</span>}
         </div>
 
-        {/* <p class="title">{`Title:   ${title}`}</p>
-        <p class="discussionItemTitle">{`ITEM ID:   ${itemId}`}</p>
-        {typeof LOB === 'string' && <p class="title">{`Line of business:   ${LOB}`}</p>} */}
+        {/* <p className="title">{`Title:   ${title}`}</p>
+        <p className="discussionItemTitle">{`ITEM ID:   ${itemId}`}</p>
+        {typeof LOB === 'string' && <p className="title">{`Line of business:   ${LOB}`}</p>} */}
 
-        <div className="usageTypeContainer row">
-          <div className="usageTypeTitle">Select usage type</div>
+        <div className="usageTypeContainerDiscussion rowDiscussion">
+          <div className="usageTypeTitleDiscussion">Select usage type</div>
           <div
             className={`singleAssessment_Dropdown_activeDropdown`}
             onClick={() => {
@@ -141,12 +141,13 @@ const ElementDiscussion = (props) => {
             }
           }}
           src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
-          className={`discussionImage ${usageType === null ? 'image-not-selected' : ''}`}
+          className={`discussionImage ${usageType === null ? 'imageNotSelectedDiscussion' : ''}`}
         />
       </Fragment>
       <DiscussionDialog
-        selectItemId={(item) => {
+        selectDiscussion={(item) => {
           // update itemid, title in update api
+          console.log("the item is 5555 ", item)
         }}
         closeDialog={() => {
           setShowDialog(false);

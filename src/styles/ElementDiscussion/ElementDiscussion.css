@@ -1,4 +1,4 @@
-.title {
+.titleDiscussion {
   width: 29px;
   height: 17px;
   margin: 32px 80px 16px 10px;
@@ -7,13 +7,13 @@
   color: #424242;
 }
 
-.row {
+.rowDiscussion {
   flex-direction: "row";
   display: "flex";
   margin-top: 16px;
 }
 
-.lobTitle {
+.lobTitleDiscussion {
   min-width: 100px;
   height: 18px;
   margin-left: 10px;
@@ -41,7 +41,7 @@
   color: #424242;
 }
 
-.usageTypeTitle {
+.usageTypeTitleDiscussion {
   width: 153px;
   float: left;
   font-size: 13px;
@@ -50,7 +50,7 @@
   top: 6px;
 }
 
-.container {
+.containerDiscussion {
   margin-top: 20px;
 }
 
@@ -63,7 +63,7 @@
   overflow-wrap: break-word;
 }
 
-.lobNotPresent {
+.lobNotPresentDiscussion {
   height: auto;
   margin: 16px 9px 24px 10px;
   font-size: 12px;
@@ -75,11 +75,11 @@
   color: #db1158;
 }
 
-.usageTypeContainer {
+.usageTypeContainerDiscussion {
   margin-left: 11px;
 }
 
-.bottomMargin {
+.bottomMarginDiscussion {
   margin-bottom: 20px;
 }
 
@@ -89,33 +89,24 @@
   margin: 6.5em auto 0.65em auto;
 }
 
-/* For Modal */
 
-/* Set a style for all buttons */
-button {
-  background-color: #04aa6d;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-}
 
-button:hover {
-  opacity: 0.8;
-}
 
 /* Center the image and position the close button */
-.imgcontainer {
+.imgcontainerdiscussion {
   text-align: center;
   margin: 24px 0 12px 0;
   position: relative;
 }
 
-.container {
+.containerDiscussion {
   padding: 16px;
 }
+
+
+
+
+
 
 /* The Modal (background) */
 .modalDiscussion {
@@ -131,42 +122,13 @@ button:hover {
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
-.noDiscussionItem  {
-  text-align: center;
-  margin-top: 15px;
-}
 
-.image-not-selected {
+.imageNotSelectedDiscussion {
   filter: invert(40%) sepia(0%) saturate(0%) hue-rotate(236deg) brightness(110%) contrast(89%);
 }
 
-/* The Close Button (x) */
 
-/* Add Zoom Animation */
-.animate {
-  -webkit-animation: animatezoom 0.6s;
-  animation: animatezoom 0.6s;
-}
-
-@-webkit-keyframes animatezoom {
-  from {
-    -webkit-transform: scale(0);
-  }
-  to {
-    -webkit-transform: scale(1);
-  }
-}
-
-@keyframes animatezoom {
-  from {
-    transform: scale(0);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-.altText {
+.altTextDiscussion {
   font-size: 16px;
   font-weight: 600;
   font-stretch: normal;
@@ -220,12 +182,7 @@ button:hover {
   letter-spacing: normal;
 }
 
-.searchIcon {
-  color: #ababab;
-  margin-bottom: 1px;
-  margin-left: 12px;
-  font-size: 18px !important;
-}
+
 
 .headingContainerDiscussion {
   flex-direction: row;
@@ -234,7 +191,7 @@ button:hover {
   padding-left: 20px;
   padding-right: 24px;
 }
-.helpingText {
+/* .helpingTextDiscussion {
   width: 114px;
   height: 18px;
   margin: 16px 872px 4px 10px;
@@ -247,7 +204,7 @@ button:hover {
   letter-spacing: normal;
   color: #454545;
   margin-left: 20px;
-}
+} */
 .borderDivDiscussion {
   width: 99%;
   height: 1px;
@@ -285,21 +242,21 @@ button:hover {
   height: 45px;
   padding: 14px !important;
 }
-.titleRadioContainer {
+.titleRadioContainerDiscussion {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 200px;
 }
-.radioIn {
+.radioInDiscussion {
   margin-left: 20px;
   cursor:pointer;
 }
-.radioLabel {
+.radioLabelDiscussion {
   margin-left: 20px;
 }
 
-.cancel {
+.cancelDiscussion {
   margin: 0 10px 0 0;
   padding: 8px 20px;
   border-radius: 2px;
@@ -316,7 +273,7 @@ button:hover {
   cursor:pointer;
 }
 
-.select {
+.selectDiscussion {
   margin: 0 0 0 10px;
   padding: 8px 20px;
   opacity: 1;
@@ -333,7 +290,7 @@ button:hover {
   cursor:pointer;
 }
 
-.notSelect {
+.notSelectDiscussion {
   opacity: 0.5;
   margin: 0 0 0 10px;
   padding: 8px 20px;
@@ -355,11 +312,11 @@ button:hover {
   overflow-y: scroll;
 }
 
-.titlePadding {
+.titlePaddingDiscussion {
   padding-left: 20px;
 }
 
-.footerContainer {
+.footerContainerDiscussion {
   flex-direction: row;
   padding-top: 14px;
   padding-bottom: 14px;
@@ -367,6 +324,11 @@ button:hover {
   display: flex;
 }
 
-.paginationContainer {
+.paginationContainerDiscussion {
   flex: 1;
+}
+
+.noDiscussionItem  {
+  text-align: center;
+  margin-top: 15px;
 }
