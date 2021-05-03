@@ -131,6 +131,9 @@ button:hover {
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
+.image-not-selected {
+  filter: invert(40%) sepia(0%) saturate(0%) hue-rotate(236deg) brightness(110%) contrast(89%);
+}
 
 /* The Close Button (x) */
 .close {

@@ -68,7 +68,7 @@ const ElementDiscussion = (props) => {
               ...props.element,
               html: {
                 ...props.element.html,
-                label: "almighty cybress",
+                label: "<p></p>",
               },
             });
           }}
@@ -134,7 +134,7 @@ const ElementDiscussion = (props) => {
         </div>
         <img
           onClick={() => {
-            if (LOB !== undefined) {
+            if (LOB !== undefined && usageType !== null) {
               sendDataToIframe({ type: "hideToc", message: {} });
               showTocBlocker(true);
               disableHeader(true);
@@ -142,11 +142,12 @@ const ElementDiscussion = (props) => {
             }
           }}
           src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
-          className="discussionImage"
+          className={`discussionImage ${usageType === null ? 'image-not-selected' : ''}`}
         />
       </Fragment>
       <DiscussionDialog
         selectItemId={(item) => {
+          // update itemid, title in update api
         }}
         closeDialog={() => {
           setShowDialog(false);
