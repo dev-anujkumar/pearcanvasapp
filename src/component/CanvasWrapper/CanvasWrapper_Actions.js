@@ -282,6 +282,7 @@ export const fetchElementTag = (element, index = 0) => {
 
 export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
+    console.log("the lob url is " + lobURL)
     return axios.get(lobURL, {
         headers: {
             "Content-Type": "application/json",
@@ -301,10 +302,10 @@ export const getProjectDetails = () => (dispatch, getState) => {
             console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
              axios.get(usageTypeUrl, {
                 headers: {
-                    ApiKey:'PAMkIwLGoPIJtNZHc1SzowG7GFlHDZHJ',
-                    PearsonSSOSession:'pYnC0e_6d_VDf9QV8fZAiKL9Msc.*AAJTSQACMDIAAlNLABx5OEd0TXp0R3ZNVFRsb3JMZjJzM0xPalUwN1U9AAR0eXBlAANDVFMAAlMxAAIwNQ..*',
+                    ApiKey:config.STRUCTURE_APIKEY,
+                    PearsonSSOSession:config.ssoToken,
                     'Content-Type':'application/json',
-                    Authorization:'Basic Ymx1ZWJlcnJ5OmVAQkhSTUF2M2V5S2xiT1VjS0tAWl56Q0ZhMDRtYw=='
+                    Authorization:config.CMDS_AUTHORIZATION
                 }
             }).then (usageTypeResponse => {
                 console.log("the usage type response is", usageTypeResponse);
