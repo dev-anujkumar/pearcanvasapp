@@ -266,7 +266,7 @@ class PopUp extends React.Component {
             <div className="model">
                 {
                     active ?
-                        <div tabIndex="0" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
+                        <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass?? assessmentClass}`} ref={this.modelRef}>
                             <div className={this.props.isWordPastePopup ? 'wordPasteClass' : `modal-content ${assessmentClass}` } id = {isGlossary ? 'popup': ''}>
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
