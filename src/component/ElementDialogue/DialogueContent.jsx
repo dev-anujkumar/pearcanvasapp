@@ -18,10 +18,19 @@ function DialogueContent(props) {
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
+                    let activeEditorId = eIndex ? `cypress-${eIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
+                    let currentNode = document.getElementById(activeEditorId);
+                    let previousElement = currentElement ? currentElement : props.element;
+                    console.log("eveeeeeeeeeeeeeeeeeeeeeeeeeentttttttttttttt", currentNode, previousElement);
+                    let innerHTML, innerText;
+                    innerHTML = `<p>${currentNode.innerHTML}</p>`;
+                    innerText = currentNode.innerText
+                    console.log("tempDiv.innerHTML = html;", innerHTML, innerText);
                     const obj = { 
                          ...props.model[props.index],
-                        characterName: `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`,
+                         characterName: innerHTML,
                     }
+                    console.log("objjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", obj);
                     props.handleBlur("characterName", obj, props.index)
                 }}
                 placeholder="Enter Character Name..."

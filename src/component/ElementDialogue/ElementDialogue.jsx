@@ -260,6 +260,8 @@ class ElementDialogue extends React.PureComponent {
         let newPSData = JSON.parse(JSON.stringify(this.props.element)) || {};
         if (newPSData?.html?.hasOwnProperty("dialogueContent")) {
             newPSData.html.dialogueContent[index] = data;
+            newPSData.html = this.removeTextKeyFromObject(newPSData.html);
+            console.log("aaaaaaaaaaaaaaaaaaaaaaaa", index, newPSData.html, data)
             if (removeClassesFromHtml(this.props.element?.html?.dialogueContent[index][field]) !==
                 removeClassesFromHtml(newPSData.html?.dialogueContent[index][field]) &&
                 !config.savingInProgress) {
@@ -267,6 +269,14 @@ class ElementDialogue extends React.PureComponent {
                 this.callUpdateApi(newPSData);
             }
         }
+    }
+
+    /* removes text key from the object */
+    removeTextKeyFromObject = (obj) => {
+        if (obj.hasOwnProperty('text')) {
+            delete obj.text;
+        }
+        return obj;
     }
 
     /* Update the data to server */
