@@ -22,12 +22,16 @@ const DiscussionDialog = ({
 
   const [filteredItems, setFilteredItems] = useState(discussionItems);
 
+  const [searchText, setSearchText] = useState('');
+
   useEffect(() => {
     if (showDialog) {
+      console.log("the show dialog is true");
       setSelectedDiscussion(undefined);
       setFilteredItems(discussionItems);
+      setSearchText('');
     }
-  }, showDialog);
+  }, [showDialog]);
 
   return (
     <div
@@ -60,14 +64,17 @@ const DiscussionDialog = ({
               ></i>
             </span>
             <input
+              value={searchText}
               onChange={(e) => {
                 console.log("the text is ", e.target.value);
+                const text = e.target.value;
+                setSearchText(text);
                 setFilteredItems(
                   discussionItems.filter(
                     (item) =>
                       JSON.stringify(item)
                         .toUpperCase()
-                        .indexOf(e.target.value.toUpperCase()) > -1
+                        .indexOf(text.toUpperCase()) > -1
                   )
                 );
               }}
