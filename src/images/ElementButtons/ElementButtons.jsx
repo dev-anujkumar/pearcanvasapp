@@ -393,18 +393,17 @@ export const dialougeElementIcon = (() => {
     )
 })();
 
-export const discussionCloseIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g fill="none" fill-rule="evenodd">
-            <g>
-                <g>
-                    <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1197 -97) translate(1197 97)" />
-                    <path fill="#005A70" fill-rule="nonzero" d="M18 7.209L16.791 6 12 10.791 7.209 6 6 7.209 10.791 12 6 16.791 7.209 18 12 13.209 16.791 18 18 16.791 13.209 12z" transform="translate(-1197 -97) translate(1197 97)" />
-                </g>
+export const discussionCloseIcon = (() => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+                <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1197 -97) translate(1197 97)" />
+                <path fill="#005A70" fill-rule="nonzero" d="M18 7.209L16.791 6 12 10.791 7.209 6 6 7.209 10.791 12 6 16.791 7.209 18 12 13.209 16.791 18 18 16.791 13.209 12z" transform="translate(-1197 -97) translate(1197 97)" />
             </g>
-        </g>
-    </svg>
-)
+        </svg>
+    )
+})();
+
 
 export const learnosityIcon = (() => {
     return (

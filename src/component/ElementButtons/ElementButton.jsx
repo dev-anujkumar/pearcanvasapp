@@ -226,11 +226,13 @@ class ElementButton extends Component {
                     buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
                         {dialougeElementIcon}
                     </span>
+                    break;
 
-            case ButtonTypes.CLOSE_ASSESMENT: 
-                    buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
+            case ButtonTypes.CLOSE_DISCUSSION_DIALOG: 
+                    buttonJSX = <span onClick={clickHandlerFn}>
                     {discussionCloseIcon}
                 </span>
+                break;
         }
         return buttonJSX
     }

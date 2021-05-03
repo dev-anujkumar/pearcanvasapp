@@ -8,7 +8,7 @@ export default {
     EXPAND : "expand",
     STAGE_DIRECTION: 'stage-direction',
     DIALOGUE_ELEMENT: 'dialogue-element',
-    CLOSE_ASSESMENT: 'close-discussion-dialog',
+    CLOSE_DISCUSSION_DIALOG: 'close-discussion-dialog',
     SPLIT_SLATE : "split",
     COLOR_PALETTE : "color-palette",
     COLOR_TEXT : "color-text",
