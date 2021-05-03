@@ -23,12 +23,12 @@ import { element } from "prop-types";
 // conditions
 
 const ElementDiscussion = (props) => {
-  let assessmentid = '';
-  let assessmenttitle = '';
+  let assessmentid = "";
+  let assessmenttitle = "";
   let usagetype = null;
 
   let elementdata = props?.element?.elementdata;
-  if(elementdata) {
+  if (elementdata) {
     assessmentid = elementdata.assessmentid;
     assessmenttitle = elementdata.assessmenttitle;
     usagetype = elementdata.usagetype;
@@ -39,7 +39,6 @@ const ElementDiscussion = (props) => {
   const [showUsageTypeOptions, setshowUsageTypeOptions] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
 
-  
   const [usageType, setUsageType] = useState(usagetype);
   const [itemId, setItemId] = useState(assessmentid);
   const [title, setTitle] = useState(assessmenttitle);
@@ -61,34 +60,43 @@ const ElementDiscussion = (props) => {
     );
   };
   return (
-    <header className="containerDiscussion">
-      <Fragment>
-        <TinyMceEditor
-          permissions={props.permissions}
-          element={props.element}
-          slateLockInfo={props.slateLockInfo}
-          elementId={props.elementId}
-          index={`${props.index}-0`}
-          placeholder="Enter Label..."
-          tagName={"h4"}
-          model={props.element?.html?.title || "<p><br></p>"}
-          handleBlur={(
-            forceupdate,
-            currentElement,
-            eIndex,
-            showHideType,
-            eventTarget
-          ) => {
-            callUpdateApi({
-              ...props.element,
-              html: {
-                ...props.element.html,
-              },
-            });
-          }}
-          handleEditorFocus={() => {}}
-        />
-
+    <div className="containerDiscussion">
+      <div>
+        <div className="figureElement">
+          <div>
+            <figure>
+              <header>
+                <TinyMceEditor
+                  permissions={props.permissions}
+                  element={props.element}
+                  handleEditorFocus={props.handleFocus}
+                  handleBlur={(
+                    forceupdate,
+                    currentElement,
+                    eIndex,
+                    showHideType,
+                    eventTarget
+                  ) => {
+                    const html = {
+                      title: eventTarget.innerHTML
+                    }
+                    callUpdateApi({
+                      ...props.element,
+                      html,
+                    });
+                  }}
+                  index={`${props.index}-0`}
+                  placeholder="Enter Label..."
+                  tagName={"h4"}
+                  className={" figureLabel "}
+                  model={props.element.html.title}
+                  slateLockInfo={props.slateLockInfo}
+                  elementId={props.elementId}
+                />
+              </header>
+            </figure>
+          </div>
+        </div>
         <div>
           <span className="discussionItemTitle">Title ID:</span>
           <span className="valueDiscussion">{title}</span>
@@ -143,10 +151,10 @@ const ElementDiscussion = (props) => {
                         ...props.element.elementdata,
                         usagetype: usageType,
                       };
-            
+
                       callUpdateApi({
                         ...props.element,
-                        elementdata
+                        elementdata,
                       });
                     }}
                   />
@@ -169,7 +177,7 @@ const ElementDiscussion = (props) => {
             usageType === null ? "imageNotSelectedDiscussion" : ""
           }`}
         />
-      </Fragment>
+      </div>
       <DiscussionDialog
         selectDiscussion={(item) => {
           // update itemid, title in update api
@@ -184,9 +192,8 @@ const ElementDiscussion = (props) => {
           setTitle(item.title);
           callUpdateApi({
             ...props.element,
-            elementdata
+            elementdata,
           });
-
         }}
         closeDialog={() => {
           setShowDialog(false);
@@ -196,7 +203,7 @@ const ElementDiscussion = (props) => {
         }}
         showDialog={showDialog}
       />
-    </header>
+    </div>
   );
 };
 
