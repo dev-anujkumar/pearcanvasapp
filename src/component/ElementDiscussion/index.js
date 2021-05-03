@@ -17,17 +17,30 @@ import {
 } from "../../js/toggleLoader";
 import { sendDataToIframe } from "../../constants/utility";
 import config from "../../config/config";
+import { element } from "prop-types";
 
 // see review mode
 // conditions
 
 const ElementDiscussion = (props) => {
-  const { assessmenttitle, assessmentid, usagetype = null } = props?.element?.elementdata;
+  let assessmentid = '';
+  let assessmenttitle = '';
+  let usagetype = null;
+
+  let elementdata = props?.element?.elementdata;
+  if(elementdata) {
+    assessmentid = elementdata.assessmentid;
+    assessmenttitle = elementdata.assessmenttitle;
+    usagetype = elementdata.usagetype;
+  }
+
   const LOB = useSelector((state) => state.projectInfo.lineOfBusiness);
   const USAGE_TYPES = useSelector((state) => state.projectInfo.usageType);
   const [showUsageTypeOptions, setshowUsageTypeOptions] = useState(false);
-  const [usageType, setUsageType] = useState(usagetype);
   const [showDialog, setShowDialog] = useState(false);
+
+  
+  const [usageType, setUsageType] = useState(usagetype);
   const [itemId, setItemId] = useState(assessmentid);
   const [title, setTitle] = useState(assessmenttitle);
 
