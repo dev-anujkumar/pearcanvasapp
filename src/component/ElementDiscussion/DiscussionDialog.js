@@ -48,11 +48,11 @@ const DiscussionDialog = ({
           </div>
           {/* <span className="helpingText">Showing 1-25 of 345 </span> */}
           <div className="borderDiv"></div>
-          <div style={{ height: 402, overflowY: "scroll" }}>
+          <div className="tableContainer">
             <table className="discussTable">
               <tr>
                 <th>
-                  <div style={{ paddingLeft: 20 }}>Title</div>
+                  <div className="titlePadding">Title</div>
                 </th>
                 <th>Discussion ID</th>
                 <th>Section Title</th>
@@ -79,14 +79,12 @@ const DiscussionDialog = ({
               ))}
             </table>
           </div>
-          <div style={{ flexDirection: "row", paddingTop:14, paddingBottom:14, paddingRight:24, display:'flex' }}>
-            <div style={{ flex: 1 }}></div>
-            <div style={{ flexDirection: "row", display:'flex' }}>
+          <div className="footerContainer">
+            <div className="paginationContainer"></div>
               <div onClick={() => {closeDialog()}} className="cancel">Cancel</div>
               <div className={elementSelected ? "select" : "notSelect"}>
                 Select
               </div>
-            </div>
           </div>
         </div>
       </div>

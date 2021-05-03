@@ -194,7 +194,6 @@ button:hover {
   }
 }
 
-
 .altText {
   font-size: 16px;
   font-weight: 600;
@@ -213,9 +212,8 @@ button:hover {
   line-height: normal;
   letter-spacing: normal;
   color: #005a70;
-  flex: 1 
+  flex: 1;
 }
-
 
 .searchContainer {
   flex-direction: row;
@@ -227,21 +225,20 @@ button:hover {
   padding-left: 20px;
   padding-right: 24px;
   border-radius: 4px;
-  padding-top:9px;
-  padding-bottom:9px;
+  padding-top: 9px;
+  padding-bottom: 9px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   border: solid 1px #e8e8e8;
   background-color: #ffffff;
   margin-bottom: 13px;
 }
 
-
 .searchText {
   margin: 1px 0 1px 8px;
- border: none;
- width: 100%;
-
-}::placeholder {
+  border: none;
+  width: 100%;
+}
+::placeholder {
   color: #ababab;
   font-size: 16px;
   font-weight: normal;
@@ -249,25 +246,23 @@ button:hover {
   font-style: normal;
   line-height: normal;
   letter-spacing: normal;
-  
 }
 
 .searchIcon {
-  color:#ababab;
+  color: #ababab;
   margin-bottom: 1px;
   margin-left: 12px;
   font-size: 18px !important;
 }
 
 .headingContainer {
-
   flex-direction: row;
   align-items: center;
   display: flex;
   padding-left: 20px;
   padding-right: 24px;
 }
-.helpingText{
+.helpingText {
   width: 114px;
   height: 18px;
   margin: 16px 872px 4px 10px;
@@ -281,14 +276,14 @@ button:hover {
   color: #454545;
   margin-left: 20px;
 }
-.borderDiv{
+.borderDiv {
   width: 99%;
   height: 1px;
   margin: 4px 0px 0;
   background-color: #d9d9d9;
   margin-left: 4px;
 }
-.discussTable{
+.discussTable {
   margin-left: 5px;
   width: 99%;
   border: 1px solid #ddd;
@@ -309,26 +304,25 @@ button:hover {
   color: #202020;
   border-radius: 4px;
   background-color: #fafafa;
-  border: none  !important;
+  border: none !important;
   height: 45px;
 }
-.discussTable td{
+.discussTable td {
   border-right: 1px solid transparent;
-    border-bottom: 1px solid #ccc;
-height: 45px;
-padding: 14px !important;
-
+  border-bottom: 1px solid #ccc;
+  height: 45px;
+  padding: 14px !important;
 }
-.titleRadioContainer{
+.titleRadioContainer {
   overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 200px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px;
 }
-.radioIn{
+.radioIn {
   margin-left: 20px;
 }
-.radioLabel{
+.radioLabel {
   margin-left: 20px;
 }
 
@@ -380,5 +374,25 @@ padding: 14px !important;
   letter-spacing: normal;
   text-align: center;
   color: #ffffff;
-  
+}
+
+.tableContainer {
+  height: 418px;
+  overflow-y: scroll;
+}
+
+.titlePadding {
+  padding-left: 20px;
+}
+
+.footerContainer {
+  flex-direction: row;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  padding-right: 24px;
+  display: flex;
+}
+
+.paginationContainer {
+  flex: 1;
 }
