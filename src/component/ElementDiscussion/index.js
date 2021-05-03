@@ -8,7 +8,14 @@ import { useSelector } from "react-redux";
 import DiscussionDialog from "./DiscussionDialog";
 import { createDiscussionForUpdateAPI } from "./Utils";
 import { updateElement } from "../ElementContainer/ElementContainer_Actions";
-import {connect} from 'react-redux';
+import { connect } from "react-redux";
+import {
+  disableHeader,
+  hideBlocker,
+  hideTocBlocker,
+  showTocBlocker,
+} from "../../js/toggleLoader";
+import { sendDataToIframe } from "../../constants/utility";
 
 // see review mode
 // conditions
@@ -60,9 +67,9 @@ const ElementDiscussion = (props) => {
               ...props.element,
               html: {
                 ...props.element.html,
-                label: eventTarget.innerHtml
-              }
-            })
+                label: eventTarget.innerHtml,
+              },
+            });
           }}
           handleEditorFocus={() => {}}
         />
@@ -126,7 +133,10 @@ const ElementDiscussion = (props) => {
         </div>
         <img
           onClick={() => {
-            setShowDialog(!showDialog);
+            sendDataToIframe({ type: "hideToc", message: {} });
+            showTocBlocker(true);
+            disableHeader(true);
+            setShowDialog(true);
           }}
           src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
           className="discussionImage"
@@ -135,6 +145,9 @@ const ElementDiscussion = (props) => {
       <DiscussionDialog
         closeDialog={() => {
           setShowDialog(false);
+          hideBlocker(true);
+          hideTocBlocker(true);
+          disableHeader(false);
         }}
         showDialog={showDialog}
       />
