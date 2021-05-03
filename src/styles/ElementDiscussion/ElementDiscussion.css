@@ -343,10 +343,9 @@ button:hover {
 }
 
 .select {
-  opacity: 0.5;
   margin: 0 0 0 10px;
   padding: 8px 20px;
-  opacity: 0.5;
+  opacity: 0.1;
   border-radius: 2px;
   background-color: #005a70;
   font-size: 14px;
@@ -360,10 +359,9 @@ button:hover {
 }
 
 .notSelect {
-  opacity: 1;
+  opacity: 0.5;
   margin: 0 0 0 10px;
   padding: 8px 20px;
-  opacity: 0.5;
   border-radius: 2px;
   background-color: #005a70;
   font-size: 14px;
