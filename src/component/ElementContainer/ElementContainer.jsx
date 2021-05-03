@@ -91,13 +91,13 @@ class ElementContainer extends Component {
             this.props.getElementStatus(element.id, this.props.index)
         }
         else if (element && element.type === "popup") {
-            if (element.popupdata&& element.popupdata.hasOwnProperty("formatted-title")) {
+            if (element.popupdata.hasOwnProperty("formatted-title")) {
                 !elementStatus[element.popupdata["formatted-title"].id] && this.props.getElementStatus(element.popupdata["formatted-title"].id, this.props.index)
             }
-            if (element.popupdata&& element.popupdata.hasOwnProperty("formatted-subtitle")) {
+            if (element.popupdata.hasOwnProperty("formatted-subtitle")) {
                 !elementStatus[element.popupdata["formatted-subtitle"].id] && this.props.getElementStatus(element.popupdata["formatted-subtitle"].id, this.props.index)
             }
-            if (element.popupdata&& element.popupdata.hasOwnProperty("postertextobject")) {
+            if (element.popupdata.hasOwnProperty("postertextobject")) {
                 !elementStatus[element.popupdata["postertextobject"][0].id] && this.props.getElementStatus(element.popupdata["postertextobject"][0].id, this.props.index)
             }
         }
