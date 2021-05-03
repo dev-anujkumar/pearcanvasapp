@@ -63,7 +63,7 @@ const ElementDiscussion = (props) => {
             showHideType,
             eventTarget
           ) => {
-            this.callUpdateApi({
+            callUpdateApi({
               ...props.element,
               html: {
                 ...props.element.html,
@@ -143,6 +143,9 @@ const ElementDiscussion = (props) => {
         />
       </Fragment>
       <DiscussionDialog
+        selectItemId={(item) => {
+          console.log("the selected item id is ", item);
+        }}
         closeDialog={() => {
           setShowDialog(false);
           hideBlocker(true);
