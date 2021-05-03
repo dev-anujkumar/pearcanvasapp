@@ -22,12 +22,14 @@ import config from "../../config/config";
 // conditions
 
 const ElementDiscussion = (props) => {
-  const { title, itemId, selectedUsageType = null } = props;
+  const { assessmenttitle, assessmentid, usagetype = null } = props?.element?.elementdata;
   const LOB = useSelector((state) => state.projectInfo.lineOfBusiness);
   const USAGE_TYPES = useSelector((state) => state.projectInfo.usageType);
   const [showUsageTypeOptions, setshowUsageTypeOptions] = useState(false);
-  const [usageType, setUsageType] = useState(selectedUsageType);
+  const [usageType, setUsageType] = useState(usagetype);
   const [showDialog, setShowDialog] = useState(false);
+  const [itemId, setItemId] = useState(assessmentid);
+  const [title, setTitle] = useState(assessmenttitle);
 
   const callUpdateApi = (elementDiscussion) => {
     /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
@@ -67,7 +69,7 @@ const ElementDiscussion = (props) => {
             callUpdateApi({
               ...props.element,
               html: {
-                ...props.element.html
+                ...props.element.html,
               },
             });
           }}
@@ -76,12 +78,12 @@ const ElementDiscussion = (props) => {
 
         <div>
           <span className="discussionItemTitle">Title ID:</span>
-          <span></span>
+          <span className="valueDiscussion">{title}</span>
         </div>
 
         <div className="rowDiscussion">
           <span className="discussionItemTitle">ITEM ID:</span>
-          <span className="lobNotPresentDiscussion"></span>
+          <span className="valueDiscussion">{itemId}</span>
         </div>
 
         <div className="rowDiscussion">
@@ -124,6 +126,15 @@ const ElementDiscussion = (props) => {
                     clickHandlerFn={(usageType) => {
                       setshowUsageTypeOptions(false);
                       setUsageType(usageType);
+                      const elementdata = {
+                        ...props.element.elementdata,
+                        usagetype: usageType,
+                      };
+            
+                      callUpdateApi({
+                        ...props.element,
+                        elementdata
+                      });
                     }}
                   />
                 }
@@ -141,13 +152,28 @@ const ElementDiscussion = (props) => {
             }
           }}
           src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
-          className={`discussionImage ${usageType === null ? 'imageNotSelectedDiscussion' : ''}`}
+          className={`discussionImage ${
+            usageType === null ? "imageNotSelectedDiscussion" : ""
+          }`}
         />
       </Fragment>
       <DiscussionDialog
         selectDiscussion={(item) => {
           // update itemid, title in update api
-          console.log("the item is 5555 ", item)
+          console.log("the item is 5555 ", item);
+          const elementdata = {
+            assessmentid: item.discussionUrn,
+            assessmenttitle: item.title,
+            usagetype: usageType,
+          };
+
+          setItemId(item.discussionUrn);
+          setTitle(item.title);
+          callUpdateApi({
+            ...props.element,
+            elementdata
+          });
+
         }}
         closeDialog={() => {
           setShowDialog(false);
