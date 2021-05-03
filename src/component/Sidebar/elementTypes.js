@@ -729,6 +729,7 @@ export default {
         "primary-showhide": {
             text: 'Show Hide',
             dropdownDisabled: true,
+            enum:'SHOW_HIDE',
             subtype: {
                 'secondary-showhide': {
                     text: 'Show Hide',

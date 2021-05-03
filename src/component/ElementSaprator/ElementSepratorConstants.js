@@ -28,6 +28,8 @@ export default {
     TABLE_EDITOR: 'table-editor-elem-button',
     TOC_PARENT_TYPES: ["frontmatter", "backmatter"],
     ELEMENT_DIALOGUE : 'element-dialogue',
+    SHOW_HIDE: 'showhide',
+    POPUP: 'popup'
 }
 
 /** This array contains data for element picker popup with key as button-type */
