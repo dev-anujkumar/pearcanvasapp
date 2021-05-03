@@ -42,6 +42,8 @@ const { TEXT,
     BLOCK_TEXT_BUTTON,
     TABLE_EDITOR,
     TOC_PARENT_TYPES,
+    SHOW_HIDE,
+    POPUP,
     ELEMENT_DISCUSSION
  } = elementTypeConstant
 
@@ -375,9 +377,11 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
     const firstOne = separatorProps.firstOne || false;
     const insertionIndex = firstOne ? index : index + 1
     const selectedElement = separatorProps.elementSelection.element
-    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,ELEMENT_DISCUSSION]
+    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,SHOW_HIDE,POPUP,ELEMENT_DISCUSSION]
     if ((acceptedTypes.includes(selectedElement.type)) && type === 'copy'){
-        return separatorProps.cloneContainer(insertionIndex, selectedElement.id)
+        const parentUrn = separatorProps.parentUrn ?? null
+        const asideData = separatorProps.asideData ?? null
+        return separatorProps.cloneContainer(insertionIndex, selectedElement.id,parentUrn,asideData)
     }
     const pasteFnArgs = {
         index: insertionIndex,
