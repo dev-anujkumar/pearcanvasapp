@@ -20,9 +20,7 @@ const DiscussionDialog = ({
   const [selectedDiscussion, setSelectedDiscussion] = useState(
     getSelectedItemFromId(itemId)
   );
-
   const [filteredItems, setFilteredItems] = useState(discussionItems);
-
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
@@ -56,27 +54,30 @@ const DiscussionDialog = ({
               }}
             />
           </div>
-          <div style={{}} className="searchContainer">
+          {filteredItems.length > 0 && (
+            <div style={{}} className="searchContainer">
               {searchDisussion}
-            <input
-              value={searchText}
-              onChange={(e) => {
-                const text = e.target.value.trim();
-                setSearchText(text);
-                setFilteredItems(
-                  discussionItems.filter(
-                    (item) =>
-                      JSON.stringify(Object.values(item))
-                        .toUpperCase()
-                        .indexOf(text.toUpperCase()) > -1
-                  )
-                );
-              }}
-              type="text"
-              className="searchText"
-              placeholder="Search By Discussion ID or Title"
-            ></input>
-          </div>
+              <input
+                value={searchText}
+                onChange={(e) => {
+                  const text = e.target.value.trim();
+                  setSearchText(text);
+                  setFilteredItems(
+                    discussionItems.filter(
+                      (item) =>
+                        JSON.stringify(Object.values(item))
+                          .toUpperCase()
+                          .indexOf(text.toUpperCase()) > -1
+                    )
+                  );
+                }}
+                type="text"
+                className="searchText"
+                placeholder="Search By Discussion ID or Title"
+              ></input>
+            </div>
+          )}
+
           {/* <span className="helpingText">Showing 1-25 of 345 </span> */}
           <div className="borderDiv"></div>
           <div className="tableContainer">
@@ -116,8 +117,13 @@ const DiscussionDialog = ({
                   <td>Discussion</td>
                 </tr>
               ))}
+              {}
             </table>
+            {filteredItems.length === 0 && (
+              <div className="noDiscussionItem">No Discussion Items Found</div>
+            )}
           </div>
+
           <div className="footerContainer">
             <div className="paginationContainer"></div>
             <div
