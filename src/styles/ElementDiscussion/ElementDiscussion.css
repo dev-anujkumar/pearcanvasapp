@@ -77,9 +77,12 @@
   color: #424242;
 }
 
+.itemIdDiscussion {
+  word-break: break-all;
+}
+
 .valueDiscussion {
   font-size: 12px;
-  word-break: break-all;
   font-weight: 600;
   padding-left: 10px;
   color: #424242;
