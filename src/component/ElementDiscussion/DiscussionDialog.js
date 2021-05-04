@@ -58,7 +58,7 @@ const DiscussionDialog = ({
                   setFilteredItems(
                     discussionItems.filter(
                       (item) =>
-                        JSON.stringify(Object.values(item))
+                        `${item.title}${item.discussionUrn}`
                           .toUpperCase()
                           .indexOf(text.trim().toUpperCase()) > -1
                     )
