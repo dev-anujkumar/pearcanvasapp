@@ -33,7 +33,8 @@ import {
     multiColumnContainer,
     elmInteractiveIcon,
     editIcon,
-    approvedIcon
+    approvedIcon,
+    discussionCloseIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
@@ -225,6 +226,13 @@ class ElementButton extends Component {
                     buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
                         {dialougeElementIcon}
                     </span>
+                    break;
+
+            case ButtonTypes.CLOSE_DISCUSSION_DIALOG: 
+                    buttonJSX = <span onClick={clickHandlerFn}>
+                    {discussionCloseIcon}
+                </span>
+                break;
         }
         return buttonJSX
     }

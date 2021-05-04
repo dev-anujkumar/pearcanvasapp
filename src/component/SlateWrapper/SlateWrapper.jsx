@@ -20,7 +20,7 @@ import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE,
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -46,6 +46,7 @@ import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
+import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 
 let random = guid();
 
@@ -673,7 +674,9 @@ class SlateWrapper extends Component {
             case 'element-dialogue':
                 this.props.createElement(ELEMENT_DIALOGUE, indexToinsert, parentUrn, asideData, null, null, null, null);
                 break;
-
+            case 'element-discussion': 
+                this.props.createElement(ELEMENT_DISCUSSION, indexToinsert, parentUrn, asideData, null, null, null, null);
+                break;
             case 'text-elem':
             default:
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
@@ -913,16 +916,21 @@ class SlateWrapper extends Component {
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
-                if (_elements.length === 0 && _slateType == "assessment" && config.isDefaultElementInProgress) {
+                /* @-isPdf_Assess-@ - TO check TYPE of current slate  */
+                const isPdf_Assess = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(config.slateType);
+                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', () => {
+                    const typeOfEle = _slateType === SLATE_TYPE_ASSESSMENT ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
+                    this.props.createElement(typeOfEle, "0", '', '', '', '', () => {
                         config.isDefaultElementInProgress = true;
                     });
                 }
                 else if (_elements.length === 0 && _slateType != "assessment") {
                     return this.renderBlankSlate(this.props)
                 }
+                /* @hideSapratorFor@ List of slates where seprator is hidden */
+                const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(_slateType);
                 return _elements.map((element, index) => {
                         return (
                             
@@ -932,7 +940,7 @@ class SlateWrapper extends Component {
                                     placeholder={<div data-id={element.id}><LargeLoader /></div>}
                                 >
                                     {
-                                        index === 0 && _slateType !== 'assessment' && config.isCO === false ?
+                                        index === 0 && !hideSapratorFor && config.isCO === false ?
                                             <ElementSaprator
                                                 userRole={this.props.userRole}
                                                 firstOne={index === 0}
@@ -978,7 +986,7 @@ class SlateWrapper extends Component {
                                             )
                                         }
                                     </ElementContainer>
-                                    {_slateType !== 'assessment' ?
+                                    {!hideSapratorFor ?
                                         <ElementSaprator
                                             userRole={this.props.userRole}
                                             index={index}
@@ -1227,6 +1235,7 @@ class SlateWrapper extends Component {
                     altText={true}
                     isInputDisabled={true}
                     splitSlateClass="split-slate"
+                    wirisAltTextClass="wiris-alt-text-popup"
                 />
             )
         }

@@ -14,7 +14,7 @@ import {
 import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { connect } from 'react-redux';
 import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
-import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX, SLATE_TYPE_PDF, SLATE_TYPE_SECTION } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { loNextIcon, tickIcon } from './../../images/ElementButtons/ElementButtons.jsx';
 import { CYPRESS_LF, EXTERNAL_LF } from '../../constants/Element_Constants';
 class SlateTagDropdown extends React.Component {
@@ -33,7 +33,6 @@ class SlateTagDropdown extends React.Component {
     }
     componentDidMount(){
       if(this.props.isLOExist){
-        this.node1.style.width='310px';
         this.node1.style.height='84px';
       }
       this.setDropdownPosition();
@@ -233,30 +232,30 @@ class SlateTagDropdown extends React.Component {
     render = () => {
       const enableExtLO =this.checkExternalFramework();
       const liOptionStatus = this.handleCypressLODropdownOptions()
+      /* @-isLoOption4Slate-@ - TO check is LO dropdown options allowed for current slate or not */
+      const isLoOption4Slate = [SLATE_TYPE_SECTION, SLATE_TYPE_PDF].includes(config.slateType);
         return (
         <div>
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
               <ul>
-                <div>
-               {this.props.isLOExist&&this.props.currentSlateLF !== EXTERNAL_LF && <span className='tick-icon'>{tickIcon}</span>}
-                <li onClick={this.toggleLoOptionsDropdown}><span className={this.props.isLOExist&&"dropdown-option"}>{AlignToCypressSlateDropdown}</span><span className='lo-navigation-icon'>{loNextIcon}</span></li>
+                <div className={enableExtLO &&"option-disabled"}>
+                <li onClick={this.toggleLoOptionsDropdown}><span>{AlignToCypressSlateDropdown}</span><span className='lo-navigation-icon'>{loNextIcon}</span></li>
                 </div>
-                <div >
-                {this.props.isLOExist&&this.props.currentSlateLF === EXTERNAL_LF && <span className='tick-icon'>{tickIcon}</span>}
-                <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO === true ? '' : 'disable-buttton'}><span className={this.props.isLOExist &&"dropdown-option"}>{AlignToExternalFrameworkSlateDropdown}</span></li>
+                <div>
+                <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO === true ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
                 </div>
               </ul>
             </div>
                 <div className="learningobjectivedropdown2" ref={node2 => this.node2 = node2}>
                 <ul>
-                    {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
+                    {this.props.permissions.includes('lo_edit_metadata') && isLoOption4Slate &&
                         <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}> {AddLearningObjectiveSlateDropdown}</li>}
-                    {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
+                    {this.props.permissions.includes('lo_edit_metadata') && isLoOption4Slate &&
                         <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}>{AddEditLearningObjectiveDropdown}</li>}
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'assessment' &&
                         <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveAssessmentDropdown}</li>}
                     <li className={liOptionStatus.viewLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{ViewLearningObjectiveSlateDropdown}</li>
-                    {config.slateType === 'section' && !hasReviewerRole() &&
+                    {isLoOption4Slate && !hasReviewerRole() &&
                         <li className={liOptionStatus.unlinkLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
             </div> 

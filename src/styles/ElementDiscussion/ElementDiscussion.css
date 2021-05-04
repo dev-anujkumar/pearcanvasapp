@@ -1,0 +1,306 @@
+.titleDiscussion {
+  width: 29px;
+  height: 17px;
+  margin: 32px 80px 16px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #424242;
+}
+
+.rowDiscussion {
+  flex-direction: "row";
+  display: "flex";
+  margin-top: 16px;
+}
+
+.displayBlockDiscussion {
+  display: block;
+}
+
+.popupDiscussion {
+  height: 592px;
+  width: 100%;
+  padding-top: 13px;
+  background-color: white;
+}
+
+.displayNoneDiscussion {
+  display: none;
+}
+
+.lobTitleDiscussion {
+  min-width: 100px;
+  height: 18px;
+  margin-left: 10px;
+  margin-right: 17px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #424242;
+  float: left;
+}
+
+.discussionItemTitle {
+  min-width: 48px;
+  height: 17px;
+  margin: 16px 62px 16px 9px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #424242;
+}
+
+.usageTypeTitleDiscussion {
+  width: 153px;
+  float: left;
+  font-size: 13px;
+  color: #424242;
+  position: relative;
+  top: 6px;
+}
+
+.popupContainerDiscussion {
+  width: 1138px;
+  /* min-width: 400px; */
+  margin-left: 10%;
+  margin-right: 10%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.valueDiscussion {
+  height: auto;
+  margin: 16px 9px 24px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.lobNotPresentDiscussion {
+  height: auto;
+  margin: 16px 9px 24px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #db1158;
+}
+
+.usageTypeContainerDiscussion {
+  margin-left: 11px;
+}
+
+.bottomMarginDiscussion {
+  margin-bottom: 20px;
+}
+
+.discussionImage {
+  display: block;
+  width: 100%;
+  margin: 6.5em auto 0.65em auto;
+}
+
+/* Center the image and position the close button */
+.imgcontainerdiscussion {
+  text-align: center;
+  margin: 24px 0 12px 0;
+  position: relative;
+}
+
+.containerDiscussion {
+  padding: 16px;
+}
+
+/* The Modal (background) */
+.modalDiscussion {
+  position: fixed; /* Stay in place */
+  z-index: 6; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.imageNotSelectedDiscussion {
+  filter: invert(40%) sepia(0%) saturate(0%) hue-rotate(236deg) brightness(110%)
+    contrast(89%);
+}
+
+.altTextDiscussion {
+  font-size: 16px;
+  font-weight: 600;
+  color: #005a70;
+}
+
+.headingTextDiscussion {
+  font-size: 16px;
+  font-weight: 600;
+  color: #005a70;
+  flex: 1;
+}
+
+.searchContainerDiscussion {
+  flex-direction: row;
+  align-items: center;
+  margin-right: 149px;
+  margin-left: 20px;
+  margin-top: 13px;
+  display: flex;
+  padding-left: 20px;
+  padding-right: 24px;
+  border-radius: 4px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  border: solid 1px #e8e8e8;
+  background-color: #ffffff;
+  margin-bottom: 13px;
+}
+
+.searchTextDiscussion {
+  margin: 1px 0 1px 8px;
+  border: none;
+  width: 100%;
+}
+::placeholder {
+  color: #ababab;
+  font-size: 16px;
+}
+
+.headingContainerDiscussion {
+  flex-direction: row;
+  align-items: center;
+  display: flex;
+  padding-left: 20px;
+  padding-right: 24px;
+}
+/* .helpingTextDiscussion {
+  width: 114px;
+  height: 18px;
+  margin: 16px 872px 4px 10px;
+  font-family: OpenSans;
+  font-size: 12px;
+
+
+
+  line-height: 1.5;
+
+  color: #454545;
+  margin-left: 20px;
+} */
+.borderDivDiscussion {
+  width: 99%;
+  height: 1px;
+  margin: 4px 0px 0;
+  background-color: #d9d9d9;
+  margin-left: 4px;
+}
+.discussTableDiscussion {
+  margin-left: 5px;
+  width: 99%;
+  border: 1px solid #ddd;
+  padding: 8px;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.discussTableDiscussion th {
+  margin: 85px 209px 118px 215px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+
+  color: #202020;
+  border-radius: 4px;
+  background-color: #fafafa;
+  border: none !important;
+  height: 45px;
+}
+.discussTableDiscussion td {
+  border-right: 1px solid transparent;
+  border-bottom: 1px solid #ccc;
+  height: 45px;
+  padding: 14px !important;
+}
+.titleRadioContainerDiscussion {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px;
+  align-items: center;
+  display: flex;
+}
+.radioInDiscussion {
+  margin-left: 20px;
+  cursor: pointer;
+}
+.radioLabelDiscussion {
+  margin-left: 20px;
+}
+
+.cancelDiscussion {
+  margin: 0 10px 0 0;
+  padding: 8px 20px;
+  border-radius: 2px;
+  border: solid 1px #dcdcdc;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  text-align: center;
+  color: #005a70;
+  cursor: pointer;
+}
+
+.selectDiscussion {
+  margin: 0 0 0 10px;
+  padding: 8px 20px;
+  opacity: 1;
+  border-radius: 2px;
+  background-color: #005a70;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  text-align: center;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.notSelectDiscussion {
+  opacity: 0.5;
+  margin: 0 0 0 10px;
+  padding: 8px 20px;
+  border-radius: 2px;
+  background-color: #005a70;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  text-align: center;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.tableContainerDiscussion {
+  height: 418px;
+  overflow-y: scroll;
+}
+
+.titlePaddingDiscussion {
+  padding-left: 20px;
+}
+
+.footerContainerDiscussion {
+  flex-direction: row;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  padding-right: 24px;
+  display: flex;
+}
+
+.paginationContainerDiscussion {
+  flex: 1;
+}
+
+.noDiscussionItem {
+  text-align: center;
+  margin-top: 15px;
+}
