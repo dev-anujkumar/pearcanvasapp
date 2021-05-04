@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Fragment } from "react";
 import TinyMceEditor from "../tinyMceEditor";
-import { dropdownArrow } from "../../images/ElementButtons/ElementButtons.jsx";
+import {
+  dropdownArrow,
+} from "../../images/ElementButtons/ElementButtons.jsx";
 import { UsageTypeDropdown } from "../AssessmentSlateCanvas/UsageTypeDropdown/UsageTypeDropdown.jsx";
 import "../../styles/ElementDiscussion/ElementDiscussion.css";
 import { useSelector } from "react-redux";
@@ -21,7 +22,6 @@ import {
   sendDataToIframe,
 } from "../../constants/utility";
 import config from "../../config/config";
-import { element } from "prop-types";
 import { replaceUnwantedtags } from "../ElementContainer/UpdateElements";
 
 // see review mode
@@ -99,7 +99,8 @@ const ElementDiscussion = (props) => {
                     const html = {
                       title: newTitle,
                     };
-                    if (removeClassesFromHtml(lastTitle) !==
+                    if (
+                      removeClassesFromHtml(lastTitle) !==
                         removeClassesFromHtml(newTitle) &&
                       !config.savingInProgress
                     ) {
@@ -121,7 +122,7 @@ const ElementDiscussion = (props) => {
             </figure>
           </div>
         </div>
-        <div>
+        <div className="rowDiscussion">
           <span className="discussionItemTitle">Title ID:</span>
           <span className="valueDiscussion">{title}</span>
         </div>
@@ -132,7 +133,7 @@ const ElementDiscussion = (props) => {
         </div>
 
         <div className="rowDiscussion">
-          <span className="lobTitleDiscussion">Line of business:</span>
+          <span className="discussionItemTitle">Line of business:</span>
 
           {LOB === undefined && (
             <div className="lobNotPresentDiscussion">
@@ -140,51 +141,60 @@ const ElementDiscussion = (props) => {
               for this project in the Universal Dashboard first
             </div>
           )}
-          {typeof LOB === "string" && <span>{`${LOB}`}</span>}
+          {typeof LOB === "string" && (
+            <span className="valueDiscussion">{`${LOB}`}</span>
+          )}
         </div>
 
         {/* <p className="title">{`Title:   ${title}`}</p>
         <p className="discussionItemTitle">{`ITEM ID:   ${itemId}`}</p>
         {typeof LOB === 'string' && <p className="title">{`Line of business:   ${LOB}`}</p>} */}
+        <div className="rowUsageTypeDiscussion singleAssessment_Dropdown_Container">
+          <div className="single-assessment-usagetype-container">
+            <div className="singleAssessment_Dropdown_SelectLabel">
+              Select usage type
+            </div>
+            <div className="singleAssessment_Dropdown_activeDropdown">
+              <div
+                onClick={() => {
+                  if (LOB !== null) {
+                    setshowUsageTypeOptions(!showUsageTypeOptions);
+                  }
+                }}
+              >
+                <span>
+                  <span className="singleAssessment_Dropdown_currentLabel">
+                    {usageType !== null ? usageType : "Select"}
+                    <span className="singleAssessment_Dropdown_arrow">
+                      {dropdownArrow}
+                    </span>
+                  </span>
+                </span>
 
-        <div className="usageTypeContainerDiscussion rowDiscussion">
-          <div className="usageTypeTitleDiscussion">Select usage type</div>
-          <div
-            className={`singleAssessment_Dropdown_activeDropdown`}
-            onClick={() => {
-              if (LOB !== null) {
-                setshowUsageTypeOptions(!showUsageTypeOptions);
-              }
-            }}
-          >
-            <span className="singleAssessment_Dropdown_currentLabel">
-              {usageType !== null ? usageType : "Select"}
-            </span>
-            <span className="singleAssessment_Dropdown_arrow">
-              {dropdownArrow}
-            </span>
-            {showUsageTypeOptions ? (
-              <ul className="slate_assessment_type_dropdown_options">
-                {
-                  <UsageTypeDropdown
-                    usageTypeList={USAGE_TYPES.map((item) => item.label)}
-                    clickHandlerFn={(usageType) => {
-                      setshowUsageTypeOptions(false);
-                      setUsageType(usageType);
-                      const elementdata = {
-                        ...props.element.elementdata,
-                        usagetype: usageType,
-                      };
+                {showUsageTypeOptions ? (
+                  <ul className="slate_assessment_type_dropdown_options">
+                    {
+                      <UsageTypeDropdown
+                        usageTypeList={USAGE_TYPES.map((item) => item.label)}
+                        clickHandlerFn={(usageType) => {
+                          setshowUsageTypeOptions(false);
+                          setUsageType(usageType);
+                          const elementdata = {
+                            ...props.element.elementdata,
+                            usagetype: usageType,
+                          };
 
-                      callUpdateApi({
-                        ...props.element,
-                        elementdata,
-                      });
-                    }}
-                  />
-                }
-              </ul>
-            ) : null}
+                          callUpdateApi({
+                            ...props.element,
+                            elementdata,
+                          });
+                        }}
+                      />
+                    }
+                  </ul>
+                ) : null}
+              </div>
+            </div>
           </div>
         </div>
         <img

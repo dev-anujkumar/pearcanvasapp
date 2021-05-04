@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
+import { discussionCloseIcon, searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
 import Button from "../ElementButtons";
 
 const getSelectedItemFromId = (id) => {
@@ -41,14 +41,9 @@ const DiscussionDialog = ({
         >
           <div className="headingContainerDiscussion">
             <div className="headingTextDiscussion">Select Discussion Items</div>
-            <Button
-              type="close-discussion-dialog"
-              onClick={() => {
-                closeDialog(true);
-              }}
-            />
+            <div onClick={() =>  closeDialog()} className="closeIconDiscussion">{discussionCloseIcon}</div>
           </div>
-            <div style={{}} className="searchContainerDiscussion">
+            <div className="searchContainerDiscussion">
               {searchDisussion}
               <input
                 value={searchText}
