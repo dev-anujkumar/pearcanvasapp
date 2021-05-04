@@ -50,8 +50,6 @@
   top: 6px;
 }
 
-
-
 .popupContainerDiscussion {
   width: 1138px;
   /* min-width: 400px; */
@@ -70,7 +68,6 @@
   font-style: normal;
   line-height: normal;
   letter-spacing: normal;
-
 }
 
 .lobNotPresentDiscussion {
@@ -99,9 +96,6 @@
   margin: 6.5em auto 0.65em auto;
 }
 
-
-
-
 /* Center the image and position the close button */
 .imgcontainerdiscussion {
   text-align: center;
@@ -110,13 +104,8 @@
 }
 
 .containerDiscussion {
-  padding: 16px
+  padding: 16px;
 }
-
-
-
-
-
 
 /* The Modal (background) */
 .modalDiscussion {
@@ -132,11 +121,10 @@
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
-
 .imageNotSelectedDiscussion {
-  filter: invert(40%) sepia(0%) saturate(0%) hue-rotate(236deg) brightness(110%) contrast(89%);
+  filter: invert(40%) sepia(0%) saturate(0%) hue-rotate(236deg) brightness(110%)
+    contrast(89%);
 }
-
 
 .altTextDiscussion {
   font-size: 16px;
@@ -191,8 +179,6 @@
   line-height: normal;
   letter-spacing: normal;
 }
-
-
 
 .headingContainerDiscussion {
   flex-direction: row;
@@ -257,10 +243,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 200px;
+  align-items: center;
+  display: flex;
 }
 .radioInDiscussion {
   margin-left: 20px;
-  cursor:pointer;
+  cursor: pointer;
 }
 .radioLabelDiscussion {
   margin-left: 20px;
@@ -280,7 +268,7 @@
   letter-spacing: normal;
   text-align: center;
   color: #005a70;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .selectDiscussion {
@@ -297,7 +285,7 @@
   letter-spacing: normal;
   text-align: center;
   color: #ffffff;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .notSelectDiscussion {
@@ -314,7 +302,7 @@
   letter-spacing: normal;
   text-align: center;
   color: #ffffff;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .tableContainerDiscussion {
@@ -338,7 +326,7 @@
   flex: 1;
 }
 
-.noDiscussionItem  {
+.noDiscussionItem {
   text-align: center;
   margin-top: 15px;
 }
