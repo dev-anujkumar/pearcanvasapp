@@ -865,5 +865,20 @@ export default {
                 }
             }
         } 
-    }
+    },
+    "discussion" : {
+        "primary-element-discussion": {
+            enum: 'DISCUSSION',
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent'],
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-element-discussion': {
+                    text: 'Element Dialogue Editor',
+                    labelText: 'PS',
+                    enum: 'NA',
+                }
+            }
+        } 
+    },
+    
 };
