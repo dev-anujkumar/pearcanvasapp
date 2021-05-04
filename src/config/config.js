@@ -65,8 +65,7 @@ let config = {
         CITE_REPO_NAME:"AWS US"
     },
     VCS_API_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/vcs-api/v1/content/',
-    LEARNOSITY_CONTENT_BRIDGE_API: 'https://contentapis-staging.pearsoncms.net/learnositycontentbridge-api/lcb/v1/bank2projapi/',
-    TCM_SRVR_STATUS_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tcstats/proj/` :"http://localhost:5000/tcstats/proj/",
+    LEARNOSITY_CONTENT_BRIDGE_API: 'https://contentapis-staging.pearsoncms.net/learnositycontentbridge-api/lcb/v1/bank2projapi/'
 };
 
 if (process.env.NODE_ENV === "development") {
