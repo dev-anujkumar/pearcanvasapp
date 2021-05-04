@@ -15,9 +15,14 @@ import {
   hideTocBlocker,
   showTocBlocker,
 } from "../../js/toggleLoader";
-import { sendDataToIframe } from "../../constants/utility";
+import {
+  matchHTMLwithRegex,
+  removeClassesFromHtml,
+  sendDataToIframe,
+} from "../../constants/utility";
 import config from "../../config/config";
 import { element } from "prop-types";
+import { replaceUnwantedtags } from "../ElementContainer/UpdateElements";
 
 // see review mode
 // conditions
@@ -80,13 +85,29 @@ const ElementDiscussion = (props) => {
                     showHideType,
                     eventTarget
                   ) => {
+                    const lastTitle = props?.element?.html?.title;
+
+                    // create data and call update API
+                    let newTitle = replaceUnwantedtags(
+                      eventTarget?.innerHTML,
+                      true
+                    );
+                    newTitle = matchHTMLwithRegex(newTitle)
+                      ? newTitle
+                      : `<p>${newTitle}</p>`;
+                    // newPSData.html[field] = tempCredit;
                     const html = {
-                      title: eventTarget.innerHTML,
+                      title: newTitle,
                     };
-                    callUpdateApi({
-                      ...props.element,
-                      html,
-                    });
+                    if (removeClassesFromHtml(lastTitle) !==
+                        removeClassesFromHtml(newTitle) &&
+                      !config.savingInProgress
+                    ) {
+                      callUpdateApi({
+                        ...props.element,
+                        html,
+                      });
+                    }
                   }}
                   index={`${props.index}-0`}
                   placeholder="Enter Label..."
