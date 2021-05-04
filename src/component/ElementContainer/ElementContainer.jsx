@@ -1769,8 +1769,8 @@ class ElementContainer extends Component {
         let { element } = this.props;
         let id = `${element.figuredata.imageid}`
         let metadataUrl = id.replace('urn:pearson:alfresco:','');
-        const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${metadataUrl}`
-       
+        // const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${metadataUrl}`
+        const Url  = `https://alfresco-qa.cms.pearson.com/share/page/site/r34-pdf-splitter/document-details?nodeRef=workspace://SpacesStore/736b9be5-acbd-4344-b83f-fbd1a099967a&parentNodeRef=workspace://SpacesStore/2c239df5-01ae-4f66-a5f8-29e7552b10eb&path=%252F`
         if(element?.type === 'figure' && element.figuretype === 'image'){
              this.handleFigurePopup(true,Url);
             //  window.open(Url);
