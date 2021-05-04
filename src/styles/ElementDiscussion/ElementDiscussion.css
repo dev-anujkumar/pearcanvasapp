@@ -18,10 +18,22 @@
 }
 
 .popupDiscussion {
-  height: 592px;
+  height: 560px;
   width: 100%;
   padding-top: 13px;
   background-color: white;
+}
+
+.paginationSelected {
+  margin: 7px 16px 6px;
+  font-size: 12px;
+  letter-spacing: 0.17px;
+  color: #252525;
+  border-bottom: 3px solid black;
+}
+
+.paginationUnselected {
+  
 }
 
 .displayNoneDiscussion {
@@ -58,12 +70,10 @@
 }
 
 .popupContainerDiscussion {
-  width: 1138px;
-  /* min-width: 400px; */
-  margin-left: 10%;
-  margin-right: 10%;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+    margin-left: 10%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    margin-right: 10%;
 }
 
 .valueDiscussion {
@@ -280,7 +290,7 @@
 }
 
 .tableContainerDiscussion {
-  height: 418px;
+  height: 378px;
   overflow-y: scroll;
 }
 
