@@ -30,6 +30,7 @@ import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.j
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
+
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -179,6 +180,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }   
     }).catch(error => {
         // Opener Element mock creation
+
         if (type == "OPENER") {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;

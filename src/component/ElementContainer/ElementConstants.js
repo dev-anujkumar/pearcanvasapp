@@ -14,6 +14,7 @@ export default {
     FIGURE_AUDIO : "audio",
     FIGURE_VIDEO : "video",
     FIGURE_ASSESSMENT : "assessment",
+    FIGURE_ELEMENT_DISCUSSION : "element-discussion",
  
 /****************Figure Interactive Element************************ */
     INTERACTIVE : "interactive",
@@ -57,6 +58,7 @@ export default {
     ELEMENT_DIALOGUE: "element-dialogue",
     DIALOGUE_SD: "stagedirection",
     DIALOGUE_DE: "lines",
+    ELEMENT_DISCUSSION: 'discussion',
 
 /**************** PDF Slate Element ************************ */  
     PDF_SLATE : "element-pdf"
