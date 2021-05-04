@@ -41,8 +41,14 @@ class PdfSlate extends Component {
 	* @param {*} locationData alfresco locationData
 	*/
 	handleC2ExtendedClick = (locationData) => {
+		const location = { 
+			...locationData,
+			currentAsset: { 
+				id: this.state?.pdfId?.split(":")[3],
+			}
+		}
 		const that = this;
-		!hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(locationData, function (data_2) {
+		!hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(location, function (data_2) {
 			c2MediaModule.AddanAssetCallBack(data_2, function (pdfData) {
 				that.getAlfrescoData(pdfData);
 			})
