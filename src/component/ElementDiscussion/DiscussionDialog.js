@@ -53,14 +53,14 @@ const DiscussionDialog = ({
               <input
                 value={searchText}
                 onChange={(e) => {
-                  const text = e.target.value.trim();
+                  const text = e.target.value;
                   setSearchText(text);
                   setFilteredItems(
                     discussionItems.filter(
                       (item) =>
                         JSON.stringify(Object.values(item))
                           .toUpperCase()
-                          .indexOf(text.toUpperCase()) > -1
+                          .indexOf(text.trim().toUpperCase()) > -1
                     )
                   );
                 }}
@@ -116,7 +116,9 @@ const DiscussionDialog = ({
           </div>
 
           <div className="footerContainerDiscussion">
-            <div className="paginationContainerDiscussion"></div>
+            <div className="paginationContainerDiscussion">
+              
+            </div>
             <div
               onClick={() => {
                 closeDialog();
