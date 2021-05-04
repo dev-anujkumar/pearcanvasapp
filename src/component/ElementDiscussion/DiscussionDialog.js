@@ -54,7 +54,6 @@ const DiscussionDialog = ({
               }}
             />
           </div>
-          {filteredItems.length > 0 && (
             <div style={{}} className="searchContainerDiscussion">
               {searchDisussion}
               <input
@@ -76,7 +75,6 @@ const DiscussionDialog = ({
                 placeholder="Search By Discussion ID or Title"
               ></input>
             </div>
-          )}
 
           {/* <span className="helpingText">Showing 1-25 of 345 </span> */}
           <div className="borderDivDiscussion"></div>
