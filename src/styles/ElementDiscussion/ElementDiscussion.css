@@ -13,6 +13,21 @@
   margin-top: 16px;
 }
 
+.displayBlockDiscussion {
+  display: block;
+}
+
+.popupDiscussion {
+  height: 592px;
+  width: 100%;
+  padding-top: 13px;
+  background-color: white;
+}
+
+.displayNoneDiscussion {
+  display: none;
+}
+
 .lobTitleDiscussion {
   min-width: 100px;
   height: 18px;
@@ -20,10 +35,6 @@
   margin-right: 17px;
   font-size: 12px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
   color: #424242;
   float: left;
 }
@@ -34,10 +45,6 @@
   margin: 16px 62px 16px 9px;
   font-size: 12px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
   color: #424242;
 }
 
@@ -64,10 +71,6 @@
   margin: 16px 9px 24px 10px;
   font-size: 12px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
 }
 
 .lobNotPresentDiscussion {
@@ -75,10 +78,6 @@
   margin: 16px 9px 24px 10px;
   font-size: 12px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
   color: #db1158;
 }
 
@@ -109,7 +108,6 @@
 
 /* The Modal (background) */
 .modalDiscussion {
-  display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 6; /* Sit on top */
   left: 0;
@@ -129,20 +127,12 @@
 .altTextDiscussion {
   font-size: 16px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
   color: #005a70;
 }
 
 .headingTextDiscussion {
   font-size: 16px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
   color: #005a70;
   flex: 1;
 }
@@ -173,11 +163,6 @@
 ::placeholder {
   color: #ababab;
   font-size: 16px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
 }
 
 .headingContainerDiscussion {
@@ -193,11 +178,11 @@
   margin: 16px 872px 4px 10px;
   font-family: OpenSans;
   font-size: 12px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
+
+
+
   line-height: 1.5;
-  letter-spacing: normal;
+
   color: #454545;
   margin-left: 20px;
 } */
@@ -222,10 +207,8 @@
   text-align: left;
   font-size: 14px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
   line-height: 1.43;
-  letter-spacing: normal;
+
   color: #202020;
   border-radius: 4px;
   background-color: #fafafa;
@@ -262,10 +245,7 @@
   background-color: #ffffff;
   font-size: 14px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
   line-height: 1.43;
-  letter-spacing: normal;
   text-align: center;
   color: #005a70;
   cursor: pointer;
@@ -279,10 +259,7 @@
   background-color: #005a70;
   font-size: 14px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
   line-height: 1.43;
-  letter-spacing: normal;
   text-align: center;
   color: #ffffff;
   cursor: pointer;
@@ -296,10 +273,7 @@
   background-color: #005a70;
   font-size: 14px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
   line-height: 1.43;
-  letter-spacing: normal;
   text-align: center;
   color: #ffffff;
   cursor: pointer;

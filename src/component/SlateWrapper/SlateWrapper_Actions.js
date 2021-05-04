@@ -30,7 +30,6 @@ import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.j
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
-import DE_DATA  from './de_api'
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);

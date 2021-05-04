@@ -184,7 +184,6 @@ const ElementDiscussion = (props) => {
       <DiscussionDialog
         selectDiscussion={(item) => {
           // update itemid, title in update api
-          console.log("the item is 5555 ", item);
           const elementdata = {
             assessmentid: item.discussionUrn,
             assessmenttitle: item.title,

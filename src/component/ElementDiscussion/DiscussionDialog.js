@@ -33,17 +33,11 @@ const DiscussionDialog = ({
 
   return (
     <div
-      style={{ display: showDialog ? "block" : "none" }}
-      className="modalDiscussion"
+      className={`modalDiscussion ${showDialog? 'displayBlockDiscussion' : 'displayNoneDiscussion'}`}
     >
       <div className="popupContainerDiscussion">
         <div
-          style={{
-            height: 592,
-            width: "100%",
-            paddingTop: 13,
-            backgroundColor: "white",
-          }}
+          className="popupDiscussion"
         >
           <div className="headingContainerDiscussion">
             <div className="headingTextDiscussion">Select Discussion Items</div>
