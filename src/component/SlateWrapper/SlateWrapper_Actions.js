@@ -30,6 +30,7 @@ import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.j
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
+
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -179,6 +180,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }   
     }).catch(error => {
         // Opener Element mock creation
+
         if (type == "OPENER") {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
@@ -835,7 +837,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         
-        const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample"]
+        const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample",'showhide','popup']
         if(acceptedTypes.includes(selection.element.type)) {
             const payloadParams = {
                 ...params,
@@ -917,8 +919,7 @@ export const wirisAltTextPopup = (data) => (dispatch) => {
  * @param {*} insertionIndex index of insertion
  * @param {*} manifestUrn container urn
  */
-export const cloneContainer = (insertionIndex, manifestUrn) => async (dispatch) => {
-
+export const cloneContainer = (insertionIndex, manifestUrn,parentUrn,asideData) => async (dispatch) => {
     try {
         //Clone container
         const cloneApiUrl = `${config.AUDIO_NARRATION_URL}container/${manifestUrn}/clone`
@@ -941,7 +942,9 @@ export const cloneContainer = (insertionIndex, manifestUrn) => async (dispatch) 
             insertionIndex,
             requestId,
             dispatch,
-            pasteElement
+            pasteElement,
+            parentUrn,
+            asideData
         }
         await (await import("./slateWrapperAction_helper.js")).fetchStatusAndPaste(fetchAndPasteArgs)  
     }
