@@ -73,7 +73,8 @@ let cypressConfig = {
     isCreateGlossary:false,
     isCreateFootnote:false,
     isSavingElement:false,
-    tcmslatemanifest:""
+    tcmslatemanifest:"",
+    TCM_SRVR_STATUS_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tcstats/proj/` :"http://localhost:5000/tcstats/proj/",
 }
 
 
