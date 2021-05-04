@@ -28,6 +28,7 @@ import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, up
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
 import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
 import PopUp from '../PopUp';
+import {OPEN_ELM_PICKER} from '../../constants/IFrameMessageTypes';
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -357,6 +358,7 @@ class Interactive extends React.Component {
             //     showElmComponent: true
             // })
             // sendDataToIframe({ 'type': 'hideToc', 'message': {} });
+            console.log("In ElementInteractive");
             sendDataToIframe({
                 'type': OPEN_ELM_PICKER,
                 'message': {

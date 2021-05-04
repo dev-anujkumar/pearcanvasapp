@@ -21,6 +21,7 @@ import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js'
 import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX, Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
+import {OPEN_ELM_PICKER} from '../../constants/IFrameMessageTypes';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
 class ElementSingleAssessment extends Component {
@@ -253,6 +254,7 @@ class ElementSingleAssessment extends Component {
             if (this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY) {
                 this.toggleAssessmentPopup(e, true)
             } else {
+                console.log("In ElementSingleAssessment");
                 sendDataToIframe({
                     'type': OPEN_ELM_PICKER,
                     'message': {
@@ -269,10 +271,12 @@ class ElementSingleAssessment extends Component {
                         slateEntityURN: config.tempSlateEntityURN ?? config.slateEntityURN,
                         projectTitle: config.book_title
                     }
+                   
                 });
-                showTocBlocker(true);
-                disableHeader(true);
-                this.props.showBlocker(true);
+                console.log("In ElementSingleAssessment after send data to iframe");
+                // showTocBlocker(true);
+                // disableHeader(true);
+                // this.props.showBlocker(true);
             }
         }
     }
