@@ -44,20 +44,23 @@ const ElementDiscussion = (props) => {
   const [title, setTitle] = useState(assessmenttitle);
 
   const callUpdateApi = (elementDiscussion) => {
-    /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
-    const { index, parentUrn, asideData, parentElement } = props;
-    const dataToSend = createDiscussionForUpdateAPI(props, elementDiscussion);
-    sendDataToIframe({ type: "isDirtyDoc", message: { isDirtyDoc: true } });
-    config.isSavingElement = true;
-    props.updateElement(
-      dataToSend,
-      index,
-      parentUrn,
-      asideData,
-      null,
-      parentElement,
-      null
-    );
+    // if there is any change only than update
+    if (JSON.stringify(elementDiscussion) !== JSON.stringify(props.element)) {
+      /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
+      const { index, parentUrn, asideData, parentElement } = props;
+      const dataToSend = createDiscussionForUpdateAPI(props, elementDiscussion);
+      sendDataToIframe({ type: "isDirtyDoc", message: { isDirtyDoc: true } });
+      config.isSavingElement = true;
+      props.updateElement(
+        dataToSend,
+        index,
+        parentUrn,
+        asideData,
+        null,
+        parentElement,
+        null
+      );
+    }
   };
   return (
     <div className="containerDiscussion">
@@ -78,8 +81,8 @@ const ElementDiscussion = (props) => {
                     eventTarget
                   ) => {
                     const html = {
-                      title: eventTarget.innerHTML
-                    }
+                      title: eventTarget.innerHTML,
+                    };
                     callUpdateApi({
                       ...props.element,
                       html,
