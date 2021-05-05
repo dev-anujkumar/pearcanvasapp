@@ -18,7 +18,7 @@ import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_U
 import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions } from './AssessmentActions/assessmentActions.js';
-import { OPEN_ELM_PICKER } from '../../constants/IFrameMessageTypes.js';
+import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -377,20 +377,22 @@ class AssessmentSlateData extends Component {
                 case PUF:
                 case LEARNOSITY:
                     sendDataToIframe({
-                        'type': OPEN_ELM_PICKER,
+                        'type': TOGGLE_ELM_SPA,
                         'message': {
-                            usageType: this.state.activeAssessmentUsageType,
-                            elementType: this.state.activeAssessmentType,
-                            resource_type: Resource_Type.ASSESSMENT,
+                            type: OPEN_ELM_PICKER,
+                            usageType: this.state.activeAsseessmentUsageType,
+                            elementType: this.state.elementType,
+                            resource_type: Resource_Type.ASSESSMENT_ITEM,
                             ssoToken: config.ssoToken,
-                            projectURN: config.projectUrn,
-                            ELM_PORTAL_URL: config.ELM_PORTAL_URL,
+                            projectUrn: config.projectUrn,
+                            ELM_PORTAL_ENDPOINT: config.ELM_PORTAL_URL,
                             REACT_APP_API_URL: config.REACT_APP_API_URL,
                             MANIFEST_API_ENDPOINT: config.ELM_ENDPOINT,
                             STRUCTURE_APIKEY: config.STRUCTURE_APIKEY,
                             slateManifestURN: config.tempSlateManifestURN ?? config.slateManifestURN,
                             slateEntityURN: config.tempSlateEntityURN ?? config.slateEntityURN,
-                            projectTitle: config.book_title
+                            projectTitle: config.book_title,
+                            elementId: this.props.model.id
                         }
                     });
                     break;

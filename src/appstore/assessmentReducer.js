@@ -15,7 +15,8 @@ import {
 const INITIAL_STATE = {
     usageTypeListData: {},
     currentEditAssessment:{},
-    itemUpdateEvent:false
+    itemUpdateEvent: false,
+    dataFromElm: {}
 }
 
 const INITIAL_ACTION = {

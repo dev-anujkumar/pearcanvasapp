@@ -32,7 +32,7 @@ import {publishContent,logout} from '../../js/header'
 import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
-import { fetchUsageTypeData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
@@ -317,6 +317,7 @@ export default connect(
         audioGlossaryPopup,
         fetchLearnosityContent,
         fetchProjectLFs,
-        currentSlateLOType
+        currentSlateLOType,
+        setElmPickerData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

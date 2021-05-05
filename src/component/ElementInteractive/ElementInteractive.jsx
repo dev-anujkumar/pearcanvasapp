@@ -353,33 +353,26 @@ class Interactive extends React.Component {
                 });
             }
         }
-        else if (this.props.model.figuredata.interactiveformat===ELM_INT){
-            // this.setState({
-            //     showElmComponent: true
-            // })
-            // sendDataToIframe({ 'type': 'hideToc', 'message': {} });
-            console.log("In ElementInteractive");
+        else if (this.props.model.figuredata.interactiveformat === ELM_INT) {
             sendDataToIframe({
-                'type': OPEN_ELM_PICKER,
+                'type': TOGGLE_ELM_SPA,
                 'message': {
-                    usageType: this.state.activeAssessmentUsageType,
-                    elementType: this.state.activeAssessmentType,
-                    resource_type: Resource_Type.INTERACTIVE,
+                    type: OPEN_ELM_PICKER,
+                    usageType: this.state.activeAsseessmentUsageType,
+                    elementType: this.state.elementType,
+                    resource_type: Resource_Type.ASSESSMENT_ITEM,
                     ssoToken: config.ssoToken,
-                    projectURN: config.projectUrn,
-                    ELM_PORTAL_URL: config.ELM_PORTAL_URL,
+                    projectUrn: config.projectUrn,
+                    ELM_PORTAL_ENDPOINT: config.ELM_PORTAL_URL,
                     REACT_APP_API_URL: config.REACT_APP_API_URL,
                     MANIFEST_API_ENDPOINT: config.ELM_ENDPOINT,
                     STRUCTURE_APIKEY: config.STRUCTURE_APIKEY,
                     slateManifestURN: config.tempSlateManifestURN ?? config.slateManifestURN,
                     slateEntityURN: config.tempSlateEntityURN ?? config.slateEntityURN,
-                    projectTitle: config.book_title
+                    projectTitle: config.book_title,
+                    elementId: this.props.model.id
                 }
             });
-            showTocBlocker(true);
-            disableHeader(true);
-            this.props.showBlocker(true);
-            this.props.handleFocus();
         }
         else {
             this.props.showBlocker(value);

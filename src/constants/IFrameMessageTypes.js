@@ -36,4 +36,8 @@ export const SendMessageForVersioning = "sendMessageForVersioning"
 export const projectPendingTcStatus = "projectPendingTcStatus"
 
 /* Elm Picker */
-export const OPEN_ELM_PICKER="OpenElmPicker"
+export const TOGGLE_ELM_SPA = "ToggleElmSPA"
+export const OPEN_ELM_PICKER = "OpenElmPicker"
+export const ELM_CREATE_IN_PLACE = "ElmCreateInPlace"
+export const CLOSE_ELM_PICKER = "CloseElmPicker"
+export const SAVE_ELM_DATA = "SaveElmData"

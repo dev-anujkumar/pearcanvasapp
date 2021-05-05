@@ -21,7 +21,7 @@ import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js'
 import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX, Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
-import {OPEN_ELM_PICKER} from '../../constants/IFrameMessageTypes';
+import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
 class ElementSingleAssessment extends Component {
@@ -71,6 +71,17 @@ class ElementSingleAssessment extends Component {
             const saveEventUpdate = latestItem?.shouldUpdateOnSaveEvent;
             if ((assessmentReducer.itemUpdateEvent == true && assessmentReducer[assessmentId].showUpdateStatus == false) && (saveEventUpdate == true && (latestItemId && assessmentItemId != latestItemId) || (assessmentTitle != assessmentReducer[assessmentId].assessmentTitle))) {
                 this.updateElmOnSaveEvent(this.props);
+            }
+        }
+        if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && assessmentReducer.dataFromElm) {
+            const { dataFromElm } = assessmentReducer;
+            if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resource_type == 'assessmentItem' && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementId === this.props.model.id) {
+                window.open(dataFromElm.elmUrl);
+                handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType);
+                this.props.setElmPickerData({});
+            } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resource_type == 'assessmentItem' && dataFromElm.pufObj && dataFromElm.elementId === this.props.model.id) {
+                this.addPufAssessment(dataFromElm.pufObj);
+                this.props.setElmPickerData({});
             }
         }
     }
@@ -254,29 +265,25 @@ class ElementSingleAssessment extends Component {
             if (this.state.elementType !== PUF && this.state.elementType !== LEARNOSITY) {
                 this.toggleAssessmentPopup(e, true)
             } else {
-                console.log("In ElementSingleAssessment");
                 sendDataToIframe({
-                    'type': OPEN_ELM_PICKER,
+                    'type': TOGGLE_ELM_SPA,
                     'message': {
-                        usageType: this.state.activeAssessmentUsageType,
-                        elementType: this.state.activeAssessmentType,
+                        type: OPEN_ELM_PICKER,
+                        usageType: this.state.activeAsseessmentUsageType,
+                        elementType: this.state.elementType,
                         resource_type: Resource_Type.ASSESSMENT_ITEM,
                         ssoToken: config.ssoToken,
-                        projectURN: config.projectUrn,
-                        ELM_PORTAL_URL: config.ELM_PORTAL_URL,
+                        projectUrn: config.projectUrn,
+                        ELM_PORTAL_ENDPOINT: config.ELM_PORTAL_URL,
                         REACT_APP_API_URL: config.REACT_APP_API_URL,
                         MANIFEST_API_ENDPOINT: config.ELM_ENDPOINT,
                         STRUCTURE_APIKEY: config.STRUCTURE_APIKEY,
                         slateManifestURN: config.tempSlateManifestURN ?? config.slateManifestURN,
                         slateEntityURN: config.tempSlateEntityURN ?? config.slateEntityURN,
-                        projectTitle: config.book_title
+                        projectTitle: config.book_title,
+                        elementId: this.props.model.id
                     }
-                   
                 });
-                console.log("In ElementSingleAssessment after send data to iframe");
-                // showTocBlocker(true);
-                // disableHeader(true);
-                // this.props.showBlocker(true);
             }
         }
     }

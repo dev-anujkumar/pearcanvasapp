@@ -151,3 +151,6 @@ export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 
 /* --------------- Learnosity Project ------------------------*/
 export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
+
+/*-----------------Elm Picker----------------------------*/
+export const SET_ELM_PICKER_MSG = "SET_ELM_PICKER_MSG";
