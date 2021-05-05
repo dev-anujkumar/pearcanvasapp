@@ -38,6 +38,7 @@ import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSla
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import discussionItems from '../SlateWrapper/de_api';
+import cypressConfig from '../../config/cypressConfig';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -307,6 +308,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
             // call api to get usage types
+            
             const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
             const usageTypeUrl = `${config.STRUCTURE_API_URL}${usageTypeEndPoint}`;
             console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
@@ -334,17 +336,18 @@ export const getProjectDetails = () => (dispatch, getState) => {
 
 
             // call api to get discussion items
-            const discussionURLEndPoint = 'narrative/v1/discussion/discussions';
-            const discussionUrl = `${config.NARRATIVE_API_ENDPOINT}${discussionURLEndPoint}}`;
-            return axios.get(discussionUrl, {
+            const discussionURLEndPoint = 'v1/discussion/discussions';
+            // 'https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1/discussion/discussions'
+            const discussionUrl = `${config.REACT_APP_API_URL}${discussionURLEndPoint}`;
+            return axios.post(discussionUrl, {
+                "lineOfBusinesses" : [
+                    lineOfBusiness
+                ]
+            },
+            {
                 headers: {
                     "Content-Type": "application/json",
                     "PearsonSSOSession": config.ssoToken
-                },
-                params: {
-                    "lineOfBusinesses": [
-                        "HNO"
-                    ]
                 }
             }).then (discussionResponse => {
                 if(Array.isArray(discussionResponse?.data)) {
@@ -355,7 +358,6 @@ export const getProjectDetails = () => (dispatch, getState) => {
                 }
                 
             }).catch(error => {
-                console.log("cannnot proceed with")
                  dispatch({
                     type: UPDATE_DISCUSSION_ITEMS,
                     payload: discussionItems
