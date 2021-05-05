@@ -1543,7 +1543,7 @@ class ElementContainer extends Component {
             }
         }
 
-        let noTCM = ['TE', 'Qu', 'PS'];
+        let noTCM = ['TE', 'Qu', 'PS','MA'];
         if(noTCM.indexOf(labelText) >= 0) {
             tcm = false;
         }
