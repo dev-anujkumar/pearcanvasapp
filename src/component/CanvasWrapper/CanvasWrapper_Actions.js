@@ -38,7 +38,6 @@ import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSla
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import discussionItems from '../SlateWrapper/de_api';
-import cypressConfig from '../../config/cypressConfig';
 
 export const findElementType = (element, index) => {
     let elementType = {};
