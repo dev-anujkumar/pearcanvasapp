@@ -832,7 +832,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             _requestData = {
                 "content": [{
                     ..._requestData.content[0],
-                    "elementdata": selection.element.elementdata
+                    "blockdata": selection.element.blockdata
                 }]
             }
         }
