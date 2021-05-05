@@ -180,7 +180,9 @@ const ElementDiscussion = (props) => {
                           setshowUsageTypeOptions(false);
                           setUsageType(usageType);
                           const elementdata = {
-                            ...props.element.elementdata,
+                            assessmentid: itemId,
+                            assessmenttitle: title,
+                            usagetype: usageType,
                             usagetype: usageType,
                           };
 
