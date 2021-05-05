@@ -43,7 +43,8 @@ const { TEXT,
     TABLE_EDITOR,
     TOC_PARENT_TYPES,
     SHOW_HIDE,
-    POPUP
+    POPUP,
+    ELEMENT_DISCUSSION
  } = elementTypeConstant
 
 export function ElementSaprator(props) {

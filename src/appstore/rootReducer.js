@@ -16,6 +16,7 @@ import elementStatusReducer from "./elementStatusReducer";
 import { searchReducer, commentSearchReducer } from './searchReducer';
 import assessmentReducer from './assessmentReducer';
 import { selectionReducer } from './copyUrnReducer';
+import { projectInfo } from './projectInfoReducer'
 
 export default combineReducers({
     appStore: appReducer,
@@ -35,5 +36,6 @@ export default combineReducers({
     searchReducer,
     commentSearchReducer,
     assessmentReducer,
-    selectionReducer
+    selectionReducer,
+    projectInfo
 });

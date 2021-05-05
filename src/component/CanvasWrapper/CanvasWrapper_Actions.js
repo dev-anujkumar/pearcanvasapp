@@ -17,7 +17,10 @@ import {
     SET_CURRENT_SLATE_DATA,
     GET_TCM_RESOURCES,
     LEARNOSITY_PROJECT_INFO,
-    PROJECT_LEARNING_FRAMEWORKS
+    PROJECT_LEARNING_FRAMEWORKS,
+    UPDATE_PROJECT_INFO,
+    UPDATE_USAGE_TYPE,
+    UPDATE_DISCUSSION_ITEMS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -34,6 +37,7 @@ import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
+import discussionItems from '../SlateWrapper/de_api';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -251,6 +255,16 @@ export const findElementType = (element, index) => {
                     }
                     break;
                 }
+            case "discussion" : {
+                let dialogueType = 'discussion';
+                elementType = {
+                    elementType: elementDataBank[dialogueType]["elementType"],
+                    primaryOption: elementDataBank[dialogueType]["primaryOption"],
+                    secondaryOption: elementDataBank[dialogueType]["secondaryOption"],
+                 
+                }
+                break;
+            }
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -275,6 +289,86 @@ export const fetchElementTag = (element, index = 0) => {
         return findElementType(element, index).tag || "";
     }
 }
+
+export const getProjectDetails = () => (dispatch, getState) => {
+    let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
+    console.log("the lob url is " + lobURL)
+    return axios.get(lobURL, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then (response => {
+        dispatch({
+            type: UPDATE_PROJECT_INFO,
+            payload: response.data
+        })
+        const data = JSON.parse(JSON.stringify(response.data))
+        const {lineOfBusiness} = data;
+        if(lineOfBusiness) {
+            // call api to get usage types
+            const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
+            const usageTypeUrl = `${config.STRUCTURE_API_URL}${usageTypeEndPoint}`;
+            console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
+             axios.get(usageTypeUrl, {
+                headers: {
+                    ApiKey:config.STRUCTURE_APIKEY,
+                    PearsonSSOSession:config.ssoToken,
+                    'Content-Type':'application/json',
+                    Authorization:config.CMDS_AUTHORIZATION
+                }
+            }).then (usageTypeResponse => {
+                console.log("the usage type response is", usageTypeResponse);
+                const data = usageTypeResponse?.data;
+                if(Array.isArray(data)){
+                    const usageType = data.map(item => ({label:item.label.en}))
+                dispatch({
+                    type: UPDATE_USAGE_TYPE,
+                    payload: usageType
+                })
+            }
+                
+            }).catch(error => {
+            }) 
+
+
+
+            // call api to get discussion items
+            const discussionURLEndPoint = 'narrative/v1/discussion/discussions';
+            const discussionUrl = `${config.NARRATIVE_API_ENDPOINT}${discussionURLEndPoint}}`;
+            return axios.get(discussionUrl, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                },
+                params: {
+                    "lineOfBusinesses": [
+                        "HNO"
+                    ]
+                }
+            }).then (discussionResponse => {
+                if(Array.isArray(discussionResponse?.data)) {
+                dispatch({
+                    type: UPDATE_DISCUSSION_ITEMS,
+                    payload: discussionResponse.data
+                })
+                }
+                
+            }).catch(error => {
+                console.log("cannnot proceed with")
+                 dispatch({
+                    type: UPDATE_DISCUSSION_ITEMS,
+                    payload: discussionItems
+                })
+            }) 
+        }
+    }).catch(error => {
+        console.log("cannnow proceed")
+    })  
+}
+
+
+
 export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload) => (dispatch, getState) => {
     // if(config.isFetchSlateInProgress){
     //  return false;
