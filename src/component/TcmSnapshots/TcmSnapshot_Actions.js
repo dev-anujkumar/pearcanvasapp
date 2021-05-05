@@ -9,8 +9,7 @@ import { GET_TCM_RESOURCES, AUTHORING_ELEMENT_UPDATE } from '../../constants/Act
   */
 export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
-    // let url = `http://localhost:4000/tcstats/proj/${config.projectUrn}/slate/${slateManifestUrn}`
-    let url = `/cypress/trackchanges-srvr/tcstats/proj/${config.projectUrn}/slate/${slateManifestUrn}`;
+    let url = `${config.TCM_SRVR_STATUS_URL}${config.projectUrn}/slate/${slateManifestUrn}`;
     return axios.get(url, {
         headers: {
             PearsonSSOSession: config.ssoToken,
