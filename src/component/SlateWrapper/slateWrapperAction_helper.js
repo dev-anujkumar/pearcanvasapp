@@ -187,6 +187,7 @@ export const onPasteSuccess = async (params) => {
             }
         })
     } else {
+        console.log('@@Data',cutIndex, 0, responseData)
         newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
     }
 

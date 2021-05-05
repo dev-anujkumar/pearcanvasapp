@@ -140,6 +140,7 @@ const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticTy
         } else if (item.listitems && item.listitems.length > 0) { // for nested lists
             snapshotsList = snapshotsList.concat(await setSnapshotsInListAndPoetry(actionStatus, item.listitems, semanticType,glossaryFootnoteHtmlList,index,element));
         }
+        console.log('dataItrating',item,snapshotsList,elementList)
     }))
     return snapshotsList
 }
