@@ -350,17 +350,12 @@ export const getProjectDetails = () => (dispatch, getState) => {
                 }
             }).then (discussionResponse => {
                 if(Array.isArray(discussionResponse?.data)) {
-                dispatch({
-                    type: UPDATE_DISCUSSION_ITEMS,
-                    payload: discussionResponse.data
-                })
+                    dispatch({
+                        type: UPDATE_DISCUSSION_ITEMS,
+                        payload: discussionResponse.data
+                    })
                 }
-                
             }).catch(error => {
-                 dispatch({
-                    type: UPDATE_DISCUSSION_ITEMS,
-                    payload: discussionItems
-                })
             }) 
         }
     }).catch(error => {
