@@ -183,7 +183,6 @@ const ElementDiscussion = (props) => {
                             assessmentid: itemId,
                             assessmenttitle: title,
                             usagetype: usageType,
-                            usagetype: usageType,
                           };
 
                           callUpdateApi({
