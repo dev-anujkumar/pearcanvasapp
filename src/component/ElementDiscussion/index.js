@@ -123,7 +123,7 @@ const ElementDiscussion = (props) => {
           </div>
         </div>
         <div className="rowDiscussion">
-          <span className="discussionItemTitle">Title ID:</span>
+          <span className="discussionItemTitle">Title:</span>
           <span className="valueDiscussion">{title}</span>
         </div>
 
