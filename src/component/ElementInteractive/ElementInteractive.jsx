@@ -28,7 +28,7 @@ import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, up
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
 import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
 import PopUp from '../PopUp';
-import {OPEN_ELM_PICKER} from '../../constants/IFrameMessageTypes';
+import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
