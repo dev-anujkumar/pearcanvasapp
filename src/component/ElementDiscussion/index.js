@@ -199,6 +199,7 @@ const ElementDiscussion = (props) => {
         </div>
         <img
           onClick={() => {
+            setshowUsageTypeOptions(false);
             if (LOB !== undefined && usageType !== null) {
               sendDataToIframe({ type: "hideToc", message: {} });
               showTocBlocker(true);
