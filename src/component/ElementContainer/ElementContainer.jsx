@@ -58,6 +58,7 @@ import elementTypes from './../Sidebar/elementTypes.js';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import ElementDialogue from '../ElementDialogue';
+import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 
 class ElementContainer extends Component {
@@ -100,7 +101,6 @@ class ElementContainer extends Component {
             if (element.popupdata.hasOwnProperty("postertextobject")) {
                 !elementStatus[element.popupdata["postertextobject"][0].id] && this.props.getElementStatus(element.popupdata["postertextobject"][0].id, this.props.index)
             }
-            
         }
         else if (element && (element.type === "poetry" || element.type === "citations")) {
             if (element.contents && element.contents.hasOwnProperty("formatted-title")) {
@@ -1490,6 +1490,32 @@ class ElementContainer extends Component {
                         />;
                         labelText = 'PS'
                         break;
+                    case elementTypeConstant.ELEMENT_DISCUSSION:
+                        editor = <ElementDiscussion
+                            permissions={permissions}
+                            btnClassName={this.state.btnClassName}
+                            borderToggle={this.state.borderToggle}
+                            elemBorderToggle={this.props.elemBorderToggle}
+                            elementSepratorProps={elementSepratorProps}
+                            index={index}
+                            element={element}
+                            elementId={element.id}
+                            slateLockInfo={slateLockInfo}
+                            // splithandlerfunction={splithandlerfunction}
+                            userRole={this.props.userRole}
+                            activeElement={this.props.activeElement}
+                            onClickCapture={this.props.onClickCapture}
+                            showBlocker={this.props.showBlocker}
+                            setActiveElement={this.props.setActiveElement}
+                            parentElement={this.props.parentElement}
+                            showDeleteElemPopup={this.showDeleteElemPopup}
+                            handleBlur={this.handleBlur}
+                            handleFocus={this.handleFocus}
+                            deleteElement={this.deleteElement}
+                        />
+                        labelText = 'DE'
+                        break;
+                    
                     case elementTypeConstant.PDF_SLATE:
                         editor = <PdfSlate
                             permissions={permissions}
@@ -1501,6 +1527,8 @@ class ElementContainer extends Component {
                             showBlocker={this.props.showBlocker}
                             parentElement={this.props.parentElement}
                             handleFocus={this.handleFocus}
+                            handleBlur={this.handleBlur}
+                            model={this.props.model}
                         />;
                         labelText = 'PDF'
                         break;
@@ -1544,7 +1572,7 @@ class ElementContainer extends Component {
             }
         }
 
-        let noTCM = ['TE', 'Qu', 'PS'];
+        let noTCM = ['TE', 'Qu', 'PS','MA'];
         if(noTCM.indexOf(labelText) >= 0) {
             tcm = false;
         }

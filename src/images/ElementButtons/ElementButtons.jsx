@@ -372,8 +372,8 @@ export const approvedIcon = (() => {
 export const stageDirectionIcon = (() => {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
-                <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1036 -501) translate(391 432) translate(645 69)" />
+            <g fill="none" fillRule="evenodd">
+                <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-1036 -501) translate(391 432) translate(645 69)" />
                 <path fill="gray" d="M16.958 4.452c-.053-.165-.17-.302-.324-.38-.154-.08-.333-.094-.497-.04l-2.728.889c-.343.111-.53.48-.419.823l.137.421-6.94 5.11-2.736.892c-.165.054-.301.17-.38.325-.078.154-.093.334-.04.499l1.664 5.13c.09.277.345.452.62.452.067 0 .135-.01.202-.032l2.736-.891 1.407.007C9.942 18.994 11.128 20 12.544 20c1.405 0 2.583-.991 2.877-2.313l1.442.008.137.42c.053.166.17.303.324.381.092.048.194.072.296.072.068 0 .136-.011.201-.032l2.728-.889c.343-.112.53-.48.419-.824l-4.01-12.371zM5.734 17.096l-1.26-3.888 1.596-.52 1.26 3.888-1.596.52zm6.81 1.597c-.688 0-1.278-.426-1.523-1.029l3.04.016c-.25.594-.835 1.013-1.517 1.013zm-3.918-2.349l-.686-2.116-.685-2.116 6.296-4.637 1.93 5.958.958 2.952-7.813-.041zm9.412.746l-.08-.247v-.001l-1.723-5.316-1.803-5.564 1.488-.485 3.606 11.128-1.488.485z" transform="translate(-1036 -501) translate(391 432) translate(645 69)" />
             </g>
 
@@ -384,9 +384,9 @@ export const stageDirectionIcon = (() => {
 export const dialougeElementIcon = (() => {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
-                <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1036 -465) translate(391 432) translate(645 33)" />
-                <path fill="#000" fill-rule="nonzero" d="M19.2 7.2h-1.6v7.2H7.2V16c0 .44.36.8.8.8h8.8L20 20V8c0-.44-.36-.8-.8-.8zM16 12V4.8c0-.44-.36-.8-.8-.8H4.8c-.44 0-.8.36-.8.8V16l3.2-3.2h8c.44 0 .8-.36.8-.8z" transform="translate(-1036 -465) translate(391 432) translate(645 33)" />
+            <g fill="none" fillRule="evenodd">
+                <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-1036 -465) translate(391 432) translate(645 33)" />
+                <path fill="#000" fillRule="nonzero" d="M19.2 7.2h-1.6v7.2H7.2V16c0 .44.36.8.8.8h8.8L20 20V8c0-.44-.36-.8-.8-.8zM16 12V4.8c0-.44-.36-.8-.8-.8H4.8c-.44 0-.8.36-.8.8V16l3.2-3.2h8c.44 0 .8-.36.8-.8z" transform="translate(-1036 -465) translate(391 432) translate(645 33)" />
             </g>
         </svg>
 
@@ -421,12 +421,12 @@ export const learnosityIcon = (() => {
 export const tickIcon = (() => {
     return (
         <svg id="tick-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                <g>
                   <g>
                      <g>
-                        <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-921 -146) translate(911 138) translate(10 8)"/>
-                        <path fill="#000" fill-rule="nonzero" d="M21 7L9 19 3.5 13.5 4.91 12.09 9 16.17 19.59 5.59z" transform="translate(-921 -146) translate(911 138) translate(10 8)"/>
+                        <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-921 -146) translate(911 138) translate(10 8)"/>
+                        <path fill="#000" fillRule="nonzero" d="M21 7L9 19 3.5 13.5 4.91 12.09 9 16.17 19.59 5.59z" transform="translate(-921 -146) translate(911 138) translate(10 8)"/>
                      </g>
                   </g>
                </g>
@@ -434,3 +434,27 @@ export const tickIcon = (() => {
         </svg>
     )
 })();
+
+export const discussionCloseIcon = (() => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fillRule="evenodd">
+                <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-1197 -97) translate(1197 97)" />
+                <path fill="#005A70" fillRule="nonzero" d="M18 7.209L16.791 6 12 10.791 7.209 6 6 7.209 10.791 12 6 16.791 7.209 18 12 13.209 16.791 18 18 16.791 13.209 12z" transform="translate(-1197 -97) translate(1197 97)" />
+            </g>
+        </svg>
+    )
+})();
+
+export const searchDisussion = (() => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fillRule="evenodd">
+                <g>
+                    <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-247 -141) translate(235 133) translate(12 8)"/>
+                    <path fill="#A8A8A8" fillRule="nonzero" d="M15.435 14.063h-.723l-.256-.247c.897-1.043 1.437-2.397 1.437-3.87C15.893 6.662 13.23 4 9.946 4 6.662 4 4 6.662 4 9.946s2.662 5.947 5.946 5.947c1.473 0 2.827-.54 3.87-1.437l.247.256v.723L18.637 20 20 18.637l-4.565-4.574zm-5.489 0c-2.278 0-4.116-1.839-4.116-4.117S7.668 5.83 9.946 5.83c2.278 0 4.117 1.838 4.117 4.116 0 2.278-1.839 4.117-4.117 4.117z" transform="translate(-247 -141) translate(235 133) translate(12 8)"/>
+                </g>
+            </g>
+        </svg>    
+    )
+})()

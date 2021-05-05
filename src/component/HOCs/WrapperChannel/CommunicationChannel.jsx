@@ -16,6 +16,7 @@ import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
+import { getProjectDetails } from '../../CanvasWrapper/CanvasWrapper_Actions.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -128,6 +129,9 @@ function CommunicationChannel(WrappedComponent) {
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
                     this.props.fetchLearnosityContent()
+
+                    // call get project api here
+                    this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
                     break;

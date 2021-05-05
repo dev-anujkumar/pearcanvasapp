@@ -150,7 +150,9 @@ export const WIRIS_ALT_TEXT_POPUP = 'WIRIS_ALT_TEXT_POPUP';
 export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 
 /* --------------- Learnosity Project ------------------------*/
-export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
+export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO";
 
-/*-----------------Elm Picker----------------------------*/
-export const SET_ELM_PICKER_MSG = "SET_ELM_PICKER_MSG";
+/*---------------- Cypress Project Info ------------------------*/
+export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
+export const UPDATE_DISCUSSION_ITEMS = 'UPDATE_DISCUSSION_ITEMS';
+export const UPDATE_USAGE_TYPE = 'UPDATE_USAGE_TYPE';
