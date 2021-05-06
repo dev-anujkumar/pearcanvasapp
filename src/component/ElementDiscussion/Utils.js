@@ -18,3 +18,20 @@ export const createDiscussionForUpdateAPI = (_props, elementDiscussion) => {
         index: _props.index.toString().split('-')[_props.index.toString().split('-').length - 1]
     }
 }
+
+export const clearElement = (element) => {
+    const clearedElement = element;
+  
+    if (element.elementdata) {
+        clearedElement.elementdata = null;
+    }
+    if(element.blockdata.usagetype === '') {
+        clearedElement.blockdata.usagetype = null
+    }
+    if(element.blockdata.itemid === '') {
+        clearedElement.blockdata.itemid = null
+    }
+
+    return clearedElement;
+  };
+  

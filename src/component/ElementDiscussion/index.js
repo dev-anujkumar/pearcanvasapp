@@ -5,7 +5,7 @@ import { UsageTypeDropdown } from "../AssessmentSlateCanvas/UsageTypeDropdown/Us
 import "../../styles/ElementDiscussion/ElementDiscussion.css";
 import { useSelector } from "react-redux";
 import DiscussionDialog from "./DiscussionDialog";
-import { createDiscussionForUpdateAPI } from "./Utils";
+import { createDiscussionForUpdateAPI, clearElement } from "./Utils";
 import { updateElement } from "../ElementContainer/ElementContainer_Actions";
 import { connect } from "react-redux";
 import {
@@ -51,12 +51,10 @@ const ElementDiscussion = (props) => {
     // if there is any change only than update
     if (JSON.stringify(elementDiscussion) !== JSON.stringify(props.element)) {
       /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
-      const elementToUpdate  = {
-        ...elementDiscussion,
-        elementdata:null
-      }
+     
       const { index, parentUrn, asideData, parentElement } = props;
-      const dataToSend = createDiscussionForUpdateAPI(props, elementToUpdate);
+      const clearedElement = clearElement(elementDiscussion);
+      const dataToSend = createDiscussionForUpdateAPI(props, clearedElement);
       sendDataToIframe({ type: "isDirtyDoc", message: { isDirtyDoc: true } });
       config.isSavingElement = true;
       props.updateElement(
