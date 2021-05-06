@@ -118,6 +118,7 @@ class ElementDialogue extends React.PureComponent {
                                     glossaryFootnoteValue={_props.glossaryFootnoteValue}
                                     glossaaryFootnotePopup={_props.glossaaryFootnotePopup}
                                     openGlossaryFootnotePopUp={_props.openGlossaryFootnotePopUp}
+                                    handleAudioPopupLocation = {_props.handleAudioPopupLocation}
                                 />
                             </div>
                         </div>
