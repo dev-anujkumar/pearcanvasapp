@@ -133,7 +133,7 @@ const ElementDiscussion = (props) => {
         </div>
 
         <div className="rowDiscussion">
-          <span className="discussionItemTitle">Line of business:</span>
+          <span className="discussionItemTitle">Line of Business:</span>
 
           {LOB === undefined && (
             <div className="lobNotPresentDiscussion">
