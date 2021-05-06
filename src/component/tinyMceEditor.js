@@ -2794,7 +2794,7 @@ export class TinyMceEditor extends Component {
                 case "Enter Act Title...": 
                 case "Enter Scene Title...": 
                 case "Enter Credit...": { 
-                    toolbar = [...config.playScriptToolbar];
+                    toolbar = [...config.playScriptToolbar, 'glossary'];
                     break;
                 }
                 case "Enter Dialogue...": {
