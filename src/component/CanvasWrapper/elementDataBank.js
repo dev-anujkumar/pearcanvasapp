@@ -356,6 +356,11 @@ const elementDataBank = {
         "elementType" : "element-dialogue",
         "primaryOption" : "primary-element-dialogue",
         "secondaryOption" : "secondary-element-dialogue"
+    },
+    "discussion" : {
+        "elementType" : "discussion",
+        "primaryOption" : "primary-element-discussion",
+        "secondaryOption" : "secondary-element-discussion"
     }
 }
 

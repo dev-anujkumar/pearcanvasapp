@@ -225,6 +225,9 @@ class ElementButton extends Component {
                     buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
                         {dialougeElementIcon}
                     </span>
+                    break;
+
+                break;
         }
         return buttonJSX
     }
