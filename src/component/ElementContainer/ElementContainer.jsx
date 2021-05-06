@@ -50,7 +50,7 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata} from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -80,7 +80,9 @@ class ElementContainer extends Component {
             sectionBreak: null,
             audioPopupStatus:false,
             position:{},
-            editInteractiveId:""
+            editInteractiveId:"",
+            isfigurePopup:false,
+            figureUrl:""
         };
 
 
@@ -1542,7 +1544,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element);
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element);
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1615,6 +1617,7 @@ class ElementContainer extends Component {
                     deleteElement={this.deleteElement}
                     isAddComment ={true}
                 />}
+                {this.state.isfigurePopup && <PopUp active={true} figurePopup={true} figureUrl={this.state.figureUrl} togglePopup= {this.handleFigurePopup} isfigurePopup ={this.state.isfigurePopup} />}
                 {this.props.children &&
                     <PageNumberContext.Consumer>
                         {
@@ -1789,6 +1792,19 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
+    handleFigurePopup = (togglePopup,url) =>{
+        this.props.showBlocker(togglePopup);
+        this.setState({
+            isfigurePopup:togglePopup,
+            figureUrl:url
+          })
+        if(togglePopup){
+            showTocBlocker();
+        }else{
+            hideBlocker();
+        }
+    }
+
     /**
      * @description - This function is to launch Elm Portal from Cypress.
      * @param event the click event triggered
@@ -1796,22 +1812,32 @@ class ElementContainer extends Component {
     handleEditButton = (event) => {
         event.stopPropagation();
         let { element } = this.props;
-        let fullAssessment = checkFullElmAssessment(element);
-        let embeddedAssessment = checkEmbeddedElmAssessment(element);
-        const isInteractive = checkInteractive(element);
-        let dataToSend = {
-            assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
-            projDURN: config.projectUrn,
-            containerURN: config.slateManifestURN,
-            assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
-            interactiveId: isInteractive ? element.figuredata.interactiveid : ""
+        let id = `${element.figuredata.imageid}`
+        let metadataUrl = id.replace('urn:pearson:alfresco:','');
+        // const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${metadataUrl}`
+        const Url  = `https://alfresco-qa.cms.pearson.com/share/page/site/r34-pdf-splitter/document-details?nodeRef=workspace://SpacesStore/736b9be5-acbd-4344-b83f-fbd1a099967a&parentNodeRef=workspace://SpacesStore/2c239df5-01ae-4f66-a5f8-29e7552b10eb&path=%252F`
+        if(element?.type === 'figure' && element.figuretype === 'image'){
+             this.handleFigurePopup(true,Url);
+            //  window.open(Url);
         }
-        handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
-        this.props.openElmAssessmentPortal(dataToSend);
-        embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
-        isInteractive && this.setState({ editInteractiveId: element.figuredata.interactiveid });
+        else{
+            let fullAssessment = checkFullElmAssessment(element);
+            let embeddedAssessment = checkEmbeddedElmAssessment(element);
+            const isInteractive = checkInteractive(element);
+            let dataToSend = {
+                assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
+                projDURN: config.projectUrn,
+                containerURN: config.slateManifestURN,
+                assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
+                interactiveId: isInteractive ? element.figuredata.interactiveid : ""
+            }
+            handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
+            this.props.openElmAssessmentPortal(dataToSend);
+            embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
+            isInteractive && this.setState({ editInteractiveId: element.figuredata.interactiveid });
+        }
+        
     }
-   
     render = () => {
         const { element } = this.props;
         try {

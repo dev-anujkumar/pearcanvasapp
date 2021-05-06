@@ -2,7 +2,7 @@
  * Module - assessmentUtility
  * Description - This file contains utility functions related to assessments (full and embedded)
  */
-import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY, ELM_INT, FIGURE_INTERACTIVE } from '../AssessmentSlateConstants.js';
+import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY, ELM_INT, FIGURE_INTERACTIVE, DEFAULT_IMAGE_SOURCE } from '../AssessmentSlateConstants.js';
 /** This is a function to set Assessment Title for Embedded Assessment
  * * @param model - object containig element data
 */
@@ -129,6 +129,14 @@ export const checkEmbeddedElmAssessment = (element, assessReducer) => {
 export const checkInteractive = (element) => {
     if (element?.type === ELEMENT_FIGURE && element.figuretype === FIGURE_INTERACTIVE &&
          element.figuredata?.interactiveformat === ELM_INT && element.figuredata?.interactiveid) {
+        return true;
+    }
+    return false;
+}
+
+export const checkFigureMetadata = (element) => {
+    if (element?.type === ELEMENT_FIGURE && element.figuretype === 'image' &&
+    element.figuredata && element.figuredata.path && element.figuredata.path !==DEFAULT_IMAGE_SOURCE) {
         return true;
     }
     return false;

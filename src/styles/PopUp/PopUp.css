@@ -419,3 +419,44 @@
   margin-top: 2px;
   color: #005a70;
 }
+
+#figure-iframe{
+  width: 100%;
+    border: none;
+    height: 65vh;
+}
+
+.figure-popup{
+    width: 1200px;
+    height: 78vh;
+    z-index: 9999;
+    background-color: #fff;
+    top: -32px;
+    margin: auto;
+    border-top: 4px solid #005a70;
+}
+.dialog-button{
+  margin-top: 15px;
+  margin-right: 15px
+} 
+.save-buttons{
+  border-radius: 2px;
+  border: 0;
+  float: right;
+  font-family: inherit;
+  background: #005a70;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  text-align: center;
+  margin: 0 0 10px 16px;
+}
+.save-buttons:hover {
+background: #07313b;
+}
+
