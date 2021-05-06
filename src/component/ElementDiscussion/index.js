@@ -152,7 +152,7 @@ const ElementDiscussion = (props) => {
         <div className="rowUsageTypeDiscussion singleAssessment_Dropdown_Container">
           <div className="single-assessment-usagetype-container">
             <div className="singleAssessment_Dropdown_SelectLabel">
-              Select usage type
+              Select usage type<span className="required">*</span>
             </div>
             <div className="singleAssessment_Dropdown_activeDropdown">
               <div
