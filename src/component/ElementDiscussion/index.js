@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import TinyMceEditor from "../tinyMceEditor";
-import {
-  dropdownArrow,
-} from "../../images/ElementButtons/ElementButtons.jsx";
+import { dropdownArrow } from "../../images/ElementButtons/ElementButtons.jsx";
 import { UsageTypeDropdown } from "../AssessmentSlateCanvas/UsageTypeDropdown/UsageTypeDropdown.jsx";
 import "../../styles/ElementDiscussion/ElementDiscussion.css";
 import { useSelector } from "react-redux";
@@ -30,8 +28,8 @@ import { replaceUnwantedtags } from "../ElementContainer/UpdateElements";
 const ElementDiscussion = (props) => {
   let itemid = "";
   let importeddiscussiontitle = {};
-  let usagetype = '';
-
+  let usagetype = "";
+  let htmltitle = props?.element?.html?.title;
   let blockdata = props?.element?.blockdata;
   if (blockdata) {
     itemid = blockdata.itemid;
@@ -47,6 +45,7 @@ const ElementDiscussion = (props) => {
   const [usageType, setUsageType] = useState(usagetype);
   const [itemId, setItemId] = useState(itemid);
   const [title, setTitle] = useState(importeddiscussiontitle.text);
+  const [htmlTitle, setHtmlTitle] = useState(htmltitle);
 
   const callUpdateApi = (elementDiscussion) => {
     // if there is any change only than update
@@ -104,6 +103,7 @@ const ElementDiscussion = (props) => {
                         removeClassesFromHtml(newTitle) &&
                       !config.savingInProgress
                     ) {
+                      setHtmlTitle(newTitle);
                       callUpdateApi({
                         ...props.element,
                         html,
@@ -164,7 +164,7 @@ const ElementDiscussion = (props) => {
               >
                 <span>
                   <span className="singleAssessment_Dropdown_currentLabel">
-                    {usageType !== '' ? usageType : "Select"}
+                    {usageType !== "" ? usageType : "Select"}
                     <span className="singleAssessment_Dropdown_arrow">
                       {dropdownArrow}
                     </span>
@@ -182,15 +182,23 @@ const ElementDiscussion = (props) => {
                           const blockdata = {
                             itemid: itemId,
                             importeddiscussiontitle: {
-                              ...props.element.blockdata.importeddiscussiontitle,
-                              text: title
+                              ...props.element.blockdata
+                                .importeddiscussiontitle,
+                              text: title,
                             },
+                            business: LOB,
                             usagetype: usageType,
+                          };
+
+                          const html = {
+                            ...props?.element?.html,
+                            title: htmlTitle,
                           };
 
                           callUpdateApi({
                             ...props.element,
                             blockdata,
+                            html
                           });
                         }}
                       />
@@ -204,7 +212,7 @@ const ElementDiscussion = (props) => {
         <img
           onClick={() => {
             setshowUsageTypeOptions(false);
-            if (LOB !== undefined && usageType !== '') {
+            if (LOB !== undefined && usageType !== "") {
               sendDataToIframe({ type: "hideToc", message: {} });
               showTocBlocker(true);
               disableHeader(true);
@@ -213,7 +221,7 @@ const ElementDiscussion = (props) => {
           }}
           src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
           className={`discussionImage ${
-            usageType === '' ? "imageNotSelectedDiscussion" : ""
+            usageType === "" ? "imageNotSelectedDiscussion" : ""
           }`}
         />
       </div>
@@ -222,9 +230,11 @@ const ElementDiscussion = (props) => {
           // update itemid, title in update api
           const blockdata = {
             itemid: item.discussionUrn,
-            importeddiscussiontitle: {...props.element.blockdata.importeddiscussiontitle,
-              text:item.title,
+            importeddiscussiontitle: {
+              ...props.element.blockdata.importeddiscussiontitle,
+              text: item.title,
             },
+            business: LOB,
             usagetype: usageType,
           };
 
