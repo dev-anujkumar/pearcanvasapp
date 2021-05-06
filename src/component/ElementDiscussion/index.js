@@ -51,8 +51,12 @@ const ElementDiscussion = (props) => {
     // if there is any change only than update
     if (JSON.stringify(elementDiscussion) !== JSON.stringify(props.element)) {
       /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
+      const elementToUpdate  = {
+        ...elementDiscussion,
+        elementdata:null
+      }
       const { index, parentUrn, asideData, parentElement } = props;
-      const dataToSend = createDiscussionForUpdateAPI(props, elementDiscussion);
+      const dataToSend = createDiscussionForUpdateAPI(props, elementToUpdate);
       sendDataToIframe({ type: "isDirtyDoc", message: { isDirtyDoc: true } });
       config.isSavingElement = true;
       props.updateElement(
