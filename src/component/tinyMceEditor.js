@@ -33,6 +33,7 @@ import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
 import { handleC2MediaClick }  from '../js/TinyMceUtility.js';
+import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -2468,6 +2469,10 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
+        if(this.props?.element?.type === ELEMENT_TYPE_PDF){
+            this.editorConfig.toolbar = [];
+            tinymce.remove() 
+        }
         let currentNode = document.getElementById('cypress-' + this.props.index);
         if (currentNode.getElementsByTagName("IMG").length) {
             currentNode.innerHTML = this.getNodeContent();

@@ -7,21 +7,26 @@
   color: #424242;
 }
 
-.rowDiscussion {
-  flex-direction: "row";
-  display: "flex";
-  margin-top: 16px;
-}
-
 .displayBlockDiscussion {
   display: block;
 }
 
 .popupDiscussion {
-  height: 592px;
+  height: 560px;
   width: 100%;
   padding-top: 13px;
   background-color: white;
+}
+
+.paginationSelected {
+  margin: 7px 16px 6px;
+  font-size: 12px;
+  letter-spacing: 0.17px;
+  color: #252525;
+  border-bottom: 3px solid black;
+}
+
+.paginationUnselected {
 }
 
 .displayNoneDiscussion {
@@ -39,17 +44,7 @@
   float: left;
 }
 
-.discussionItemTitle {
-  min-width: 48px;
-  height: 17px;
-  margin: 16px 62px 16px 9px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #424242;
-}
-
 .usageTypeTitleDiscussion {
-  width: 153px;
   float: left;
   font-size: 13px;
   color: #424242;
@@ -58,19 +53,64 @@
 }
 
 .popupContainerDiscussion {
-  width: 1138px;
-  /* min-width: 400px; */
   margin-left: 10%;
-  margin-right: 10%;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  margin-right: 10%;
+}
+
+.rowDiscussion {
+  flex-direction: row;
+  display: flex;
+  margin-top: 16px;
+}
+
+
+.rowUsageTypeDiscussion {
+  margin-top: 24px;
+}
+
+.discussionItemTitle {
+  font-size: 12px;
+  width: 98px;
+  font-weight: 600;
+  color: #424242;
+}
+
+.itemIdDiscussion {
+  word-break: break-all;
 }
 
 .valueDiscussion {
-  height: auto;
-  margin: 16px 9px 24px 10px;
   font-size: 12px;
   font-weight: 600;
+  padding-left: 10px;
+  color: #424242;
+  flex: 80%;
+}
+
+.arrowDiscussion {
+  padding-left: 20px;
+}
+
+.usageTypeValueDiscussion {
+  display: flex;
+  align-items: center;
+  flex: 80%;
+  letter-spacing: -0.4px;
+  color: #252525;
+}
+
+.usageTypeSelectedText {
+  padding: 5px;
+  border: 1px solid #424242;
+  border-radius: 30px;
+}
+
+.usageTitle {
+  flex:16%;
+  color: #424242;
+  font-size: 13px;
 }
 
 .lobNotPresentDiscussion {
@@ -82,7 +122,7 @@
 }
 
 .usageTypeContainerDiscussion {
-  margin-left: 11px;
+  /* margin-left: 11px; */
 }
 
 .bottomMarginDiscussion {
@@ -92,7 +132,7 @@
 .discussionImage {
   display: block;
   width: 100%;
-  margin: 6.5em auto 0.65em auto;
+  margin: 0.60em auto 3.15em auto;
 }
 
 /* Center the image and position the close button */
@@ -103,7 +143,7 @@
 }
 
 .containerDiscussion {
-  padding: 16px;
+  padding: 0px;
 }
 
 /* The Modal (background) */
@@ -237,6 +277,10 @@
   margin-left: 20px;
 }
 
+.closeIconDiscussion {
+  cursor: pointer;
+}
+
 .cancelDiscussion {
   margin: 0 10px 0 0;
   padding: 8px 20px;
@@ -280,7 +324,7 @@
 }
 
 .tableContainerDiscussion {
-  height: 418px;
+  height: 378px;
   overflow-y: scroll;
 }
 

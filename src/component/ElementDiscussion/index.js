@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Fragment } from "react";
 import TinyMceEditor from "../tinyMceEditor";
-import { dropdownArrow } from "../../images/ElementButtons/ElementButtons.jsx";
+import {
+  dropdownArrow,
+} from "../../images/ElementButtons/ElementButtons.jsx";
 import { UsageTypeDropdown } from "../AssessmentSlateCanvas/UsageTypeDropdown/UsageTypeDropdown.jsx";
 import "../../styles/ElementDiscussion/ElementDiscussion.css";
 import { useSelector } from "react-redux";
@@ -15,23 +16,27 @@ import {
   hideTocBlocker,
   showTocBlocker,
 } from "../../js/toggleLoader";
-import { sendDataToIframe } from "../../constants/utility";
+import {
+  matchHTMLwithRegex,
+  removeClassesFromHtml,
+  sendDataToIframe,
+} from "../../constants/utility";
 import config from "../../config/config";
-import { element } from "prop-types";
+import { replaceUnwantedtags } from "../ElementContainer/UpdateElements";
 
 // see review mode
 // conditions
 
 const ElementDiscussion = (props) => {
-  let assessmentid = "";
-  let assessmenttitle = "";
-  let usagetype = null;
+  let itemid = "";
+  let importeddiscussiontitle = {};
+  let usagetype = '';
 
-  let elementdata = props?.element?.elementdata;
-  if (elementdata) {
-    assessmentid = elementdata.assessmentid;
-    assessmenttitle = elementdata.assessmenttitle;
-    usagetype = elementdata.usagetype;
+  let blockdata = props?.element?.blockdata;
+  if (blockdata) {
+    itemid = blockdata.itemid;
+    importeddiscussiontitle = blockdata.importeddiscussiontitle;
+    usagetype = blockdata.usagetype;
   }
 
   const LOB = useSelector((state) => state.projectInfo.lineOfBusiness);
@@ -40,8 +45,8 @@ const ElementDiscussion = (props) => {
   const [showDialog, setShowDialog] = useState(false);
 
   const [usageType, setUsageType] = useState(usagetype);
-  const [itemId, setItemId] = useState(assessmentid);
-  const [title, setTitle] = useState(assessmenttitle);
+  const [itemId, setItemId] = useState(itemid);
+  const [title, setTitle] = useState(importeddiscussiontitle.text);
 
   const callUpdateApi = (elementDiscussion) => {
     // if there is any change only than update
@@ -80,13 +85,30 @@ const ElementDiscussion = (props) => {
                     showHideType,
                     eventTarget
                   ) => {
+                    const lastTitle = props?.element?.html?.title;
+
+                    // create data and call update API
+                    let newTitle = replaceUnwantedtags(
+                      eventTarget?.innerHTML,
+                      true
+                    );
+                    newTitle = matchHTMLwithRegex(newTitle)
+                      ? newTitle
+                      : `<p>${newTitle}</p>`;
+                    // newPSData.html[field] = tempCredit;
                     const html = {
-                      title: eventTarget.innerHTML,
+                      title: newTitle,
                     };
-                    callUpdateApi({
-                      ...props.element,
-                      html,
-                    });
+                    if (
+                      removeClassesFromHtml(lastTitle) !==
+                        removeClassesFromHtml(newTitle) &&
+                      !config.savingInProgress
+                    ) {
+                      callUpdateApi({
+                        ...props.element,
+                        html,
+                      });
+                    }
                   }}
                   index={`${props.index}-0`}
                   placeholder="Enter Label..."
@@ -100,18 +122,18 @@ const ElementDiscussion = (props) => {
             </figure>
           </div>
         </div>
-        <div>
-          <span className="discussionItemTitle">Title ID:</span>
+        <div className="rowDiscussion">
+          <span className="discussionItemTitle">Title:</span>
           <span className="valueDiscussion">{title}</span>
         </div>
 
         <div className="rowDiscussion">
           <span className="discussionItemTitle">ITEM ID:</span>
-          <span className="valueDiscussion">{itemId}</span>
+          <span className="valueDiscussion itemIdDiscussion">{itemId}</span>
         </div>
 
         <div className="rowDiscussion">
-          <span className="lobTitleDiscussion">Line of business:</span>
+          <span className="discussionItemTitle">Line of Business:</span>
 
           {LOB === undefined && (
             <div className="lobNotPresentDiscussion">
@@ -119,56 +141,70 @@ const ElementDiscussion = (props) => {
               for this project in the Universal Dashboard first
             </div>
           )}
-          {typeof LOB === "string" && <span>{`${LOB}`}</span>}
+          {typeof LOB === "string" && (
+            <span className="valueDiscussion">{`${LOB}`}</span>
+          )}
         </div>
 
         {/* <p className="title">{`Title:   ${title}`}</p>
         <p className="discussionItemTitle">{`ITEM ID:   ${itemId}`}</p>
         {typeof LOB === 'string' && <p className="title">{`Line of business:   ${LOB}`}</p>} */}
+        <div className="rowUsageTypeDiscussion singleAssessment_Dropdown_Container">
+          <div className="single-assessment-usagetype-container">
+            <div className="singleAssessment_Dropdown_SelectLabel">
+              Select usage type
+            </div>
+            <div className="singleAssessment_Dropdown_activeDropdown">
+              <div
+                onClick={() => {
+                  if (LOB !== null) {
+                    setshowUsageTypeOptions(!showUsageTypeOptions);
+                  }
+                }}
+              >
+                <span>
+                  <span className="singleAssessment_Dropdown_currentLabel">
+                    {usageType !== '' ? usageType : "Select"}
+                    <span className="singleAssessment_Dropdown_arrow">
+                      {dropdownArrow}
+                    </span>
+                  </span>
+                </span>
 
-        <div className="usageTypeContainerDiscussion rowDiscussion">
-          <div className="usageTypeTitleDiscussion">Select usage type</div>
-          <div
-            className={`singleAssessment_Dropdown_activeDropdown`}
-            onClick={() => {
-              if (LOB !== null) {
-                setshowUsageTypeOptions(!showUsageTypeOptions);
-              }
-            }}
-          >
-            <span className="singleAssessment_Dropdown_currentLabel">
-              {usageType !== null ? usageType : "Select"}
-            </span>
-            <span className="singleAssessment_Dropdown_arrow">
-              {dropdownArrow}
-            </span>
-            {showUsageTypeOptions ? (
-              <ul className="slate_assessment_type_dropdown_options">
-                {
-                  <UsageTypeDropdown
-                    usageTypeList={USAGE_TYPES.map((item) => item.label)}
-                    clickHandlerFn={(usageType) => {
-                      setshowUsageTypeOptions(false);
-                      setUsageType(usageType);
-                      const elementdata = {
-                        ...props.element.elementdata,
-                        usagetype: usageType,
-                      };
+                {showUsageTypeOptions ? (
+                  <ul className="slate_assessment_type_dropdown_options">
+                    {
+                      <UsageTypeDropdown
+                        usageTypeList={USAGE_TYPES.map((item) => item.label)}
+                        clickHandlerFn={(usageType) => {
+                          setshowUsageTypeOptions(false);
+                          setUsageType(usageType);
+                          const blockdata = {
+                            itemid: itemId,
+                            importeddiscussiontitle: {
+                              ...props.element.blockdata.importeddiscussiontitle,
+                              text: title
+                            },
+                            usagetype: usageType,
+                          };
 
-                      callUpdateApi({
-                        ...props.element,
-                        elementdata,
-                      });
-                    }}
-                  />
-                }
-              </ul>
-            ) : null}
+                          callUpdateApi({
+                            ...props.element,
+                            blockdata,
+                          });
+                        }}
+                      />
+                    }
+                  </ul>
+                ) : null}
+              </div>
+            </div>
           </div>
         </div>
         <img
           onClick={() => {
-            if (LOB !== undefined && usageType !== null) {
+            setshowUsageTypeOptions(false);
+            if (LOB !== undefined && usageType !== '') {
               sendDataToIframe({ type: "hideToc", message: {} });
               showTocBlocker(true);
               disableHeader(true);
@@ -177,16 +213,18 @@ const ElementDiscussion = (props) => {
           }}
           src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
           className={`discussionImage ${
-            usageType === null ? "imageNotSelectedDiscussion" : ""
+            usageType === '' ? "imageNotSelectedDiscussion" : ""
           }`}
         />
       </div>
       <DiscussionDialog
         selectDiscussion={(item) => {
           // update itemid, title in update api
-          const elementdata = {
-            assessmentid: item.discussionUrn,
-            assessmenttitle: item.title,
+          const blockdata = {
+            itemid: item.discussionUrn,
+            importeddiscussiontitle: {...props.element.blockdata.importeddiscussiontitle,
+              text:item.title,
+            },
             usagetype: usageType,
           };
 
@@ -194,7 +232,7 @@ const ElementDiscussion = (props) => {
           setTitle(item.title);
           callUpdateApi({
             ...props.element,
-            elementdata,
+            blockdata,
           });
         }}
         closeDialog={() => {

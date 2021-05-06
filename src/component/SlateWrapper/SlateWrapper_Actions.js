@@ -828,6 +828,15 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             delete _requestData.content[0].contentUrn;
         }
 
+        if(selection.element.type === "discussion") {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "blockdata": selection.element.blockdata
+                }]
+            }
+        }
+
         if(selection.element.type === "figure") {
             _requestData = {
                 "content": [{
