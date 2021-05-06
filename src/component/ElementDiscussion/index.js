@@ -28,15 +28,15 @@ import { replaceUnwantedtags } from "../ElementContainer/UpdateElements";
 // conditions
 
 const ElementDiscussion = (props) => {
-  let assessmentid = "";
-  let assessmenttitle = "";
-  let usagetype = null;
+  let itemid = "";
+  let importeddiscussiontitle = {};
+  let usagetype = '';
 
-  let elementdata = props?.element?.elementdata;
-  if (elementdata) {
-    assessmentid = elementdata.assessmentid;
-    assessmenttitle = elementdata.assessmenttitle;
-    usagetype = elementdata.usagetype;
+  let blockdata = props?.element?.blockdata;
+  if (blockdata) {
+    itemid = blockdata.itemid;
+    importeddiscussiontitle = blockdata.importeddiscussiontitle;
+    usagetype = blockdata.usagetype;
   }
 
   const LOB = useSelector((state) => state.projectInfo.lineOfBusiness);
@@ -45,8 +45,8 @@ const ElementDiscussion = (props) => {
   const [showDialog, setShowDialog] = useState(false);
 
   const [usageType, setUsageType] = useState(usagetype);
-  const [itemId, setItemId] = useState(assessmentid);
-  const [title, setTitle] = useState(assessmenttitle);
+  const [itemId, setItemId] = useState(itemid);
+  const [title, setTitle] = useState(importeddiscussiontitle.text);
 
   const callUpdateApi = (elementDiscussion) => {
     // if there is any change only than update
@@ -133,7 +133,7 @@ const ElementDiscussion = (props) => {
         </div>
 
         <div className="rowDiscussion">
-          <span className="discussionItemTitle">Line of business:</span>
+          <span className="discussionItemTitle">Line of Business:</span>
 
           {LOB === undefined && (
             <div className="lobNotPresentDiscussion">
@@ -164,7 +164,7 @@ const ElementDiscussion = (props) => {
               >
                 <span>
                   <span className="singleAssessment_Dropdown_currentLabel">
-                    {usageType !== null ? usageType : "Select"}
+                    {usageType !== '' ? usageType : "Select"}
                     <span className="singleAssessment_Dropdown_arrow">
                       {dropdownArrow}
                     </span>
@@ -179,14 +179,18 @@ const ElementDiscussion = (props) => {
                         clickHandlerFn={(usageType) => {
                           setshowUsageTypeOptions(false);
                           setUsageType(usageType);
-                          const elementdata = {
-                            ...props.element.elementdata,
+                          const blockdata = {
+                            itemid: itemId,
+                            importeddiscussiontitle: {
+                              ...props.element.blockdata.importeddiscussiontitle,
+                              text: title
+                            },
                             usagetype: usageType,
                           };
 
                           callUpdateApi({
                             ...props.element,
-                            elementdata,
+                            blockdata,
                           });
                         }}
                       />
@@ -199,7 +203,8 @@ const ElementDiscussion = (props) => {
         </div>
         <img
           onClick={() => {
-            if (LOB !== undefined && usageType !== null) {
+            setshowUsageTypeOptions(false);
+            if (LOB !== undefined && usageType !== '') {
               sendDataToIframe({ type: "hideToc", message: {} });
               showTocBlocker(true);
               disableHeader(true);
@@ -208,16 +213,18 @@ const ElementDiscussion = (props) => {
           }}
           src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
           className={`discussionImage ${
-            usageType === null ? "imageNotSelectedDiscussion" : ""
+            usageType === '' ? "imageNotSelectedDiscussion" : ""
           }`}
         />
       </div>
       <DiscussionDialog
         selectDiscussion={(item) => {
           // update itemid, title in update api
-          const elementdata = {
-            assessmentid: item.discussionUrn,
-            assessmenttitle: item.title,
+          const blockdata = {
+            itemid: item.discussionUrn,
+            importeddiscussiontitle: {...props.element.blockdata.importeddiscussiontitle,
+              text:item.title,
+            },
             usagetype: usageType,
           };
 
@@ -225,7 +232,7 @@ const ElementDiscussion = (props) => {
           setTitle(item.title);
           callUpdateApi({
             ...props.element,
-            elementdata,
+            blockdata,
           });
         }}
         closeDialog={() => {

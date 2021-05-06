@@ -132,7 +132,7 @@
 .discussionImage {
   display: block;
   width: 100%;
-  margin-top: 24px;
+  margin: 0.60em auto 3.15em auto;
 }
 
 /* Center the image and position the close button */
