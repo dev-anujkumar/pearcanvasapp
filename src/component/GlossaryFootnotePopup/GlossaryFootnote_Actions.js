@@ -9,17 +9,10 @@ const {
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
 import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA} from "./../../constants/Action_Constants";
-import { html } from 'tinymce';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
 
-    console.log(":::::::::::::", "status="+status, "glossaaryFootnote="+glossaaryFootnote, "glossaryfootnoteid="+glossaryfootnoteid, "elementWorkId="+elementWorkId, "elementType="+elementType, "index="+index, "elementSubType="+elementSubType, "glossaryTermText+"+glossaryTermText, "typeWithPopup="+typeWithPopup, "poetryField="+poetryField)
-    const slateId = config.slateManifestURN;
-    const parentData = store.getState().appStore.slateLevelData;
-    let newParentData = JSON.parse(JSON.stringify(parentData));
-    let newBodymatter = newParentData[slateId].contents.bodymatter;
-    console.log("newBodymatter newBodymatter", newBodymatter)
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
@@ -42,7 +35,6 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             return false;
         }
         let newBodymatter = newParentData[slateId].contents.bodymatter;
-        console.log("newBodymatter newBodymatter newBodymatter newBodymatter", newBodymatter)
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
@@ -93,16 +85,13 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             }
         } else if ((tempIndex.length == 4 || tempIndex.length == 5) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Playscript inside Multi-Column
             glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
-            console.log("multicolumnnnnnnnnnnnnnnnnnnnn", glossaryFootElem);
         } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "workedexample") { //Playscript inside we element
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
             if (glossaryFootElem.type === 'manifest') {
                 glossaryFootElem = glossaryFootElem.contents.bodymatter[tempIndex[2]];
             }
-            console.log("workedelementttttttttttttttttt", glossaryFootElem);
         } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "sidebar") { //Playscript inside aside element
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
-            console.log("workedelementttttttttttttttttt", glossaryFootElem);
         } else if (elementType === "element-dialogue") {
             glossaryFootElem = newBodymatter[tempIndex[0]];
         }
@@ -115,36 +104,34 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 let indexes = index.split('-');
                 let indexesLen = indexes.length, condition;
                 if (indexesLen == 2) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]];
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == elementWorkId) {
                         glossaryFootElem = condition
                     }
                 } else if (indexesLen == 3) {
                     if(elementType==='stanza'){
-                        condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]];
+                        condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
                     } else if (newBodymatter[indexes[0]].type === "groupedcontent") { //All elements inside multi-column except figure
                         condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     } else {
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]];
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     }
-                    if (condition && condition.versionUrn == elementWorkId) {
+                    if (condition.versionUrn == elementWorkId) {
                         glossaryFootElem = condition
                     }
                 }
 
             }
         }
-        console.log("glossaryFootElem glossaryFootElem", glossaryFootElem)
 
         switch (semanticType) {
             case 'FOOTNOTE':
                 footnoteContentText = glossaryFootElem && glossaryFootElem.html['footnotes'] && glossaryFootElem.html['footnotes'][glossaryfootnoteid]
                 break;
             case 'GLOSSARY':
-                tempGlossaryContentText = glossaryFootElem && glossaryFootElem.html && glossaryFootElem.html['glossaryentries'] && glossaryFootElem.html['glossaryentries'][glossaryfootnoteid]
+                tempGlossaryContentText = glossaryFootElem && glossaryFootElem.html['glossaryentries'] && glossaryFootElem.html['glossaryentries'][glossaryfootnoteid]
                 footnoteContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).definition
                 glossaryContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).term || glossaryTermText
-                console.log("tempGlossaryContentText tempGlossaryContentText", tempGlossaryContentText);
         }
     }
     if(glossaryContentText && glossaryContentText.includes('audio-id')){
@@ -432,7 +419,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
         }
         /**-------------------------------------------------------------------------------------------------------------*/
-        console.log("RESPONSEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", res.data);
         if(res.data.id !== data.id && currentSlateData.status === 'approved'){
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
@@ -527,7 +513,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
             }
         } else if ((tempIndex.length == 4 || tempIndex.length == 5) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Playscript inside Multi-Column
-            console.log("multicolumnnnnnnnnnn", newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]], newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html)
             res.data = {
                 ...res.data,
                 html: {
@@ -541,14 +526,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             if (res.data.html.hasOwnProperty('text')) {
                 delete res.data.html.text;
             }
-            console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqq", res.data);
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
         } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "workedexample") { //Playscript inside we element
             let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
             if (glossaryFootnoteElementOfWe.type === 'manifest') {
                 glossaryFootnoteElementOfWe = glossaryFootnoteElementOfWe.contents.bodymatter[tempIndex[2]];
             }
-            console.log("glossaryFootnoteElementOfWe pahleee", glossaryFootnoteElementOfWe);
             glossaryFootnoteElementOfWe = {
                 ...glossaryFootnoteElementOfWe,
                 html: {
@@ -557,14 +540,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     footnotes: res.data.html.footnotes
                 }
             }
-            console.log("glossaryFootnoteElementOfWe baad me", glossaryFootnoteElementOfWe);
             if (newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].type === 'manifest') {
                 newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = glossaryFootnoteElementOfWe;
             } else {
                 newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = glossaryFootnoteElementOfWe;
             }
         } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "sidebar") { //Playscript inside aside element
-            console.log("newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]", newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]);
             res.data = {
                 ...res.data,
                 html: {
@@ -578,7 +559,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             if (res.data.html.hasOwnProperty('text')) {
                 delete res.data.html.text;
             }
-            console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqq", res.data);
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data;
         } else if (elementType === "element-dialogue") {
             res.data = {
@@ -600,7 +580,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     status: newBodymatter[tempIndex[0]].status
                 }
             }
-            console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqq", res.data);
             newBodymatter[tempIndex[0]] = res.data;
         }
         else {
@@ -612,9 +591,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 let indexes = index.split('-');
                 let indexesLen = indexes.length, condition;
                 if (indexesLen == 2) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]];
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == elementWorkId) {
-                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data;
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
                     }
                 } else if (indexesLen == 3) {
                    if(elementType==='stanza'){
@@ -624,7 +603,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     }
                     else {
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]];
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     }
                     if (condition.versionUrn == elementWorkId) {
                         if(elementType==='stanza'){
@@ -634,7 +613,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                             newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
                         }
                         else {
-                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data;
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
                         }
 
                     }

@@ -583,11 +583,9 @@ class ElementContainer extends Component {
                 }
             } 
                 let currentNode = document.getElementById(index)
-                console.log("let currentNode = document.getElementById(index)", currentNode)
                 let html = currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
-                console.log("tempDiv.innerHTML = html;", tempDiv)
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
                  /** [BG-2293 - mathML/chemML is not captured in postertextobject field in show-hide */
@@ -660,9 +658,6 @@ class ElementContainer extends Component {
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
-                    console.log("createUpdatedData 1", previousElementData.type, previousElementData);
-                    console.log("createUpdatedData 2", tempDiv);
-                    console.log("createUpdatedData 3", parentElement);
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true

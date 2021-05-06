@@ -262,7 +262,6 @@ class ElementDialogue extends React.PureComponent {
         if (newPSData?.html?.hasOwnProperty("dialogueContent")) {
             newPSData.html.dialogueContent[index] = data;
             newPSData.html = this.removeTextKeyFromObject(newPSData.html);
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa", index, newPSData.html, data)
             if (removeClassesFromHtml(this.props.element?.html?.dialogueContent[index][field]) !==
                 removeClassesFromHtml(newPSData.html?.dialogueContent[index][field]) &&
                 !config.savingInProgress) {
@@ -301,6 +300,7 @@ class ElementDialogue extends React.PureComponent {
             glossaryFootnoteValue:this.props.glossaryFootnoteValue,
             glossaaryFootnotePopup:this.props.glossaaryFootnotePopup,
             openGlossaryFootnotePopUp:this.props.openGlossaryFootnotePopUp,
+            handleAudioPopupLocation: this.props.handleAudioPopupLocation
         }
         return (
             (this.props !== null && this.props !== undefined) ?

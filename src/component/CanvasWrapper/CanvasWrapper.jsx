@@ -226,9 +226,7 @@ export class CanvasWrapper extends Component {
                                 }
                                 <div className='clr'></div>
                             </div>
-                            <div>
-                                
-                            </div>
+                            
                         </div>
                     </div>
                     <div className = "sidebar-panel">
