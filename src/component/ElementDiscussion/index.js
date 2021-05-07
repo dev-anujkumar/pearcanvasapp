@@ -21,6 +21,7 @@ import {
 } from "../../constants/utility";
 import config from "../../config/config";
 import { replaceUnwantedtags } from "../ElementContainer/UpdateElements";
+import { element } from "prop-types";
 
 // see review mode
 // conditions
@@ -222,11 +223,12 @@ const ElementDiscussion = (props) => {
           }}
           src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
           className={`discussionImage ${
-            usageType === "" ? "imageNotSelectedDiscussion" : ""
+            typeof usageType === 'string' && usageType.length > 0  ? "" : "imageNotSelectedDiscussion"
           }`}
         />
       </div>
       <DiscussionDialog
+        elemendId={props?.element?.id}
         selectDiscussion={(item) => {
           // update itemid, title in update api
           const blockdata = {

@@ -9,6 +9,7 @@ const getSelectedItemFromId = (id) => {
 
 const DiscussionDialog = ({
   showDialog = false,
+  elemendId='',
   itemId = undefined,
   selectDiscussion = () => {},
   closeDialog = () => {},
@@ -92,7 +93,7 @@ const DiscussionDialog = ({
                           setSelectedDiscussion(item);
                         }}
                         type="radio"
-                        name={item.discussionUrn}
+                        name={elemendId + "-" + item.discussionUrn}
                         value={item.title}
                       />
                       <label for={item.title} className="radioLabelDiscussion">
