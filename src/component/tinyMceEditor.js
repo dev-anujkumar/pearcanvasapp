@@ -2473,10 +2473,6 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
-        if(this.props?.element?.type === ELEMENT_TYPE_PDF){
-            this.editorConfig.toolbar = [];
-            tinymce.remove() 
-        }
         let currentNode = document.getElementById('cypress-' + this.props.index);
         if (currentNode.getElementsByTagName("IMG").length) {
             currentNode.innerHTML = this.getNodeContent();
