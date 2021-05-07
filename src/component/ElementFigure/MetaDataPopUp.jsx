@@ -52,7 +52,7 @@ class MetaDataPopUp extends React.Component {
 				console.error("error--", error);
 			})
 	}
-
+	/*--*/
 	sendAlfrescoMetadata = () => {
 		const url = "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/" + this.props.imageId;
 		
@@ -70,7 +70,8 @@ class MetaDataPopUp extends React.Component {
 				"Content-Type": "application/json",
 				"PearsonSSOSession": config.ssoToken,
 				"apikey": config.CMDS_APIKEY,
-				"Accept": "*/*"
+				"Accept": "*/*",
+				"Access-Control-Allow-Origin": "*"
 			}
 		}).then(response => {
 				console.log("response--", response);
