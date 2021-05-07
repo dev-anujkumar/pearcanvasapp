@@ -15,6 +15,7 @@ import {
   showTocBlocker,
 } from "../../js/toggleLoader";
 import {
+  hasReviewerRole,
   matchHTMLwithRegex,
   removeClassesFromHtml,
   sendDataToIframe,
@@ -54,7 +55,9 @@ const ElementDiscussion = (props) => {
     // if there is any change only than update
     if (JSON.stringify(elementDiscussion) !== JSON.stringify(props.element)) {
       /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
-
+      if(hasReviewerRole()) {
+        return true
+      }
       const { index, parentUrn, asideData, parentElement } = props;
       const clearedElement = clearElement(elementDiscussion);
       const dataToSend = createDiscussionForUpdateAPI(props, clearedElement);
@@ -79,6 +82,7 @@ const ElementDiscussion = (props) => {
             <figure>
               <header>
                 <TinyMceEditor
+
                   permissions={props.permissions}
                   element={props.element}
                   handleEditorFocus={props.handleFocus}
@@ -163,6 +167,9 @@ const ElementDiscussion = (props) => {
               <div
                 onClick={() => {
                   if (LOB !== null) {
+                    if(hasReviewerRole()) {
+                      return;
+                    }
                     setshowUsageTypeOptions(!showUsageTypeOptions);
                   }
                 }}
@@ -184,6 +191,9 @@ const ElementDiscussion = (props) => {
                       <UsageTypeDropdown
                         usageTypeList={USAGE_TYPES.map((item) => item.label)}
                         clickHandlerFn={(usageType) => {
+                          if(hasReviewerRole()){
+                            return true
+                          }
                           setshowUsageTypeOptions(false);
                           setUsageType(usageType);
                           const blockdata = {
@@ -218,6 +228,9 @@ const ElementDiscussion = (props) => {
         </div>
         <img
           onClick={() => {
+            if(hasReviewerRole()){
+              return true
+            }
             setshowUsageTypeOptions(false);
             if (LOB !== undefined && usageType) {
               sendDataToIframe({ type: "hideToc", message: {} });
