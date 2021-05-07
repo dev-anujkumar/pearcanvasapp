@@ -9,6 +9,7 @@ import { hasReviewerRole } from '../../constants/utility.js'
 import { connect } from 'react-redux';
 import { getPageNumber, pageData } from '../SlateWrapper/SlateWrapper_Actions';
 import config from '../../config/config.js';
+import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 
 
 class PageNumberElement extends React.Component {
@@ -27,7 +28,7 @@ class PageNumberElement extends React.Component {
     pagenumberData = () => {
         if (config.pageNumberInProcess && this.props.isPageNumberEnabled && this.props.isHovered === true &&
             (this.props.allElemPageData.length == 0 || this.props.allElemPageData.indexOf(this.props.element.id) == -1) &&
-            this.props._slateType !== 'assessment' && config.isPopupSlate === false) {
+            this.hidePageNumber() && config.isPopupSlate === false) {
             config.pageNumberInProcess = false;
             this.props.getPageNumber(this.props.element.id).then((response) => {
                 if (response) {
@@ -79,8 +80,14 @@ class PageNumberElement extends React.Component {
         this.props.updatePageNumber(pageNumber, id, asideData, parentUrn)
     }
 
+    /* @hidePageNumber@ List of slates where PageNumber is hidden 
+        return boolean - true for pdf and assessment slate else false */
+    hidePageNumber = () => {
+        return !([SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(this.props._slateType));
+    }
+
     render() {
-        let { element, isHovered, isPageNumberEnabled, activeElement, permissions, _slateType } = this.props;
+        let { element, isHovered, isPageNumberEnabled, activeElement, permissions } = this.props;
         let loader = this.props.pageLoading;
         let content = null;
         let pageNumber;
@@ -106,7 +113,7 @@ class PageNumberElement extends React.Component {
                 }
             </div>
         }
-        if (isPageNumberEnabled && activeElement && element.id === activeElement.elementId && _slateType !== 'assessment' && config.isPopupSlate === false) {
+        if (isPageNumberEnabled && activeElement && element.id === activeElement.elementId && this.hidePageNumber() && config.isPopupSlate === false) {
             return (
                 <form id="pageNumberForm">
                     <div className={'pageNumberCover focusedNumberCover'}>
@@ -115,7 +122,7 @@ class PageNumberElement extends React.Component {
                 </form>
             )
         }
-        else if (isHovered && isPageNumberEnabled && _slateType !== 'assessment' && config.isPopupSlate === false) {
+        else if (isHovered && isPageNumberEnabled && this.hidePageNumber() && config.isPopupSlate === false) {
             if(this.props.pageNumberLoading) return <div className='pageNumberBoxLoader'><div className='loadingpagenumber'></div></div>
             else{
                 return (

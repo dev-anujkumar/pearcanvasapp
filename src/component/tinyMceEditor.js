@@ -33,6 +33,7 @@ import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
 import { handleC2MediaClick }  from '../js/TinyMceUtility.js';
+import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -2229,6 +2230,10 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance 
      */
     addGlossary = (editor) => {
+        let elementId = this.props.elementId;
+        if (this.props.element.type === "element-dialogue") {
+            elementId = this.props.element.id;
+        }
         let sText = editor.selection.getContent();
         let parser = new DOMParser();
         let htmlDoc = parser.parseFromString(sText, 'text/html');
@@ -2252,7 +2257,7 @@ export class TinyMceEditor extends Component {
         }
         config.isCreateGlossary = true
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
+        getGlossaryFootnoteId(elementId, "GLOSSARY", res => {
             let insertionText = ""
             if (res.data && res.data.id) {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
@@ -2468,6 +2473,10 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
+        if(this.props?.element?.type === ELEMENT_TYPE_PDF){
+            this.editorConfig.toolbar = [];
+            tinymce.remove() 
+        }
         let currentNode = document.getElementById('cypress-' + this.props.index);
         if (currentNode.getElementsByTagName("IMG").length) {
             currentNode.innerHTML = this.getNodeContent();
@@ -2779,7 +2788,7 @@ export class TinyMceEditor extends Component {
                 case "Enter Act Title...": 
                 case "Enter Scene Title...": 
                 case "Enter Credit...": { 
-                    toolbar = [...config.playScriptToolbar];
+                    toolbar = [...config.playScriptToolbar, 'glossary'];
                     break;
                 }
                 case "Enter Dialogue...": {
@@ -2797,7 +2806,6 @@ export class TinyMceEditor extends Component {
                 default: break;
             }
         }
-
         return toolbar;
     }
 
