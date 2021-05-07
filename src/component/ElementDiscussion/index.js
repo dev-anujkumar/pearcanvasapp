@@ -29,13 +29,15 @@ import { element } from "prop-types";
 const ElementDiscussion = (props) => {
   let itemid = "";
   let importeddiscussiontitle = {};
-  let usagetype = null;
+  let usagetype = '';
   let htmltitle = props?.element?.html?.title;
+  let smartlink = ''
   let blockdata = props?.element?.blockdata;
   if (blockdata) {
     itemid = blockdata.itemid;
     importeddiscussiontitle = blockdata.importeddiscussiontitle;
     usagetype = blockdata.usagetype;
+    smartlink = blockdata.path;
   }
 
   const LOB = useSelector((state) => state.projectInfo.lineOfBusiness);
@@ -47,12 +49,12 @@ const ElementDiscussion = (props) => {
   const [itemId, setItemId] = useState(itemid);
   const [title, setTitle] = useState(importeddiscussiontitle.text);
   const [htmlTitle, setHtmlTitle] = useState(htmltitle);
-
+  const [path, setPath] = useState(smartlink)
   const callUpdateApi = (elementDiscussion) => {
     // if there is any change only than update
     if (JSON.stringify(elementDiscussion) !== JSON.stringify(props.element)) {
       /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
-     
+
       const { index, parentUrn, asideData, parentElement } = props;
       const clearedElement = clearElement(elementDiscussion);
       const dataToSend = createDiscussionForUpdateAPI(props, clearedElement);
@@ -167,7 +169,9 @@ const ElementDiscussion = (props) => {
               >
                 <span>
                   <span className="singleAssessment_Dropdown_currentLabel">
-                    {typeof usageType === 'string' && usageType.length > 0 ? usageType : "Select"}
+                    {typeof usageType === "string" && usageType.length > 0
+                      ? usageType
+                      : "Select"}
                     <span className="singleAssessment_Dropdown_arrow">
                       {dropdownArrow}
                     </span>
@@ -184,8 +188,10 @@ const ElementDiscussion = (props) => {
                           setUsageType(usageType);
                           const blockdata = {
                             itemid: itemId,
+                            path,
                             importeddiscussiontitle: {
-                              ...props.element.blockdata.importeddiscussiontitle,
+                              ...props.element.blockdata
+                                .importeddiscussiontitle,
                               text: title,
                             },
                             business: LOB,
@@ -200,7 +206,7 @@ const ElementDiscussion = (props) => {
                           callUpdateApi({
                             ...props.element,
                             blockdata,
-                            html
+                            html,
                           });
                         }}
                       />
@@ -223,7 +229,9 @@ const ElementDiscussion = (props) => {
           }}
           src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
           className={`discussionImage ${
-            typeof usageType === 'string' && usageType.length > 0  ? "" : "imageNotSelectedDiscussion"
+            typeof usageType === "string" && usageType.length > 0
+              ? ""
+              : "imageNotSelectedDiscussion"
           }`}
         />
       </div>
@@ -232,6 +240,7 @@ const ElementDiscussion = (props) => {
         selectDiscussion={(item) => {
           // update itemid, title in update api
           const blockdata = {
+            path: item.smartLink,
             itemid: item.discussionUrn,
             importeddiscussiontitle: {
               ...props.element.blockdata.importeddiscussiontitle,
@@ -243,6 +252,7 @@ const ElementDiscussion = (props) => {
 
           setItemId(item.discussionUrn);
           setTitle(item.title);
+          setPath(item.smartLink);
           callUpdateApi({
             ...props.element,
             blockdata,
@@ -266,13 +276,9 @@ const dispatchActions = {
 
 const mapStateToProps = ({ appStore }) => {
   return {
-      asideData: appStore.asideData,
-      parentUrn: appStore.parentUrn
-  }
-}
-
+    asideData: appStore.asideData,
+    parentUrn: appStore.parentUrn,
+  };
+};
 
 export default connect(mapStateToProps, dispatchActions)(ElementDiscussion);
-
-
-

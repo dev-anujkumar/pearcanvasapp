@@ -29,12 +29,16 @@ export const clearElement = (element) => {
     if (element.elementdata) {
         clearedElement.elementdata = null;
     }
-    if(element.blockdata.usagetype === '') {
-        clearedElement.blockdata.usagetype = null
-    }
-    if(element.blockdata.itemid === '') {
-        clearedElement.blockdata.itemid = null
-    }
+    // if(element.blockdata.usagetype === '') {
+    //     clearedElement.blockdata.usagetype = null
+    // }
+    // if(element.blockdata.itemid === '') {
+    //     clearedElement.blockdata.itemid = null
+    // }
+
+    // if(element.blockdata.smartlink === '') {
+    //     clearedElement.blockdata.smartlink = null
+    // }
 
     return clearedElement;
   };
