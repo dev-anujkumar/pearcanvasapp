@@ -1,0 +1,121 @@
+/**
+* Root Component of PopUp .
+*/
+
+import React from 'react';
+import '../../styles/PopUp/PopUp.css';
+import axios from 'axios';
+import config from '../../config/config';
+/**
+* @description - PopUp is a class based component. It is defined simply
+* to make a skeleton of PopUps.
+*/
+class MetaDataPopUp extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+           altText:"",
+		   longDescription:""
+        }
+    }
+
+    componentDidMount() {
+		/*--- */
+		this.getAlfrescoMetadata();
+    }
+
+    componentWillUnmount() {
+        if (this.props.showConfirmation) {
+            hideBlocker();
+            this.props.hideCanvasBlocker(false)
+        }
+    }
+	/**
+    * @description - This function is responsible for rendering the Dialog text in the popup.
+    * @param {event} 
+    */
+	getAlfrescoMetadata = () => {
+		let url = "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/" + this.props.imageId;
+		axios.get(url, {
+			headers: {
+				"Content-Type": "application/json",
+				"PearsonSSOSession": config.ssoToken,
+				"apikey":"5x8gLqCCfkOfgPkFd9YNotcAykeldvVd"
+			}
+		}).then(response => {
+				console.log("response--", response.data.entry.properties["cplg:altText"]); //cplg:longDescription
+				
+				this.setState({
+					//metaData: response.data,
+					altText: response.data.entry.properties["cplg:altText"],
+					longDescription: response.data.entry.properties["cplg:longDescription"]
+				})
+			}).catch(error => {
+				console.error("error--", error);
+			})
+	}
+
+	sendAlfrescoMetadata = () => {
+		const url = "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/e2b1710e-a000-4625-b582-367261a2cd0e"
+		
+		const { altText, longDescription } = this.state;
+		const body = {"entry":{properties:{"cplg:altText": altText, "cplg:longDescription": longDescription}}}
+		axios.put(url, body, {
+			headers: {
+				"Content-Type": "application/json",
+				"PearsonSSOSession": config.ssoToken,
+				"apikey": config.CMDS_APIKEY
+			}
+		}).then(response => {
+				console.log("response--", response);
+				
+				
+			}).catch(error => {
+				console.error("error--", error);
+			})
+	}
+
+    render() {
+        const { togglePopup } = this.props;
+		const { altText, longDescription } = this.state;
+        return (
+            <div className="model">
+				<div tabIndex="0" className="model-popup">
+					<div className="figure-popup">
+						<div className="dialog-button">
+							<span className="save-buttons">Import in Cypress</span>
+							<span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
+						</div>
+						<div>
+							<div>
+								<label>Alt Text:</label>
+								<input 
+									id="altText_AM" 
+									name="altText_AM" 
+									type="text" 
+									placeholder="Alt Text" 
+									value={altText}
+									onChange={(e) => this.setState({ altText: e.target.value })}
+								/>
+							</div>
+							<div className="margin-top-20px">
+								<label>Long Description:</label>
+								<textarea 
+									id="longDescription_AM" 
+									name="longDescription_AM" 
+									rows="4" 
+									cols="50" 
+									value={longDescription}
+									onChange={(e) => this.setState({ longDescription: e.target.value })}>
+								</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+                        
+            </div>
+        );
+    }
+}
+
+export default MetaDataPopUp;

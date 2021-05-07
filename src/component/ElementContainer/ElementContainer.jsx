@@ -60,6 +60,7 @@ import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper
 import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
+import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -1489,6 +1490,10 @@ class ElementContainer extends Component {
                             handleBlur={this.handleBlur}
                             handleFocus={this.handleFocus}
                             deleteElement={this.deleteElement}
+                            glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                            glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                            openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
+                            handleAudioPopupLocation = {this.handleAudioPopupLocation}
                         />;
                         labelText = 'PS'
                         break;
@@ -1617,7 +1622,12 @@ class ElementContainer extends Component {
                     deleteElement={this.deleteElement}
                     isAddComment ={true}
                 />}
-                {this.state.isfigurePopup && <PopUp active={true} figurePopup={true} figureUrl={this.state.figureUrl} togglePopup= {this.handleFigurePopup} isfigurePopup ={this.state.isfigurePopup} />}
+                { this.state.isfigurePopup && 
+                    <MetaDataPopUp  
+                        figureUrl={this.state.figureUrl} 
+                        togglePopup={this.handleFigurePopup}
+                        imageId={this.state.imageId} 
+                    />}
                 {this.props.children &&
                     <PageNumberContext.Consumer>
                         {
@@ -1792,11 +1802,15 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
-    handleFigurePopup = (togglePopup,url) =>{
+    handleFigurePopup = (togglePopup,url) =>{ 
+        let imageId = this.props?.element?.figuredata?.imageid;
+        imageId = imageId.replace('urn:pearson:alfresco:','');
+
         this.props.showBlocker(togglePopup);
         this.setState({
             isfigurePopup:togglePopup,
-            figureUrl:url
+            //figureUrl:url,
+            imageId
           })
         if(togglePopup){
             showTocBlocker();
@@ -1811,9 +1825,7 @@ class ElementContainer extends Component {
      */
     handleEditButton = (event) => {
         event.stopPropagation();
-        let { element } = this.props;
-        let id = `${element.figuredata.imageid}`
-        let metadataUrl = id.replace('urn:pearson:alfresco:','');
+        const { element } = this.props;
         // const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${metadataUrl}`
         const Url  = `https://alfresco-qa.cms.pearson.com/share/page/site/r34-pdf-splitter/document-details?nodeRef=workspace://SpacesStore/736b9be5-acbd-4344-b83f-fbd1a099967a&parentNodeRef=workspace://SpacesStore/2c239df5-01ae-4f66-a5f8-29e7552b10eb&path=%252F`
         if(element?.type === 'figure' && element.figuretype === 'image'){

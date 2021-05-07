@@ -40,7 +40,7 @@ const DiscussionDialog = ({
           className="popupDiscussion"
         >
           <div className="headingContainerDiscussion">
-            <div className="headingTextDiscussion">Select Discussion Items</div>
+            <div className="headingTextDiscussion">Select a Discussion Item</div>
             <div onClick={() =>  closeDialog()} className="closeIconDiscussion">{discussionCloseIcon}</div>
           </div>
             <div className="searchContainerDiscussion">
