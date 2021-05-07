@@ -190,8 +190,7 @@ const ElementDiscussion = (props) => {
                             itemid: itemId,
                             path,
                             importeddiscussiontitle: {
-                              ...props.element.blockdata
-                                .importeddiscussiontitle,
+                              ...props.element.blockdata.importeddiscussiontitle,
                               text: title,
                             },
                             business: LOB,
@@ -240,7 +239,7 @@ const ElementDiscussion = (props) => {
         selectDiscussion={(item) => {
           // update itemid, title in update api
           const blockdata = {
-            path: item.smartLink,
+            path: item.smartLink || '',
             itemid: item.discussionUrn,
             importeddiscussiontitle: {
               ...props.element.blockdata.importeddiscussiontitle,
