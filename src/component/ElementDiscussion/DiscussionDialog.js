@@ -82,6 +82,7 @@ const DiscussionDialog = ({
                   <td>
                     <div className="titleRadioContainerDiscussion">
                       <input
+                        
                         checked={
                           selectedDiscussion?.discussionUrn ===
                           item.discussionUrn
@@ -91,7 +92,7 @@ const DiscussionDialog = ({
                           setSelectedDiscussion(item);
                         }}
                         type="radio"
-                        name={item.title}
+                        name={item.discussionUrn}
                         value={item.title}
                       />
                       <label for={item.title} className="radioLabelDiscussion">

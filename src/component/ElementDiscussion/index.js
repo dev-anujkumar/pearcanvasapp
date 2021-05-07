@@ -184,8 +184,7 @@ const ElementDiscussion = (props) => {
                           const blockdata = {
                             itemid: itemId,
                             importeddiscussiontitle: {
-                              ...props.element.blockdata
-                                .importeddiscussiontitle,
+                              ...props.element.blockdata.importeddiscussiontitle,
                               text: title,
                             },
                             business: LOB,
@@ -263,4 +262,15 @@ const dispatchActions = {
   updateElement,
 };
 
-export default connect(null, dispatchActions)(ElementDiscussion);
+const mapStateToProps = ({ appStore }) => {
+  return {
+      asideData: appStore.asideData,
+      parentUrn: appStore.parentUrn
+  }
+}
+
+
+export default connect(mapStateToProps, dispatchActions)(ElementDiscussion);
+
+
+
