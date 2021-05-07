@@ -206,6 +206,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         config.popupCreationCallInProgress = false
         config.isSavingElement = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.error("updateElement Api fail", error);
     }
 }
@@ -429,6 +430,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             cb("create",index);
         }
     }).catch(error => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         showError(error, dispatch, "error while creating element")
     })
 }
