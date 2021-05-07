@@ -40,13 +40,11 @@ class MetaDataPopUp extends React.Component {
 			headers: {
 				"Content-Type": "application/json",
 				"PearsonSSOSession": config.ssoToken,
-				"apikey":"5x8gLqCCfkOfgPkFd9YNotcAykeldvVd"
+				"apikey": config.CMDS_APIKEY
 			}
-		}).then(response => {
-				console.log("response--", response.data.entry.properties["cplg:altText"]); //cplg:longDescription
-				
+		}).then(response => {				
 				this.setState({
-					//metaData: response.data,
+					metaData: response.data.entry.properties,
 					altText: response.data.entry.properties["cplg:altText"],
 					longDescription: response.data.entry.properties["cplg:longDescription"]
 				})
@@ -56,23 +54,44 @@ class MetaDataPopUp extends React.Component {
 	}
 
 	sendAlfrescoMetadata = () => {
-		const url = "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/e2b1710e-a000-4625-b582-367261a2cd0e"
+		const url = "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/" + this.props.imageId;
 		
 		const { altText, longDescription } = this.state;
-		const body = {"entry":{properties:{"cplg:altText": altText, "cplg:longDescription": longDescription}}}
+		const body = {
+			properties: { 
+				...this.state.metaData,
+				"cplg:altText": altText,
+				"cplg:longDescription": longDescription
+			}
+		}
+		console.log(JSON.stringify(body));
 		axios.put(url, body, {
 			headers: {
 				"Content-Type": "application/json",
 				"PearsonSSOSession": config.ssoToken,
-				"apikey": config.CMDS_APIKEY
+				"apikey": config.CMDS_APIKEY,
+				"Accept": "*/*"
 			}
 		}).then(response => {
 				console.log("response--", response);
-				
-				
+				/* -- */
+				this.updateElementData();
 			}).catch(error => {
 				console.error("error--", error);
 			})
+	}
+
+	updateElementData = () => {
+		const { index, element } = this.props;
+		/*--*/
+		let figureData = { ...element.figuredata };
+		figureData.alttext = this.state.altText;
+		figureData.longdescription = this.state.longDescription;
+		/*--*/
+		this.props.updateFigureData(figureData, index, element.id, () => {
+			this.props.handleFocus("updateFromC2")
+			this.props.handleBlur()
+		})
 	}
 
     render() {
@@ -83,7 +102,7 @@ class MetaDataPopUp extends React.Component {
 				<div tabIndex="0" className="model-popup">
 					<div className="figure-popup">
 						<div className="dialog-button">
-							<span className="save-buttons">Import in Cypress</span>
+							<span className="save-buttons" onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
 							<span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
 						</div>
 						<div>

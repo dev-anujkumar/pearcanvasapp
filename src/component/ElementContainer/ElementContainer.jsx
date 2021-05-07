@@ -1626,7 +1626,12 @@ class ElementContainer extends Component {
                     <MetaDataPopUp  
                         figureUrl={this.state.figureUrl} 
                         togglePopup={this.handleFigurePopup}
-                        imageId={this.state.imageId} 
+                        imageId={this.state.imageId}
+                        updateFigureData={this.updateFigureData}
+                        handleFocus={this.handleFocus} 
+                        handleBlur={this.handleBlur}
+                        element={this.props.element}
+                        index={this.props.index}
                     />}
                 {this.props.children &&
                     <PageNumberContext.Consumer>
