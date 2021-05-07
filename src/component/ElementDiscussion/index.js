@@ -28,7 +28,7 @@ import { replaceUnwantedtags } from "../ElementContainer/UpdateElements";
 const ElementDiscussion = (props) => {
   let itemid = "";
   let importeddiscussiontitle = {};
-  let usagetype = "";
+  let usagetype = null;
   let htmltitle = props?.element?.html?.title;
   let blockdata = props?.element?.blockdata;
   if (blockdata) {
@@ -166,7 +166,7 @@ const ElementDiscussion = (props) => {
               >
                 <span>
                   <span className="singleAssessment_Dropdown_currentLabel">
-                    {usageType !== "" ? usageType : "Select"}
+                    {typeof usageType === 'string' && usageType.length > 0 ? usageType : "Select"}
                     <span className="singleAssessment_Dropdown_arrow">
                       {dropdownArrow}
                     </span>
@@ -214,7 +214,7 @@ const ElementDiscussion = (props) => {
         <img
           onClick={() => {
             setshowUsageTypeOptions(false);
-            if (LOB !== undefined && usageType !== "") {
+            if (LOB !== undefined && usageType) {
               sendDataToIframe({ type: "hideToc", message: {} });
               showTocBlocker(true);
               disableHeader(true);
