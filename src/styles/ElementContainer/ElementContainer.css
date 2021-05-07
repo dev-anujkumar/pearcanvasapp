@@ -230,3 +230,6 @@ button.SearchLibraryStyles__btnCancel___1G1qN, button.BrowseStyles__btnCancel___
 .ignore-for-drag{
     cursor: default!important;
 }
+div.stageDirectionItalicFont dfn {
+    font-style: italic;
+}
