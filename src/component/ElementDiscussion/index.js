@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import TinyMceEditor from "../tinyMceEditor";
-import {
-  dropdownArrow,
-} from "../../images/ElementButtons/ElementButtons.jsx";
+import { dropdownArrow } from "../../images/ElementButtons/ElementButtons.jsx";
 import { UsageTypeDropdown } from "../AssessmentSlateCanvas/UsageTypeDropdown/UsageTypeDropdown.jsx";
 import "../../styles/ElementDiscussion/ElementDiscussion.css";
 import { useSelector } from "react-redux";
 import DiscussionDialog from "./DiscussionDialog";
-import { createDiscussionForUpdateAPI } from "./Utils";
+import { createDiscussionForUpdateAPI, clearElement } from "./Utils";
 import { updateElement } from "../ElementContainer/ElementContainer_Actions";
 import { connect } from "react-redux";
 import {
@@ -23,6 +21,7 @@ import {
 } from "../../constants/utility";
 import config from "../../config/config";
 import { replaceUnwantedtags } from "../ElementContainer/UpdateElements";
+import { element } from "prop-types";
 
 // see review mode
 // conditions
@@ -31,12 +30,14 @@ const ElementDiscussion = (props) => {
   let itemid = "";
   let importeddiscussiontitle = {};
   let usagetype = '';
-
+  let htmltitle = props?.element?.html?.title;
+  let smartlink = ''
   let blockdata = props?.element?.blockdata;
   if (blockdata) {
     itemid = blockdata.itemid;
     importeddiscussiontitle = blockdata.importeddiscussiontitle;
     usagetype = blockdata.usagetype;
+    smartlink = blockdata.path;
   }
 
   const LOB = useSelector((state) => state.projectInfo.lineOfBusiness);
@@ -47,13 +48,16 @@ const ElementDiscussion = (props) => {
   const [usageType, setUsageType] = useState(usagetype);
   const [itemId, setItemId] = useState(itemid);
   const [title, setTitle] = useState(importeddiscussiontitle.text);
-
+  const [htmlTitle, setHtmlTitle] = useState(htmltitle);
+  const [path, setPath] = useState(smartlink)
   const callUpdateApi = (elementDiscussion) => {
     // if there is any change only than update
     if (JSON.stringify(elementDiscussion) !== JSON.stringify(props.element)) {
       /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
+
       const { index, parentUrn, asideData, parentElement } = props;
-      const dataToSend = createDiscussionForUpdateAPI(props, elementDiscussion);
+      const clearedElement = clearElement(elementDiscussion);
+      const dataToSend = createDiscussionForUpdateAPI(props, clearedElement);
       sendDataToIframe({ type: "isDirtyDoc", message: { isDirtyDoc: true } });
       config.isSavingElement = true;
       props.updateElement(
@@ -104,6 +108,7 @@ const ElementDiscussion = (props) => {
                         removeClassesFromHtml(newTitle) &&
                       !config.savingInProgress
                     ) {
+                      setHtmlTitle(newTitle);
                       callUpdateApi({
                         ...props.element,
                         html,
@@ -152,7 +157,7 @@ const ElementDiscussion = (props) => {
         <div className="rowUsageTypeDiscussion singleAssessment_Dropdown_Container">
           <div className="single-assessment-usagetype-container">
             <div className="singleAssessment_Dropdown_SelectLabel">
-              Select usage type
+              Select usage type<span className="required">*</span>
             </div>
             <div className="singleAssessment_Dropdown_activeDropdown">
               <div
@@ -164,7 +169,9 @@ const ElementDiscussion = (props) => {
               >
                 <span>
                   <span className="singleAssessment_Dropdown_currentLabel">
-                    {usageType !== '' ? usageType : "Select"}
+                    {typeof usageType === "string" && usageType.length > 0
+                      ? usageType
+                      : "Select"}
                     <span className="singleAssessment_Dropdown_arrow">
                       {dropdownArrow}
                     </span>
@@ -181,16 +188,24 @@ const ElementDiscussion = (props) => {
                           setUsageType(usageType);
                           const blockdata = {
                             itemid: itemId,
+                            path,
                             importeddiscussiontitle: {
                               ...props.element.blockdata.importeddiscussiontitle,
-                              text: title
+                              text: title,
                             },
+                            business: LOB,
                             usagetype: usageType,
+                          };
+
+                          const html = {
+                            ...props?.element?.html,
+                            title: htmlTitle,
                           };
 
                           callUpdateApi({
                             ...props.element,
                             blockdata,
+                            html,
                           });
                         }}
                       />
@@ -204,7 +219,7 @@ const ElementDiscussion = (props) => {
         <img
           onClick={() => {
             setshowUsageTypeOptions(false);
-            if (LOB !== undefined && usageType !== '') {
+            if (LOB !== undefined && usageType) {
               sendDataToIframe({ type: "hideToc", message: {} });
               showTocBlocker(true);
               disableHeader(true);
@@ -213,23 +228,30 @@ const ElementDiscussion = (props) => {
           }}
           src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
           className={`discussionImage ${
-            usageType === '' ? "imageNotSelectedDiscussion" : ""
+            typeof usageType === "string" && usageType.length > 0
+              ? ""
+              : "imageNotSelectedDiscussion"
           }`}
         />
       </div>
       <DiscussionDialog
+        elemendId={props?.element?.id}
         selectDiscussion={(item) => {
           // update itemid, title in update api
           const blockdata = {
+            path: item.smartLink || '',
             itemid: item.discussionUrn,
-            importeddiscussiontitle: {...props.element.blockdata.importeddiscussiontitle,
-              text:item.title,
+            importeddiscussiontitle: {
+              ...props.element.blockdata.importeddiscussiontitle,
+              text: item.title,
             },
+            business: LOB,
             usagetype: usageType,
           };
 
           setItemId(item.discussionUrn);
           setTitle(item.title);
+          setPath(item.smartLink);
           callUpdateApi({
             ...props.element,
             blockdata,
@@ -251,4 +273,11 @@ const dispatchActions = {
   updateElement,
 };
 
-export default connect(null, dispatchActions)(ElementDiscussion);
+const mapStateToProps = ({ appStore }) => {
+  return {
+    asideData: appStore.asideData,
+    parentUrn: appStore.parentUrn,
+  };
+};
+
+export default connect(mapStateToProps, dispatchActions)(ElementDiscussion);
