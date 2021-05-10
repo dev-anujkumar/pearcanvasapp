@@ -103,32 +103,36 @@ class MetaDataPopUp extends React.Component {
 				<div tabIndex="0" className="model-popup">
 					<div className="figure-popup">
 						<div className="dialog-button">
-							<span className="save-buttons" onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
-							<span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
+						    <span className="edit-metadata">Edit Alfresco Metadata</span>
 						</div>
-						<div>
-							<div>
-								<label>Alt Text:</label>
+						<div className="figuremetadata-field">
+							<div className="alt-text-body" >
+								<p className="alt-text">Alt Text:</p>
 								<input 
 									id="altText_AM" 
 									name="altText_AM" 
 									type="text" 
-									placeholder="Alt Text" 
+									placeholder="Enter your text here" 
 									value={altText}
 									onChange={(e) => this.setState({ altText: e.target.value })}
 								/>
 							</div>
-							<div className="margin-top-20px">
-								<label>Long Description:</label>
+							<div className="long-description-body">
+								<p className='long-text'>Long Description:</p>
 								<textarea 
 									id="longDescription_AM" 
 									name="longDescription_AM" 
-									rows="4" 
+									rows="9" 
 									cols="50" 
+									placeholder="Enter your text here" 
 									value={longDescription}
 									onChange={(e) => this.setState({ longDescription: e.target.value })}>
 								</textarea>
 							</div>
+						</div>
+						<div className="metadata-button">
+						   <span className="save-buttons" onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
+						   <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
 						</div>
 					</div>
 				</div>

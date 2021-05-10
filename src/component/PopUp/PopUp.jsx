@@ -107,8 +107,6 @@ class PopUp extends React.Component {
                     <span className="powerpaste-cancel-button"  onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
                 </div>
             )
-        }else if (props.figurePopup){
-            return null;
         }
         if (props.LOPopup) {
             return (
@@ -154,15 +152,7 @@ class PopUp extends React.Component {
                 toggleWordPasteProceed={this.toggleWordPasteProceed}
               />
             )
-        } else if (props.figurePopup){
-            return(
-                <iframe
-                  id='figure-iframe'
-                  src={props.figureUrl}
-                  className='displayShow'
-                />
-            )
-        }
+        } 
         else {
             return (
                 <textarea autoFocus className={`dialog-input-textarea ${props.assessmentClass}`} type="text" onChange={(event) => props.handleChange(event.target.value)} onClick={(event) => this.handleClickTextArea(event)}
@@ -178,13 +168,6 @@ class PopUp extends React.Component {
     renderCloseSymbol = (props) => {
         if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup) {
             return null
-        }else if(props.figurePopup){
-            return(
-                <div className={`dialog-button`}>
-                    <span className="save-buttons">Import in Cypress</span>
-                    <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
-                </div>
-            )
         }
         else {
             return (
@@ -278,13 +261,13 @@ class PopUp extends React.Component {
     }
 
     render() {
-        const { active, assessmentClass, isGlossary, isfigurePopup } = this.props;
+        const { active, assessmentClass, isGlossary } = this.props;
         return (
             <div className="model">
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : isfigurePopup ? 'figure-popup': `modal-content ${assessmentClass}` } id = {isGlossary ? 'popup': ''}>
+                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : `modal-content ${assessmentClass}`} id = {isGlossary ? 'popup': ''}>
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
                                 <div className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
