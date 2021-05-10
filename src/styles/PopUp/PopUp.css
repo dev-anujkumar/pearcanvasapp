@@ -460,7 +460,6 @@
 
 .alt-text-body {
   padding: 8px 12px;
-  border-radius: 3px;
   background-color: #f7f7f7;
   overflow: auto;
   border-bottom: 1px solid #005a70;
@@ -468,7 +467,6 @@
   height: 70px;
 }
 .long-description-body{
-  border-radius: 3px;
   background-color: #f7f7f7;
   overflow: auto;
   border-bottom: 1px solid #005a70;
