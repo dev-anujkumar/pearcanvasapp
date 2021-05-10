@@ -37,11 +37,11 @@ class MetaDataPopUp extends React.Component {
 				"apikey": config.CMDS_APIKEY
 			}
 		}).then(response => {
-			const  { properties } = response?.data?.entry || {};		
+			const { properties } = response?.data?.entry || {};	
 				this.setState({
 					metaData: properties,
-					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"]: "" ,
-					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : ''
+					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
+					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : ""
 				})
 			}).catch(error => {
 				console.error("error--", error);
@@ -50,7 +50,6 @@ class MetaDataPopUp extends React.Component {
 	/*- Retrive the changed data from state and Updata alfresco metadata in alfresco -*/
 	sendAlfrescoMetadata = () => {
 		let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
-		
 		const { altText, longDescription } = this.state;
 		const body = {
 			properties: { 
