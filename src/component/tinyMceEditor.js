@@ -3030,12 +3030,12 @@ export class TinyMceEditor extends Component {
                 //---------------------------------------------------------------------------------//
                 // if editor contains footnode in the text anywhere then check the condition and if 
                 // footnode lies in the end then remove the superscript mode from the end of text.
-                if (tinymce.activeEditor.selection.getContent() === "") { // if user is not selecting any text on the editor
+                if (tinymce.activeEditor?.selection?.getContent() === "") { // if user is not selecting any text on the editor
                     let activeNode = tinymce.activeEditor.selection.getNode()
-                    if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
+                    if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
                         this.removeSupFormat(clickedX, clickedY);
                     }
-                    else if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
+                    else if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1) {
                         let cursorNode = document.elementFromPoint(clickedX, clickedY);
                         let selectNode = '';
                         if (cursorNode?.nodeName === 'A') {
@@ -3120,12 +3120,12 @@ export class TinyMceEditor extends Component {
                 // if editor contains footnode in the text anywhere then check the condition and if 
                 // footnode lies in the end then remove the superscript mode from the end of text.
                 
-                if (tinymce.activeEditor.selection.getContent() === "") { // if user is not selecting any text on the editor
+                if (tinymce.activeEditor?.selection?.getContent() === "") { // if user is not selecting any text on the editor
                     let activeNode = tinymce.activeEditor.selection.getNode()
-                    if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
+                    if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
                         this.removeSupFormat(clickedX, clickedY);
                     }
-                    else if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
+                    else if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1) {
                         let cursorNode = document.elementFromPoint(clickedX, clickedY);
                         let selectNode = '';
                         if (cursorNode?.nodeName === 'A') {
@@ -3203,18 +3203,18 @@ export class TinyMceEditor extends Component {
             innerHtml = "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#8203;&#65279;</span>" + existingInnerHTML;
         }
         let parentInnerHtml = removeBOM(parentNode.innerHTML);
-        let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
+        let newParentInnerHtml = parentInnerHtml?.replace(existingInnerHTML, innerHtml);
         parentNode.innerHTML = newParentInnerHtml;
         if (clickedX1 !== 0 && clickedY1 !== 0) {     //User generated click event
             let pointerElement = document.getElementById('_mce_caret');
             if (pointerElement?.nodeName == 'SPAN' && pointerElement.hasAttribute('id')) {
-                let selectedNode = tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('span#_mce_caret')[0]);
-                tinymce.activeEditor.selection.setCursorLocation(selectedNode)
-                tinymce.activeEditor.selection.placeCaretAt(Math.round(clickedX1), Math.round(clickedY1)) //Placing exact cursor position on clicking.
+                let selectedNode = tinymce.activeEditor?.selection?.select(tinymce.activeEditor?.dom?.select('span#_mce_caret')[0]);
+                tinymce.activeEditor?.selection?.setCursorLocation(selectedNode)
+                tinymce.activeEditor?.selection?.placeCaretAt(Math.round(clickedX1), Math.round(clickedY1)) //Placing exact cursor position on clicking.
                 if (endPosition) {
-                    tinymce.activeEditor.selection.setCursorLocation(pointerElement, 1);
+                    tinymce.activeEditor?.selection?.setCursorLocation(pointerElement, 1);
                 } else {
-                    tinymce.activeEditor.setCursorLocation(pointerElement, 0);
+                    tinymce.activeEditor?.setCursorLocation(pointerElement, 0);
                 }
             }
         }
