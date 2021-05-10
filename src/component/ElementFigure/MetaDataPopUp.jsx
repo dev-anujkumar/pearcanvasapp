@@ -66,7 +66,7 @@ class MetaDataPopUp extends React.Component {
 			}
 		}).then(response => {
 				/* -- if update alfresco metadata put call success then update wip also */
-				// this.updateElementData();
+				this.updateElementData();
 			}).catch(error => {
 				this.updateElementData();
 				console.error("error--", error);
