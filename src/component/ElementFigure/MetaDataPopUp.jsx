@@ -62,9 +62,7 @@ class MetaDataPopUp extends React.Component {
 			headers: {
 				"Content-Type": "application/json",
 				"PearsonSSOSession": config.ssoToken,
-				"apikey": config.CMDS_APIKEY,
-				"Accept": "*/*",
-				"Access-Control-Allow-Origin": "*"
+				"apikey": config.CMDS_APIKEY
 			}
 		}).then(response => {
 				/* -- if update alfresco metadata put call success then update wip also */
