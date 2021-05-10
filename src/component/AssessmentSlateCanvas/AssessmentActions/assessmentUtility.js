@@ -135,8 +135,9 @@ export const checkInteractive = (element) => {
 }
 
 export const checkFigureMetadata = (element) => {
-    if (element?.type === ELEMENT_FIGURE && element.figuretype === 'image' &&
-    element.figuredata && element.figuredata.path && element.figuredata.path !==DEFAULT_IMAGE_SOURCE) {
+    const figureImageTypes = ["image", "mathImage", "table"]
+    if (element?.type === ELEMENT_FIGURE && figureImageTypes.includes(element?.figuretype) &&
+     element?.figuredata?.path && element?.figuredata?.path !==DEFAULT_IMAGE_SOURCE) {
         return true;
     }
     return false;

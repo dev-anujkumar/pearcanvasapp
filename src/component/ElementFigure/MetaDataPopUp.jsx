@@ -35,7 +35,7 @@ class MetaDataPopUp extends React.Component {
     * @param {event} 
     */
 	getAlfrescoMetadata = () => {
-		let url = "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/" + this.props.imageId;
+		let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
 		axios.get(url, {
 			headers: {
 				"Content-Type": "application/json",
@@ -54,7 +54,7 @@ class MetaDataPopUp extends React.Component {
 	}
 	/*--*/
 	sendAlfrescoMetadata = () => {
-		const url = "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/" + this.props.imageId;
+		let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
 		
 		const { altText, longDescription } = this.state;
 		const body = {
@@ -80,6 +80,7 @@ class MetaDataPopUp extends React.Component {
 			}).catch(error => {
 				console.error("error--", error);
 			})
+		this.props.togglePopup(false);
 	}
 
 	updateElementData = () => {

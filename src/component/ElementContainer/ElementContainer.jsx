@@ -1608,6 +1608,7 @@ class ElementContainer extends Component {
                         handleCommentspanel(event,element.id, this.props.index)
                         }} type="comment-flag" />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                     {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCM(event)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
@@ -1822,6 +1823,17 @@ class ElementContainer extends Component {
         }else{
             hideBlocker();
         }
+    }
+
+    /**
+     * @description - This function is used to open alfresco metadata in new window.
+     */
+
+    handleAlfrescoMetadataWindow = () =>{
+        let imageId = this.props?.element?.figuredata?.imageid;
+        imageId = imageId.replace('urn:pearson:alfresco:','');
+        const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
+        window.open(Url);
     }
 
     /**
