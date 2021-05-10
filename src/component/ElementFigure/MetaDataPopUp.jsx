@@ -66,9 +66,10 @@ class MetaDataPopUp extends React.Component {
 			}
 		}).then(response => {
 				/* -- if update alfresco metadata put call success then update wip also */
-				this.updateElementData();
+				// this.updateElementData();
 			}).catch(error => {
 				console.error("error--", error);
+				this.updateElementData();
 			})
 		this.props.togglePopup(false);
 	}
@@ -100,6 +101,7 @@ class MetaDataPopUp extends React.Component {
 							<div className="alt-text-body" >
 								<p className="alt-text">Alt Text:</p>
 								<input 
+								    autocomplete="off"
 									id="altText_AM" 
 									name="altText_AM" 
 									type="text" 
