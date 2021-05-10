@@ -3030,11 +3030,25 @@ export class TinyMceEditor extends Component {
                 //---------------------------------------------------------------------------------//
                 // if editor contains footnode in the text anywhere then check the condition and if 
                 // footnode lies in the end then remove the superscript mode from the end of text.
-                /**
-                if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
-                    this.removeSupFormat(clickedX, clickedY);
+                if (tinymce.activeEditor.selection.getContent() === "") { // if user is not selecting any text on the editor
+                    let activeNode = tinymce.activeEditor.selection.getNode()
+                    if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
+                        this.removeSupFormat(clickedX, clickedY);
+                    }
+                    else if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
+                        let cursorNode = document.elementFromPoint(clickedX, clickedY);
+                        let selectNode = '';
+                        if (cursorNode?.nodeName === 'A') {
+                            selectNode = cursorNode
+                            tinymce.activeEditor.selection.select(selectNode);
+                            this.removeSupFormat(clickedX, clickedY);
+                        } else if (cursorNode?.nodeName === 'SUP' && cursorNode?.childNodes?.length && cursorNode?.childNodes[0]?.nodeName === 'A') {
+                            selectNode = cursorNode.childNodes[0]
+                            tinymce.activeEditor.selection.select(selectNode);
+                            this.removeSupFormat(clickedX, clickedY);
+                        }
+                    }
                 }
-                */
 
                 //---------------------------------------------------------------------------------//
                 if (clickedX !== 0 && clickedY !== 0) {     //User generated click event
@@ -3106,13 +3120,25 @@ export class TinyMceEditor extends Component {
                 // if editor contains footnode in the text anywhere then check the condition and if 
                 // footnode lies in the end then remove the superscript mode from the end of text.
                 
-                /*** 
                 if (tinymce.activeEditor.selection.getContent() === "") { // if user is not selecting any text on the editor
-                    if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
+                    let activeNode = tinymce.activeEditor.selection.getNode()
+                    if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
                         this.removeSupFormat(clickedX, clickedY);
                     }
+                    else if (tinymce.activeEditor.getContent().indexOf("<sup>") > -1) {
+                        let cursorNode = document.elementFromPoint(clickedX, clickedY);
+                        let selectNode = '';
+                        if (cursorNode?.nodeName === 'A') {
+                            selectNode = cursorNode
+                            tinymce.activeEditor.selection.select(selectNode);
+                            this.removeSupFormat(clickedX, clickedY);
+                        } else if (cursorNode?.nodeName === 'SUP' && cursorNode?.childNodes?.length && cursorNode?.childNodes[0]?.nodeName === 'A') {
+                            selectNode = cursorNode.childNodes[0]
+                            tinymce.activeEditor.selection.select(selectNode);
+                            this.removeSupFormat(clickedX, clickedY);
+                        }
+                    }
                 }
-                */
 
                 //---------------------------------------------------------------------------------//
 
@@ -3145,26 +3171,16 @@ export class TinyMceEditor extends Component {
      * @param {*} clickedX  x cords of mouse clicking
      * @param {*} clickedY  y cords of mouse clicking
      */
-    removeSupFormat = (clickedX, clickedY) => {
+    removeSupFormat = (clickedX1, clickedY1) => {
         let selectedElement;
         // We are checking event in below condition because on handle click event when tiny mce editor 
         // init then it selects div element of editor, so we need to find its child anchor or sup element.
-        if (tinymce.activeEditor.selection.getNode().tagName?.toLowerCase() === "div") {
-            let editorParaChildrenElems = tinymce.activeEditor.selection.getNode().children[0].children;
-            for (let i = editorParaChildrenElems.length - 1; i>=0; i--) {
-                const allowedTagArr = ["sup", "span", "a"];
-                if (allowedTagArr.includes(editorParaChildrenElems[i].tagName?.toLowerCase())) {
-                    selectedElement = editorParaChildrenElems[i];
-                    break;
-                }
-            }
-        } else {
-            selectedElement = tinymce.activeEditor.selection.getNode();
-            // Below if condition works only when editor has no text and contains only footnote star
-            if (selectedElement?.tagName?.toLowerCase() === "p") {
-                selectedElement = selectedElement.firstChild;    
-            }
+        selectedElement = tinymce.activeEditor.selection.getNode();
+        // Below if condition works only when editor has no text and contains only footnote star
+        if (selectedElement?.tagName?.toLowerCase() === "p") {
+            selectedElement = selectedElement.firstChild;
         }
+
         let parentNode = selectedElement.parentNode;
         let endPosition = true;
         if (selectedElement?.tagName?.toLowerCase() === 'a') {
@@ -3189,8 +3205,18 @@ export class TinyMceEditor extends Component {
         let parentInnerHtml = removeBOM(parentNode.innerHTML);
         let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
         parentNode.innerHTML = newParentInnerHtml;
-        if (clickedX !== 0 && clickedY !== 0) {     //User generated click event
-            tinymce.activeEditor.selection.placeCaretAt(Math.round(clickedX), Math.round(clickedY)) //Placing exact cursor position on clicking.
+        if (clickedX1 !== 0 && clickedY1 !== 0) {     //User generated click event
+            let pointerElement = document.getElementById('_mce_caret');
+            if (pointerElement?.nodeName == 'SPAN' && pointerElement.hasAttribute('id')) {
+                let selectedNode = tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('span#_mce_caret')[0]);
+                tinymce.activeEditor.selection.setCursorLocation(selectedNode)
+                tinymce.activeEditor.selection.placeCaretAt(Math.round(clickedX1), Math.round(clickedY1)) //Placing exact cursor position on clicking.
+                if (endPosition) {
+                    tinymce.activeEditor.selection.setCursorLocation(pointerElement, 1);
+                } else {
+                    tinymce.activeEditor.setCursorLocation(pointerElement, 0);
+                }
+            }
         }
     }
     
