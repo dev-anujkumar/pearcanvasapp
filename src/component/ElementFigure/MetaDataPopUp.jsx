@@ -42,11 +42,12 @@ class MetaDataPopUp extends React.Component {
 				"PearsonSSOSession": config.ssoToken,
 				"apikey": config.CMDS_APIKEY
 			}
-		}).then(response => {				
+		}).then(response => {
+			const  { properties } = response?.data?.entry || {};		
 				this.setState({
-					metaData: response.data.entry.properties,
-					altText: response.data.entry.properties["cplg:altText"],
-					longDescription: response.data.entry.properties["cplg:longDescription"]
+					metaData: properties,
+					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"]: "" ,
+					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : ''
 				})
 			}).catch(error => {
 				console.error("error--", error);
