@@ -18,7 +18,7 @@ const ElmFooter = (props) => {
     activeAssessmentType,
     addPufFunction,
     containerUrn,
-    activeUsageType } = props.elmFooterProps;
+    activeUsageType, elementUrn } = props.elmFooterProps;
 
   const { addFlag, hideSearch, openItemTable,
     currentAssessmentSelected,
@@ -66,7 +66,7 @@ const ElmFooter = (props) => {
           }
         }
         if (tempUrl) {
-          let url = `${tempUrl}?containerUrn=${containerUrn}&projectUrn=${config.projectUrn}`;
+          let url = `${tempUrl}?containerUrn=${containerUrn}&projectUrn=${config.projectUrn}&elementUrn=${elementUrn}`;
 
           if (activeAssessmentType !== ELM_INT) { /* if NOT Interactive elm then append usageType param */
             const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";

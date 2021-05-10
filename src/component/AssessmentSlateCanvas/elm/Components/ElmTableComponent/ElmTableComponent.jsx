@@ -438,6 +438,7 @@ class ElmTableComponent extends Component {
         addPufFunction: this.props.addPufFunction,
         containerUrn: this.props?.currentSlateAncestorData?.ancestor?.containerUrn,
         activeUsageType: this.props.activeUsageType,
+        elementUrn: this.props.activeElementId
     };
 
     render() {
@@ -561,6 +562,7 @@ const mapActionToProps = {
 export default connect((state) => {
     return {
         elmReducer: state.elmReducer,
-        currentSlateAncestorData: state.appStore.currentSlateAncestorData
+        currentSlateAncestorData: state.appStore.currentSlateAncestorData,
+        activeElementId: state.appStore?.activeElement?.elementId
     }
 },mapActionToProps)(ElmTableComponent);
