@@ -20,18 +20,12 @@ class MetaDataPopUp extends React.Component {
     }
 
     componentDidMount() {
-		/*--- */
+		/* -- Get metadata from alfresco - */
 		this.getAlfrescoMetadata();
     }
 
-    componentWillUnmount() {
-        if (this.props.showConfirmation) {
-            hideBlocker();
-            this.props.hideCanvasBlocker(false)
-        }
-    }
 	/**
-    * @description - This function is responsible for rendering the Dialog text in the popup.
+    * @description - This function is responsible for showing alfresco metadata in the popup.
     * @param {event} 
     */
 	getAlfrescoMetadata = () => {
@@ -53,7 +47,7 @@ class MetaDataPopUp extends React.Component {
 				console.error("error--", error);
 			})
 	}
-	/*--*/
+	/*- Retrive the changed data from state and Updata alfresco metadata in alfresco -*/
 	sendAlfrescoMetadata = () => {
 		let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
 		
@@ -65,7 +59,6 @@ class MetaDataPopUp extends React.Component {
 				"cplg:longDescription": longDescription
 			}
 		}
-		console.log(JSON.stringify(body));
 		axios.put(url, body, {
 			headers: {
 				"Content-Type": "application/json",
@@ -75,8 +68,7 @@ class MetaDataPopUp extends React.Component {
 				"Access-Control-Allow-Origin": "*"
 			}
 		}).then(response => {
-				console.log("response--", response);
-				/* -- */
+				/* -- if update alfresco metadata put call success then update wip also */
 				this.updateElementData();
 			}).catch(error => {
 				console.error("error--", error);
@@ -86,11 +78,11 @@ class MetaDataPopUp extends React.Component {
 
 	updateElementData = () => {
 		const { index, element } = this.props;
-		/*--*/
+		/*-- Form data to send to wip */
 		let figureData = { ...element.figuredata };
 		figureData.alttext = this.state.altText;
 		figureData.longdescription = this.state.longDescription;
-		/*--*/
+		/*-- Updata the image metadata in wip */
 		this.props.updateFigureData(figureData, index, element.id, () => {
 			this.props.handleFocus("updateFromC2")
 			this.props.handleBlur()
