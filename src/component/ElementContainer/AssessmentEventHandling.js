@@ -96,6 +96,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
         const getMsgafterAddAssessment = async (event) => {
             try {
                 const { data = {} } = event;
+                //console.log("data = ",data);
                 /* Get the data from store */
                 const itemData = store.getState().assessmentReducer?.item ?? {};
 
@@ -144,7 +145,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                         intObj.callFrom = "fromEventHandling";
                         addPufFunction(intObj);
                         /* Remove EventListener */
-                        window.removeEventListener("message", getMsgafterAddAssessment, false);
+                        //window.removeEventListener("message", getMsgafterAddAssessment, false);
                     }
                 }  
                 if(action === "remove"){
@@ -163,12 +164,12 @@ function getInteractivePostMsg(data){
     /* get data from post message */
     if (typeof data === "string") {
         const interactives = data?.split("|") ?? [];
-        if (interactives?.length === 5 && interactives[0] === "interactive") {
+        if (interactives?.length === 6 && interactives[0] === "interactive") {
             const interactiveFromMsg = {
                 id: interactives[1]?.split("_")[1],
-                title: interactives[2]?.split("_")[1],
-                //calledFrom:'createElm',
-                interactiveType: interactives[3]?.split("_")[1]                               
+                elementUrn: interactives[2]?.split("_")[1],
+                title: interactives[3]?.split("_")[1],
+                interactiveType: interactives[4]?.split("_")[1]                               
             };
             return interactiveFromMsg;
         }

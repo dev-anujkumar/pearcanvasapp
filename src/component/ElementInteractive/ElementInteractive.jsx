@@ -388,33 +388,35 @@ class Interactive extends React.Component {
      * @param {Object} pufObj Objeact containing elmInteractive Asset details
     */
     addElmInteractive = (pufObj, cb) => {
-        showTocBlocker();
-        disableHeader(true);
+        if(pufObj.elementUrn === this.props.elementId){
+            showTocBlocker();
+            disableHeader(true);
 
-        let figureData = {
-            schema: INTERACTIVE_SCHEMA,
-            interactiveid: pufObj.id,
-            interactivetype: pufObj.interactiveType,
-            interactivetitle: pufObj.title,
-            interactiveformat: ELM_INT
-        }
-        this.setState({
-            itemID: pufObj.id,
-            interactiveTitle: pufObj.title,
-            elementType: pufObj.interactiveType
-        }, () => {
-            this.props.fetchAssessmentMetadata("interactive", "",{ targetId: pufObj.id });
-        })
-        this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
-            this.props.handleFocus("updateFromC2");
-            this.props.handleBlur();
-        })
-        if(pufObj.callFrom === "fromEventHandling"){
-            hideTocBlocker();
-            disableHeader(false);
-        }
-        if (cb) {
-            cb();
+            let figureData = {
+                schema: INTERACTIVE_SCHEMA,
+                interactiveid: pufObj.id,
+                interactivetype: pufObj.interactiveType,
+                interactivetitle: pufObj.title,
+                interactiveformat: ELM_INT
+            }
+            this.setState({
+                itemID: pufObj.id,
+                interactiveTitle: pufObj.title,
+                elementType: pufObj.interactiveType
+            }, () => {
+                this.props.fetchAssessmentMetadata("interactive", "",{ targetId: pufObj.id });
+            })
+            this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
+                this.props.handleFocus("updateFromC2");
+                this.props.handleBlur();
+            })
+            if(pufObj.callFrom === "fromEventHandling"){
+                hideTocBlocker();
+                disableHeader(false);
+            }
+            if (cb) {
+                cb();
+            }
         }
     }
 
