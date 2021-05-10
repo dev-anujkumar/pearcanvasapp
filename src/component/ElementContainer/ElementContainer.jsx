@@ -1808,14 +1808,13 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
-    handleFigurePopup = (togglePopup,url) =>{ 
+    handleFigurePopup = (togglePopup) =>{ 
         let imageId = this.props?.element?.figuredata?.imageid;
         imageId = imageId.replace('urn:pearson:alfresco:','');
 
         this.props.showBlocker(togglePopup);
         this.setState({
             isfigurePopup:togglePopup,
-            //figureUrl:url,
             imageId
           })
         if(togglePopup){
@@ -1843,11 +1842,9 @@ class ElementContainer extends Component {
     handleEditButton = (event) => {
         event.stopPropagation();
         const { element } = this.props;
-        // const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${metadataUrl}`
-        const Url  = `https://alfresco-qa.cms.pearson.com/share/page/site/r34-pdf-splitter/document-details?nodeRef=workspace://SpacesStore/736b9be5-acbd-4344-b83f-fbd1a099967a&parentNodeRef=workspace://SpacesStore/2c239df5-01ae-4f66-a5f8-29e7552b10eb&path=%252F`
-        if(element?.type === 'figure' && element.figuretype === 'image'){
-             this.handleFigurePopup(true,Url);
-            //  window.open(Url);
+        const figureImageTypes = ["image", "mathImage", "table"]
+        if(element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)){
+            this.handleFigurePopup(true);
         }
         else{
             let fullAssessment = checkFullElmAssessment(element);
