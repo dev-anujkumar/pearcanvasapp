@@ -18,7 +18,7 @@ const ElmFooter = (props) => {
     activeAssessmentType,
     addPufFunction,
     containerUrn,
-    activeUsageType, elementUrn } = props.elmFooterProps;
+    activeUsageType, elementId } = props.elmFooterProps;
 
   const { addFlag, hideSearch, openItemTable,
     currentAssessmentSelected,
@@ -66,12 +66,14 @@ const ElmFooter = (props) => {
           }
         }
         if (tempUrl) {
-          let url = `${tempUrl}?containerUrn=${containerUrn}&projectUrn=${config.projectUrn}&elementUrn=${elementUrn}`;
+          let url = `${tempUrl}?containerUrn=${containerUrn}&projectUrn=${config.projectUrn}`;
 
           if (activeAssessmentType !== ELM_INT) { /* if NOT Interactive elm then append usageType param */
             const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
             url = `${url}&usageType=${usageType}`;
           }
+        url = `${url}&elementUrn=${elementId}`;
+        console.log("url = ",url)
         /* open elm portal */
           window.open(url);
         /**@function call for add listeners to get data from elm portal */
