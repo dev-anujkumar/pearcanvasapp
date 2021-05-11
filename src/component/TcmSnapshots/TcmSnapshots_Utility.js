@@ -729,8 +729,6 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
     }
-    console.log('snapData@@@',element,actionStatus,index, elementDetails, CurrentSlateStatus,semanticSnapshots,elementSnapshot)
-
     return elementSnapshot;
 }
 

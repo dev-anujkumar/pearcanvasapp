@@ -870,8 +870,6 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             )
             if (createdElemData && createdElemData.status == '200') {
                 let responseData = Object.values(createdElemData.data)
-                console.log('responseData',responseData)
-
                 const figureTypes = ["image", "mathImage", "table", "video", "audio"]
                 if((responseData[0]?.type === "figure") && figureTypes.includes(responseData[0]?.figuretype) ){
                     const elementId = responseData[0].id
