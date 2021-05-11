@@ -107,6 +107,7 @@ class MetaDataPopUp extends React.Component {
 									type="text" 
 									placeholder="Enter your text here" 
 									value={altText}
+									disabled
 									onChange={(e) => this.setState({ altText: e.target.value })}
 								/>
 							</div>
@@ -119,6 +120,7 @@ class MetaDataPopUp extends React.Component {
 									cols="50" 
 									placeholder="Enter your text here" 
 									value={longDescription}
+									disabled
 									onChange={(e) => this.setState({ longDescription: e.target.value })}>
 								</textarea>
 							</div>
