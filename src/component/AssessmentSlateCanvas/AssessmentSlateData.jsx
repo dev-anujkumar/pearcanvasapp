@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import PopUp from '../PopUp';
 import ElmUpdateButton from './ElmUpdateButton.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
-import RootElmComponent from './elm/RootElmComponent.jsx';
 import { UsageTypeDropdown } from './UsageTypeDropdown/UsageTypeDropdown.jsx';
 import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 /** ----- Import - Dependencies ----- */

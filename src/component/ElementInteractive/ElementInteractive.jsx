@@ -358,9 +358,9 @@ class Interactive extends React.Component {
                 'type': TOGGLE_ELM_SPA,
                 'message': {
                     type: OPEN_ELM_PICKER,
-                    usageType: this.state.activeAsseessmentUsageType,
+                    usageType: '',
                     elementType: this.state.elementType,
-                    resource_type: Resource_Type.ASSESSMENT_ITEM,
+                    resource_type: Resource_Type.INTERACTIVE,
                     ssoToken: config.ssoToken,
                     projectUrn: config.projectUrn,
                     ELM_PORTAL_ENDPOINT: config.ELM_PORTAL_URL,
@@ -773,7 +773,6 @@ class Interactive extends React.Component {
                             {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                             {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                             {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
-                            {/* {this.state.showElmComponent? <RootElmComponent activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} elementType={model.figuretype}/> : ''} */}
                         </div>
                         {this.state.showUpdatePopup && this.showCustomPopup()}
                     </>
