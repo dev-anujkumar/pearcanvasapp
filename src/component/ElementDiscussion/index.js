@@ -5,7 +5,7 @@ import { UsageTypeDropdown } from "../AssessmentSlateCanvas/UsageTypeDropdown/Us
 import "../../styles/ElementDiscussion/ElementDiscussion.css";
 import { useSelector } from "react-redux";
 import DiscussionDialog from "./DiscussionDialog";
-import { createDiscussionForUpdateAPI, clearElement } from "./Utils";
+import { createDiscussionForUpdateAPI, clearElement, removeLabel } from "./Utils";
 import { updateElement } from "../ElementContainer/ElementContainer_Actions";
 import { connect } from "react-redux";
 import {
@@ -18,6 +18,7 @@ import {
   hasReviewerRole,
   matchHTMLwithRegex,
   removeClassesFromHtml,
+  removeTagsforSubTitle,
   sendDataToIframe,
 } from "../../constants/utility";
 import config from "../../config/config";
@@ -102,7 +103,7 @@ const ElementDiscussion = (props) => {
                     );
                     newTitle = matchHTMLwithRegex(newTitle)
                       ? newTitle
-                      : `<p>${newTitle}</p>`;
+                      : `<p><label>${newTitle}</label></p>`;
                     // newPSData.html[field] = tempCredit;
                     const html = {
                       title: newTitle,
@@ -123,7 +124,7 @@ const ElementDiscussion = (props) => {
                   placeholder="Enter Label..."
                   tagName={"h4"}
                   className={" figureLabel "}
-                  model={props.element.html.title}
+                  model={removeLabel(props.element.html.title)}
                   slateLockInfo={props.slateLockInfo}
                   elementId={props.elementId}
                 />

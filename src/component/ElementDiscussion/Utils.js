@@ -25,9 +25,9 @@ export const createDiscussionForUpdateAPI = (_props, elementDiscussion) => {
 
 export const clearElement = (element) => {
     const clearedElement = element;
-  
+
     if (element.elementdata) {
-        clearedElement.elementdata = null;
+        delete clearedElement.elementdata;
     }
     // if(element.blockdata.usagetype === '') {
     //     clearedElement.blockdata.usagetype = null
@@ -43,3 +43,11 @@ export const clearElement = (element) => {
     return clearedElement;
   };
   
+
+  export const removeLabel = (html) => {
+      if(typeof html === 'string' && html.length>0) {
+          const replacedHtml = html.replace("<label>","").replace("</label>","");
+          return replacedHtml;
+      }
+      return html;
+  }
