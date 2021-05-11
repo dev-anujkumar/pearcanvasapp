@@ -58,6 +58,7 @@ export class TinyMceEditor extends Component {
         this.notFormatting = true;
         this.gRange = null;
         this.wirisClick = 0;
+        this.activeGlossaryFootnoteId="";
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -723,6 +724,7 @@ export class TinyMceEditor extends Component {
         if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.parentElement.childNodes &&
             e.target.parentElement.childNodes[0].nodeName == 'A' && e.target.dataset.uri) {
             let uri = e.target.dataset.uri;
+            this.activeGlossaryFootnoteId = uri;
             this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
@@ -3038,6 +3040,7 @@ export class TinyMceEditor extends Component {
                     else if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1) {
                         let cursorNode = document.elementFromPoint(clickedX, clickedY);
                         let selectNode = '';
+                        // const parentNodeName = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN', 'DIV', 'HEADER']
                         if (cursorNode?.nodeName === 'A') {
                             selectNode = cursorNode
                             tinymce.activeEditor.selection.select(selectNode);
@@ -3046,7 +3049,14 @@ export class TinyMceEditor extends Component {
                             selectNode = cursorNode.childNodes[0]
                             tinymce.activeEditor.selection.select(selectNode);
                             this.removeSupFormat(clickedX, clickedY);
-                        }
+                        } 
+                        /**else if (parentNodeName.indexOf(cursorNode?.nodeName?.toUpperCase()) > -1 && this.activeGlossaryFootnoteId) {
+                            let footnoteAnchorNode = cursorNode.querySelector(`a[data-uri="${this.activeGlossaryFootnoteId}"]`)
+                            if (footnoteAnchorNode) {
+                              tinymce.activeEditor.selection.select(footnoteAnchorNode);
+                              this.removeSupFormat(clickedX, clickedY);
+                            }
+                        }*/
                     }
                 }
 
@@ -3119,7 +3129,7 @@ export class TinyMceEditor extends Component {
                 //---------------------------------------------------------------------------------//
                 // if editor contains footnode in the text anywhere then check the condition and if 
                 // footnode lies in the end then remove the superscript mode from the end of text.
-                
+
                 if (tinymce.activeEditor?.selection?.getContent() === "") { // if user is not selecting any text on the editor
                     let activeNode = tinymce.activeEditor.selection.getNode()
                     if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
@@ -3128,6 +3138,7 @@ export class TinyMceEditor extends Component {
                     else if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1) {
                         let cursorNode = document.elementFromPoint(clickedX, clickedY);
                         let selectNode = '';
+                        const parentNodeName = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN', 'DIV', 'HEADER']
                         if (cursorNode?.nodeName === 'A') {
                             selectNode = cursorNode
                             tinymce.activeEditor.selection.select(selectNode);
@@ -3136,6 +3147,12 @@ export class TinyMceEditor extends Component {
                             selectNode = cursorNode.childNodes[0]
                             tinymce.activeEditor.selection.select(selectNode);
                             this.removeSupFormat(clickedX, clickedY);
+                        } else if (parentNodeName.indexOf(cursorNode?.nodeName?.toUpperCase()) > -1 && this.activeGlossaryFootnoteId) {
+                            let footnoteAnchorNode = cursorNode.querySelector(`a[data-uri="${this.activeGlossaryFootnoteId}"]`)
+                            if (footnoteAnchorNode) {
+                                tinymce.activeEditor?.selection?.select(footnoteAnchorNode);
+                                this.removeSupFormat(clickedX, clickedY);
+                            }
                         }
                     }
                 }
@@ -3180,7 +3197,6 @@ export class TinyMceEditor extends Component {
         if (selectedElement?.tagName?.toLowerCase() === "p") {
             selectedElement = selectedElement.firstChild;
         }
-
         let parentNode = selectedElement.parentNode;
         let endPosition = true;
         if (selectedElement?.tagName?.toLowerCase() === 'a') {
@@ -3216,6 +3232,7 @@ export class TinyMceEditor extends Component {
                 } else {
                     tinymce.activeEditor?.setCursorLocation(pointerElement, 0);
                 }
+                this.activeGlossaryFootnoteId = ""
             }
         }
     }
