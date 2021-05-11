@@ -37,7 +37,6 @@ import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
-import discussionItems from '../SlateWrapper/de_api';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -350,17 +349,12 @@ export const getProjectDetails = () => (dispatch, getState) => {
                 }
             }).then (discussionResponse => {
                 if(Array.isArray(discussionResponse?.data)) {
-                dispatch({
-                    type: UPDATE_DISCUSSION_ITEMS,
-                    payload: discussionResponse.data
-                })
+                    dispatch({
+                        type: UPDATE_DISCUSSION_ITEMS,
+                        payload: discussionResponse.data
+                    })
                 }
-                
             }).catch(error => {
-                 dispatch({
-                    type: UPDATE_DISCUSSION_ITEMS,
-                    payload: discussionItems
-                })
             }) 
         }
     }).catch(error => {

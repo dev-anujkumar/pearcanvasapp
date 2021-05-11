@@ -132,7 +132,7 @@
 .discussionImage {
   display: block;
   width: 100%;
-  margin-top: 24px;
+  margin: 0.60em auto 3.15em auto;
 }
 
 /* Center the image and position the close button */
@@ -240,6 +240,7 @@
   padding: 8px;
   border-collapse: collapse;
   margin-top: 16px;
+  white-space: pre;
 }
 
 .discussTableDiscussion th {
@@ -264,7 +265,6 @@
 .titleRadioContainerDiscussion {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
   width: 200px;
   align-items: center;
   display: flex;
@@ -275,6 +275,8 @@
 }
 .radioLabelDiscussion {
   margin-left: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .closeIconDiscussion {

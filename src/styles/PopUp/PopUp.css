@@ -125,7 +125,9 @@
   }
 
   .cancel-button:hover,.lo-save-button:hover{
-    background-color: #def8ff
+    background-color: #def8ff;
+    cursor: pointer;
+    border: 1px solid #005a70;
   }
 
 .save-button{
@@ -361,7 +363,7 @@
   text-align: center;
 }
 .powerpaste-cancel-button:hover {
-  border: solid 1px #005a70;
+  border: 1px solid #005a70;
   background-color: #def8ff;
 }
 
@@ -418,4 +420,100 @@
   font-weight: 500;
   margin-top: 2px;
   color: #005a70;
+}
+
+.figure-popup{
+  width: 640px;
+  height: 476px;
+  z-index: 9999;
+  background-color: #fff;
+  top: -32px;
+  margin: auto;
+  border-top: 4px solid #005a70;
+  padding: 20px;
+}
+.save-buttons{
+  border-radius: 2px;
+  border: 0;
+  float: right;
+  font-family: inherit;
+  background: #005a70;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px 20px;
+  font-size: 14px;
+  line-height: 1.43;
+  text-align: center;
+  margin: 0 0 10px 16px;
+  border: 1px solid #005a70;
+}
+.save-buttons:hover {
+  background: #07313b;
+  border: 1px solid #07313b;
+}
+.edit-metadata{
+  font-size: 16px;
+  color: #005a70;
+  font-weight: 600;
+  float: left;
+}
+
+.alt-text-body {
+  padding: 8px 12px;
+  background-color: #f7f7f7;
+  overflow: auto;
+  border-bottom: 1px solid #005a70;
+  margin-bottom: 20px;
+  height: 70px;
+}
+.long-description-body{
+  background-color: #f7f7f7;
+  overflow: auto;
+  border-bottom: 1px solid #005a70;
+  padding: 8px 12px;
+  height: 230px;
+}
+.alt-text-body .alt-text{
+  font-size: 14px;
+  color: #005a70;
+  margin: 0;
+  padding: 2px 0;
+}
+.long-description-body .long-text{
+  font-size: 14px;
+  color: #005a70;
+  margin: 0;
+  padding: 2px 0;
+}
+.figuremetadata-field {
+  margin-top:42px;
+}
+.metadata-button{
+  margin-top: 35px;
+}
+#longDescription_AM{
+  border: 0;
+  border-radius: 0;
+  width: 100%;
+  padding: 0;
+  color: #000000;
+  background-color: transparent;
+  resize: none;
+  font-size: 14px;
+}
+#longDescription_AM::placeholder {
+  font-size: 14px;
+}
+#altText_AM{
+  border: 0;
+  border-radius: 0;
+  width: 100%;
+  padding: 0;
+  color: #000000;
+  background-color: transparent;
+  resize: none;
+  font-size: 14px;
+}
+#altText_AM::placeholder {
+  font-size: 14px;
 }

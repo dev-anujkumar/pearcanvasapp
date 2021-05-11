@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { discussionCloseIcon, searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
-import Button from "../ElementButtons";
 
 const getSelectedItemFromId = (id) => {
   return undefined;
@@ -9,6 +8,7 @@ const getSelectedItemFromId = (id) => {
 
 const DiscussionDialog = ({
   showDialog = false,
+  elemendId='',
   itemId = undefined,
   selectDiscussion = () => {},
   closeDialog = () => {},
@@ -40,7 +40,7 @@ const DiscussionDialog = ({
           className="popupDiscussion"
         >
           <div className="headingContainerDiscussion">
-            <div className="headingTextDiscussion">Select Discussion Items</div>
+            <div className="headingTextDiscussion">Select a Discussion Item</div>
             <div onClick={() =>  closeDialog()} className="closeIconDiscussion">{discussionCloseIcon}</div>
           </div>
             <div className="searchContainerDiscussion">
@@ -82,6 +82,7 @@ const DiscussionDialog = ({
                   <td>
                     <div className="titleRadioContainerDiscussion">
                       <input
+                        
                         checked={
                           selectedDiscussion?.discussionUrn ===
                           item.discussionUrn
@@ -91,7 +92,7 @@ const DiscussionDialog = ({
                           setSelectedDiscussion(item);
                         }}
                         type="radio"
-                        name={item.title}
+                        name={elemendId + "-" + item.discussionUrn}
                         value={item.title}
                       />
                       <label for={item.title} className="radioLabelDiscussion">

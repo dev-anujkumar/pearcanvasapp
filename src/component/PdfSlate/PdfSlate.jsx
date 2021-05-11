@@ -118,15 +118,6 @@ class PdfSlate extends Component {
 					filetitle = {this.state.filetitle}
 					OpenAlfresco = {this.OpenAlfresco}
 				/>
-				<TinyMceEditor
-                    slateLockInfo={this.props.slateLockInfo}
-                    handleBlur={this.props.handleBlur}
-                    model={this.props.element}
-                    handleEditorFocus={this.props.handleFocus}
-                    className="addLOdata"
-                    permissions={this.props.permissions}
-                    element={this.props.element}
-                />
 			</div>
 		)
 	}
