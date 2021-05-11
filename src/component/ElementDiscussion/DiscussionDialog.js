@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { discussionCloseIcon, searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
-import Button from "../ElementButtons";
 
 const getSelectedItemFromId = (id) => {
   return undefined;

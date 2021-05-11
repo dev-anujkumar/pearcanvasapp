@@ -18,12 +18,10 @@ import {
   hasReviewerRole,
   matchHTMLwithRegex,
   removeClassesFromHtml,
-  removeTagsforSubTitle,
   sendDataToIframe,
 } from "../../constants/utility";
 import config from "../../config/config";
 import { replaceUnwantedtags } from "../ElementContainer/UpdateElements";
-import { element } from "prop-types";
 
 // see review mode
 // conditions
