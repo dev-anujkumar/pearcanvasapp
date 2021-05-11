@@ -359,18 +359,9 @@ class Interactive extends React.Component {
                 'message': {
                     type: OPEN_ELM_PICKER,
                     usageType: '',
-                    elementType: this.state.elementType,
-                    resource_type: Resource_Type.INTERACTIVE,
-                    ssoToken: config.ssoToken,
-                    projectUrn: config.projectUrn,
-                    ELM_PORTAL_ENDPOINT: config.ELM_PORTAL_URL,
-                    REACT_APP_API_URL: config.REACT_APP_API_URL,
-                    MANIFEST_API_ENDPOINT: config.ELM_ENDPOINT,
-                    STRUCTURE_APIKEY: config.STRUCTURE_APIKEY,
-                    slateManifestURN: config.tempSlateManifestURN ?? config.slateManifestURN,
-                    slateEntityURN: config.tempSlateEntityURN ?? config.slateEntityURN,
-                    projectTitle: config.book_title,
-                    elementId: this.props.model.id
+                    elementType: ELM_INT,
+                    resourceType: Resource_Type.INTERACTIVE,
+                    elementUrn: this.props.model.id
                 }
             });
         }

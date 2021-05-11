@@ -276,6 +276,9 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.setElmPickerData({})
                         break;
                 }
+                this.setState({
+                    showBlocker: false
+                });
             } else {
                 this.props.setElmPickerData({})
             }
