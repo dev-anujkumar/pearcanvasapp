@@ -16,6 +16,9 @@ import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
+import {saveSelectedAssetData} from '../../AlfrescoPopup/Alfresco_Action'
+import {connect} from 'react-redux'
+import { compose } from 'redux';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -248,6 +251,9 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'unlinkLOFailForWarningPopup':
                     this.handleUnlinkedLOData(message)
+                    break;
+                case 'selectedAlfrescoAssetData' :
+                    this.props.saveSelectedAssetData(message)
                     break;
             }
         }
@@ -841,4 +847,17 @@ function CommunicationChannel(WrappedComponent) {
     return CommunicationWrapper;
 }
 
-export default CommunicationChannel;
+const mapActionToProps = (dispatch) =>{
+    return{
+        saveSelectedAssetData: (message) => {
+            dispatch(saveSelectedAssetData(message))
+        },
+    }
+}
+
+const CommunicationChannelWrapper = compose(
+    connect(null, mapActionToProps),
+    CommunicationChannel
+)
+
+export default CommunicationChannelWrapper;

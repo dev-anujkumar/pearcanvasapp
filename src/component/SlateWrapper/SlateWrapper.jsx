@@ -46,6 +46,7 @@ import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
+import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 
 let random = guid();
 
@@ -1315,6 +1316,25 @@ class SlateWrapper extends Component {
         this.props.toggleLOWarningPopup(false, "");
     }
 
+       /**
+     * This method renders Alfresco Product Link Popup based on Selection 
+     */
+        showAlfrescoPopup = () => {
+            if (this.props.launchAlfrescoPopup) {
+                this.props.showBlocker(true)
+                showTocBlocker();
+                return (
+                    <AlfrescoPopup 
+                    alfrescoPath = {this.props.alfrescoPath}
+                    alfrescoListOption= {this.props.alfrescoListOption}
+                    />
+                )
+            }
+            else {
+                return null
+            }
+        }
+
     /**
      * render | renders title and slate wrapper
      */
@@ -1371,6 +1391,8 @@ class SlateWrapper extends Component {
                 {/* **************** Word Paste Popup ************ */}
                 {this.showWordPastePopup()}
                 {this.showLOWarningPopup()}{/* **************** LO Warning Popup ************ */}
+               {/* **************** Alfresco Popup ************ */}
+               {this.showAlfrescoPopup()}
             </React.Fragment>
         );
     }
@@ -1420,7 +1442,10 @@ const mapStateToProps = state => {
         wirisAltText: state.appStore.wirisAltText,
         currentSlateLF: state.metadataReducer.currentSlateLF,
         loWarningPopupData: state.metadataReducer.loWarningPopupData,
-        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        alfrescoPath : state.alfrescoReducer.alfrescoPath,
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
     };
 };
 

@@ -16,6 +16,8 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import figureData from './figureTypes';
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js'
+import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action'
+import { connect } from 'react-redux';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -27,7 +29,8 @@ class ElementFigure extends Component {
             imgSrc: null,
             projectMetadata: false,
             alfrescoSite: '',
-            alfrescoSiteData: {}
+            alfrescoSiteData: {},
+            alfrescoListOptions: {}
         }
     }
 
@@ -166,25 +169,27 @@ class ElementFigure extends Component {
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath.alfresco.nodeRef) {         //if alfresco location is available
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                data_1 = alfrescoPath.alfresco;
-                data_1.currentAsset = currentAsset;
-                /*
-                    data according to new project api 
-                */
-                data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
-                data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
-                data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
-                data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
+                let messageObj = { citeName: alfrescoPath.alfresco.name, citeNodeRef: alfrescoPath.alfresco.nodeRef, elementId: this.props.elementId }
+                sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                // data_1 = alfrescoPath.alfresco;
+                // data_1.currentAsset = currentAsset;
+                // /*
+                //     data according to new project api 
+                // */
+                // data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
+                // data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
+                // data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
+                // data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
 
-                /*
-                    data according to old core api and c2media
-                */
-                data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
-                data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
-                data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
-                data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
+                // /*
+                //     data according to old core api and c2media
+                // */
+                // data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
+                // data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
+                // data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
+                // data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
-                this.handleC2ExtendedClick(data_1)
+                // this.handleC2ExtendedClick(data_1)
             }
             else {
                 this.props.accessDenied(true)
@@ -192,60 +197,7 @@ class ElementFigure extends Component {
 
         }} else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-                    data_1 = {
-                        ...alfrescoData,
-                        currentAsset: currentAsset,
-                    };
-
-                    let request = {
-                        eTag: alfrescoPath.etag,
-                        projectId: alfrescoPath.id,
-                        ...alfrescoPath,
-                        additionalMetadata: { ...alfrescoData },
-                        alfresco: { ...alfrescoData }
-                    };
-
-                    /*
-                        preparing data according to Project api
-                    */
-
-                    request.additionalMetadata['repositoryName'] = data_1['repoName'];
-                    request.additionalMetadata['repositoryFolder'] = data_1['name'];
-                    request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
-                    request.additionalMetadata['visibility'] = data_1['siteVisibility'];
-
-                    request.alfresco['repositoryName'] = data_1['repoName'];
-                    request.alfresco['repositoryFolder'] = data_1['name'];
-                    request.alfresco['repositoryUrl'] = data_1['repoInstance'];
-                    request.alfresco['visibility'] = data_1['siteVisibility'];
-
-                    that.handleC2ExtendedClick(data_1)
-                    /*
-                        API to set alfresco location on dashboard
-                    */
-                    let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
-                    let SSOToken = request.ssoToken;
-                    return axios.patch(url, request.alfresco,
-                        {
-                            headers: {
-                                'Accept': 'application/json',
-                                'ApiKey': config.STRUCTURE_APIKEY,
-                                'Content-Type': 'application/json',
-                                'PearsonSSOSession': SSOToken,
-                                'If-Match': request.eTag
-                            }
-                        })
-                        .then(function (response) {
-                            let tempData = { alfresco: alfrescoData };
-                            that.setState({
-                                projectMetadata: tempData
-                            })
-                        })
-                        .catch(function (error) {
-                            console.log("error", error)
-                        });
-                })
+                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId)
             } else {
                 this.props.accessDenied(true)
             }
@@ -306,6 +258,31 @@ class ElementFigure extends Component {
         }
     }
 
+    handleSiteOptionsDropdown = (alfrescoPath, id) =>{
+        let that = this
+        let url = 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000';
+        let SSOToken = config.ssoToken;
+        return axios.get(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'ApiKey': config.CMDS_APIKEY,
+                    'Content-Type': 'application/json',
+                    'PearsonSSOSession': SSOToken
+                }
+            })
+            .then(function (response) {
+               let payloadObj = {launchAlfrescoPopup: true, 
+                alfrescoPath: alfrescoPath, 
+                alfrescoListOption: response.data.list.entries,
+                elementId: id
+            }
+                that.props.alfrescoPopup(payloadObj)
+            })
+            .catch(function (error) {
+                console.log("error IN SITE API", error)
+            });
+    }
     /*** @description - This function is for handling the different types of figure-element.
         * @param model object that defined the type of element
         * @param index index of the current element
@@ -484,4 +461,22 @@ ElementFigure.propTypes = {
     onFocus: PropTypes.func
 }
 
-export default ElementFigure;
+const mapActionToProps = (dispatch) =>{
+    return{
+        alfrescoPopup: (payloadObj) => {
+            dispatch(alfrescoPopup(payloadObj))
+        },
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
+        alfrescoElementId : state.alfrescoReducer.elementId
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapActionToProps
+)(ElementFigure);

@@ -1,0 +1,76 @@
+.MuiDialog-paperWidthSm{
+    width: 410px !important;
+}
+.MuiTypography-h6{
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    font-stretch: normal !important;
+    font-style: normal !important;
+    line-height: normal !important;
+    letter-spacing: normal;
+    color: #005a70;
+}
+
+.MuiDialog-paper{
+    overflow-y: hidden !important;
+}
+
+.MuiDialogContent-root{
+    overflow-y: hidden!important;
+}
+
+.MuiTypography-body1{
+    font-size: 14px !important;
+    font-weight: bold !important;
+    color: #858585 !important;
+}
+.MuiDialogContentText-root{
+    margin-bottom: 0px !important;
+}
+.MuiDialogContent-root{
+    flex: none !important;
+    padding: 5px 24px !important;
+}
+.MuiFilledInput-input{
+    padding: 10px 12px 20px !important;
+}
+.MuiPaper-elevation24{
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14) !important; 
+}
+.MuiFilledInput-root{
+background-color: #f7f7f7 !important;
+}
+.MuiFormLabel-root{
+    color: black !important;
+    font-size: 14px !important;
+}
+.MuiSelect-icon{
+    color: black !important;
+}
+.popup-top-line{
+  height: 5px;
+  margin: 0 0 5px;
+  background-color: #005a70;
+}
+.MuiPaper-rounded{
+    border-radius: 0px !important;
+}
+.MuiButton-root{
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+.MuiDialogActions-root{
+    margin: 16px !important;
+}
+.active-button-class{
+    color: #005a70 !important;
+}
+.MuiFilledInput-underline:after{
+    border-bottom: 1px solid #005a70 !important;
+}
+.MuiSelect-select:not([multiple]) option, .MuiSelect-select:not([multiple]) optgroup{
+    padding: 10px;
+}
+.MuiInputBase-input{
+    font-size: 14px !important;
+}
