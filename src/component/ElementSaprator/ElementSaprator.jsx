@@ -43,7 +43,8 @@ const { TEXT,
     TABLE_EDITOR,
     TOC_PARENT_TYPES,
     SHOW_HIDE,
-    POPUP
+    POPUP,
+    ELEMENT_DISCUSSION
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
@@ -378,8 +379,8 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
     const selectedElement = separatorProps.elementSelection.element
     const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,SHOW_HIDE,POPUP]
     if ((acceptedTypes.includes(selectedElement.type)) && type === 'copy'){
-        let parentUrn = 'parentUrn' in separatorProps ? separatorProps.parentUrn : null
-        let asideData = 'asideData' in separatorProps ? separatorProps.asideData : null
+        const parentUrn = separatorProps.parentUrn ?? null
+        const asideData = separatorProps.asideData ?? null
         return separatorProps.cloneContainer(insertionIndex, selectedElement.id,parentUrn,asideData)
     }
     const pasteFnArgs = {

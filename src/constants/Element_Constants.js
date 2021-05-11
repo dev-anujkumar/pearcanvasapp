@@ -126,7 +126,7 @@ export const getPasteValidated = (sourceType, selectionType) => {
     let validation = true;
     if(sourceType in SOURCE_MAP) { 
         if(SOURCE_MAP[sourceType].support.length > 0) {
-            if((SOURCE_MAP[sourceType].support).indexOf(selectionType) < 0){
+            if((SOURCE_MAP[sourceType].support).indexOf(selectionType) < 0) {
                 validation = false;
             }
         } else if(SOURCE_MAP[sourceType].notSupport.length > 0) {

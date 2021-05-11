@@ -26,6 +26,8 @@ export const MULTI_COLUMN = "MULTI_COLUMN";
 export const MMI_ELM = "MMI_ELM";
 export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have access to the Linked Alfresco site. please contact the Manager for this project";
 export const ELEMENT_DIALOGUE = "ELEMENT_DIALOGUE";
+export const ELEMENT_DISCUSSION = 'DISCUSSION';
+
 /* PDF Slate */
 export const ELEMENT_PDF = "ELEMENT_PDF";
 /*-----------------Pop Dialog text-------------------------- */
