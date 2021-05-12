@@ -115,6 +115,10 @@ class ElementDialogue extends React.PureComponent {
                                     userRole={_props.userRole}
                                     slateLockInfo={_props.slateLockInfo}
                                     updatePageNumber={_props.updatePageNumber}
+                                    glossaryFootnoteValue={_props.glossaryFootnoteValue}
+                                    glossaaryFootnotePopup={_props.glossaaryFootnotePopup}
+                                    openGlossaryFootnotePopUp={_props.openGlossaryFootnotePopUp}
+                                    handleAudioPopupLocation = {_props.handleAudioPopupLocation}
                                 />
                             </div>
                         </div>
@@ -257,6 +261,7 @@ class ElementDialogue extends React.PureComponent {
         let newPSData = JSON.parse(JSON.stringify(this.props.element)) || {};
         if (newPSData?.html?.hasOwnProperty("dialogueContent")) {
             newPSData.html.dialogueContent[index] = data;
+            newPSData.html = this.removeTextKeyFromObject(newPSData.html);
             if (removeClassesFromHtml(this.props.element?.html?.dialogueContent[index][field]) !==
                 removeClassesFromHtml(newPSData.html?.dialogueContent[index][field]) &&
                 !config.savingInProgress) {
@@ -264,6 +269,14 @@ class ElementDialogue extends React.PureComponent {
                 this.callUpdateApi(newPSData);
             }
         }
+    }
+
+    /* removes text key from the object */
+    removeTextKeyFromObject = (obj) => {
+        if (obj.hasOwnProperty('text')) {
+            delete obj.text;
+        }
+        return obj;
     }
 
     /* Update the data to server */
@@ -283,7 +296,11 @@ class ElementDialogue extends React.PureComponent {
             element: this.props.element,
             slateLockInfo: this.props.slateLockInfo,
             elementId: this.props.elementId,
-            handleEditorFocus: this.handleOuterFocus
+            handleEditorFocus: this.handleOuterFocus,
+            glossaryFootnoteValue:this.props.glossaryFootnoteValue,
+            glossaaryFootnotePopup:this.props.glossaaryFootnotePopup,
+            openGlossaryFootnotePopUp:this.props.openGlossaryFootnotePopUp,
+            handleAudioPopupLocation: this.props.handleAudioPopupLocation
         }
         return (
             (this.props !== null && this.props !== undefined) ?

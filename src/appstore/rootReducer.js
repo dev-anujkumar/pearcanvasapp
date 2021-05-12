@@ -17,6 +17,7 @@ import { searchReducer, commentSearchReducer } from './searchReducer';
 import assessmentReducer from './assessmentReducer';
 import { selectionReducer } from './copyUrnReducer';
 import alfrescoReducer from './alfrescoReducer';
+import { projectInfo } from './projectInfoReducer'
 
 export default combineReducers({
     appStore: appReducer,
@@ -37,5 +38,6 @@ export default combineReducers({
     commentSearchReducer,
     assessmentReducer,
     selectionReducer,
-    alfrescoReducer
+    alfrescoReducer,
+    projectInfo
 });

@@ -151,7 +151,13 @@ export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 
 /* --------------- Learnosity Project ------------------------*/
 export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
+export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO";
 
 /* --------------- Alfresco Project ------------------------*/
 export const SET_ALFRESCO_POPUP = "SET_ALFRESCO_POPUP"
 export const SAVE_ALFRESCO_ASSET_DATA = "SAVE_ALFRESCO_ASSET_DATA"
+
+/*---------------- Cypress Project Info ------------------------*/
+export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
+export const UPDATE_DISCUSSION_ITEMS = 'UPDATE_DISCUSSION_ITEMS';
+export const UPDATE_USAGE_TYPE = 'UPDATE_USAGE_TYPE';

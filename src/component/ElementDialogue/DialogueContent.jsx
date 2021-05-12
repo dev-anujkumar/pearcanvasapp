@@ -18,11 +18,16 @@ function DialogueContent(props) {
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
+                    let activeEditorId = eIndex ? `cypress-${eIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
+                    let currentNode = document.getElementById(activeEditorId);
+                    let innerHTML, innerText;
+                    innerHTML = `<p>${currentNode.innerHTML}</p>`;
+                    innerText = currentNode.innerText
                     const obj = { 
                          ...props.model[props.index],
-                        characterName: `<p>${removeBlankTags(eventTarget?.innerHTML)}</p>`,
+                         characterName: innerHTML,
                     }
-                    props.handleBlur("characterName", obj, props.index)
+                    props.handleBlur("characterName", obj, props.index);
                 }}
                 placeholder="Enter Character Name..."
                 tagName={'h4'}
@@ -31,6 +36,7 @@ function DialogueContent(props) {
                 slateLockInfo={props.slateLockInfo}
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
+                handleAudioPopupLocation = {props.handleAudioPopupLocation}
             />
             <TinyMceEditor
                 index={`${props.elementIndex}-${props.index}-1`}
@@ -40,11 +46,16 @@ function DialogueContent(props) {
                 elementId={props.elementId}
                 handleEditorFocus={props.handleFocus}
                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
+                    let activeEditorId = eIndex ? `cypress-${eIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
+                    let currentNode = document.getElementById(activeEditorId);
+                    let innerHTML, innerText;
+                    innerHTML = `<p>${currentNode.innerHTML}</p>`;
+                    innerText = currentNode.innerText
                     const obj = { 
                          ...props.model[props.index],
-                        text:`<p>${eventTarget?.innerHTML}</p>`
+                        text: innerHTML,
                     }
-                    props.handleBlur("text", obj, props.index)
+                    props.handleBlur("text", obj, props.index);
             }}
                 placeholder={placeholder}
                 tagName={'div'}
@@ -53,6 +64,7 @@ function DialogueContent(props) {
                 slateLockInfo={props.slateLockInfo}
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
+                handleAudioPopupLocation = {props.handleAudioPopupLocation}
             />
         </Fragment>
     } else {
@@ -64,11 +76,16 @@ function DialogueContent(props) {
             elementId={props.elementId}
             handleEditorFocus={props.handleFocus}
             handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => {
+                let activeEditorId = eIndex ? `cypress-${eIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
+                let currentNode = document.getElementById(activeEditorId);
+                let innerHTML, innerText;
+                innerHTML = currentNode.innerHTML
+                innerText = currentNode.innerText
                     const obj = { 
                          ...props.model[props.index],
-                        text: eventTarget?.innerHTML,
+                        text: innerHTML,
                     }
-                    props.handleBlur("text", obj, props.index)
+                    props.handleBlur("text", obj, props.index);
             }}
             placeholder={placeholder}
             tagName={'div'}
@@ -77,6 +94,7 @@ function DialogueContent(props) {
             slateLockInfo={props.slateLockInfo}
             glossaryFootnoteValue={props.glossaryFootnoteValue}
             glossaaryFootnotePopup={props.glossaaryFootnotePopup}
+            handleAudioPopupLocation = {props.handleAudioPopupLocation}
         />;
     }
     return <header>{editor}</header>;

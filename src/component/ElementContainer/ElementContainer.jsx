@@ -50,14 +50,17 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import {handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata} from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import ElementDialogue from '../ElementDialogue';
+import ElementDiscussion from '../ElementDiscussion';
+import PdfSlate from '../PdfSlate/PdfSlate.jsx';
+import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -78,7 +81,9 @@ class ElementContainer extends Component {
             sectionBreak: null,
             audioPopupStatus:false,
             position:{},
-            editInteractiveId:""
+            editInteractiveId:"",
+            isfigurePopup:false,
+            figureUrl:""
         };
 
 
@@ -99,7 +104,6 @@ class ElementContainer extends Component {
             if (element.popupdata.hasOwnProperty("postertextobject")) {
                 !elementStatus[element.popupdata["postertextobject"][0].id] && this.props.getElementStatus(element.popupdata["postertextobject"][0].id, this.props.index)
             }
-            
         }
         else if (element && (element.type === "poetry" || element.type === "citations")) {
             if (element.contents && element.contents.hasOwnProperty("formatted-title")) {
@@ -1486,8 +1490,54 @@ class ElementContainer extends Component {
                             handleBlur={this.handleBlur}
                             handleFocus={this.handleFocus}
                             deleteElement={this.deleteElement}
+                            glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                            glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                            openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
+                            handleAudioPopupLocation = {this.handleAudioPopupLocation}
                         />;
                         labelText = 'PS'
+                        break;
+                    case elementTypeConstant.ELEMENT_DISCUSSION:
+                        editor = <ElementDiscussion
+                            permissions={permissions}
+                            btnClassName={this.state.btnClassName}
+                            borderToggle={this.state.borderToggle}
+                            elemBorderToggle={this.props.elemBorderToggle}
+                            elementSepratorProps={elementSepratorProps}
+                            index={index}
+                            element={element}
+                            elementId={element.id}
+                            slateLockInfo={slateLockInfo}
+                            // splithandlerfunction={splithandlerfunction}
+                            userRole={this.props.userRole}
+                            activeElement={this.props.activeElement}
+                            onClickCapture={this.props.onClickCapture}
+                            showBlocker={this.props.showBlocker}
+                            setActiveElement={this.props.setActiveElement}
+                            parentElement={this.props.parentElement}
+                            showDeleteElemPopup={this.showDeleteElemPopup}
+                            handleBlur={this.handleBlur}
+                            handleFocus={this.handleFocus}
+                            deleteElement={this.deleteElement}
+                        />
+                        labelText = 'DE'
+                        break;
+                    
+                    case elementTypeConstant.PDF_SLATE:
+                        editor = <PdfSlate
+                            permissions={permissions}
+                            index={index}
+                            element={element}
+                            slateLockInfo={slateLockInfo}
+                            userRole={this.props.userRole}
+                            activeElement={this.props.activeElement}
+                            showBlocker={this.props.showBlocker}
+                            parentElement={this.props.parentElement}
+                            handleFocus={this.handleFocus}
+                            handleBlur={this.handleBlur}
+                            model={this.props.model}
+                        />;
+                        labelText = 'PDF'
                         break;
 
             }
@@ -1499,7 +1549,8 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element);
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element);
+        let showAlfrescoExpandButton = checkFigureMetadata(element)
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1529,18 +1580,20 @@ class ElementContainer extends Component {
             }
         }
 
-        let noTCM = ['TE', 'Qu', 'PS'];
+        let noTCM = ['TE', 'Qu', 'PS','MA', 'DE'];
         if(noTCM.indexOf(labelText) >= 0) {
             tcm = false;
         }
 
+        /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
+        const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.renderCopyComponent(this.props, index, inContainer)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
-                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
+                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
                     {this.renderColorTextButton(element, permissions)}
@@ -1556,6 +1609,7 @@ class ElementContainer extends Component {
                         handleCommentspanel(event,element.id, this.props.index)
                         }} type="comment-flag" />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                     {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCM(event)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
@@ -1570,6 +1624,17 @@ class ElementContainer extends Component {
                     deleteElement={this.deleteElement}
                     isAddComment ={true}
                 />}
+                { this.state.isfigurePopup && 
+                    <MetaDataPopUp  
+                        figureUrl={this.state.figureUrl} 
+                        togglePopup={this.handleFigurePopup}
+                        imageId={this.state.imageId}
+                        updateFigureData={this.updateFigureData}
+                        handleFocus={this.handleFocus} 
+                        handleBlur={this.handleBlur}
+                        element={this.props.element}
+                        index={this.props.index}
+                    />}
                 {this.props.children &&
                     <PageNumberContext.Consumer>
                         {
@@ -1744,29 +1809,62 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
+    handleFigurePopup = (togglePopup) =>{ 
+        let imageId = this.props?.element?.figuredata?.imageid;
+        imageId = imageId.replace('urn:pearson:alfresco:','');
+
+        this.props.showBlocker(togglePopup);
+        this.setState({
+            isfigurePopup:togglePopup,
+            imageId
+          })
+        if(togglePopup){
+            showTocBlocker();
+        }else{
+            hideBlocker();
+        }
+    }
+
+    /**
+     * @description - This function is used to open alfresco metadata in new window.
+     */
+
+    handleAlfrescoMetadataWindow = () =>{
+        let imageId = this.props?.element?.figuredata?.imageid;
+        imageId = imageId.replace('urn:pearson:alfresco:','');
+        const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
+        window.open(Url);
+    }
+
     /**
      * @description - This function is to launch Elm Portal from Cypress.
      * @param event the click event triggered
      */
     handleEditButton = (event) => {
         event.stopPropagation();
-        let { element } = this.props;
-        let fullAssessment = checkFullElmAssessment(element);
-        let embeddedAssessment = checkEmbeddedElmAssessment(element);
-        const isInteractive = checkInteractive(element);
-        let dataToSend = {
-            assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
-            projDURN: config.projectUrn,
-            containerURN: config.slateManifestURN,
-            assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
-            interactiveId: isInteractive ? element.figuredata.interactiveid : ""
+        const { element } = this.props;
+        const figureImageTypes = ["image", "mathImage", "table"]
+        if(element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)){
+            this.handleFigurePopup(true);
         }
-        handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
-        this.props.openElmAssessmentPortal(dataToSend);
-        embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
-        isInteractive && this.setState({ editInteractiveId: element.figuredata.interactiveid });
+        else{
+            let fullAssessment = checkFullElmAssessment(element);
+            let embeddedAssessment = checkEmbeddedElmAssessment(element);
+            const isInteractive = checkInteractive(element);
+            let dataToSend = {
+                assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
+                projDURN: config.projectUrn,
+                containerURN: config.slateManifestURN,
+                assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
+                interactiveId: isInteractive ? element.figuredata.interactiveid : ""
+            }
+            handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
+            this.props.openElmAssessmentPortal(dataToSend);
+            embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
+            isInteractive && this.setState({ editInteractiveId: element.figuredata.interactiveid });
+        }
+        
     }
-   
     render = () => {
         const { element } = this.props;
         try {
