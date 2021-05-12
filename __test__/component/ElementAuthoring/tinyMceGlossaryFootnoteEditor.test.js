@@ -30,8 +30,9 @@ describe('Testing tinyMce component for glossary footnote with  props', () => {
         tinyMceEditor.setProps({
             id: "glossary-0"
         });
-        console.log("the tinymce editor is ", tinyMceEditor);
-        expect(tinyMceEditor.instance().props.id).toEqual("glossary-0")
+        // console.log("the tinymce editor is ", tinyMceEditor.instance());
+        expect(tinyMceEditor.find('#glossary-0')).toHaveLength(4);
+        // expect(tinyMceEditor.instance().props.id).toEqual("glossary-0")
     });
     it('Editor Click Event', () => {
         let event = {
