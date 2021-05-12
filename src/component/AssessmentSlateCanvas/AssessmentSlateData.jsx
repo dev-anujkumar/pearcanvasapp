@@ -28,7 +28,6 @@ class AssessmentSlateData extends Component {
         this.state = {
             activeAssessmentType: this.props && this.props.model && this.props.setAssessmentFormat(this.props.model),
             activeAssessmentUsageType: this.props && this.props.model && this.props.setAssessmentUsageType(this.props.model),
-            showElmComponent: false,
             changeLearningData: false,
             learningToolStatus: false,
             showCiteTdxComponent: false,
@@ -46,7 +45,7 @@ class AssessmentSlateData extends Component {
     componentDidMount() {
         let newMessage = { assessmentResponseMsg: false };
         this.props.isLOExist(newMessage);
-        if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
+        if (this.props.model?.elementdata?.assessmentid) {
             this.sendDataAssessment(this.props);
             const assessmentFormat = this.props.model && this.props.setAssessmentFormat(this.props.model)
             this.setState({
@@ -174,13 +173,6 @@ class AssessmentSlateData extends Component {
     }
 
     /**----------------- This section consists of Elm/Learnosity Assets related methods ----------------*/
-    /*** @description - This function is to close ELM PopUp */
-    closeElmWindow = () => {
-        this.setState({
-            showElmComponent: false
-        });
-        this.showCanvasBlocker(false);
-    }
 
     /*** @description - This is the function to add Elm/Learnosity Asset to Assessment Slate 
     * @param pufObj - The object contains data about Elm/Learnosity Assessment 
@@ -492,7 +484,7 @@ class AssessmentSlateData extends Component {
         this.setSlateTagIcon();
 
         const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj } = this.props;
-        const { activeAssessmentType, showElmComponent, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
+        const { activeAssessmentType, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
         let slatePlaceholder = assessmentSlateObj && activeAssessmentType && this.setAssessmentPlaceholder(activeAssessmentType, assessmentSlateObj)
         let assessmentSlateJSX;
 
