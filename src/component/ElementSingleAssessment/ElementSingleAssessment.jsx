@@ -19,7 +19,7 @@ import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
 import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX, Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions, setElmPickerData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
@@ -75,11 +75,11 @@ class ElementSingleAssessment extends Component {
         }
         if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && assessmentReducer.dataFromElm) {
             const { dataFromElm } = assessmentReducer;
-            if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resource_type == 'assessmentItem' && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementId === this.props.model.id) {
+            if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == 'assessmentItem' && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
                 window.open(dataFromElm.elmUrl);
                 handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType);
                 this.props.setElmPickerData({});
-            } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resource_type == 'assessmentItem' && dataFromElm.pufObj && dataFromElm.elementId === this.props.model.id) {
+            } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == 'assessmentItem' && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
                 this.addPufAssessment(dataFromElm.pufObj);
                 this.props.setElmPickerData({});
             }
@@ -271,7 +271,7 @@ class ElementSingleAssessment extends Component {
                         type: OPEN_ELM_PICKER,
                         usageType: this.state.activeAsseessmentUsageType,
                         elementType: this.state.elementType,
-                        resourceType: Resource_Type.ASSESSMENT,
+                        resourceType: Resource_Type.ASSESSMENT_ITEM,
                         elementUrn: this.props.model.id
                     }
                 });
@@ -580,7 +580,8 @@ const mapActionToProps = {
     fetchAssessmentMetadata: fetchAssessmentMetadata,
     updateAssessmentVersion: updateAssessmentVersion,
     saveAutoUpdateData: saveAutoUpdateData,
-    fetchAssessmentVersions: fetchAssessmentVersions
+    fetchAssessmentVersions: fetchAssessmentVersions,
+    setElmPickerData: setElmPickerData
 }
 
 export default connect(
