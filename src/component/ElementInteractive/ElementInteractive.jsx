@@ -92,6 +92,18 @@ class Interactive extends React.Component {
             this.updateElmOnSaveEvent(this.props);
            }
        }
+       const elementType=this.prop?.model?.figuredata?.interactiveformat;
+       if (!config.savingInProgress && !config.isSavingElement && (elementType == ELM_INT) && assessmentReducer.dataFromElm) {
+        const { dataFromElm } = assessmentReducer;
+        if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
+            window.open(dataFromElm.elmUrl);
+            handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType);
+            this.props.setElmPickerData({});
+        } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
+            this.addPufAssessment(dataFromElm.pufObj);
+            this.props.setElmPickerData({});
+        }
+    }
    }
 
      /*** @description This function is to show Approved/Unapproved Status on interative */

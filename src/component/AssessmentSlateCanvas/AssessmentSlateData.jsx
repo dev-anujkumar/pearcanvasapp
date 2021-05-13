@@ -74,6 +74,18 @@ class AssessmentSlateData extends Component {
                 this.updateElmOnSaveEvent(this.props);
             }
         }
+
+        if (!config.savingInProgress && !config.isSavingElement && (activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY) && assessmentReducer.dataFromElm) {
+            const { dataFromElm } = assessmentReducer;
+            if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
+                window.open(dataFromElm.elmUrl);
+                handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType);
+                this.props.setElmPickerData({});
+            } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
+                this.addPufAssessment(dataFromElm.pufObj);
+                this.props.setElmPickerData({});
+            }
+        }
     }
 
     componentWillUnmount() {
