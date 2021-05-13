@@ -2625,7 +2625,7 @@ export class TinyMceEditor extends Component {
                 let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
                 defModel = removeBOM(defModel)
                 //defModel=defModel.replace(/(?:.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
-                defModel = removeMathmlImageCache(defModel)
+                defModel = removeImageCache(defModel)
                 return defModel;
         }
     }
