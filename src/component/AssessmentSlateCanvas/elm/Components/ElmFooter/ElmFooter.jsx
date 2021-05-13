@@ -37,13 +37,13 @@ const ElmFooter = (props) => {
 
 /* open elm portal */
   function openElmPortal() {
-  const ELM_PORTAL_URL = "https://assessmentauthoring-qa.pearson.com"
+  //const ELM_PORTAL_URL = "https://assessmentauthoring-qa.pearson.com"
     try {
         let tempUrl = "";
 
         /* Open ELM portal for Add new Assessment in Assessment slate */
         if (openedFrom === ASSESSMENT_PICKER_OPENERS.FULL_ASSESSMENT) {
-          tempUrl = `${ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
+          tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
         }
         /* Open ELM portal for Add new Item in "Existing Assessment" */
         if (openedFrom === ASSESSMENT_PICKER_OPENERS.SINGLE_ASSESSMENT) {
@@ -55,15 +55,15 @@ const ElmFooter = (props) => {
               assessmentWUrn = currentAssessmentSelected?.urn
           }
           if (openItemTable && assessmentWUrn) {
-            tempUrl = `${ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`;
+            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`;
           }
           /* Open Elm portal for Add new Assessment in single assessment */ 
           if (!openItemTable) {
-            tempUrl = `${ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
+            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
           }
           /* Open Elm portal for Add new -- interactive -- in elm-interactive */ 
           if (!openItemTable && activeAssessmentType === ELM_INT) {
-            tempUrl = `${ELM_PORTAL_URL}/launch/editor/interactive/createInPlace`;
+            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/interactive/createInPlace`;
           }
         }
         if (tempUrl) {

@@ -107,12 +107,13 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                         if (items[0] === "assessment") {
                             let assessmentDataMsg = {
                                 id: items[1]?.split("_")[1],
-                                title: items[2]?.split("_")[1],
-                                usagetype: items[3]?.split("_")[1] || usagetype, 
+                                elementUrn: items[2]?.split("_")[1],
+                                title: items[3]?.split("_")[1],
+                                usagetype: items[4]?.split("_")[1] || usagetype, 
                                 calledFrom:'createElm'
                             };
-                            
-                            if(itemData?.itemid && itemData.itemTitle){
+                            const { elementUrn, itemid, itemTitle } = itemData || {};
+                            if((assessmentDataMsg.elementUrn === elementUrn) && itemid && itemTitle){
                                 assessmentDataMsg = { ...assessmentDataMsg, ...itemData };
                                 /* empty store after item data updated */
                                 store.dispatch(setNewItemFromElm({}));
@@ -120,17 +121,14 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                             /**@function to update data display in slate */
                             addPufFunction(assessmentDataMsg);
                             /* Remove EventListener */
-                            window.removeEventListener(
-                                "message",
-                                getMsgafterAddAssessment,
-                                false
-                            );
-                        }                  
+                            window.removeEventListener("message", getMsgafterAddAssessment, false);
+                        }                 
                         /* Update newly added Item */
                         else if (items[0] === "item") {
                             const itemDataFromMsg = {
                                 itemid: items[1]?.split("_")[1],
-                                itemTitle: items[2]?.split("_")[1],
+                                elementUrn: items[2]?.split("_")[1],
+                                itemTitle: items[3]?.split("_")[1],
                                 calledFrom:'createElm'                               
                             };
                             /* save item data into store */
