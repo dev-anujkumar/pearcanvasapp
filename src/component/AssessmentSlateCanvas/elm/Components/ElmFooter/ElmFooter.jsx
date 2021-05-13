@@ -37,12 +37,13 @@ const ElmFooter = (props) => {
 
 /* open elm portal */
   function openElmPortal() {
+  const ELM_PORTAL_URL = "https://assessmentauthoring-qa.pearson.com"
     try {
         let tempUrl = "";
 
         /* Open ELM portal for Add new Assessment in Assessment slate */
         if (openedFrom === ASSESSMENT_PICKER_OPENERS.FULL_ASSESSMENT) {
-          tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
+          tempUrl = `${ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
         }
         /* Open ELM portal for Add new Item in "Existing Assessment" */
         if (openedFrom === ASSESSMENT_PICKER_OPENERS.SINGLE_ASSESSMENT) {
@@ -54,15 +55,15 @@ const ElmFooter = (props) => {
               assessmentWUrn = currentAssessmentSelected?.urn
           }
           if (openItemTable && assessmentWUrn) {
-            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`;
+            tempUrl = `${ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWUrn}/item/createInPlace`;
           }
           /* Open Elm portal for Add new Assessment in single assessment */ 
           if (!openItemTable) {
-            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
+            tempUrl = `${ELM_PORTAL_URL}/launch/editor/assessment/New/item/createInPlace`;
           }
           /* Open Elm portal for Add new -- interactive -- in elm-interactive */ 
           if (!openItemTable && activeAssessmentType === ELM_INT) {
-            tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/interactive/createInPlace`;
+            tempUrl = `${ELM_PORTAL_URL}/launch/editor/interactive/createInPlace`;
           }
         }
         if (tempUrl) {
@@ -72,7 +73,9 @@ const ElmFooter = (props) => {
             const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
             url = `${url}&usageType=${usageType}`;
           }
-        url = `${url}&elementUrn=${elementId}`;
+        /* Append Element id in url to identify post messages for which element, if exist */
+        url = elementId ? `${url}&elementUrn=${elementId}` : url;
+
         console.log("url = ",url)
         /* open elm portal */
           window.open(url);

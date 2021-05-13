@@ -96,7 +96,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
         const getMsgafterAddAssessment = async (event) => {
             try {
                 const { data = {} } = event;
-                //console.log("data = ",data);
+                console.log("data = ",data);
                 /* Get the data from store */
                 const itemData = store.getState().assessmentReducer?.item ?? {};
 
