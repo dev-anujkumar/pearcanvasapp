@@ -562,6 +562,6 @@ const mapActionToProps = {
 export default connect((state) => {
     return {
         elmReducer: state.elmReducer,
-        currentSlateAncestorData: state.appStore.currentSlateAncestorData,
+        currentSlateAncestorData: state.appStore.currentSlateAncestorData
     }
 },mapActionToProps)(ElmTableComponent);
