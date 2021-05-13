@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
-import Button from "../ElementButtons";
+import { discussionCloseIcon, searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
 
 const getSelectedItemFromId = (id) => {
   return undefined;
@@ -9,6 +8,7 @@ const getSelectedItemFromId = (id) => {
 
 const DiscussionDialog = ({
   showDialog = false,
+  elemendId='',
   itemId = undefined,
   selectDiscussion = () => {},
   closeDialog = () => {},
@@ -40,27 +40,22 @@ const DiscussionDialog = ({
           className="popupDiscussion"
         >
           <div className="headingContainerDiscussion">
-            <div className="headingTextDiscussion">Select Discussion Items</div>
-            <Button
-              type="close-discussion-dialog"
-              onClick={() => {
-                closeDialog(true);
-              }}
-            />
+            <div className="headingTextDiscussion">Select a Discussion Item</div>
+            <div onClick={() =>  closeDialog()} className="closeIconDiscussion">{discussionCloseIcon}</div>
           </div>
-            <div style={{}} className="searchContainerDiscussion">
+            <div className="searchContainerDiscussion">
               {searchDisussion}
               <input
                 value={searchText}
                 onChange={(e) => {
-                  const text = e.target.value.trim();
+                  const text = e.target.value;
                   setSearchText(text);
                   setFilteredItems(
                     discussionItems.filter(
                       (item) =>
-                        JSON.stringify(Object.values(item))
+                        `${item.title}${item.discussionUrn}`
                           .toUpperCase()
-                          .indexOf(text.toUpperCase()) > -1
+                          .indexOf(text.trim().toUpperCase()) > -1
                     )
                   );
                 }}
@@ -87,6 +82,7 @@ const DiscussionDialog = ({
                   <td>
                     <div className="titleRadioContainerDiscussion">
                       <input
+                        
                         checked={
                           selectedDiscussion?.discussionUrn ===
                           item.discussionUrn
@@ -96,7 +92,7 @@ const DiscussionDialog = ({
                           setSelectedDiscussion(item);
                         }}
                         type="radio"
-                        name={item.title}
+                        name={elemendId + "-" + item.discussionUrn}
                         value={item.title}
                       />
                       <label for={item.title} className="radioLabelDiscussion">
@@ -116,7 +112,9 @@ const DiscussionDialog = ({
           </div>
 
           <div className="footerContainerDiscussion">
-            <div className="paginationContainerDiscussion"></div>
+            <div className="paginationContainerDiscussion">
+              
+            </div>
             <div
               onClick={() => {
                 closeDialog();
