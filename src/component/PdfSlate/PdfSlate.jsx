@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { hasReviewerRole } from '../../constants/utility.js';
 import { c2MediaModule } from '../../js/c2_media_module.js';
-//import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js';
 import { handleC2MediaClick } from './Alfresco.js';
 import PdfSlateComponent from "./PdfSlateComponent.jsx"
 import { updateElement } from "../ElementContainer/ElementContainer_Actions.js";
 import { ELEMENT_PDF } from '../SlateWrapper/SlateWrapperConstants.js';
 import { ELEMENT_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import config from '../../config/config.js';
+import TinyMceEditor from '../tinyMceEditor.js';
 
 class PdfSlate extends Component {
     constructor(props) {
@@ -18,7 +18,6 @@ class PdfSlate extends Component {
 			pdfId: "",
 			filetitle: "",
 			path: "",
-			alfrescoSiteData: {}
 		}
 	}
 
@@ -41,8 +40,14 @@ class PdfSlate extends Component {
 	* @param {*} locationData alfresco locationData
 	*/
 	handleC2ExtendedClick = (locationData) => {
+		const location = { 
+			...locationData,
+			currentAsset: { 
+				id: this.state?.pdfId?.split(":")[3],
+			}
+		}
 		const that = this;
-		!hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(locationData, function (data_2) {
+		!hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(location, function (data_2) {
 			c2MediaModule.AddanAssetCallBack(data_2, function (pdfData) {
 				that.getAlfrescoData(pdfData);
 			})
@@ -105,13 +110,22 @@ class PdfSlate extends Component {
 	
 	render(){
 		return(
-			<div className="AssessmentSlateCanvas div-position-relative">
+			<div className="AssessmentSlateCanvas div-position-relative pdf-slate">
 				<PdfSlateComponent 
 					showDetails = {this.state.showDetails}
 					pdfId = {this.state.pdfId}
 					filetitle = {this.state.filetitle}
 					OpenAlfresco = {this.OpenAlfresco}
 				/>
+				<TinyMceEditor
+                    slateLockInfo={this.props.slateLockInfo}
+                    handleBlur={this.props.handleBlur}
+                    model={this.props.element}
+                    handleEditorFocus={this.props.handleFocus}
+                    className="addLOdata"
+                    permissions={this.props.permissions}
+                    element={this.props.element}
+                />
 			</div>
 		)
 	}

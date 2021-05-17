@@ -64,7 +64,9 @@ describe('Testing Element Show Hide component', () => {
     })
     it('componentWillUnmount should be called on unmount', () => {
         const component = mount(<Provider store={store}><ElementPopup {...props} /></Provider>)
-        const componentWillUnmount = jest.spyOn(component.instance(), 'componentWillUnmount');
+
+        const instance = component.find('ElementPopup').instance();
+        const componentWillUnmount = jest.spyOn(instance, 'componentWillUnmount');
         component.unmount();
         expect(componentWillUnmount).toHaveBeenCalled();
     });
