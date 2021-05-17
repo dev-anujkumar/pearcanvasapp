@@ -462,28 +462,34 @@
   padding: 8px 12px;
   background-color: #f7f7f7;
   overflow: auto;
-  border-bottom: 1px solid #005a70;
+  border-bottom: 1px solid #cccccc;
   margin-bottom: 20px;
   height: 70px;
 }
 .long-description-body{
   background-color: #f7f7f7;
   overflow: auto;
-  border-bottom: 1px solid #005a70;
+  border-bottom: 1px solid #cccccc;
   padding: 8px 12px;
   height: 230px;
 }
 .alt-text-body .alt-text{
-  font-size: 14px;
-  color: #005a70;
+  font-size: 12px;
+  color: #252525;
   margin: 0;
-  padding: 2px 0;
+  padding: 1px 0;
 }
 .long-description-body .long-text{
-  font-size: 14px;
-  color: #005a70;
+  font-size: 12px;
+  color: #252525;
   margin: 0;
-  padding: 2px 0;
+  padding: 1px 0;
+}
+.alt-text-body .alt-text.active, .long-description-body .long-text.active{
+  color:#005a70;
+}
+.alt-text-body.active, .long-description-body.active{
+  border-bottom: 1px solid #005a70;
 }
 .figuremetadata-field {
   margin-top:42px;
