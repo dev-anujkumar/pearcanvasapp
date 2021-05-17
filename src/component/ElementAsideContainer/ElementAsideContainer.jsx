@@ -545,6 +545,7 @@ class ElementAsideContainer extends Component {
      * render | renders title and slate wrapper
      */
     render() {
+        console.log("Aside ---",this.props);
         const { element } = this.props;
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";

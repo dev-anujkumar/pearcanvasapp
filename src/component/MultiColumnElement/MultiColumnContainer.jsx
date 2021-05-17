@@ -108,6 +108,8 @@ class MultiColumnContainer extends PureComponent {
                                 parentElement = {this.context.element}
                                 onListSelect={this.context.onListSelect}
                                 userRole={this.props.userRole}
+                                elementSeparatorProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
+
                             />
                             <ElementSaprator
                                 index={index}
@@ -246,6 +248,7 @@ class MultiColumnContainer extends PureComponent {
     }
     
     render() {
+console.log("MC container---",this.props,"==context = ",this.context);
         const { context } = this
         return (
             <div className = "multi-column-container" onMouseUp = {this.handleFocus}>

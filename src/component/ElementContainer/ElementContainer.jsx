@@ -1817,6 +1817,7 @@ class ElementContainer extends Component {
     }
    
     render = () => {
+        //console.log("container---",this.props);
         const { element } = this.props;
         try {
             if (this.state.hasError) {

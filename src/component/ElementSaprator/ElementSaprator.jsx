@@ -219,7 +219,7 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
             return buttonType === STANZA_ELEMENT;
         }
         else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
-            let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT ];                  
+            let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT, CONTAINER_BUTTON, WORKED_EXP ];                  
             return MultiColumnPicker.includes(buttonType);
         } 
         else {
