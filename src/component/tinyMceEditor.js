@@ -3230,7 +3230,7 @@ export class TinyMceEditor extends Component {
                 if (endPosition) {
                     tinymce.activeEditor?.selection?.setCursorLocation(pointerElement, 1);
                 } else {
-                    tinymce.activeEditor?.setCursorLocation(pointerElement, 0);
+                    tinymce.activeEditor?.selection?.setCursorLocation(pointerElement, 0);
                 }
                 this.activeGlossaryFootnoteId = ""
             }
