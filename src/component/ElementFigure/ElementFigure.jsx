@@ -16,7 +16,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import figureData from './figureTypes';
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js'
-import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action'
+import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
@@ -54,6 +54,13 @@ class ElementFigure extends Component {
         } 
     }
 
+    componentDidUpdate(prevProps) {
+        const { elementId, alfrescoElementId, alfrescoAssetData } = this.props
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId) {
+            this.dataFromNewAlfresco(alfrescoAssetData)
+        }
+    }
+
     updateAlfrescoSiteUrl = () => {
         let repositoryData = this.state.alfrescoSiteData
         if(repositoryData?.repositoryFolder){
@@ -66,23 +73,24 @@ class ElementFigure extends Component {
             }) 
         }
     }
-
-    /**
+     /**
      * @description data after selecting an asset from alfresco c2 module
      * @param {*} data selected asset data
      */
-    dataFromAlfresco = (data) => {
+
+    dataFromNewAlfresco = (data) => {
         hideTocBlocker();
         disableHeader(false);
         let imageData = data;
-        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";              //commented lines will be used to update the element data
-        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-        let width = imageData['width'] ? imageData['width'] : "";
-        let height = imageData['height'] ? imageData['height'] : "";
+        let epsURL = imageData.epsUrl? imageData.epsUrl : "";
+        let figureType = data?.content?.mimeType?.split('/')[0]             
+        //commented lines will be used to update the element data
+        let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
+        let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
 
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
 
-            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+            let uniqID = imageData['id'] ? imageData['id'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
             if (epsURL !== "") {
@@ -93,11 +101,11 @@ class ElementFigure extends Component {
 
             let scaleMarkerData = {};
             Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
-                (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.scalemarker.properties["d.cmis:versionSeriesId"].value || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.scalemarker.properties["t.cmis:name"].value || "The alttext for the scale image" } : null,
-                (data && data.scalemarker && data.scalemarker.EpsUrl) ? { "path": data.scalemarker.EpsUrl || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties) ? { "height": data.scalemarker.properties["e.exif:pixelXDimension"].value || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties && data.scalemarker.properties["e.exif:pixelYDimension"]) ? { "width": data.scalemarker.properties["e.exif:pixelYDimension"].value || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": "b4031c8e-fac2-4f8b-9be9-ca641f1bf573" || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.name || "The alttext for the scale image" } : null,
+                (data && data.scalemarker && data.scalemarker.epsUrl) ? { "path": data.scalemarker.epsUrl || null } : null,
+                (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ? { "width": data.properties["exif:pixelXDimension"] || null } : null,
             );
 
             let setFigureData = {
@@ -122,6 +130,12 @@ class ElementFigure extends Component {
             if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
                 handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
             }
+            // to blank the elementId and asset data after update
+            let payloadObj = {
+                asset: {}, 
+                id: ''
+            }
+            this.props.saveSelectedAssetData(payloadObj)
             this.updateAlfrescoSiteUrl()
         }
     }
@@ -167,29 +181,10 @@ class ElementFigure extends Component {
         }
         var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
-        if (alfrescoPath.alfresco.nodeRef) {         //if alfresco location is available
+        if (alfrescoPath.alfresco.guid) {         //if alfresco location is available
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                let messageObj = { citeName: alfrescoPath.alfresco.name, citeNodeRef: alfrescoPath.alfresco.nodeRef, elementId: this.props.elementId }
+                let messageObj = { citeName: alfrescoPath.alfresco.title, citeNodeRef: alfrescoPath.alfresco.guid, elementId: this.props.elementId }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
-                // data_1 = alfrescoPath.alfresco;
-                // data_1.currentAsset = currentAsset;
-                // /*
-                //     data according to new project api 
-                // */
-                // data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
-                // data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
-                // data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
-                // data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
-
-                // /*
-                //     data according to old core api and c2media
-                // */
-                // data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
-                // data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
-                // data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
-                // data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
-
-                // this.handleC2ExtendedClick(data_1)
             }
             else {
                 this.props.accessDenied(true)
@@ -280,7 +275,7 @@ class ElementFigure extends Component {
                 that.props.alfrescoPopup(payloadObj)
             })
             .catch(function (error) {
-                console.log("error IN SITE API", error)
+                console.log("Error IN SITE API", error)
             });
     }
     /*** @description - This function is for handling the different types of figure-element.
@@ -466,13 +461,17 @@ const mapActionToProps = (dispatch) =>{
         alfrescoPopup: (payloadObj) => {
             dispatch(alfrescoPopup(payloadObj))
         },
+        saveSelectedAssetData: (payloadObj) => {
+            dispatch(saveSelectedAssetData(payloadObj))
+        },
     }
 }
 
 const mapStateToProps = (state) => {
     return {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
-        alfrescoElementId : state.alfrescoReducer.elementId
+        alfrescoElementId : state.alfrescoReducer.elementId,
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
     }
 }
 

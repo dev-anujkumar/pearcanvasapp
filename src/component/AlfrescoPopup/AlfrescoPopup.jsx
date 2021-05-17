@@ -15,7 +15,6 @@ import { sendDataToIframe } from '../../constants/utility';
 import axios from 'axios';
 import {alfrescoPopup} from "../AlfrescoPopup/Alfresco_Action";
 import { connect } from 'react-redux';
-import { hideBlocker, hideTocBlocker } from '../../js/toggleLoader';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -34,11 +33,8 @@ function AlfrescoPopup(props) {
     const classes = useStyles();
 
     const handleClose = () => {
-        hideBlocker()
-        hideTocBlocker()
-        let payloadObj = { launchAlfrescoPopup: false, alfrescoPath: {} }
-        props.alfrescoPopup(payloadObj)
         setOpen(false);
+        props.handleCloseAlfrescoPicker()
     };
 
     const handleChange = (event) => {
@@ -47,18 +43,20 @@ function AlfrescoPopup(props) {
     };
 
     const sendSelectedData = () => {
-        let alfrescoData = {
-            gridId: null,
-            name: selectedOption,
-            nodeRef: "d6141287-3945-44ce-9504-5757a2311719",
-            registerId: null,
-            repoInstance: "https://staging.api.pearson.com/content/cmis/uswip-aws",
-            repoName: "AWS US",
-            siteVisibility: "PUBLIC"
+        let alfrescoData
+        props.alfrescoListOption.map(values => {
+            if (values.entry.id === selectedOption) {
+            alfrescoData = values.entry.site
         }
-        let messageObj = { citeName: alfrescoData.name, citeNodeRef: alfrescoData.nodeRef }
+        })
+        let payloadObj = { 
+            launchAlfrescoPopup: false, 
+            alfrescoPath: props.alfrescoPath, 
+            alfrescoListOption: props.alfrescoListOption
+        }
+        props.alfrescoPopup(payloadObj)
+        let messageObj = { citeName: alfrescoData.title, citeNodeRef: alfrescoData.guid }
         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
-        //handleClose()
         let request = {
             eTag: props.alfrescoPath.etag,
             projectId: props.alfrescoPath.id,
@@ -89,15 +87,6 @@ function AlfrescoPopup(props) {
                 console.log("error", error)
             });
     }
-
-    const mapValues = [
-        '001_C5 Media POC - AWS US  (Mod)',
-        'C5-Media-Poc-UK - AWS US  (Mod)',
-        'CITE Patterns Content Design - AWS US  (Mod)',
-        'CITE sandbox - AWS US  (Mod)',
-        'CITE sandbox - AWS US  (Mod)',
-        'elm-test-cite-mod - AWS US  (Mod)'
-    ]
 
     return (
         <div>

@@ -23,7 +23,8 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
                 ...state,
                 launchAlfrescoPopup: action.payload.launchAlfrescoPopup,
                 alfrescoPath: action.payload.alfrescoPath,
-                alfrescoListOption: action.payload.alfrescoListOption
+                alfrescoListOption: action.payload.alfrescoListOption,
+                elementId: action.payload.id
             }
         case SAVE_ALFRESCO_ASSET_DATA:
             return {

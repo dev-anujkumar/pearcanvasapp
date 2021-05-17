@@ -27,7 +27,7 @@ import PageNumberElement from './PageNumberElement.jsx';
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
-import { hideBlocker, showTocBlocker, hideTocBlocker } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
@@ -48,6 +48,7 @@ import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
 import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
 
 let random = guid();
 
@@ -1336,6 +1337,7 @@ class SlateWrapper extends Component {
                     <AlfrescoPopup 
                     alfrescoPath = {this.props.alfrescoPath}
                     alfrescoListOption= {this.props.alfrescoListOption}
+                    handleCloseAlfrescoPicker={this.handleCloseAlfrescoPicker}
                     />
                 )
             }
@@ -1343,6 +1345,14 @@ class SlateWrapper extends Component {
                 return null
             }
         }
+
+        handleCloseAlfrescoPicker = () => {
+            this.props.showBlocker(false)
+            hideTocBlocker()
+            disableHeader(false)
+            let payloadObj = { launchAlfrescoPopup: false, alfrescoPath: {} }
+            this.props.alfrescoPopup(payloadObj)
+        };
 
     /**
      * render | renders title and slate wrapper
@@ -1488,6 +1498,7 @@ export default connect(
         audioGlossaryPopup,
         createPowerPasteElements,
         getMetadataAnchorLORef,
-        toggleLOWarningPopup
+        toggleLOWarningPopup,
+        alfrescoPopup
     }
 )(SlateWrapper);

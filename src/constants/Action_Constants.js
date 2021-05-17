@@ -151,7 +151,6 @@ export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 
 /* --------------- Learnosity Project ------------------------*/
 export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
-export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO";
 
 /* --------------- Alfresco Project ------------------------*/
 export const SET_ALFRESCO_POPUP = "SET_ALFRESCO_POPUP"
