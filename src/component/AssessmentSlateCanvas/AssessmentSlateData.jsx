@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import PopUp from '../PopUp';
 import ElmUpdateButton from './ElmUpdateButton.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
-import RootElmComponent from './elm/RootElmComponent.jsx';
 import { UsageTypeDropdown } from './UsageTypeDropdown/UsageTypeDropdown.jsx';
 import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 /** ----- Import - Dependencies ----- */
@@ -13,11 +12,12 @@ import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
-import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON, FULL_ASSESSMENT_LEARNOSITY } from './AssessmentSlateConstants.js';
+import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON, FULL_ASSESSMENT_LEARNOSITY, Resource_Type } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
-import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions } from './AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
+import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -28,7 +28,6 @@ class AssessmentSlateData extends Component {
         this.state = {
             activeAssessmentType: this.props && this.props.model && this.props.setAssessmentFormat(this.props.model),
             activeAssessmentUsageType: this.props && this.props.model && this.props.setAssessmentUsageType(this.props.model),
-            showElmComponent: false,
             changeLearningData: false,
             learningToolStatus: false,
             showCiteTdxComponent: false,
@@ -46,7 +45,7 @@ class AssessmentSlateData extends Component {
     componentDidMount() {
         let newMessage = { assessmentResponseMsg: false };
         this.props.isLOExist(newMessage);
-        if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
+        if (this.props.model?.elementdata?.assessmentid) {
             this.sendDataAssessment(this.props);
             const assessmentFormat = this.props.model && this.props.setAssessmentFormat(this.props.model)
             this.setState({
@@ -73,6 +72,18 @@ class AssessmentSlateData extends Component {
             const newPropsTitle = assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
             if ((assessmentSlateObj.title != newPropsTitle) && (prevPropsTitle != newPropsTitle)) {
                 this.updateElmOnSaveEvent(this.props);
+            }
+        }
+
+        if (!config.savingInProgress && !config.isSavingElement && (activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY) && assessmentReducer.dataFromElm) {
+            const { dataFromElm } = assessmentReducer;
+            if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
+                window.open(dataFromElm.elmUrl);
+                handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType);
+                this.props.setElmPickerData({});
+            } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
+                this.addPufAssessment(dataFromElm.pufObj);
+                this.props.setElmPickerData({});
             }
         }
     }
@@ -174,13 +185,6 @@ class AssessmentSlateData extends Component {
     }
 
     /**----------------- This section consists of Elm/Learnosity Assets related methods ----------------*/
-    /*** @description - This function is to close ELM PopUp */
-    closeElmWindow = () => {
-        this.setState({
-            showElmComponent: false
-        });
-        this.showCanvasBlocker(false);
-    }
 
     /*** @description - This is the function to add Elm/Learnosity Asset to Assessment Slate 
     * @param pufObj - The object contains data about Elm/Learnosity Assessment 
@@ -375,8 +379,15 @@ class AssessmentSlateData extends Component {
                     break;
                 case PUF:
                 case LEARNOSITY:
-                    this.setState({
-                        showElmComponent: true
+                    sendDataToIframe({
+                        'type': TOGGLE_ELM_SPA,
+                        'message': {
+                            type: OPEN_ELM_PICKER,
+                            usageType: this.state.activeAssessmentUsageType,
+                            elementType: this.state.activeAssessmentType,
+                            resourceType: Resource_Type.ASSESSMENT,
+                            elementUrn: this.props.model.id
+                        }
                     });
                     break;
                 case TDX:
@@ -485,12 +496,11 @@ class AssessmentSlateData extends Component {
         this.setSlateTagIcon();
 
         const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj } = this.props;
-        const { activeAssessmentType, showElmComponent, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
+        const { activeAssessmentType, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
         let slatePlaceholder = assessmentSlateObj && activeAssessmentType && this.setAssessmentPlaceholder(activeAssessmentType, assessmentSlateObj)
         let assessmentSlateJSX;
-        if ((activeAssessmentType === PUF || activeAssessmentType === LEARNOSITY) && showElmComponent === true) {
-            return <RootElmComponent activeAssessmentType={activeAssessmentType} closeElmWindow={() => this.closeElmWindow()} activeUsageType={activeAssessmentUsageType} elementType={'assessment'} addPufFunction={this.addPufAssessment}/>
-        } else if ((activeAssessmentType === CITE || activeAssessmentType === TDX) && showCiteTdxComponent === true) {
+
+        if ((activeAssessmentType === CITE || activeAssessmentType === TDX) && showCiteTdxComponent === true) {
             return <RootCiteTdxComponent openedFrom={'slateAssessment'} closeWindowAssessment={() => this.closeWindowAssessment()} assessmentType={activeAssessmentType} addCiteTdxFunction={this.addCiteTdxAssessment} usageTypeMetadata={activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} setCiteTdxFilterData={this.setCiteTdxFilterData} assessmentSlateObj={assessmentSlateObj}/>
         } else if (changeLearningData && activeAssessmentType === LEARNING_TEMPLATE) {
             return <LearningTool closePopUp={this.closeLTLAPopUp} linkLearningApp={this.linkLearningApp} closelearningPopup={this.closelearningPopup} />
@@ -638,7 +648,8 @@ const mapActionToProps = {
     updateAssessmentVersion: updateAssessmentVersion,
     fetchAssessmentLatestVersion:fetchAssessmentVersions,
     fetchLearningTemplates:fetchLearningTemplates,
-    setAssessmentFilterParams:setAssessmentFilterParams
+    setAssessmentFilterParams:setAssessmentFilterParams,
+    setElmPickerData: setElmPickerData
 }
 
 export default connect(

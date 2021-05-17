@@ -9,7 +9,8 @@ import {
     RESET_ASSESSMENT_STORE,
     ELM_ASSESSMENT_EDIT_ID,
     ASSESSMENT_CONFIRMATION_POPUP,
-    ELM_NEW_ITEM_DATA
+    ELM_NEW_ITEM_DATA,
+    SET_ELM_PICKER_MSG
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
@@ -265,5 +266,12 @@ export const setNewItemFromElm = (value) =>{
  return {
         type: ELM_NEW_ITEM_DATA,
         payload: value
+    }
+}
+
+export const setElmPickerData = (message) => {
+    return {
+        type: SET_ELM_PICKER_MSG,
+        payload: message
     }
 }
