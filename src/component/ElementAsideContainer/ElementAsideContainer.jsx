@@ -438,6 +438,7 @@ class ElementAsideContainer extends Component {
                                         parentElement = {this.props.element}
                                         onListSelect={this.props.onListSelect}
                                         userRole={this.props.userRole}
+                                        elementSepratorProps={this.props.elementSepratorProps}
                                     >
                                     </ElementContainer>
                                     <ElementSaprator
@@ -545,7 +546,6 @@ class ElementAsideContainer extends Component {
      * render | renders title and slate wrapper
      */
     render() {
-        console.log("Aside ---",this.props);
         const { element } = this.props;
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";

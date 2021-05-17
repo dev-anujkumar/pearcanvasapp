@@ -1453,7 +1453,7 @@ class ElementContainer extends Component {
                         handleCommentspanel : handleCommentspanel,
                         isBlockerActive : this.props.isBlockerActive,
                         onClickCapture : this.props.onClickCapture,
-                        elementSeparatorProps : elementSepratorProps,
+                        elementSepratorProps : elementSepratorProps,
                         setActiveElement : this.props.setActiveElement,
                         onListSelect : this.props.onListSelect,
                         handleFocus: this.handleFocus,
@@ -1817,7 +1817,6 @@ class ElementContainer extends Component {
     }
    
     render = () => {
-        //console.log("container---",this.props);
         const { element } = this.props;
         try {
             if (this.state.hasError) {
