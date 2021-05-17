@@ -42,7 +42,7 @@ import {
     SHOW_TOAST_MESSAGE,
     STORE_OLD_ASSET_FOR_TCM,
     WIRIS_ALT_TEXT_POPUP,
-    LEARNOSITY_PROJECT_INFO,
+    LEARNOSITY_PROJECT_INFO
 } from '../constants/Action_Constants';
 
 /**
@@ -263,7 +263,6 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             isLearnosityProjectInfo : action.payload
         }
 
-    
         default:
             return state;
     }
