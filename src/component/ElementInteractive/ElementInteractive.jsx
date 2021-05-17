@@ -20,14 +20,13 @@ import { connect } from 'react-redux';
 import { sendDataToIframe } from './../../constants/utility.js';
 import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA } from '../../constants/Element_Constants.js';
 import interactiveTypeData from './interactiveTypes.js';
-import { ELM_INT,Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
+import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion, setElmPickerData } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
-import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
+import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, ELM_INT,Resource_Type } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
 import PopUp from '../PopUp';
-import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
+import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } from '../../constants/IFrameMessageTypes';
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -86,24 +85,23 @@ class Interactive extends React.Component {
    componentDidUpdate() { 
        const { assessmentReducer } = this.props;
        const { itemID, interactiveTitle } = this.state;
-       if (!config.savingInProgress && !config.isSavingElement && (this.props?.model?.figuredata?.interactiveformat === ELM_INT) && (itemID && assessmentReducer && assessmentReducer[itemID])) {
-           const newPropsTitle = assessmentReducer[itemID].assessmentTitle;
-           if ((assessmentReducer[itemID].showUpdateStatus == false && (interactiveTitle != newPropsTitle))) {
-            this.updateElmOnSaveEvent(this.props);
+       if (!config.savingInProgress && !config.isSavingElement && (elementType === ELM_INT) && assessmentReducer) {
+           const { dataFromElm } = assessmentReducer;
+           if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elementUrn === this.props.model?.id) {
+               if (dataFromElm?.type == ELM_CREATE_IN_PLACE && dataFromElm.elmUrl) {
+                   window.open(dataFromElm.elmUrl);
+                   handlePostMsgOnAddAssess(this.addElmInteractive, dataFromElm.usageType);
+               } else if (dataFromElm?.type == SAVE_ELM_DATA && dataFromElm.pufObj) {
+                   this.addElmInteractive(dataFromElm.pufObj);
+               }
+               this.props.setElmPickerData({});
+           } else if ((itemID && assessmentReducer[itemID])) {
+               const newPropsTitle = assessmentReducer[itemID]?.assessmentTitle;
+               if ((assessmentReducer[itemID].showUpdateStatus === false && (interactiveTitle !== newPropsTitle))) {
+                   this.updateElmOnSaveEvent(this.props);
+               }
            }
        }
-       const elementType=this.prop?.model?.figuredata?.interactiveformat;
-       if (!config.savingInProgress && !config.isSavingElement && (elementType == ELM_INT) && assessmentReducer.dataFromElm) {
-        const { dataFromElm } = assessmentReducer;
-        if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
-            window.open(dataFromElm.elmUrl);
-            handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType);
-            this.props.setElmPickerData({});
-        } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
-            this.addPufAssessment(dataFromElm.pufObj);
-            this.props.setElmPickerData({});
-        }
-    }
    }
 
      /*** @description This function is to show Approved/Unapproved Status on interative */
@@ -391,8 +389,6 @@ class Interactive extends React.Component {
      * @param {Object} pufObj Objeact containing elmInteractive Asset details
     */
     addElmInteractive = (pufObj, cb) => {
-        showTocBlocker();
-        disableHeader(true);
 
         let figureData = {
             schema: INTERACTIVE_SCHEMA,
@@ -804,7 +800,8 @@ const mapActionToProps = {
     setNewItemFromElm: setNewItemFromElm,
     fetchAssessmentMetadata: fetchAssessmentMetadata,
     fetchAssessmentVersions: fetchAssessmentVersions,
-    updateAssessmentVersion: updateAssessmentVersion
+    updateAssessmentVersion: updateAssessmentVersion,
+    setElmPickerData: setElmPickerData
 }
 
 const mapStateToProps = (state) => {

@@ -144,7 +144,8 @@ let props = {
     closeLtAction: jest.fn(),
     openLTFunction: jest.fn(),
     checkElmAssessmentStatus: jest.fn(),
-    showToastMessage: jest.fn()
+    showToastMessage: jest.fn(),
+    setElmPickerData: jest.fn()
 }
 describe('Testing Assessment Slate Data component', () => {
     let store = mockStore(initialState);
@@ -457,6 +458,23 @@ describe('Testing Assessment Slate Data component', () => {
             jest.spyOn(assessmentSlateInstance7, 'showElmVersionStatus')
             assessmentSlateInstance7.showElmVersionStatus();
             expect(assessmentSlateInstance7.props.assessmentReducer).toEqual(expectedProps)
+        })
+        it('Test 10.6-componentDidUpdate', () => {
+            const dataFromElm = {
+                elementType: "mmi-elm",
+                elementUrn: "urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70",
+                pufObj: { id: "urn:pearson:work:ba755f55-58cb-4a3b-9cde-1c6ac6400b22", title: "saa", interactiveType: "flashcards" },
+                resourceType: "interactive",
+                type: "SaveElmData"
+            }
+            jest.spyOn(assessmentSlateInstance6, 'componentDidUpdate')
+            let prevProps = {
+                ...props,
+                assessmentReducer: {dataFromElm: dataFromElm}
+            }
+            assessmentSlateInstance6.componentDidUpdate(prevProps);
+            expect(assessmentSlateInstance6.componentDidUpdate).toHaveBeenCalled()
+            expect(assessmentSlateInstance6.props.getAssessmentDataPopup).toBe(false)
         })
     })
     describe('Test 8- mainAddAssessment', () => {

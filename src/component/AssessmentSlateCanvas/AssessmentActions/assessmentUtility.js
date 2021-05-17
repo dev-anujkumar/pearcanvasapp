@@ -79,9 +79,9 @@ export const setAssessmentElement = (model) => {
         const { assessmentid, assessmentitemid, assessmenttitle, templatelabel, templateid, assessmentformat } = model.elementdata
         let isLearningToolAssessment = assessmentformat == LEARNING_TEMPLATE ? true : false;
         assessmentSlateObj = {
-            title: isLearningToolAssessment && templatelabel ?? assessmenttitle ?? "",
+            title: (isLearningToolAssessment && templatelabel) ? templatelabel : assessmenttitle ?? "",
             itemId: assessmentitemid ?? "",
-            assessmentId: isLearningToolAssessment && templateid ?? assessmentid ??  ""
+            assessmentId: (isLearningToolAssessment && templateid) ? templateid : assessmentid ??  ""
         }
     }
     return assessmentSlateObj;

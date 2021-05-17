@@ -16,7 +16,7 @@ import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_U
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
-import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions } from './AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
 /**
 * Module | AssessmentSlateData
@@ -648,7 +648,8 @@ const mapActionToProps = {
     updateAssessmentVersion: updateAssessmentVersion,
     fetchAssessmentLatestVersion:fetchAssessmentVersions,
     fetchLearningTemplates:fetchLearningTemplates,
-    setAssessmentFilterParams:setAssessmentFilterParams
+    setAssessmentFilterParams:setAssessmentFilterParams,
+    setElmPickerData: setElmPickerData
 }
 
 export default connect(
