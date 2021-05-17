@@ -140,6 +140,7 @@ export const ELM_ITEM_EVENT_DATA = 'ELM_ITEM_EVENT_DATA'
 export const ELM_NEW_ITEM_DATA = "ELM_NEW_ITEM_DATA"
 export const SET_USAGE_TYPE = "SET_USAGE_TYPE"
 export const SET_INTERACTIVE_METADATA = "SET_INTERACTIVE_METADATA"
+export const SET_ELM_PICKER_MSG = "SET_ELM_PICKER_MSG"
 /* --------------- Selection Constants ------------------------*/
 export const SET_SELECTION = 'SET_SELECTION'
 

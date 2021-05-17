@@ -104,5 +104,11 @@
         "sortablejs": "^1.10.0",
         "tinymce": "../cypress-tinymce",
         "utils": "^0.3.1"
-    }
+    },
+    "jest": {
+        "preset": "react",
+        "setupFiles": [
+          "./test/jest.setup.js"
+        ]
+      }
 }

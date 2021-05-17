@@ -15,7 +15,8 @@ class MetaDataPopUp extends React.Component {
         super(props);
         this.state = {
            altText:"",
-		   longDescription:""
+		   longDescription:"",
+		   active:''
         }
     }
 
@@ -23,6 +24,12 @@ class MetaDataPopUp extends React.Component {
 		/* -- Get metadata from alfresco - */
 		this.getAlfrescoMetadata();
     }
+
+	handleActiveState = (active) => {
+		this.setState({
+			active
+		})
+	}
 
 	/**
     * @description - This function is responsible for showing alfresco metadata in the popup.
@@ -89,7 +96,7 @@ class MetaDataPopUp extends React.Component {
 
     render() {
         const { togglePopup } = this.props;
-		const { altText, longDescription } = this.state;
+		const { altText, longDescription, active } = this.state;
         return (
             <div className="model">
 				<div tabIndex="0" className="model-popup">
@@ -98,8 +105,8 @@ class MetaDataPopUp extends React.Component {
 						    <span className="edit-metadata">Edit Alfresco Metadata</span>
 						</div>
 						<div className="figuremetadata-field">
-							<div className="alt-text-body" >
-								<p className="alt-text">Alt Text:</p>
+							<div className={`alt-text-body ${active === 'altBody' ? 'active' : ""}`} onClick={()=>this.handleActiveState('altBody')} >
+								<p className={`alt-text ${active === 'altBody' ? 'active' : ""}`}>Alt Text</p>
 								<input 
 								    autocomplete="off"
 									id="altText_AM" 
@@ -111,8 +118,8 @@ class MetaDataPopUp extends React.Component {
 									onChange={(e) => this.setState({ altText: e.target.value })}
 								/>
 							</div>
-							<div className="long-description-body">
-								<p className='long-text'>Long Description:</p>
+							<div className= {`long-description-body ${active === 'longBody' ? 'active' : ""}`} onClick={()=>this.handleActiveState('longBody')}>
+								<p className={`long-text ${active === 'longBody' ? 'active' : ""}`}>Long Description</p>
 								<textarea 
 									id="longDescription_AM" 
 									name="longDescription_AM" 
