@@ -397,4 +397,7 @@ span.approved-button.enable svg path#path2 {
   left: 35%;
   cursor: pointer !important;
 }
+.pdf-slate .addLOdata {
+  display: none;
+}
 /* Ends - PDF Slate Canvas css */
