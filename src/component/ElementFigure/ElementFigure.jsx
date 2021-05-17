@@ -101,7 +101,7 @@ class ElementFigure extends Component {
 
             let scaleMarkerData = {};
             Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
-                (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": "b4031c8e-fac2-4f8b-9be9-ca641f1bf573" || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.id || null } : null,
                 (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.name || "The alttext for the scale image" } : null,
                 (data && data.scalemarker && data.scalemarker.epsUrl) ? { "path": data.scalemarker.epsUrl || null } : null,
                 (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
