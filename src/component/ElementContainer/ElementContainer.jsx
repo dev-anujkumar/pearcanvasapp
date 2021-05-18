@@ -1288,6 +1288,7 @@ class ElementContainer extends Component {
                         pasteElement={this.props.pasteElement}
                         userRole={this.props.userRole}
                         handleAudioPopupLocation = {this.handleAudioPopupLocation}
+                        parentElement={this.props.parentElement}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:

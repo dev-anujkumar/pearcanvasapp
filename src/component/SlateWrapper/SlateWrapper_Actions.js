@@ -125,6 +125,15 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                             ele.contents.bodymatter.splice(index, 0, createdElementData)
                         }
                     })
+                /* To update redux store while creating new element inside 2C->Aside->New */
+                } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
+                    item?.groupeddata?.bodymatter?.map((ele) => {
+                        ele?.groupdata?.bodymatter?.map(i => {
+                            if (i?.id === parentUrn.manifestUrn) {
+                                i?.elementdata?.bodymatter?.splice(index, 0, createdElementData);
+                            }
+                        })
+                    })
                 }
             })
         }else if (popupSlateData && popupSlateData.type == "popup"){

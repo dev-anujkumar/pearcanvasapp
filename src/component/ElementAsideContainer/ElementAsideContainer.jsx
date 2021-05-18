@@ -339,6 +339,7 @@ class ElementAsideContainer extends Component {
     renderElement(_elements, parentUrn, parentIndex, elementLength) {
         let firstSection = true;
         let showSectionBreak;
+        const { id, type } = this.props?.parentElement || {};
         let asideData = {
             type: "element-aside",
             subtype :this.props.element.subtype, 
@@ -346,6 +347,8 @@ class ElementAsideContainer extends Component {
             contentUrn: this.props.element.contentUrn,
             element : this.props.element
         };
+        /* Adding parent id and type to update redux store while creating new element inside 2c->Aside->New */
+        asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type }} : asideData;
         try {
             if (_elements !== undefined) {
                 if (_elements.length == 0) {
