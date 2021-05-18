@@ -166,8 +166,15 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, createdElementData)
                 }
             })
-        }
-        else {
+        /* Adding WE element inside 2C element */
+        } else if(parentUrn?.elementType === "group" && !asideData){
+            newParentData[config.slateManifestURN]?.contents?.bodymatter?.map((item, i) => {
+                let column = item?.groupeddata?.bodymatter[parentUrn?.columnIndex] || [];
+                if (column?.id === parentUrn?.manifestUrn) {
+                    column?.groupdata?.bodymatter?.splice(index, 0, createdElementData)
+                }
+            })
+        } else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
