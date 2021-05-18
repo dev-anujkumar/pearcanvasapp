@@ -245,12 +245,7 @@ describe('Testing ElementAside component with props', () => {
             expect(booleanCheck).toEqual(true);
         })
 
-        it(' componentWillMount  testing', () => {
-            const tempWrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
-            const componentWillUnmount = jest.spyOn(tempWrapper.instance(), 'componentWillUnmount');
-            tempWrapper.unmount();
-            expect(componentWillUnmount).toHaveBeenCalled();
-        })
+    
         it("onSectionDragUpdate test for section", () => {
             const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
             const instance = wrapper.find('ElementAsideContainer').instance();

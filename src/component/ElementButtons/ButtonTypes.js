@@ -39,5 +39,6 @@ export default {
     EDIT_BUTTON:"edit-button",
     APPROVE_TICK_ICON:"approve-icon",
     PASTE:"paste",
-    POWERPASTE:"powerpaste"
+    POWERPASTE:"powerpaste",
+    ALFRESCO_METADATA:'alfresco-metadata'
 }
