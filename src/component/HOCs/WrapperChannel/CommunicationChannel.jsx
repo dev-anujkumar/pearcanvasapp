@@ -16,9 +16,6 @@ import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
-import {saveSelectedAssetData} from '../../AlfrescoPopup/Alfresco_Action'
-import {connect} from 'react-redux'
-import { compose } from 'redux';
 import { getProjectDetails } from '../../CanvasWrapper/CanvasWrapper_Actions.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 function CommunicationChannel(WrappedComponent) {
@@ -879,17 +876,4 @@ function CommunicationChannel(WrappedComponent) {
     return CommunicationWrapper;
 }
 
-const mapActionToProps = (dispatch) =>{
-    return{
-        saveSelectedAssetData: (message) => {
-            dispatch(saveSelectedAssetData(message))
-        },
-    }
-}
-
-const CommunicationChannelWrapper = compose(
-    connect(null, mapActionToProps),
-    CommunicationChannel
-)
-
-export default CommunicationChannelWrapper;
+export default CommunicationChannel;
