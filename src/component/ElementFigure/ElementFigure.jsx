@@ -181,9 +181,11 @@ class ElementFigure extends Component {
         }
         var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
-        if (alfrescoPath.alfresco.guid) {         //if alfresco location is available
+        if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                let messageObj = { citeName: alfrescoPath.alfresco.title, citeNodeRef: alfrescoPath.alfresco.guid, elementId: this.props.elementId }
+                let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoPath.alfresco.name  , 
+                    citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                    elementId: this.props.elementId }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
             }
             else {
