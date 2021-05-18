@@ -84,7 +84,7 @@ class Interactive extends React.Component {
 
    componentDidUpdate() { 
        const { assessmentReducer } = this.props;
-       const { itemID, interactiveTitle } = this.state;
+       const { itemID, interactiveTitle, elementType } = this.state;
        if (!config.savingInProgress && !config.isSavingElement && (elementType === ELM_INT) && assessmentReducer) {
            const { dataFromElm } = assessmentReducer;
            if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elementUrn === this.props.model?.id) {
