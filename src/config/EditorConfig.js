@@ -82,6 +82,10 @@ const FormatSelectorType = [
     {
         text: 'Learning Objective Item',
         value: "LO",
+    },
+    {
+        text: 'Handwriting',
+        value: 'HS'
     }
 ]
 
