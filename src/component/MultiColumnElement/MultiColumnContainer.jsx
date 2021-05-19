@@ -109,6 +109,7 @@ class MultiColumnContainer extends PureComponent {
                                 onListSelect={this.context.onListSelect}
                                 userRole={this.props.userRole}
                                 elementSepratorProps={this.context.elementSepratorProps}
+                                splithandlerfunction={this.context.splithandlerfunction}
                             />
                             <ElementSaprator
                                 index={index}

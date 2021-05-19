@@ -442,6 +442,7 @@ class ElementAsideContainer extends Component {
                                         onListSelect={this.props.onListSelect}
                                         userRole={this.props.userRole}
                                         elementSepratorProps={this.props.elementSepratorProps}
+                                        splithandlerfunction={this.props.splithandlerfunction}
                                     >
                                     </ElementContainer>
                                     <ElementSaprator
