@@ -129,6 +129,12 @@ export const deleteFromStore = (params) => {
                             element.elementdata.bodymatter.splice(indexInner, 1);
                         }
                     })
+                } else {
+                    element?.groupeddata?.bodymatter?.map(item => {
+                        item?.groupdata?.bodymatter?.map(i => {
+                            delInsideWE(i, asideData, parentUrn, elmId);
+                        })
+                    })
                 }
             } else if(poetryData && poetryData.type == 'poetry') {
                 if (element.id === poetryData.parentUrn) {
@@ -140,17 +146,26 @@ export const deleteFromStore = (params) => {
                 }
             }
             else if (parentUrn && parentUrn.elementType == "manifest") {
-                if (element.id === asideData.id) {
-                    element.elementdata.bodymatter.forEach((ele) => {
-                        if (ele.id == parentUrn.manifestUrn) {
-                            ele.contents.bodymatter.forEach((el, indexInner) => {
-                                if (el.id === elmId) {
-                                    ele.contents.bodymatter.splice(indexInner, 1);
-                                }
-                            })
-                        }
-
+                //if (element.id === asideData.id) {
+                //    element.elementdata.bodymatter.forEach((ele) => {
+                //        if (ele.id == parentUrn.manifestUrn) {
+                //            ele.contents.bodymatter.forEach((el, indexInner) => {
+                //                if (el.id === elmId) {
+                //                    ele.contents.bodymatter.splice(indexInner, 1);
+                //                }
+                //            })
+                //        }
+                //    })
+                //} else 
+                /* Delete element inside 2C->WE->element */
+                if(element?.type === "groupedcontent") {
+                    element?.groupeddata?.bodymatter?.map(item => {
+                        item?.groupdata?.bodymatter?.map(i => {
+                            delInsideWE(i, asideData, parentUrn, elmId);
+                        })
                     })
+                } else {
+                    delInsideWE(element, asideData, parentUrn, elmId);
                 }
             } else if (parentUrn && parentUrn.elementType == "citations"){
                 if (element.id === parentUrn.manifestUrn) {
@@ -167,6 +182,22 @@ export const deleteFromStore = (params) => {
             slateLevelData: newParentData
         }
     })
+}
+/* Delete Element inside WE and aside */
+const delInsideWE = (item, asideData, parentUrn, elmId) => {
+    if (item.id === asideData?.id) {
+        item?.elementdata?.bodymatter?.forEach((ele,index) => {
+            if (ele.id == parentUrn.manifestUrn) {
+                ele.contents.bodymatter.forEach((el, indexInner) => {
+                    if (el.id === elmId) {
+                        ele.contents.bodymatter.splice(indexInner, 1);
+                    }
+                })
+            } else if (ele.id === elmId) {
+                item.elementdata.bodymatter.splice(index, 1);
+            }
+        })
+    }
 }
 
 export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {

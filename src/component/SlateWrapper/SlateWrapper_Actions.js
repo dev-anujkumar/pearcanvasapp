@@ -113,6 +113,21 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == asideData.id) {
                     item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
+                } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
+                    /* Add element inside 2c->WE->new */
+                    item?.groupeddata?.bodymatter?.map((ele) => {
+                        ele?.groupdata?.bodymatter?.map(i => {
+                            if (i?.id === parentUrn.manifestUrn) {
+                                i?.elementdata?.bodymatter?.splice(outerAsideIndex, 0, createdElementData);
+                            } else if(i?.subtype === "workedexample"){
+                                i?.elementdata?.bodymatter?.map(j => {
+                                    if (j?.id === parentUrn.manifestUrn) {
+                                        j?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                                    }
+                                })
+                            }
+                        })
+                    })
                 }
             })
         } else if (asideData && asideData.type == 'element-aside'  && type !== 'SECTION_BREAK') {
@@ -131,6 +146,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         ele?.groupdata?.bodymatter?.map(i => {
                             if (i?.id === parentUrn.manifestUrn) {
                                 i?.elementdata?.bodymatter?.splice(index, 0, createdElementData);
+                            } else if(i?.subtype === "workedexample"){
+                                i?.elementdata?.bodymatter?.map(j => {
+                                    if (j?.id === parentUrn.manifestUrn) {
+                                        j?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                                    }
+                                })
                             }
                         })
                     })
