@@ -8,6 +8,7 @@ import config from '../config/config';
 import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
+import value from 'require-context.macro';
 // DECLARATION - const or variables 
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
@@ -125,7 +126,10 @@ export const encodeHTMLInWiris = (str) => {
  * Refines title content from unified model by removing extra tags
  * @param {*} htmlText unified HTML content
  */
-const removeTagsforSubTitle = (htmlText) => {
+const removeTagsforSubTitle = (htmlText, elementType) => {
+    if (elementType === 'figure') {
+        return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<number>?.+<\/number>/g, "").replace(/<p>|<\/p>/g, "")    
+    }
     return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<p>|<\/p>/g, "")
 }
 
@@ -135,12 +139,12 @@ const removeTagsforSubTitle = (htmlText) => {
  * @param {*} model label or title HTML content
  * @param {*} modelType type - label or title
  */
-export const getTitleSubtitleModel = (model, modelType) => {
+export const getTitleSubtitleModel = (model, modelType, modelElement = "popup") => {
     let modelDocDom = model && new DOMParser().parseFromString(model, "text/html")
     let modelDom = modelDocDom && modelDocDom.body && modelDocDom.body.children[0]
     let modelToReturn
     if(modelType){
-        if(modelType === "formatted-title"){
+        if (modelType === "formatted-title"){
             try{
                 if(model && model.match(/<label>?.+<\/label>/g)){
                     modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`   
@@ -152,11 +156,23 @@ export const getTitleSubtitleModel = (model, modelType) => {
             catch (error) {
                 modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
             }
-        }
-        else if(modelType === "formatted-subtitle"){
+        } else if (modelType === "formatted-number"){
+            try{
+                if(model && model.match(/<number>?.+<\/number>/g)){
+                    let numberHtml = modelDom.children[0].tagName === 'NUMBER' ? modelDom.children[0].innerHTML : modelDom.children[1].innerHTML; 
+                    modelToReturn = `<p class="paragraphNumeroUno">${numberHtml}</p>`   
+                }
+                else{
+                    modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+                }
+            }
+            catch (error) {
+                modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+            }
+        } else if (modelType === "formatted-subtitle"){
             try{
                 let modelInnerHTML = modelDom.innerHTML
-                let modelWithRemovedTags = removeTagsforSubTitle(modelInnerHTML)
+                let modelWithRemovedTags = removeTagsforSubTitle(modelInnerHTML, modelElement)
                 modelToReturn = `<p class="paragraphNumeroUno">${modelWithRemovedTags}</p>`
             }
             catch (error) {
@@ -186,6 +202,41 @@ export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
         return `<p>${titleModel}</p>`
     }
     return `<p><label>${labelHTML}&nbsp;</label>${titleModel}</p>`
+}
+
+
+/**
+ * Combines label, number and title HTML and returns HTML content to send through update API
+ * @param {*} labelHTML Label HTML content
+ * @param {*} numberHTML number HTML content
+ * @param {*} titleHTML title HTML content
+ */
+export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) => {
+    if (labelHTML === "" && numberHTML === ""){
+        return `<p>${titleHTML}</p>`
+    } else if (numberHTML === "" && labelHTML) {
+        return `<p><label>${labelHTML}</label>${titleHTML}</p>`    
+    } else if (labelHTML === "" && numberHTML) {
+        return `<p><number>${numberHTML}</number>${titleHTML}</p>`    
+    }
+    return `<p><label>${labelHTML}</label><number>${numberHTML}</number>${titleHTML}</p>`
+}
+
+/**
+ * Validates the user input and returns only numbers
+ * @param {*} numberInput Number HTML content
+ */
+export const validateFigureNumber = (numberInput) => {
+    let inputToReturn = "";
+    const numberArr = [...numberInput];
+    let numericRegex = new RegExp('^[1-9]\d*$');
+    console.log("numberArr", numberArr);
+    for (let digit of numberArr) {
+        if (digit.match(numericRegex) || (digit === '.' && !inputToReturn.includes('.')) || (digit === '0' && inputToReturn)) {
+            inputToReturn += digit;
+        }
+    }
+    return inputToReturn;
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |

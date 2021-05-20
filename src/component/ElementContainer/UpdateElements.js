@@ -5,7 +5,8 @@ import { matchHTMLwithRegex, removeBlankTags } from '../../constants/utility.js'
 import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
-import { storeOldAssetForTCM } from './ElementContainer_Actions'
+import { storeOldAssetForTCM } from './ElementContainer_Actions';
+import { createLabelNumberTitleModel, getTitleSubtitleModel } from '../../constants/utility';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -34,11 +35,13 @@ export const replaceUnwantedtags = (html,flag) => {
  */
 export const generateCommonFigureData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
     let titleDOM = document.getElementById(`cypress-${index}-0`),
-        subtitleDOM = document.getElementById(`cypress-${index}-1`),
-        captionDOM = document.getElementById(`cypress-${index}-2`),
-        creditsDOM = document.getElementById(`cypress-${index}-3`)
+        numberDOM = document.getElementById(`cypress-${index}-1`),
+        subtitleDOM = document.getElementById(`cypress-${index}-2`),
+        captionDOM = document.getElementById(`cypress-${index}-3`),
+        creditsDOM = document.getElementById(`cypress-${index}-4`)
 
     let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+        numberHTML = numberDOM ? numberDOM.innerHTML : "",
         subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
@@ -48,10 +51,17 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
-    captionHTML = replaceUnwantedtags(captionHTML,true)
-    creditsHTML = replaceUnwantedtags(creditsHTML,true)
-    subtitleHTML = replaceUnwantedtags(subtitleHTML,true)
-    titleHTML = replaceUnwantedtags(titleHTML,false)
+    captionHTML = replaceUnwantedtags(captionHTML, true);
+    creditsHTML = replaceUnwantedtags(creditsHTML, true);
+    subtitleHTML = replaceUnwantedtags(subtitleHTML, true);
+    numberHTML = replaceUnwantedtags(numberHTML, false);
+    titleHTML = replaceUnwantedtags(titleHTML, false);
+
+    titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+    console.log("titleHTML titleHTML", titleHTML);
+    console.log("label walaaaaaa", getTitleSubtitleModel(titleHTML, "formatted-title", "figure"));
+    console.log("number walaaaaaa", getTitleSubtitleModel(titleHTML, "formatted-number", "figure"));
+    console.log("title walaaaaaa", getTitleSubtitleModel(titleHTML, "formatted-subtitle", "figure"));
 
     /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
     subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
@@ -71,11 +81,11 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             ...indivisualData,
             text : titleText
         },
-        subtitle : {
-            ...indivisualData,
-            text : subtitleText,
-            footnotes : []
-        },
+        // subtitle : {
+        //     ...indivisualData,
+        //     text : subtitleText,
+        //     footnotes : []
+        // },
         captions : {
             ...indivisualData,
             text : captionText,
@@ -91,8 +101,9 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
-            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
+            // subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            // title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
+            title: titleHTML,
             postertext: "",
             text: ""
         },
@@ -118,11 +129,13 @@ const podHtmlmatchWithRegex = (html) => {
 export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
     const oldFigureData = Object.assign({},previousElementData.figuredata);
     let titleDOM = document.getElementById(`cypress-${index}-0`),
-        subtitleDOM = document.getElementById(`cypress-${index}-1`),
-        captionDOM = document.getElementById(`cypress-${index}-3`),
-        creditsDOM = document.getElementById(`cypress-${index}-4`)
+        numberDOM = document.getElementById(`cypress-${index}-1`),
+        subtitleDOM = document.getElementById(`cypress-${index}-2`),
+        captionDOM = document.getElementById(`cypress-${index}-4`),
+        creditsDOM = document.getElementById(`cypress-${index}-5`)
 
     let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+        numberHTML = numberDOM ? numberDOM.innerHTML : "",
         subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
@@ -135,7 +148,10 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         captionHTML = replaceUnwantedtags(captionHTML,true)
         creditsHTML = replaceUnwantedtags(creditsHTML,true)
         subtitleHTML = replaceUnwantedtags(subtitleHTML,true)
+        numberHTML = replaceUnwantedtags(numberHTML, false);
         titleHTML = replaceUnwantedtags(titleHTML,false)
+
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
     
         /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
         subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
@@ -152,11 +168,11 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             ...indivisualData,
             text : titleText        
         },
-        subtitle : {
-            ...indivisualData,
-            text : subtitleText,
-            footnotes : [ ]
-        },
+        // subtitle : {
+        //     ...indivisualData,
+        //     text : subtitleText,
+        //     footnotes : [ ]
+        // },
         captions : {
             ...indivisualData,
             text : captionText,
@@ -170,8 +186,9 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         html : {
             captions: matchHTMLwithRegex(captionHTML)?captionHTML:`<p>${captionHTML}</p>`,
             credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
-            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
-            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
+            // subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            // title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
+            title: titleHTML,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
             postertext: "",
@@ -186,7 +203,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         previousElementData.figuredata.interactivetype === "web-link") {
         const oldPostertextObj = previousElementData?.figuredata?.postertext ? Object.assign({},previousElementData.figuredata.postertext) : { text: "" };
         const oldPostertext = previousElementData?.figuredata?.postertext?.text ?? "";
-        let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
+        let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
         let pdfPosterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
@@ -229,12 +246,14 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
     let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || true ;
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
-        subtitleDOM = document.getElementById(`cypress-${index}-1`),
-        preformattedText = document.getElementById(`cypress-${index}-2`).innerHTML ? document.getElementById(`cypress-${index}-2`).innerHTML : '<span class="codeNoHighlightLine"><br /></span>',
-        captionDOM = document.getElementById(`cypress-${index}-3`),
-        creditsDOM = document.getElementById(`cypress-${index}-4`)
+        numberDOM = document.getElementById(`cypress-${index}-1`),
+        subtitleDOM = document.getElementById(`cypress-${index}-2`),
+        preformattedText = document.getElementById(`cypress-${index}-3`).innerHTML ? document.getElementById(`cypress-${index}-3`).innerHTML : '<span class="codeNoHighlightLine"><br /></span>',
+        captionDOM = document.getElementById(`cypress-${index}-4`),
+        creditsDOM = document.getElementById(`cypress-${index}-5`)
 
     let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+        numberHTML = numberDOM ? numberDOM.innerHTML : "",
         subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
@@ -247,7 +266,10 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         captionHTML = replaceUnwantedtags(captionHTML,true)
         creditsHTML = replaceUnwantedtags(creditsHTML,true)
         subtitleHTML = replaceUnwantedtags(subtitleHTML,true)
+        numberHTML = replaceUnwantedtags(numberHTML, false)
         titleHTML = replaceUnwantedtags(titleHTML,false)
+
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
     
         /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
         subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
@@ -260,11 +282,11 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             ...indivisualData,
             text : titleText
         },
-        subtitle : {
-            ...indivisualData,
-            text : subtitleText,
-            footnotes : [ ]
-        },
+        // subtitle : {
+        //     ...indivisualData,
+        //     text : subtitleText,
+        //     footnotes : [ ]
+        // },
         captions : {
             ...indivisualData,
             text : captionText,
@@ -280,8 +302,9 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
+            // subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            // title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
+            title: titleHTML,
             postertext: "",
             tableasHTML: "",
             text: "",
@@ -313,12 +336,14 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
 const generateCommonFigureDataAT = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
-        subtitleDOM = document.getElementById(`cypress-${index}-1`),
-        captionDOM = document.getElementById(`cypress-${index}-3`),
-        creditsDOM = document.getElementById(`cypress-${index}-4`),
-        textDOM = document.getElementById(`cypress-${index}-2`)
+        numberDOM = document.getElementById(`cypress-${index}-1`),
+        subtitleDOM = document.getElementById(`cypress-${index}-2`),
+        captionDOM = document.getElementById(`cypress-${index}-4`),
+        creditsDOM = document.getElementById(`cypress-${index}-5`),
+        textDOM = document.getElementById(`cypress-${index}-3`)
 
     let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+        numberHTML = numberDOM ? numberDOM.innerHTML : "",
         subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
@@ -333,8 +358,11 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     captionHTML = replaceUnwantedtags(captionHTML, true)
     creditsHTML = replaceUnwantedtags(creditsHTML, true)
     subtitleHTML = replaceUnwantedtags(subtitleHTML, true)
+    numberHTML = replaceUnwantedtags(numberHTML, false)
     titleHTML = replaceUnwantedtags(titleHTML, false)
     textHTML = replaceUnwantedtags(textHTML, false)
+
+    titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
     /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
     subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
@@ -347,11 +375,11 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             ...indivisualData,
             text : titleText
         },
-        subtitle : {
-            ...indivisualData,
-            text : subtitleText,
-            footnotes : [ ]
-        },
+        // subtitle : {
+        //     ...indivisualData,
+        //     text : subtitleText,
+        //     footnotes : [ ]
+        // },
         captions : {
             ...indivisualData,
             text : captionText,
@@ -377,8 +405,9 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
+            // subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            // title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
+            title: titleHTML,
             postertext: "",
             tableasHTML: "",
             text: textHTML.match(/<p>/g) ? textHTML:`<p>${textHTML}</p>`

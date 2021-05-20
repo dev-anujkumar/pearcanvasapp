@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -327,23 +327,24 @@ class ElementContainer extends Component {
     figureDifference = (index, previousElementData) => {
        
         let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            captionDOM = document.getElementById(`cypress-${index}-2`),
-            creditsDOM = document.getElementById(`cypress-${index}-3`)
+            numberDOM = document.getElementById(`cypress-${index}-1`),
+            subtitleDOM = document.getElementById(`cypress-${index}-2`),
+            captionDOM = document.getElementById(`cypress-${index}-3`),
+            creditsDOM = document.getElementById(`cypress-${index}-4`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
   
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        // subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
 
         let defaultImageUrl = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
@@ -353,7 +354,6 @@ class ElementContainer extends Component {
         let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
 
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             (this.props.oldImage ? this.props.oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
@@ -364,13 +364,15 @@ class ElementContainer extends Component {
 
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            preformattedText = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML.trim() : '<span class="codeNoHighlightLine"><br /></span>',
-            captionDOM = document.getElementById(`cypress-${index}-3`),
-            creditsDOM = document.getElementById(`cypress-${index}-4`);
+            numberDOM = document.getElementById(`cypress-${index}-1`),
+            subtitleDOM = document.getElementById(`cypress-${index}-2`),
+            preformattedText = document.getElementById(`cypress-${index}-3`) ? document.getElementById(`cypress-${index}-3`).innerHTML.trim() : '<span class="codeNoHighlightLine"><br /></span>',
+            captionDOM = document.getElementById(`cypress-${index}-4`),
+            creditsDOM = document.getElementById(`cypress-${index}-5`);
 
         preformattedText = `<p>${preformattedText}</p>`
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
@@ -387,12 +389,13 @@ class ElementContainer extends Component {
         }
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        // subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        // titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        // subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
         preformattedText = this.removeClassesFromHtml(preformattedText)
 
@@ -400,7 +403,7 @@ class ElementContainer extends Component {
             previousElementData.html.preformattedtext = '<p><span class="codeNoHighlightLine"></span></p>'
         }
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+            // subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             preformattedText !== this.removeClassesFromHtml(previousElementData.html.preformattedtext) ||
@@ -418,32 +421,35 @@ class ElementContainer extends Component {
     figureDifferenceInteractive = (index, previousElementData) => {
         let newInteractiveid = previousElementData.figuredata.interactiveid || ""
         let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            captionsDOM = document.getElementById(`cypress-${index}-3`),
-            creditsDOM = document.getElementById(`cypress-${index}-4`)
+            numberDOM = document.getElementById(`cypress-${index}-1`),
+            subtitleDOM = document.getElementById(`cypress-${index}-2`),
+            captionsDOM = document.getElementById(`cypress-${index}-4`),
+            creditsDOM = document.getElementById(`cypress-${index}-5`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        // subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        // titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        // subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link") {
-            let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
+            let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
             posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
             
             let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+                // subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
@@ -452,7 +458,7 @@ class ElementContainer extends Component {
         }
         else {
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+                // subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.props.oldImage !== newInteractiveid
@@ -461,12 +467,14 @@ class ElementContainer extends Component {
     }
     figureDifferenceAT = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            text = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML : "<p></p>",
-            captionDOM = document.getElementById(`cypress-${index}-3`),
-            creditsDOM = document.getElementById(`cypress-${index}-4`)
+            numberDOM = document.getElementById(`cypress-${index}-1`),
+            subtitleDOM = document.getElementById(`cypress-${index}-2`),
+            text = document.getElementById(`cypress-${index}-3`) ? document.getElementById(`cypress-${index}-3`).innerHTML : "<p></p>",
+            captionDOM = document.getElementById(`cypress-${index}-4`),
+            creditsDOM = document.getElementById(`cypress-${index}-5`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
@@ -474,25 +482,23 @@ class ElementContainer extends Component {
 
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         text = matchHTMLwithRegex(text) ? text : `<p>${text}</p>`
         oldtext = matchHTMLwithRegex(oldtext) ? oldtext : `<p>${oldtext}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
         text = this.removeClassesFromHtml(text)
         oldtext = this.removeClassesFromHtml(oldtext)
        
         let oldTitle =  this.removeClassesFromHtml(previousElementData.html.title),
-        oldSubtitle =  this.removeClassesFromHtml(previousElementData.html.subtitle),
+        // oldSubtitle =  this.removeClassesFromHtml(previousElementData.html.subtitle),
         oldCaption =  this.removeClassesFromHtml(previousElementData.html.captions),
         oldCredit =  this.removeClassesFromHtml(previousElementData.html.credits)
 
-        return (titleHTML !==oldTitle ||
-            subtitleHTML !== oldSubtitle ||
+        return (titleHTML !== oldTitle ||
+            // subtitleHTML !== oldSubtitle ||
             captionHTML !== oldCaption ||
             creditsHTML !== oldCredit ||
             // formattedText!==formattedOldText
@@ -503,28 +509,27 @@ class ElementContainer extends Component {
     figureDifferenceAudioVideo = (index, previousElementData) => {
 
         let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            captionDOM = document.getElementById(`cypress-${index}-2`),
-            creditsDOM = document.getElementById(`cypress-${index}-3`)
+            numberDOM = document.getElementById(`cypress-${index}-1`),
+            subtitleDOM = document.getElementById(`cypress-${index}-2`),
+            captionDOM = document.getElementById(`cypress-${index}-3`),
+            creditsDOM = document.getElementById(`cypress-${index}-4`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
         let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "")
        // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.props.oldImage !== assetId
@@ -561,6 +566,7 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
+        // console.log(">>>>>>>. node = ", node, "previousElementData = ", previousElementData, "elementType = ", elementType, "primaryOption = ", primaryOption, "secondaryOption = ", secondaryOption, "activeEditorId = ", activeEditorId, "forceupdate = ", forceupdate, "parentElement = ", parentElement)
         const { parentUrn, asideData } = this.props
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
