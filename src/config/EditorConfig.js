@@ -149,6 +149,11 @@ export const elementTypeOptions = Object.freeze({
         secondaryOption : 'secondary-learning-objective',
         label : 'LO',
     },
+    'HS' : {
+        primaryOption : 'primary-handwriting',
+        secondaryOption : 'subtype-handwriting',
+        label : 'HS',
+    },
 })
 
 /** -------------------------------- Insert-Media Toolbar Handling -------------------------------- */

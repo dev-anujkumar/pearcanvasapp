@@ -38,6 +38,8 @@
 div.mce-resizehandle{
     z-index: 0 !important;
 }
+
+
 .element-container p.paragraphNumeroUno{
     margin-top: 0.5em !important;
     margin-bottom: 0.5em !important;
@@ -45,6 +47,11 @@ div.mce-resizehandle{
     padding:0px;
     font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
 }
+
+.element-container p.handwritingstyle{
+    font-family: 'Dancing Script', cursive !important;
+}
+
 h3.pullQuoteNumeroUno{
     margin-top: 0.5em;
     margin-bottom: 0.5em;
