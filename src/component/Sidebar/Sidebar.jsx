@@ -235,7 +235,7 @@ class Sidebar extends Component {
                 secondaryOptions = secondaryOptionList.map(item => {
                     let addClass = '';
                     if(item === SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY){
-                        addClass = 'learnosity-disabled';
+                        //addClass = 'learnosity-disabled';
                         showLearnosityDropdown = true;
                     }
                     return <li key={item} data-value={item} className={`${addClass}`} onClick={this.handleSecondaryOptionChange}>

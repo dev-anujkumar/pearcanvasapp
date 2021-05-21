@@ -102,7 +102,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
 
                 if (data.source === "elm") {                  
                     const items = data.type?.split("|") ?? []; 
-                    if(items.length >= 3){                  
+                    if(items.length >= 4){                  
                         /* Update newly added assessment */
                         if (items[0] === "assessment") {
                             let assessmentDataMsg = {
@@ -116,12 +116,12 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                             if((assessmentDataMsg.elementUrn === elementUrn) && itemid && itemTitle){
                                 assessmentDataMsg = { ...assessmentDataMsg, ...itemData };
                                 /* empty store after item data updated */
-                                store.dispatch(setNewItemFromElm({}));
+                                console.log("assessmentDataMsg = ",assessmentDataMsg);
+                                /**@function to update data display in slate */
+                                addPufFunction(assessmentDataMsg);
+                                /* Remove EventListener */
+                                window.removeEventListener("message", getMsgafterAddAssessment, false);
                             }
-                            /**@function to update data display in slate */
-                            addPufFunction(assessmentDataMsg);
-                            /* Remove EventListener */
-                            window.removeEventListener("message", getMsgafterAddAssessment, false);
                         }                 
                         /* Update newly added Item */
                         else if (items[0] === "item") {
@@ -163,13 +163,12 @@ function getInteractivePostMsg(data){
     if (typeof data === "string") {
         const interactives = data?.split("|") ?? [];
         if (interactives?.length === 6 && interactives[0] === "interactive") {
-            const interactiveFromMsg = {
+            return {
                 id: interactives[1]?.split("_")[1],
                 elementUrn: interactives[2]?.split("_")[1],
                 title: interactives[3]?.split("_")[1],
                 interactiveType: interactives[4]?.split("_")[1]                               
             };
-            return interactiveFromMsg;
         }
     }  
 }

@@ -19,7 +19,7 @@ import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
 import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -75,6 +75,7 @@ class ElementSingleAssessment extends Component {
     }
 
     componentDidMount() {
+        console.log("componentDidMount = ",this.props.elementId);
         let title = this.props.model && getAssessmentTitle(this.props.model) != null ? getAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
         this.setState({
             assessmentTitle: title,
@@ -82,7 +83,6 @@ class ElementSingleAssessment extends Component {
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
             assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
             assessmentItemTitle: this.props.model && setAssessmentItemTitle(this.props.model)
-        
         })
         let newElement = localStorage.getItem('newElement');
         if (newElement) {
@@ -281,7 +281,11 @@ class ElementSingleAssessment extends Component {
     * @param pufObj - The object contains data about Elm/Learnosity Assessment
     */
     addPufAssessment = (pufObj, cb) => {
-        if(pufObj.elementUrn === this.props.elementId){
+         console.log("this.props.model = ",this.props.model)
+        console.log("pufObj.elementUrn = ",pufObj.elementUrn)
+        console.log("this.props.elementId = ",this.state.elementId)
+        if(pufObj.elementUrn === this.nextProps.elementId){
+            console.log("matched  = ");
             showTocBlocker();
             disableHeader(true);
             let usageTypeList = this.props?.assessmentReducer?.usageTypeListData
@@ -311,6 +315,10 @@ class ElementSingleAssessment extends Component {
             if (cb) {
                 cb();
             }
+            /* empty item data store(saved after getting post message from elm) after update call */
+            this.props.setNewItemFromElm({});
+        }else{
+            console.log("Not matched  = ");
         }
     }
 
@@ -515,6 +523,7 @@ class ElementSingleAssessment extends Component {
     }
 
     render() {
+        console.log("render elementId ="+this.props.elementId)
         const { model, index } = this.props;
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
@@ -568,7 +577,8 @@ const mapActionToProps = {
     fetchAssessmentMetadata: fetchAssessmentMetadata,
     updateAssessmentVersion: updateAssessmentVersion,
     saveAutoUpdateData: saveAutoUpdateData,
-    fetchAssessmentVersions: fetchAssessmentVersions
+    fetchAssessmentVersions: fetchAssessmentVersions,
+    setNewItemFromElm: setNewItemFromElm
 }
 
 export default connect(
