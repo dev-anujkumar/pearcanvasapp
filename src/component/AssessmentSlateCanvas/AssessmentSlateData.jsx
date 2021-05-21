@@ -18,6 +18,7 @@ import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from 
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
+import { handlePostMsgOnAddAssess } from '../../component/ElementContainer/AssessmentEventHandling';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
