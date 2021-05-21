@@ -268,7 +268,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
         figureDataObj = {
             "title": title,
-            "subtitle": "",
+            // "subtitle": "",
             "text": text ? text : "",
             "postertext": (hasCtaText.indexOf(currentElement.secondaryOption) !== -1) ? postertext  ? postertext.match(/<p>/g) ? postertext : `<p>${postertext}</p>` : "<p></p>" : "",
             "tableasHTML": tableAsHTML ? tableAsHTML : '',
