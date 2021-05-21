@@ -90,9 +90,9 @@ class ElementFigure extends Component {
 
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
 
-            let uniqID = imageData['id'] ? imageData['id'] : "";
-            let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-            let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+            let uniqID = imageData.id ? imageData.id : "";
+            let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
+            let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
             if (epsURL !== "") {
                 this.setState({ imgSrc: epsURL })
             } else {
