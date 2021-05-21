@@ -394,11 +394,17 @@ class ElementAudioVideo extends Component {
     renderAudioVideoType = (model,index,slateLockInfo) => {
         var audioVideoJSX;
         var assetPath;
-        let formattedLabel, formattedNumber, formattedTitle;
-        model.html.title = model.html.title.replace(/(\r\n|\n|\r)/gm, '');
-        formattedLabel = getTitleSubtitleModel(model.html.title, "formatted-title", "figure");
-        formattedNumber = getTitleSubtitleModel(model.html.title, "formatted-number", "figure");
-        formattedTitle = getTitleSubtitleModel(model.html.title, "formatted-subtitle", "figure");
+        let formattedLabel, formattedNumber, formattedTitle
+        if (model.html.hasOwnProperty('subtitle')) {  // to render old figure element 
+            formattedLabel = model.html.title;
+            formattedNumber = `<p class="paragraphNumeroUno"><br/></p>`;
+            formattedTitle = model.html.subtitle;    
+        } else {
+            model.html.title = model.html.title.replace(/(\r\n|\n|\r)/gm, '');
+            formattedLabel = getTitleSubtitleModel(model.html.title, "formatted-title", "figure");
+            formattedNumber = getTitleSubtitleModel(model.html.title, "formatted-number", "figure");
+            formattedTitle = getTitleSubtitleModel(model.html.title, "formatted-subtitle", "figure");
+        }
         switch (model.figuretype) {
             case AUDIO:
                 /**JSX for Audio-type element*/

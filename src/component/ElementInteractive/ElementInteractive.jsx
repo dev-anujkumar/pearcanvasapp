@@ -232,11 +232,18 @@ class Interactive extends React.Component {
         paragraphCredit = interactiveData['paragraphCredit'];
         hyperlinkClass = interactiveData['hyperlinkClass'] ? interactiveData['hyperlinkClass'] : "";
 
+
         let formattedLabel, formattedNumber, formattedTitle
-        element.html.title = element.html.title.replace(/(\r\n|\n|\r)/gm, '');
-        formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure");
-        formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure");
-        formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure");
+        if (element.html.hasOwnProperty('subtitle')) {  // to render old figure element 
+            formattedLabel = element.html.title
+            formattedNumber = `<p class="paragraphNumeroUno"><br/></p>`;
+            formattedTitle = element.html.subtitle;    
+        } else {
+            element.html.title = element.html.title.replace(/(\r\n|\n|\r)/gm, '');
+            formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure");
+            formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure");
+            formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure");
+        }
 
         if(context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
             jsx = <div className={divImage} resource="">
