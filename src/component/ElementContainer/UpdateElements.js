@@ -74,6 +74,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         previousElementData.figuredata.podwidth = podwidth ? (podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`) : ''
     }  
 
+    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
 
     let data = {
         ...previousElementData,
@@ -161,6 +162,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         if('posterimage' in previousElementData.figuredata && typeof(previousElementData.figuredata.posterimage)!=="object"){
             delete previousElementData.figuredata.posterimage;
         }
+    
+    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
 
     let data = {
         ...previousElementData,
@@ -276,6 +279,8 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
         creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
 
+    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
+
     let data = {
         ...previousElementData,
         title :{
@@ -368,6 +373,8 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
     captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
     creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
+
+    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
 
     let data = {
         ...previousElementData,
