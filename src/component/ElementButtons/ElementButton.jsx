@@ -217,7 +217,7 @@ class ElementButton extends Component {
                 buttonJSX = <span className="btn-element power-paste-icon" onClick={clickHandlerFn}><img src={powerPasteIcon} /></span>
                 break;
             case ButtonTypes.ALFRESCO_METADATA:
-                buttonJSX = <span className= {`btn-element alfresco-metadata-icon ${btnClassName}`} onClick={clickHandlerFn} title="Open in Alfresco" ><img src={alfrescoMetadata} /></span>
+                buttonJSX = <span className= {`btn-element alfresco-metadata-icon ${btnClassName}`} onClick={clickHandlerFn} ><img src={alfrescoMetadata} /></span>
                 break;
             case ButtonTypes.STAGE_DIRECTION:
                     buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
