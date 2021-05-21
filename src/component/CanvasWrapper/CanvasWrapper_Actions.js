@@ -52,7 +52,14 @@ export const findElementType = (element, index) => {
                 if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
                     elementType['primaryOption'] = elementDataBank["element-authoredtext-heading"]["primaryOption"];
                     elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
-                } else {
+                } else if (element && element.elementdata && element.elementdata.designtype) {
+                    const designType = element.elementdata.designtype;
+                    if(designType === 'handwritingstyle') {
+                        elementType['primaryOption'] = elementDataBank["element-authoredtext-handwriting"]["primaryOption"];
+                        elementType['secondaryOption'] = elementDataBank["element-authoredtext-handwriting"]["secondaryOption"];
+                    }
+                } 
+                else {
                     elementType['primaryOption'] = elementDataBank[element.type]["primaryOption"];
                     elementType['secondaryOption'] = elementDataBank[element.type]["secondaryOption"];
                 }
