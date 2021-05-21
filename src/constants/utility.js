@@ -183,7 +183,7 @@ export const getTitleSubtitleModel = (model, modelType, modelElement = "popup") 
             modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
         }
     }
-    return modelToReturn
+    return modelToReturn;
 }
 
 /**

@@ -347,12 +347,13 @@ class ElementFigure extends Component {
         var figureJsx;
 
         let formattedLabel, formattedNumber, formattedTitle
+        
         model.html.title = model.html.title.replace(/(\r\n|\n|\r)/gm, '');
         formattedLabel = getTitleSubtitleModel(model.html.title, "formatted-title", "figure");
         formattedNumber = getTitleSubtitleModel(model.html.title, "formatted-number", "figure");
         formattedTitle = getTitleSubtitleModel(model.html.title, "formatted-subtitle", "figure");
 
-        // console.log("formattedLabel, formattedNumber, formattedTitle", formattedLabel, formattedNumber, formattedTitle)
+        console.log("formattedLabel, formattedNumber, formattedTitle", formattedLabel, formattedNumber, formattedTitle)
         
         if (model && model.figuretype === 'authoredtext') {
             let posterText = model.html.text
