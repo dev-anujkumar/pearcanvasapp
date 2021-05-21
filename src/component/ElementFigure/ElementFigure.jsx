@@ -347,12 +347,16 @@ class ElementFigure extends Component {
         var figureJsx;
 
         let formattedLabel, formattedNumber, formattedTitle
-        
-        model.html.title = model.html.title.replace(/(\r\n|\n|\r)/gm, '');
-        formattedLabel = getTitleSubtitleModel(model.html.title, "formatted-title", "figure");
-        formattedNumber = getTitleSubtitleModel(model.html.title, "formatted-number", "figure");
-        formattedTitle = getTitleSubtitleModel(model.html.title, "formatted-subtitle", "figure");
-
+        if (model.html.hasOwnProperty('subtitle')) {  // to render old figure element 
+            formattedLabel = model.html.title;
+            formattedNumber = `<p class="paragraphNumeroUno"><br/></p>`;
+            formattedTitle = model.html.subtitle;    
+        } else {
+            model.html.title = model.html.title.replace(/(\r\n|\n|\r)/gm, '');
+            formattedLabel = getTitleSubtitleModel(model.html.title, "formatted-title", "figure");
+            formattedNumber = getTitleSubtitleModel(model.html.title, "formatted-number", "figure");
+            formattedTitle = getTitleSubtitleModel(model.html.title, "formatted-subtitle", "figure");
+        }
         console.log("formattedLabel, formattedNumber, formattedTitle", formattedLabel, formattedNumber, formattedTitle)
         
         if (model && model.figuretype === 'authoredtext') {
