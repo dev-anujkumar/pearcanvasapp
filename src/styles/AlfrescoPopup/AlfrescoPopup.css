@@ -42,8 +42,9 @@
 background-color: #f7f7f7 !important;
 }
 .MuiFormLabel-root{
-    color: black !important;
+    color: #000000bf !important;
     font-size: 14px !important;
+    font-weight: 600 !important;
 }
 .MuiSelect-icon{
     color: black !important;
@@ -85,12 +86,12 @@ background-color: #f7f7f7 !important;
     width: 6px;
   }
 .MuiMenu-paper::-webkit-scrollbar-thumb {
-    background-color: #005a70;
-    width: 6px;
-    height: 80px;
+    background-color: #00000096 !important;
     margin: 0 4px 36px 0;
-    opacity: 0.65;
     border-radius: 3px;
+  }
+  .MuiMenu-paper::-webkit-scrollbar{
+      width: 8px !important;
   }
   .small-title {
     color: #858585;
@@ -100,6 +101,19 @@ background-color: #f7f7f7 !important;
   }
   .dropdown-items {
     font-size: 15px;
-    font-weight: 500;
+    font-weight: bold;
     font-family: 'Open Sans', sans-serif;
+  }
+
+  .MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded{
+    top: 358px !important;
+  }
+  .MuiListItem-button:hover{
+      background-color: #f3f7f8 !important;
+  }
+  .MuiInputLabel-filled.MuiInputLabel-shrink{
+    transform: translate(10px, 14px) !important;
+  }
+  .MuiSelect-iconFilled{
+      font-size: 24px !important;
   }
