@@ -5,6 +5,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -24,7 +26,21 @@ const useStyles = makeStyles((theme) => ({
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
+    dropdownItem: {
+        height: '40px',
+        width: '350px',
+        fontWeight: '500'
+    }
 }));
+
+const MenuProps = {
+    PaperProps: {
+      style: {
+        width: 360,
+        height: 208
+      },
+    },
+  };
 
 function AlfrescoPopup(props) {
     const [open, setOpen] = React.useState(true);
@@ -99,7 +115,7 @@ function AlfrescoPopup(props) {
                 <DialogTitle id="alert-dialog-title">{"Select Alfresco Site"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Location in Alfresco
+                        <span className='small-title'>Location in Alfresco</span>
                     </DialogContentText>
                 </DialogContent>
                 <FormControl variant="filled" className={classes.formControl}>
@@ -107,14 +123,18 @@ function AlfrescoPopup(props) {
                         <InputLabel id="filled-age-native-simple">Select One</InputLabel>
                     }
                     <Select
-                        native
                         value={selectedOption}
                         onChange={handleChange}
                         labelId="filled-age-native-simple"
+                        IconComponent={ExpandMoreIcon}
+                        MenuProps={MenuProps}
                     >
-                        <option aria-label="None" value="" />
                         {props.alfrescoListOption.map((values, index) => (
-                            <option key={index} value={values.entry.id}>{values.entry.id}</option>
+                        <MenuItem 
+                            key={index} 
+                            value={values.entry.id}
+                            className={classes.dropdownItem}
+                        ><span className='dropdown-items'>{values.entry.id}</span></MenuItem>
                         ))}
                     </Select>
                 </FormControl>
