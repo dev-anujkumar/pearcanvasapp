@@ -14,20 +14,20 @@ import axios from 'axios';
 import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
-import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx';
 import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData, assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import {resetElmStore} from '../AssessmentSlateCanvas/elm/Actions/ElmActions.js';
 import { connect } from 'react-redux';
 import { sendDataToIframe } from './../../constants/utility.js';
 import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA } from '../../constants/Element_Constants.js';
 import interactiveTypeData from './interactiveTypes.js';
-import { ELM_INT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
+import { setNewItemFromElm, fetchAssessmentMetadata, fetchAssessmentVersions, updateAssessmentVersion, setElmPickerData } from "../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js"
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx';
-import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
+import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, ELM_INT,Resource_Type } from "../AssessmentSlateCanvas/AssessmentSlateConstants.js"
 import PopUp from '../PopUp';
+import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } from '../../constants/IFrameMessageTypes';
+import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -52,7 +52,6 @@ class Interactive extends React.Component {
             itemParentID: this.props.model.figuredata && this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
             openedFrom:'',
             interactiveTitle: this.props.model.figuredata && this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
-            showElmComponent:false,
             showUpdatePopup:false
            };
 
@@ -85,12 +84,24 @@ class Interactive extends React.Component {
     }
 
    componentDidUpdate() { 
-       const { assessmentReducer } = this.props;
+       const { assessmentReducer, model } = this.props;
        const { itemID, interactiveTitle } = this.state;
-       if (!config.savingInProgress && !config.isSavingElement && (this.props?.model?.figuredata?.interactiveformat === ELM_INT) && (itemID && assessmentReducer && assessmentReducer[itemID])) {
-           const newPropsTitle = assessmentReducer[itemID].assessmentTitle;
-           if ((assessmentReducer[itemID].showUpdateStatus == false && (interactiveTitle != newPropsTitle))) {
-            this.updateElmOnSaveEvent(this.props);
+       const isElmInteractive = model?.figuredata?.interactiveformat === ELM_INT ? true : false
+       if (!config.savingInProgress && !config.isSavingElement && (isElmInteractive) && assessmentReducer) {
+           const { dataFromElm } = assessmentReducer;
+           if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elementUrn === this.props.model?.id) {
+               if (dataFromElm?.type == ELM_CREATE_IN_PLACE && dataFromElm.elmUrl) {
+                   window.open(dataFromElm.elmUrl);
+                   handlePostMsgOnAddAssess(this.addElmInteractive, dataFromElm.usageType);
+               } else if (dataFromElm?.type == SAVE_ELM_DATA && dataFromElm.pufObj) {
+                   this.addElmInteractive(dataFromElm.pufObj);
+               }
+               this.props.setElmPickerData({});
+           } else if ((itemID && assessmentReducer[itemID])) {
+               const newPropsTitle = assessmentReducer[itemID]?.assessmentTitle;
+               if ((assessmentReducer[itemID].showUpdateStatus === false && (interactiveTitle !== newPropsTitle))) {
+                   this.updateElmOnSaveEvent(this.props);
+               }
            }
        }
    }
@@ -352,15 +363,17 @@ class Interactive extends React.Component {
                 });
             }
         }
-        else if (this.props.model.figuredata.interactiveformat===ELM_INT){
-            this.setState({
-                showElmComponent: true
-            })
-            sendDataToIframe({ 'type': 'hideToc', 'message': {} });
-            showTocBlocker(true);
-            disableHeader(true);
-            this.props.showBlocker(true);
-            this.props.handleFocus();
+        else if (this.props.model.figuredata.interactiveformat === ELM_INT) {
+            sendDataToIframe({
+                'type': TOGGLE_ELM_SPA,
+                'message': {
+                    type: OPEN_ELM_PICKER,
+                    usageType: '',
+                    elementType: ELM_INT,
+                    resourceType: Resource_Type.INTERACTIVE,
+                    elementUrn: this.props.model.id
+                }
+            });
         }
         else {
             this.props.showBlocker(value);
@@ -372,16 +385,6 @@ class Interactive extends React.Component {
     }
 
     /**---------------- This section consists of Elm Interactive related methods ----------------*/
-    /*** @description This function is to close ELM PopUp */
-    closeElmWindow = () => {
-        this.setState({
-            showElmComponent: false
-        });
-        hideTocBlocker(false);
-        disableHeader(false);
-        this.props.showBlocker(false);
-        this.props.resetElmStore();
-    }
 
     /**
      * @description This function is to add Elm Interactive Asset ot Interactive Element 
@@ -763,7 +766,6 @@ class Interactive extends React.Component {
                             {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                             {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                             {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
-                            {this.state.showElmComponent? <RootElmComponent activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} elementType={model.figuretype} elementId={this.props.elementId}/> : ''}
                         </div>
                         {this.state.showUpdatePopup && this.showCustomPopup()}
                     </>
@@ -804,7 +806,8 @@ const mapActionToProps = {
     setNewItemFromElm: setNewItemFromElm,
     fetchAssessmentMetadata: fetchAssessmentMetadata,
     fetchAssessmentVersions: fetchAssessmentVersions,
-    updateAssessmentVersion: updateAssessmentVersion
+    updateAssessmentVersion: updateAssessmentVersion,
+    setElmPickerData: setElmPickerData
 }
 
 const mapStateToProps = (state) => {
