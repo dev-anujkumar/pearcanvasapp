@@ -12,6 +12,18 @@ export default {
                 }
             }
         },
+        'primary-handwriting': {
+            text: 'Handwriting',
+            enum: 'HS',
+            toolbar: ['insertMedia'],
+            subtype: {
+                'subtype-handwriting': {
+                    text: 'Handwriting',
+                    labelText: 'HS',
+                    enum: 'NA'
+                },
+            }
+        },
         'primary-heading': {
             text: 'Headings',
             enum: 'HEADERS',
@@ -879,6 +891,5 @@ export default {
                 }
             }
         } 
-    },
-    
+    }, 
 };
