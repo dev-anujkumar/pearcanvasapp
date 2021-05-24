@@ -284,8 +284,6 @@ class ElementSingleAssessment extends Component {
     * @param pufObj - The object contains data about Elm/Learnosity Assessment
     */
     addPufAssessment = (pufObj, cb) => {
-        showTocBlocker();
-        disableHeader(true);
         let usageTypeList = this.props?.assessmentReducer?.usageTypeListData
         if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
             const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.usagetype == pufObj.usagetype)

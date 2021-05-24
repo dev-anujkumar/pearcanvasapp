@@ -282,6 +282,7 @@ function CommunicationChannel(WrappedComponent) {
             } else {
                 this.props.setElmPickerData({})
             }
+            hideBlocker();
         }
 
         /**
