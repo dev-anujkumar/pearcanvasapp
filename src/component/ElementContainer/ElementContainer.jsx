@@ -1856,7 +1856,8 @@ class ElementContainer extends Component {
                 projDURN: config.projectUrn,
                 containerURN: config.slateManifestURN,
                 assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
-                interactiveId: isInteractive ? element.figuredata.interactiveid : ""
+                interactiveId: isInteractive ? element.figuredata.interactiveid : "",
+                elementId: this.props?.element?.id
             }
             handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
             this.props.openElmAssessmentPortal(dataToSend);
