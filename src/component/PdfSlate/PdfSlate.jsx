@@ -18,7 +18,6 @@ class PdfSlate extends Component {
 			pdfId: "",
 			filetitle: "",
 			path: "",
-			alfrescoSiteData: {}
 		}
 	}
 
@@ -111,13 +110,22 @@ class PdfSlate extends Component {
 	
 	render(){
 		return(
-			<div className="AssessmentSlateCanvas div-position-relative">
+			<div className="AssessmentSlateCanvas div-position-relative pdf-slate">
 				<PdfSlateComponent 
 					showDetails = {this.state.showDetails}
 					pdfId = {this.state.pdfId}
 					filetitle = {this.state.filetitle}
 					OpenAlfresco = {this.OpenAlfresco}
 				/>
+				<TinyMceEditor
+                    slateLockInfo={this.props.slateLockInfo}
+                    handleBlur={this.props.handleBlur}
+                    model={this.props.element}
+                    handleEditorFocus={this.props.handleFocus}
+                    className="addLOdata"
+                    permissions={this.props.permissions}
+                    element={this.props.element}
+                />
 			</div>
 		)
 	}

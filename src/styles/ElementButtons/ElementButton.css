@@ -212,3 +212,10 @@
 .editor.searched > div > .btn-element.add-comment {
     background-color: #ff9b19;
 }
+.btn-element.alfresco-metadata-icon{
+    padding: 0;
+}
+.btn-element.alfresco-metadata-icon img{
+    padding: 2px 2px 0 2px;
+    width: 19px;
+}
