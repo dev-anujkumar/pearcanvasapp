@@ -388,33 +388,35 @@ class Interactive extends React.Component {
      * @param {Object} pufObj Objeact containing elmInteractive Asset details
     */
     addElmInteractive = (pufObj, cb) => {
-        showTocBlocker();
-        disableHeader(true);
+        if(pufObj.elementUrn === this.props.elementId){
+            showTocBlocker();
+            disableHeader(true);
 
-        let figureData = {
-            schema: INTERACTIVE_SCHEMA,
-            interactiveid: pufObj.id,
-            interactivetype: pufObj.interactiveType,
-            interactivetitle: pufObj.title,
-            interactiveformat: ELM_INT
-        }
-        this.setState({
-            itemID: pufObj.id,
-            interactiveTitle: pufObj.title,
-            elementType: pufObj.interactiveType
-        }, () => {
-            this.props.fetchAssessmentMetadata("interactive", "",{ targetId: pufObj.id });
-        })
-        this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
-            this.props.handleFocus("updateFromC2");
-            this.props.handleBlur();
-        })
-        if(pufObj.callFrom === "fromEventHandling"){
-            hideTocBlocker();
-            disableHeader(false);
-        }
-        if (cb) {
-            cb();
+            let figureData = {
+                schema: INTERACTIVE_SCHEMA,
+                interactiveid: pufObj.id,
+                interactivetype: pufObj.interactiveType,
+                interactivetitle: pufObj.title,
+                interactiveformat: ELM_INT
+            }
+            this.setState({
+                itemID: pufObj.id,
+                interactiveTitle: pufObj.title,
+                elementType: pufObj.interactiveType
+            }, () => {
+                this.props.fetchAssessmentMetadata("interactive", "",{ targetId: pufObj.id });
+            })
+            this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
+                this.props.handleFocus("updateFromC2");
+                this.props.handleBlur();
+            })
+            if(pufObj.callFrom === "fromEventHandling"){
+                hideTocBlocker();
+                disableHeader(false);
+            }
+            if (cb) {
+                cb();
+            }
         }
     }
 
@@ -761,7 +763,7 @@ class Interactive extends React.Component {
                             {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                             {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                             {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
-                            {this.state.showElmComponent? <RootElmComponent activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} elementType={model.figuretype}/> : ''}
+                            {this.state.showElmComponent? <RootElmComponent activeAssessmentType={model.figuredata.interactiveformat} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addElmInteractive} elementType={model.figuretype} elementId={this.props.elementId}/> : ''}
                         </div>
                         {this.state.showUpdatePopup && this.showCustomPopup()}
                     </>

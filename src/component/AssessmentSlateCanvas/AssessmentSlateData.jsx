@@ -18,6 +18,7 @@ import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_U
 import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions } from './AssessmentActions/assessmentActions.js';
+import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -198,6 +199,7 @@ class AssessmentSlateData extends Component {
         this.props.addPufAssessment(dataToSend, this.state.activeAssessmentType, 'insert');
         const elmData = { targetId: pufObj.id }
         this.props.checkElmAssessmentStatus('assessment', 'fromAddElm', elmData, {});
+        handlePostMsgOnAddAssess("", "", "", "remove");
     }
 
     /*** @description This function is used to open Version update Popup */
@@ -489,7 +491,7 @@ class AssessmentSlateData extends Component {
         let slatePlaceholder = assessmentSlateObj && activeAssessmentType && this.setAssessmentPlaceholder(activeAssessmentType, assessmentSlateObj)
         let assessmentSlateJSX;
         if ((activeAssessmentType === PUF || activeAssessmentType === LEARNOSITY) && showElmComponent === true) {
-            return <RootElmComponent activeAssessmentType={activeAssessmentType} closeElmWindow={() => this.closeElmWindow()} activeUsageType={activeAssessmentUsageType} elementType={'assessment'} addPufFunction={this.addPufAssessment}/>
+            return <RootElmComponent activeAssessmentType={activeAssessmentType} closeElmWindow={() => this.closeElmWindow()} activeUsageType={activeAssessmentUsageType} elementType={'assessment'} addPufFunction={this.addPufAssessment} elementId={this.props?.elementId}/>
         } else if ((activeAssessmentType === CITE || activeAssessmentType === TDX) && showCiteTdxComponent === true) {
             return <RootCiteTdxComponent openedFrom={'slateAssessment'} closeWindowAssessment={() => this.closeWindowAssessment()} assessmentType={activeAssessmentType} addCiteTdxFunction={this.addCiteTdxAssessment} usageTypeMetadata={activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} setCiteTdxFilterData={this.setCiteTdxFilterData} assessmentSlateObj={assessmentSlateObj}/>
         } else if (changeLearningData && activeAssessmentType === LEARNING_TEMPLATE) {
