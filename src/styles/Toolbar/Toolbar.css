@@ -272,6 +272,10 @@ span.answerLineContent {
 .tox .tox-tbtn--enabled :not(svg) {
   fill: #005a70!important;
 }
+.tox.tox-tinymce-aux:not([dir=rtl]) .tox-toolbar__overflow{
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+  border-radius: 0;
+}
 .tox .tox-tbtn:hover:not(.tox-tbtn--disabled) {
   background: none!important;
 }
