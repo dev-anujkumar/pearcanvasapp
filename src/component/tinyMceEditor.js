@@ -1768,6 +1768,8 @@ export class TinyMceEditor extends Component {
             case "element-authoredtext":
                 if (element.elementdata.headers)
                     return `Heading ${element.elementdata.headers[0].level}`
+                else if(element?.elementdata?.designtype === 'handwritingstyle') 
+                    return 'Handwriting'
                 else
                     return "Paragraph"
             case "element-blockfeature":
