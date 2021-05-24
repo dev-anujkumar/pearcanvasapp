@@ -133,7 +133,6 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
  */
 export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
     let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn, interactiveId, elementId } = assessmentData
-    console.log("elementId = "+elementId);
     let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     if (assessmentItemWorkUrn.trim() != "") {
         url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
@@ -142,7 +141,6 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
     }
     /* Append Element id in url to identify post messages for which element, if exist */
     url = elementId ? `${url}&elementUrn=${elementId}` : url;
-    console.log("openElmAssessmentPortal url = "+url);
     try {
         let elmWindow = window.open(url);
         if (elmWindow.closed) {
