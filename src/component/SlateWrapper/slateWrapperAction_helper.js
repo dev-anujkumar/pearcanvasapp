@@ -138,7 +138,6 @@ export const onPasteSuccess = async (params) => {
             index,
             elmFeedback: feedback
         }
-
         await handleTCMSnapshotsForCreation(snapArgs, operationType)
     }
     /**---------------------------------------------------------------------------------------------------*/
@@ -254,8 +253,12 @@ export const handleTCMSnapshotsForCreation = async (params, operationType = null
     const containerElement = {
         asideData: asideData,
         parentUrn: parentUrn,
-        poetryData: poetryData
+        poetryData: poetryData,
     };
+    if(responseData.type==="popup" && responseData.popupdata['formatted-title']){
+        containerElement.parentElement = responseData;
+        containerElement.metaDataField = "formattedTitle";
+    }
     const slateData = {
         currentParentData: newParentData,
         bodymatter: currentSlateData.contents.bodymatter,
@@ -320,7 +323,7 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             break;
         case slateWrapperConstants.POP_UP:
             elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
-            elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
+            createdElementData.popupdata.bodymatter.length>0 && elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
             break;
         case slateWrapperConstants.SHOW_HIDE:
             elmUrn = getShowhideChildUrns(createdElementData)
