@@ -21,6 +21,7 @@ import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js'
 import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
+import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
 class ElementSingleAssessment extends Component {
@@ -75,7 +76,6 @@ class ElementSingleAssessment extends Component {
     }
 
     componentDidMount() {
-        console.log("componentDidMount = ",this.props.elementId);
         let title = this.props.model && getAssessmentTitle(this.props.model) != null ? getAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
         this.setState({
             assessmentTitle: title,
@@ -281,11 +281,7 @@ class ElementSingleAssessment extends Component {
     * @param pufObj - The object contains data about Elm/Learnosity Assessment
     */
     addPufAssessment = (pufObj, cb) => {
-         console.log("this.props.model = ",this.props.model)
-        console.log("pufObj.elementUrn = ",pufObj.elementUrn)
-        console.log("this.props.elementId = ",this.state.elementId)
-        if(pufObj.elementUrn === this.nextProps.elementId){
-            console.log("matched  = ");
+        if(pufObj.elementUrn === this.props.elementId){
             showTocBlocker();
             disableHeader(true);
             let usageTypeList = this.props?.assessmentReducer?.usageTypeListData
@@ -317,8 +313,7 @@ class ElementSingleAssessment extends Component {
             }
             /* empty item data store(saved after getting post message from elm) after update call */
             this.props.setNewItemFromElm({});
-        }else{
-            console.log("Not matched  = ");
+            handlePostMsgOnAddAssess("", "", "", "remove");
         }
     }
 
@@ -523,7 +518,6 @@ class ElementSingleAssessment extends Component {
     }
 
     render() {
-        console.log("render elementId ="+this.props.elementId)
         const { model, index } = this.props;
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>

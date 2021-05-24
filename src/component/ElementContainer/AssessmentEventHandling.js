@@ -7,6 +7,7 @@ import { releaseSlateLockWithCallback, getSlateLockStatus } from '../CanvasWrapp
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { updateElmItemData, setItemUpdateEvent, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { ASSESSMENT_PICKER_OPENERS } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 /**
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
@@ -35,8 +36,6 @@ export const handleElmPortalEvents = (action = 'add') => {
                     /* To edit interactive using edit button */
                     const intObj = getInteractivePostMsg(data)
                     if(intObj?.id && intObj.title && intObj.interactiveType) {
-                        /* save item data into store */
-                        //store.dispatch(setNewItemFromElm(intObj));
                         handleRefreshSlate(store.dispatch);
                     }
                 }
@@ -90,49 +89,25 @@ export const prepareItemMetadata = (eventData) =>{
 }
 
 /* update on getting message form elm portal */
-export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
+export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action) => {
     let slateLockInfo = store.getState()?.slateLockReducer?.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         const getMsgafterAddAssessment = async (event) => {
             try {
                 const { data = {} } = event;
-                console.log("data = ",data);
-                /* Get the data from store */
+                /* Get the item data from store */
                 const itemData = store.getState().assessmentReducer?.item ?? {};
-
+                /* Get Assessment data from Post message */
                 if (data.source === "elm") {                  
                     const items = data.type?.split("|") ?? []; 
                     if(items.length >= 4){                  
-                        /* Update newly added assessment */
+                        /* Update newly added Assessment */
                         if (items[0] === "assessment") {
-                            let assessmentDataMsg = {
-                                id: items[1]?.split("_")[1],
-                                elementUrn: items[2]?.split("_")[1],
-                                title: items[3]?.split("_")[1],
-                                usagetype: items[4]?.split("_")[1] || usagetype, 
-                                calledFrom:'createElm'
-                            };
-                            const { elementUrn, itemid, itemTitle } = itemData || {};
-                            if((assessmentDataMsg.elementUrn === elementUrn) && itemid && itemTitle){
-                                assessmentDataMsg = { ...assessmentDataMsg, ...itemData };
-                                /* empty store after item data updated */
-                                console.log("assessmentDataMsg = ",assessmentDataMsg);
-                                /**@function to update data display in slate */
-                                addPufFunction(assessmentDataMsg);
-                                /* Remove EventListener */
-                                window.removeEventListener("message", getMsgafterAddAssessment, false);
-                            }
-                        }                 
-                        /* Update newly added Item */
+                            getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment);
+                        }
+                        /* Get newly added Item from post messages */
                         else if (items[0] === "item") {
-                            const itemDataFromMsg = {
-                                itemid: items[1]?.split("_")[1],
-                                elementUrn: items[2]?.split("_")[1],
-                                itemTitle: items[3]?.split("_")[1],
-                                calledFrom:'createElm'                               
-                            };
-                            /* save item data into store */
-                            store.dispatch(setNewItemFromElm(itemDataFromMsg));
+                            getAssessmentItemPostMsg(items);
                         }
                     }                
                 } else {
@@ -142,8 +117,6 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
                         /**@function to update data display in interactive  */
                         intObj.callFrom = "fromEventHandling";
                         addPufFunction(intObj);
-                        /* Remove EventListener */
-                        //window.removeEventListener("message", getMsgafterAddAssessment, false);
                     }
                 }  
                 if(action === "remove"){
@@ -171,4 +144,40 @@ function getInteractivePostMsg(data){
             };
         }
     }  
+}
+/* get assessment items data from post message */
+function getAssessmentItemPostMsg(items){
+    const itemDataFromMsg = {
+        itemid: items[1]?.split("_")[1],
+        elementUrn: items[2]?.split("_")[1],
+        itemTitle: items[3]?.split("_")[1],
+        calledFrom:'createElm'                               
+    };
+    /* save item data into store */
+    store.dispatch(setNewItemFromElm(itemDataFromMsg));
+}
+/* get Assessment data from post message and send to server */
+function getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment){
+    /* Single Assessment - get data form post messages and update the server */
+    let assessmentDataMsg = {
+        id: items[1]?.split("_")[1],
+        elementUrn: items[2]?.split("_")[1],
+        title: items[3]?.split("_")[1],
+        usagetype: items[4]?.split("_")[1] || usagetype, 
+        calledFrom:'createElm'
+    };
+    const { elementUrn, itemid, itemTitle } = itemData || {};
+    if((assessmentDataMsg.elementUrn === elementUrn) && itemid && itemTitle) {
+        assessmentDataMsg = { ...assessmentDataMsg, ...itemData };
+        /**@function to update data to server by api call */
+        addPufFunction(assessmentDataMsg);
+        /* Remove EventListener */
+        window.removeEventListener("message", getMsgafterAddAssessment, false);
+
+    /* Full Assessment - get data form post messages and update the server */
+    } else if(type === ASSESSMENT_PICKER_OPENERS.FULL_ASSESSMENT) {
+        addPufFunction(assessmentDataMsg);
+        /* Remove EventListener */
+        window.removeEventListener("message", getMsgafterAddAssessment, false);
+    }
 }
