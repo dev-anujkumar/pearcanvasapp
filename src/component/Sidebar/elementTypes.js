@@ -728,6 +728,7 @@ export default {
             text: 'Pop up window',
             toolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent','alignment'],
             dropdownDisabled: true,
+            enum:'POP_UP',
             subtype: {
                 'secondary-popup': {
                     text: 'Pop up window',

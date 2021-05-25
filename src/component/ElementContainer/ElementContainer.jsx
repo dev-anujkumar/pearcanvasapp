@@ -185,7 +185,7 @@ class ElementContainer extends Component {
             config.releaseCallCount += 1
         }
         handleElmPortalEvents('remove');/** Remove Elm-Assessment Update eventListener */
-        handlePostMsgOnAddAssess("", "", "remove")
+        handlePostMsgOnAddAssess("", "", "", "remove")
     }
 
     componentWillReceiveProps(newProps) {
@@ -1856,7 +1856,8 @@ class ElementContainer extends Component {
                 projDURN: config.projectUrn,
                 containerURN: config.slateManifestURN,
                 assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
-                interactiveId: isInteractive ? element.figuredata.interactiveid : ""
+                interactiveId: isInteractive ? element.figuredata.interactiveid : "",
+                elementId: this.props?.element?.id
             }
             handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
             this.props.openElmAssessmentPortal(dataToSend);
