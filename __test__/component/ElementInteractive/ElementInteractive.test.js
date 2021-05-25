@@ -1209,7 +1209,7 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         expect(elementInteractiveInstance.state.interactiveTitle).toBe(pufObj.title)
         expect(elementInteractiveInstance.state.elementType).toBe(pufObj.interactiveType)
     })
-    xit("Test - togglePopup -elminteractive", () => {
+    it("Test - togglePopup -elminteractive", () => {
         const spytogglePopup = jest.spyOn(elementInteractiveInstance, 'togglePopup')
         const e = {
             target: {
@@ -1222,7 +1222,7 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         elementInteractiveInstance.forceUpdate();
         component.update();
         expect(spytogglePopup).toHaveBeenCalledWith(e, true)
-        expect(elementInteractiveInstance.state.showElmComponent).toBe(true)
+        expect(elementInteractiveInstance.props.model.figuredata.interactiveformat).toBe('mmi-elm')
         spytogglePopup.mockClear()
     })
     it('Test - 4 - toggleUpdatePopup function', () => {
@@ -1304,7 +1304,7 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         })     
     })
     xit('Test - 8 - updateElmOnSaveEvent', () => {
-        const intInstance = interactiveInstance(props);
+        const intInstance = interactiveInstance({...props, model:{...interactiveElm, id:"123"}});
         intInstance.setState({
             itemID: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
             elementType: "elm-int"
