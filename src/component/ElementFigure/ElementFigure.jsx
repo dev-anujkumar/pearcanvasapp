@@ -63,9 +63,9 @@ class ElementFigure extends Component {
 
     updateAlfrescoSiteUrl = () => {
         let repositoryData = this.state.alfrescoSiteData
-        if(repositoryData?.repositoryFolder){
+        if(repositoryData?.title){
             this.setState({
-                alfrescoSite: repositoryData.repositoryFolder
+                alfrescoSite: repositoryData.title
             })  
         }else {
             this.setState({
@@ -183,9 +183,13 @@ class ElementFigure extends Component {
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                let alfrescoLocationData = this.state.alfrescoSiteData
                 let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
-                let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
-                    citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                alfrescoSiteName = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
+                let nodeRefs = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
+                nodeRefs = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : nodeRefs;
+                let messageObj = { citeName: alfrescoLocationData?.siteId ? alfrescoLocationData.siteId : alfrescoSiteName, 
+                    citeNodeRef: nodeRefs, 
                     elementId: this.props.elementId }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
             }
