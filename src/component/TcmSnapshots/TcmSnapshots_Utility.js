@@ -67,6 +67,19 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     let elementId = {
         parentId:  wipData.id
     }
+    /* Add WE/Aside inside 2C */
+    const { asideData, parentUrn } = containerElement;
+    const { id, columnId, columnName } = asideData?.parent || {};
+    if(wipData.type === ELEMENT_ASIDE && parentUrn?.elementType === "group") {
+        /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
+        const gId = asideData?.id || parentUrn?.mcId;
+        tag.grandParent = "2C:" + parentUrn?.columnName;
+        elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`;
+    /* Add section Break inside 2C->WE */
+    } else if(type === SECTION_BREAK && asideData?.parent?.type === "groupedcontent"){
+        tag.grandParent = "2C:" + columnName;
+        elementId.grandParentId = `${id}+${columnId}`;
+    }
     /* Initial snapshotsData of elements*/
     let snapshotsData = {
         tag: tag,
@@ -169,6 +182,7 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
             elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer,slateManifestVersioning, isPopupSlate);
+            console.log("elementDetails = ",elementDetails);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
         else if (item.type === SHOWHIDE) {
@@ -580,6 +594,10 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
     if(eleIndex > -1){
         elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
+    }
+    if(tag.grandParent && eleId.grandParentId){
+        elementTag =  `${tag.grandParent}:${elementTag}`
+        elementId = `${eleId.grandParentId}+${elementId}`
     }
     if (parentElement?.element?.type === SHOWHIDE) {    //showhide
         let showHideSection = getShowHideTag(parentElement.showHideType)

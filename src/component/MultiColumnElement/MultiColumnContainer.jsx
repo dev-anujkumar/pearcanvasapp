@@ -173,7 +173,8 @@ class MultiColumnContainer extends PureComponent {
                 columnIndex: columnIndex,
                 manifestUrn: _containerId,
                 contentUrn: group.contentUrn,
-                elementType: _containerType
+                elementType: _containerType,
+                mcId: this.context?.element?.id, /* Will be used in tcm snapshot -2c->we */
             }
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
