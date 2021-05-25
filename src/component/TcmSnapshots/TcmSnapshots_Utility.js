@@ -368,7 +368,7 @@ export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerE
     let elementDetails;
     const { parentElement, metaDataField, CurrentSlateStatus, isMetaFieldExist } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
-    let wipDataTitle = calledFrom == 'delete' ? wipData.popupdata['formatted-title'] : wipData  // delete Whole pop case handling
+    let wipDataTitle = calledFrom == 'delete'|| calledFrom == 'create' ? wipData.popupdata['formatted-title'] : wipData  // delete Whole pop case handling
     elementId.parentId = parentElement.id;
     elementId.childId = wipData.type === POPUP_ELEMENT ? wipData.popupdata['formatted-title'] && wipData.popupdata['formatted-title'].id : wipData.id;; // delete Whole pop case handling
 
@@ -410,10 +410,13 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index
  * @param {String} type - type of element
 */
 export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type,index) => {
-    const { metaDataField, sectionType } = containerElement
-    if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
+    const { metaDataField, sectionType, parentElement } = containerElement
+    if (defaultKeys.action === 'create' || defaultKeys.action === 'update' && type == POP_UP) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
         tcmSnapshotsCreatePopup(snapshotsData, defaultKeys,index);
+        if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
+            tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
+        }
     }
     else if((defaultKeys.action === 'delete' && type == POPUP_ELEMENT)) {            /** Delete Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
@@ -724,14 +727,12 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
 export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails, CurrentSlateStatus) => {
     let elementSnapshot = {};
     let semanticSnapshots = (element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
-
     elementSnapshot = {
         contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
         glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
         footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
         assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
     }
-
     return elementSnapshot;
 }
 
