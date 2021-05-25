@@ -185,7 +185,7 @@ class ElementContainer extends Component {
             config.releaseCallCount += 1
         }
         handleElmPortalEvents('remove');/** Remove Elm-Assessment Update eventListener */
-        handlePostMsgOnAddAssess("", "", "remove")
+        handlePostMsgOnAddAssess("", "", "", "remove")
     }
 
     componentWillReceiveProps(newProps) {

@@ -7,7 +7,7 @@ import { releaseSlateLockWithCallback, getSlateLockStatus } from '../CanvasWrapp
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { updateElmItemData, setItemUpdateEvent, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-import { ASSESSMENT_PICKER_OPENERS } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+import { Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 /**
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
@@ -26,16 +26,18 @@ export const handleElmPortalEvents = (action = 'add') => {
                         store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
                         store.dispatch(setItemUpdateEvent(true))
                     }
-                    if (data.action == 'approve') {
+                    if (data.action.includes('_approve_') || data.action === 'approve') {
                         window.removeEventListener('message', elmAssessmentUpdate, false);
                     }
                     if (data.type == 'assessment') {
                         handleRefreshSlate(store.dispatch);
                     }
-                } else {
+                } 
+                if (typeof data === 'string' && data?.split('|')[0] == 'interactive') {
+                    window.removeEventListener('message', elmAssessmentUpdate, false);
                     /* To edit interactive using edit button */
                     const intObj = getInteractivePostMsg(data)
-                    if(intObj?.id && intObj.title && intObj.interactiveType) {
+                    if (intObj?.id && intObj.title && intObj.interactiveType) {
                         handleRefreshSlate(store.dispatch);
                     }
                 }
@@ -110,7 +112,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action
                             getAssessmentItemPostMsg(items);
                         }
                     }                
-                } else {
+                } else if(type === 'interactive'){
                     /* Get Interactive data from Post message */
                     const intObj = getInteractivePostMsg(data);
                     if(intObj?.id && intObj.title && intObj.interactiveType){
@@ -175,7 +177,7 @@ function getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, 
         window.removeEventListener("message", getMsgafterAddAssessment, false);
 
     /* Full Assessment - get data form post messages and update the server */
-    } else if(type === ASSESSMENT_PICKER_OPENERS.FULL_ASSESSMENT) {
+    } else if(type === Resource_Type.ASSESSMENT) {
         addPufFunction(assessmentDataMsg);
         /* Remove EventListener */
         window.removeEventListener("message", getMsgafterAddAssessment, false);
