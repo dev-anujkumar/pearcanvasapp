@@ -1445,10 +1445,39 @@ export class TinyMceEditor extends Component {
 
     addAlignmentIcon = editor => {
 
-        editor.ui.registry.addGroupToolbarButton("Alignment", {
-            icon: "Alignment",
+        // editor.ui.registry.addGroupToolbarButton("Alignment", {
+        //     icon: "Alignment",
+        //     tooltip: "Alignment",
+        //     items: 'alignLeft alignCenter alignRight',
+        //     onAction: () => {
+        //     },
+        // });
+
+        editor.ui.registry.addMenuButton("Alignment", {
+            icon: "alignment",
             tooltip: "Alignment",
-            items: 'alignLeft alignCenter alignRight'
+            fetch: function (callback) {
+                var items = [{
+                        type: 'menuitem',
+                        icon: "align-left",
+                        onAction: function () {
+                        }
+                    },
+                    {
+                        type: 'menuitem',
+                        icon: "align-center",
+                        onAction: function () {
+                        }
+                    },
+                    {
+                        type: 'menuitem',
+                        icon: "align-right",
+                        onAction: function () {
+                        }
+                    }
+                ];
+                callback(items);
+            }
         });
     }
 
