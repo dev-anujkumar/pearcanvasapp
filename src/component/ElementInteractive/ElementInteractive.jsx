@@ -28,6 +28,7 @@ import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, ELM_INT,Resou
 import PopUp from '../PopUp';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
+import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -66,6 +67,14 @@ class Interactive extends React.Component {
                 interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
             
             })
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        const { elementId, alfrescoElementId, alfrescoAssetData } = this.props
+        console.log('Interactive ASSET DATA', alfrescoAssetData)
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId) {
+            this.dataFromAlfresco(alfrescoAssetData)
         }
     }
 
@@ -528,6 +537,32 @@ class Interactive extends React.Component {
         }
     }
 
+    handleSiteOptionsDropdown = (alfrescoPath, id) =>{
+        let that = this
+        let url = 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000';
+        let SSOToken = config.ssoToken;
+        return axios.get(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'ApiKey': config.CMDS_APIKEY,
+                    'Content-Type': 'application/json',
+                    'PearsonSSOSession': SSOToken
+                }
+            })
+            .then(function (response) {
+               let payloadObj = {launchAlfrescoPopup: true, 
+                alfrescoPath: alfrescoPath, 
+                alfrescoListOption: response.data.list.entries,
+                elementId: id
+            }
+                that.props.alfrescoPopup(payloadObj)
+            })
+            .catch(function (error) {
+                console.log("Error IN SITE API", error)
+            });
+    }
+
     /**
      * @description Open C2 module with predefined Alfresco location
      * @param {*} locationData alfresco locationData
@@ -564,7 +599,8 @@ class Interactive extends React.Component {
         var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath.alfresco.nodeRef) {         //if alfresco location is available
-            if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
+             if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
+                
             data_1 = alfrescoPath.alfresco;
             /*
                 data according to new project api 
@@ -574,22 +610,29 @@ class Interactive extends React.Component {
             data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
             data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
 
-            /*
-                data according to old core api and c2media
-            */
+            // /*
+            //     data according to old core api and c2media
+            // */
             data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
             data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
             data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
             this.handleC2ExtendedClick(data_1)
-            }
+            // if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
+            //     if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+            //         let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoPath.alfresco.name  , 
+            //             citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+            //             elementId: this.props.elementId }
+            //             sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+             }
             else{
                 this.props.accessDenied(true)
             }
         }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
+               // this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId)
                 c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
                     data_1 = { ...alfrescoData };
                     let request = {
@@ -802,12 +845,17 @@ const mapActionToProps = {
     fetchAssessmentMetadata: fetchAssessmentMetadata,
     fetchAssessmentVersions: fetchAssessmentVersions,
     updateAssessmentVersion: updateAssessmentVersion,
-    setElmPickerData: setElmPickerData
+    setElmPickerData: setElmPickerData,
+    alfrescoPopup: alfrescoPopup,
+    saveSelectedAssetData: saveSelectedAssetData
 }
 
 const mapStateToProps = (state) => {
     return {
         assessmentReducer: state.assessmentReducer,
+        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
+        alfrescoElementId : state.alfrescoReducer.elementId,
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
     }
 }
 
