@@ -12,6 +12,18 @@ export default {
                 }
             }
         },
+        'primary-handwriting': {
+            text: 'Handwriting',
+            enum: 'HS',
+            toolbar: ['insertMedia'],
+            subtype: {
+                'subtype-handwriting': {
+                    text: 'Handwriting',
+                    labelText: 'HS',
+                    enum: 'NA'
+                },
+            }
+        },
         'primary-heading': {
             text: 'Headings',
             enum: 'HEADERS',
@@ -716,6 +728,7 @@ export default {
             text: 'Pop up window',
             toolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent'],
             dropdownDisabled: true,
+            enum:'POP_UP',
             subtype: {
                 'secondary-popup': {
                     text: 'Pop up window',
@@ -879,6 +892,5 @@ export default {
                 }
             }
         } 
-    },
-    
+    }, 
 };

@@ -118,8 +118,8 @@ export const SOURCE_MAP = {
     [CITATION_SOURCE]: { 'support': ['ELEMENT_CITATION'], 'notSupport': [] },
     [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN'] },
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
-    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN','SHOW_HIDE'] },
-    [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] }
+    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN','SHOW_HIDE','POP_UP'] },
+    [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] },
 };
 
 export const getPasteValidated = (sourceType, selectionType) => {

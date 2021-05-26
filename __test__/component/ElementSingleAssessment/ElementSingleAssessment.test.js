@@ -402,7 +402,7 @@ describe('Testing Element Single Assessment component', () => {
             elmAssessmentInstance.updateElmAssessment(event);
             expect(elmAssessmentInstance.state.assessmentId).toBe(pufObj.id)
         })
-        it('Test-7-addAssessmentResource-Add ELM', () => {
+        xit('Test-7-addAssessmentResource-Add ELM', () => {
             const spyaddAssessmentResource = jest.spyOn(elmAssessmentInstance, 'addAssessmentResource')
             elmAssessmentInstance.addAssessmentResource(event);
             expect(elmAssessmentInstance.state.elementType).toBe('puf');
@@ -410,7 +410,7 @@ describe('Testing Element Single Assessment component', () => {
             expect(spyaddAssessmentResource).toHaveBeenCalled();
             spyaddAssessmentResource.mockClear();
         });
-        it('Test-8-closeElmWindow function', () => {
+        xit('Test-8-closeElmWindow function', () => {
             const spycloseELMWindow = jest.spyOn(elmAssessmentInstance, 'closeElmWindow')
             elmAssessmentInstance.closeElmWindow();
             expect(elmAssessmentInstance.state.showElmComponent).toBe(false);
