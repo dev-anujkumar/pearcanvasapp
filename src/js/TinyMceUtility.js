@@ -13,15 +13,15 @@ import { alfrescoPopup } from '../component/AlfrescoPopup/Alfresco_Action';
   * @param {*} data selected asset data
   * @param {*} editor tinymce editor
   */
-const dataFromAlfresco = (data, editor, imageArgs) => {
+ export const dataFromAlfresco = (data, editor, imageArgs) => {
     let imageData = data;
-    let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+    let epsURL = imageData.epsUrl? imageData.epsUrl : "";
     //let width = imageData['width'] ? imageData['width'] : "";
     //let height = imageData['height'] ? imageData['height'] : "";
-    let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-    let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-    let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-    let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+    let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
+    let uniqID = imageData.id ? imageData.id : "";
+    let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
+    let figureType = data?.content?.mimeType?.split('/')[0]             
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
     const imgData = `<img src=${epsURL} data-id="${imageID}" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:${uniqID}" alt="${altText}" longdescription="${longDesc}"/>`;
     const imageTypes = ["image", "table", "mathImage", "authoredtext"];

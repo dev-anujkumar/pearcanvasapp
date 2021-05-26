@@ -32,7 +32,8 @@ import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco }  from '../js/TinyMceUtility.js';
+import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
 let clickedX = 0;
@@ -1440,6 +1441,12 @@ export class TinyMceEditor extends Component {
      */
     addInsertMediaButton = editor => {
         const self = this;
+        let objectSend = {
+            element: this.props.element,
+            permissions: this.props.permissions,
+            editor: editor
+        }
+        self.props.saveInlineImageData(objectSend)
         editor.ui.registry.addMenuButton('insertMedia', {
             text: 'Insert',
             tooltip: 'insertMedia',
@@ -2701,6 +2708,9 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
+        debugger
+        //console.log('COMPONENTDIDUPDATE INLINE IMAGE EDITOR', editor)
+        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData} = this.props
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
@@ -2722,6 +2732,9 @@ export class TinyMceEditor extends Component {
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
+         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId) {
+            dataFromAlfresco(alfrescoAssetData, alfrescoEditor)
+        }
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
@@ -3558,7 +3571,16 @@ TinyMceEditor.defaultProps = {
     error: null,
 };
 
+const mapStateToProps = (state) => {
+    return {
+        alfrescoPermission: state.alfrescoReducer.Permission,
+        alfrescoElementId : state.alfrescoReducer.elementId,
+        alfrescoEditor: state.alfrescoReducer.editor,
+        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData
+    }
+}
+
 export default connect(
-    null,
-    { conversionElement, wirisAltTextPopup }
+    mapStateToProps,
+    { conversionElement, wirisAltTextPopup, saveInlineImageData }
 )(TinyMceEditor);
