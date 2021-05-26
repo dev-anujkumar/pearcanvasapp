@@ -1444,35 +1444,48 @@ export class TinyMceEditor extends Component {
     }
 
     addAlignmentIcon = editor => {
-
-        // editor.ui.registry.addGroupToolbarButton("Alignment", {
-        //     icon: "Alignment",
-        //     tooltip: "Alignment",
-        //     items: 'alignLeft alignCenter alignRight',
-        //     onAction: () => {
-        //     },
-        // });
-
         editor.ui.registry.addMenuButton("Alignment", {
-            icon: "alignment",
+            icon:'align-left',
             tooltip: "Alignment",
             fetch: function (callback) {
                 var items = [{
-                        type: 'menuitem',
+                        text:'  Left',
+                        type: 'togglemenuitem',
                         icon: "align-left",
                         onAction: function () {
+                            tinymce.activeEditor.execCommand('JustifyLeft');
+                        },
+                        onSetup: function(api) {
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft'));
+                            return function() {};
                         }
                     },
                     {
-                        type: 'menuitem',
+                        text:'  Center',
+                        type: 'togglemenuitem',
                         icon: "align-center",
                         onAction: function () {
+                            if(!tinymce.activeEditor.queryCommandState('JustifyCenter')){
+                                tinymce.activeEditor.execCommand('JustifyCenter');
+                            }
+                        },
+                        onSetup: function(api) {
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyCenter'));
+                            return function() {};
                         }
                     },
                     {
-                        type: 'menuitem',
+                        text:'  Right',
+                        type: 'togglemenuitem',
                         icon: "align-right",
                         onAction: function () {
+                            if(!tinymce.activeEditor.queryCommandState('JustifyRight')){
+                                tinymce.activeEditor.execCommand('JustifyRight');
+                            }
+                        },
+                        onSetup: function(api) {
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyRight'));
+                            return function() {};
                         }
                     }
                 ];
