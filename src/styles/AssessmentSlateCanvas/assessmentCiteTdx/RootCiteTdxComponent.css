@@ -19,6 +19,7 @@
   max-height: 390px;
 }
 .cite-wrapper .main-div{
+  overflow-y: auto;
   margin: 0 5px 0 20px;
   min-height: 335px;
   max-height: 335px;
@@ -30,6 +31,8 @@
   background-color: #d3d3d369;
 }
 .cite-wrapper .header-block {
+  display: flex;
+  justify-content: space-between;
   background-color: inherit;
 }
 .cite-wrapper .header-close-button{
@@ -263,6 +266,12 @@
   fill: #b20070;
   fill-opacity: 1;
 }
+
+.cls-1 {
+  fill: #fff;
+  opacity: 1;
+}
+
 .assessment-table-class tbody tr{
   font-size:13px;
 }
