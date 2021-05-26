@@ -55,8 +55,8 @@ class ElementFigure extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoAssetData } = this.props
-        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId) {
+        const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.dataFromNewAlfresco(alfrescoAssetData)
         }
     }
@@ -277,7 +277,7 @@ class ElementFigure extends Component {
                let payloadObj = {launchAlfrescoPopup: true, 
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
-                elementId: id
+                id
             }
                 that.props.alfrescoPopup(payloadObj)
             })
@@ -478,7 +478,8 @@ const mapStateToProps = (state) => {
     return {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         alfrescoElementId : state.alfrescoReducer.elementId,
-        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup
     }
 }
 
