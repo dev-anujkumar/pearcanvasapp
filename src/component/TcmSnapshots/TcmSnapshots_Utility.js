@@ -69,16 +69,18 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     }
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
-    const { id, columnId, columnName } = asideData?.parent || {};
+    const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
     if(wipData.type === ELEMENT_ASIDE && parentUrn?.elementType === "group") {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = "2C:" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`;
     /* Add section Break inside 2C->WE */
-    } else if(type === SECTION_BREAK && asideData?.parent?.type === "groupedcontent"){
-        tag.grandParent = "2C:" + columnName;
-        elementId.grandParentId = `${id}+${columnId}`;
+    } else if((type === SECTION_BREAK || actionStatus.action === "update" || 
+        actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE) && 
+        gPType === "groupedcontent"){
+            tag.grandParent = "2C:" + columnName;
+            elementId.grandParentId = `${id}+${columnId}`;
     }
     /* Initial snapshotsData of elements*/
     let snapshotsData = {
@@ -1117,7 +1119,9 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
                 } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column */
                     wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
-                }
+                } //else if(eleIndex.length == 4 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column->Aside/WE */
+                //    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]].elementdata.bodymatter[eleIndex[3]];
+                //}
                 break;
             case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */           
                 wipData = popupWipData(bodymatter, eleIndex,operationType,wipData)

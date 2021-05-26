@@ -350,7 +350,7 @@ class ElementAsideContainer extends Component {
             element : this.props.element
         };
          /* @columnIndex@ */
-        const columnIndex = this.props.index.split("-").length === 3 ? this.props.index.split("-")[1] : "";
+        const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
         console.log(this.props.index," = columnIndex = ",columnIndex)
         const columnId = groupeddata?.bodymatter[columnIndex]?.id;
         /* Adding parent id and type to update redux store while creating new element inside 2c->Aside->New */
