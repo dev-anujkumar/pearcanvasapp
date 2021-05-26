@@ -1451,10 +1451,11 @@ export class TinyMceEditor extends Component {
                 var items = [{
                         text:'Left Align',
                         type: 'togglemenuitem',
-                        // type: 'menuitem',
                         icon: "action-next",
                         onAction: function () {
+                            if(!tinymce.activeEditor.queryCommandState('JustifyLeft')){
                             tinymce.activeEditor.execCommand('JustifyLeft');
+                            }
                         },
                         onSetup: function(api) {
                             api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft'));
@@ -1464,7 +1465,6 @@ export class TinyMceEditor extends Component {
                     {
                         text:'Center Align',
                         type: 'togglemenuitem',
-                        // type: 'menuitem',
                         icon: "align-center",
                         onAction: function () {
                             if(!tinymce.activeEditor.queryCommandState('JustifyCenter')){
@@ -1479,7 +1479,6 @@ export class TinyMceEditor extends Component {
                     {
                         text:'Right Align',
                         type: 'togglemenuitem',
-                        // type: 'menuitem',
                         icon: "align-right",
                         onAction: function () {
                             if(!tinymce.activeEditor.queryCommandState('JustifyRight')){
