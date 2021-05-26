@@ -1449,7 +1449,7 @@ export class TinyMceEditor extends Component {
             tooltip: "Alignment",
             fetch: function (callback) {
                 var items = [{
-                        text:'Left',
+                        text:'Left Align',
                         type: 'togglemenuitem',
                         // type: 'menuitem',
                         icon: "action-next",
@@ -1462,7 +1462,7 @@ export class TinyMceEditor extends Component {
                         }
                     },
                     {
-                        text:'Center',
+                        text:'Center Align',
                         type: 'togglemenuitem',
                         // type: 'menuitem',
                         icon: "align-center",
@@ -1477,7 +1477,7 @@ export class TinyMceEditor extends Component {
                         }
                     },
                     {
-                        text:'Right',
+                        text:'Right Align',
                         type: 'togglemenuitem',
                         // type: 'menuitem',
                         icon: "align-right",
