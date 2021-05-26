@@ -19,7 +19,7 @@ import './styles/style.css';
 
 
 
-console.log("!!!!! ---- canvas-1.23.17.01 ---- !!!!!")
+console.log("!!!!! ---- canvas-1.23.17.02 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
