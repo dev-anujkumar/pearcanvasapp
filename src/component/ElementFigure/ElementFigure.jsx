@@ -188,7 +188,7 @@ class ElementFigure extends Component {
                 alfrescoSiteName = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                 let nodeRefs = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
                 nodeRefs = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : nodeRefs;
-                let messageObj = { citeName: alfrescoLocationData?.siteId ? alfrescoLocationData.siteId : alfrescoSiteName, 
+                let messageObj = { citeName: alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoSiteName, 
                     citeNodeRef: nodeRefs, 
                     elementId: this.props.elementId }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
