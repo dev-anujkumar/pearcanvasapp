@@ -25,7 +25,7 @@ let cypressConfig = {
     textcolors:["option1", "option2"],
     isCO : false,
     isLOL:false,
-    toolBarList : ['undo', 'redo', 'insertMedia', 'formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
+    toolBarList : ['undo', 'redo', 'insertMedia', 'formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor', 'calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
     elementToolbar: [],
     showHideToolbar: ['insertMedia','formatSelector', 'footnote','glossary','assetpopover'],
     revelToolbar : ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','orderedlist','unorderedlist'],

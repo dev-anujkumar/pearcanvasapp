@@ -270,6 +270,7 @@ function CommunicationChannel(WrappedComponent) {
          * Handle the element update action on linking a page
          */
         updatePageLink = (linkData) => {
+            console.log('linkData',linkData)
             let activeElement, linkNode, linkHTML, editor;
             let linkId = "", elementId = "", pageId = "";
             let linkNotification = '';

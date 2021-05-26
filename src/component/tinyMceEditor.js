@@ -17,7 +17,7 @@ import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, calloutMenuIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
@@ -37,6 +37,7 @@ import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstan
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
+
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -120,7 +121,9 @@ export class TinyMceEditor extends Component {
                     * This code is written to remove lagging in typing and move cursor at end on focus
                     */
                 });
-                tinymce.$('.blockquote-editor').attr('contenteditable', false)
+                tinymce.$('.blockquote-editor').attr('contenteditable', false);
+                this.setCalloutIcon(editor);
+                this.addCalloutIcon(editor);
             },
 
             init_instance_callback: (editor) => {
@@ -516,6 +519,17 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                     }
+                    console.log('window.getSelection()',window.getSelection(),tinymce.activeEditor.selection.getNode())
+                    if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
+                        let selectedText = window.getSelection().toString();
+                        if (selectedText.length) {
+                            let selected = editor.selection.getContent();
+                            let selection = window.getSelection().anchorNode.parentNode;
+                            selection.parentNode.removeChild(selection);
+                            tinymce.activeEditor.selection.setContent(selected);                         
+                        }
+                    }
+
                     /**
                      * In case remove all formatting is being appied on list element
                      */
@@ -1433,6 +1447,78 @@ export class TinyMceEditor extends Component {
             crossLinkIcon
         );
     }
+ 
+    /**
+     * Adds Callout icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setCalloutIcon = (editor) => {
+        editor.ui.registry.addIcon(
+            "calloutIcon",
+            calloutMenuIcon
+        );
+    }
+
+
+     /**
+     * Adding button for Callout
+     * @param {*} editor  editor instance
+     */
+      addCalloutIcon = editor => {
+        const calloutsCount = 4;  // Count for dynamically creating callouts.
+        const items = [];
+        if ('element' in this.props && 'type' in this.props.element) {
+           for(let i=1;i<=calloutsCount;i++){
+            items.push({
+                type: 'togglemenuitem',
+                text: `Callout option ${i}`,
+                tooltip: `Callout option ${i}`,
+                onAction: () => {
+                    let selectedText = window.getSelection().toString();
+                    if (!hasReviewerRole() && selectedText.length) {
+                        this.setCalloutToSelection(editor,i)
+                    }
+                },
+                onSetup: function (api) {
+                    let activeCallout = tinymce.activeEditor.selection.getNode().className;
+                    if(activeCallout===`callout${i}`){
+                        api.setActive(true);
+                    }
+                    else{
+                        api.setActive(false);
+                    }
+                }
+            })
+        }
+     }    
+        editor.ui.registry.addMenuButton("calloutIcon", {
+            text: "",
+            icon: "callouticon",
+            tooltip: "Callout",
+            fetch: cb => cb(items)
+        });
+    }
+
+    setCalloutToSelection(editor,selectedCalloutIndex){
+        let selectedContent = editor.selection.getContent();
+        let selectedText = this.removeHTMLTags(selectedContent);
+        let calloutSpan = selectedContent.replace(selectedText,`<span title="callout${selectedCalloutIndex}" class="callout${selectedCalloutIndex}">${selectedText}</span>`)
+        let isSelected = tinymce.activeEditor.selection.getNode().className.includes('callout');
+        if(!isSelected){
+            tinymce.activeEditor.selection.setContent(calloutSpan);
+        }
+        else{
+            let selection = window.getSelection().anchorNode.parentNode;
+            selection.parentNode.removeChild(selection);
+            tinymce.activeEditor.selection.setContent(`<span title="callout${selectedCalloutIndex}" class="callout${selectedCalloutIndex}">${selectedText}</span>`);
+        }
+    }
+
+     removeHTMLTags(html) {
+        var regX = /(<([^>]+)>)/ig;                
+        return(html.replace(regX, ""));
+      }
+
 
     /**
      * Adds Insert button to the toolbar for adding Media like Images.
@@ -2305,7 +2391,7 @@ export class TinyMceEditor extends Component {
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
+        console.log('dataToCheck', selection,selectedTag,selectedTagClass,selectedText)
         let parentNode = true;
         do {
             if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
@@ -2346,6 +2432,7 @@ export class TinyMceEditor extends Component {
         } else {
             selection.parentNode.removeChild(selection);
         }
+
         sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
     }
 

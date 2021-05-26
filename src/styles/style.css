@@ -365,3 +365,91 @@ table:not([cellpadding]) td, table:not([cellpadding]) th {
 .tox.tox-tinymce--toolbar-bottom .tox-editor-header, .tox.tox-tinymce-inline .tox-editor-header {
     border: none !important;
 }
+
+
+
+/*  Callout Content Design  */
+
+span[title="callout1"]:not(.sup):not(.sub)::after,
+span[title="callout1"] sub::after,
+span[title="callout1"] sup::after {
+    content: url('./../images/Callout/callout1.svg');
+    height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    padding: 0 2px;
+    position: relative;
+    text-decoration: underline dotted;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+span[title="callout2"]:not(.sup):not(.sub)::after,
+span[title="callout2"] sub::after,
+span[title="callout2"] sup::after {
+    content: url('./../images/Callout/callout2.svg');
+    height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    padding: 0 2px;
+    position: relative;
+    text-decoration: underline dotted;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+
+
+span[title="callout3"]:not(.sup):not(.sub)::after,
+span[title="callout3"] sub::after,
+span[title="callout3"] sup::after {
+    content: url('./../images/Callout/callout3.svg');
+    height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    padding: 0 2px;
+    position: relative;
+    text-decoration: underline dotted;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+
+span[title="callout4"]:not(.sup):not(.sub)::after,
+span[title="callout4"] sub::after,
+span[title="callout4"] sup::after {
+    content: url('./../images/Callout/callout4.svg');
+    height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    padding: 0 2px;
+    position: relative;
+    text-decoration: underline dotted;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+
+.callout1{
+    color:#007FA3;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+.callout2{
+    color:#007FA3;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+.callout3{
+    color:#007FA3;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+.callout4{
+    color:#007FA3;
+    border-bottom: 1.1px dotted #007FA3;
+}

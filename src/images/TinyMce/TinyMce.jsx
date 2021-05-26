@@ -188,3 +188,17 @@ export const searchDown = (function () {
     </svg>
   )
 })();
+
+export const calloutMenuIcon = (function () {
+return (
+`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <g fill="none" fill-opacity=".87" fill-rule="evenodd">
+        <g fill="#000" fill-rule="nonzero">
+            <g>
+                <path d="M18.4 16.136l-.936-.936H5.6V5.6h12.8v10.536zM18.4 4H5.6C4.72 4 4 4.72 4 5.6v9.6c0 .88.72 1.6 1.6 1.6h11.2L20 20V5.6c0-.88-.72-1.6-1.6-1.6z" transform="translate(-18 -17) translate(14 13)"/>
+            </g>
+        </g>
+    </g>
+</svg>`
+  )
+})();
