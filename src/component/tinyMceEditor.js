@@ -42,7 +42,7 @@ export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
         context = this;
-        this.state = { popup: false }
+        this.state = { popup: false,alignment:'' }
         this.placeHolderClass = ''
         this.indentRun = false;
         this.outdentRun = false;
@@ -1449,9 +1449,10 @@ export class TinyMceEditor extends Component {
             tooltip: "Alignment",
             fetch: function (callback) {
                 var items = [{
-                        text:'  Left',
+                        text:'Left',
                         type: 'togglemenuitem',
-                        icon: "align-left",
+                        // type: 'menuitem',
+                        icon: "action-next",
                         onAction: function () {
                             tinymce.activeEditor.execCommand('JustifyLeft');
                         },
@@ -1461,8 +1462,9 @@ export class TinyMceEditor extends Component {
                         }
                     },
                     {
-                        text:'  Center',
+                        text:'Center',
                         type: 'togglemenuitem',
+                        // type: 'menuitem',
                         icon: "align-center",
                         onAction: function () {
                             if(!tinymce.activeEditor.queryCommandState('JustifyCenter')){
@@ -1475,8 +1477,9 @@ export class TinyMceEditor extends Component {
                         }
                     },
                     {
-                        text:'  Right',
+                        text:'Right',
                         type: 'togglemenuitem',
+                        // type: 'menuitem',
                         icon: "align-right",
                         onAction: function () {
                             if(!tinymce.activeEditor.queryCommandState('JustifyRight')){
