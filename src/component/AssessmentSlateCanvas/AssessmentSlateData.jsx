@@ -80,7 +80,7 @@ class AssessmentSlateData extends Component {
             const { dataFromElm } = assessmentReducer;
             if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
                 window.open(dataFromElm.elmUrl);
-                handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType, Resource_Type.ASSESSMENT);
+                handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType, Resource_Type.ASSESSMENT, 'add','fromCreate');
                 this.props.setElmPickerData({});
             } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
                 this.addPufAssessment(dataFromElm.pufObj);
@@ -203,7 +203,7 @@ class AssessmentSlateData extends Component {
         this.props.addPufAssessment(dataToSend, this.state.activeAssessmentType, 'insert');
         const elmData = { targetId: pufObj.id }
         this.props.checkElmAssessmentStatus('assessment', 'fromAddElm', elmData, {});
-        handlePostMsgOnAddAssess("", "", "", "remove");
+        handlePostMsgOnAddAssess("", "", "", "remove","");
     }
 
     /*** @description This function is used to open Version update Popup */

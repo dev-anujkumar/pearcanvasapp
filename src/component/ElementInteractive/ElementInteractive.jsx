@@ -92,7 +92,7 @@ class Interactive extends React.Component {
            if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elementUrn === this.props.model?.id) {
                if (dataFromElm?.type == ELM_CREATE_IN_PLACE && dataFromElm.elmUrl) {
                    window.open(dataFromElm.elmUrl);
-                   handlePostMsgOnAddAssess(this.addElmInteractive, dataFromElm.usageType, Resource_Type.INTERACTIVE );
+                   handlePostMsgOnAddAssess(this.addElmInteractive, dataFromElm.usageType, Resource_Type.INTERACTIVE, 'add','fromCreate' );
                } else if (dataFromElm?.type == SAVE_ELM_DATA && dataFromElm.pufObj) {
                    this.addElmInteractive(dataFromElm.pufObj);
                }
@@ -160,6 +160,7 @@ class Interactive extends React.Component {
         } else {
             hideTocBlocker(value);
         }
+        this.props.showBlocker(value);
         disableHeader(value);
         showBlocker(value);
     }
@@ -420,7 +421,7 @@ class Interactive extends React.Component {
             if (cb) {
                 cb();
             }
-            handlePostMsgOnAddAssess("", "", "", "remove");
+            // handlePostMsgOnAddAssess("", "", "", "remove","");
         }
     }
 
@@ -439,7 +440,7 @@ class Interactive extends React.Component {
         if (props?.assessmentReducer?.item?.calledFrom === 'createElm') {
             this.props.setNewItemFromElm({});
         }
-        handlePostMsgOnAddAssess("", "", "", "remove");
+        // handlePostMsgOnAddAssess("", "", "", "remove","");
     }
     /**------------------------------------------------------------------------------------------*/
     

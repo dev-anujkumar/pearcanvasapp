@@ -63,28 +63,36 @@ class ElementSingleAssessment extends Component {
 
     componentDidUpdate() {
         const { assessmentReducer } = this.props;
-        const { elementType, assessmentId, assessmentItemId, assessmentTitle } = this.state;
-        if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentId && assessmentReducer && assessmentReducer[assessmentId] && assessmentReducer[assessmentId].items)) {
-            const latestItem = assessmentReducer[assessmentId]?.items?.find(itemdata => itemdata.oldItemId == assessmentItemId)
-            const latestItemId = latestItem?.latestItemId;
-            const saveEventUpdate = latestItem?.shouldUpdateOnSaveEvent;
-            if ((assessmentReducer.itemUpdateEvent == true && assessmentReducer[assessmentId].showUpdateStatus == false) && (saveEventUpdate == true && (latestItemId && assessmentItemId != latestItemId) || (assessmentTitle != assessmentReducer[assessmentId].assessmentTitle))) {
-                this.updateElmOnSaveEvent(this.props);
-            }
-        }
-        if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && assessmentReducer.dataFromElm) {
-            const { dataFromElm } = assessmentReducer;
-            if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
-                window.open(dataFromElm.elmUrl);
-                handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType);
-                this.props.setElmPickerData({});
-            } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
-                this.addPufAssessment(dataFromElm.pufObj);
-                this.props.setElmPickerData({});
+        const { elementType, assessmentId } = this.state;
+        if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentId && assessmentReducer)){
+            if (assessmentReducer[assessmentId]?.items) {
+                this.updateElmLearnosityOnRefresh(this.props);
+            } else if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.elementUrn === this.props.model.id) {
+                const { dataFromElm } = assessmentReducer;
+                if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.elmUrl && dataFromElm.usageType) {
+                    window.open(dataFromElm.elmUrl);
+                    handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType, Resource_Type.ASSESSMENT_ITEM, 'add', 'fromCreate');
+                    this.props.setElmPickerData({});
+                } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.pufObj) {
+                    this.addPufAssessment(dataFromElm.pufObj);
+                    this.props.setElmPickerData({});
+                }
             }
         }
     }
 
+    updateElmLearnosityOnRefresh=(props)=>{
+        const { assessmentReducer } = props;
+        const { assessmentId, assessmentItemId, assessmentTitle } = this.state;
+        const assessmentData = assessmentReducer[assessmentId];
+        const latestItem = assessmentData?.items?.find(itemdata => itemdata.oldItemId == assessmentItemId)
+        const latestItemId = latestItem?.latestItemId;
+        const saveEventUpdate = latestItem?.shouldUpdateOnSaveEvent;
+        if (((assessmentReducer.itemUpdateEvent && !assessmentData.showUpdateStatus) && (saveEventUpdate && (latestItemId && assessmentItemId != latestItemId) || (assessmentTitle != assessmentData.assessmentTitle))) ||
+            (!assessmentData.showUpdateStatus && ((assessmentTitle != assessmentData.assessmentTitle) || (latestItemId && assessmentItemId != latestItemId)))) {
+            this.updateElmOnSaveEvent(this.props);
+        }
+    }
     componentDidMount() {
         let title = this.props.model && getAssessmentTitle(this.props.model) != null ? getAssessmentTitle(this.props.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
         this.setState({
@@ -317,7 +325,7 @@ class ElementSingleAssessment extends Component {
             }
             /* empty item data store(saved after getting post message from elm) after update call */
             this.props.setNewItemFromElm({});
-            handlePostMsgOnAddAssess("", "", "", "remove");
+            handlePostMsgOnAddAssess("", "", "", "remove", "");
         }
     }
 
