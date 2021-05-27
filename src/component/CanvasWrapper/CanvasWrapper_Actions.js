@@ -52,7 +52,14 @@ export const findElementType = (element, index) => {
                 if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
                     elementType['primaryOption'] = elementDataBank["element-authoredtext-heading"]["primaryOption"];
                     elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
-                } else {
+                } else if (element && element.elementdata && element.elementdata.designtype) {
+                    const designType = element.elementdata.designtype;
+                    if(designType === 'handwritingstyle') {
+                        elementType['primaryOption'] = elementDataBank["element-authoredtext-handwriting"]["primaryOption"];
+                        elementType['secondaryOption'] = elementDataBank["element-authoredtext-handwriting"]["secondaryOption"];
+                    }
+                } 
+                else {
                     elementType['primaryOption'] = elementDataBank[element.type]["primaryOption"];
                     elementType['secondaryOption'] = elementDataBank[element.type]["secondaryOption"];
                 }
@@ -447,6 +454,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
             if (slateBodymatter[0] && slateBodymatter[0].type == ELEMENT_ASSESSMENT && isElmLearnosityAssessment(slateBodymatter[0].elementdata) && slateBodymatter[0].elementdata.assessmentid) {
                 const assessmentData = { targetId: slateBodymatter[0].elementdata.assessmentid }
+                config.saveElmOnAS = true
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
         }

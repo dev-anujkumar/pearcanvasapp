@@ -37,6 +37,7 @@ const RootElmComponent = (props) => {
                         setItemParentUrn={props.setItemParentUrn}                        
                         fetchAssessmentItem={props.fetchAssessmentItem}
                         activeAssessmentType={props.activeAssessmentType}
+                        elementId={props.elementId}
                     />
                 }
             </div>

@@ -13,6 +13,23 @@ export const crossLinkIcon = (function () {
   return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M4.71 12.5c0-1.539 1.251-2.79 2.79-2.79h3.6V8H7.5C5.015 8 3 10.015 3 12.5S5.015 17 7.5 17h3.6v-1.71H7.5c-1.539 0-2.79-1.251-2.79-2.79m3.69.9h7.2v-1.8H8.4v1.8M16.5 8h-3.6v1.71h3.6c1.539 0 2.79 1.251 2.79 2.79 0 1.539-1.251 2.79-2.79 2.79h-3.6V17h3.6c2.485 0 4.5-2.015 4.5-4.5S18.985 8 16.5 8z"/></g></svg>')
 })();
 
+export const alignment = (function () {
+  return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-31 -19) translate(31 19)"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M4 4h16v1.778H4V4m0 3.556h10.667v1.777H4V7.556m0 3.555h16v1.778H4V11.11m0 3.556h10.667v1.777H4v-1.777m0 3.555h16V20H4v-1.778z" transform="translate(-31 -19) translate(31 19)"/></g></svg>')
+})();
+
+export const alignleft = (function () {
+  return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-31 -19) translate(31 19)"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M4 4h16v1.778H4V4m0 3.556h10.667v1.777H4V7.556m0 3.555h16v1.778H4V11.11m0 3.556h10.667v1.777H4v-1.777m0 3.555h16V20H4v-1.778z" transform="translate(-31 -19) translate(31 19)"/></g></svg>')
+})();
+
+export const alignright = (function () {
+  return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-103 -19) translate(103 19)"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M4 4h16v1.778H4V4m5.333 3.556H20v1.777H9.333V7.556M4 11.11h16v1.778H4V11.11m5.333 3.556H20v1.777H9.333v-1.777M4 18.222h16V20H4v-1.778z" transform="translate(-103 -19) translate(103 19)"/></g></svg>')
+})();
+
+export const aligncenter = (function () {
+  return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-67 -19) translate(67 19)"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M4 4h16v1.778H4V4m3.556 3.556h8.888v1.777H7.556V7.556M4 11.11h16v1.778H4V11.11m3.556 3.556h8.888v1.777H7.556v-1.777M4 18.222h16V20H4v-1.778z" transform="translate(-67 -19) translate(67 19)"/></g></svg>')
+})();
+
+
 export const code = (function () {
   return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M14.34 16.54l4.14-4.14-4.14-4.14L15.6 7l5.4 5.4-5.4 5.4-1.26-1.26m-4.68 0L5.52 12.4l4.14-4.14L8.4 7 3 12.4l5.4 5.4 1.26-1.26z"/></g></svg>')
 })();
