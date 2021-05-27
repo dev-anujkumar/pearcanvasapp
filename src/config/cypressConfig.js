@@ -36,7 +36,7 @@ let cypressConfig = {
     labelToolbar:['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary','footnote','decreaseindent','alignment'],
     captionToolbar:['insertMedia','formatSelector','decreaseindent','glossary','crossLinkingIcon','assetpopover','alignment'],
     poetryLabelToolbar:['insertMedia','formatSelector','footnote','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','mathml','chemml','alignment'],
-    popupCallToActionToolbar: ['insertMedia','formatSelector','strikethrough','footnote','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','increaseindent','decreaseindent','mathml','chemml','superscript','subscript','specialcharactor','alignment','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment'],
+    popupCallToActionToolbar: ['insertMedia','formatSelector','strikethrough','footnote','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','increaseindent','decreaseindent','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment'],
     poetryCaptionToolbar:['insertMedia','formatSelector','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','alignment'],
     poetryStanzaToolbar:['insertMedia','formatSelector','increaseindent','decreaseindent','orderedlist','unorderedlist','alignment'],
     sdToolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'italic', 'assetpopover', 'footnote', 'glossary','decreaseindent','alignment'],
