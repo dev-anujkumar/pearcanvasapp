@@ -15,7 +15,7 @@ export default {
         'primary-handwriting': {
             text: 'Handwriting',
             enum: 'HS',
-            toolbar: ['insertMedia'],
+            toolbar: ['insertMedia','alignment'],
             subtype: {
                 'subtype-handwriting': {
                     text: 'Handwriting',

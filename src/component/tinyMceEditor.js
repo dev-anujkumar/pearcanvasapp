@@ -1436,12 +1436,22 @@ export class TinyMceEditor extends Component {
         );
     }
 
+    /**
+     * Adds Alignment icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+
     setAlignmentIcon = editor => {
         editor.ui.registry.addIcon(
             "Alignment",
              alignment
         );
     }
+
+    /**
+     * Adding button for Alignment
+     * @param {*} editor  editor instance
+     */
 
     addAlignmentIcon = editor => {
         editor.ui.registry.addMenuButton("Alignment", {
@@ -1833,6 +1843,8 @@ export class TinyMceEditor extends Component {
             case "element-authoredtext":
                 if (element.elementdata.headers)
                     return `Heading ${element.elementdata.headers[0].level}`
+                else if(element?.elementdata?.designtype === 'handwritingstyle')
+                    return 'Handwriting'
                 else
                     return "Paragraph"
             case "element-blockfeature":
