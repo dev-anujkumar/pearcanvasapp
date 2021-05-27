@@ -47,7 +47,7 @@ class ElementFigure extends Component {
         if(figureImageTypes.includes(this.props?.model?.figuretype)){
           getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.repositoryFolder,
+                alfrescoSite: response.title,
                 alfrescoSiteData:{...response}
             })
           })
@@ -61,11 +61,11 @@ class ElementFigure extends Component {
         }
     }
 
-    updateAlfrescoSiteUrl = () => {
-        let repositoryData = this.state.alfrescoSiteData
-        if(repositoryData?.title){
+    updateAlfrescoSiteUrl = (alfrescoData) => {
+        let repositoryData = alfrescoData.title
+        if(repositoryData){
             this.setState({
-                alfrescoSite: repositoryData.title
+                alfrescoSite: repositoryData
             })  
         }else {
             this.setState({
@@ -137,7 +137,7 @@ class ElementFigure extends Component {
                 id: ''
             }
             this.props.saveSelectedAssetData(payloadObj)
-            this.updateAlfrescoSiteUrl()
+            this.updateAlfrescoSiteUrl(alfrescoData)
         }
     }
     /**

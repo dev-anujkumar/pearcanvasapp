@@ -65,14 +65,14 @@ class OpenerElement extends Component {
                 imageId: imageId,
                 updateImageOptions:false,
                 width
+            }, ()=>{
+            this.handleBlur({imgSrc: epsURL, imageId});
             });
             if (document.querySelector("[name='alt_text']"))
                 document.querySelector("[name='alt_text']").innerHTML = altText;
             if (document.querySelector("[name='long_description']"))
                 document.querySelector("[name='long_description']").innerHTML = longDesc;
         }
-        
-        this.handleBlur({imgSrc: epsURL, imageId});
         let payloadObj = {
             asset: {}, 
             id: ''
@@ -454,14 +454,14 @@ class OpenerElement extends Component {
             && (this.state.label === getOpenerContent(textsemantics, "label", text))
             && (this.state.number === getOpenerContent(textsemantics, "number", text))
             && (this.state.title === getOpenerContent(textsemantics, "title", text))) {
-            //flag = false;
+            flag = false;
         }
         else if ((classList.length === 0) 
         && this.state.label === getOpenerContent(textsemantics, "label", text)
         && this.state.number === getOpenerContent(textsemantics, "number", text)
         && this.state.title === getOpenerContent(textsemantics, "title", text)
         && this.state.imgSrc!==event.imgSrc) {
-            //flag = false
+            flag = false
         }
         let element = this.props.element;
         let { label, number, title, imgSrc, imageId } = this.state;
