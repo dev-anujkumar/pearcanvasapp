@@ -140,6 +140,11 @@
   bottom: 0;
   width: 100%;
 }
+
+.assessemnt-title-container {
+  display: flex;
+}
+
 .assessment-titles{
   max-width: 350px;
   height: 20px;
