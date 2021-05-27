@@ -390,11 +390,12 @@
   background-color: #def8ff;
 }
 
-.powerpaste-save-button.disabled {
+.powerpaste-save-button.disabled, .save-buttons.disabled {
   background: #b3d8e1;
   cursor: not-allowed;
   pointer-events: none;
   color: white;
+  border: 1px solid #b3d8e1;
 }
 
 .dialog-input-poc {

@@ -16,7 +16,8 @@ class MetaDataPopUp extends React.Component {
         this.state = {
            altText:"",
 		   longDescription:"",
-		   active:''
+		   active:'',
+		   disabledButton:false
         }
     }
 
@@ -48,7 +49,8 @@ class MetaDataPopUp extends React.Component {
 				this.setState({
 					metaData: properties,
 					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
-					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : ""
+					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
+					disabledButton:true
 				})
 			}).catch(error => {
 				console.error("error--", error);
@@ -133,7 +135,7 @@ class MetaDataPopUp extends React.Component {
 							</div>
 						</div>
 						<div className="metadata-button">
-						   <span className="save-buttons" onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
+						   <span className={`save-buttons ${this.state.disabledButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
 						   <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
 						</div>
 					</div>

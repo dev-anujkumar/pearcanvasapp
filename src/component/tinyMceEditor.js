@@ -17,7 +17,7 @@ import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
@@ -42,7 +42,7 @@ export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
         context = this;
-        this.state = { popup: false }
+        this.state = { popup: false,alignment:'' }
         this.placeHolderClass = ''
         this.indentRun = false;
         this.outdentRun = false;
@@ -88,6 +88,8 @@ export class TinyMceEditor extends Component {
                     this.addChemistryFormulaButton(editor);
                     this.addMathmlFormulaButton(editor);
                 }
+                this.setAlignmentIcon(editor);
+                this.addAlignmentIcon(editor);
                 this.setCrossLinkingIcon(editor);
                 this.addCrossLinkingIcon(editor);
                 this.setAssetPopoverIcon(editor);
@@ -1435,6 +1437,76 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * Adds Alignment icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+
+    setAlignmentIcon = editor => {
+        editor.ui.registry.addIcon(
+            "Alignment",
+             alignment
+        );
+    }
+
+    /**
+     * Adding button for Alignment
+     * @param {*} editor  editor instance
+     */
+
+    addAlignmentIcon = editor => {
+        editor.ui.registry.addMenuButton("Alignment", {
+            icon:'align-left',
+            tooltip: "Alignment",
+            fetch: function (callback) {
+                var items = [{
+                        text:'Left Align',
+                        type: 'togglemenuitem',
+                        icon: "action-next",
+                        onAction: function () {
+                            if(!tinymce.activeEditor.queryCommandState('JustifyLeft')){
+                            tinymce.activeEditor.execCommand('JustifyLeft');
+                            }
+                        },
+                        onSetup: function(api) {
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft'));
+                            return function() {};
+                        }
+                    },
+                    {
+                        text:'Center Align',
+                        type: 'togglemenuitem',
+                        icon: "align-center",
+                        onAction: function () {
+                            if(!tinymce.activeEditor.queryCommandState('JustifyCenter')){
+                                tinymce.activeEditor.execCommand('JustifyCenter');
+                            }
+                        },
+                        onSetup: function(api) {
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyCenter'));
+                            return function() {};
+                        }
+                    },
+                    {
+                        text:'Right Align',
+                        type: 'togglemenuitem',
+                        icon: "align-right",
+                        onAction: function () {
+                            if(!tinymce.activeEditor.queryCommandState('JustifyRight')){
+                                tinymce.activeEditor.execCommand('JustifyRight');
+                            }
+                        },
+                        onSetup: function(api) {
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyRight'));
+                            return function() {};
+                        }
+                    }
+                ];
+                callback(items);
+            }
+        });
+    }
+
+    /**
      * Adds Insert button to the toolbar for adding Media like Images.
      * @param {*} editor  editor instance
      */
@@ -1499,6 +1571,9 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addIcon("undo", undo);
         editor.ui.registry.addIcon("redo", redo);
         editor.ui.registry.addIcon("bold", bold);
+        editor.ui.registry.addIcon("align-left", alignleft);
+        editor.ui.registry.addIcon("align-right", alignright);
+        editor.ui.registry.addIcon("align-center", aligncenter);
         editor.ui.registry.addIcon("italic", italic);
         editor.ui.registry.addIcon("underline", underline);
         editor.ui.registry.addIcon("strike-through", strikethrough);
@@ -1768,6 +1843,8 @@ export class TinyMceEditor extends Component {
             case "element-authoredtext":
                 if (element.elementdata.headers)
                     return `Heading ${element.elementdata.headers[0].level}`
+                else if(element?.elementdata?.designtype === 'handwritingstyle')
+                    return 'Handwriting'
                 else
                     return "Paragraph"
             case "element-blockfeature":

@@ -4,6 +4,7 @@ export default {
     BLOCKFEATURE: "element-blockfeature",
     ELEMENT_LIST: "element-list",
     HEADING: "heading",
+    HAND_WRITING: 'handwriting',
     PARAGRAPH: "paragraph",
     LEARNING_OBJECTIVE: "element-learningobjectives",
     FORMATTED_TITLE:'formatted-title',
