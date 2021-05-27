@@ -133,7 +133,7 @@ function AlfrescoPopup(props) {
                             key={index} 
                             value={values.entry.id}
                             className={classes.dropdownItem}
-                        ><span className='dropdown-items'>{values.entry.id}</span></MenuItem>
+                        ><span className='dropdown-items'>{values.entry.site.title}</span></MenuItem>
                         ))}
                     </Select>
                 </FormControl>
