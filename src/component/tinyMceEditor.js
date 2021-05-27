@@ -1441,12 +1441,6 @@ export class TinyMceEditor extends Component {
      */
     addInsertMediaButton = editor => {
         const self = this;
-        let objectSend = {
-            element: this.props.element,
-            permissions: this.props.permissions,
-            editor: editor
-        }
-        self.props.saveInlineImageData(objectSend)
         editor.ui.registry.addMenuButton('insertMedia', {
             text: 'Insert',
             tooltip: 'insertMedia',
