@@ -64,11 +64,9 @@ class ElementSingleAssessment extends Component {
     componentDidUpdate() {
         const { assessmentReducer } = this.props;
         const { elementType, assessmentId } = this.state;
-        if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentId && assessmentReducer)){
-            if (assessmentReducer[assessmentId]?.items) {
-                this.updateElmLearnosityOnRefresh(this.props);
-            } else if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.elementUrn === this.props.model.id) {
-                const { dataFromElm } = assessmentReducer;
+        if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentReducer)){
+            const { dataFromElm } = assessmentReducer;
+            if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.elementUrn === this.props.model.id) {
                 if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.elmUrl && dataFromElm.usageType) {
                     window.open(dataFromElm.elmUrl);
                     handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType, Resource_Type.ASSESSMENT_ITEM, 'add', 'fromCreate');
@@ -77,6 +75,8 @@ class ElementSingleAssessment extends Component {
                     this.addPufAssessment(dataFromElm.pufObj);
                     this.props.setElmPickerData({});
                 }
+            }else if (assessmentId && assessmentReducer[assessmentId]?.items) {
+                this.updateElmLearnosityOnRefresh(this.props);
             }
         }
     }
