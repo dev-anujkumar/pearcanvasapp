@@ -17,7 +17,7 @@ import { resetElmStore } from '../AssessmentSlateCanvas/elm/Actions/ElmActions.j
 import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
-import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, TDX, Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX, Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions, setElmPickerData, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';

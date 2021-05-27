@@ -798,9 +798,10 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
         snapshotData = '<p></p>'          
-    } else if(element.type === ELEMENT_LIST && element.html && element.html.text){
+    } 
+    /**else if(element.type === ELEMENT_LIST && element.html && element.html.text){
         snapshotData = element.html.text.replace(/<br>/g,"")
-    }
+    }*/
     else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
