@@ -1520,7 +1520,7 @@ class ElementContainer extends Component {
                             handleFocus={this.handleFocus}
                             deleteElement={this.deleteElement}
                         />
-                        labelText = 'DE'
+                        labelText = 'DI'
                         break;
                     
                     case elementTypeConstant.PDF_SLATE:
