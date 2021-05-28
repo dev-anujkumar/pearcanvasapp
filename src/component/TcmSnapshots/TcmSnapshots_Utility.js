@@ -500,6 +500,12 @@ export const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defa
     let bodyWE = headWE == "BODY" ? popupParentUrn && popupParentUrn.manifestUrn ? popupParentUrn.manifestUrn : "" : "";//body-id
     tag.popupParentTag = `${tag.popupParentTag}${headWE ? ":"+headWE : ""}`
     elementId.popupParentId = `${elementId.popupParentId}${headWE == "BODY" ? "+"+bodyWE : ""}`
+    /* If popup inside the 2C-WE/Aside; Get the Data of 2C */
+    const { id, type: gPType, columnName, columnId } = popupAsideData?.parent || {};
+    if (gPType === "groupedcontent") {
+        tag.grandParent = "2C:" + columnName;
+        elementId.grandParentId = `${id}+${columnId}`;
+    }
     let popupData = {
         tag: tag,
         wipData: wipData,
