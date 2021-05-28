@@ -18,7 +18,7 @@ const ElmFooter = (props) => {
     activeAssessmentType,
     addPufFunction,
     containerUrn,
-    activeUsageType } = props.elmFooterProps;
+    activeUsageType, elementId } = props.elmFooterProps;
 
   const { addFlag, hideSearch, openItemTable,
     currentAssessmentSelected,
@@ -39,9 +39,11 @@ const ElmFooter = (props) => {
   function openElmPortal() {
     try {
         let tempUrl = "";
-
+        /* @typeOfAssess@ - To identify type of assessment in AssessmentEventHandling after getting post message */
+        let typeOfAssess = "";
         /* Open ELM portal for Add new Assessment in Assessment slate */
         if (openedFrom === ASSESSMENT_PICKER_OPENERS.FULL_ASSESSMENT) {
+          typeOfAssess = ASSESSMENT_PICKER_OPENERS.FULL_ASSESSMENT;
           tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
         }
         /* Open ELM portal for Add new Item in "Existing Assessment" */
@@ -72,10 +74,13 @@ const ElmFooter = (props) => {
             const usageType = activeUsageType ? activeUsageType.replace(" ", "").toLowerCase() : "";
             url = `${url}&usageType=${usageType}`;
           }
+        /* Append Element id in url to identify post messages for which element, if exist */
+        url = elementId ? `${url}&elementUrn=${elementId}` : url;
+
         /* open elm portal */
           window.open(url);
         /**@function call for add listeners to get data from elm portal */
-          handlePostMsgOnAddAssess(addPufFunction, activeUsageType);
+          handlePostMsgOnAddAssess(addPufFunction, activeUsageType, typeOfAssess);
           closeElmWindow();
         }
     } catch (err) {

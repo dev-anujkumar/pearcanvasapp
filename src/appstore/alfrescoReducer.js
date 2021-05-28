@@ -11,7 +11,9 @@ const INITIAL_STATE = {
     alfrescoAssetData: {},
     elementId: '',
     Permission : [],
-    editor : {}
+    editor : {},
+    isCiteChanged: false,
+    changedSiteData: {}
 }
 
 const INITIAL_ACTION = {
@@ -32,7 +34,9 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
         case SAVE_ALFRESCO_ASSET_DATA:
             return {
                 alfrescoAssetData: action.payload.asset,
-                elementId: action.payload.id
+                elementId: action.payload.id,
+                isCiteChanged: action.payload.changedSiteUrl,
+                changedSiteData: action.payload.changedAlfrescoData
             }
         case SAVE_INLINE_IMAGE_DATA:
             return {

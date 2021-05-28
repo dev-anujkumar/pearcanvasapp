@@ -79,6 +79,7 @@ export const checkTCM = element => {
         case "groupedcontent": return MULTI_COLUMN;
         case "group": return MULTI_COLUMN_GROUP;
         case "workedexample" : return WORKED_EXAMPLE;
+        case "popup" : return POP_UP;
         case "discussion" : return ELEMENT_DISCUSSION;
         default: return TEXT;
     }

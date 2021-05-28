@@ -82,6 +82,10 @@ const FormatSelectorType = [
     {
         text: 'Learning Objective Item',
         value: "LO",
+    },
+    {
+        text: 'Handwriting',
+        value: 'HS'
     }
 ]
 
@@ -144,6 +148,11 @@ export const elementTypeOptions = Object.freeze({
         primaryOption : 'primary-learning-objective',
         secondaryOption : 'secondary-learning-objective',
         label : 'LO',
+    },
+    'HS' : {
+        primaryOption : 'primary-handwriting',
+        secondaryOption : 'subtype-handwriting',
+        label : 'HS',
     },
 })
 

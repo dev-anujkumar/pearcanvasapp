@@ -18,6 +18,7 @@ import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from 
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
+import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -79,7 +80,7 @@ class AssessmentSlateData extends Component {
             const { dataFromElm } = assessmentReducer;
             if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
                 window.open(dataFromElm.elmUrl);
-                handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType);
+                handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType, Resource_Type.ASSESSMENT);
                 this.props.setElmPickerData({});
             } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
                 this.addPufAssessment(dataFromElm.pufObj);
@@ -202,6 +203,7 @@ class AssessmentSlateData extends Component {
         this.props.addPufAssessment(dataToSend, this.state.activeAssessmentType, 'insert');
         const elmData = { targetId: pufObj.id }
         this.props.checkElmAssessmentStatus('assessment', 'fromAddElm', elmData, {});
+        handlePostMsgOnAddAssess("", "", "", "remove");
     }
 
     /*** @description This function is used to open Version update Popup */

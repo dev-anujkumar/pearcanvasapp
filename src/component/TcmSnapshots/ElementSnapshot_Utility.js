@@ -9,6 +9,7 @@ import { getCurrentlyLinkedImage } from '../AssetPopover/AssetPopover_Actions.js
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
 const {
+    HAND_WRITING,
     AUTHORED_TEXT,
     BLOCKFEATURE,
     ELEMENT_LIST,
@@ -264,7 +265,7 @@ export const fetchElementsTag = (element,metadataField) => {
     eleType = metadataField ? setMetadataType[element.type][metadataField] : eleType;
     switch (eleType) {
         case AUTHORED_TEXT:
-            eleSubType = (element.elementdata && element.elementdata.headers) ? HEADING + element.elementdata.headers[0].level : PARAGRAPH;
+            eleSubType = (element.elementdata && element.elementdata.headers) ? HEADING + element.elementdata.headers[0].level : element?.elementdata?.designtype === 'handwritingstyle' ? HAND_WRITING : PARAGRAPH;
             break;
         case ELEMENT_ASIDE:
             eleSubType = element.subtype === WORKED_EXAMPLE ? WORKED_EXAMPLE : ASIDE;
@@ -435,6 +436,10 @@ const setElementTag = {
             },
             'heading6': {
                 parentTag: "H6",
+                childTag: ""
+            },
+            'handwriting': {
+                parentTag: "HS",
                 childTag: ""
             },
         }

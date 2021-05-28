@@ -47,7 +47,7 @@ class ElementFigure extends Component {
         if(figureImageTypes.includes(this.props?.model?.figuretype)){
           getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.repositoryFolder,
+                alfrescoSite: response.title,
                 alfrescoSiteData:{...response}
             })
           })
@@ -55,17 +55,17 @@ class ElementFigure extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoAssetData } = this.props
-        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId) {
+        const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.dataFromNewAlfresco(alfrescoAssetData)
         }
     }
 
-    updateAlfrescoSiteUrl = () => {
-        let repositoryData = this.state.alfrescoSiteData
-        if(repositoryData?.repositoryFolder){
+    updateAlfrescoSiteUrl = (alfrescoData) => {
+        let repositoryData = alfrescoData.title
+        if(repositoryData){
             this.setState({
-                alfrescoSite: repositoryData.repositoryFolder
+                alfrescoSite: repositoryData
             })  
         }else {
             this.setState({
@@ -90,9 +90,9 @@ class ElementFigure extends Component {
 
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
 
-            let uniqID = imageData['id'] ? imageData['id'] : "";
-            let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-            let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+            let uniqID = imageData.id ? imageData.id : "";
+            let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
+            let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
             if (epsURL !== "") {
                 this.setState({ imgSrc: epsURL })
             } else {
@@ -125,9 +125,10 @@ class ElementFigure extends Component {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur()
             })
-            const alfrescoData = config?.alfrescoMetaData?.alfresco;
+            let alfrescoData = config?.alfrescoMetaData?.alfresco;
+            alfrescoData = this.props.isCiteChanged ? this.props.changedSiteData : alfrescoData
             let alfrescoSiteLocation = this.state.alfrescoSiteData
-            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
+            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '' || this.props.isCiteChanged)){
                 handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
             }
             // to blank the elementId and asset data after update
@@ -136,7 +137,7 @@ class ElementFigure extends Component {
                 id: ''
             }
             this.props.saveSelectedAssetData(payloadObj)
-            this.updateAlfrescoSiteUrl()
+            this.updateAlfrescoSiteUrl(alfrescoData)
         }
     }
     /**
@@ -183,9 +184,15 @@ class ElementFigure extends Component {
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                let alfrescoLocationData = this.state.alfrescoSiteData
                 let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
-                let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
-                    citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                alfrescoSiteName = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
+                let nodeRefs = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
+                const locationSiteDataNodeRef =alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData.guid
+                nodeRefs = locationSiteDataNodeRef ? locationSiteDataNodeRef : nodeRefs;
+                const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData.title
+                let messageObj = { citeName: locationSiteDataTitle? locationSiteDataTitle : alfrescoSiteName, 
+                    citeNodeRef: nodeRefs, 
                     elementId: this.props.elementId }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
             }
@@ -273,7 +280,7 @@ class ElementFigure extends Component {
                let payloadObj = {launchAlfrescoPopup: true, 
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
-                elementId: id
+                id
             }
                 that.props.alfrescoPopup(payloadObj)
             })
@@ -474,7 +481,10 @@ const mapStateToProps = (state) => {
     return {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         alfrescoElementId : state.alfrescoReducer.elementId,
-        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        isCiteChanged : state.alfrescoReducer.isCiteChanged,
+        changedSiteData: state.alfrescoReducer.changedSiteData
     }
 }
 
