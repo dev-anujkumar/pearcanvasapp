@@ -215,11 +215,11 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
     if (labelHTML === "" && numberHTML === ""){
         return `<p>${titleHTML}</p>`
     } else if (numberHTML === "" && labelHTML) {
-        return `<p><label>${labelHTML}</label>${titleHTML}</p>`    
+        return `<p><label>${labelHTML}&nbsp;</label>${titleHTML}</p>`    
     } else if (labelHTML === "" && numberHTML) {
-        return `<p><number>${numberHTML}</number>${titleHTML}</p>`    
+        return `<p><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`    
     }
-    return `<p><label>${labelHTML}</label><number>${numberHTML}</number>${titleHTML}</p>`
+    return `<p><label>${labelHTML}&nbsp;</label><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`
 }
 
 /**

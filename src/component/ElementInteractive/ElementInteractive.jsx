@@ -240,8 +240,8 @@ class Interactive extends React.Component {
             formattedTitle = element.html.subtitle;    
         } else {
             element.html.title = element.html.title.replace(/(\r\n|\n|\r)/gm, '');
-            formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure");
-            formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure");
+            formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
+            formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
             formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure");
         }
 

@@ -401,8 +401,8 @@ class ElementAudioVideo extends Component {
             formattedTitle = model.html.subtitle;    
         } else {
             model.html.title = model.html.title.replace(/(\r\n|\n|\r)/gm, '');
-            formattedLabel = getTitleSubtitleModel(model.html.title, "formatted-title", "figure");
-            formattedNumber = getTitleSubtitleModel(model.html.title, "formatted-number", "figure");
+            formattedLabel = getTitleSubtitleModel(model.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
+            formattedNumber = getTitleSubtitleModel(model.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
             formattedTitle = getTitleSubtitleModel(model.html.title, "formatted-subtitle", "figure");
         }
         switch (model.figuretype) {
