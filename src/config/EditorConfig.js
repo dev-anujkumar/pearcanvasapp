@@ -2,7 +2,6 @@ import { CONTENT_STYLE } from './TinymceDefaultCss';
 import 'tinymce/plugins/charmap/plugin.min.js';
 import { handleC2MediaClick } from '../js/TinyMceUtility.js';
 import ElementConstants from '../component/ElementContainer/ElementConstants.js';
-import {sendDataToIframe} from '../constants/utility'
 export const EditorConfig = {
     
     formats: {
@@ -154,7 +153,6 @@ const insertImageHandler = (params) => {
     let { element, permissions, editor } = params;
     if (element?.type === ElementConstants.ELEMENT_LIST) {
         handleC2MediaClick(permissions, editor, element);
-        sendDataToIframe({ 'type': 'inlineImageAlfresco', 'message': params });
     }
 }
 /** Insert Media-Selector Dropdown Handler */
