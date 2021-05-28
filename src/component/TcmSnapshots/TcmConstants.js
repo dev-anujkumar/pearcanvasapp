@@ -56,7 +56,7 @@ export default {
         "table": "Table"
     },
     /*****************Element Type Arrays*******************/
-    elementType: ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'],
+    elementType: ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure','popup'],
     containerType : ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY', 'groupedcontent'],
     formattedTitleField : ['formattedTitle','formattedTitleOnly','formattedSubtitle' ],
     parentType : ['WORKED_EXAMPLE', 'CONTAINER', 'CITATION', 'POETRY', 'MULTI_COLUMN'],

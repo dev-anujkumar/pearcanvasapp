@@ -151,6 +151,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
 const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlate,containerElement) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
+    console.log('wipData',wipData)
     wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
         if (item.type === WE_MANIFEST) {
             item.contents.bodymatter.map((ele) => {
