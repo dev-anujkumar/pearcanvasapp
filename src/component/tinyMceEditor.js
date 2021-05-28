@@ -1092,38 +1092,25 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
-            console.log("e.key", e.keyCode);
-            const keyCode = e.keyCode || e.which;
-            const currentNode = document.getElementById(tinymce.activeEditor.id);
-            const parentOfParentElement = currentNode?.parentNode?.parentNode;
-            let editorNumberContent = currentNode.innerText;
-            editorNumberContent = editorNumberContent.replace('.', '');
-            if (parentOfParentElement.tagName === "FIGURE" && currentNode.classList.contains('figureNumber')) {
-                // console.log("in first ifffffffffffffffffff e", e);
-                console.log("in first ifffffffffffffffffff e.target.textContent", editorNumberContent, editorNumberContent.length);
-                // console.log("in first ifffffffffffffffffff e.target.innerHTML", e.target.innerHTML);
-                // console.log("in first ifffffffffffffffffff e.target.innerText", e.target.innerText);
-                // console.log("in first ifffffffffffffffffff e.target.outerHTML", e.target.outerHTML);
-                // console.log("in first ifffffffffffffffffff e.target.outerText", e.target.outerText);
-
-                // console.log("in first ifffffffffffffffffff e.currentTarget.textContent", e.currentTarget.textContent);
-                // console.log("in first ifffffffffffffffffff e.currentTarget.innerHTML", e.currentTarget.innerHTML);
-                // console.log("in first ifffffffffffffffffff e.currentTarget.innerText", e.currentTarget.innerText);
-                // console.log("in first ifffffffffffffffffff e.currentTarget.outerHTML", e.currentTarget.outerHTML);
-                // console.log("in first ifffffffffffffffffff e.currentTarget.outerText", e.currentTarget.outerText);
-                console.log("in first uuuuuuuuuuuuuu", (keyCode > 47 && keyCode < 58), (keyCode === 190 && !currentNode.innerText.includes('.') && currentNode.innerText), (keyCode === 8 || keyCode === 37 || keyCode === 39 || keyCode === 46), !(editorNumberContent.length === 5));
-                if ( ((keyCode > 47 && keyCode < 58) && e.shiftKey) || ((keyCode > 47 && keyCode < 58) && (editorNumberContent.length === 6)) || (keyCode === 86 && (e.ctrlKey || e.metaKey))) {
-                    console.log("in second ifffffffffffffffffff 1111");
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    return
-                } else if (!((keyCode > 47 && keyCode < 58) || (keyCode === 190 && !currentNode.innerText.includes('.') && currentNode.innerText) || (keyCode === 8 || keyCode === 37 || keyCode === 39 || keyCode === 46))) {
-                    console.log("in second ifffffffffffffffffff 3333");
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    return
-                }
-            }
+            // console.log("e.key", e.keyCode);
+            // const keyCode = e.keyCode || e.which;
+            // const currentNode = document.getElementById(tinymce.activeEditor.id);
+            // const parentOfParentElement = currentNode?.parentNode?.parentNode;
+            // let editorNumberContent = currentNode.innerText;
+            // editorNumberContent = editorNumberContent.replace('.', '');
+            // if (parentOfParentElement.tagName === "FIGURE" && currentNode.classList.contains('figureNumber')) {
+            //     if ( ((keyCode > 47 && keyCode < 58) && e.shiftKey) || ((keyCode > 47 && keyCode < 58) && (editorNumberContent.length === 6)) || (keyCode === 86 && (e.ctrlKey || e.metaKey))) {
+            //         console.log("in second ifffffffffffffffffff 1111");
+            //         e.preventDefault();
+            //         e.stopImmediatePropagation();
+            //         return
+            //     } else if (!((keyCode > 47 && keyCode < 58) || (keyCode === 190 && !currentNode.innerText.includes('.') && currentNode.innerText) || (keyCode === 8 || keyCode === 37 || keyCode === 39 || keyCode === 46))) {
+            //         console.log("in second ifffffffffffffffffff 3333");
+            //         e.preventDefault();
+            //         e.stopImmediatePropagation();
+            //         return
+            //     }
+            // }
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;
