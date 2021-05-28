@@ -1468,7 +1468,7 @@ export class TinyMceEditor extends Component {
                             }
                         },
                         onSetup: function(api) {
-                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft'));
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft') || (!tinymce.activeEditor.queryCommandState('JustifyLeft') && !tinymce.activeEditor.queryCommandState('JustifyRight') && !tinymce.activeEditor.queryCommandState('JustifyCenter')))
                             return function() {};
                         }
                     },
