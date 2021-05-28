@@ -37,12 +37,13 @@ const ElmFooter = (props) => {
 
 /* open elm portal */
   function openElmPortal() {
-  //const ELM_PORTAL_URL = "https://assessmentauthoring-qa.pearson.com"
     try {
         let tempUrl = "";
-
+        /* @typeOfAssess@ - To identify type of assessment in AssessmentEventHandling after getting post message */
+        let typeOfAssess = "";
         /* Open ELM portal for Add new Assessment in Assessment slate */
         if (openedFrom === ASSESSMENT_PICKER_OPENERS.FULL_ASSESSMENT) {
+          typeOfAssess = ASSESSMENT_PICKER_OPENERS.FULL_ASSESSMENT;
           tempUrl = `${config.ELM_PORTAL_URL}/launch/editor/assessment/createInPlace`;
         }
         /* Open ELM portal for Add new Item in "Existing Assessment" */
@@ -76,11 +77,10 @@ const ElmFooter = (props) => {
         /* Append Element id in url to identify post messages for which element, if exist */
         url = elementId ? `${url}&elementUrn=${elementId}` : url;
 
-        console.log("url = ",url)
         /* open elm portal */
           window.open(url);
         /**@function call for add listeners to get data from elm portal */
-          handlePostMsgOnAddAssess(addPufFunction, activeUsageType);
+          handlePostMsgOnAddAssess(addPufFunction, activeUsageType, typeOfAssess);
           closeElmWindow();
         }
     } catch (err) {
