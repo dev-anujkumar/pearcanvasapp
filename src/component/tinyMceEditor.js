@@ -1456,7 +1456,7 @@ export class TinyMceEditor extends Component {
     addAlignmentIcon = editor => {
         editor.ui.registry.addMenuButton("Alignment", {
             icon:'align-left',
-            tooltip: "Alignment",
+            tooltip: "Text Alignment",
             fetch: function (callback) {
                 var items = [{
                         text:'Left Align',
