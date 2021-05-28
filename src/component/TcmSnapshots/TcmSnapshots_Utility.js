@@ -42,7 +42,8 @@ const {
     bqHiddenText,
     FIGURE,
     allowedFigureTypesForTCM,
-    SHOWHIDE
+    SHOWHIDE,
+    SHOW_HIDE
 }
     = TcmConstants;
 
@@ -76,7 +77,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         tag.grandParent = "2C:" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`;
     /* Add section Break inside 2C->WE */
-    } else if((type === SECTION_BREAK || actionStatus.action === "update" || 
+    } else if((type === SECTION_BREAK || type === POP_UP || type === SHOW_HIDE || actionStatus.action === "update" || 
         actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE) && 
         gPType === "groupedcontent"){
             tag.grandParent = "2C:" + columnName;
@@ -597,10 +598,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
-    if(tag.grandParent && eleId.grandParentId){
-        elementTag =  `${tag.grandParent}:${elementTag}`
-        elementId = `${eleId.grandParentId}+${elementId}`
-    }
+    
     if (parentElement?.element?.type === SHOWHIDE) {    //showhide
         let showHideSection = getShowHideTag(parentElement.showHideType)
         elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
@@ -637,7 +635,12 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${eleId.popID}+${elementId}`;
     }
-    
+    /* if WE and Aside inside 2C element - 2C:AS/WE:--- */
+    if(tag.grandParent && eleId.grandParentId){
+        elementTag =  `${tag.grandParent}:${elementTag}`
+        elementId = `${eleId.grandParentId}+${elementId}`
+    }
+
     elementData = {
         elementUrn: elementId,
         elementType: elementTag
