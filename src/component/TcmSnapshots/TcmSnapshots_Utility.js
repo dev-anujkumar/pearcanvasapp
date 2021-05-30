@@ -12,6 +12,7 @@ import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 
+let operType = "";
 const {
     elementType,
     containerType,
@@ -54,7 +55,8 @@ const {
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, index, elmFeedback = null) => {
+export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null) => {
+    console.log('operationType',operationType)
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
@@ -89,15 +91,15 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* For POPUP Element */
     else if ((wipData.type === POPUP_ELEMENT && (type == POP_UP || type == POPUP_ELEMENT)) || (parentElement && parentElement.type == POPUP_ELEMENT)) {
         if (hasParentData) { /** Popup Inside WE/Aside */
-            tcmSnapshotsPopupInContainer(snapshotsData, defaultKeys, containerElement, type,index);
+            tcmSnapshotsPopupInContainer(snapshotsData, defaultKeys, containerElement, type,index,operationType);
         }
         else {               /** Popup Element */
-            tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, containerElement, type,index);
+            tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, containerElement, type,index,operationType);
         }
     }
     /** TCM Snapshots on Default Slate - Section/I.S. */
     else {
-        tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type,index, "")
+        tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type,index, "",operationType)
     }
 }
 
@@ -109,12 +111,12 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type,index, isPopupSlate) => {
+export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type,index, isPopupSlate,operationType=null) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     /* For WE creation*/
     if (wipData.type === ELEMENT_ASIDE && type != SECTION_BREAK) {
-        tcmSnapshotsCreateAsideWE(snapshotsData, defaultKeys,index, isPopupSlate,containerElement);
+        tcmSnapshotsCreateAsideWE(snapshotsData, defaultKeys,index, isPopupSlate,containerElement,operationType);
     }
     /* For SH creation*/
     else if (wipData.type === SHOWHIDE) {
@@ -148,10 +150,9 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
  * @param {Object} snapshotsData - Initial Snapshots data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlate,containerElement) => {
+const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlate,containerElement,operationType=null) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
-    console.log('wipData',wipData)
     wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
         if (item.type === WE_MANIFEST) {
             item.contents.bodymatter.map((ele) => {
@@ -164,6 +165,9 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
                else if (ele.type === SHOWHIDE) {
                     tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,ele)
                 }
+                else if (ele.type === POPUP_ELEMENT) {
+                    tcmSnapshotsPopup(wipData,index,containerElement,actionStatus,ele,operationType);
+                }
             })
         }
         else if (elementType.indexOf(item.type) !== -1) {
@@ -175,8 +179,45 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
         else if (item.type === SHOWHIDE) {
             tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,item)
         }
+        else if (item.type === POPUP_ELEMENT) {
+            tcmSnapshotsPopup(wipData,index,containerElement,actionStatus,item,operationType);
+        }
     })
 }
+
+
+
+const tcmSnapshotsPopup =(wipData,index,containerElement,actionStatus,item,operationType=null) => {
+    const updatedContainerElement = {
+        asideData: {
+            contentUrn: wipData.contentUrn,
+            element: wipData,
+            id: wipData.id,
+            subtype: wipData.subtype,
+            type: wipData.type
+        },
+        parentUrn: {
+            contentUrn: wipData.contentUrn,
+            elementType: wipData.type,
+            manifestUrn: wipData.id
+        },
+        metaDataField: item.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
+        parentElement: item
+    }
+    let newContainerElement = {}
+    if (containerElement.cutCopyParentUrn) {
+        newContainerElement = {
+            ...containerElement,
+            ...updatedContainerElement
+        }
+    } else {
+        newContainerElement = updatedContainerElement
+    }
+    const shActionStatus = {...actionStatus, status: ""}
+    prepareTcmSnapshots(item, shActionStatus, newContainerElement, item.type, index, "",operationType);
+}
+
+
 
 const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item) => {
     const updatedContainerElement = {
@@ -366,6 +407,7 @@ const tcmSnapshotsDeletePopup = (snapshotsData, defaultKeys,index, containerElem
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
 export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerElement,type,index, calledFrom) => {
+   console.log('data@@', snapshotsData, defaultKeys, containerElement,type,index, calledFrom)
     let elementDetails;
     const { parentElement, metaDataField, CurrentSlateStatus, isMetaFieldExist } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
@@ -389,6 +431,7 @@ export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerE
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
 const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index) => {
+    console.log('this case',snapshotsData, defaultKeys, containerElement,index)
     let elementDetails;
     const { parentElement, sectionType } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
@@ -410,11 +453,18 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type,index) => {
+export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type,index,operationType=null) => {
+    console.log('operationTypeUpdateCase',operationType);
     const { metaDataField, sectionType, parentElement } = containerElement
-    if (defaultKeys.action === 'create' || defaultKeys.action === 'update' && type == POP_UP) {     /** Create Popup */
+    if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
         tcmSnapshotsCreatePopup(snapshotsData, defaultKeys,index);
+        if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
+            tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
+        }
+    }
+    else if (defaultKeys.action === 'create' && type == POPUP_ELEMENT && operationType==='copy') {     /** Create Popup */
+        tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
         if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
         }
@@ -425,6 +475,12 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
          tcmSnapshotsDeletePopup(snapshotsData, defaultKeys,index,containerElement,type);
         if(defaultKeys.action === 'delete' && type == POPUP_ELEMENT && (metaDataField && formattedTitleField.includes(metaDataField))){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'delete');
+        }
+    }
+    else if(operationType==='cut' && defaultKeys.action === 'update'){
+        tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
+        if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
+            tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
         }
     }
     else if ((type && formattedTitleField.includes(type)) || (metaDataField && formattedTitleField.includes(metaDataField))) { /** Formatted-title */
@@ -442,7 +498,7 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerElement, type,index) => {
+const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerElement, type,index,operationType=null) => {
     const { wipData, elementId, tag, actionStatus, slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn } = containerElement
     let popupParent = asideData ? asideData : poetryData ? poetryData : parentUrn;
@@ -461,7 +517,7 @@ const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerEleme
         popupInContainer:true,
         slateManifestVersioning:slateManifestVersioning
     }
-    tcmSnapshotsInPopupElement(popupData, defaultKeys, containerElement, type,index)
+    tcmSnapshotsInPopupElement(popupData, defaultKeys, containerElement, type,index,operationType)
 }
 
 /**
@@ -557,7 +613,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
         elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) : JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
         ...defaultKeys
     };
-    if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create'){
+    if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create' && operType!=='copy'){
         currentSnapshot.status = 'accepted'  
         if(currentSnapshot.elementType.includes("LB") && CurrentSlateStatus != 'approved'){
             res.elementdata.text = ''
@@ -924,7 +980,7 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
         status:"",
         fromWhere:"create"
     }
-
+    operType= operationType;
     let currentSlateData = elementCreateData.currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementCreateData.currentParentData[config.tempSlateManifestURN]
@@ -935,7 +991,7 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
         versionStatus = fetchManifestStatus(elementCreateData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
-    prepareTcmSnapshots(elementCreateData.response, actionStatus, containerElement, type, index, elmFeedback);
+    prepareTcmSnapshots(elementCreateData.response, actionStatus, containerElement, type, index, elmFeedback,operationType);
 }
 
 /**
