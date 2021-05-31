@@ -212,6 +212,14 @@ export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
  * @param {*} titleHTML title HTML content
  */
 export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) => {
+    labelHTML = labelHTML.replace(/<br>/g, "");
+    numberHTML = numberHTML.replace(/<br>/g, "");
+    titleHTML = titleHTML.replace(/<br>/g, "");
+
+    labelHTML = handleBlankLineDom(labelHTML);
+    numberHTML = handleBlankLineDom(numberHTML);
+    titleHTML = handleBlankLineDom(titleHTML);
+
     if (labelHTML === "" && numberHTML === ""){
         return `<p>${titleHTML}</p>`
     } else if (numberHTML === "" && labelHTML) {

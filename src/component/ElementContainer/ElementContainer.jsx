@@ -340,6 +340,8 @@ class ElementContainer extends Component {
   
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
         titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
@@ -389,6 +391,8 @@ class ElementContainer extends Component {
         }
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
         // subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         // titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
         titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
@@ -433,6 +437,8 @@ class ElementContainer extends Component {
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
         // subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         // titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
         titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
@@ -482,6 +488,8 @@ class ElementContainer extends Component {
 
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
         titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         text = matchHTMLwithRegex(text) ? text : `<p>${text}</p>`
         oldtext = matchHTMLwithRegex(oldtext) ? oldtext : `<p>${oldtext}</p>`
@@ -522,6 +530,8 @@ class ElementContainer extends Component {
 
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
         titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
         captionHTML = this.removeClassesFromHtml(captionHTML)

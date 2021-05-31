@@ -357,7 +357,6 @@ class ElementFigure extends Component {
             formattedNumber = getTitleSubtitleModel(model.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
             formattedTitle = getTitleSubtitleModel(model.html.title, "formatted-subtitle", "figure");
         }
-        console.log("formattedLabel, formattedNumber, formattedTitle", formattedLabel, formattedNumber, formattedTitle)
         
         if (model && model.figuretype === 'authoredtext') {
             let posterText = model.html.text
