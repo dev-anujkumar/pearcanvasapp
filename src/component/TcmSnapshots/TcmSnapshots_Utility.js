@@ -1132,9 +1132,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
                 } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column */
                     wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
-                } //else if(eleIndex.length == 4 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column->Aside/WE */
-                //    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]].elementdata.bodymatter[eleIndex[3]];
-                //}
+                }
                 break;
             case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */           
                 wipData = popupWipData(bodymatter, eleIndex,operationType,wipData)
