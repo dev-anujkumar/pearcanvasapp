@@ -9,7 +9,7 @@ import React, { Component } from 'react';
 import config from '../../../config/config.js';
 import { sendDataToIframe, defaultMathImagePath } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { TocToggle } from '../../../constants/IFrameMessageTypes';
+import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
@@ -254,7 +254,35 @@ function CommunicationChannel(WrappedComponent) {
                 case 'unlinkLOFailForWarningPopup':
                     this.handleUnlinkedLOData(message)
                     break;
+                case TOGGLE_ELM_SPA:
+                    this.handleElmPickerTransactions(message);
+                    break;
             }
+        }
+
+        /**
+          * This method handles all transactions from Elm Picker SPA
+          * @param {*} message | message received from wrapper
+          */
+        handleElmPickerTransactions = (message) => {
+            if (message?.dataToSend?.type) {
+                switch (message.dataToSend.type) {
+                    case ELM_CREATE_IN_PLACE:
+                    case SAVE_ELM_DATA:
+                        this.props.setElmPickerData(message.dataToSend);
+                        break;
+                    case CLOSE_ELM_PICKER:
+                    default:
+                        this.props.setElmPickerData({})
+                        break;
+                }
+                this.setState({
+                    showBlocker: false
+                });
+            } else {
+                this.props.setElmPickerData({})
+            }
+            hideBlocker();
         }
 
         /**

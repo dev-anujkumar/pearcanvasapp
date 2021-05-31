@@ -9,7 +9,8 @@ import {
     RESET_ASSESSMENT_STORE,
     ELM_ASSESSMENT_EDIT_ID,
     ASSESSMENT_CONFIRMATION_POPUP,
-    ELM_NEW_ITEM_DATA
+    ELM_NEW_ITEM_DATA,
+    SET_ELM_PICKER_MSG
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
@@ -132,13 +133,15 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
  * This action creator is used to launch Elm Assessment Portal from Cypress
  */
 export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
-    let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn, interactiveId } = assessmentData
+    let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn, interactiveId, elementId } = assessmentData
     let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     if (assessmentItemWorkUrn.trim() != "") {
         url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     } else if(interactiveId){
         url = `${config.ELM_PORTAL_URL}/launch/editor/interactive/${interactiveId}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     }
+    /* Append Element id in url to identify post messages for which element, if exist */
+    url = elementId ? `${url}&elementUrn=${elementId}` : url;
     try {
         let elmWindow = window.open(url);
         if (elmWindow.closed) {
@@ -265,5 +268,12 @@ export const setNewItemFromElm = (value) =>{
  return {
         type: ELM_NEW_ITEM_DATA,
         payload: value
+    }
+}
+
+export const setElmPickerData = (message) => {
+    return {
+        type: SET_ELM_PICKER_MSG,
+        payload: message
     }
 }
