@@ -258,6 +258,9 @@ function CommunicationChannel(WrappedComponent) {
                     console.log('ASSET DATA FROM ALFRESCO', message.asset)
                     this.props.saveSelectedAssetData(message)
                     break;
+                case 'saveAlfrescoDataToConfig' : 
+                config.alfrescoMetaData = message
+                break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
                     break;
