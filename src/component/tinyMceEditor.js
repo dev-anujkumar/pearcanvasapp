@@ -1543,7 +1543,7 @@ export class TinyMceEditor extends Component {
     addAlignmentIcon = editor => {
         editor.ui.registry.addMenuButton("Alignment", {
             icon:'align-left',
-            tooltip: "Alignment",
+            tooltip: "Text Alignment",
             fetch: function (callback) {
                 var items = [{
                         text:'Left Align',
@@ -1555,7 +1555,7 @@ export class TinyMceEditor extends Component {
                             }
                         },
                         onSetup: function(api) {
-                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft'));
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft') || (!tinymce.activeEditor.queryCommandState('JustifyLeft') && !tinymce.activeEditor.queryCommandState('JustifyRight') && !tinymce.activeEditor.queryCommandState('JustifyCenter')))
                             return function() {};
                         }
                     },
