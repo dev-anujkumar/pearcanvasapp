@@ -92,7 +92,7 @@ class Interactive extends React.Component {
            if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elementUrn === this.props.model?.id) {
                if (dataFromElm?.type == ELM_CREATE_IN_PLACE && dataFromElm.elmUrl) {
                    window.open(dataFromElm.elmUrl);
-                   handlePostMsgOnAddAssess(this.addElmInteractive, dataFromElm.usageType, Resource_Type.INTERACTIVE );
+                   handlePostMsgOnAddAssess(this.addElmInteractive, dataFromElm.usageType, Resource_Type.INTERACTIVE, 'add','fromCreate' );
                } else if (dataFromElm?.type == SAVE_ELM_DATA && dataFromElm.pufObj) {
                    this.addElmInteractive(dataFromElm.pufObj);
                }
@@ -152,25 +152,39 @@ class Interactive extends React.Component {
         })
         this.showCanvasBlocker(toggleValue);
     }
+    closeUpdatePopup = (toggleValue,event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            showUpdatePopup: toggleValue
+        })
+        hideTocBlocker();
+        disableHeader(false);
+        this.props.showBlocker(false);
+    }
     /*** @description - This function is to disable all components when update Popups are open in window */
     showCanvasBlocker = (value) => {
         if (value === true) {
             showTocBlocker();
             hideToc();
         } else {
-            hideTocBlocker(value);
+            hideTocBlocker();
+            disableHeader(false);
         }
+        this.props.showBlocker(value);
         disableHeader(value);
         showBlocker(value);
     }
       /*** @description This function is used to render Version update Popup */
     showCustomPopup = () => {
         this.showCanvasBlocker(true);
+        this.props.showBlocker(true);
         return (
             <PopUp
                 dialogText={ELM_UPDATE_MSG}
                 active={true}
-                togglePopup={this.toggleUpdatePopup}
+                togglePopup={this.closeUpdatePopup}
                 isElmUpdatePopup={true}
                 updateElmAssessment={this.updateElmAssessment}
                 isInputDisabled={true}
@@ -180,8 +194,7 @@ class Interactive extends React.Component {
         )
     }
     updateElmAssessment = async (event) => {
-        this.toggleUpdatePopup(false, event);
-        this.showCanvasBlocker(false);
+        this.closeUpdatePopup(false, event);
         let oldWorkUrn = this.props?.model?.figuredata?.interactiveid;
         let oldReducerData = this.props.assessmentReducer[oldWorkUrn]??{};
         oldReducerData.targetId = oldWorkUrn;
@@ -420,7 +433,7 @@ class Interactive extends React.Component {
             if (cb) {
                 cb();
             }
-            handlePostMsgOnAddAssess("", "", "", "remove");
+            // handlePostMsgOnAddAssess("", "", "", "remove","");
         }
     }
 
@@ -439,7 +452,7 @@ class Interactive extends React.Component {
         if (props?.assessmentReducer?.item?.calledFrom === 'createElm') {
             this.props.setNewItemFromElm({});
         }
-        handlePostMsgOnAddAssess("", "", "", "remove");
+        // handlePostMsgOnAddAssess("", "", "", "remove","");
     }
     /**------------------------------------------------------------------------------------------*/
     
