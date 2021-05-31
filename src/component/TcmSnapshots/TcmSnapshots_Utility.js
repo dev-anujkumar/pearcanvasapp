@@ -11,8 +11,6 @@ import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getI
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
-let operType = "";
-
 
 let operType = "";
 const {
