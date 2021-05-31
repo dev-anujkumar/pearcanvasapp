@@ -11,6 +11,8 @@ import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getI
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
+let operType = "";
+
 
 const {
     elementType,
@@ -556,7 +558,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
         elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) : JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
         ...defaultKeys
     };
-    if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create'){
+    if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create' && operType!=='copy'){
         currentSnapshot.status = 'accepted'  
         if(currentSnapshot.elementType.includes("LB") && CurrentSlateStatus != 'approved'){
             res.elementdata.text = ''
@@ -923,7 +925,7 @@ export const tcmSnapshotsForCreate = async (elementCreateData, type, containerEl
         status:"",
         fromWhere:"create"
     }
-
+    operType= operationType;
     let currentSlateData = elementCreateData.currentParentData[config.slateManifestURN] 
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementCreateData.currentParentData[config.tempSlateManifestURN]
