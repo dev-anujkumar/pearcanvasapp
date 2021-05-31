@@ -187,7 +187,6 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
             elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer,slateManifestVersioning, isPopupSlate);
-            console.log("elementDetails = ",elementDetails);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
         else if (item.type === SHOWHIDE) {
