@@ -407,7 +407,6 @@ const tcmSnapshotsDeletePopup = (snapshotsData, defaultKeys,index, containerElem
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
 export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerElement,type,index, calledFrom) => {
-   console.log('data@@', snapshotsData, defaultKeys, containerElement,type,index, calledFrom)
     let elementDetails;
     const { parentElement, metaDataField, CurrentSlateStatus, isMetaFieldExist } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
@@ -431,7 +430,6 @@ export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerE
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
 const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index) => {
-    console.log('this case',snapshotsData, defaultKeys, containerElement,index)
     let elementDetails;
     const { parentElement, sectionType } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
