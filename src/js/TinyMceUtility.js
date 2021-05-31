@@ -7,7 +7,6 @@ import tinymce from 'tinymce/tinymce';
 import config from '../config/config';
 import { sendDataToIframe } from '../constants/utility';
 import { c2MediaModule } from './c2_media_module';
-import { alfrescoPopup } from '../component/AlfrescoPopup/Alfresco_Action';
 /**
   * @description data after selecting an asset from alfresco c2 module
   * @param {*} data selected asset data
@@ -38,7 +37,7 @@ import { alfrescoPopup } from '../component/AlfrescoPopup/Alfresco_Action';
             setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
         }
     }
-    return imgData;
+    // return imgData;
 }
 /**
  * @description Open C2 module with predefined Alfresco location
@@ -135,7 +134,8 @@ export const handleC2MediaClick = (permissions, editor, element) => {
                 let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
                 let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
                     citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
-                    elementId: element.id}
+                    elementId: element.id,
+                    editor: true}
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
             } else {
                 // props.accessDenied(true)
@@ -168,9 +168,10 @@ function handleSiteOptionsDropdown (alfrescoPath, id) {
             launchAlfrescoPopup: true, 
             alfrescoPath: alfrescoPath, 
             alfrescoListOption: response.data.list.entries,
-            elementId: id
+            id,
+            editor: true
         }
-            alfrescoPopup(payloadObj)
+            sendDataToIframe({ 'type': 'openInlineAlsfrescoPopup', 'message': payloadObj })
         })
         .catch(function (error) {
             console.log("Error IN SITE API", error)

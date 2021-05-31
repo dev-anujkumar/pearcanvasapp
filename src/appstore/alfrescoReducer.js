@@ -13,7 +13,8 @@ const INITIAL_STATE = {
     Permission : [],
     editor : {},
     isCiteChanged: false,
-    changedSiteData: {}
+    changedSiteData: {},
+    isInlineEditorOpen: false
 }
 
 const INITIAL_ACTION = {
@@ -29,20 +30,24 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
                 launchAlfrescoPopup: action.payload.launchAlfrescoPopup,
                 alfrescoPath: action.payload.alfrescoPath,
                 alfrescoListOption: action.payload.alfrescoListOption,
-                elementId: action.payload.id
+                elementId: action.payload.id,
+                isInlineEditorOpen: action.payload.editor
             }
         case SAVE_ALFRESCO_ASSET_DATA:
             return {
                 alfrescoAssetData: action.payload.asset,
                 elementId: action.payload.id,
                 isCiteChanged: action.payload.changedSiteUrl,
-                changedSiteData: action.payload.changedAlfrescoData
+                changedSiteData: action.payload.changedAlfrescoData,
+                editor : action.payload.editor
             }
         case SAVE_INLINE_IMAGE_DATA:
             return {
                 Permission: action.payload.permissions,
                 editor: action.payload.editor,
-                elementId: action.payload.element
+                elementId: action.payload.element,
+                imageArgs: action.payload.imageArgs,
+                alfrescoAssetData: action.payload.asset
             }
         default:
             return state

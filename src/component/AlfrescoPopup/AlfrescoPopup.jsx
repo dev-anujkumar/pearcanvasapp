@@ -70,7 +70,8 @@ function AlfrescoPopup(props) {
         }
         handleClose()
         props.alfrescoPopup(payloadObj)
-        let messageObj = { citeName: alfrescoData.title, citeNodeRef: alfrescoData.guid, elementId: props.alfrescoElementId }
+        const editor = props.isInlineEditorOpen === true
+        let messageObj = { citeName: alfrescoData.title, citeNodeRef: alfrescoData.guid, elementId: props.alfrescoElementId, editor }
         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
         let request = {
             eTag: props.alfrescoPath.etag,
@@ -162,7 +163,8 @@ const mapActionToProps = (dispatch) =>{
 
 const mapStateToProps = (state) => {
     return {
-        alfrescoElementId : state.alfrescoReducer.elementId
+        alfrescoElementId : state.alfrescoReducer.elementId,
+        isInlineEditorOpen: state.alfrescoReducer.isInlineEditorOpen
     }
 }
 export default connect(

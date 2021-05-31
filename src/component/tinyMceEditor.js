@@ -1460,6 +1460,7 @@ export class TinyMceEditor extends Component {
                     permissions: self.props.permissions,
                     editor: editor
                 }
+                self.props.saveInlineImageData(params)
                 const items = insertMediaSelectors(params);
                 callback(items);
             }
@@ -2706,7 +2707,7 @@ export class TinyMceEditor extends Component {
     componentDidUpdate(prevProps) {
         debugger
         //console.log('COMPONENTDIDUPDATE INLINE IMAGE EDITOR', editor)
-        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData} = this.props
+        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup} = this.props
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
@@ -2728,7 +2729,7 @@ export class TinyMceEditor extends Component {
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
-         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId) {
+         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
             dataFromAlfresco(alfrescoAssetData, alfrescoEditor)
         }
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
@@ -3572,7 +3573,8 @@ const mapStateToProps = (state) => {
         alfrescoPermission: state.alfrescoReducer.Permission,
         alfrescoElementId : state.alfrescoReducer.elementId,
         alfrescoEditor: state.alfrescoReducer.editor,
-        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData
+        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup
     }
 }
 

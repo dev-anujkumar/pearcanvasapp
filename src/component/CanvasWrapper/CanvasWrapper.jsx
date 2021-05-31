@@ -36,7 +36,7 @@ import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/A
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
-import {saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action.js'
+import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -273,7 +273,8 @@ const mapStateToProps = state => {
         ErrorPopup: state.errorPopup,
         pageNumberToggle: state.toolbarReducer.pageNumberToggle,
         audioGlossaryData:state.audioReducer.audioGlossaryData,
-        currentSlateLF: state.metadataReducer.currentSlateLF
+        currentSlateLF: state.metadataReducer.currentSlateLF,
+        alfrescoEditor: state.alfrescoReducer.editor
     };
 };
 
@@ -321,6 +322,8 @@ export default connect(
         fetchProjectLFs,
         currentSlateLOType,
         setElmPickerData,
-        saveSelectedAssetData
+        saveSelectedAssetData,
+        saveInlineImageData,
+        alfrescoPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
