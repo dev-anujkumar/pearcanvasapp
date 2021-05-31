@@ -521,10 +521,9 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                     }
-                    console.log('window.getSelection()',window.getSelection(),tinymce.activeEditor.selection.getNode())
                     if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
-                        let selectedText = window.getSelection().toString();
-                        if (selectedText.length) {
+                        let textSelected = window.getSelection().toString();
+                        if (textSelected.length) {
                             let selected = editor.selection.getContent();
                             let selection = window.getSelection().anchorNode.parentNode;
                             selection.parentNode.removeChild(selection);
@@ -1478,12 +1477,13 @@ export class TinyMceEditor extends Component {
                 onAction: () => {
                     let selectedText = window.getSelection().toString();
                     if (!hasReviewerRole() && selectedText.length) {
-                        this.setCalloutToSelection(editor,i)
+                        this.setCalloutToSelection(editor,i-1)
                     }
                 },
                 onSetup: function (api) {
+                    let callouts=['One','Two','Three','Four']
                     let activeCallout = tinymce.activeEditor.selection.getNode().className;
-                    if(activeCallout===`callout${i}`){
+                    if(activeCallout===`callout${callouts[i-1]}`){
                         api.setActive(true);
                     }
                     else{
@@ -1502,9 +1502,10 @@ export class TinyMceEditor extends Component {
     }
 
     setCalloutToSelection(editor,selectedCalloutIndex){
+        let callouts=['One','Two','Three','Four']
         let selectedContent = editor.selection.getContent();
         let selectedText = this.removeHTMLTags(selectedContent);
-        let calloutSpan = selectedContent.replace(selectedText,`<span title="callout${selectedCalloutIndex}" class="callout${selectedCalloutIndex}">${selectedText}</span>`)
+        let calloutSpan = selectedContent.replace(selectedText,`<span title="callout${callouts[selectedCalloutIndex]}" class="callout${callouts[selectedCalloutIndex]}">${selectedText}</span>`)
         let isSelected = tinymce.activeEditor.selection.getNode().className.includes('callout');
         if(!isSelected){
             tinymce.activeEditor.selection.setContent(calloutSpan);
@@ -1512,7 +1513,7 @@ export class TinyMceEditor extends Component {
         else{
             let selection = window.getSelection().anchorNode.parentNode;
             selection.parentNode.removeChild(selection);
-            tinymce.activeEditor.selection.setContent(`<span title="callout${selectedCalloutIndex}" class="callout${selectedCalloutIndex}">${selectedText}</span>`);
+            tinymce.activeEditor.selection.setContent(`<span title="callout${callouts[selectedCalloutIndex]}" class="callout${callouts[selectedCalloutIndex]}">${selectedText}</span>`);
         }
     }
 
@@ -2468,7 +2469,6 @@ export class TinyMceEditor extends Component {
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        console.log('dataToCheck', selection,selectedTag,selectedTagClass,selectedText)
         let parentNode = true;
         do {
             if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
