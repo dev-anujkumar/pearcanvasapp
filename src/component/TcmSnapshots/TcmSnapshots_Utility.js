@@ -56,7 +56,6 @@ const {
  * @param {String} type - type of element
 */
 export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null) => {
-    console.log('operationType',operationType)
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
@@ -452,7 +451,6 @@ const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index
  * @param {String} type - type of element
 */
 export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, containerElement, type,index,operationType=null) => {
-    console.log('operationTypeUpdateCase',operationType);
     const { metaDataField, sectionType, parentElement } = containerElement
     if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
