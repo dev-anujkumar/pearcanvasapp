@@ -47,7 +47,7 @@ class ElementFigure extends Component {
         if(figureImageTypes.includes(this.props?.model?.figuretype)){
           getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.repositoryFolder,
+                alfrescoSite: response.title,
                 alfrescoSiteData:{...response}
             })
           })
@@ -55,17 +55,17 @@ class ElementFigure extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoAssetData } = this.props
-        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId) {
+        const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.dataFromNewAlfresco(alfrescoAssetData)
         }
     }
 
-    updateAlfrescoSiteUrl = () => {
-        let repositoryData = this.state.alfrescoSiteData
-        if(repositoryData?.title){
+    updateAlfrescoSiteUrl = (alfrescoData) => {
+        let repositoryData = alfrescoData.title
+        if(repositoryData){
             this.setState({
-                alfrescoSite: repositoryData.title
+                alfrescoSite: repositoryData
             })  
         }else {
             this.setState({
@@ -125,9 +125,10 @@ class ElementFigure extends Component {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur()
             })
-            const alfrescoData = config?.alfrescoMetaData?.alfresco;
+            let alfrescoData = config?.alfrescoMetaData?.alfresco;
+            alfrescoData = this.props.isCiteChanged ? this.props.changedSiteData : alfrescoData
             let alfrescoSiteLocation = this.state.alfrescoSiteData
-            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
+            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '' || this.props.isCiteChanged)){
                 handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
             }
             // to blank the elementId and asset data after update
@@ -136,7 +137,7 @@ class ElementFigure extends Component {
                 id: ''
             }
             this.props.saveSelectedAssetData(payloadObj)
-            this.updateAlfrescoSiteUrl()
+            this.updateAlfrescoSiteUrl(alfrescoData)
         }
     }
     /**
@@ -187,8 +188,10 @@ class ElementFigure extends Component {
                 let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
                 alfrescoSiteName = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                 let nodeRefs = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
-                nodeRefs = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : nodeRefs;
-                let messageObj = { citeName: alfrescoLocationData?.siteId ? alfrescoLocationData.siteId : alfrescoSiteName, 
+                const locationSiteDataNodeRef =alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData.guid
+                nodeRefs = locationSiteDataNodeRef ? locationSiteDataNodeRef : nodeRefs;
+                const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData.title
+                let messageObj = { citeName: locationSiteDataTitle? locationSiteDataTitle : alfrescoSiteName, 
                     citeNodeRef: nodeRefs, 
                     elementId: this.props.elementId }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
@@ -277,7 +280,7 @@ class ElementFigure extends Component {
                let payloadObj = {launchAlfrescoPopup: true, 
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
-                elementId: id
+                id
             }
                 that.props.alfrescoPopup(payloadObj)
             })
@@ -478,7 +481,10 @@ const mapStateToProps = (state) => {
     return {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         alfrescoElementId : state.alfrescoReducer.elementId,
-        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        isCiteChanged : state.alfrescoReducer.isCiteChanged,
+        changedSiteData: state.alfrescoReducer.changedSiteData
     }
 }
 

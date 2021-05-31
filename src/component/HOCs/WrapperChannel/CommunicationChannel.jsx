@@ -256,6 +256,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleUnlinkedLOData(message)
                     break;
                 case 'selectedAlfrescoAssetData' :
+                    console.log('ASSET DATA FROM ALFRESCO', message.asset)
                     this.props.saveSelectedAssetData(message)
                     let fileName = message.asset.name;
                     let fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
@@ -266,6 +267,9 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.showWrongAudioPopup(true);
                     }
                     break;
+                case 'saveAlfrescoDataToConfig' : 
+                config.alfrescoMetaData = message
+                break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
                     break;
@@ -294,6 +298,7 @@ function CommunicationChannel(WrappedComponent) {
             } else {
                 this.props.setElmPickerData({})
             }
+            hideBlocker();
         }
 
         /**

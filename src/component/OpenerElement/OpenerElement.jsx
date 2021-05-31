@@ -43,73 +43,43 @@ class OpenerElement extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoAssetData } = this.props
-        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId) {
+        const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.dataFromNewAlfresco(alfrescoAssetData)
         }
     }
-
     dataFromNewAlfresco = (data) => {
-        debugger
         hideTocBlocker();
         disableHeader(false);
         let imageData = data;
         let epsURL = imageData.epsUrl? imageData.epsUrl : "";
-        let figureType = data?.content?.mimeType?.split('/')[0]             
-        //commented lines will be used to update the element data
+        let uniqID = imageData.id ? imageData.id : "";
+        let imageId = `urn:pearson:alfresco:${uniqID}`;
+        let figureType = data?.content?.mimeType?.split('/')[0]
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
-        let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
-
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
-
-            let uniqID = imageData.id ? imageData.id : "";
             let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
             let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
-            if (epsURL !== "") {
-                this.setState({ imgSrc: epsURL })
-            } else {
-                this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
-            }
-
-            let scaleMarkerData = {};
-            Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
-                (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.id || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.name || "The alttext for the scale image" } : null,
-                (data && data.scalemarker && data.scalemarker.epsUrl) ? { "path": data.scalemarker.epsUrl || null } : null,
-                (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ? { "width": data.properties["exif:pixelXDimension"] || null } : null,
-            );
-
-            let setFigureData = {
-                path: epsURL,
-                height: height,
-                width: width,
-                schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-                imageid: `urn:pearson:alfresco:${uniqID}`,
-                alttext: altText,
-                longdescription: longDesc,
-                type: figureType,
-            }
-            
-            Object.assign(setFigureData, (Object.keys(scaleMarkerData).length > 0) ? { scaleimage: scaleMarkerData } : null);
-
-            this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, () => {
-                this.props.handleFocus("updateFromC2")
-                this.props.handleBlur()
-            })
-            const alfrescoData = config?.alfrescoMetaData?.alfresco;
-            let alfrescoSiteLocation = this.state.alfrescoSiteData
-            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
-                handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
-            }
-            // to blank the elementId and asset data after update
-            let payloadObj = {
-                asset: {}, 
-                id: ''
-            }
-            this.props.saveSelectedAssetData(payloadObj)
-            this.updateAlfrescoSiteUrl()
+            this.setState({
+                imgSrc: epsURL,
+                imageId: imageId,
+                updateImageOptions:false,
+                width
+            }, ()=>{
+            this.handleBlur({imgSrc: epsURL, imageId});
+            });
+            if (document.querySelector("[name='alt_text']"))
+                document.querySelector("[name='alt_text']").innerHTML = altText;
+            if (document.querySelector("[name='long_description']"))
+                document.querySelector("[name='long_description']").innerHTML = longDesc;
         }
+        let payloadObj = {
+            asset: {}, 
+            id: ''
+        }
+        this.props.saveSelectedAssetData(payloadObj)
+        disableHeader(false)
+        hideTocBlocker()
     }
     
     dataFromAlfresco = (data) => {
@@ -167,7 +137,7 @@ class OpenerElement extends Component {
                let payloadObj = {launchAlfrescoPopup: true, 
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
-                elementId: id
+                id
             }
                 that.props.alfrescoPopup(payloadObj)
             })
@@ -201,14 +171,10 @@ class OpenerElement extends Component {
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                    let alfrescoLocationData = this.state.alfrescoSiteData
-                    let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
-                    alfrescoSiteName = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
-                    let nodeRefs = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
-                    nodeRefs = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : nodeRefs;
-                    let messageObj = { citeName: alfrescoLocationData?.siteId ? alfrescoLocationData.siteId : alfrescoSiteName, 
-                        citeNodeRef: nodeRefs, 
-                        elementId: this.props.elementId }
+                let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId            
+                let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
+                    citeNodeRef: alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid, 
+                    elementId: this.props.elementId }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
         // if (alfrescoPath.alfresco.nodeRef) {
         //     if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
@@ -316,7 +282,11 @@ class OpenerElement extends Component {
         }
         if (globalAlfrescoPath && globalAlfrescoPath.nodeRef) {
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                this.handleC2ExtendedClick(globalAlfrescoPath)
+                let messageObj = { citeName: globalAlfrescoPath?.repoName, 
+                    citeNodeRef: globalAlfrescoPath?.nodeRef, 
+                    elementId: this.props.elementId }
+                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                //this.handleC2ExtendedClick(globalAlfrescoPath)
             }
             else {
                 this.props.accessDenied(true)
@@ -659,7 +629,8 @@ const mapStateToProps = (state) => {
     return {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         alfrescoElementId : state.alfrescoReducer.elementId,
-        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup
     }
 }
 

@@ -18,7 +18,7 @@ import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from 
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
-import { handlePostMsgOnAddAssess } from '../../component/ElementContainer/AssessmentEventHandling';
+import { handlePostMsgOnAddAssess, handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -52,10 +52,11 @@ class AssessmentSlateData extends Component {
             this.setState({
                 activeAssessmentType: assessmentFormat
             });
-           this.setCiteTdxFilterData(assessmentFormat,this.props.assessmentSlateObj);
+            if (assessmentFormat === CITE || assessmentFormat === TDX) {
+                this.setCiteTdxFilterData(assessmentFormat, this.props.assessmentSlateObj);
+            }
         }
         document.addEventListener("mousedown", this.handleClickOutside);
-
         if(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName){
             this.handleAssessmentTypeChange(assessmentFormats[LEARNOSITY])
         }
@@ -67,25 +68,33 @@ class AssessmentSlateData extends Component {
         }
         const { activeAssessmentType } = this.state;
         const { assessmentSlateObj, assessmentReducer } = this.props;
-        if ((activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY) &&
-            ((assessmentSlateObj.title) && (assessmentReducer && (assessmentReducer[assessmentSlateObj.assessmentId] && assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle)))) {
-            const prevPropsTitle = prevProps && prevProps.assessmentReducer && prevProps.assessmentReducer[assessmentSlateObj.assessmentId] && prevProps.assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
-            const newPropsTitle = assessmentReducer[assessmentSlateObj.assessmentId].assessmentTitle
-            if ((assessmentSlateObj.title != newPropsTitle) && (prevPropsTitle != newPropsTitle)) {
-                this.updateElmOnSaveEvent(this.props);
+        const isElmLearnosity = (activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY) ? true : false
+
+        if (isElmLearnosity && !config.savingInProgress && !config.isSavingElement && assessmentReducer) {
+            const newAssessmentData = assessmentReducer[assessmentSlateObj.assessmentId]
+            if (assessmentReducer.dataFromElm) {
+                const { dataFromElm } = assessmentReducer;
+                if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
+                    window.open(dataFromElm.elmUrl);
+                    handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType, Resource_Type.ASSESSMENT, 'add', 'fromCreate');
+                    this.props.setElmPickerData({});
+                } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
+                    this.addPufAssessment(dataFromElm.pufObj);
+                    this.props.setElmPickerData({});
+                }
+            } else if (assessmentSlateObj?.assessmentId && assessmentSlateObj.title && newAssessmentData?.assessmentTitle) {
+                this.updateElmLearnosityOnRefresh(prevProps, this.props)
             }
         }
-
-        if (!config.savingInProgress && !config.isSavingElement && (activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY) && assessmentReducer.dataFromElm) {
-            const { dataFromElm } = assessmentReducer;
-            if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
-                window.open(dataFromElm.elmUrl);
-                handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType);
-                this.props.setElmPickerData({});
-            } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
-                this.addPufAssessment(dataFromElm.pufObj);
-                this.props.setElmPickerData({});
-            }
+    }
+    updateElmLearnosityOnRefresh = (prevProps, newProps) => {
+        const activeAS_ID = newProps?.assessmentSlateObj?.assessmentId
+        const prevPropsTitle = prevProps?.assessmentReducer[activeAS_ID]?.assessmentTitle
+        const newPropsTitle = newProps?.assessmentReducer[activeAS_ID]?.assessmentTitle
+        if ((newProps?.assessmentSlateObj?.title !== newPropsTitle) && (prevPropsTitle != newPropsTitle) && config.saveElmOnAS) {
+            config.saveElmOnAS = false
+            handleElmPortalEvents('remove');
+            this.updateElmOnSaveEvent(newProps);//
         }
     }
 
@@ -203,6 +212,7 @@ class AssessmentSlateData extends Component {
         this.props.addPufAssessment(dataToSend, this.state.activeAssessmentType, 'insert');
         const elmData = { targetId: pufObj.id }
         this.props.checkElmAssessmentStatus('assessment', 'fromAddElm', elmData, {});
+        handlePostMsgOnAddAssess("", "", "", "remove","");
     }
 
     /*** @description This function is used to open Version update Popup */

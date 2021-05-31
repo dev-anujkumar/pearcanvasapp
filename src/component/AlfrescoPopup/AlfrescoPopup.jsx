@@ -65,13 +65,15 @@ function AlfrescoPopup(props) {
             alfrescoData = values.entry.site
         }
         })
+        let tempData = props.alfrescoPath
+        tempData.alfresco = alfrescoData
+        sendDataToIframe({ 'type': 'saveAlfrescoDataToConfig', 'message': tempData })
         let payloadObj = { 
-            launchAlfrescoPopup: false, 
-            alfrescoPath: props.alfrescoPath, 
-            alfrescoListOption: props.alfrescoListOption
+            launchAlfrescoPopup: false
         }
+        handleClose()
         props.alfrescoPopup(payloadObj)
-        let messageObj = { citeName: alfrescoData.title, citeNodeRef: alfrescoData.guid }
+        let messageObj = { citeName: alfrescoData.title, citeNodeRef: alfrescoData.guid, elementId: props.alfrescoElementId }
         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
         let request = {
             eTag: props.alfrescoPath.etag,
@@ -134,7 +136,7 @@ function AlfrescoPopup(props) {
                             key={index} 
                             value={values.entry.id}
                             className={classes.dropdownItem}
-                        ><span className='dropdown-items'>{values.entry.id}</span></MenuItem>
+                        ><span className='dropdown-items'>{values.entry.site.title}</span></MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -161,7 +163,12 @@ const mapActionToProps = (dispatch) =>{
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        alfrescoElementId : state.alfrescoReducer.elementId
+    }
+}
 export default connect(
-    null,
+    mapStateToProps,
     mapActionToProps
 )(AlfrescoPopup);

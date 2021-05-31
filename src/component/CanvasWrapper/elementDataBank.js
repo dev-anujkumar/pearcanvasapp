@@ -11,6 +11,11 @@ const elementDataBank = {
         "primaryOption" : "primary-heading",
         // "secondaryOption" : "secondary-heading-{number}"
     },
+    "element-authoredtext-handwriting" : {
+        "elementType" : "element-authoredtext",
+        "primaryOption" : "primary-handwriting",
+        "secondaryOption" : "subtype-handwriting"
+    },
 
     "element-blockfeature" : {
         "pullquote" : {
