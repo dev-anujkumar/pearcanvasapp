@@ -218,8 +218,6 @@ class Interactive extends React.Component {
         var context = element && element.figuredata && element.figuredata.interactivetype;
         /**------------------ Set classes for jsx based on interactivetype value ------------------*/
 
-        console.log("consoleeeeeeee interactiveeeeeeee 1", element);
-        console.log("consoleeeeeeee interactiveeeeeeee 2", context);
         let interactiveData = interactiveTypeData.hasOwnProperty(context) === true ? interactiveTypeData[context] : interactiveTypeData["fpo"];
         divImage = interactiveData['divImage'];
         figureImage = interactiveData['figureImage'];

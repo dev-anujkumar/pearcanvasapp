@@ -58,10 +58,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     titleHTML = replaceUnwantedtags(titleHTML, false);
 
     titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
-    console.log("titleHTML titleHTML", titleHTML);
-    console.log("label walaaaaaa", getTitleSubtitleModel(titleHTML, "formatted-title", "figure"));
-    console.log("number walaaaaaa", getTitleSubtitleModel(titleHTML, "formatted-number", "figure"));
-    console.log("title walaaaaaa", getTitleSubtitleModel(titleHTML, "formatted-subtitle", "figure"));
 
     /** [ BG-2528 ]|On deleting footnote and its data wip is showing invalid properties for Char fields */
     subtitleText = subtitleText.replace(/(\r\n|\n|\r)/gm, '');
@@ -82,11 +78,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             ...indivisualData,
             text : titleText
         },
-        // subtitle : {
-        //     ...indivisualData,
-        //     text : subtitleText,
-        //     footnotes : []
-        // },
         captions : {
             ...indivisualData,
             text : captionText,
@@ -102,8 +93,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            // subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
-            // title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             title: titleHTML,
             postertext: "",
             text: ""
@@ -171,11 +160,6 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             ...indivisualData,
             text : titleText        
         },
-        // subtitle : {
-        //     ...indivisualData,
-        //     text : subtitleText,
-        //     footnotes : [ ]
-        // },
         captions : {
             ...indivisualData,
             text : captionText,
@@ -287,11 +271,6 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             ...indivisualData,
             text : titleText
         },
-        // subtitle : {
-        //     ...indivisualData,
-        //     text : subtitleText,
-        //     footnotes : [ ]
-        // },
         captions : {
             ...indivisualData,
             text : captionText,
@@ -307,8 +286,6 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            // subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
-            // title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             title: titleHTML,
             postertext: "",
             tableasHTML: "",
@@ -382,11 +359,6 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             ...indivisualData,
             text : titleText
         },
-        // subtitle : {
-        //     ...indivisualData,
-        //     text : subtitleText,
-        //     footnotes : [ ]
-        // },
         captions : {
             ...indivisualData,
             text : captionText,
@@ -412,8 +384,6 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            // subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
-            // title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             title: titleHTML,
             postertext: "",
             tableasHTML: "",

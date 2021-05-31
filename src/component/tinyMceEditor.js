@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, validateFigureNumber } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -1092,25 +1092,6 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
-            // console.log("e.key", e.keyCode);
-            // const keyCode = e.keyCode || e.which;
-            // const currentNode = document.getElementById(tinymce.activeEditor.id);
-            // const parentOfParentElement = currentNode?.parentNode?.parentNode;
-            // let editorNumberContent = currentNode.innerText;
-            // editorNumberContent = editorNumberContent.replace('.', '');
-            // if (parentOfParentElement.tagName === "FIGURE" && currentNode.classList.contains('figureNumber')) {
-            //     if ( ((keyCode > 47 && keyCode < 58) && e.shiftKey) || ((keyCode > 47 && keyCode < 58) && (editorNumberContent.length === 6)) || (keyCode === 86 && (e.ctrlKey || e.metaKey))) {
-            //         console.log("in second ifffffffffffffffffff 1111");
-            //         e.preventDefault();
-            //         e.stopImmediatePropagation();
-            //         return
-            //     } else if (!((keyCode > 47 && keyCode < 58) || (keyCode === 190 && !currentNode.innerText.includes('.') && currentNode.innerText) || (keyCode === 8 || keyCode === 37 || keyCode === 39 || keyCode === 46))) {
-            //         console.log("in second ifffffffffffffffffff 3333");
-            //         e.preventDefault();
-            //         e.stopImmediatePropagation();
-            //         return
-            //     }
-            // }
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;

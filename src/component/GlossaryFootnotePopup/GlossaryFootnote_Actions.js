@@ -264,11 +264,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         title = replaceUnwantedtags(title, true);
 
         title = createLabelNumberTitleModel(label, number, title);
-        console.log("titleHTML titleHTML in glossary action file", title);
 
         figureDataObj = {
             "title": title,
-            // "subtitle": "",
             "text": text ? text : "",
             "postertext": (hasCtaText.indexOf(currentElement.secondaryOption) !== -1) ? postertext  ? postertext.match(/<p>/g) ? postertext : `<p>${postertext}</p>` : "<p></p>" : "",
             "tableasHTML": tableAsHTML ? tableAsHTML : '',

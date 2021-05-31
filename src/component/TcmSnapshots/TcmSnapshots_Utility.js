@@ -746,8 +746,6 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
     formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
     formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
     let snapshotData = {
-        // title: handleBlankLineDom(element.html.title, 'BlankLine') || "",
-        // subtitle: handleBlankLineDom(element.html.subtitle, 'BlankLine') || "",
         title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
         figurenumber: handleBlankLineDom(formattedNumber, 'BlankLine') || "",
         subtitle: handleBlankLineDom(formattedTitle, 'BlankLine') || "",

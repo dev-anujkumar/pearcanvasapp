@@ -8,7 +8,6 @@ import config from '../config/config';
 import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
-import value from 'require-context.macro';
 // DECLARATION - const or variables 
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
@@ -228,23 +227,6 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
         return `<p><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`    
     }
     return `<p><label>${labelHTML}&nbsp;</label><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`
-}
-
-/**
- * Validates the user input and returns only numbers
- * @param {*} numberInput Number HTML content
- */
-export const validateFigureNumber = (numberInput) => {
-    let inputToReturn = "";
-    const numberArr = [...numberInput];
-    let numericRegex = new RegExp('^[1-9]\d*$');
-    console.log("numberArr", numberArr);
-    for (let digit of numberArr) {
-        if (digit.match(numericRegex) || (digit === '.' && !inputToReturn.includes('.')) || (digit === '0' && inputToReturn)) {
-            inputToReturn += digit;
-        }
-    }
-    return inputToReturn;
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
