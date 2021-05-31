@@ -25,10 +25,10 @@ let cypressConfig = {
     textcolors:["option1", "option2"],
     isCO : false,
     isLOL:false,
-    toolBarList : ['undo', 'redo', 'insertMedia', 'formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
+    toolBarList : ['undo', 'redo', 'insertMedia', 'formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor','alignment', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
     elementToolbar: [],
-    showHideToolbar: ['insertMedia','formatSelector', 'footnote','glossary','assetpopover'],
-    revelToolbar : ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','orderedlist','unorderedlist'],
+    showHideToolbar: ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','alignment'],
+    revelToolbar : ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','orderedlist','unorderedlist','alignment'],
     headingToolbar : ['insertMedia','formatSelector','italic','clearformatting','increaseindent','footnote','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
     codeListingToolbarEnabled: ['insertMedia','formatSelector','strikethrough','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
     codeListingToolbarDisabled: ['insertMedia','formatSelector','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag'],
@@ -75,7 +75,8 @@ let cypressConfig = {
     isCreateGlossary:false,
     isCreateFootnote:false,
     isSavingElement:false,
-    tcmslatemanifest:""
+    tcmslatemanifest:"",
+    saveElmOnAS: false
 }
 
 

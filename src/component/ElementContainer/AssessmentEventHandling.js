@@ -7,37 +7,41 @@ import { releaseSlateLockWithCallback, getSlateLockStatus } from '../CanvasWrapp
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { updateElmItemData, setItemUpdateEvent, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 /**
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
 */
-export const handleElmPortalEvents = (action = 'add') => {
+export const handleElmPortalEvents = (action,eventType) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
 
         let elmAssessmentUpdate = async (event) => {
             try {
                 const { data } = event;
-                if (action == 'add' && data && data.source == 'elm') {
-                    //console.log('Event From ELM Portal>>>', data)
-                    if(data.type.includes('item|')){
-                        const itemMetadata = prepareItemMetadata(data.type)
-                        store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
-                        store.dispatch(setItemUpdateEvent(true))
-                    }
-                    if (data.action == 'approve') {
+                if (eventType == 'fromUpdate') {
+                    if (action == 'add' && data && data.source == 'elm') {
+                        //console.log('Event From ELM Portal>>>', data)
+                        if (data.type.includes('item|')) {
+                            const itemMetadata = prepareItemMetadata(data.type)
+                            store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
+                            store.dispatch(setItemUpdateEvent(true))
+                        }
+                        if (data.action == 'approve') {
+                            window.removeEventListener('message', elmAssessmentUpdate, false);
+                        }
+                        if (data.type == 'assessment') {
+                            handleRefreshSlate(store.dispatch);
+                        }
+                    } else {
+                        /* To edit interactive using edit button */
+                        const intObj = getInteractivePostMsg(data)
                         window.removeEventListener('message', elmAssessmentUpdate, false);
-                    }
-                    if (data.type == 'assessment') {
-                        handleRefreshSlate(store.dispatch);
-                    }
-                } else {
-                    /* To edit interactive using edit button */
-                    const intObj = getInteractivePostMsg(data)
-                    if(intObj?.id && intObj.title && intObj.interactiveType) {
-                        /* save item data into store */
-                        //store.dispatch(setNewItemFromElm(intObj));
-                        handleRefreshSlate(store.dispatch);
+                        if (intObj?.id && intObj.title && intObj.interactiveType) {
+                            /* save item data into store */
+                            //store.dispatch(setNewItemFromElm(intObj));
+                            handleRefreshSlate(store.dispatch);
+                        }
                     }
                 }
                 if (action == 'remove') {
@@ -90,63 +94,38 @@ export const prepareItemMetadata = (eventData) =>{
 }
 
 /* update on getting message form elm portal */
-export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, action) => {
+export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action, eventType) => {
     let slateLockInfo = store.getState()?.slateLockReducer?.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         const getMsgafterAddAssessment = async (event) => {
             try {
                 const { data = {} } = event;
-                /* Get the data from store */
+                /* Get the item data from store */
                 const itemData = store.getState().assessmentReducer?.item ?? {};
-
-                if (data.source === "elm") {                  
-                    const items = data.type?.split("|") ?? []; 
-                    if(items.length >= 3){                  
-                        /* Update newly added assessment */
-                        if (items[0] === "assessment") {
-                            let assessmentDataMsg = {
-                                id: items[1]?.split("_")[1],
-                                title: items[2]?.split("_")[1],
-                                usagetype: items[3]?.split("_")[1] || usagetype, 
-                                calledFrom:'createElm'
-                            };
-                            
-                            if(itemData?.itemid && itemData.itemTitle){
-                                assessmentDataMsg = { ...assessmentDataMsg, ...itemData };
-                                /* empty store after item data updated */
-                                store.dispatch(setNewItemFromElm({}));
+                /* Get Assessment data from Post message */
+                if(eventType == 'fromCreate'){
+                    if (data.source === "elm") {                  
+                        const items = data.type?.split("|") ?? []; 
+                        if(items.length >= 4){                  
+                            /* Update newly added Assessment */
+                            if (items[0] === "assessment") {
+                                getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment);
                             }
-                            /**@function to update data display in slate */
-                            addPufFunction(assessmentDataMsg);
-                            /* Remove EventListener */
-                            window.removeEventListener(
-                                "message",
-                                getMsgafterAddAssessment,
-                                false
-                            );
-                        }                  
-                        /* Update newly added Item */
-                        else if (items[0] === "item") {
-                            const itemDataFromMsg = {
-                                itemid: items[1]?.split("_")[1],
-                                itemTitle: items[2]?.split("_")[1],
-                                calledFrom:'createElm'                               
-                            };
-                            /* save item data into store */
-                            store.dispatch(setNewItemFromElm(itemDataFromMsg));
+                            /* Get newly added Item from post messages */
+                            else if (items[0] === "item") {
+                                getAssessmentItemPostMsg(items);
+                            }
                         }
-                    }                
-                } else {
-                    /* Get Interactive data from Post message */
-                    const intObj = getInteractivePostMsg(data);
-                    if(intObj?.id && intObj.title && intObj.interactiveType){
-                        /**@function to update data display in interactive  */
-                        intObj.callFrom = "fromEventHandling";
-                        addPufFunction(intObj);
-                        /* Remove EventListener */
-                        window.removeEventListener("message", getMsgafterAddAssessment, false);
+                    } else if(type === 'interactive'){
+                        /* Get Interactive data from Post message */
+                        const intObj = getInteractivePostMsg(data);
+                        if(intObj?.id && intObj.title && intObj.interactiveType){
+                            /**@function to update data display in interactive  */
+                            intObj.callFrom = "fromEventHandling";
+                            addPufFunction(intObj);
+                        }
                     }
-                }  
+                }
                 if(action === "remove"){
                     /* Remove EventListener */
                     window.removeEventListener("message", getMsgafterAddAssessment, false);
@@ -163,14 +142,49 @@ function getInteractivePostMsg(data){
     /* get data from post message */
     if (typeof data === "string") {
         const interactives = data?.split("|") ?? [];
-        if (interactives?.length === 5 && interactives[0] === "interactive") {
-            const interactiveFromMsg = {
+        if (interactives?.length === 6 && interactives[0] === "interactive") {
+            return {
                 id: interactives[1]?.split("_")[1],
-                title: interactives[2]?.split("_")[1],
-                //calledFrom:'createElm',
-                interactiveType: interactives[3]?.split("_")[1]                               
+                elementUrn: interactives[2]?.split("_")[1],
+                title: interactives[3]?.split("_")[1],
+                interactiveType: interactives[4]?.split("_")[1]                               
             };
-            return interactiveFromMsg;
         }
     }  
+}
+/* get assessment items data from post message */
+function getAssessmentItemPostMsg(items){
+    const itemDataFromMsg = {
+        itemid: items[1]?.split("_")[1],
+        elementUrn: items[2]?.split("_")[1],
+        itemTitle: items[3]?.split("_")[1],
+        calledFrom:'createElm'                               
+    };
+    /* save item data into store */
+    store.dispatch(setNewItemFromElm(itemDataFromMsg));
+}
+/* get Assessment data from post message and send to server */
+function getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment){
+    /* Single Assessment - get data form post messages and update the server */
+    let assessmentDataMsg = {
+        id: items[1]?.split("_")[1],
+        elementUrn: items[2]?.split("_")[1],
+        title: items[3]?.split("_")[1],
+        usagetype: items[4]?.split("_")[1] || usagetype, 
+        calledFrom:'createElm'
+    };
+    const { elementUrn, itemid, itemTitle } = itemData || {};
+    if((assessmentDataMsg.elementUrn === elementUrn) && itemid && itemTitle) {
+        assessmentDataMsg = { ...assessmentDataMsg, ...itemData };
+        /**@function to update data to server by api call */
+        addPufFunction(assessmentDataMsg);
+        /* Remove EventListener */
+        window.removeEventListener("message", getMsgafterAddAssessment, false);
+
+    /* Full Assessment - get data form post messages and update the server */
+    } else if(type === Resource_Type.ASSESSMENT) {
+        addPufFunction(assessmentDataMsg);
+        /* Remove EventListener */
+        window.removeEventListener("message", getMsgafterAddAssessment, false);
+    }
 }

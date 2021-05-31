@@ -185,7 +185,7 @@ class ElementContainer extends Component {
             config.releaseCallCount += 1
         }
         handleElmPortalEvents('remove');/** Remove Elm-Assessment Update eventListener */
-        handlePostMsgOnAddAssess("", "", "remove")
+        handlePostMsgOnAddAssess("", "", "", "remove","")
     }
 
     componentWillReceiveProps(newProps) {
@@ -296,6 +296,13 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-custom-editor');
+        tinyMCE.$(tempDiv).find('p').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h1').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h2').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h3').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h4').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h5').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h6').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('ol').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
@@ -1523,7 +1530,7 @@ class ElementContainer extends Component {
                             handleFocus={this.handleFocus}
                             deleteElement={this.deleteElement}
                         />
-                        labelText = 'DE'
+                        labelText = 'DI'
                         break;
                     
                     case elementTypeConstant.PDF_SLATE:
@@ -1859,9 +1866,10 @@ class ElementContainer extends Component {
                 projDURN: config.projectUrn,
                 containerURN: config.slateManifestURN,
                 assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
-                interactiveId: isInteractive ? element.figuredata.interactiveid : ""
+                interactiveId: isInteractive ? element.figuredata.interactiveid : "",
+                elementId: this.props?.element?.id
             }
-            handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
+            handleElmPortalEvents('add','fromUpdate');/** Add Elm-Assessment Update eventListener */
             this.props.openElmAssessmentPortal(dataToSend);
             embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
             isInteractive && this.setState({ editInteractiveId: element.figuredata.interactiveid });
