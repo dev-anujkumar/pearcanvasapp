@@ -43,8 +43,8 @@ class OpenerElement extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoAssetData } = this.props
-        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId) {
+        const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.dataFromNewAlfresco(alfrescoAssetData)
         }
     }
@@ -65,14 +65,14 @@ class OpenerElement extends Component {
                 imageId: imageId,
                 updateImageOptions:false,
                 width
+            }, ()=>{
+            this.handleBlur({imgSrc: epsURL, imageId});
             });
             if (document.querySelector("[name='alt_text']"))
                 document.querySelector("[name='alt_text']").innerHTML = altText;
             if (document.querySelector("[name='long_description']"))
                 document.querySelector("[name='long_description']").innerHTML = longDesc;
         }
-        
-        this.handleBlur({imgSrc: epsURL, imageId});
         let payloadObj = {
             asset: {}, 
             id: ''
@@ -137,7 +137,7 @@ class OpenerElement extends Component {
                let payloadObj = {launchAlfrescoPopup: true, 
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
-                elementId: id
+                id
             }
                 that.props.alfrescoPopup(payloadObj)
             })
@@ -171,14 +171,10 @@ class OpenerElement extends Component {
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                    let alfrescoLocationData = this.state.alfrescoSiteData
-                    let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
-                    alfrescoSiteName = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
-                    let nodeRefs = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
-                    nodeRefs = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : nodeRefs;
-                    let messageObj = { citeName: alfrescoLocationData?.siteId ? alfrescoLocationData.siteId : alfrescoSiteName, 
-                        citeNodeRef: nodeRefs, 
-                        elementId: this.props.elementId }
+                let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId            
+                let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
+                    citeNodeRef: alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid, 
+                    elementId: this.props.elementId }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
         // if (alfrescoPath.alfresco.nodeRef) {
         //     if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
@@ -286,7 +282,11 @@ class OpenerElement extends Component {
         }
         if (globalAlfrescoPath && globalAlfrescoPath.nodeRef) {
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                this.handleC2ExtendedClick(globalAlfrescoPath)
+                let messageObj = { citeName: globalAlfrescoPath?.repoName, 
+                    citeNodeRef: globalAlfrescoPath?.nodeRef, 
+                    elementId: this.props.elementId }
+                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                //this.handleC2ExtendedClick(globalAlfrescoPath)
             }
             else {
                 this.props.accessDenied(true)
@@ -629,7 +629,8 @@ const mapStateToProps = (state) => {
     return {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         alfrescoElementId : state.alfrescoReducer.elementId,
-        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup
     }
 }
 

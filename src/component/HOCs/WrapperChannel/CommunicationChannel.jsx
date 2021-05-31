@@ -255,6 +255,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleUnlinkedLOData(message)
                     break;
                 case 'selectedAlfrescoAssetData' :
+                    console.log('ASSET DATA FROM ALFRESCO', message.asset)
                     this.props.saveSelectedAssetData(message)
                     break;
                 case TOGGLE_ELM_SPA:
