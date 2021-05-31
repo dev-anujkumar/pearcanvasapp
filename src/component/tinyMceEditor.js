@@ -885,8 +885,6 @@ export class TinyMceEditor extends Component {
             if(this.props.element && this.props.element.type==="element-blockfeature" && e.target &&  e.target.className==="blockquoteTextCredit"){
                 setFormattingToolbar('disableTinymceToolbar')
             }
-
-        
             if (activeElement) {
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
