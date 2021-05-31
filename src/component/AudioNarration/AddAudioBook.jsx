@@ -130,8 +130,8 @@ class AddAudioBook extends React.Component {
                     let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoPath.alfresco.name  , 
                         citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
                         elementId: this.props.elementId,
-                        calledFrom: 'NarrativeAudio' }
-                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                        calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary }
+                        sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                         // data_1 = alfrescoPath.alfresco;
                         // /*
                         //     data according to new project api 
