@@ -12,33 +12,36 @@ import { Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants
  * This module deals with the event handling for the Update of Full and Embedded Elm Assessments
  * for the events triggered from the Elm Assessment Portal
 */
-export const handleElmPortalEvents = (action = 'add') => {
+export const handleElmPortalEvents = (action,eventType) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
 
         let elmAssessmentUpdate = async (event) => {
             try {
                 const { data } = event;
-                if (action == 'add' && data && data.source == 'elm') {
-                    //console.log('Event From ELM Portal>>>', data)
-                    if(data.type.includes('item|')){
-                        const itemMetadata = prepareItemMetadata(data.type)
-                        store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
-                        store.dispatch(setItemUpdateEvent(true))
-                    }
-                    if (data.action.includes('_approve_') || data.action === 'approve') {
+                if (eventType == 'fromUpdate') {
+                    if (action == 'add' && data && data.source == 'elm') {
+                        //console.log('Event From ELM Portal>>>', data)
+                        if (data.type.includes('item|')) {
+                            const itemMetadata = prepareItemMetadata(data.type)
+                            store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
+                            store.dispatch(setItemUpdateEvent(true))
+                        }
+                        if (data.action == 'approve') {
+                            window.removeEventListener('message', elmAssessmentUpdate, false);
+                        }
+                        if (data.type == 'assessment') {
+                            handleRefreshSlate(store.dispatch);
+                        }
+                    } else {
+                        /* To edit interactive using edit button */
+                        const intObj = getInteractivePostMsg(data)
                         window.removeEventListener('message', elmAssessmentUpdate, false);
-                    }
-                    if (data.type == 'assessment') {
-                        handleRefreshSlate(store.dispatch);
-                    }
-                } 
-                if (typeof data === 'string' && data?.split('|')[0] == 'interactive') {
-                    window.removeEventListener('message', elmAssessmentUpdate, false);
-                    /* To edit interactive using edit button */
-                    const intObj = getInteractivePostMsg(data)
-                    if (intObj?.id && intObj.title && intObj.interactiveType) {
-                        handleRefreshSlate(store.dispatch);
+                        if (intObj?.id && intObj.title && intObj.interactiveType) {
+                            /* save item data into store */
+                            //store.dispatch(setNewItemFromElm(intObj));
+                            handleRefreshSlate(store.dispatch);
+                        }
                     }
                 }
                 if (action == 'remove') {
@@ -91,7 +94,7 @@ export const prepareItemMetadata = (eventData) =>{
 }
 
 /* update on getting message form elm portal */
-export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action) => {
+export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action, eventType) => {
     let slateLockInfo = store.getState()?.slateLockReducer?.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         const getMsgafterAddAssessment = async (event) => {
@@ -100,27 +103,29 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action
                 /* Get the item data from store */
                 const itemData = store.getState().assessmentReducer?.item ?? {};
                 /* Get Assessment data from Post message */
-                if (data.source === "elm") {                  
-                    const items = data.type?.split("|") ?? []; 
-                    if(items.length >= 4){                  
-                        /* Update newly added Assessment */
-                        if (items[0] === "assessment") {
-                            getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment);
+                if(eventType == 'fromCreate'){
+                    if (data.source === "elm") {                  
+                        const items = data.type?.split("|") ?? []; 
+                        if(items.length >= 4){                  
+                            /* Update newly added Assessment */
+                            if (items[0] === "assessment") {
+                                getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment);
+                            }
+                            /* Get newly added Item from post messages */
+                            else if (items[0] === "item") {
+                                getAssessmentItemPostMsg(items);
+                            }
                         }
-                        /* Get newly added Item from post messages */
-                        else if (items[0] === "item") {
-                            getAssessmentItemPostMsg(items);
+                    } else if(type === 'interactive'){
+                        /* Get Interactive data from Post message */
+                        const intObj = getInteractivePostMsg(data);
+                        if(intObj?.id && intObj.title && intObj.interactiveType){
+                            /**@function to update data display in interactive  */
+                            intObj.callFrom = "fromEventHandling";
+                            addPufFunction(intObj);
                         }
-                    }                
-                } else if(type === 'interactive'){
-                    /* Get Interactive data from Post message */
-                    const intObj = getInteractivePostMsg(data);
-                    if(intObj?.id && intObj.title && intObj.interactiveType){
-                        /**@function to update data display in interactive  */
-                        intObj.callFrom = "fromEventHandling";
-                        addPufFunction(intObj);
                     }
-                }  
+                }
                 if(action === "remove"){
                     /* Remove EventListener */
                     window.removeEventListener("message", getMsgafterAddAssessment, false);

@@ -65,6 +65,9 @@ function AlfrescoPopup(props) {
             alfrescoData = values.entry.site
         }
         })
+        let tempData = props.alfrescoPath
+        tempData.alfresco = alfrescoData
+        sendDataToIframe({ 'type': 'saveAlfrescoDataToConfig', 'message': tempData })
         let payloadObj = { 
             launchAlfrescoPopup: false
         }

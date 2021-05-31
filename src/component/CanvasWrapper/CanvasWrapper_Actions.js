@@ -454,6 +454,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
             if (slateBodymatter[0] && slateBodymatter[0].type == ELEMENT_ASSESSMENT && isElmLearnosityAssessment(slateBodymatter[0].elementdata) && slateBodymatter[0].elementdata.assessmentid) {
                 const assessmentData = { targetId: slateBodymatter[0].elementdata.assessmentid }
+                config.saveElmOnAS = true
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
         }
