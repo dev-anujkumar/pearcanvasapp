@@ -202,8 +202,6 @@ export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
     }
     return `<p><label>${labelHTML}&nbsp;</label>${titleModel}</p>`
 }
-
-
 /**
  * Combines label, number and title HTML and returns HTML content to send through update API
  * @param {*} labelHTML Label HTML content
@@ -227,6 +225,25 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
         return `<p><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`    
     }
     return `<p><label>${labelHTML}&nbsp;</label><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`
+}
+
+/**
+ * Returns label, number and title HTML
+ * @param {*} figureObj figure element object
+ */
+ export const getLabelNumberTitleHTML = (figureObj) => {
+    let data = {};
+        if (figureObj.html.hasOwnProperty('subtitle')) {  // to render old figure element 
+            data.formattedLabel = figureObj.html.title;
+            data.formattedNumber = `<p class="paragraphNumeroUno"><br/></p>`;
+            data.formattedTitle = figureObj.html.subtitle;    
+        } else {
+            figureObj.html.title = figureObj.html.title.replace(/(\r\n|\n|\r)/gm, '');
+            data.formattedLabel = getTitleSubtitleModel(figureObj.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
+            data.formattedNumber = getTitleSubtitleModel(figureObj.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
+            data.formattedTitle = getTitleSubtitleModel(figureObj.html.title, "formatted-subtitle", "figure");
+        }
+    return data;
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
