@@ -9,7 +9,7 @@ import {
     SHOW_REMOVE_POPUP,
     SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP, ERROR_POPUP
 } from '../../constants/Action_Constants.js'
-
+import { hideTocBlocker } from '../../js/toggleLoader'
 /**
  * 
  * @param {*} value 
@@ -216,4 +216,18 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
             dispatch({type: ERROR_POPUP, payload:{show: true}})
         }
     } 
+}
+
+export const saveDataFromAlfresco = (message) => dispatch => {
+    let assetData = message.asset;
+    let audioData = {
+        "narrativeAudioUrn": assetData.id || "",
+        "location": assetData.epsUrl,
+        "title": {
+            "en": assetData.name
+        },
+        "format": assetData.content.mimeType
+    }
+    dispatch(addAudioNarrationForContainer(audioData));
+    hideTocBlocker();                    
 }

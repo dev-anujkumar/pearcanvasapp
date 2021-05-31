@@ -25,7 +25,7 @@ import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, se
 import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
-import { fetchAudioNarrationForContainer ,audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer ,audioGlossaryPopup, saveDataFromAlfresco, showWrongAudioPopup} from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import RootContext from './PageNumberContext.js';
 import {publishContent,logout} from '../../js/header'
@@ -321,6 +321,8 @@ export default connect(
         fetchProjectLFs,
         currentSlateLOType,
         setElmPickerData,
-        saveSelectedAssetData
+        saveSelectedAssetData,
+        saveDataFromAlfresco,
+        showWrongAudioPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

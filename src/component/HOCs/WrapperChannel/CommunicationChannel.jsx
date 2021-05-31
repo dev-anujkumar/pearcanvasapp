@@ -18,6 +18,7 @@ import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem,
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
 import { getProjectDetails } from '../../CanvasWrapper/CanvasWrapper_Actions.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { showWrongAudioPopup } from '../../AudioNarration/AudioNarration_Actions';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -256,6 +257,16 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'selectedAlfrescoAssetData' :
                     this.props.saveSelectedAssetData(message)
+                    if (message.calledFrom === 'NarrativeAudio') {
+                        let fileName = message.asset.name;
+                        let fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+                        let allowedExtentions = ["mp3", "aac", "wav"];
+                        if (allowedExtentions.includes(fileExtension)) {
+                            this.props.saveDataFromAlfresco(message);
+                        } else {
+                            this.props.showWrongAudioPopup(true);
+                        }
+                    }
                     break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
