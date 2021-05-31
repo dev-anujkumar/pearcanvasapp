@@ -58,7 +58,6 @@ class ElementAsideContainer extends Component {
      */
 
     renderContainer({ element: _containerData }) {
-        console.log("this.props = ",this.props)
         try {
             if (_containerData !== null && _containerData !== undefined) {
                 if (Object.values(_containerData).length > 0) {

@@ -76,10 +76,12 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = "2C:" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`;
-    /* Add section Break inside 2C->WE */
-    } else if((type === SECTION_BREAK || type === POP_UP || type === SHOW_HIDE || actionStatus.action === "update" || 
+  
+    } 
+    else if((type === SECTION_BREAK || type === POP_UP || type === SHOW_HIDE || actionStatus.action === "update" || 
         actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE) && 
         gPType === "groupedcontent"){
+         /* Add section Break inside 2C->WE */ 
             tag.grandParent = "2C:" + columnName;
             elementId.grandParentId = `${id}+${columnId}`;
     }

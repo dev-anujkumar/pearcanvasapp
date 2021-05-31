@@ -148,17 +148,19 @@ export const deleteFromStore = (params) => {
                 }
             }
             else if (parentUrn && parentUrn.elementType == "manifest") {
-                //if (element.id === asideData.id) {
-                //    element.elementdata.bodymatter.forEach((ele) => {
-                //        if (ele.id == parentUrn.manifestUrn) {
-                //            ele.contents.bodymatter.forEach((el, indexInner) => {
-                //                if (el.id === elmId) {
-                //                    ele.contents.bodymatter.splice(indexInner, 1);
-                //                }
-                //            })
-                //        }
-                //    })
-                //} else 
+                /*
+                if (element.id === asideData.id) {
+                    element.elementdata.bodymatter.forEach((ele) => {
+                        if (ele.id == parentUrn.manifestUrn) {
+                            ele.contents.bodymatter.forEach((el, indexInner) => {
+                                if (el.id === elmId) {
+                                    ele.contents.bodymatter.splice(indexInner, 1);
+                                }
+                            })
+                        }
+                    })
+                } else 
+                */
                 /* Delete element inside 2C->WE->element */
                 if(element?.type === "groupedcontent") {
                     element?.groupeddata?.bodymatter?.map(item => {
