@@ -2705,8 +2705,6 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
-        debugger
-        //console.log('COMPONENTDIDUPDATE INLINE IMAGE EDITOR', editor)
         const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup} = this.props
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {

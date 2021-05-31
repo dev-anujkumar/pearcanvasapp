@@ -47,7 +47,8 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
                 editor: action.payload.editor,
                 elementId: action.payload.element,
                 imageArgs: action.payload.imageArgs,
-                alfrescoAssetData: action.payload.asset
+                alfrescoAssetData: action.payload.asset,
+                launchAlfrescoPopup: action.payload.launchAlfrescoPopup
             }
         default:
             return state
