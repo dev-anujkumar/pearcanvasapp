@@ -970,6 +970,8 @@ const appendCreatedElement = async (paramObj, responseData) => {
         }
         else if(popupElementIndex.length === 4){
             targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+        } else if(popupElementIndex.length === 5) {
+            targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]          
         }
         if (targetPopupElement) {
             targetPopupElement.popupdata["formatted-title"] = responseData
