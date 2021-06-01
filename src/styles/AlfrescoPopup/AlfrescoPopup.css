@@ -73,9 +73,40 @@ background-color: #f7f7f7 !important;
 .MuiSelect-select:not([multiple]) option, .MuiSelect-select:not([multiple]) optgroup{
     padding: 10px;
 }
-.MuiInputBase-input{
-    font-size: 14px !important;
+.MuiMenu-paper{
+    width: 360px;
+    height: 208px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
+.MuiMenu-paper::-webkit-scrollbar-thumb {
+    background-color: #00000096 !important;
+    margin: 0 4px 36px 0;
+    border-radius: 3px;
+  }
+  .MuiMenu-paper::-webkit-scrollbar{
+    width: 8px !important;
+}
+  .small-title {
+    color: #858585;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+  }
+  .dropdown-items {
+    font-size: 15px;
+    font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
+  }
+  .MuiListItem-button:hover{
+      background-color: #f3f7f8 !important;
+  }
+  .MuiInputLabel-filled.MuiInputLabel-shrink{
+    transform: translate(10px, 14px) !important;
+  }
+  .MuiSelect-iconFilled{
+      font-size: 24px !important;
+  }
 @media (max-width: 1822px) { 
     .MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded{
         top: 416px !important;
