@@ -296,6 +296,13 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-custom-editor');
+        tinyMCE.$(tempDiv).find('p').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h1').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h2').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h3').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h4').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h5').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h6').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('ol').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
