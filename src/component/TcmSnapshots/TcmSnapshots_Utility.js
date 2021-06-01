@@ -77,10 +77,12 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = "2C:" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`;
-    /* Add section Break inside 2C->WE */
-    } else if((type === SECTION_BREAK || type === POP_UP || type === SHOW_HIDE || actionStatus.action === "update" || 
+  
+    } 
+    else if((type === SECTION_BREAK || type === POP_UP || type === SHOW_HIDE || actionStatus.action === "update" || 
         actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE) && 
         gPType === "groupedcontent"){
+         /* Add section Break inside 2C->WE */ 
             tag.grandParent = "2C:" + columnName;
             elementId.grandParentId = `${id}+${columnId}`;
     }
@@ -189,7 +191,6 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
             elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer,slateManifestVersioning, isPopupSlate);
-            console.log("elementDetails = ",elementDetails);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
         else if (item.type === SHOWHIDE) {
@@ -1183,9 +1184,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
                 } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column */
                     wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
-                } //else if(eleIndex.length == 4 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column->Aside/WE */
-                //    wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]].elementdata.bodymatter[eleIndex[3]];
-                //}
+                }
                 break;
             case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */           
                 wipData = popupWipData(bodymatter, eleIndex,operationType,wipData)
