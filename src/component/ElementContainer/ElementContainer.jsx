@@ -1298,6 +1298,7 @@ class ElementContainer extends Component {
                         pasteElement={this.props.pasteElement}
                         userRole={this.props.userRole}
                         handleAudioPopupLocation = {this.handleAudioPopupLocation}
+                        parentElement={this.props.parentElement}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1466,7 +1467,7 @@ class ElementContainer extends Component {
                         handleCommentspanel : handleCommentspanel,
                         isBlockerActive : this.props.isBlockerActive,
                         onClickCapture : this.props.onClickCapture,
-                        elementSeparatorProps : elementSepratorProps,
+                        elementSepratorProps : elementSepratorProps,
                         setActiveElement : this.props.setActiveElement,
                         onListSelect : this.props.onListSelect,
                         handleFocus: this.handleFocus,

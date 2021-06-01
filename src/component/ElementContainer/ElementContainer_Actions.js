@@ -110,7 +110,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             poetryData,
             cutCopyParentUrn,
             fetchSlateData,
-            showHideObj
+            showHideObj,
+            element
         }
         onDeleteSuccess(deleteArgs)
     } 

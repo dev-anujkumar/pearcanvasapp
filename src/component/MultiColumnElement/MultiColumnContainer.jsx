@@ -40,7 +40,7 @@ class MultiColumnContainer extends PureComponent {
             <ElementSaprator
                 index={index}
                 firstOne={true}
-                esProps={_context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
+                esProps={_context.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
                 elementType="group"
                 sectionBreak={false}
                 permissions={_context.permissions}
@@ -81,7 +81,7 @@ class MultiColumnContainer extends PureComponent {
                             index == 0 && <ElementSaprator
                                     index={index}
                                     firstOne={index === 0}
-                                    esProps={this.context.elementSeparatorProps(index, true, parentUrn, asideData, parentIndex)}
+                                    esProps={this.context.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
                                     elementType="group"
                                     sectionBreak={false}
                                     permissions={this.context.permissions}
@@ -108,10 +108,12 @@ class MultiColumnContainer extends PureComponent {
                                 parentElement = {this.context.element}
                                 onListSelect={this.context.onListSelect}
                                 userRole={this.props.userRole}
+                                elementSepratorProps={this.context.elementSepratorProps}
+                                splithandlerfunction={this.context.splithandlerfunction}
                             />
                             <ElementSaprator
                                 index={index}
-                                esProps={this.context.elementSeparatorProps(index, false, parentUrn, asideData, parentIndex)}
+                                esProps={this.context.elementSepratorProps(index, false, parentUrn, asideData, parentIndex)}
                                 elementType="group"
                                 sectionBreak={false}
                                 permissions={this.context.permissions}
@@ -171,7 +173,8 @@ class MultiColumnContainer extends PureComponent {
                 columnIndex: columnIndex,
                 manifestUrn: _containerId,
                 contentUrn: group.contentUrn,
-                elementType: _containerType
+                elementType: _containerType,
+                mcId: this.context?.element?.id, /* Will be used in tcm snapshot -2c->we */
             }
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
