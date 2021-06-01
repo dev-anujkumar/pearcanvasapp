@@ -30,8 +30,7 @@ export default {
     ELEMENT_DIALOGUE : 'element-dialogue',
     ELEMENT_DISCUSSION : "discussion",
     SHOW_HIDE: 'showhide',
-    POPUP: 'popup',
-    //C2_CONTAINER_BUTTON : 'c2-container-elem-button',
+    POPUP: 'popup'
 }
 
 /** This array contains data for element picker popup with key as button-type */

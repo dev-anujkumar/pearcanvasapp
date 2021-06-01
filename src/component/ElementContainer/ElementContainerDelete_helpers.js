@@ -29,7 +29,8 @@ export const onDeleteSuccess = (params) => {
         poetryData,
         cutCopyParentUrn,
         fetchSlateData,
-        showHideObj
+        showHideObj,
+        element
     } = params
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -49,7 +50,8 @@ export const onDeleteSuccess = (params) => {
         index,
         poetryData,
         cutCopyParentUrn,
-        showHideObj
+        showHideObj,
+        element
     }
     prepareTCMSnapshotsForDelete(tcmDeleteArgs)
 
@@ -146,17 +148,19 @@ export const deleteFromStore = (params) => {
                 }
             }
             else if (parentUrn && parentUrn.elementType == "manifest") {
-                //if (element.id === asideData.id) {
-                //    element.elementdata.bodymatter.forEach((ele) => {
-                //        if (ele.id == parentUrn.manifestUrn) {
-                //            ele.contents.bodymatter.forEach((el, indexInner) => {
-                //                if (el.id === elmId) {
-                //                    ele.contents.bodymatter.splice(indexInner, 1);
-                //                }
-                //            })
-                //        }
-                //    })
-                //} else 
+                /*
+                if (element.id === asideData.id) {
+                    element.elementdata.bodymatter.forEach((ele) => {
+                        if (ele.id == parentUrn.manifestUrn) {
+                            ele.contents.bodymatter.forEach((el, indexInner) => {
+                                if (el.id === elmId) {
+                                    ele.contents.bodymatter.splice(indexInner, 1);
+                                }
+                            })
+                        }
+                    })
+                } else 
+                */
                 /* Delete element inside 2C->WE->element */
                 if(element?.type === "groupedcontent") {
                     element?.groupeddata?.bodymatter?.map(item => {
@@ -224,7 +228,8 @@ export const prepareTCMSnapshotsForDelete = (params) => {
         index,
         poetryData,
         cutCopyParentUrn,
-        showHideObj
+        showHideObj,
+        element
     } = params
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
@@ -242,7 +247,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             showHideObj: showHideCondition ? showHideObj : null
         }
         const deleteData = {
-            wipData,
+            wipData: Object.keys(wipData).length > 0 ? wipData : element, /** Inside Multi-Column->Aside/WE */
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
             index
