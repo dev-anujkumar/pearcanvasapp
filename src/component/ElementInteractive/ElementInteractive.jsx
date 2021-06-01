@@ -598,33 +598,33 @@ class Interactive extends React.Component {
         }
         var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
-        if (alfrescoPath.alfresco.nodeRef) {         //if alfresco location is available
-             if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
+        //if (alfrescoPath.alfresco.nodeRef) {         //if alfresco location is available
+             //if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
                 
-            data_1 = alfrescoPath.alfresco;
+            //data_1 = alfrescoPath.alfresco;
             /*
                 data according to new project api 
             */
-            data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
-            data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
-            data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
-            data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
+            // data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
+            // data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
+            // data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
+            // data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
 
             // /*
             //     data according to old core api and c2media
             // */
-            data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
-            data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
-            data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
-            data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
+            // data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
+            // data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
+            // data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
+            // data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
-            this.handleC2ExtendedClick(data_1)
-            // if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
-            //     if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-            //         let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoPath.alfresco.name  , 
-            //             citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
-            //             elementId: this.props.elementId }
-            //             sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+            // this.handleC2ExtendedClick(data_1)
+            if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
+                if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                    let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoPath.alfresco.name  , 
+                        citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                        elementId: this.props.elementId }
+                        sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
              }
             else{
                 this.props.accessDenied(true)
@@ -632,57 +632,57 @@ class Interactive extends React.Component {
         }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-               // this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId)
-                c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-                    data_1 = { ...alfrescoData };
-                    let request = {
-                        eTag: alfrescoPath.etag,
-                        projectId: alfrescoPath.id,
-                        ...alfrescoPath,
-                        additionalMetadata: { ...alfrescoData },
-                        alfresco: { ...alfrescoData }
-                    };
+               this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId)
+                // c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
+                //     data_1 = { ...alfrescoData };
+                //     let request = {
+                //         eTag: alfrescoPath.etag,
+                //         projectId: alfrescoPath.id,
+                //         ...alfrescoPath,
+                //         additionalMetadata: { ...alfrescoData },
+                //         alfresco: { ...alfrescoData }
+                //     };
 
-                    /*
-                        preparing data according to Project api
-                    */
+                //     /*
+                //         preparing data according to Project api
+                //     */
 
-                    request.additionalMetadata['repositoryName'] = data_1['repoName'];
-                    request.additionalMetadata['repositoryFolder'] = data_1['name'];
-                    request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
-                    request.additionalMetadata['visibility'] = data_1['siteVisibility'];
+                //     request.additionalMetadata['repositoryName'] = data_1['repoName'];
+                //     request.additionalMetadata['repositoryFolder'] = data_1['name'];
+                //     request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
+                //     request.additionalMetadata['visibility'] = data_1['siteVisibility'];
 
-                    request.alfresco['repositoryName'] = data_1['repoName'];
-                    request.alfresco['repositoryFolder'] = data_1['name'];
-                    request.alfresco['repositoryUrl'] = data_1['repoInstance'];
-                    request.alfresco['visibility'] = data_1['siteVisibility'];
+                //     request.alfresco['repositoryName'] = data_1['repoName'];
+                //     request.alfresco['repositoryFolder'] = data_1['name'];
+                //     request.alfresco['repositoryUrl'] = data_1['repoInstance'];
+                //     request.alfresco['visibility'] = data_1['siteVisibility'];
 
-                    that.handleC2ExtendedClick(data_1)
-                    /*
-                        API to set alfresco location on dashboard
-                    */
-                    let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
-                    let SSOToken = request.ssoToken;
-                    return axios.patch(url, request.alfresco,
-                        {
-                            headers: {
-                                'Accept': 'application/json',
-                                'ApiKey': config.STRUCTURE_APIKEY,
-                                'Content-Type': 'application/json',
-                                'PearsonSSOSession': SSOToken,
-                                'If-Match': request.eTag
-                            }
-                        })
-                        .then(function (response) {
-                            let tempData = { alfresco: alfrescoData };
-                            that.setState({
-                                projectMetadata: tempData
-                            })
-                        })
-                        .catch(function (error) {
-                            console.log("error", error)
-                        });
-                })
+                //     that.handleC2ExtendedClick(data_1)
+                //     /*
+                //         API to set alfresco location on dashboard
+                //     */
+                //     let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
+                //     let SSOToken = request.ssoToken;
+                //     return axios.patch(url, request.alfresco,
+                //         {
+                //             headers: {
+                //                 'Accept': 'application/json',
+                //                 'ApiKey': config.STRUCTURE_APIKEY,
+                //                 'Content-Type': 'application/json',
+                //                 'PearsonSSOSession': SSOToken,
+                //                 'If-Match': request.eTag
+                //             }
+                //         })
+                //         .then(function (response) {
+                //             let tempData = { alfresco: alfrescoData };
+                //             that.setState({
+                //                 projectMetadata: tempData
+                //             })
+                //         })
+                //         .catch(function (error) {
+                //             console.log("error", error)
+                //         });
+                // })
             }
             else {
                 this.props.accessDenied(true)

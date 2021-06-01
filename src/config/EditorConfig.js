@@ -25,7 +25,7 @@ export const EditorConfig = {
             { selector: 'span', remove: 'empty', split: false }
           ]
     },
-    toolbar: 'undo redo | insertMedia | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code | customListButton customUoListButton indent outdent | slateTag ',
+    toolbar: 'undo redo | insertMedia | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters Alignment | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code | customListButton customUoListButton indent outdent | slateTag ',
     contentStyle: CONTENT_STYLE,
     plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image",
 }
@@ -82,6 +82,10 @@ const FormatSelectorType = [
     {
         text: 'Learning Objective Item',
         value: "LO",
+    },
+    {
+        text: 'Handwriting',
+        value: 'HS'
     }
 ]
 
@@ -145,6 +149,11 @@ export const elementTypeOptions = Object.freeze({
         secondaryOption : 'secondary-learning-objective',
         label : 'LO',
     },
+    'HS' : {
+        primaryOption : 'primary-handwriting',
+        secondaryOption : 'subtype-handwriting',
+        label : 'HS',
+    },
 })
 
 /** -------------------------------- Insert-Media Toolbar Handling -------------------------------- */
@@ -152,7 +161,7 @@ export const elementTypeOptions = Object.freeze({
 const insertImageHandler = (params) => {
     let { element, permissions, editor } = params;
     if (element?.type === ElementConstants.ELEMENT_LIST) {
-        handleC2MediaClick(permissions, editor);
+        handleC2MediaClick(permissions, editor, element);
     }
 }
 /** Insert Media-Selector Dropdown Handler */

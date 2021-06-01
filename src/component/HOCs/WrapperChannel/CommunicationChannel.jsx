@@ -255,10 +255,20 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleUnlinkedLOData(message)
                     break;
                 case 'selectedAlfrescoAssetData' :
+                    console.log('ASSET DATA FROM ALFRESCO', message.asset)
+                    if(message.isEditor){
+                        this.handleEditorSave(message)
+                    }
                     this.props.saveSelectedAssetData(message)
                     break;
+                case 'saveAlfrescoDataToConfig' : 
+                config.alfrescoMetaData = message
+                break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
+                    break;
+                case 'openInlineAlsfrescoPopup' :
+                    this.props.alfrescoPopup(message);
                     break;
             }
         }
@@ -285,6 +295,7 @@ function CommunicationChannel(WrappedComponent) {
             } else {
                 this.props.setElmPickerData({})
             }
+            hideBlocker();
         }
 
         /**
@@ -371,6 +382,16 @@ function CommunicationChannel(WrappedComponent) {
                     editor.blur();
                 }
             }, 500);
+        }
+
+        handleEditorSave = (message) =>{
+            let params = {
+                element: message.id,
+                editor: this.props.alfrescoEditor,
+                asset: message.asset,
+                launchAlfrescoPopup: false                
+            }
+            this.props.saveInlineImageData(params)
         }
 
         /**

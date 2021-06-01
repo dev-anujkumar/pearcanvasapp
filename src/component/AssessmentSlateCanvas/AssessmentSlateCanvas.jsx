@@ -120,7 +120,7 @@ class AssessmentSlateCanvas extends Component {
     }
 
     render() {
-        const { type, model, permissions, isLOExist, showBlocker } = this.props;
+        const { type, model, permissions, isLOExist, showBlocker, elementId } = this.props;
         const { getAssessmentDataPopup, getAssessmentData, assessmentSlateObj } = this.state;
         let handleCanvasBlocker = {
             showTocBlocker: showTocBlocker,
@@ -147,6 +147,7 @@ class AssessmentSlateCanvas extends Component {
                     handleAssessmentBlur={this.handleAssessmentBlur}
                     addCiteTdxAssessment={this.addCiteTdxAssessment}
                     setAssessmentUsageType={setAssessmentUsageType}
+                    elementId={elementId}
                 />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
