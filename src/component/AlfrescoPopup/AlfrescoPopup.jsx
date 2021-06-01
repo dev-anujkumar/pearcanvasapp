@@ -74,7 +74,11 @@ function AlfrescoPopup(props) {
         handleClose()
         props.alfrescoPopup(payloadObj)
         const editor = props.isInlineEditorOpen === true
-        let messageObj = { citeName: alfrescoData.title, citeNodeRef: alfrescoData.guid, elementId: props.alfrescoElementId, editor }
+        let alfrescoLocationData = props.locationData
+        let locationSiteDataNodeRef = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData.guid
+        locationSiteDataNodeRef = locationSiteDataNodeRef ? locationSiteDataNodeRef : alfrescoData.guid;
+        const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData.title
+        let messageObj = { citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef, elementId: props.alfrescoElementId, editor }
         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
         let request = {
             eTag: props.alfrescoPath.etag,
@@ -167,7 +171,8 @@ const mapActionToProps = (dispatch) =>{
 const mapStateToProps = (state) => {
     return {
         alfrescoElementId : state.alfrescoReducer.elementId,
-        isInlineEditorOpen: state.alfrescoReducer.isInlineEditorOpen
+        isInlineEditorOpen: state.alfrescoReducer.isInlineEditorOpen,
+        locationData: state.alfrescoReducer.locationData
     }
 }
 export default connect(

@@ -202,7 +202,7 @@ class ElementFigure extends Component {
 
         }} else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId)
+                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData)
             } else {
                 this.props.accessDenied(true)
             }
@@ -263,7 +263,7 @@ class ElementFigure extends Component {
         }
     }
 
-    handleSiteOptionsDropdown = (alfrescoPath, id) =>{
+    handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{
         let that = this
         let url = 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000';
         let SSOToken = config.ssoToken;
@@ -280,7 +280,8 @@ class ElementFigure extends Component {
                let payloadObj = {launchAlfrescoPopup: true, 
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
-                id
+                id,
+                locationData
             }
                 that.props.alfrescoPopup(payloadObj)
             })

@@ -14,7 +14,8 @@ const INITIAL_STATE = {
     editor : {},
     isCiteChanged: false,
     changedSiteData: {},
-    isInlineEditorOpen: false
+    isInlineEditorOpen: false,
+    locationData: {}
 }
 
 const INITIAL_ACTION = {
@@ -31,7 +32,8 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
                 alfrescoPath: action.payload.alfrescoPath,
                 alfrescoListOption: action.payload.alfrescoListOption,
                 elementId: action.payload.id,
-                isInlineEditorOpen: action.payload.editor
+                isInlineEditorOpen: action.payload.editor,
+                locationData: action.payload.locationData
             }
         case SAVE_ALFRESCO_ASSET_DATA:
             return {
