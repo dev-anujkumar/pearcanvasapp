@@ -38,7 +38,7 @@ code .codeNoHighlightLine{
 .figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv{
     cursor: auto !important;
     /* max-height: 85px; */
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
 }
 .figureCredit , .figureTitle, .figureCaption, .figureLabel, .figureNumber, .mathml .figureElement .figureData {
     min-height: 40px!important;
@@ -78,7 +78,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     padding: 10px 0;
     width:100%!important;
     max-width: 100% !important;
-    overflow-x: auto;
+    /* overflow-x: auto; */
 }
 .figureElement .pearson-component.image.figureData:not(.table-figure-data) {
     /* cursor:copy!important ; */

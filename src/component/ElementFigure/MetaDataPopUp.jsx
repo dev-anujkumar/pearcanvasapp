@@ -62,7 +62,6 @@ class MetaDataPopUp extends React.Component {
 		const { altText, longDescription } = this.state;
 		const body = {
 			properties: { 
-				...this.state.metaData,
 				"cplg:altText": altText,
 				"cplg:longDescription": longDescription
 			}
@@ -77,7 +76,6 @@ class MetaDataPopUp extends React.Component {
 				/* -- if update alfresco metadata put call success then update wip also */
 				this.updateElementData();
 			}).catch(error => {
-				this.updateElementData();
 				console.error("error--", error);
 			})
 		this.props.togglePopup(false);
@@ -116,7 +114,7 @@ class MetaDataPopUp extends React.Component {
 									type="text" 
 									placeholder="Enter your text here" 
 									value={altText}
-									disabled
+                                    disabled ={this.state.disabledButton ? false : true}
 									onChange={(e) => this.setState({ altText: e.target.value })}
 								/>
 							</div>
@@ -129,7 +127,7 @@ class MetaDataPopUp extends React.Component {
 									cols="50" 
 									placeholder="Enter your text here" 
 									value={longDescription}
-									disabled
+								    disabled ={this.state.disabledButton ? false : true}
 									onChange={(e) => this.setState({ longDescription: e.target.value })}>
 								</textarea>
 							</div>
