@@ -158,6 +158,25 @@ export const onPasteSuccess = async (params) => {
                         ele.contents.bodymatter.splice(cutIndex, 0, responseData)
                     }
                 })
+            } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id) {
+                /* 2C:ASIDE/WE:Elements; Update the store */
+                //item?.groupeddata?.bodymatter?.map((item_L2) => {
+                //    item_L2?.groupdata?.bodymatter?.map(item_L3 => {
+                //        if (item_L3?.id === parentUrn.manifestUrn) {
+                //            item_L3?.elementdata?.bodymatter?.splice(cutIndex, 0, responseData);
+                //        } else if(item_L3?.subtype === "workedexample"){
+                //            item_L3?.elementdata?.bodymatter?.map(item_L4 => {
+                //                if (item_L4?.id === parentUrn.manifestUrn) {
+                //                    item_L4?.contents?.bodymatter?.splice(cutIndex, 0, responseData);
+                //                }
+                //            })
+                //        }
+                //    })
+                //})
+                const indexs = asideData?.index?.split("-") || [];
+                if(indexs.length === 3) { /* Inside 2C:AS; COPY-PASTE elements */
+                    item?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.splice(cutIndex, 0, responseData)
+                }
             }
         })
     } else if(asideData && asideData.type == 'citations'){
