@@ -120,6 +120,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         glossaryFootElem = condition
                     }
                 }
+           
+                else if (indexesLen == 4) {
+                    /* 2C:AS/WE:PS */
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
+                   
+                }
+                else if (indexesLen == 5) {
+                    /* 2C:WE-BODY:PS */
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
+                }
 
             }
         }
