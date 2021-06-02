@@ -116,11 +116,11 @@ export const updateElementInStore = (paramsObj) => {
                 }
             }
         })
-    } else if(asideData?.parent?.type === "groupedcontent" && parentElement?.type === "element-aside") {
+    } else if(asideData?.parent?.type === "groupedcontent") {
         /* 2C:AS/WE:PS */
         const indexes = elementIndex?.split("-");
         /* 2C:AS/WE-HEAD:PS */
-        if(indexes?.length == 4) {
+        if(indexes?.length == 4 && parentUrn?.elementType === "element-aside") {
             const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
             _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
                 ...element,
