@@ -93,7 +93,7 @@ class ElementDialogue extends React.PureComponent {
                         >
                             {this.renderButtons(index, buttonClass, labelText, _props.element)}
                             <div
-                                className={`element-container ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)}`}
+                                className={`element-container play-script ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)}`}
                                 data-id={_props.elementId+'-'+index}
                             >
                                 <DialogueContent

@@ -313,6 +313,9 @@
     width: 190px;
     margin: 5px 0px 5px 0px !important;
 }
+.container-multi-column-group.container-multi-column-group.wider-60-40.column-1 .elm-update-button{
+    width: 146px !important;
+}
 .container-multi-column-group.wider-60-40.column-1 .interactive-status .eml-int-status-text-tm,
 .container-multi-column-group.text-width-60-40.column-1 .interactive-status .eml-int-status-text-tm{
     margin: 7px 5px 0px 2px;
@@ -341,4 +344,5 @@
 .container-multi-column-group.text-width-60-40 .interactive-status strong  {
     width: 115px;
     min-width: 115px;
+    word-wrap: break-word;
 }
