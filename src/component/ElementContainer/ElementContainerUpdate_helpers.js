@@ -116,17 +116,19 @@ export const updateElementInStore = (paramsObj) => {
                 }
             }
         })
-    } else if(asideData?.parent?.type === "groupedcontent") {
+    } else if(asideData?.parent?.type === "groupedcontent" && parentElement?.type === "element-aside") {
         /* 2C:AS/WE:PS */
         const indexes = elementIndex?.split("-");
-        if(indexes?.length == 4) {   /* 2C:AS/WE-HEAD:PS */
-            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]]
+        /* 2C:AS/WE-HEAD:PS */
+        if(indexes?.length == 4) {
+            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
             _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
                 ...element,
                 ...updatedData,
             }
-        } else if(indexes?.length == 5) {  /* 2C:WE-BODY:PS */
-            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
+        } else if(indexes?.length == 5 && parentUrn?.elementType === "manifest") {
+            /* 2C:WE-BODY/Section Break:PS */
+            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
             _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
                 ...element,
                 ...updatedData,
