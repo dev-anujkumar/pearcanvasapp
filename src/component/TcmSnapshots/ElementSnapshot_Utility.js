@@ -75,6 +75,7 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
             glossarySnap = []
             assetPopoverSnap = []
             footnoteWipList = { 
+                title: element.title ? element.title.footnotes : [],
                 subtitle: element.subtitle ? element.subtitle.footnotes : [], 
                 caption: element.captions ? element.captions.footnotes : [], 
                 credit: element.credits ? element.credits.footnotes : []
@@ -108,6 +109,7 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
 */
 const prepareFigureFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteHtmlList) => {
     return [
+            ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.title, footnoteHtmlList),
             ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.subtitle, footnoteHtmlList),
             ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.caption, footnoteHtmlList),
             ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.credit, footnoteHtmlList),
