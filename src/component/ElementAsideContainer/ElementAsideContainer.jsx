@@ -115,6 +115,8 @@ class ElementAsideContainer extends Component {
                                             swappedElementData: swappedElementData,
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'we',
+                                            elementIndex: this.props.index,
+                                            parentElement: { type: this.props?.parentElement?.type }
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -182,7 +184,9 @@ class ElementAsideContainer extends Component {
             swappedElementData: swappedElementData,
             currentSlateEntityUrn: contentURN,
             containerTypeElem: 'section',
-            asideId: this.props.element.id
+            asideId: this.props.element.id,
+            elementIndex: this.props.index,
+            parentElement: { type: this.props?.parentElement?.type }
         }
 
         this.props.swapElement(dataObj, (bodyObj) => { })
@@ -346,15 +350,14 @@ class ElementAsideContainer extends Component {
             subtype :this.props.element.subtype, 
             id: this.props.element.id,
             contentUrn: this.props.element.contentUrn,
-            element : this.props.element
+            element : this.props.element,
+            index: this.props.index
         };
          /* @columnIndex@ */
         const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
-        console.log(this.props.index," = columnIndex = ",columnIndex)
         const columnId = groupeddata?.bodymatter[columnIndex]?.id;
         /* Adding parent id and type to update redux store while creating new element inside 2c->Aside->New */
         asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : "C2"  }} : asideData;
-        console.log("asideData = ",asideData)
         try {
             if (_elements !== undefined) {
                 if (_elements.length == 0) {
@@ -449,6 +452,7 @@ class ElementAsideContainer extends Component {
                                         userRole={this.props.userRole}
                                         elementSepratorProps={this.props.elementSepratorProps}
                                         splithandlerfunction={this.props.splithandlerfunction}
+                                        pasteElement={this.props.pasteElement}
                                     >
                                     </ElementContainer>
                                     <ElementSaprator

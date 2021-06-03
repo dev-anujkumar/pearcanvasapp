@@ -13,6 +13,7 @@
 
  .id-info {
     padding: 5px 0 10px;
+    word-wrap: break-word;
 } 
 .eml-int-status-padding{
     padding: 0px !important;
