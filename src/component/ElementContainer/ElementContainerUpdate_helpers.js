@@ -125,6 +125,15 @@ export const updateElementInStore = (paramsObj) => {
             _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
                 ...element,
                 ...updatedData,
+                    elementdata: {
+                        ...element.elementdata,
+                        startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                        numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                        text: updatedData.elementdata ? updatedData.elementdata.text : null
+                    },
+                    tcm: _slateObject.tcm ? true : false,
+                    html: updatedData.html
+    
             }
         } else if(indexes?.length == 5 && parentUrn?.elementType === "manifest") {
             /* 2C:WE-BODY/Section Break:PS */
@@ -132,6 +141,14 @@ export const updateElementInStore = (paramsObj) => {
             _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
                 ...element,
                 ...updatedData,
+                elementdata: {
+                    ...element.elementdata,
+                    startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                    numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                    text: updatedData.elementdata ? updatedData.elementdata.text : null
+                },
+                tcm: _slateObject.tcm ? true : false,
+                html: updatedData.html
             }
         }
     } else {
