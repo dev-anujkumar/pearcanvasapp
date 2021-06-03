@@ -76,7 +76,8 @@ let cypressConfig = {
     isCreateFootnote:false,
     isSavingElement:false,
     tcmslatemanifest:"",
-    saveElmOnAS: false
+    saveElmOnAS: false,
+    fullName:'c5test01'
 }
 
 

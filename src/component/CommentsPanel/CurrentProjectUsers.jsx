@@ -27,7 +27,7 @@ class CurrentProjectUsers extends React.Component {
             <ul className="assign-user-list-popup-container">
                 {
                     users.map((item, i) => {
-                        let fullName = item.userId
+                        let fullName = item.lastName + ',' + item.firstName
                         return (
                             <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
                         )
