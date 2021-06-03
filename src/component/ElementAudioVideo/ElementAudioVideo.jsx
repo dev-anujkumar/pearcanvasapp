@@ -34,53 +34,39 @@ class ElementAudioVideo extends Component {
      * @description data after selecting an asset from alfresco c2 module
      * @param {*} data selected asset data
      */
-    dataFromAlfresco = (alfrescoAssetData) => {
+    dataFromAlfresco = (data) => {
         hideTocBlocker();
         disableHeader(false);
         let tracks = [];
-        debugger
-        let data = {
-            EpsUrl: "https://cite-media-stg.pearson.com/legacy_paths/6b641668-1752-47af-a42c-745233892fd4/Everest.jpg",
-            figureType: alfrescoAssetData?.content?.mimeType?.split('/')[0],  
-            width: alfrescoAssetData.width,
-            height: alfrescoAssetData.height,
-            smartLinkURl: alfrescoAssetData.epsUrl,
-            mimetype: null,
-            uniqueID: alfrescoAssetData.id,
-            subtitle: '',
-            frenchsubtitle: "",
-            spanishsubtitle: "",
-            desc: alfrescoAssetData.desc,
-            text: alfrescoAssetData.text
-           // text: `{"results":[{"properties":{"s.avs:url":{"id":"avs:url","localName":"url","displayName":"Url","queryName":"s.avs:url","type":"string","value":["https:\/\/www.google.com"]},"s.avs:jsonString":{"id":"avs:jsonString","localName":"jsonString","displayName":"JSON String","queryName":"s.avs:jsonString","type":"string","value":["{\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\",\n\"englishCC\":\"\",\n\"spanishCC\":\"\",\n\"frenchCC\":\"\",\n\"audioDescription\":\"\",\n\"nonsppurlEnabled\":\"No\",\n\"englishCCEnabled\":\"Yes\",\n\"frenchCCEnabled\":\"Yes\",\n\"spanishCCEnabled\":\"No\",\n\"audioDescEnabled\":\"No\"\n}"]}}}],"hasMoreItems":false,"numItems":1}`
-        }
         let imageData = data;
         let clipInfo;
         let audioDes;
-        let epsURL = imageData.EpsUrl ? imageData.EpsUrl : "";
-        let figureType = imageData.assetType ? imageData.assetType.toLowerCase() : "";
-        let width = imageData.width ? imageData.width : "";
-        let height = imageData.height ? imageData.height : "";
-        let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
+        let checkFormat = epsURL.match(/\.[0-9a-z]+$/i)
+        checkFormat = checkFormat && checkFormat[0]
+        let figureType = imageData?.content?.mimeType?.split('/')[0]
+        let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
+        let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
+        let smartLinkAssetType = (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
         smartLinkAssetType = smartLinkAssetType.toLowerCase();
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
-            if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
+            if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined || checkFormat == null)) {
                 epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
             }
-            let smartLinkURl = imageData.smartLinkURl ? imageData.smartLinkURl : "";
-            if (imageData['clipinfo']) {
-                if (typeof (imageData['clipinfo']) == "string") {
-                    let clipInfoData = JSON.parse(imageData['clipinfo'])
+            let smartLinkURl = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
+            if (imageData.properties["cp:clips"]) {
+                if (typeof (imageData.properties["cp:clips"]) == "string") {
+                    let clipInfoData = JSON.parse(imageData.properties["cp:clips"])
                     if (clipInfoData === null) {
                         clipInfo = null;
                     }
                     else {
                         clipInfo = {
-                            "clipid": clipInfoData.id ? clipInfoData.id : "",
-                            "starttime": clipInfoData.start ? clipInfoData.start : "",
-                            "endtime": clipInfoData.end ? clipInfoData.end : "",
-                            "description": clipInfoData.description ? clipInfoData.description : "",
-                            "duration": clipInfoData.duration ? clipInfoData.duration : ""
+                            "clipid": clipInfoData[0].id ? clipInfoData[0].id : "",
+                            "starttime": clipInfoData[0].start ? clipInfoData[0].start : "",
+                            "endtime": clipInfoData[2].end ? clipInfoData[2].end : "",
+                            "description": clipInfoData[0].description ? clipInfoData[0].description : "",
+                            "duration": clipInfoData[0].duration ? clipInfoData[0].duration : ""
                         }
                     }
                 }
@@ -100,12 +86,15 @@ class ElementAudioVideo extends Component {
                 }
             }
             let videoFormat = imageData.mimetype ? imageData.mimetype : "";
-            let uniqID = imageData.uniqueID ? imageData.uniqueID : "";
-            let ensubtitle = imageData.subtitle ? imageData.subtitle : "";
-            let frenchSubtitle = imageData.frenchsubtitle ? imageData.frenchsubtitle : "";
-            let spanishSubtitle = imageData.spanishsubtitle ? imageData.spanishsubtitle : "";
+            let uniqID = imageData.id ? imageData.id : "";
+            let ensubtitle
+            let frenchSubtitle
+            let spanishSubtitle
             try{
-                audioDes = JSON.parse(JSON.parse(imageData.text).results[0].properties['s.avs:jsonString'].value[0]);
+                audioDes = JSON.parse(imageData.properties['avs:jsonString'])
+                ensubtitle = audioDes.englishCC ? audioDes.englishCC : "";
+                frenchSubtitle = audioDes.frenchCC ? audioDes.frenchCC : "";
+                spanishSubtitle = audioDes.spanishCC ? audioDes.spanishCC : "";
             }catch(err){
                 console.log(err)
             }
@@ -170,7 +159,7 @@ class ElementAudioVideo extends Component {
                 if (uniqIDString) {
                     uniqueIDSmartlink = uniqIDString.split('s.cmis:objectId = ')[1].replace(/\'/g, '');
                 }
-                let uniqueID = imageData.uniqueID ? imageData.uniqueID : (uniqueIDSmartlink ? uniqueIDSmartlink : '');
+                let uniqueID = imageData.id ? imageData.id : (uniqueIDSmartlink ? uniqueIDSmartlink : '');
                 if (uniqueID) {
                     uniqID = uniqueID;
                 }
