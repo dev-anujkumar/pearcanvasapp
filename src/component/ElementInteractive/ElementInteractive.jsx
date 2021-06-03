@@ -70,14 +70,6 @@ class Interactive extends React.Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoAssetData } = this.props
-        console.log('Interactive ASSET DATA', alfrescoAssetData)
-        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId) {
-            this.dataFromAlfresco(alfrescoAssetData)
-        }
-    }
-
     static getDerivedStateFromProps(nextProps, prevState) {
         if('figuredata' in nextProps.model && 'interactivetype' in nextProps.model.figuredata && nextProps.model.figuredata.interactivetype !== prevState.elementType) {
             return {
@@ -92,8 +84,8 @@ class Interactive extends React.Component {
         return null;
     }
 
-   componentDidUpdate() { 
-       const { assessmentReducer } = this.props;
+   componentDidUpdate(prevProps) { 
+       const { assessmentReducer,  elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup  } = this.props;
        const { itemID, interactiveTitle, elementType } = this.state;
        if (!config.savingInProgress && !config.isSavingElement && (elementType === ELM_INT) && assessmentReducer) {
            const { dataFromElm } = assessmentReducer;
@@ -111,6 +103,9 @@ class Interactive extends React.Component {
                    this.updateElmOnSaveEvent(this.props);
                }
            }
+       }
+       if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId  && !launchAlfrescoPopup) {
+           this.dataFromAlfresco(alfrescoAssetData)
        }
    }
 
@@ -451,20 +446,22 @@ class Interactive extends React.Component {
         disableHeader(false);
         this.props.showBlocker(false);
         let imageData = data;
-        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";              //commented lines will be used to update the element data
+        let epsURL = imageData.epsUrl ?imageData.epsUrl : "";              //commented lines will be used to update the element data
         //let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-        let width = imageData['width'] ? imageData['width'] : "";
-        let height = imageData['height'] ? imageData['height'] : "";
-        let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
-        let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+        let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
+        let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
+        let smartLinkPath = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
+        let smartLinkString = (imageData.properties["cm:description"] && imageData.properties["cm:description"].toLowerCase() !== "eps media") ? imageData.properties["cm:description"] : "{}";
         let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
         let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-        let altText = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:jsonString'].value && imageData.body.results[0].properties['s.avs:jsonString'].value[0].imageAltText) ? imageData.body.results[0].properties['s.avs:jsonString'].value[0].imageAltText : "";
-        let longDescription = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:jsonString'].value && imageData.body.results[0].properties['s.avs:jsonString'].value[0].linkLongDesc) ? imageData.body.results[0].properties['s.avs:jsonString'].value[0].linkLongDesc : "";
+        let avsStringData = JSON.parse(imageData.properties["avs:jsonString"]);
+        let altText = avsStringData.imageAltText ? avsStringData.imageAltText : "";
+        let longDescription = avsStringData.linkLongDesc ? avsStringData.linkLongDesc : "";
+        let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
+        checkFormat = checkFormat && checkFormat[0]
         if (smartLinkType) {
-            let uniqInterString = imageData && imageData.req && imageData.req.url;
             let uniqueIDInteractive;
-            let uniqInter = (uniqInterString) ? uniqInterString.split('s.cmis:objectId = ')[1].replace(/\'/g, '') : "";
+            let uniqInter = imageData.id
             if (uniqInter) {
                 uniqueIDInteractive = "urn:pearson:alfresco:" + uniqInter
             }
@@ -492,11 +489,11 @@ class Interactive extends React.Component {
                         break;
                 }
                 // let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
-                if (epsURL == "" || epsURL == undefined) {
-                    epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : INTERACTIVE_FPO;
+                if (epsURL == "" || epsURL == undefined || checkFormat === null) {
+                    epsURL = avsStringData.imageReferenceURL ? avsStringData.imageReferenceURL : INTERACTIVE_FPO;
                 }
-                let vendorName = imageData['vendorName'];
-                let mobileready = imageData['smartlinkoptimizedmobileval'];
+                let vendorName = avsStringData.smartLinkThirdPartyVendorVal;
+                let mobileready = avsStringData.smartLinkOptimizedMobileVal;
 
                 this.setState({ itemID: uniqueIDInteractive, posterImage: epsURL })
                 let figuredata = {
@@ -512,7 +509,7 @@ class Interactive extends React.Component {
                         "imageid": uniqueIDInteractive,
                         "path": epsURL
                     },
-                    "path": smartLinkPath[0]
+                    "path": smartLinkPath
                 }
                 if (interactivetype === THIRD_PARTY) {
                     figuredata.alttext = altText
@@ -855,7 +852,8 @@ const mapStateToProps = (state) => {
         assessmentReducer: state.assessmentReducer,
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         alfrescoElementId : state.alfrescoReducer.elementId,
-        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
     }
 }
 

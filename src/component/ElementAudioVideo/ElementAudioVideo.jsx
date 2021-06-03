@@ -42,7 +42,7 @@ class ElementAudioVideo extends Component {
         let clipInfo;
         let audioDes;
         let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
-        let checkFormat = epsURL.match(/\.[0-9a-z]+$/i)
+        let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
         checkFormat = checkFormat && checkFormat[0]
         let figureType = imageData?.content?.mimeType?.split('/')[0]
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
@@ -225,7 +225,7 @@ class ElementAudioVideo extends Component {
     }
 
     updateAlfrescoSiteUrl = (alfrescoData) => {
-        let repositoryData = alfrescoData.title
+        let repositoryData = alfrescoData.title ? alfrescoData.title : alfrescoData.repositoryFolder
         if(repositoryData){
             this.setState({
                 alfrescoSite: repositoryData
@@ -267,7 +267,7 @@ class ElementAudioVideo extends Component {
     componentDidMount() {
         getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.repositoryFolder,
+                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
                 alfrescoSiteData:{...response}
             })
         })
