@@ -124,7 +124,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 else if (indexesLen == 4) {
                     /* 2C:AS/WE:PS */
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
-                   
+                    
                 }
                 else if (indexesLen == 5) {
                     /* 2C:WE-BODY:PS */
@@ -133,7 +133,6 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
 
             }
         }
-
         switch (semanticType) {
             case 'FOOTNOTE':
                 footnoteContentText = glossaryFootElem && glossaryFootElem.html['footnotes'] && glossaryFootElem.html['footnotes'][glossaryfootnoteid]
@@ -627,6 +626,15 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         }
 
                     }
+                }
+                else if (indexesLen == 4) {
+                    // aside inside multi column
+                    newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                   
+                }
+                else if (indexesLen == 5) {
+                    // element inside popup inside multi column
+                    newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data
                 }
             }
         }
