@@ -47,7 +47,7 @@ class ElementFigure extends Component {
         if(figureImageTypes.includes(this.props?.model?.figuretype)){
           getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.title,
+                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
                 alfrescoSiteData:{...response}
             })
           })
@@ -62,7 +62,7 @@ class ElementFigure extends Component {
     }
 
     updateAlfrescoSiteUrl = (alfrescoData) => {
-        let repositoryData = alfrescoData.title
+        let repositoryData = alfrescoData.title ? alfrescoData.title : alfrescoData.repositoryFolder
         if(repositoryData){
             this.setState({
                 alfrescoSite: repositoryData
