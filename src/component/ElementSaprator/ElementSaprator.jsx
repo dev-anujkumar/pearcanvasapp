@@ -389,7 +389,7 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
         asideData: 'asideData' in separatorProps ? separatorProps.asideData : null,
         poetryData: 'poetryData' in separatorProps ? separatorProps.poetryData : null
     }
-    separatorProps.pasteElement(pasteFnArgs)
+    separatorProps?.pasteElement(pasteFnArgs)
 }
 
 const mapStateToProps = (state) => ({
