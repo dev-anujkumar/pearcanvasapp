@@ -460,7 +460,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
     let convertBodymatter = convertSlate.contents.bodymatter;
-    let convertParentData = fetchParentData(convertBodymatter,indexes, appStore.showHideObj);
+    let convertParentData = fetchParentData(convertBodymatter,indexes, appStore, response);
     let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
     /** latest version for WE/CE/PE/AS/2C*/
     convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
@@ -472,7 +472,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         actionStatusVersioning.status ="accepted"
         prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "",indexes);
     }
-    prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes);
+    prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes, "", appStore);
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {
