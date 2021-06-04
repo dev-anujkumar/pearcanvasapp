@@ -910,6 +910,7 @@ export const fetchAuthUser = () => dispatch => {
     }).then((response) => {
         let userInfo = response.data;
 		config.userEmail = userInfo.email;
+        config.fullName = userInfo.lastName + ',' + userInfo.firstName
 		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
 		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
     })
