@@ -16,7 +16,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
     let newComment = {
         comment: commentString,
         commentCreator: config.fullName,
-        assignee: config.assignee || config.userId
+        assignee: config.fullName
     };
 
     let Comment = {
