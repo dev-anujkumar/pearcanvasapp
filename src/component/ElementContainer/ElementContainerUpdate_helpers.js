@@ -121,7 +121,7 @@ export const updateElementInStore = (paramsObj) => {
         const indexes = elementIndex?.split("-");
         /* 2C:AS/WE-HEAD:PS */
         if(indexes?.length == 4 && parentUrn?.elementType === "element-aside") {
-            if(updatedData?.type === "element-dialogue") {
+            if(updatedData?.type === "element-dialogue" || updatedData?.type === "element-authoredtext") {
                 const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                 _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
                 ...element,
@@ -151,7 +151,7 @@ export const updateElementInStore = (paramsObj) => {
             } 
         } else if(indexes?.length == 5 && parentUrn?.elementType === "manifest") {
             /* 2C:WE-BODY/Section Break:PS */
-            if(updatedData?.type === "element-dialogue") {
+            if(updatedData?.type === "element-dialogue" || updatedData?.type === "element-authoredtext") {
                 const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
                 _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
                     ...element,
