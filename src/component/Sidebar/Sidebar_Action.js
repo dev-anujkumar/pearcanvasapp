@@ -472,7 +472,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         actionStatusVersioning.status ="accepted"
         prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "",indexes);
     }
-    prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes, "", appStore);
+    prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes);
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {

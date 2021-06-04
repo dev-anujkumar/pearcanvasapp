@@ -275,7 +275,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
     let {cutCopyParentUrn,parentUrn} =  containerElement
-    if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
+    if (elementDeleteData?.wipData?.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM?.includes(elementDeleteData.wipData.figuretype)) {
         return false
     }
     const actionStatus = {

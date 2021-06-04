@@ -12,7 +12,7 @@ import { getTitleSubtitleModel } from '../../constants/utility';
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
-import store from 'redux';
+import store from '../../appstore/store.js';
 
 let operType = "";
 const {
