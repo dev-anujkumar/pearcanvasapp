@@ -48,10 +48,11 @@ class ElementAudioVideo extends Component {
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
         let smartLinkAssetType = (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
-        smartLinkAssetType = smartLinkAssetType.toLowerCase();
+        smartLinkAssetType = smartLinkAssetType?.toLowerCase();
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
             if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined || checkFormat == null)) {
-                epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
+                const imageReference = JSON.parse(imageData.properties['avs:jsonString'])
+                epsURL = imageReference.imageReferenceURL ? imageReference.imageReferenceURL : "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
             }
             let smartLinkURl = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
             if (imageData.properties["cp:clips"]) {
