@@ -7,6 +7,7 @@
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData } from './ElementSnapshot_Utility.js';
+import { getTitleSubtitleModel } from '../../constants/utility';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
@@ -854,9 +855,14 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
  * @param {Object} element Figure element data
  */
 export const setFigureElementContentSnapshot = (element, actionStatus) => {
+    let formattedLabel, formattedNumber, formattedTitle
+    formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
+    formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
+    formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
     let snapshotData = {
-        title: handleBlankLineDom(element.html.title, 'BlankLine') || "",
-        subtitle: handleBlankLineDom(element.html.subtitle, 'BlankLine') || "",
+        title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
+        figurenumber: handleBlankLineDom(formattedNumber, 'BlankLine') || "",
+        subtitle: handleBlankLineDom(formattedTitle, 'BlankLine') || "",
         captions: handleBlankLineDom(element.html.captions, 'BlankLine') || "",
         credits: handleBlankLineDom(element.html.credits, 'BlankLine') || "" 
     }
