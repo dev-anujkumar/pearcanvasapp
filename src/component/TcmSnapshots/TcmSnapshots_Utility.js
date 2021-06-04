@@ -83,7 +83,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = "2C:" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
-    } else if(([SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE].includes(type) || actionStatus.action === "update" || 
+    } else if(([SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, "IMAGE"].includes(type) || actionStatus.action === "update" || 
         actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
