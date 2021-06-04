@@ -575,7 +575,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     // Modifying old figures html into new pattern
                     // ................................XX...........................................
                     let figureElementsType = ['image', 'table', 'mathImage', 'authoredtext', 'codelisting', 'interactive'];              
-                    // let slateElements = slateData.data[manifestURN].contents.bodymatter;
                     for (let element of slateData.data[manifestURN].contents.bodymatter) {
                         if (element.hasOwnProperty('figuretype') && figureElementsType.includes(element.figuretype) && element.type == 'figure') {
                             if (element.hasOwnProperty('subtitle')) {
