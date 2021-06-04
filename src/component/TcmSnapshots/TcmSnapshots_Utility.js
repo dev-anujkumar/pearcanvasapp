@@ -12,6 +12,7 @@ import { getTitleSubtitleModel } from '../../constants/utility';
 import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
+import store from 'redux';
 
 let operType = "";
 const {
@@ -58,8 +59,11 @@ const {
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null, appStore) => {
+export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null) => {
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
+    /* Get the aside data from store for 2C:WE:Section-Break */
+    const parentData = store?.getState()?.appStore?.asideData?.parent || {};
+
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback);
@@ -91,9 +95,9 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
         tag.grandParent = "2C:" + figParent.columnName;
         elementId.grandParentId = `${figParent.id}+${figParent.columnId}`;
-    } else if(actionStatus.action === "delete" && appStore?.asideData?.parent?.type === MULTI_COLUMN ) {
+    } else if(actionStatus.action === "delete" && parentData?.type === MULTI_COLUMN ) {
         /* snapshots for Delete the section break inside 2c/we */
-        const { id: sc_id, columnName: sb_cName, columnId: sb_cId } = appStore.asideData.parent || {};
+        const { id: sc_id, columnName: sb_cName, columnId: sb_cId } = parentData || {};
         tag.grandParent = "2C:" + sb_cName;
         elementId.grandParentId = `${sc_id}+${sb_cId}`;
     }
@@ -1257,12 +1261,12 @@ export const popupWipData = (bodymatter, eleIndex,operationType,wipData) => {
  * @param {String/Number} indexes - index of element converted
  * @returns {Object} ParentData fo given element
 */
-export const fetchParentData = (bodymatter, indexes, appStore, response) => {
+export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
     /* Convert of Figure inside 2C:AS/WE Only Update Action */
-    const { type,  parent } = appStore?.asideData || {};
+    const { asideData } = store?.getState()?.appStore || {};
+    const { type,  parent } = asideData || {};
     const isFigure = (response?.type === FIGURE) && (type === ELEMENT_ASIDE) && (parent?.type === MULTI_COLUMN);
     
-    const { showHideObj, asideData } = appStore || {};
     let parentData = {};
     let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
     let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
