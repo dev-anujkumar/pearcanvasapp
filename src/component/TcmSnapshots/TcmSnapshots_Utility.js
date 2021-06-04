@@ -184,10 +184,8 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
         if (item.type === WE_MANIFEST) {
-            console.log("item = ",item)
             item.contents.bodymatter.map((ele) => {
                 if (elementType.indexOf(ele.type) !== -1) {
-                    console.log("ele = ",ele)
                     elementId.childId = ele.id;
                     tag.childTag = fetchElementsTag(ele);
                     elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? 'BODY' : "", item.id,undefined,popupInContainer,slateManifestVersioning,isPopupSlate);
@@ -738,7 +736,6 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementUrn: elementId,
         elementType: elementTag
     }
-    console.log("elementData = ",elementData)
     return elementData
 }
 
@@ -1265,7 +1262,6 @@ export const fetchParentData = (bodymatter, indexes, appStore, response) => {
     const { type,  parent } = appStore?.asideData || {};
     const isFigure = (response?.type === FIGURE) && (type === ELEMENT_ASIDE) && (parent?.type === MULTI_COLUMN);
     
-    console.log(isFigure," = bodymatter, indexes",bodymatter, indexes)
     const { showHideObj, asideData } = appStore || {};
     let parentData = {};
     let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
