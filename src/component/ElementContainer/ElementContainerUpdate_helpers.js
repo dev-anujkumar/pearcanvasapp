@@ -121,35 +121,64 @@ export const updateElementInStore = (paramsObj) => {
         const indexes = elementIndex?.split("-");
         /* 2C:AS/WE-HEAD:PS */
         if(indexes?.length == 4 && parentUrn?.elementType === "element-aside") {
-            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
-            _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
+            if(updatedData?.type === "element-dialogue" || updatedData?.type === "element-authoredtext") {
+                const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
                 ...element,
-                ...updatedData,
-                    elementdata: {
-                        ...element.elementdata,
-                        startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
-                        numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
-                        text: updatedData.elementdata ? updatedData.elementdata.text : null
-                    },
-                    tcm: _slateObject.tcm ? true : false,
-                    html: updatedData.html
-    
-            }
+                ...updatedData
+                }
+            } else if(parentElement?.type === "popup") {
+                const element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata;
+                if(updatedData.sectionType === "postertextobject"){
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata.postertextobject[0] = {
+                        ...element.postertextobject[0],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element.postertextobject[0].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                } else {
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata["formatted-title"] = {
+                        ...element["formatted-title"],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element["formatted-title"].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                }
+            } 
         } else if(indexes?.length == 5 && parentUrn?.elementType === "manifest") {
             /* 2C:WE-BODY/Section Break:PS */
-            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
-            _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
-                ...element,
-                ...updatedData,
-                elementdata: {
-                    ...element.elementdata,
-                    startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
-                    numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
-                    text: updatedData.elementdata ? updatedData.elementdata.text : null
-                },
-                tcm: _slateObject.tcm ? true : false,
-                html: updatedData.html
-            }
+            if(updatedData?.type === "element-dialogue" || updatedData?.type === "element-authoredtext") {
+                const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
+                    ...element,
+                    ...updatedData
+                }
+            } else if(parentElement?.type === "popup") {  /* 2C:WE-BODY/Section Break:Popup*/
+                const element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata;
+                if(updatedData.sectionType === "postertextobject"){ /* 2C:WE-BODY/Section Break:Popup: posterobjectdata*/
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata.postertextobject[0] = {
+                        ...element.postertextobject[0],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element.postertextobject[0].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                } else { /* 2C:WE-BODY/Section Break:Popup: formatted-title */
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata["formatted-title"] = {
+                        ...element["formatted-title"],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element["formatted-title"].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                }
+            } 
         }
     } else {
         _slateBodyMatter = _slateBodyMatter.map(element => {
