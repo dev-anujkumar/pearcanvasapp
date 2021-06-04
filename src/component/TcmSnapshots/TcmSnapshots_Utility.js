@@ -47,7 +47,7 @@ const {
     allowedFigureTypesForTCM,
     SHOWHIDE,
     SHOW_HIDE,
-    SMART_LINK
+    SMART_LINK, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM
 }
     = TcmConstants;
 
@@ -63,7 +63,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
     const parentData = store?.getState()?.appStore?.asideData?.parent || {};
-
+    const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM];
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback);
@@ -83,7 +83,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = "2C:" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
-    } else if(([SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, "IMAGE"].includes(type) || actionStatus.action === "update" || 
+    } else if((figureElementList.includes(type) || actionStatus.action === "update" || 
         actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
