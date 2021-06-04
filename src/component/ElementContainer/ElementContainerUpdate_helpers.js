@@ -119,17 +119,36 @@ export const updateElementInStore = (paramsObj) => {
     } else if(asideData?.parent?.type === "groupedcontent") {
         /* 2C:AS/WE:PS */
         const indexes = elementIndex?.split("-");
-        if(indexes?.length == 4) {   /* 2C:AS/WE-HEAD:PS */
-            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]]
+        /* 2C:AS/WE-HEAD:PS */
+        if(indexes?.length == 4 && parentUrn?.elementType === "element-aside") {
+            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
             _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
                 ...element,
                 ...updatedData,
+                    elementdata: {
+                        ...element.elementdata,
+                        startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                        numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                        text: updatedData.elementdata ? updatedData.elementdata.text : null
+                    },
+                    tcm: _slateObject.tcm ? true : false,
+                    html: updatedData.html
+    
             }
-        } else if(indexes?.length == 5) {  /* 2C:WE-BODY:PS */
-            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
+        } else if(indexes?.length == 5 && parentUrn?.elementType === "manifest") {
+            /* 2C:WE-BODY/Section Break:PS */
+            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
             _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
                 ...element,
                 ...updatedData,
+                elementdata: {
+                    ...element.elementdata,
+                    startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                    numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                    text: updatedData.elementdata ? updatedData.elementdata.text : null
+                },
+                tcm: _slateObject.tcm ? true : false,
+                html: updatedData.html
             }
         }
     } else {

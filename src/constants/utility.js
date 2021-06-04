@@ -125,7 +125,10 @@ export const encodeHTMLInWiris = (str) => {
  * Refines title content from unified model by removing extra tags
  * @param {*} htmlText unified HTML content
  */
-const removeTagsforSubTitle = (htmlText) => {
+const removeTagsforSubTitle = (htmlText, elementType) => {
+    if (elementType === 'figure') {
+        return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<number>?.+<\/number>/g, "").replace(/<p>|<\/p>/g, "")    
+    }
     return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<p>|<\/p>/g, "")
 }
 
@@ -135,12 +138,12 @@ const removeTagsforSubTitle = (htmlText) => {
  * @param {*} model label or title HTML content
  * @param {*} modelType type - label or title
  */
-export const getTitleSubtitleModel = (model, modelType) => {
+export const getTitleSubtitleModel = (model, modelType, modelElement = "popup") => {
     let modelDocDom = model && new DOMParser().parseFromString(model, "text/html")
     let modelDom = modelDocDom && modelDocDom.body && modelDocDom.body.children[0]
     let modelToReturn
     if(modelType){
-        if(modelType === "formatted-title"){
+        if (modelType === "formatted-title"){
             try{
                 if(model && model.match(/<label>?.+<\/label>/g)){
                     modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`   
@@ -152,11 +155,23 @@ export const getTitleSubtitleModel = (model, modelType) => {
             catch (error) {
                 modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
             }
-        }
-        else if(modelType === "formatted-subtitle"){
+        } else if (modelType === "formatted-number"){
+            try{
+                if(model && model.match(/<number>?.+<\/number>/g)){
+                    let numberHtml = modelDom.children[0].tagName === 'NUMBER' ? modelDom.children[0].innerHTML : modelDom.children[1].innerHTML; 
+                    modelToReturn = `<p class="paragraphNumeroUno">${numberHtml}</p>`   
+                }
+                else{
+                    modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+                }
+            }
+            catch (error) {
+                modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
+            }
+        } else if (modelType === "formatted-subtitle"){
             try{
                 let modelInnerHTML = modelDom.innerHTML
-                let modelWithRemovedTags = removeTagsforSubTitle(modelInnerHTML)
+                let modelWithRemovedTags = removeTagsforSubTitle(modelInnerHTML, modelElement)
                 modelToReturn = `<p class="paragraphNumeroUno">${modelWithRemovedTags}</p>`
             }
             catch (error) {
@@ -167,7 +182,7 @@ export const getTitleSubtitleModel = (model, modelType) => {
             modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
         }
     }
-    return modelToReturn
+    return modelToReturn;
 }
 
 /**
@@ -186,6 +201,43 @@ export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
         return `<p>${titleModel}</p>`
     }
     return `<p><label>${labelHTML}&nbsp;</label>${titleModel}</p>`
+}
+/**
+ * Combines label, number and title HTML and returns HTML content to send through update API
+ * @param {*} labelHTML Label HTML content
+ * @param {*} numberHTML number HTML content
+ * @param {*} titleHTML title HTML content
+ */
+export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) => {
+    labelHTML = labelHTML?.replace(/<br>/g, "");
+    numberHTML = numberHTML?.replace(/<br>/g, "");
+    titleHTML = titleHTML?.replace(/<br>/g, "");
+
+    labelHTML = handleBlankLineDom(labelHTML);
+    numberHTML = handleBlankLineDom(numberHTML);
+    titleHTML = handleBlankLineDom(titleHTML);
+
+    if (labelHTML === "" && numberHTML === ""){
+        return `<p>${titleHTML}</p>`
+    } else if (numberHTML === "" && labelHTML) {
+        return `<p><label>${labelHTML}&nbsp;</label>${titleHTML}</p>`    
+    } else if (labelHTML === "" && numberHTML) {
+        return `<p><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`    
+    }
+    return `<p><label>${labelHTML}&nbsp;</label><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`
+}
+
+/**
+ * Returns label, number and title HTML
+ * @param {*} figureObj figure element object
+ */
+ export const getLabelNumberTitleHTML = (figureObj) => {
+    let data = {};
+        figureObj.html.title = figureObj.html.title.replace(/(\r\n|\n|\r)/gm, '');
+        data.formattedLabel = getTitleSubtitleModel(figureObj.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
+        data.formattedNumber = getTitleSubtitleModel(figureObj.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
+        data.formattedTitle = getTitleSubtitleModel(figureObj.html.title, "formatted-subtitle", "figure");
+    return data;
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |

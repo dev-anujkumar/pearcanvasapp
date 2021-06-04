@@ -15,15 +15,15 @@ export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
-        commentCreator: config.userName || config.userId,
-        assignee: config.assignee || config.userId
+        commentCreator: config.fullName,
+        assignee: config.fullName
     };
 
     let Comment = {
         commentType: "comment",
         commentDateTime: new Date().toISOString(),
-        commentAssignee: config.userName || config.userId,
-        commentCreator: config.userName || config.userId,
+        commentAssignee: config.fullName,
+        commentCreator: config.fullName,
         commentString: commentString,
         commentStatus: "OPEN",
         commentOnEntity: elementId,

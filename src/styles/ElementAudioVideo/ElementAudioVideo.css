@@ -23,21 +23,21 @@
     outline: none;
    
 }
-.figureLabel.cypress-editable{
+.figureLabel.cypress-editable, .figureNumber.cypress-editable {
     font-weight: 800 !important;
 }
-.figureLabel.cypress-editable strong{
+.figureLabel.cypress-editable strong, .figureNumber.cypress-editable strong{
     font-weight: 800;
     font-family: Helvetica, sans-serif!important;
 }
-.divAudio .figureLabel.cypress-editable{
+.divAudio .figureLabel.cypress-editable .figureNumber.cypress-editable{
     font-size: 10.8!important;
     font-weight: 400 !important;
  }
  .divAudio .figureTitle.cypress-editable{
      font-size: 10.2!important;
   }
-.figureCredit , .figureTitle, .figureCaption, .figureLabel{
+.figureCredit , .figureTitle, .figureCaption, .figureLabel, .figureNumber{
     min-height: 40px!important;
     cursor: auto !important;
     width:100%!important;

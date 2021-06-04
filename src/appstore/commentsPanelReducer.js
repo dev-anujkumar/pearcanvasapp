@@ -119,7 +119,7 @@ export default function (state = initialState, action = INITIAL_ACTION) {
             }
         case GET_PROJECT_USER:
             let users = payload;
-            users = users.filter(user => user.isMember === true)
+            // users = users.filter(user => user.isMember === true)
             return {
                 ...state,
                 users: users
