@@ -51,7 +51,8 @@ export const onDeleteSuccess = (params) => {
         poetryData,
         cutCopyParentUrn,
         showHideObj,
-        element
+        element,
+        appStore: getState().appStore
     }
     prepareTCMSnapshotsForDelete(tcmDeleteArgs)
 
@@ -238,7 +239,8 @@ export const prepareTCMSnapshotsForDelete = (params) => {
         poetryData,
         cutCopyParentUrn,
         showHideObj,
-        element
+        element,
+        appStore
     } = params
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
@@ -259,7 +261,8 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             wipData: wipData && Object.keys(wipData).length > 0 ? wipData : element, /** Inside Multi-Column->Aside/WE */
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
-            index
+            index,
+            appStore
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement)
     }
@@ -293,5 +296,5 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index);
+    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"","",elementDeleteData.appStore);
 }

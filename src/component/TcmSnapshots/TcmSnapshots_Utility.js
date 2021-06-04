@@ -84,15 +84,17 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
             tag.grandParent = "2C:" + columnName;
             elementId.grandParentId = `${id}+${columnId}`;
-    }
-    if(wipData.type === FIGURE && asideData?.figureIn2cAside?.isExist && actionStatus.action === "update") {
+    } else if(wipData.type === FIGURE && asideData?.figureIn2cAside?.isExist && actionStatus.action === "update") {
         /* figure element conversion inside; 2C:ASIDE:FIGURE */ 
-        const { id: asId, parent: figParent } = asideData?.figureIn2cAside?.asideData || {};
-        //tag.figIn_2c_Aside = fetchElementsTag(asideData?.figureIn2cAside?.asideData);
-        //elementId.figIn_2c_Aside = asId;
+        const { parent: figParent } = asideData?.figureIn2cAside?.asideData || {};
         /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
         tag.grandParent = "2C:" + figParent.columnName;
         elementId.grandParentId = `${figParent.id}+${figParent.columnId}`;
+    } else if(actionStatus.action === "delete" && appStore?.asideData?.parent?.type === MULTI_COLUMN ) {
+        /* snapshots for Delete the section break inside 2c/we */
+        const { id: sc_id, columnName: sb_cName, columnId: sb_cId } = appStore.asideData.parent || {};
+        tag.grandParent = "2C:" + sb_cName;
+        elementId.grandParentId = `${sc_id}+${sb_cId}`;
     }
     
     /* Initial snapshotsData of elements*/
@@ -181,8 +183,10 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     wipData.elementdata.bodymatter && wipData.elementdata.bodymatter.map((item) => {
         if (item.type === WE_MANIFEST) {
+            console.log("item = ",item)
             item.contents.bodymatter.map((ele) => {
                 if (elementType.indexOf(ele.type) !== -1) {
+                    console.log("ele = ",ele)
                     elementId.childId = ele.id;
                     tag.childTag = fetchElementsTag(ele);
                     elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? 'BODY' : "", item.id,undefined,popupInContainer,slateManifestVersioning,isPopupSlate);
@@ -353,7 +357,6 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
             const sectionOfWE = asideFigObj?.element?.elementdata?.bodymatter?.find(item => {
                 return (item?.id === wipData?.id);
             })
-            console.log("sectionOfWE = ",sectionOfWE);
             /* Check head or body of WE */
             isHead = sectionOfWE?.id ? "HEAD" : "BODY";
         }
@@ -734,6 +737,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementUrn: elementId,
         elementType: elementTag
     }
+    console.log("elementData = ",elementData)
     return elementData
 }
 
