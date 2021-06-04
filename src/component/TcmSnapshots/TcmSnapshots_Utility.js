@@ -45,7 +45,8 @@ const {
     FIGURE,
     allowedFigureTypesForTCM,
     SHOWHIDE,
-    SHOW_HIDE
+    SHOW_HIDE,
+    SMART_LINK
 }
     = TcmConstants;
 
@@ -73,16 +74,14 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
-    if(wipData.type === ELEMENT_ASIDE && parentUrn?.elementType === "group") {
+    if(wipData.type === ELEMENT_ASIDE && parentUrn?.elementType === MULTI_COLUMN_GROUP) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = "2C:" + parentUrn?.columnName;
-        elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`;
-  
-    } 
-    else if((type === SECTION_BREAK || type === POP_UP || type === SHOW_HIDE || actionStatus.action === "update" || 
+        elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
+    } else if(([SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE].includes(type) || actionStatus.action === "update" || 
         actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE) && 
-        gPType === "groupedcontent"){
+        gPType === MULTI_COLUMN){
          /* Add section Break inside 2C->WE */ 
             tag.grandParent = "2C:" + columnName;
             elementId.grandParentId = `${id}+${columnId}`;

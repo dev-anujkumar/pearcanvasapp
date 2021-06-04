@@ -984,11 +984,27 @@ const appendCreatedElement = async (paramObj, responseData) => {
 
     if(parentElement.type === "popup"){
         let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
-        if(popupElementIndex.length === 3){
-            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
-        }
-        else if(popupElementIndex.length === 4){
-            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+        //if(popupElementIndex.length === 3){
+        //    targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
+        //}
+        //else if(popupElementIndex.length === 4){
+        //    targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+        //} else if(popupElementIndex.length === 5) {
+        //    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]          
+        //}
+        switch(popupElementIndex?.length) {
+            case 3:
+                targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
+                break;
+            case 4:
+                targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+                break;
+            case 5:
+                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]          
+                break;
+            case 6:
+                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]]          
+                break;
         }
         if (targetPopupElement) {
             targetPopupElement.popupdata["formatted-title"] = responseData
@@ -1001,12 +1017,30 @@ const appendCreatedElement = async (paramObj, responseData) => {
             }
             targetPopupElement.popupdata["formatted-title"].elementdata.text = elemNode.innerText
             // _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
-            if (popupElementIndex.length === 3) {
-                _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]] = targetPopupElement
-            } else if (popupElementIndex.length === 4) {
-                _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]] = targetPopupElement
-            } else {
-                _slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement
+            //if (popupElementIndex.length === 3) {
+            //    _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]] = targetPopupElement
+            //} else if (popupElementIndex.length === 4) {
+            //    _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]] = targetPopupElement
+            //} else if(popupElementIndex.length === 5) {
+            //    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;      
+            //} else {
+            //        _slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement
+            //    }
+            switch(popupElementIndex?.length) {
+                case 3:
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]] = targetPopupElement;
+                    break;
+                case 4:
+                   _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]] = targetPopupElement;
+                    break;
+                case 5:
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;          
+                    break;
+                case 6:
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]] = targetPopupElement;          
+                    break;
+                default:
+                    slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement;
             }
         }
     }

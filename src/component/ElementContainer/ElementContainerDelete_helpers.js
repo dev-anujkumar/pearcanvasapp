@@ -247,7 +247,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             showHideObj: showHideCondition ? showHideObj : null
         }
         const deleteData = {
-            wipData: Object.keys(wipData).length > 0 ? wipData : element, /** Inside Multi-Column->Aside/WE */
+            wipData: wipData && Object.keys(wipData).length > 0 ? wipData : element, /** Inside Multi-Column->Aside/WE */
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
             index
