@@ -143,7 +143,7 @@ class ElementAudioVideo extends Component {
                 )
             }
             
-            this.setState({ imgSrc: epsURL,assetData :smartLinkURl })
+            this.setState({ imgSrc: epsURL,assetData :epsURL })
             let figureData = {
                 height : height,
                 width : width,
@@ -196,7 +196,7 @@ class ElementAudioVideo extends Component {
                         },
                         audio: {
                             format: videoFormat,
-                            path: smartLinkURl
+                            path: epsURL
                         },
                         schema: "http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio"
                     }
