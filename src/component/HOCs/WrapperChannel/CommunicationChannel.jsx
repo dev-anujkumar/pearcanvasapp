@@ -257,6 +257,9 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'selectedAlfrescoAssetData' :
                     console.log('ASSET DATA FROM ALFRESCO', message.asset)
+                    if(message.isEditor){
+                        this.handleEditorSave(message)
+                    }
                     this.props.saveSelectedAssetData(message)
                     let fileName = message.asset.name;
                     let fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
@@ -272,6 +275,9 @@ function CommunicationChannel(WrappedComponent) {
                 break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
+                    break;
+                case 'openInlineAlsfrescoPopup' :
+                    this.props.alfrescoPopup(message);
                     break;
             }
         }
@@ -385,6 +391,16 @@ function CommunicationChannel(WrappedComponent) {
                     editor.blur();
                 }
             }, 500);
+        }
+
+        handleEditorSave = (message) =>{
+            let params = {
+                element: message.id,
+                editor: this.props.alfrescoEditor,
+                asset: message.asset,
+                launchAlfrescoPopup: false                
+            }
+            this.props.saveInlineImageData(params)
         }
 
         /**

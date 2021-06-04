@@ -17,7 +17,7 @@ import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
@@ -32,11 +32,13 @@ import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco }  from '../js/TinyMceUtility.js';
+import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
+
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -122,7 +124,9 @@ export class TinyMceEditor extends Component {
                     * This code is written to remove lagging in typing and move cursor at end on focus
                     */
                 });
-                tinymce.$('.blockquote-editor').attr('contenteditable', false)
+                tinymce.$('.blockquote-editor').attr('contenteditable', false);
+                this.setCalloutIcon(editor);
+                this.addCalloutIcon(editor);
             },
 
             init_instance_callback: (editor) => {
@@ -518,6 +522,16 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                     }
+                    if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
+                        let textSelected = window.getSelection().toString();
+                        if (textSelected.length) {
+                            let selected = editor.selection.getContent();
+                            let selection = window.getSelection().anchorNode.parentNode;
+                            selection.parentNode.removeChild(selection);
+                            tinymce.activeEditor.selection.setContent(selected);                         
+                        }
+                    }
+
                     /**
                      * In case remove all formatting is being appied on list element
                      */
@@ -1435,6 +1449,80 @@ export class TinyMceEditor extends Component {
             crossLinkIcon
         );
     }
+ 
+    /**
+     * Adds Callout icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setCalloutIcon = (editor) => {
+        editor.ui.registry.addIcon(
+            "calloutIcon",
+            calloutMenuIcon
+        );
+    }
+
+
+     /**
+     * Adding button for Callout
+     * @param {*} editor  editor instance
+     */
+      addCalloutIcon = editor => {
+        const calloutsCount = 4;  // Count for dynamically creating callouts.
+        const items = [];
+        if ('element' in this.props && 'type' in this.props.element) {
+           for(let i=1;i<=calloutsCount;i++){
+            items.push({
+                type: 'togglemenuitem',
+                text: `Callout option ${i}`,
+                tooltip: `Callout option ${i}`,
+                onAction: () => {
+                    let selectedText = window.getSelection().toString();
+                    if (!hasReviewerRole() && selectedText.length) {
+                        this.setCalloutToSelection(editor,i-1)
+                    }
+                },
+                onSetup: function (api) {
+                    let callouts=['One','Two','Three','Four']
+                    let activeCallout = tinymce.activeEditor.selection.getNode().className;
+                    if(activeCallout===`callout${callouts[i-1]}`){
+                        api.setActive(true);
+                    }
+                    else{
+                        api.setActive(false);
+                    }
+                }
+            })
+        }
+     }    
+        editor.ui.registry.addMenuButton("calloutIcon", {
+            text: "",
+            icon: "callouticon",
+            tooltip: "Callout",
+            fetch: cb => cb(items)
+        });
+    }
+
+    setCalloutToSelection(editor,selectedCalloutIndex){
+        let callouts=['One','Two','Three','Four']
+        let selectedContent = editor.selection.getContent();
+        let selectedText = this.removeHTMLTags(selectedContent);
+        let calloutSpan = selectedContent.replace(selectedText,`<span title="callout${callouts[selectedCalloutIndex]}" class="callout${callouts[selectedCalloutIndex]}">${selectedText}</span>`)
+        let isSelected = tinymce.activeEditor.selection.getNode().className.includes('callout');
+        if(!isSelected){
+            tinymce.activeEditor.selection.setContent(calloutSpan);
+        }
+        else{
+            let selection = window.getSelection().anchorNode.parentNode;
+            selection.parentNode.removeChild(selection);
+            tinymce.activeEditor.selection.setContent(`<span title="callout${callouts[selectedCalloutIndex]}" class="callout${callouts[selectedCalloutIndex]}">${selectedText}</span>`);
+        }
+    }
+
+     removeHTMLTags(html) {
+        var regX = /(<([^>]+)>)/ig;                
+        return(html.replace(regX, ""));
+      }
+
 
     /**
      * Adds Alignment icon to the toolbar.
@@ -1531,6 +1619,7 @@ export class TinyMceEditor extends Component {
                     permissions: self.props.permissions,
                     editor: editor
                 }
+                self.props.saveInlineImageData(params)
                 const items = insertMediaSelectors(params);
                 callback(items);
             }
@@ -2382,7 +2471,6 @@ export class TinyMceEditor extends Component {
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
         let parentNode = true;
         do {
             if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
@@ -2423,6 +2511,7 @@ export class TinyMceEditor extends Component {
         } else {
             selection.parentNode.removeChild(selection);
         }
+
         sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
     }
 
@@ -2778,6 +2867,7 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
+        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup} = this.props
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
@@ -2799,6 +2889,9 @@ export class TinyMceEditor extends Component {
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
+         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
+            dataFromAlfresco(alfrescoAssetData, alfrescoEditor)
+        }
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
@@ -2834,8 +2927,9 @@ export class TinyMceEditor extends Component {
         let toolbar = [];
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        }
-        else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
+        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Enter Number...") {
+            toolbar = config.figureNumberToolbar;
+        } else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
@@ -3544,7 +3638,7 @@ export class TinyMceEditor extends Component {
                     <h4 ref={this.editorRef} 
                         id={id}
                         data-id={this.props.currentElement ? this.props.currentElement.id : undefined}
-                        onKeyDown={this.normalKeyDownHandler} 
+                        onKeyDown={this.normalKeyDownHandler}
                         onBlur={this.handleBlur} 
                         onClick={this.handleClick} 
                         className={classes} 
@@ -3635,7 +3729,17 @@ TinyMceEditor.defaultProps = {
     error: null,
 };
 
+const mapStateToProps = (state) => {
+    return {
+        alfrescoPermission: state.alfrescoReducer.Permission,
+        alfrescoElementId : state.alfrescoReducer.elementId,
+        alfrescoEditor: state.alfrescoReducer.editor,
+        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup
+    }
+}
+
 export default connect(
-    null,
-    { conversionElement, wirisAltTextPopup }
+    mapStateToProps,
+    { conversionElement, wirisAltTextPopup, saveInlineImageData }
 )(TinyMceEditor);

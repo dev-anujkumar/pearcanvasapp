@@ -113,6 +113,21 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == asideData.id) {
                     item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
+                } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
+                    /* Add element inside 2c->WE->new */
+                    item?.groupeddata?.bodymatter?.map((ele) => {
+                        ele?.groupdata?.bodymatter?.map(i => {
+                            if (i?.id === parentUrn.manifestUrn) {
+                                i?.elementdata?.bodymatter?.splice(outerAsideIndex, 0, createdElementData);
+                            } else if(i?.subtype === "workedexample"){
+                                i?.elementdata?.bodymatter?.map(j => {
+                                    if (j?.id === parentUrn.manifestUrn) {
+                                        j?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                                    }
+                                })
+                            }
+                        })
+                    })
                 }
             })
         } else if (asideData && asideData.type == 'element-aside'  && type !== 'SECTION_BREAK') {
@@ -124,6 +139,21 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         if (ele.id === parentUrn.manifestUrn) {
                             ele.contents.bodymatter.splice(index, 0, createdElementData)
                         }
+                    })
+                /* To update redux store while creating new element inside 2C->Aside->New */
+                } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
+                    item?.groupeddata?.bodymatter?.map((ele) => {
+                        ele?.groupdata?.bodymatter?.map(i => {
+                            if (i?.id === parentUrn.manifestUrn) {
+                                i?.elementdata?.bodymatter?.splice(index, 0, createdElementData);
+                            } else if(i?.subtype === "workedexample"){
+                                i?.elementdata?.bodymatter?.map(j => {
+                                    if (j?.id === parentUrn.manifestUrn) {
+                                        j?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                                    }
+                                })
+                            }
+                        })
                     })
                 }
             })
@@ -157,8 +187,15 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, createdElementData)
                 }
             })
-        }
-        else {
+        /* Adding WE element inside 2C element */
+        } else if(parentUrn?.elementType === "group" && !asideData){
+            newParentData[config.slateManifestURN]?.contents?.bodymatter?.map((item, i) => {
+                let column = item?.groupeddata?.bodymatter[parentUrn?.columnIndex] || [];
+                if (column?.id === parentUrn?.manifestUrn) {
+                    column?.groupdata?.bodymatter?.splice(index, 0, createdElementData)
+                }
+            })
+        } else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
@@ -290,7 +327,7 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
 
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId, parentElement, elementIndex } = dataObj || {};
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -337,21 +374,38 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
                 if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
-                    for (let i in newBodymatter) {
-                        if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
-                            newBodymatter[i].elementdata.bodymatter.move(oldIndex, newIndex);
+                    const indexs = elementIndex?.split('-') || [];
+                    if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
+                        let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]];
+                        if (asid.contentUrn == currentSlateEntityUrn) {
+                            asid?.elementdata?.bodymatter?.move(oldIndex, newIndex);
+                        }
+                    } else {
+                        for (let i in newBodymatter) {
+                            if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
+                                newBodymatter[i].elementdata.bodymatter.move(oldIndex, newIndex);
+                            }
                         }
                     }
                 } else if (containerTypeElem && containerTypeElem == 'section') {
-                    newBodymatter.forEach(element => {
-                        if (element.id == asideId) {
-                            element.elementdata.bodymatter.forEach((nestedElem) => {
-                                if (nestedElem.contentUrn == currentSlateEntityUrn) {
-                                    nestedElem.contents.bodymatter.move(oldIndex, newIndex);
-                                }
-                            })
-                        }
-                    });
+                    const indexs = elementIndex?.split('-') || [];
+                    if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:WE:BODY:SECTION-BREAK: Swap Elements */
+                        newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.map(item => {
+                            if (item.contentUrn == currentSlateEntityUrn) {
+                                item?.contents?.bodymatter?.move(oldIndex, newIndex);
+                            }
+                        })
+                    } else {
+                        newBodymatter.forEach(element => {
+                            if (element.id == asideId) {
+                                element.elementdata.bodymatter.forEach((nestedElem) => {
+                                    if (nestedElem.contentUrn == currentSlateEntityUrn) {
+                                        nestedElem.contents.bodymatter.move(oldIndex, newIndex);
+                                    }
+                                })
+                            }
+                        });
+                    }
                 } 
                 /** ----------Swapping elements inside Citations Group Element----------------- */
                 else if (containerTypeElem && containerTypeElem == 'cg') {

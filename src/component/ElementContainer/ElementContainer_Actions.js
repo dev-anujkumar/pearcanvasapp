@@ -15,15 +15,15 @@ export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
-        commentCreator: config.userName || config.userId,
-        assignee: config.assignee || config.userId
+        commentCreator: config.fullName,
+        assignee: config.fullName
     };
 
     let Comment = {
         commentType: "comment",
         commentDateTime: new Date().toISOString(),
-        commentAssignee: config.userName || config.userId,
-        commentCreator: config.userName || config.userId,
+        commentAssignee: config.fullName,
+        commentCreator: config.fullName,
         commentString: commentString,
         commentStatus: "OPEN",
         commentOnEntity: elementId,
@@ -110,7 +110,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             poetryData,
             cutCopyParentUrn,
             fetchSlateData,
-            showHideObj
+            showHideObj,
+            element
         }
         onDeleteSuccess(deleteArgs)
     } 
@@ -267,6 +268,16 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
                     }
     
                 }
+            }
+        } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === "groupedcontent") { /* 2C:AS:Fig */
+            if (indexesLen == 4) {
+                condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];  
+            } else if (indexesLen == 5) {
+                condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+            }
+            if (condition.versionUrn === elementId) {
+                dataToSend = condition?.figuredata
+                condition.figuredata = figureData
             }
         }
     }

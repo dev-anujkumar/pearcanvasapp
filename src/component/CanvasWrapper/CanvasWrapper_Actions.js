@@ -37,6 +37,7 @@ import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
+import { createLabelNumberTitleModel } from '../../constants/utility.js';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -569,7 +570,24 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         else {
                             dispatch(fetchComments(contentUrn, title))
                         }
-                    }                   
+                    }
+
+                    // Modifying old figures html into new pattern
+                    // ................................XX...........................................
+                    let figureElementsType = ['image', 'table', 'mathImage', 'authoredtext', 'codelisting', 'interactive'];              
+                    for (let element of slateData.data[manifestURN].contents.bodymatter) {
+                        if (element.hasOwnProperty('figuretype') && figureElementsType.includes(element.figuretype) && element.type == 'figure') {
+                            if (element.hasOwnProperty('subtitle')) {
+                                element.html.title = createLabelNumberTitleModel(element.html.title.replace("<p>", '').replace("</p>", ''), '', element.html.subtitle.replace("<p>", '').replace("</p>", ''));
+                            }
+                        } else if ((element.figuretype == 'audio' || element.figuretype == 'video') && element.type == 'figure') {
+                            if (element.hasOwnProperty('title') && element.hasOwnProperty('subtitle')) {
+                                element.html.title = createLabelNumberTitleModel(element.html.title.replace("<p>", '').replace("</p>", ''), '', element.html.subtitle.replace("<p>", '').replace("</p>", ''));
+                            }
+                        }
+                    }
+                    // ................................XX...........................................
+                    
                     config.totalPageCount = slateData.data[manifestURN].pageCount;
                     config.pageLimit = slateData.data[manifestURN].pageLimit;
                     let parentData = getState().appStore.slateLevelData;
@@ -891,6 +909,7 @@ export const fetchAuthUser = () => dispatch => {
     }).then((response) => {
         let userInfo = response.data;
 		config.userEmail = userInfo.email;
+        config.fullName = userInfo.lastName + ',' + userInfo.firstName
 		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
 		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
     })
@@ -965,11 +984,27 @@ const appendCreatedElement = async (paramObj, responseData) => {
 
     if(parentElement.type === "popup"){
         let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
-        if(popupElementIndex.length === 3){
-            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
-        }
-        else if(popupElementIndex.length === 4){
-            targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+        //if(popupElementIndex.length === 3){
+        //    targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
+        //}
+        //else if(popupElementIndex.length === 4){
+        //    targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+        //} else if(popupElementIndex.length === 5) {
+        //    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]          
+        //}
+        switch(popupElementIndex?.length) {
+            case 3:
+                targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
+                break;
+            case 4:
+                targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
+                break;
+            case 5:
+                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]          
+                break;
+            case 6:
+                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]]          
+                break;
         }
         if (targetPopupElement) {
             targetPopupElement.popupdata["formatted-title"] = responseData
@@ -982,12 +1017,30 @@ const appendCreatedElement = async (paramObj, responseData) => {
             }
             targetPopupElement.popupdata["formatted-title"].elementdata.text = elemNode.innerText
             // _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
-            if (popupElementIndex.length === 3) {
-                _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]] = targetPopupElement
-            } else if (popupElementIndex.length === 4) {
-                _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]] = targetPopupElement
-            } else {
-                _slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement
+            //if (popupElementIndex.length === 3) {
+            //    _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]] = targetPopupElement
+            //} else if (popupElementIndex.length === 4) {
+            //    _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]] = targetPopupElement
+            //} else if(popupElementIndex.length === 5) {
+            //    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;      
+            //} else {
+            //        _slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement
+            //    }
+            switch(popupElementIndex?.length) {
+                case 3:
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]] = targetPopupElement;
+                    break;
+                case 4:
+                   _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]] = targetPopupElement;
+                    break;
+                case 5:
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;          
+                    break;
+                case 6:
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]] = targetPopupElement;          
+                    break;
+                default:
+                    slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement;
             }
         }
     }

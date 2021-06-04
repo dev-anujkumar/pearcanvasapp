@@ -1,7 +1,8 @@
 import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
-import { sendDataToIframe, createTitleSubtitleModel, matchHTMLwithRegex } from '../../constants/utility.js';
+import { sendDataToIframe, createTitleSubtitleModel, matchHTMLwithRegex, createLabelNumberTitleModel } from '../../constants/utility.js';
+import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { tcmSnapshotsForUpdate, fetchParentData, fetchElementWipData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 const {
@@ -120,10 +121,19 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         glossaryFootElem = condition
                     }
                 }
+           
+                else if (indexesLen == 4) {
+                    /* 2C:AS/WE:PS */
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
+                    
+                }
+                else if (indexesLen == 5) {
+                    /* 2C:WE-BODY:PS */
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
+                }
 
             }
         }
-
         switch (semanticType) {
             case 'FOOTNOTE':
                 footnoteContentText = glossaryFootElem && glossaryFootElem.html['footnotes'] && glossaryFootElem.html['footnotes'][glossaryfootnoteid]
@@ -218,7 +228,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
-        let label, title, captions, credits, elementIndex, text, postertext;
+        let label, number, title, captions, credits, elementIndex, text, postertext;
         let preformattedtext = null;
         let tableAsHTML = null;
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
@@ -232,33 +242,40 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
 
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
-        title = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
+        number = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
+        title = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
+
 
         if(elementSubType == 'image' || elementSubType === 'tableasmarkup' || elementSubType === "audio" || elementSubType === "video" || elementSubType === 'table' || elementSubType === "mathImage"){
-            captions = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
-            credits = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+            captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+            credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
             if (elementSubType === 'tableasmarkup') {
                 if(document.getElementById(elementIndex + '-tableData')) {
                     tableAsHTML = document.getElementById(elementIndex + '-tableData').innerHTML;
                 }
             }
         }else if (elementSubType === 'interactive' || elementSubType === "codelisting" || elementSubType === "authoredtext"){
-            captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
-            credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
-            let index2Data = document.getElementById('cypress-' + elementIndex + '-2') ;//cypress-1-2
-            let hasData = index2Data && index2Data.innerHTML ? index2Data.innerHTML : "";
+            captions = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
+            credits = document.getElementById('cypress-' + elementIndex + '-5').innerHTML //cypress-1-5
+            let index3Data = document.getElementById('cypress-' + elementIndex + '-3') ;//cypress-1-2
+            let hasData = index3Data && index3Data.innerHTML ? index3Data.innerHTML : "";
             if(elementSubType === 'codelisting') {
-                preformattedtext = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
+                preformattedtext = document.getElementById('cypress-' + elementIndex + '-3').innerHTML;
             } else if (elementSubType === 'authoredtext') {
-                text = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
+                text = document.getElementById('cypress-' + elementIndex + '-3').innerHTML ;
             }else if(elementSubType === 'interactive' && hasCtaText.indexOf(currentElement.secondaryOption) !==-1){
                 postertext = hasData; //BG-2628 Fixes
             }
         }
+        
+        label = replaceUnwantedtags(label, false);
+        number = replaceUnwantedtags(number, false);
+        title = replaceUnwantedtags(title, true);
+
+        title = createLabelNumberTitleModel(label, number, title);
 
         figureDataObj = {
-            "title": matchHTMLwithRegex(label) ? label : `<p>${label}</p>`,
-            "subtitle": matchHTMLwithRegex(title) ? title : `<p>${title}</p>`,
+            "title": title,
             "text": text ? text : "",
             "postertext": (hasCtaText.indexOf(currentElement.secondaryOption) !== -1) ? postertext  ? postertext.match(/<p>/g) ? postertext : `<p>${postertext}</p>` : "<p></p>" : "",
             "tableasHTML": tableAsHTML ? tableAsHTML : '',
@@ -617,6 +634,15 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         }
 
                     }
+                }
+                else if (indexesLen == 4) {
+                    // aside inside multi column
+                    newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                   
+                }
+                else if (indexesLen == 5) {
+                    // element inside popup inside multi column
+                    newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data
                 }
             }
         }

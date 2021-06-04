@@ -38,28 +38,31 @@ code .codeNoHighlightLine{
 .figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv{
     cursor: auto !important;
     /* max-height: 85px; */
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
 }
-.figureCredit , .figureTitle, .figureCaption, .figureLabel, .mathml .figureElement .figureData {
+.figureCredit , .figureTitle, .figureCaption, .figureLabel, .figureNumber, .mathml .figureElement .figureData {
     min-height: 40px!important;
     cursor: auto !important;
     width:100%!important;
     max-width: 100% !important;
     color:black!important;
 }
-h4.figureLabel, h4.figureTitle{
+h4.figureLabel, h4.figureTitle, h4.figureNumber{
     margin-bottom: 6px!important;
 }
 .figureCaption{
     margin-top: 5px!important;
 }
-.figure-header .figureLabel.cypress-editable,.figure-header .figureTitle.cypress-editable{
+.figure-header .figureLabel.cypress-editable,.figure-header .figureTitle.cypress-editable, .figure-header .figureNumber.cypress-editable {
     font-size: 12px!important;
     font-family: Helvetica, sans-serif!important;
 }
 .figureLabel.cypress-editable  em,.figureLabel.cypress-editable  em strong,.figureLabel.cypress-editable strong span{
     font-weight: 900 !important;
     font-family: inherit !important;
+}
+.figureNumber.cypress-editable {
+    font-weight: 800 !important;
 }
 .figure-header{
     min-height: 86px;
@@ -75,7 +78,7 @@ h4.figureLabel, h4.figureTitle{
     padding: 10px 0;
     width:100%!important;
     max-width: 100% !important;
-    overflow-x: auto;
+    /* overflow-x: auto; */
 }
 .figureElement .pearson-component.image.figureData:not(.table-figure-data) {
     /* cursor:copy!important ; */

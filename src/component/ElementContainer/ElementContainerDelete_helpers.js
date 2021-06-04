@@ -29,7 +29,8 @@ export const onDeleteSuccess = (params) => {
         poetryData,
         cutCopyParentUrn,
         fetchSlateData,
-        showHideObj
+        showHideObj,
+        element
     } = params
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -49,7 +50,8 @@ export const onDeleteSuccess = (params) => {
         index,
         poetryData,
         cutCopyParentUrn,
-        showHideObj
+        showHideObj,
+        element
     }
     prepareTCMSnapshotsForDelete(tcmDeleteArgs)
 
@@ -129,6 +131,13 @@ export const deleteFromStore = (params) => {
                             element.elementdata.bodymatter.splice(indexInner, 1);
                         }
                     })
+                } else {
+                    /* Delete inside 2C:WE/AS:ELEMETNS */
+                    element?.groupeddata?.bodymatter?.map(item => {
+                        item?.groupdata?.bodymatter?.map(i => {
+                            delInsideWE(i, asideData, parentUrn, elmId);
+                        })
+                    })
                 }
             } else if(poetryData && poetryData.type == 'poetry') {
                 if (element.id === poetryData.parentUrn) {
@@ -140,6 +149,7 @@ export const deleteFromStore = (params) => {
                 }
             }
             else if (parentUrn && parentUrn.elementType == "manifest") {
+                /*
                 if (element.id === asideData.id) {
                     element.elementdata.bodymatter.forEach((ele) => {
                         if (ele.id == parentUrn.manifestUrn) {
@@ -149,8 +159,18 @@ export const deleteFromStore = (params) => {
                                 }
                             })
                         }
-
                     })
+                } else 
+                */
+                /* Delete element inside 2C->WE->element */
+                if(element?.type === "groupedcontent") {
+                    element?.groupeddata?.bodymatter?.map(item => {
+                        item?.groupdata?.bodymatter?.map(i => {
+                            delInsideWE(i, asideData, parentUrn, elmId);
+                        })
+                    })
+                } else {
+                    delInsideWE(element, asideData, parentUrn, elmId);
                 }
             } else if (parentUrn && parentUrn.elementType == "citations"){
                 if (element.id === parentUrn.manifestUrn) {
@@ -167,6 +187,30 @@ export const deleteFromStore = (params) => {
             slateLevelData: newParentData
         }
     })
+}
+/* Delete Element inside WE and aside */
+const delInsideWE = (item, asideData, parentUrn, elmId) => {
+    /* Delete elements inside 2C:WE/AS */
+    if (item.id === asideData?.id) {
+        item?.elementdata?.bodymatter?.forEach((ele,index) => {
+            if (ele.id == parentUrn.manifestUrn) {
+                ele.contents.bodymatter.forEach((el, indexInner) => {
+                    if (el.id === elmId) {
+                        ele.contents.bodymatter.splice(indexInner, 1);
+                    }
+                })
+            } else if (ele.id === elmId) {
+                item.elementdata.bodymatter.splice(index, 1);
+            }
+        })
+    } else if (item.id === parentUrn?.manifestUrn) {
+        /* Delete Section break inside 2C:WE */
+        item?.elementdata?.bodymatter?.forEach((item_L1, index) => {
+            if (item_L1.id === elmId) {
+                item.elementdata.bodymatter.splice(index, 1);
+            }
+        })
+    }
 }
 
 export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
@@ -193,7 +237,8 @@ export const prepareTCMSnapshotsForDelete = (params) => {
         index,
         poetryData,
         cutCopyParentUrn,
-        showHideObj
+        showHideObj,
+        element
     } = params
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
@@ -211,7 +256,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             showHideObj: showHideCondition ? showHideObj : null
         }
         const deleteData = {
-            wipData,
+            wipData: wipData && Object.keys(wipData).length > 0 ? wipData : element, /** Inside Multi-Column->Aside/WE */
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
             index
@@ -230,7 +275,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
     let {cutCopyParentUrn,parentUrn} =  containerElement
-    if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
+    if (elementDeleteData?.wipData?.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM?.includes(elementDeleteData.wipData.figuretype)) {
         return false
     }
     const actionStatus = {

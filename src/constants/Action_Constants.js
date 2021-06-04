@@ -156,6 +156,7 @@ export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
 /* --------------- Alfresco Project ------------------------*/
 export const SET_ALFRESCO_POPUP = "SET_ALFRESCO_POPUP"
 export const SAVE_ALFRESCO_ASSET_DATA = "SAVE_ALFRESCO_ASSET_DATA"
+export const SAVE_INLINE_IMAGE_DATA = "SAVE_INLINE_IMAGE_DATA"
 
 /*---------------- Cypress Project Info ------------------------*/
 export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
