@@ -43,7 +43,9 @@ const {
     bqHiddenText,
     FIGURE,
     allowedFigureTypesForTCM,
-    SHOWHIDE
+    SHOWHIDE,
+    SHOW_HIDE,
+    SMART_LINK
 }
     = TcmConstants;
 
@@ -67,6 +69,21 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* ID of elements*/
     let elementId = {
         parentId:  wipData.id
+    }
+    /* Add WE/Aside inside 2C */
+    const { asideData, parentUrn } = containerElement;
+    const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
+    if(wipData.type === ELEMENT_ASIDE && parentUrn?.elementType === MULTI_COLUMN_GROUP) {
+        /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
+        const gId = asideData?.id || parentUrn?.mcId;
+        tag.grandParent = "2C:" + parentUrn?.columnName;
+        elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
+    } else if(([SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE].includes(type) || actionStatus.action === "update" || 
+        actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE) && 
+        gPType === MULTI_COLUMN){
+         /* Add section Break inside 2C->WE */ 
+            tag.grandParent = "2C:" + columnName;
+            elementId.grandParentId = `${id}+${columnId}`;
     }
     /* Initial snapshotsData of elements*/
     let snapshotsData = {
@@ -536,6 +553,12 @@ export const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defa
     let bodyWE = headWE == "BODY" ? popupParentUrn && popupParentUrn.manifestUrn ? popupParentUrn.manifestUrn : "" : "";//body-id
     tag.popupParentTag = `${tag.popupParentTag}${headWE ? ":"+headWE : ""}`
     elementId.popupParentId = `${elementId.popupParentId}${headWE == "BODY" ? "+"+bodyWE : ""}`
+    /* If popup inside the 2C-WE/Aside; Get the Data of 2C */
+    const { id, type: gPType, columnName, columnId } = popupAsideData?.parent || {};
+    if (gPType === "groupedcontent") {
+        tag.grandParent = "2C:" + columnName;
+        elementId.grandParentId = `${id}+${columnId}`;
+    }
     let popupData = {
         tag: tag,
         wipData: wipData,
@@ -637,6 +660,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
+    
     if (parentElement?.element?.type === SHOWHIDE) {    //showhide
         let showHideSection = getShowHideTag(parentElement.showHideType)
         elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
@@ -673,7 +697,12 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${eleId.popID}+${elementId}`;
     }
-    
+    /* if WE and Aside inside 2C element - 2C:AS/WE:--- */
+    if(tag.grandParent && eleId.grandParentId){
+        elementTag =  `${tag.grandParent}:${elementTag}`
+        elementId = `${eleId.grandParentId}+${elementId}`
+    }
+
     elementData = {
         elementUrn: elementId,
         elementType: elementTag

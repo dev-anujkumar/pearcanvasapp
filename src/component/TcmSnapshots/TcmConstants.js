@@ -24,6 +24,8 @@ export default {
     POP_UP:'POP_UP',
     POPUP_ELEMENT:'popup',
     SHOWHIDE: "showhide",
+    SHOW_HIDE: "SHOW_HIDE",
+    SMART_LINK: "SMART_LINK",
     /****************Citation elment************************/
     CITATION_GROUP: "citations",
     CITATION_ELEMENT: "element-citation",
