@@ -244,6 +244,13 @@ class Comments extends React.Component {
     }
     render() {
         const { comment, elementId, updateReplyComment, toggleReplyForm, users } = this.props
+        let avatarObject = [];
+        let avatar = '';
+        avatarObject = comment?.commentCreator.split(',');
+        let revAvatarObject = avatarObject.reverse();
+        revAvatarObject.forEach(item => {
+            avatar += (item.substr(0, 1)).toUpperCase();
+        });
         return (
             <div className="comment-wrapper">
                 <div className="comment">
@@ -251,7 +258,7 @@ class Comments extends React.Component {
                     <div className="comment-header">
                         <div className="avatar avatar--large">
                             <span className="profile-picture-placeholder green">
-                                {comment.commentCreator[0].toUpperCase()}
+                                {avatar}
                           </span>
                         </div>
                         <div className="comment-info">
