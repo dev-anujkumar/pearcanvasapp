@@ -318,8 +318,8 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
     let elementDetails;
     const { wipData, elementId, tag, actionStatus,popupInContainer,slateManifestVersioning } = snapshotsData;
     const { asideData, parentUrn } = containerElement
-    tag.parentTag = asideData && fetchElementsTag(asideData) ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
-    elementId.parentId = asideData && asideData.id ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+    tag.parentTag = asideData && fetchElementsTag(asideData) && asideData?.type !== MULTI_COLUMN ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
+    elementId.parentId = asideData && asideData.id && asideData?.type !== MULTI_COLUMN ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     wipData.contents.bodymatter.map((item) => {
         if (elementType.indexOf(item.type) !== -1) {
             elementId.childId = item.id;
@@ -1228,6 +1228,18 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 break;
             case FIGURE:
                 wipData = generateWipDataForFigure(bodymatter, index)
+                break;
+            case ELEMENT_ASIDE:                      /** Inside Aside */
+                if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN) {
+                    const sectionBreakParent = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]];
+                    if (sectionBreakParent.subtype === WORKED_EXAMPLE) {  /** Delete Section-Break */
+                        sectionBreakParent.elementdata.bodymatter.map((item, innerIndex) => {
+                            if (item.type == WE_MANIFEST && entityUrn == item.contentUrn) {
+                                wipData = sectionBreakParent.elementdata.bodymatter[innerIndex]
+                            }
+                        })
+                    }
+                }
                 break;
         }
     }
