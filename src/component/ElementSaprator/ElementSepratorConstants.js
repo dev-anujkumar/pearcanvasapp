@@ -53,8 +53,5 @@ export const containerTypeArray = {
         "Block Code": "blockcode-elem",
         "Block Poetry": "poetry-elem",
         "Playscript": "element-dialogue"
-    },
-    //"c2-container-elem-button": {
-    //    "Add Aside": "container-elem"
-    //},
+    }
 }
