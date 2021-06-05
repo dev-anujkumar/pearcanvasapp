@@ -1275,7 +1275,7 @@ export const popupWipData = (bodymatter, eleIndex,operationType,wipData) => {
 */
 export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
     /* Convert of Figure inside 2C:AS/WE Only Update Action */
-    const { asideData } = store?.getState()?.appStore || {};
+    const { asideData, parentUrn } = store?.getState()?.appStore || {};
     const { type,  parent } = asideData || {};
     const isFigure = (response?.type === FIGURE) && (type === ELEMENT_ASIDE) && (parent?.type === MULTI_COLUMN);
     
@@ -1316,6 +1316,17 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
         }
         if(isFigure) {
              parentData.asideData.figureIn2cAside = { isExist : true, asideData };
+        }
+        /** Footntoe Glossary for elements in S/WE in 2C */
+        if (bodymatter[tempIndex[0]].type === MULTI_COLUMN) {
+            const asideWeCondition = bodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]
+            if(asideWeCondition?.type === ELEMENT_ASIDE){
+                parentData = {
+                    ...parentData,
+                    asideData: asideData,
+                    parentUrn: parentUrn
+                }
+            }
         }
     }
     return parentData;
