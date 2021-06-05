@@ -1231,11 +1231,11 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 break;
             case ELEMENT_ASIDE:                      /** Inside Aside */
                 if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN) {
-                    const sectionBreakParent = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]];
-                    if (sectionBreakParent.subtype === WORKED_EXAMPLE) {  /** Delete Section-Break */
-                        sectionBreakParent.elementdata.bodymatter.map((item, innerIndex) => {
+                    const sectionBreakParent = bodymatter[eleIndex[0]]?.groupeddata?.bodymatter[eleIndex[1]]?.groupdata?.bodymatter[eleIndex[2]];
+                    if (sectionBreakParent?.subtype === WORKED_EXAMPLE) {  /** Delete Section-Break */
+                        sectionBreakParent?.elementdata?.bodymatter.map((item, innerIndex) => {
                             if (item.type == WE_MANIFEST && entityUrn == item.contentUrn) {
-                                wipData = sectionBreakParent.elementdata.bodymatter[innerIndex]
+                                wipData = sectionBreakParent?.elementdata?.bodymatter[innerIndex]
                             }
                         })
                     }
