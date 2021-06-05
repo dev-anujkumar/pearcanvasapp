@@ -209,9 +209,9 @@ export const createTitleSubtitleModel = (titleHTML, subtitleHTML) => {
  * @param {*} titleHTML title HTML content
  */
 export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) => {
-    labelHTML = labelHTML.replace(/<br>/g, "");
-    numberHTML = numberHTML.replace(/<br>/g, "");
-    titleHTML = titleHTML.replace(/<br>/g, "");
+    labelHTML = labelHTML?.replace(/<br>/g, "");
+    numberHTML = numberHTML?.replace(/<br>/g, "");
+    titleHTML = titleHTML?.replace(/<br>/g, "");
 
     labelHTML = handleBlankLineDom(labelHTML);
     numberHTML = handleBlankLineDom(numberHTML);
@@ -233,16 +233,10 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
  */
  export const getLabelNumberTitleHTML = (figureObj) => {
     let data = {};
-        if (figureObj.html.hasOwnProperty('subtitle')) {  // to render old figure element 
-            data.formattedLabel = figureObj.html.title;
-            data.formattedNumber = `<p class="paragraphNumeroUno"><br/></p>`;
-            data.formattedTitle = figureObj.html.subtitle;    
-        } else {
-            figureObj.html.title = figureObj.html.title.replace(/(\r\n|\n|\r)/gm, '');
-            data.formattedLabel = getTitleSubtitleModel(figureObj.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
-            data.formattedNumber = getTitleSubtitleModel(figureObj.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
-            data.formattedTitle = getTitleSubtitleModel(figureObj.html.title, "formatted-subtitle", "figure");
-        }
+        figureObj.html.title = figureObj.html.title.replace(/(\r\n|\n|\r)/gm, '');
+        data.formattedLabel = getTitleSubtitleModel(figureObj.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
+        data.formattedNumber = getTitleSubtitleModel(figureObj.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
+        data.formattedTitle = getTitleSubtitleModel(figureObj.html.title, "formatted-subtitle", "figure");
     return data;
 }
 
