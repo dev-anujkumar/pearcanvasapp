@@ -6,7 +6,7 @@
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
-import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData } from './ElementSnapshot_Utility.js';
+import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
 import { getTitleSubtitleModel } from '../../constants/utility';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
@@ -926,7 +926,8 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
     snapshotData = handleBlankLineDom(snapshotData,'BlankLine');
-    snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
+    snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'');
+    snapshotData = snapshotData && removeCalloutTitle(snapshotData)
     return snapshotData
 }
 /**
