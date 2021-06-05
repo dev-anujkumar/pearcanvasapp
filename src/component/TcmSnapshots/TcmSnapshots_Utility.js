@@ -1320,7 +1320,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
         /** Footntoe Glossary for elements in S/WE in 2C */
         if (bodymatter[tempIndex[0]].type === MULTI_COLUMN) {
             const asideWeCondition = bodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]
-            if(asideWeCondition?.type === ELEMENT_ASIDE){
+            if(asideWeCondition?.type === ELEMENT_ASIDE && asideData){
                 parentData = {
                     ...parentData,
                     asideData: asideData,
