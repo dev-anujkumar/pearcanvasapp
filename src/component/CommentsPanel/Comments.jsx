@@ -170,8 +170,8 @@ class Comments extends React.Component {
     actionsMenu = () => {
         let deleteCommentPermission = false;
         const { comment ,permissions} = this.props
-        if ((config.userId === comment.commentCreator && permissions.includes('notes_deleting')) ||
-            (config.userId !== comment.commentCreator && permissions.includes('notes_delete_others_comment'))) {
+        if ((config.fullName === comment.commentCreator && permissions.includes('notes_deleting')) ||
+            (config.fullName !== comment.commentCreator && permissions.includes('notes_delete_others_comment'))) {
             deleteCommentPermission = true;
         }
 
@@ -179,7 +179,7 @@ class Comments extends React.Component {
             <ul className="comment-action-menu action-menu">
                 {permissions.includes('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
-                {config.userId === comment.commentCreator && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
+                {config.fullName === comment.commentCreator && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
                 {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
                 {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
