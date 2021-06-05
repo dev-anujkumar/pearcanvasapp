@@ -117,32 +117,114 @@ export const updateElementInStore = (paramsObj) => {
             }
         })
     } else if(asideData?.parent?.type === "groupedcontent") {
+        /** updation of aside and WE elements inside multicolumn */
         /* 2C:AS/WE:PS */
         const indexes = elementIndex?.split("-");
-        if(indexes?.length == 4) {   /* 2C:AS/WE-HEAD:PS */
-            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]]
-            _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
+        /* 2C:AS/WE-HEAD:PS */
+        if(indexes?.length == 4 && parentUrn?.elementType === "element-aside") {
+           if(parentElement?.type === "popup") {
+                const element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata;
+                if(updatedData.sectionType === "postertextobject"){
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata.postertextobject[0] = {
+                        ...element.postertextobject[0],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element.postertextobject[0].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                } else {
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata["formatted-title"] = {
+                        ...element["formatted-title"],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element["formatted-title"].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                }
+            }else if (parentElement?.type == "showhide" && showHideType) {
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType].map((showHideData) => {
+                    if (showHideData.id == updatedData.id) {
+                        showHideData.elementdata.text = updatedData.elementdata.text;
+                        showHideData.html = updatedData.html;
+                    }
+                })
+            }
+            else {
+                /** updation of text and figure elements inside aside/WE of multicolumn */
+                const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
                 ...element,
                 ...updatedData,
+                elementdata: {
+                    ...element.elementdata,
+                    startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                    numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                    text: updatedData.elementdata ? updatedData.elementdata.text : null
+                },
+                tcm: _slateObject.tcm ? true : false
+                }
             }
-        } else if(indexes?.length == 5) {  /* 2C:WE-BODY:PS */
-            const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
-            _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
-                ...element,
-                ...updatedData,
-            }
+        } else if(indexes?.length == 5 && parentUrn?.elementType === "manifest") {
+            /* 2C:WE-BODY/Section Break:PS */
+            if(parentElement?.type === "popup") {  /* 2C:WE-BODY/Section Break:Popup*/
+                const element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata;
+                if(updatedData.sectionType === "postertextobject"){ /* 2C:WE-BODY/Section Break:Popup: posterobjectdata*/
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata.postertextobject[0] = {
+                        ...element.postertextobject[0],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element.postertextobject[0].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                } else { /* 2C:WE-BODY/Section Break:Popup: formatted-title */
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata["formatted-title"] = {
+                        ...element["formatted-title"],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element["formatted-title"].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                }
+            } else if (parentElement?.type == "showhide" && showHideType) {
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType].map((showHideData) => {
+                    if (showHideData.id == updatedData.id) {
+                        showHideData.elementdata.text = updatedData.elementdata.text;
+                        showHideData.html = updatedData.html;
+                    }
+                })
+            }else {
+                const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
+                    ...element,
+                    ...updatedData,
+                    elementdata: {
+                        ...element.elementdata,
+                        startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                        numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                        text: updatedData.elementdata ? updatedData.elementdata.text : null
+                    },
+                    tcm: _slateObject.tcm ? true : false
+                }
+            }  
         }
     } else {
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
+                /**updation of non container elements */
                 if (element.type === "element-dialogue" || element.type === "element-discussion") {
+                    /** updation of playscript element having dialogue and discussion element */
+                    /**PS,SD,DE */
                     element = {
                         ...element,
                         ...updatedData,
                     }
                 } 
-                
                 else if (element.type !== "openerelement") {
+                    /** updation of simple text elements and figure elements */
                     element = {
                         ...element,
                         ...updatedData,
@@ -335,7 +417,6 @@ export const updateElementInStore = (paramsObj) => {
     }
     _slateContent.bodymatter = _slateBodyMatter
     _slateObject.contents = _slateContent
-
     return dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
         payload: {

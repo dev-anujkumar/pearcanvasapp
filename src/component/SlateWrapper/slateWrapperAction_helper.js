@@ -29,10 +29,12 @@ export const onPasteSuccess = async (params) => {
     replaceWirisClassAndAttr(activeEditorId)
     // Store Update on Paste Element
     let operationType = '';
+    let sourceElementIndex = "";
     let elmSelection = {};
     if (Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
         elmSelection = getState().selectionReducer.selection;
         operationType = elmSelection.operationType;
+        sourceElementIndex = elmSelection?.sourceElementIndex;
     }
 
     /** Create Snapshot for cut action on different slate */
@@ -158,6 +160,23 @@ export const onPasteSuccess = async (params) => {
                         ele.contents.bodymatter.splice(cutIndex, 0, responseData)
                     }
                 })
+            } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id) {
+                /* 2C:ASIDE/WE:Elements; Update the store */
+                const indexs = asideData?.index?.split("-") || [];
+                if(indexs.length === 3) { /* Inside 2C:AS; COPY-PASTE elements */
+                    const selcetIndex = sourceElementIndex?.toString().split("-") || [];
+                    if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest" && selcetIndex.length === 5 ) { /* paste inner level elements inside 2C/Aside */
+                        item?.groupeddata?.bodymatter[selcetIndex[1]]?.groupdata?.bodymatter[selcetIndex[2]]?.elementdata?.bodymatter[selcetIndex[3]]?.contents.bodymatter?.splice(cutIndex, 0, responseData);
+                    } else if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest") { /* paste slate level elements inside 2C/WE/Body */ 
+                        item?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.map(item_L2 => {
+                            if(item_L2.id === parentUrn?.manifestUrn) {
+                                item_L2?.contents?.bodymatter?.splice(cutIndex, 0, responseData);
+                            }
+                        })
+                    } else { /* paste slate level elements inside 2C/WE/Head */
+                        item?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.splice(cutIndex, 0, responseData)
+                    }
+                }
             }
         })
     } else if(asideData && asideData.type == 'citations'){

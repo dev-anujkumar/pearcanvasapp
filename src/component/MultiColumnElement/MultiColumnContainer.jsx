@@ -110,6 +110,7 @@ class MultiColumnContainer extends PureComponent {
                                 userRole={this.props.userRole}
                                 elementSepratorProps={this.context.elementSepratorProps}
                                 splithandlerfunction={this.context.splithandlerfunction}
+                                pasteElement={this.props.pasteElement}
                             />
                             <ElementSaprator
                                 index={index}

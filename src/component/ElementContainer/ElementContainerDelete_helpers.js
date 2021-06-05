@@ -132,6 +132,7 @@ export const deleteFromStore = (params) => {
                         }
                     })
                 } else {
+                    /* Delete inside 2C:WE/AS:ELEMETNS */
                     element?.groupeddata?.bodymatter?.map(item => {
                         item?.groupdata?.bodymatter?.map(i => {
                             delInsideWE(i, asideData, parentUrn, elmId);
@@ -189,6 +190,7 @@ export const deleteFromStore = (params) => {
 }
 /* Delete Element inside WE and aside */
 const delInsideWE = (item, asideData, parentUrn, elmId) => {
+    /* Delete elements inside 2C:WE/AS */
     if (item.id === asideData?.id) {
         item?.elementdata?.bodymatter?.forEach((ele,index) => {
             if (ele.id == parentUrn.manifestUrn) {
@@ -198,6 +200,13 @@ const delInsideWE = (item, asideData, parentUrn, elmId) => {
                     }
                 })
             } else if (ele.id === elmId) {
+                item.elementdata.bodymatter.splice(index, 1);
+            }
+        })
+    } else if (item.id === parentUrn?.manifestUrn) {
+        /* Delete Section break inside 2C:WE */
+        item?.elementdata?.bodymatter?.forEach((item_L1, index) => {
+            if (item_L1.id === elmId) {
                 item.elementdata.bodymatter.splice(index, 1);
             }
         })
@@ -266,7 +275,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
 */
 export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
     let {cutCopyParentUrn,parentUrn} =  containerElement
-    if (elementDeleteData.wipData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementDeleteData.wipData.figuretype)) {
+    if (elementDeleteData?.wipData?.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM?.includes(elementDeleteData.wipData.figuretype)) {
         return false
     }
     const actionStatus = {
