@@ -73,7 +73,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     }
     /* ID of elements*/
     let elementId = {
-        parentId:  wipData.id
+        parentId:  wipData?.id
     }
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
