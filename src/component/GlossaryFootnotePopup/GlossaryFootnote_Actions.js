@@ -47,19 +47,14 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
         }
         else if (tempIndex.length == 5 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
-            const figureParent =newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]];
-            console.log("the figure parent is ", figureParent);
-            if(figureParent) {
-                if(figureParent?.type === 'element-aside') {
-                    glossaryFootElem =  figureParent.elementdata.bodymatter[tempIndex[3]];
-                    // console.log("the figure is inside we/aside", glossaryFootElem);
-                }
-            }
+            glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]];
+            
+        }
+        else if (tempIndex.length == 6 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
+            glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]]?.contents?.bodymatter[tempIndex[4]];
         }
         else if (elementType === "figure") {
-            console.log("inside figure default again")
             let tempUpdatedIndex = index.split('-');
-
             let updatedIndex = tempUpdatedIndex[0];
             glossaryFootElem = newBodymatter[updatedIndex]
         }
@@ -252,6 +247,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             elementIndex = tempIndex[0]+'-'+tempIndex[1]
         }else if (tempIndex.length == 5) {
             elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]+'-'+tempIndex[3]
+        }
+        else if (tempIndex.length == 6) {
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]+'-'+tempIndex[3]+'-'+tempIndex[4]
         }
         else {
             elementIndex = tempIndex[0]
@@ -463,7 +461,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         } else if (tempIndex.length == 3 && elementType =='figure') {//section 2 figure in WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data
         } else if (tempIndex.length === 5 && elementType == 'figure') {
-            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
+            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = res.data;
+        }
+        else if (tempIndex.length === 6 && elementType == 'figure') {
+            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = res.data;
         }
         else if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
