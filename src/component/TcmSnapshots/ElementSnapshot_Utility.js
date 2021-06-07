@@ -612,3 +612,26 @@ export const getInteractiveSubtypeData = (figuredata, html) => {
     }
     return interactiveDataToReturn
 }
+
+
+export const removeCalloutTitle = (elementHTML) =>{
+    let hiddenDiv = document.createElement('div');
+    hiddenDiv.innerHTML = elementHTML;
+    hiddenDiv.style.visibility = 'hidden';
+    document.body.appendChild(hiddenDiv);
+    if (hiddenDiv) {
+        const callout1List = hiddenDiv.querySelectorAll(`span.calloutOne`) ?? []
+        const callout2List = hiddenDiv.querySelectorAll(`span.calloutTwo`) ?? []
+        const callout3List = hiddenDiv.querySelectorAll(`span.calloutThree`) ?? []
+        const callout4List = hiddenDiv.querySelectorAll(`span.calloutFour`) ?? []
+        const calloutList = [callout1List, callout2List, callout3List, callout4List];
+        calloutList && calloutList.length && calloutList.map((calloutTypeList) => {
+            for (let index = 0; index < calloutTypeList.length; index++) {
+                calloutTypeList[index].removeAttribute('title');
+            }
+        })
+    }
+      let updatedData = hiddenDiv.innerHTML;
+      document.body.removeChild(hiddenDiv);
+      return updatedData
+}
