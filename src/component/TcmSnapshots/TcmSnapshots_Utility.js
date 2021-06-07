@@ -47,7 +47,8 @@ const {
     allowedFigureTypesForTCM,
     SHOWHIDE,
     SHOW_HIDE,
-    SMART_LINK, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT
+    SMART_LINK, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT,
+    CONTAINER, WE_TYPE
 }
     = TcmConstants;
 
@@ -118,7 +119,10 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */     
             tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeys, containerElement, type,index);
         } else {                           /** Elements in Containers/ Simple Elements in PopupSlate */
-            tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type,index, "");
+            const isMultiColumnInPopup = hasParentData && config.isPopupSlate && ((parentUrn?.elementType === MULTI_COLUMN_GROUP && (type === CONTAINER || type === WE_TYPE) ) || asideData?.parent?.type === MULTI_COLUMN) ? true : false 
+            snapshotsData.isMultiColumnInPopup = isMultiColumnInPopup;
+            snapshotsData.tag.isMultiColumnInPopup = isMultiColumnInPopup;
+            tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type, index, "");
         }
     }
     /* For POPUP Element */
@@ -709,7 +713,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
             elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         }
-        else if (config.isPopupSlate) {                //POP:BODY:WE:BODY:P
+        else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         }
@@ -722,7 +726,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}${elementTag}`;
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${elementId}`;
     }
-    else if (config.isPopupSlate) {                //POP:BODY:WE:BODY:P
+    else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
@@ -731,9 +735,13 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementId = `${eleId.popID}+${elementId}`;
     }
     /* if WE and Aside inside 2C element - 2C:AS/WE:--- */
-    if(tag.grandParent && eleId.grandParentId){
-        elementTag =  `${tag.grandParent}:${elementTag}`
+    if (tag.grandParent && eleId.grandParentId) {
+        elementTag = `${tag.grandParent}:${elementTag}`
         elementId = `${eleId.grandParentId}+${elementId}`
+        if (tag?.isMultiColumnInPopup) {
+            elementTag = `POP:BODY:${elementTag}`;
+            elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
     }
 
     elementData = {
