@@ -14,7 +14,6 @@ const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockf
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
 
-    console.log("status = " +status, "glossaaryFootnote = " +glossaaryFootnote, "glossaryfootnoteid = " +glossaryfootnoteid, "elementWorkId = " +elementWorkId, "elementType = " +elementType, "index = " +index, "elementSubType = " +elementSubType, "glossaryTermText = " +glossaryTermText, "typeWithPopup = " +typeWithPopup)
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
@@ -39,7 +38,6 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", newBodymatter, tempIndex);
         if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
         }else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent"){ //Figure inside Multi-Column
