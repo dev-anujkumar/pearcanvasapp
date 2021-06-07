@@ -324,6 +324,7 @@ export default connect(
         setElmPickerData,
         saveSelectedAssetData,
         saveInlineImageData,
-        alfrescoPopup
+        alfrescoPopup,
+        saveDataFromAlfresco
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
