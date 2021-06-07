@@ -263,7 +263,7 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, ac
 export const fetchElementsTag = (element,metadataField) => {
     const interactiveArray = ["3rd-party","pdf","web-link","pop-up-web-link","table"];
     let labelText, eleTag, eleType, eleSubType;
-    eleType = element && element.type ? element.type :  element.elementType;
+    eleType = element && element.type ? element.type :  element?.elementType;
     eleType = metadataField ? setMetadataType[element.type][metadataField] : eleType;
     switch (eleType) {
         case AUTHORED_TEXT:

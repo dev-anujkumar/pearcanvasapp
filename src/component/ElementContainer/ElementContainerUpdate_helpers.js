@@ -154,7 +154,6 @@ export const updateElementInStore = (paramsObj) => {
             else {
                 /** updation of text and figure elements inside aside/WE of multicolumn */
                 const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
-                //console.log("updatedData incolumn>>>>",updatedData)
                 _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
                 ...element,
                 ...updatedData,
@@ -190,7 +189,14 @@ export const updateElementInStore = (paramsObj) => {
                         },
                     }
                 }
-            } else {
+            } else if (parentElement?.type == "showhide" && showHideType) {
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType].map((showHideData) => {
+                    if (showHideData.id == updatedData.id) {
+                        showHideData.elementdata.text = updatedData.elementdata.text;
+                        showHideData.html = updatedData.html;
+                    }
+                })
+            }else {
                 const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
                 _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
                     ...element,

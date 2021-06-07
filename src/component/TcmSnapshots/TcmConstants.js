@@ -62,6 +62,7 @@ export default {
     VIDEO: "VIDEO",
     BLOCK_CODE_EDITOR: "BLOCK_CODE_EDITOR",
     MMI_ELM: "MMI_ELM",
+    TEXT: "TEXT",
     /*****************Element Type Arrays*******************/
     elementType: ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'],
     containerType : ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY', 'groupedcontent'],
