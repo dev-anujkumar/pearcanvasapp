@@ -627,9 +627,7 @@ export const removeCalloutTitle = (elementHTML) =>{
         const calloutList = [callout1List, callout2List, callout3List, callout4List];
         calloutList && calloutList.length && calloutList.map((calloutTypeList) => {
             for (let index = 0; index < calloutTypeList.length; index++) {
-                const calloutType = calloutTypeList[index].getAttribute('title');
                 calloutTypeList[index].removeAttribute('title');
-                calloutTypeList[index].setAttribute('data-callouttype', calloutType);
             }
         })
     }
