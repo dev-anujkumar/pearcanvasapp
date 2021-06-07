@@ -171,6 +171,12 @@
 .container-multi-column-group.wider-60-40.column-0 .single-assessment-elm-update-container .elm-update-button.embedded-assessment {
     margin: 5px auto;
 }
+
+.container-multi-column-group.text-width-60-40.column-0 .element-container .container-aside .singleAssessment_Dropdown_currentLabel,
+.container-multi-column-group.wider-60-40.column-0 .element-container .container-aside .singleAssessment_Dropdown_currentLabel {
+    display: flex;
+    margin: 0 13px 0 8px !important;
+}
 /************/
 
 /***** C2 *****/
