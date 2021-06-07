@@ -63,7 +63,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
     const parentData = store?.getState()?.appStore?.asideData?.parent || {};
-    const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT];
+    const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT, POPUP_ELEMENT,SHOWHIDE];
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback);
@@ -246,6 +246,10 @@ const tcmSnapshotsPopup =(wipData,index,containerElement,actionStatus,item,opera
     } else {
         newContainerElement = updatedContainerElement
     }
+    if(containerElement?.asideData?.parent?.source === "fromCutCopy") {
+        /* @parent@ cut/copy operation of 2c/aside:we/popup:showhide */
+        newContainerElement.asideData.parent = containerElement?.asideData?.parent || {};
+    }
     const shActionStatus = {...actionStatus, status: ""}
     prepareTcmSnapshots(item, shActionStatus, newContainerElement, item.type, index, "",operationType);
 }
@@ -276,10 +280,48 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item) =
     } else {
         newContainerElement = updatedContainerElement
     }
+     if(containerElement?.asideData?.parent?.source === "fromCutCopy") {
+        /* @parent@ cut/copy operation of 2c/aside:we/popup:showhide */
+        newContainerElement.asideData.parent = containerElement?.asideData?.parent || {};
+    }
     const shActionStatus = {...actionStatus, status: ""}
-    prepareTcmSnapshots(item, shActionStatus, newContainerElement, "", index, "");
+    prepareTcmSnapshots(item, shActionStatus, newContainerElement, item.type, index, "");
 }
 
+/* When cut/copy paste operation of  2c/aside:we/popup:showhide */
+const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,item, columnIndex) => {
+    const updatedContainerElement = {
+        asideData: {
+            contentUrn: item.contentUrn,
+            element: item,
+            id: item.id,
+            subtype: item.subtype,
+            type: item.type,
+            parent: { 
+                id: wipData?.id,
+                type: "groupedcontent",
+                columnId: wipData?.groupeddata?.bodymatter[columnIndex]?.id,
+                columnName: (columnIndex == 0) ? "C1" : "C2",
+                source:"fromCutCopy"
+            }
+        },
+        parentUrn: {
+            contentUrn: wipData.contentUrn,
+            elementType: wipData.type,
+            manifestUrn: wipData.id
+        }
+    }
+    let newContainerElement = {}
+    if (containerElement.cutCopyParentUrn) {
+        newContainerElement = {
+            ...containerElement,
+            ...updatedContainerElement
+        }
+    } else {
+        newContainerElement = updatedContainerElement
+    }
+    prepareTcmSnapshots(item, actionStatus, newContainerElement, "", index, "");
+}
 /**
  * @function tcmSnapshotsCreateShowHide
  * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = showhide
@@ -382,11 +424,15 @@ const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys,ind
     const { parentUrn } = containerElement
     wipData.groupeddata.bodymatter.map((item, eleIndex) => {
         item.groupdata.bodymatter.map((ele) => {
-            elementId.columnId =  item.id;
-            elementId.childId = ele.id;
-            tag.childTag = fetchElementsTag(ele);
-            elementDetails = setElementTypeAndUrn(elementId, tag, "", "", parentUrn ? parentUrn.columnIndex : eleIndex,popupInContainer,slateManifestVersioning, isPopupSlate);
-            prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus,index);
+            if(ele?.type === "element-aside") {
+               tcmSnapshotsAsideWE(wipData,index,containerElement,actionStatus,ele, eleIndex)
+            } else {
+                elementId.columnId =  item.id;
+                elementId.childId = ele.id;
+                tag.childTag = fetchElementsTag(ele);
+                elementDetails = setElementTypeAndUrn(elementId, tag, "", "", parentUrn ? parentUrn.columnIndex : eleIndex,popupInContainer,slateManifestVersioning, isPopupSlate);
+                prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus,index);
+            }
         })
 
     })
