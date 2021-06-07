@@ -521,14 +521,11 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                     }
-      
+
                     if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
-                            let selected = editor.selection.getContent();
-                            let selection = window.getSelection().anchorNode.parentNode;
-                            selection.parentNode.removeChild(selection);
-                            tinymce.activeEditor.selection.setContent(selected);                         
+                            editor.insertContent(textSelected);
                         }
                     }
 
@@ -1493,7 +1490,7 @@ export class TinyMceEditor extends Component {
                 onAction: () => {
                     let selectedText = window.getSelection().toString();
                     if (!hasReviewerRole() && selectedText.length) {
-                        this.setCalloutToSelection(editor,i-1)
+                        this.setCalloutToSelection(editor,i-1,selectedText)
                     }
                 },
                 onSetup: function (api) {
@@ -1517,23 +1514,21 @@ export class TinyMceEditor extends Component {
         });
     }
 
-    setCalloutToSelection(editor,selectedCalloutIndex){
+    setCalloutToSelection(editor,selectedCalloutIndex,selected){
         let callouts=['One','Two','Three','Four']
-        let selectedContent = editor.selection.getContent();
-        let selectedText = this.removeHTMLTags(selectedContent);
+        let selectedText = selected;
         const selectedCallout = `callout${callouts[selectedCalloutIndex]}`;
-        const newCallOutID = `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}`
-        let calloutSpan = selectedContent.replace(selectedText,`<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${newCallOutID}">${selectedText}</span>`)
+        let newCallOutID = ''
         let isSelected = tinymce.activeEditor.selection.getNode().className.includes('callout');
-        if (!isSelected) {  /** Add new Callout */
-            tinymce.activeEditor.selection.setContent(calloutSpan);
+        if(!isSelected){
+            newCallOutID= `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}`
         }
-        else {             /** Update existing Callout */
+        else{
             let selection = window.getSelection().anchorNode.parentNode;
-            const calloutId = selection?.dataset?.calloutid ?? `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}` ;
-            selection.parentNode.removeChild(selection);
-            tinymce.activeEditor.selection.setContent(`<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${calloutId}">${selectedText}</span>`);
+            newCallOutID = selection?.dataset?.calloutid ?? `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}` ;
         }
+        let insertionText = `<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${newCallOutID}">${selectedText}</span>`
+        editor.insertContent(insertionText);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         this.handleBlur(null, true);
         setTimeout(() => {
