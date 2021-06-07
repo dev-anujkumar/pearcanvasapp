@@ -521,6 +521,7 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                     }
+      
                     if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
@@ -1223,6 +1224,21 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
+                let selecteClassName = tinymce.activeEditor.selection.getNode().className;
+                if(selecteClassName.toLowerCase() ==='calloutone' || selecteClassName.toLowerCase() ==='callouttwo' || selecteClassName.toLowerCase() ==='calloutthree' || selecteClassName.toLowerCase() ==='calloutfour'){
+                    let currentElement = tinymce.activeEditor.selection.getNode();
+                    let offset = this.getOffSet(currentElement);
+                    let textLength = currentElement.textContent.length;
+                    if (textLength === offset || textLength === offset + 1) {
+                        if (!currentElement.nextSibling) {
+                            let parentNode = currentElement.parentNode;
+                            let innerHtml = parentNode.innerHTML + '&#65279';
+                            parentNode.innerHTML = innerHtml;
+                            let childNodes = parentNode.childNodes;
+                            editor.selection.setCursorLocation(parentNode.childNodes[childNodes.length - 1], 0);
+                        }
+                    }
+                }
             }
             if (activeElement.nodeName === "CODE") {
                 let tempKey = e.keyCode || e.which;
@@ -1518,13 +1534,17 @@ export class TinyMceEditor extends Component {
             selection.parentNode.removeChild(selection);
             tinymce.activeEditor.selection.setContent(`<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${calloutId}">${selectedText}</span>`);
         }
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        this.handleBlur(null, true);
+        setTimeout(() => {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+        }, 1000);
     }
 
      removeHTMLTags(html) {
         var regX = /(<([^>]+)>)/ig;                
         return(html.replace(regX, ""));
       }
-
 
     /**
      * Adds Alignment icon to the toolbar.
@@ -1546,7 +1566,7 @@ export class TinyMceEditor extends Component {
     addAlignmentIcon = editor => {
         editor.ui.registry.addMenuButton("Alignment", {
             icon:'align-left',
-            tooltip: "Text Alignment",
+            tooltip: "Alignment",
             fetch: function (callback) {
                 var items = [{
                         text:'Left Align',
@@ -1558,7 +1578,7 @@ export class TinyMceEditor extends Component {
                             }
                         },
                         onSetup: function(api) {
-                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft') || (!tinymce.activeEditor.queryCommandState('JustifyLeft') && !tinymce.activeEditor.queryCommandState('JustifyRight') && !tinymce.activeEditor.queryCommandState('JustifyCenter')))
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft'));
                             return function() {};
                         }
                     },
@@ -2484,7 +2504,6 @@ export class TinyMceEditor extends Component {
                 parentNode = false;
             }
         } while (parentNode);
-
         let activeElement = tinymce.activeEditor.targetElm.closest('.element-container');
         let linkCount = Math.floor(Math.random() * 100) + '-' + Math.floor(Math.random() * 10000);
         let insertionText = '<span asset-id="page-link-' + linkCount + '" class="page-link-attacher ' + selectedTag.toLocaleLowerCase() + '" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
@@ -2924,9 +2943,8 @@ export class TinyMceEditor extends Component {
         let toolbar = [];
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Enter Number...") {
-            toolbar = config.figureNumberToolbar;
-        } else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
+        }
+        else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
@@ -3635,7 +3653,7 @@ export class TinyMceEditor extends Component {
                     <h4 ref={this.editorRef} 
                         id={id}
                         data-id={this.props.currentElement ? this.props.currentElement.id : undefined}
-                        onKeyDown={this.normalKeyDownHandler}
+                        onKeyDown={this.normalKeyDownHandler} 
                         onBlur={this.handleBlur} 
                         onClick={this.handleClick} 
                         className={classes} 
