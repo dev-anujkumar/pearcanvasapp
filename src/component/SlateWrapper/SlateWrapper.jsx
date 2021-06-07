@@ -617,7 +617,15 @@ class SlateWrapper extends Component {
                 parentUrn.contentUrn = asideData.contentUrn
                 parentUrn.manifestUrn = asideData.id
                 if (typeof (outerAsideIndex) == "string") {
-                    outerIndex = outerAsideIndex.split("-")[1]
+                    if (asideData?.parent?.type === "groupedcontent") {
+                        /** When WE is inside Mult-column */
+                        outerIndex = outerAsideIndex.split("-")[3];
+                        if (!outerIndex) { /** Add Section-Break after Head */
+                            outerIndex = indexToinsert;
+                        }
+                    }else{
+                        outerIndex = outerAsideIndex.split("-")[1]
+                    }
                     if (outerIndex !== 1) {
                         outerIndex = Number(outerIndex) + 1
                     }

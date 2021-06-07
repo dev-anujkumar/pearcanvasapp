@@ -33,7 +33,7 @@ class ReplyComment extends React.Component {
         const reply = {
             commentType: "commentReply",
             commentDateTime: date.toISOString(),
-            commentCreator: config.userName,//auth.user.userId,
+            commentCreator: config.fullName,//auth.user.userId,
             commentString: text,
             commentOnEntity: elementId
         }

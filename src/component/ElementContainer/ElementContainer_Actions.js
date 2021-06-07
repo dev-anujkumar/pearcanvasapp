@@ -417,7 +417,19 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             if (condition.versionUrn == elementId) {
                     newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
             }
-        }else{
+        } else if (newIndex.length == 6) {
+            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]];
+            //condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
+            if (condition.versionUrn == elementId) {
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
+            }
+        } else if (newIndex.length == 7) {
+            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
+            if (condition.versionUrn == elementId) {
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
+            }
+        }
+        else{
             condition =  newBodymatter[newIndex[0]]
             if(condition.versionUrn == elementId){
                 newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
@@ -469,7 +481,6 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         }
     ).then(async (response)=>{
         let newIndex = eleIndex.split("-")
-        // let newShowhideIndex = parseInt(newIndex[newIndex.length-1])+1
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -510,6 +521,16 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
             condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
             if (condition.versionUrn == parentId) {
                     newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]].interactivedata[type].splice(index, 1)
+            }
+        }else if (newIndex.length == 6) {
+            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]];
+            if (condition.versionUrn == parentId) {
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].interactivedata[type].splice(index, 1)
+            }
+        } else if (newIndex.length == 7) {
+            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
+            if (condition.versionUrn == parentId) {
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]].interactivedata[type].splice(index, 1)
             }
         }else{
             condition =  newBodymatter[newIndex[0]]

@@ -351,6 +351,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 function typeOfContainerElements(elem, props) {
     const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction } = props
     let newData = containerTypeArray[elem.buttonType];
+    /* Do not show Citation Group option if inside Multicolumn  */
+    newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
     if(newData){
         let data = Object.entries(newData).map(function (num) {
             return {

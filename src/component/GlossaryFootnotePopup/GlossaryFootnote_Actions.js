@@ -45,9 +45,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         }
         else if(tempIndex.length == 3 && elementType == 'figure'){
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
-        }else if (elementType === "figure") {
+        }
+        else if (tempIndex.length == 5 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
+            glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]];
+            
+        }
+        else if (tempIndex.length == 6 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
+            glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]]?.contents?.bodymatter[tempIndex[4]];
+        }
+        else if (elementType === "figure") {
             let tempUpdatedIndex = index.split('-');
-
             let updatedIndex = tempUpdatedIndex[0];
             glossaryFootElem = newBodymatter[updatedIndex]
         }
@@ -84,8 +91,21 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         break;
                 }
             }
-        } else if ((tempIndex.length == 4 || tempIndex.length == 5) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Playscript inside Multi-Column
-            glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
+        } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // 2C->PS or 2C->As->PS or 2C->WE->PS
+            let elementInside2C = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
+            if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "sidebar") {
+                glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+            } else if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "workedexample") {
+                glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+                if (glossaryFootElem.type === 'manifest') {
+                    glossaryFootElem = glossaryFootElem.contents.bodymatter[tempIndex[4]];
+                }
+            } else {
+                glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
+            }
+
+
+
         } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "workedexample") { //Playscript inside we element
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
             if (glossaryFootElem.type === 'manifest') {
@@ -122,13 +142,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     }
                 }
            
-                else if (indexesLen == 4) {
-                    /* 2C:AS/WE:PS */
+                else if (indexesLen == 4) {  // to support glossary in text elements inside WE/AS of 2C
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                     
-                }
-                else if (indexesLen == 5) {
-                    /* 2C:WE-BODY:PS */
+                } else if (indexesLen == 5) { // to support glossary in section break inside WE of 2C
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
                 }
 
@@ -233,11 +250,18 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let tableAsHTML = null;
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
         let hasCtaText = ["secondary-interactive-smartlink-pdf", "secondary-interactive-smartlink-web", "secondary-interactive-smartlink-pop-up-web-link"];
+       
         if(tempIndex.length == 4){//Figure inside a WE
             elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]
         }else if(tempIndex.length == 3){ //section 2 in WE figure
             elementIndex = tempIndex[0]+'-'+tempIndex[1]
-        }else{
+        }else if (tempIndex.length == 5) {
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]+'-'+tempIndex[3]
+        }
+        else if (tempIndex.length == 6) {
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]+'-'+tempIndex[3]+'-'+tempIndex[4]
+        }
+        else {
             elementIndex = tempIndex[0]
         }
 
@@ -446,7 +470,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data
         } else if (tempIndex.length == 3 && elementType =='figure') {//section 2 figure in WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data
-        } else if (elementType === "figure") {
+        } else if (tempIndex.length === 5 && elementType == 'figure') {
+            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = res.data;
+        }
+        else if (tempIndex.length === 6 && elementType == 'figure') {
+            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = res.data;
+        }
+        else if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
         }
@@ -529,21 +559,54 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         break;
                 }
             }
-        } else if ((tempIndex.length == 4 || tempIndex.length == 5) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Playscript inside Multi-Column
-            res.data = {
-                ...res.data,
-                html: {
-                    ...res.data.html,
-                    actTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.actTitle,
-                    credits: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.credits,
-                    dialogueContent: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.dialogueContent,
-                    sceneTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.sceneTitle
-                }
-            }
+        } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // 2C->PS or 2C->As->PS or 2C->WE->PS
             if (res.data.html.hasOwnProperty('text')) {
                 delete res.data.html.text;
             }
-            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
+            let elementInside2C = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
+            if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "sidebar") {
+                res.data = {
+                    ...res.data,
+                    html: {
+                        ...res.data.html,
+                        actTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].html.actTitle,
+                        credits: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].html.credits,
+                        dialogueContent: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].html.dialogueContent,
+                        sceneTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].html.sceneTitle
+                    }
+                }
+                newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = res.data;
+            } else if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "workedexample") {
+                let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+                if (glossaryFootnoteElementOfWe.type === 'manifest') {
+                    glossaryFootnoteElementOfWe = glossaryFootnoteElementOfWe.contents.bodymatter[tempIndex[4]];
+                }
+                glossaryFootnoteElementOfWe = {
+                    ...glossaryFootnoteElementOfWe,
+                    html: {
+                        ...glossaryFootnoteElementOfWe.html,
+                        glossaryentries: res.data.html.glossaryentries,
+                        footnotes: res.data.html.footnotes
+                    }
+                }
+                if (newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].type === 'manifest') {
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = glossaryFootnoteElementOfWe;
+                } else {
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = glossaryFootnoteElementOfWe;
+                }
+            } else {
+                res.data = {
+                    ...res.data,
+                    html: {
+                        ...res.data.html,
+                        actTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.actTitle,
+                        credits: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.credits,
+                        dialogueContent: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.dialogueContent,
+                        sceneTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.sceneTitle
+                    }
+                }
+                newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
+            }
         } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "workedexample") { //Playscript inside we element
             let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
             if (glossaryFootnoteElementOfWe.type === 'manifest') {

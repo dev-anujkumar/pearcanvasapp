@@ -522,6 +522,7 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                     }
+      
                     if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
@@ -1224,6 +1225,21 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
+                let selectedClassName = tinymce.activeEditor.selection.getNode().className;
+                if(selectedClassName.toLowerCase() ==='calloutone' || selectedClassName.toLowerCase() ==='callouttwo' || selectedClassName.toLowerCase() ==='calloutthree' || selectedClassName.toLowerCase() ==='calloutfour'){
+                    let currentElement = tinymce.activeEditor.selection.getNode();
+                    let offset = this.getOffSet(currentElement);
+                    let textLength = currentElement.textContent.length;
+                    if (textLength === offset || textLength === offset + 1) {
+                        if (!currentElement.nextSibling) {
+                            let parentNode = currentElement.parentNode;
+                            let innerHtml = parentNode.innerHTML + '&#65279';
+                            parentNode.innerHTML = innerHtml;
+                            let childNodes = parentNode.childNodes;
+                            editor.selection.setCursorLocation(parentNode.childNodes[childNodes.length - 1], 0);
+                        }
+                    }
+                }
             }
             if (activeElement.nodeName === "CODE") {
                 let tempKey = e.keyCode || e.which;
@@ -1506,23 +1522,30 @@ export class TinyMceEditor extends Component {
         let callouts=['One','Two','Three','Four']
         let selectedContent = editor.selection.getContent();
         let selectedText = this.removeHTMLTags(selectedContent);
-        let calloutSpan = selectedContent.replace(selectedText,`<span title="callout${callouts[selectedCalloutIndex]}" class="callout${callouts[selectedCalloutIndex]}">${selectedText}</span>`)
+        const selectedCallout = `callout${callouts[selectedCalloutIndex]}`;
+        const newCallOutID = `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}`
+        let calloutSpan = selectedContent.replace(selectedText,`<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${newCallOutID}">${selectedText}</span>`)
         let isSelected = tinymce.activeEditor.selection.getNode().className.includes('callout');
-        if(!isSelected){
+        if (!isSelected) {  /** Add new Callout */
             tinymce.activeEditor.selection.setContent(calloutSpan);
         }
-        else{
+        else {             /** Update existing Callout */
             let selection = window.getSelection().anchorNode.parentNode;
+            const calloutId = selection?.dataset?.calloutid ?? `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}` ;
             selection.parentNode.removeChild(selection);
-            tinymce.activeEditor.selection.setContent(`<span title="callout${callouts[selectedCalloutIndex]}" class="callout${callouts[selectedCalloutIndex]}">${selectedText}</span>`);
+            tinymce.activeEditor.selection.setContent(`<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${calloutId}">${selectedText}</span>`);
         }
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        this.handleBlur(null, true);
+        setTimeout(() => {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+        }, 1000);
     }
 
      removeHTMLTags(html) {
         var regX = /(<([^>]+)>)/ig;                
         return(html.replace(regX, ""));
       }
-
 
     /**
      * Adds Alignment icon to the toolbar.
@@ -3638,7 +3661,7 @@ export class TinyMceEditor extends Component {
                     <h4 ref={this.editorRef} 
                         id={id}
                         data-id={this.props.currentElement ? this.props.currentElement.id : undefined}
-                        onKeyDown={this.normalKeyDownHandler}
+                        onKeyDown={this.normalKeyDownHandler} 
                         onBlur={this.handleBlur} 
                         onClick={this.handleClick} 
                         className={classes} 
