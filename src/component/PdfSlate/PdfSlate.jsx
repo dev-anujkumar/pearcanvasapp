@@ -46,20 +46,6 @@ class PdfSlate extends Component {
 	/** @description Open C2 module with predefined Alfresco location
 	* @param {*} locationData alfresco locationData
 	*/
-	// handleC2ExtendedClick = (locationData) => {
-	// 	const location = { 
-	// 		...locationData,
-	// 		currentAsset: { 
-	// 			id: this.state?.pdfId?.split(":")[3],
-	// 		}
-	// 	}
-	// 	const that = this;
-	// 	!hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(location, function (data_2) {
-	// 		c2MediaModule.AddanAssetCallBack(data_2, function (pdfData) {
-	// 			that.getAlfrescoData(pdfData);
-	// 		})
-	// 	},"fromPdfSlate")
-	// }
 
 	/* Getting data from alfresco picker */
 	getAlfrescoData = (pdfData) => {
@@ -137,18 +123,6 @@ class PdfSlate extends Component {
 		)
 	}
 }
-
-// const mapActionToProps = (dispatch) =>{
-//     return{
-//         alfrescoPopup: (payloadObj) => {
-//             dispatch(alfrescoPopup(payloadObj))
-//         },
-//         saveSelectedAssetData: (payloadObj) => {
-//             dispatch(saveSelectedAssetData(payloadObj))
-//         },
-//     }
-// }
-
 
 const dispatchActions = {
     updateElement,
