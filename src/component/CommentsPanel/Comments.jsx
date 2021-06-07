@@ -170,8 +170,9 @@ class Comments extends React.Component {
     actionsMenu = () => {
         let deleteCommentPermission = false;
         const { comment ,permissions} = this.props
-        if ((config.userId === comment.commentCreator && permissions.includes('notes_deleting')) ||
-            (config.userId !== comment.commentCreator && permissions.includes('notes_delete_others_comment'))) {
+        const deletePermissionSameUser = (config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting')
+        const deletePermissionDifferentUser = (config.fullName !== comment.commentCreator && config.userId !== comment.commentCreator) && permissions.includes('notes_delete_others_comment')
+        if (deletePermissionSameUser || deletePermissionDifferentUser) {
             deleteCommentPermission = true;
         }
 
@@ -179,7 +180,7 @@ class Comments extends React.Component {
             <ul className="comment-action-menu action-menu">
                 {permissions.includes('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
-                {config.userId === comment.commentCreator && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
+                {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
                 {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
                 {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
@@ -244,6 +245,13 @@ class Comments extends React.Component {
     }
     render() {
         const { comment, elementId, updateReplyComment, toggleReplyForm, users } = this.props
+        let avatarObject = [];
+        let avatar = '';
+        avatarObject = comment?.commentCreator.split(',');
+        let revAvatarObject = avatarObject.reverse();
+        revAvatarObject.forEach(item => {
+            avatar += (item.substr(0, 1)).toUpperCase();
+        });
         return (
             <div className="comment-wrapper">
                 <div className="comment">
@@ -251,7 +259,7 @@ class Comments extends React.Component {
                     <div className="comment-header">
                         <div className="avatar avatar--large">
                             <span className="profile-picture-placeholder green">
-                                {comment.commentCreator[0].toUpperCase()}
+                                {avatar}
                           </span>
                         </div>
                         <div className="comment-info">

@@ -6,7 +6,7 @@
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
-import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData } from './ElementSnapshot_Utility.js';
+import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
 import { getTitleSubtitleModel } from '../../constants/utility';
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
@@ -47,7 +47,7 @@ const {
     allowedFigureTypesForTCM,
     SHOWHIDE,
     SHOW_HIDE,
-    SMART_LINK
+    SMART_LINK, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT
 }
     = TcmConstants;
 
@@ -63,7 +63,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
     const parentData = store?.getState()?.appStore?.asideData?.parent || {};
-
+    const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT];
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback);
@@ -73,7 +73,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     }
     /* ID of elements*/
     let elementId = {
-        parentId:  wipData.id
+        parentId:  wipData?.id
     }
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
@@ -83,7 +83,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = "2C:" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
-    } else if(([SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE].includes(type) || actionStatus.action === "update" || 
+    } else if((figureElementList.includes(type) || actionStatus.action === "update" || 
         actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
@@ -318,8 +318,8 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
     let elementDetails;
     const { wipData, elementId, tag, actionStatus,popupInContainer,slateManifestVersioning } = snapshotsData;
     const { asideData, parentUrn } = containerElement
-    tag.parentTag = asideData && fetchElementsTag(asideData) ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
-    elementId.parentId = asideData && asideData.id ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+    tag.parentTag = asideData && fetchElementsTag(asideData) && asideData?.type !== MULTI_COLUMN ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
+    elementId.parentId = asideData && asideData.id && asideData?.type !== MULTI_COLUMN ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     wipData.contents.bodymatter.map((item) => {
         if (elementType.indexOf(item.type) !== -1) {
             elementId.childId = item.id;
@@ -796,9 +796,9 @@ export const setSlateType = (wipData, containerElement, type) => {
     let hasParent = poetryData || asideData || parentUrn
     switch (true) {
         case (hasParent):
-        case (containerType.indexOf(wipData.type) !== -1):
+        case (containerType.indexOf(wipData?.type) !== -1):
         case (type && (containerType.indexOf(type) !== -1)):
-        case (wipData.type === POPUP_ELEMENT):
+        case (wipData?.type === POPUP_ELEMENT):
         case (config.isPopupSlate):
         case (type && formattedTitleField.includes(type)):
             isContainer = true;
@@ -926,7 +926,8 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
         snapshotData = element.html && element.html.text ? element.html.text : "";
     }
     snapshotData = handleBlankLineDom(snapshotData,'BlankLine');
-    snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'')
+    snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'');
+    snapshotData = snapshotData && removeCalloutTitle(snapshotData)
     return snapshotData
 }
 /**
@@ -1229,6 +1230,18 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
             case FIGURE:
                 wipData = generateWipDataForFigure(bodymatter, index)
                 break;
+            case ELEMENT_ASIDE:                      /** Inside Aside */
+                if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN) {
+                    const sectionBreakParent = bodymatter[eleIndex[0]]?.groupeddata?.bodymatter[eleIndex[1]]?.groupdata?.bodymatter[eleIndex[2]];
+                    if (sectionBreakParent?.subtype === WORKED_EXAMPLE) {  /** Delete Section-Break */
+                        sectionBreakParent?.elementdata?.bodymatter.map((item, innerIndex) => {
+                            if (item.type == WE_MANIFEST && entityUrn == item.contentUrn) {
+                                wipData = sectionBreakParent?.elementdata?.bodymatter[innerIndex]
+                            }
+                        })
+                    }
+                }
+                break;
         }
     }
     return wipData;
@@ -1263,7 +1276,7 @@ export const popupWipData = (bodymatter, eleIndex,operationType,wipData) => {
 */
 export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
     /* Convert of Figure inside 2C:AS/WE Only Update Action */
-    const { asideData } = store?.getState()?.appStore || {};
+    const { asideData, parentUrn } = store?.getState()?.appStore || {};
     const { type,  parent } = asideData || {};
     const isFigure = (response?.type === FIGURE) && (type === ELEMENT_ASIDE) && (parent?.type === MULTI_COLUMN);
     
@@ -1304,6 +1317,17 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
         }
         if(isFigure) {
              parentData.asideData.figureIn2cAside = { isExist : true, asideData };
+        }
+        /** Footntoe Glossary for elements in S/WE in 2C */
+        if (bodymatter[tempIndex[0]].type === MULTI_COLUMN) {
+            const asideWeCondition = bodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]
+            if(asideWeCondition?.type === ELEMENT_ASIDE && asideData){
+                parentData = {
+                    ...parentData,
+                    asideData: asideData,
+                    parentUrn: parentUrn
+                }
+            }
         }
     }
     return parentData;

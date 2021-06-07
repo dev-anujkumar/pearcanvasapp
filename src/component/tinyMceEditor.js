@@ -1506,15 +1506,18 @@ export class TinyMceEditor extends Component {
         let callouts=['One','Two','Three','Four']
         let selectedContent = editor.selection.getContent();
         let selectedText = this.removeHTMLTags(selectedContent);
-        let calloutSpan = selectedContent.replace(selectedText,`<span title="callout${callouts[selectedCalloutIndex]}" class="callout${callouts[selectedCalloutIndex]}">${selectedText}</span>`)
+        const selectedCallout = `callout${callouts[selectedCalloutIndex]}`;
+        const newCallOutID = `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}`
+        let calloutSpan = selectedContent.replace(selectedText,`<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${newCallOutID}">${selectedText}</span>`)
         let isSelected = tinymce.activeEditor.selection.getNode().className.includes('callout');
-        if(!isSelected){
+        if (!isSelected) {  /** Add new Callout */
             tinymce.activeEditor.selection.setContent(calloutSpan);
         }
-        else{
+        else {             /** Update existing Callout */
             let selection = window.getSelection().anchorNode.parentNode;
+            const calloutId = selection?.dataset?.calloutid ?? `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}` ;
             selection.parentNode.removeChild(selection);
-            tinymce.activeEditor.selection.setContent(`<span title="callout${callouts[selectedCalloutIndex]}" class="callout${callouts[selectedCalloutIndex]}">${selectedText}</span>`);
+            tinymce.activeEditor.selection.setContent(`<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${calloutId}">${selectedText}</span>`);
         }
     }
 
