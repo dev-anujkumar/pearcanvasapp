@@ -1224,8 +1224,8 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
-                let selecteClassName = tinymce.activeEditor.selection.getNode().className;
-                if(selecteClassName.toLowerCase() ==='calloutone' || selecteClassName.toLowerCase() ==='callouttwo' || selecteClassName.toLowerCase() ==='calloutthree' || selecteClassName.toLowerCase() ==='calloutfour'){
+                let selectedClassName = tinymce.activeEditor.selection.getNode().className;
+                if(selectedClassName.toLowerCase() ==='calloutone' || selectedClassName.toLowerCase() ==='callouttwo' || selectedClassName.toLowerCase() ==='calloutthree' || selectedClassName.toLowerCase() ==='calloutfour'){
                     let currentElement = tinymce.activeEditor.selection.getNode();
                     let offset = this.getOffSet(currentElement);
                     let textLength = currentElement.textContent.length;
@@ -1566,7 +1566,7 @@ export class TinyMceEditor extends Component {
     addAlignmentIcon = editor => {
         editor.ui.registry.addMenuButton("Alignment", {
             icon:'align-left',
-            tooltip: "Alignment",
+            tooltip: "Text Alignment",
             fetch: function (callback) {
                 var items = [{
                         text:'Left Align',
@@ -1578,7 +1578,7 @@ export class TinyMceEditor extends Component {
                             }
                         },
                         onSetup: function(api) {
-                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft'));
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft') || (!tinymce.activeEditor.queryCommandState('JustifyLeft') && !tinymce.activeEditor.queryCommandState('JustifyRight') && !tinymce.activeEditor.queryCommandState('JustifyCenter')))
                             return function() {};
                         }
                     },
@@ -2944,7 +2944,9 @@ export class TinyMceEditor extends Component {
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
         }
-        else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
+        else if (this.props.element.type === 'figure' && this.props.placeholder === "Enter Number...") {
+            toolbar = config.figureNumberToolbar;
+        } else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
