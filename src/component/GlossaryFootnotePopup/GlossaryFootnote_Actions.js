@@ -93,21 +93,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         break;
                 }
             }
-        // } else if ((tempIndex.length == 4 || tempIndex.length == 5) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Playscript inside Multi-Column
-        //     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
         } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // 2C->PS or 2C->As->PS or 2C->WE->PS
             let elementInside2C = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
             if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "sidebar") {
-                console.log("yhaaaaaaaaaaaaa aaya element aside");
                 glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
             } else if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "workedexample") {
-                console.log("yhaaaaaaaaaaaaa aaya worked example");
                 glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
                 if (glossaryFootElem.type === 'manifest') {
                     glossaryFootElem = glossaryFootElem.contents.bodymatter[tempIndex[4]];
                 }
             } else {
-                console.log("yhaaaaaaaaaaaaa aaya simple wala");
                 glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
             }
 
@@ -149,13 +144,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     }
                 }
            
-                else if (indexesLen == 4) {
-                    /* 2C:AS/WE:PS */
+                else if (indexesLen == 4) {  // to support glossary in text elements inside WE/AS of 2C
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                     
-                }
-                else if (indexesLen == 5) {
-                    /* 2C:WE-BODY:PS */
+                } else if (indexesLen == 5) { // to support glossary in section break inside WE of 2C
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
                 }
 
@@ -569,21 +561,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         break;
                 }
             }
-        // } else if ((tempIndex.length == 4 || tempIndex.length == 5) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Playscript inside Multi-Column
-        //     res.data = {
-        //         ...res.data,
-        //         html: {
-        //             ...res.data.html,
-        //             actTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.actTitle,
-        //             credits: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.credits,
-        //             dialogueContent: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.dialogueContent,
-        //             sceneTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.sceneTitle
-        //         }
-        //     }
-        //     if (res.data.html.hasOwnProperty('text')) {
-        //         delete res.data.html.text;
-        //     }
-        //     newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
         } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // 2C->PS or 2C->As->PS or 2C->WE->PS
             if (res.data.html.hasOwnProperty('text')) {
                 delete res.data.html.text;
