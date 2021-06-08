@@ -78,24 +78,24 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
-    if(wipData.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
+    if(wipData?.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = "2C:" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
-    } else if((figureElementList.includes(type) || actionStatus.action === "update" ||  actionStatus.action === "create" ||
-        actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
+    } else if((figureElementList.includes(type) || actionStatus?.action === "update" ||  actionStatus?.action === "create" ||
+        actionStatus?.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
             tag.grandParent = "2C:" + columnName;
             elementId.grandParentId = `${id}+${columnId}`;
-    } else if(wipData.type === FIGURE && asideData?.figureIn2cAside?.isExist && actionStatus.action === "update") {
+    } else if(wipData?.type === FIGURE && asideData?.figureIn2cAside?.isExist && actionStatus?.action === "update") {
         /* figure element conversion inside; 2C:ASIDE:FIGURE */ 
         const { parent: figParent } = asideData?.figureIn2cAside?.asideData || {};
         /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
         tag.grandParent = "2C:" + figParent.columnName;
         elementId.grandParentId = `${figParent.id}+${figParent.columnId}`;
-    } else if(actionStatus.action === "delete" && parentData?.type === MULTI_COLUMN ) {
+    } else if(actionStatus?.action === "delete" && parentData?.type === MULTI_COLUMN ) {
         /* snapshots for Delete the section break inside 2c/we */
         const { id: sc_id, columnName: sb_cName, columnId: sb_cId } = parentData || {};
         tag.grandParent = "2C:" + sb_cName;
@@ -196,7 +196,7 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
                     prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus,index);
                 }
                else if (ele.type === SHOWHIDE) {
-                    tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,ele)
+                    tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,ele, operationType)
                 }
                 else if (ele.type === POPUP_ELEMENT) {
                     tcmSnapshotsPopup(wipData,index,containerElement,actionStatus,ele,operationType);
@@ -210,7 +210,7 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
         else if (item.type === SHOWHIDE) {
-            tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,item)
+            tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,item, operationType)
         }
         else if (item.type === POPUP_ELEMENT) {
             tcmSnapshotsPopup(wipData,index,containerElement,actionStatus,item,operationType);
@@ -221,6 +221,7 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
 
 
 const tcmSnapshotsPopup =(wipData,index,containerElement,actionStatus,item,operationType=null) => {
+    const { asideData, parentUrn } = containerElement || {};
     const updatedContainerElement = {
         asideData: {
             contentUrn: wipData.contentUrn,
@@ -249,14 +250,27 @@ const tcmSnapshotsPopup =(wipData,index,containerElement,actionStatus,item,opera
     if(containerElement?.asideData?.parent?.source === "fromCutCopy") {
         /* @parent@ cut/copy operation of 2c/aside:we/popup:showhide */
         newContainerElement.asideData.parent = containerElement?.asideData?.parent || {};
+    } else if(["copy","cut"].includes(operationType) && parentUrn?.elementType === MULTI_COLUMN_GROUP) {
+        /* @parent@ cut/copy operation of aside/we:popup/showhide in multicolumn */
+        newContainerElement.asideData.parent = parentData4CutCopyASWE_2C(asideData, parentUrn);
     }
     const shActionStatus = {...actionStatus, status: ""}
     prepareTcmSnapshots(item, shActionStatus, newContainerElement, item.type, index, "",operationType);
 }
+/* Form @parent@ data for cut/copy operation of aside/we:popup/showhide in multicolumn */
+function parentData4CutCopyASWE_2C(asideData, parentUrn) {
+    const { mcId, manifestUrn, columnName } = parentUrn || {};
+    return { 
+        id: mcId || asideData?.id,
+        type: "groupedcontent",
+        columnId: manifestUrn,
+        columnName: columnName
+    }
+}
 
 
-
-const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item) => {
+const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, operationType=null) => {
+    const { asideData, parentUrn } = containerElement || {};
     const updatedContainerElement = {
         asideData: {
             contentUrn: wipData.contentUrn,
@@ -280,12 +294,15 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item) =
     } else {
         newContainerElement = updatedContainerElement
     }
-     if(containerElement?.asideData?.parent?.source === "fromCutCopy") {
+    if(containerElement?.asideData?.parent?.source === "fromCutCopy") {
         /* @parent@ cut/copy operation of 2c/aside:we/popup:showhide */
-        newContainerElement.asideData.parent = containerElement?.asideData?.parent || {};
+        newContainerElement.asideData.parent = asideData?.parent || {};
+    } else if(["copy","cut"].includes(operationType) && parentUrn?.elementType === MULTI_COLUMN_GROUP) {
+        /* @parent@ cut/copy operation of aside/we:popup/showhide in multicolumn */
+        newContainerElement.asideData.parent = parentData4CutCopyASWE_2C(asideData, parentUrn);
     }
     const shActionStatus = {...actionStatus, status: ""}
-    prepareTcmSnapshots(item, shActionStatus, newContainerElement, item.type, index, "");
+    prepareTcmSnapshots(item, shActionStatus, newContainerElement, item.type, index, "", operationType);
 }
 
 /* When cut/copy paste operation of  2c/aside:we/popup:showhide */
