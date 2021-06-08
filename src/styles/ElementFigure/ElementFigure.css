@@ -78,7 +78,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     padding: 10px 0;
     width:100%!important;
     max-width: 100% !important;
-    /* overflow-x: auto; */
+    overflow-x: auto;
 }
 .figureElement .pearson-component.image.figureData:not(.table-figure-data) {
     /* cursor:copy!important ; */
