@@ -311,7 +311,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             if(event){
                 event.stopPropagation();
             }
-            if (elem.buttonType === "interactive-elem-button" || elem.buttonType === "container-elem-button" || elem.buttonType === "block-text-button") {
+            if (elem.buttonType === "interactive-elem-button" || elem.buttonType === "container-elem-button" || elem.buttonType === "block-text-button" || elem.buttonType === "multi-column-group") {
                 setData(typeOfContainerElements(elem, props));
                 if(elem.buttonType !== showInteractiveOption.type){
                     setshowInteractiveOption({status:true,type:elem.buttonType});

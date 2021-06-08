@@ -862,6 +862,18 @@ export default {
                 }
             }		
         },
+        'primary-multicolumn-3c': {		
+            text: '3 Column',
+            toolbar: [],
+            enum: 'MULTI_COLUMN',		
+            subtype: {		
+                'secondary-multicolumn-3c-wider': {
+                    text: 'Wider than text width 33/33/33%',
+                    labelText: '3C',
+                    enum: 'WIDER_33_33_33'
+                }
+            }		
+        },
         enumType: 'multicolumn'		
     },
     "element-dialogue" : {
