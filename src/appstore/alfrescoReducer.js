@@ -41,7 +41,8 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
                 elementId: action.payload.id,
                 isCiteChanged: action.payload.changedSiteUrl,
                 changedSiteData: action.payload.changedAlfrescoData,
-                editor : action.payload.editor
+                editor : action.payload.editor,
+                launchAlfrescoPopup: action.payload.launchAlfrescoPopup
             }
         case SAVE_INLINE_IMAGE_DATA:
             return {
