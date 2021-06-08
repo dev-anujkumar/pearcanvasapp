@@ -522,6 +522,7 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                     }
+      
                     if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
@@ -1224,6 +1225,21 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
+                let selectedClassName = tinymce.activeEditor.selection.getNode().className;
+                if(selectedClassName.toLowerCase() ==='calloutone' || selectedClassName.toLowerCase() ==='callouttwo' || selectedClassName.toLowerCase() ==='calloutthree' || selectedClassName.toLowerCase() ==='calloutfour'){
+                    let currentElement = tinymce.activeEditor.selection.getNode();
+                    let offset = this.getOffSet(currentElement);
+                    let textLength = currentElement.textContent.length;
+                    if (textLength === offset || textLength === offset + 1) {
+                        if (!currentElement.nextSibling) {
+                            let parentNode = currentElement.parentNode;
+                            let innerHtml = parentNode.innerHTML + '&#65279';
+                            parentNode.innerHTML = innerHtml;
+                            let childNodes = parentNode.childNodes;
+                            editor.selection.setCursorLocation(parentNode.childNodes[childNodes.length - 1], 0);
+                        }
+                    }
+                }
             }
             if (activeElement.nodeName === "CODE") {
                 let tempKey = e.keyCode || e.which;
@@ -1519,13 +1535,17 @@ export class TinyMceEditor extends Component {
             selection.parentNode.removeChild(selection);
             tinymce.activeEditor.selection.setContent(`<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${calloutId}">${selectedText}</span>`);
         }
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        this.handleBlur(null, true);
+        setTimeout(() => {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+        }, 1000);
     }
 
      removeHTMLTags(html) {
         var regX = /(<([^>]+)>)/ig;                
         return(html.replace(regX, ""));
       }
-
 
     /**
      * Adds Alignment icon to the toolbar.
@@ -3641,7 +3661,7 @@ export class TinyMceEditor extends Component {
                     <h4 ref={this.editorRef} 
                         id={id}
                         data-id={this.props.currentElement ? this.props.currentElement.id : undefined}
-                        onKeyDown={this.normalKeyDownHandler}
+                        onKeyDown={this.normalKeyDownHandler} 
                         onBlur={this.handleBlur} 
                         onClick={this.handleClick} 
                         className={classes} 

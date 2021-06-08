@@ -47,7 +47,8 @@ const {
     allowedFigureTypesForTCM,
     SHOWHIDE,
     SHOW_HIDE,
-    SMART_LINK, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT
+    SMART_LINK, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT,
+    CONTAINER, WE_TYPE
 }
     = TcmConstants;
 
@@ -63,7 +64,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
     const parentData = store?.getState()?.appStore?.asideData?.parent || {};
-    const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT];
+    const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT, POPUP_ELEMENT,SHOWHIDE];
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback);
@@ -78,12 +79,12 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
-    if(wipData.type === ELEMENT_ASIDE && parentUrn?.elementType === MULTI_COLUMN_GROUP) {
+    if(wipData.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = "2C:" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
-    } else if((figureElementList.includes(type) || actionStatus.action === "update" || 
+    } else if((figureElementList.includes(type) || actionStatus.action === "update" ||  actionStatus.action === "create" ||
         actionStatus.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
@@ -118,7 +119,10 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         if (elementInPopupInContainer) {   /** Elements in Containers/ Simple Elements in PopupSlate Inside WE/Aside */     
             tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeys, containerElement, type,index);
         } else {                           /** Elements in Containers/ Simple Elements in PopupSlate */
-            tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type,index, "");
+            const isMultiColumnInPopup = hasParentData && config.isPopupSlate && ((parentUrn?.elementType === MULTI_COLUMN_GROUP && (type === CONTAINER || type === WE_TYPE) ) || asideData?.parent?.type === MULTI_COLUMN) ? true : false 
+            snapshotsData.isMultiColumnInPopup = isMultiColumnInPopup;
+            snapshotsData.tag.isMultiColumnInPopup = isMultiColumnInPopup;
+            tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type, index, "");
         }
     }
     /* For POPUP Element */
@@ -169,7 +173,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     }
     /* action on Multi-column */
     else if (wipData.type === MULTI_COLUMN) {
-        tcmSnapshotsMultiColumn(containerElement, snapshotsData, defaultKeys,index, isPopupSlate);
+        tcmSnapshotsMultiColumn(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType);
     }
     else {
         let elementDetails = setElementTypeAndUrn(elementId, tag, "", "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate);
@@ -246,6 +250,10 @@ const tcmSnapshotsPopup =(wipData,index,containerElement,actionStatus,item,opera
     } else {
         newContainerElement = updatedContainerElement
     }
+    if(containerElement?.asideData?.parent?.source === "fromCutCopy") {
+        /* @parent@ cut/copy operation of 2c/aside:we/popup:showhide */
+        newContainerElement.asideData.parent = containerElement?.asideData?.parent || {};
+    }
     const shActionStatus = {...actionStatus, status: ""}
     prepareTcmSnapshots(item, shActionStatus, newContainerElement, item.type, index, "",operationType);
 }
@@ -276,10 +284,48 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item) =
     } else {
         newContainerElement = updatedContainerElement
     }
+     if(containerElement?.asideData?.parent?.source === "fromCutCopy") {
+        /* @parent@ cut/copy operation of 2c/aside:we/popup:showhide */
+        newContainerElement.asideData.parent = containerElement?.asideData?.parent || {};
+    }
     const shActionStatus = {...actionStatus, status: ""}
-    prepareTcmSnapshots(item, shActionStatus, newContainerElement, "", index, "");
+    prepareTcmSnapshots(item, shActionStatus, newContainerElement, item.type, index, "");
 }
 
+/* When cut/copy paste operation of  2c/aside:we/popup:showhide */
+const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,item, columnIndex, operationType=null) => {
+    const updatedContainerElement = {
+        asideData: {
+            contentUrn: item.contentUrn,
+            element: item,
+            id: item.id,
+            subtype: item.subtype,
+            type: item.type,
+            parent: { 
+                id: wipData?.id,
+                type: "groupedcontent",
+                columnId: wipData?.groupeddata?.bodymatter[columnIndex]?.id,
+                columnName: (columnIndex == 0) ? "C1" : "C2",
+                source:"fromCutCopy"
+            }
+        },
+        parentUrn: {
+            contentUrn: wipData.contentUrn,
+            elementType: wipData.type,
+            manifestUrn: wipData.id
+        }
+    }
+    let newContainerElement = {}
+    if (containerElement.cutCopyParentUrn) {
+        newContainerElement = {
+            ...containerElement,
+            ...updatedContainerElement
+        }
+    } else {
+        newContainerElement = updatedContainerElement
+    }
+    prepareTcmSnapshots(item, actionStatus, newContainerElement, "", index, "", operationType);
+}
 /**
  * @function tcmSnapshotsCreateShowHide
  * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = showhide
@@ -376,17 +422,21 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
  * @param {Object} snapshotsData - Initial Snapshots data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys,index, isPopupSlate) => {
+const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys,index, isPopupSlate, operationType=null) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus,popupInContainer,slateManifestVersioning } = snapshotsData;
     const { parentUrn } = containerElement
     wipData.groupeddata.bodymatter.map((item, eleIndex) => {
         item.groupdata.bodymatter.map((ele) => {
-            elementId.columnId =  item.id;
-            elementId.childId = ele.id;
-            tag.childTag = fetchElementsTag(ele);
-            elementDetails = setElementTypeAndUrn(elementId, tag, "", "", parentUrn ? parentUrn.columnIndex : eleIndex,popupInContainer,slateManifestVersioning, isPopupSlate);
-            prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus,index);
+            if(ele?.type === "element-aside") {
+               tcmSnapshotsAsideWE(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType)
+            } else {
+                elementId.columnId =  item.id;
+                elementId.childId = ele.id;
+                tag.childTag = fetchElementsTag(ele);
+                elementDetails = setElementTypeAndUrn(elementId, tag, "", "", parentUrn ? parentUrn.columnIndex : eleIndex,popupInContainer,slateManifestVersioning, isPopupSlate);
+                prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus,index);
+            }
         })
 
     })
@@ -709,7 +759,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
             elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         }
-        else if (config.isPopupSlate) {                //POP:BODY:WE:BODY:P
+        else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         }
@@ -722,7 +772,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}${elementTag}`;
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${elementId}`;
     }
-    else if (config.isPopupSlate) {                //POP:BODY:WE:BODY:P
+    else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
@@ -731,9 +781,13 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementId = `${eleId.popID}+${elementId}`;
     }
     /* if WE and Aside inside 2C element - 2C:AS/WE:--- */
-    if(tag.grandParent && eleId.grandParentId){
-        elementTag =  `${tag.grandParent}:${elementTag}`
+    if (tag.grandParent && eleId.grandParentId) {
+        elementTag = `${tag.grandParent}:${elementTag}`
         elementId = `${eleId.grandParentId}+${elementId}`
+        if (tag?.isMultiColumnInPopup) {
+            elementTag = `POP:BODY:${elementTag}`;
+            elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
     }
 
     elementData = {
