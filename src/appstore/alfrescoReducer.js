@@ -15,7 +15,8 @@ const INITIAL_STATE = {
     isCiteChanged: false,
     changedSiteData: {},
     isInlineEditorOpen: false,
-    locationData: {}
+    locationData: {},
+    calledFromGlossaryFootnote: false
 }
 
 const INITIAL_ACTION = {
@@ -33,7 +34,8 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
                 alfrescoListOption: action.payload.alfrescoListOption,
                 elementId: action.payload.id,
                 isInlineEditorOpen: action.payload.editor,
-                locationData: action.payload.locationData
+                locationData: action.payload.locationData,
+                calledFromGlossaryFootnote: action.payload.isGlossary
             }
         case SAVE_ALFRESCO_ASSET_DATA:
             return {
@@ -51,7 +53,8 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
                 elementId: action.payload.element,
                 imageArgs: action.payload.imageArgs,
                 alfrescoAssetData: action.payload.asset,
-                launchAlfrescoPopup: action.payload.launchAlfrescoPopup
+                launchAlfrescoPopup: action.payload.launchAlfrescoPopup,
+                isInlineEditor: action.payload.isInlineEditor
             }
         default:
             return state

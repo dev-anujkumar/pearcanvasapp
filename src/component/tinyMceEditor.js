@@ -2890,7 +2890,7 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup} = this.props
+        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup, isInlineEditor} = this.props
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
@@ -2912,7 +2912,7 @@ export class TinyMceEditor extends Component {
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
-         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
+         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup && isInlineEditor) {
             dataFromAlfresco(alfrescoAssetData, alfrescoEditor)
         }
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
@@ -3758,7 +3758,8 @@ const mapStateToProps = (state) => {
         alfrescoElementId : state.alfrescoReducer.elementId,
         alfrescoEditor: state.alfrescoReducer.editor,
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
-        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        isInlineEditor: state.alfrescoReducer.isInlineEditor
     }
 }
 

@@ -20,7 +20,6 @@ export const saveSelectedAssetData = (data) =>{
 }
 
 export const saveInlineImageData = (data) =>{
-    debugger
     return {
         type: SAVE_INLINE_IMAGE_DATA,
         payload: data
