@@ -79,7 +79,7 @@ function AlfrescoPopup(props) {
         let locationSiteDataNodeRef = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData?.guid
         locationSiteDataNodeRef = locationSiteDataNodeRef ? locationSiteDataNodeRef : alfrescoData.guid;
         const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
-        let messageObj = { citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef, elementId: props.alfrescoElementId, editor }
+        let messageObj = { citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef, elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote }
         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
         let request = {
             eTag: props.alfrescoPath.etag,
@@ -173,7 +173,8 @@ const mapStateToProps = (state) => {
     return {
         alfrescoElementId : state.alfrescoReducer.elementId,
         isInlineEditorOpen: state.alfrescoReducer.isInlineEditorOpen,
-        locationData: state.alfrescoReducer.locationData
+        locationData: state.alfrescoReducer.locationData,
+        calledFromGlossaryFootnote: state.alfrescoReducer.calledFromGlossaryFootnote
     }
 }
 export default connect(
