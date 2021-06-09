@@ -1521,31 +1521,28 @@ export class TinyMceEditor extends Component {
      * @param {*} selected selected word/pharse
      */
     setCalloutToSelection(editor,selectedCalloutIndex,selected){
-        let callouts=['One','Two','Three','Four']
-        let selectedText = selected;
-        const selectedCallout = `callout${callouts[selectedCalloutIndex]}`;
-        let newCallOutID = ''
-        let isSelected = tinymce.activeEditor.selection.getNode().className.includes('callout');
-        if(!isSelected){
-            newCallOutID= `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}`
+        if(selected.trim().length>0){
+            let callouts=['One','Two','Three','Four']
+            let selectedText = selected;
+            const selectedCallout = `callout${callouts[selectedCalloutIndex]}`;
+            let newCallOutID = ''
+            let isSelected = tinymce.activeEditor.selection.getNode().className.includes('callout');
+            if(!isSelected){
+                newCallOutID= `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}`
+            }
+            else{
+                let selection = window.getSelection().anchorNode.parentNode;
+                newCallOutID = selection?.dataset?.calloutid ?? `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}` ;
+            }
+            let insertionText = `<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${newCallOutID}">${selectedText}</span>`
+            editor.insertContent(insertionText);
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+            setTimeout(() => {
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+            }, 1000);
+            this.saveContent();
         }
-        else{
-            let selection = window.getSelection().anchorNode.parentNode;
-            newCallOutID = selection?.dataset?.calloutid ?? `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}` ;
-        }
-        let insertionText = `<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${newCallOutID}">${selectedText}</span>`
-        editor.insertContent(insertionText);
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        setTimeout(() => {
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-        }, 1000);
-        this.saveContent();
     }
-
-     removeHTMLTags(html) {
-        var regX = /(<([^>]+)>)/ig;                
-        return(html.replace(regX, ""));
-      }
 
     /**
      * Adds Alignment icon to the toolbar.
