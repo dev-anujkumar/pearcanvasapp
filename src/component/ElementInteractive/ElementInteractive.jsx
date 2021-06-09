@@ -531,6 +531,11 @@ class Interactive extends React.Component {
                         textsemantics: []
                     }
                 }
+                let payloadObj = {
+                    asset: {}, 
+                    id: ''
+                }
+                this.props.saveSelectedAssetData(payloadObj)
                 this.props.updateFigureData(figuredata, this.props.index, this.props.elementId,()=>{
                     this.props.handleFocus("updateFromC2")
                     this.props.handleBlur()

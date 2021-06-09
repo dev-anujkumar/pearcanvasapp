@@ -260,15 +260,10 @@ function CommunicationChannel(WrappedComponent) {
                     if(message.isEditor){
                         this.handleEditorSave(message)
                     }
-                    this.props.saveSelectedAssetData(message)
-                    let fileName = message.asset.name;
-                    let fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
-                    let allowedExtentions = ["mp3", "aac", "wav"];
-                    if(allowedExtentions.includes(fileExtension)) {
-                        this.props.saveDataFromAlfresco(message);
-                    } else {
-                        this.props.showWrongAudioPopup(true);
+                     if (message.calledFrom || message.calledFromGlossaryFootnote) {
+                        this.handleAudioData(message)
                     }
+                    this.props.saveSelectedAssetData(message)
                     break;
                 case 'saveAlfrescoDataToConfig' : 
                 config.alfrescoMetaData = message
@@ -404,6 +399,21 @@ function CommunicationChannel(WrappedComponent) {
             this.props.saveInlineImageData(params)
         }
 
+        handleAudioData = (message) => {
+            let fileName = message.asset.name;
+            let fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+            let allowedExtentions = ["mp3", "aac", "wav"];
+            if (allowedExtentions.includes(fileExtension)) {
+                this.props.saveDataFromAlfresco(message);
+                let payloadObj = {
+                    asset: {}, 
+                    id: ''
+                }
+                this.props.saveSelectedAssetData(payloadObj)
+            } else {
+                this.props.showWrongAudioPopup(true);
+            }
+        }        
         /**
          * Releases slate lock and logs user out.
          */

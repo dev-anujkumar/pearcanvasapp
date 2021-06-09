@@ -325,6 +325,7 @@ export default connect(
         saveSelectedAssetData,
         saveInlineImageData,
         alfrescoPopup,
-        saveDataFromAlfresco
+        saveDataFromAlfresco,
+        showWrongAudioPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

@@ -65,6 +65,11 @@ class PdfSlate extends Component {
 					}, () =>{
 						that.sumbitElement();
 					})
+					let payloadObj = {
+						asset: {}, 
+						id: ''
+					}
+					this.props.saveSelectedAssetData(payloadObj)
 					/* Send retrived data to server to save */
 				} 
 			} else {
