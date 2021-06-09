@@ -554,7 +554,12 @@ export const generateWipDataForFigure = (bodymatter, index) => {
                 wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]
             }
             else if (bodymatter[eleIndex[0]].type === MULTI_COLUMN) { /** Multi-column */
-                wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
+                const elementInColumn = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]];
+                if(elementInColumn?.type === ELEMENT_ASIDE) { /* snapshots of figure on cut operation inside 2c:aside/we:Figure*/
+                    wipData = elementInColumn?.elementdata?.bodymatter[eleIndex[3]] || {};
+                } else {
+                    wipData = elementInColumn;
+                }
             }
             break;
     }
