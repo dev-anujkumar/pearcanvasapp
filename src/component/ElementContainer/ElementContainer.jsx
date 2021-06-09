@@ -1470,7 +1470,7 @@ class ElementContainer extends Component {
                             handleCommentspanel: handleCommentspanel,
                             isBlockerActive: this.props.isBlockerActive,
                             onClickCapture: this.props.onClickCapture,
-                            elementSeparatorProps: elementSepratorProps,
+                            elementSepratorProps: elementSepratorProps,
                             setActiveElement: this.props.setActiveElement,
                             onListSelect: this.props.onListSelect,
                             handleFocus: this.handleFocus,
