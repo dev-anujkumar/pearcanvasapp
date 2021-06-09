@@ -166,13 +166,27 @@ function getAssessmentItemPostMsg(items){
 /* get Assessment data from post message and send to server */
 function getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment){
     /* Single Assessment - get data form post messages and update the server */
+    let itemsData = items?.splice(1, items.length - 1)
     let assessmentDataMsg = {
-        id: items[1]?.split("_")[1],
-        elementUrn: items[2]?.split("_")[1],
-        title: items[3]?.split("_")[1],
-        usagetype: items[4]?.split("_")[1] || usagetype, 
         calledFrom:'createElm'
     };
+    itemsData.map((key) => {
+        const itemKey = key?.split("_");
+        switch (itemKey[0]) {
+            case 'wUrn':
+                assessmentDataMsg.id = itemKey[1];
+                break;
+            case 'elementUrn':
+                assessmentDataMsg.elementUrn = itemKey[1];
+                break;
+            case 'title':
+                assessmentDataMsg.title = itemKey[1];
+                break;
+            case 'usageType':
+                assessmentDataMsg.usagetype = itemKey[1]  || usagetype;
+                break;
+        }
+    })
     const { elementUrn, itemid, itemTitle } = itemData || {};
     if((assessmentDataMsg.elementUrn === elementUrn) && itemid && itemTitle) {
         assessmentDataMsg = { ...assessmentDataMsg, ...itemData };

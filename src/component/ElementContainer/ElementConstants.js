@@ -24,6 +24,10 @@ export default {
     INTERACTIVE_SHOW_HIDE : "showhide",
     INTERACTIVE_NARRATIVE_LINK : "narrative-link",
     SMARTLINK_ALFRESCO_TYPES : ["website", "pdf", "3rd party interactive", "metrodigi interactive", "table", "mdpopup"],
+    INTERACTIVE_TYPES: {
+        VIDEO_MCQ: 'video-mcq',
+        GUIDED_EXAMPLE: 'guided-example'
+    },
 /****************Container Element************************ */  
     ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside",

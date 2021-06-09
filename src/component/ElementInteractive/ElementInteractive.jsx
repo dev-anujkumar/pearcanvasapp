@@ -398,32 +398,48 @@ class Interactive extends React.Component {
      * @description This function is to add Elm Interactive Asset ot Interactive Element 
      * @param {Object} pufObj Objeact containing elmInteractive Asset details
     */
-    addElmInteractive = (pufObj, cb) => {
+    addElmInteractive = async (pufObj, cb) => {
+        const { INTERACTIVE_TYPES : { VIDEO_MCQ, GUIDED_EXAMPLE}} = elementTypeConstant;
+        const thumbnailTypes = [ VIDEO_MCQ, GUIDED_EXAMPLE ];
+        let thumbnailImage="";
+        if(pufObj.elementUrn === this.props.elementId){
+            showTocBlocker();
+            disableHeader(true);
 
-        let figureData = {
-            schema: INTERACTIVE_SCHEMA,
-            interactiveid: pufObj.id,
-            interactivetype: pufObj.interactiveType,
-            interactivetitle: pufObj.title,
-            interactiveformat: ELM_INT
-        }
-        this.setState({
-            itemID: pufObj.id,
-            interactiveTitle: pufObj.title,
-            elementType: pufObj.interactiveType
-        }, () => {
-            this.props.fetchAssessmentMetadata("interactive", "",{ targetId: pufObj.id });
-        })
-        this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
-            this.props.handleFocus("updateFromC2");
-            this.props.handleBlur();
-        })
-        if(pufObj.callFrom === "fromEventHandling"){
-            hideTocBlocker();
-            disableHeader(false);
-        }
-        if (cb) {
-            cb();
+            let figureData = {
+                schema: INTERACTIVE_SCHEMA,
+                interactiveid: pufObj.id,
+                interactivetype: pufObj.interactiveType,
+                interactivetitle: pufObj.title,
+                interactiveformat: ELM_INT
+            }
+            const interactiveType = this.props?.model?.figuredata?.interactivetype;
+            if (interactiveType && thumbnailTypes.indexOf(interactiveType) > -1) {
+                const thumbnailData = await this.getVideoMCQandGuidedThumbnail(pufObj.id);
+                figureData.posterimage = thumbnailData?.posterImage;
+                figureData.alttext = thumbnailData?.alttext;
+                thumbnailImage = thumbnailData?.posterImage?.path
+            }
+            this.setState({
+                itemID: pufObj.id,
+                interactiveTitle: pufObj.title,
+                elementType: pufObj.interactiveType,
+                imagePath: thumbnailImage
+            }, () => {
+                this.props.fetchAssessmentMetadata("interactive", "",{ targetId: pufObj.id });
+            })
+            this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
+                this.props.handleFocus("updateFromC2");
+                this.props.handleBlur();
+            })
+            if(pufObj.callFrom === "fromEventHandling"){
+                hideTocBlocker();
+                disableHeader(false);
+            }
+            if (cb) {
+                cb();
+            }
+            // handlePostMsgOnAddAssess("", "", "", "remove","");
         }
     }
 
@@ -439,6 +455,30 @@ class Interactive extends React.Component {
             disableHeader(false);
         });
         this.props.setNewItemFromElm({});
+    }
+
+    /**
+     * Method to fetch thumbnail images for Video-MCQ & Guided-Example
+     * @param {*} elementInteractiveType 
+     * @returns 
+     */
+    getVideoMCQandGuidedThumbnail = async (assetId) => {
+        let interactiveData ={};
+        await getMCQGuidedData(assetId).then((resData) => {
+            if (resData?.data?.thumbnail?.src) {
+                interactiveData['imageId'] = resData['data']["thumbnail"]['id'];
+                interactiveData['path'] = resData['data']["thumbnail"]['src'];
+                interactiveData['alttext'] = resData['data']["thumbnail"]['alt'];
+            }
+        })
+        let posterImage = {};
+        posterImage['imageid'] = interactiveData['imageId'] ?? '';
+        posterImage['path'] = interactiveData['path'] ?? '';
+        const alttext = interactiveData['alttext'] ?? '';
+        return {
+            posterImage,
+            alttext
+        }
     }
     /**------------------------------------------------------------------------------------------*/
     
