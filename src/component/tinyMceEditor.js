@@ -528,7 +528,7 @@ export class TinyMceEditor extends Component {
                             editor.insertContent(textSelected);
                         }
                     }
-
+                    
                     /**
                      * In case remove all formatting is being appied on list element
                      */
@@ -1514,6 +1514,12 @@ export class TinyMceEditor extends Component {
         });
     }
 
+     /**
+     * Setting callout to selected word/phrase.
+     * @param {*} editor  editor instance
+     * @param {*} selectedCalloutIndex callout option selected
+     * @param {*} selected selected word/pharse
+     */
     setCalloutToSelection(editor,selectedCalloutIndex,selected){
         let callouts=['One','Two','Three','Four']
         let selectedText = selected;
@@ -1530,10 +1536,10 @@ export class TinyMceEditor extends Component {
         let insertionText = `<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${newCallOutID}">${selectedText}</span>`
         editor.insertContent(insertionText);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        this.handleBlur(null, true);
         setTimeout(() => {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
         }, 1000);
+        this.saveContent();
     }
 
      removeHTMLTags(html) {
