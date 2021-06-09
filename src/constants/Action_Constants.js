@@ -157,3 +157,6 @@ export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO";
 export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
 export const UPDATE_DISCUSSION_ITEMS = 'UPDATE_DISCUSSION_ITEMS';
 export const UPDATE_USAGE_TYPE = 'UPDATE_USAGE_TYPE';
+
+/*---------------- 3Column details Info ------------------------*/
+export const UPDATE_THREE_COLUMN_INFO = 'UPDATE_THREE_COLUMN_INFO';

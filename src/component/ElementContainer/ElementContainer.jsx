@@ -14,7 +14,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateThreeColumnData } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
@@ -1685,14 +1685,24 @@ class ElementContainer extends Component {
 
     // function to render multiple columns for 3 column container based on bodymatter
     renderMultipleColumnLabels = (element) => {
+        console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeee", element);
         if (element && 'groupeddata' in element && element.groupeddata && 'bodymatter' in element.groupeddata &&
             element.groupeddata.bodymatter && element.groupeddata.bodymatter.length > 0) {
             return element.groupeddata.bodymatter.map((bodymatter, index)=>{
                 return (
-                    <Button key={index} labelText={`C${index+1}`} type="element-label"/>
+                    <Button key={index} labelText={`C${index+1}`} onClick={() => this.updateColumnValues(index, element)} type="label-clickable-button"/>
                 )
             });
         }
+    }
+
+    updateColumnValues = (index, element) => {
+        let threeColumnObjData = {
+            id: `C${index+1}`,
+            elementId: element.id,
+            columnId: element.groupeddata.bodymatter[index].id
+        }
+        this.props.updateThreeColumnData(threeColumnObjData);
     }
 
     /**
@@ -2032,6 +2042,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         editElmAssessmentId: (assessmentId, assessmentItemId) => {
             dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
+        },
+        updateThreeColumnData: (threeColumnObjData) => {
+            dispatch(updateThreeColumnData(threeColumnObjData))
         }
     }
 }

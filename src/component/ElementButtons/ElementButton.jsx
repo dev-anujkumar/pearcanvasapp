@@ -229,6 +229,9 @@ class ElementButton extends Component {
                         {dialougeElementIcon}
                     </span>
                     break;
+            case buttonTypes.ELEMENT_LABEL_CLICKABLE:
+                buttonJSX = <span className={`btn-element element-label-clickable-button ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
+                break;
 
                 break;
         }
