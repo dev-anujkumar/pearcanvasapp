@@ -227,7 +227,7 @@ export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
 }
 
 
-export const prepareTCMSnapshotsForDelete = (params) => {
+export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
     const {
         deleteParentData,
         type,
@@ -261,7 +261,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
             bodymatter: deleteBodymatter,
             index
         }
-        tcmSnapshotsForDelete(deleteData, type, containerElement)
+        tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)
     }
 }
 
@@ -273,7 +273,7 @@ export const prepareTCMSnapshotsForDelete = (params) => {
  * @param {Object} containerElement - Element Parent Data
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
-export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement) => {
+export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerElement, operationType) => {
     let {cutCopyParentUrn,parentUrn} =  containerElement
     if (elementDeleteData?.wipData?.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM?.includes(elementDeleteData.wipData.figuretype)) {
         return false
@@ -289,9 +289,9 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
     }
-    if ((parentType.indexOf(type) === -1) || (type === "element-aside" && parentUrn && elementDeleteData.wipData.type === "manifest") ) {
+    if ((parentType.indexOf(type) === -1) || (type === "element-aside" && parentUrn && elementDeleteData?.wipData?.type === "manifest") ) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData);
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index);
+    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"",operationType);
 }
