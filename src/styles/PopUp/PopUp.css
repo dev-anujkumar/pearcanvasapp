@@ -130,7 +130,7 @@
     border: 1px solid #005a70;
   }
 
-.save-button{
+.save-button, .metadata-import-button{
     border-radius: 2px;
     border: 0;
     float: right;
@@ -145,10 +145,12 @@
     line-height: 1.43;
     letter-spacing: normal;
     text-align: center;
-    margin: 0 0 0 16px;
+    margin: 0 0 10px 16px;
+    border: 1px solid #005a70;
 }
-.save-button:hover {
+.save-button:hover, .metadata-import-button:hover {
   background: #07313b;
+  border: 1px solid #07313b;
 }
 
 @keyframes blink {
@@ -390,7 +392,7 @@
   background-color: #def8ff;
 }
 
-.powerpaste-save-button.disabled, .save-buttons.disabled {
+.powerpaste-save-button.disabled, .metadata-import-button.disabled {
   background: #b3d8e1;
   cursor: not-allowed;
   pointer-events: none;
@@ -433,25 +435,7 @@
   border-top: 4px solid #005a70;
   padding: 20px;
 }
-.save-buttons{
-  border-radius: 2px;
-  border: 0;
-  float: right;
-  font-family: inherit;
-  background: #005a70;
-  color: #fff;
-  cursor: pointer;
-  padding: 8px 20px;
-  font-size: 14px;
-  line-height: 1.43;
-  text-align: center;
-  margin: 0 0 10px 16px;
-  border: 1px solid #005a70;
-}
-.save-buttons:hover {
-  background: #07313b;
-  border: 1px solid #07313b;
-}
+
 .edit-metadata{
   font-size: 16px;
   color: #005a70;

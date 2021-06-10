@@ -133,7 +133,7 @@ class MetaDataPopUp extends React.Component {
 							</div>
 						</div>
 						<div className="metadata-button">
-						   <span className={`save-buttons ${this.state.disabledButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
+						   <span className={`metadata-import-button ${this.state.disabledButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
 						   <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
 						</div>
 					</div>
