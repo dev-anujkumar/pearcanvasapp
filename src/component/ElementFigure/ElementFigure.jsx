@@ -125,8 +125,11 @@ class ElementFigure extends Component {
                 this.props.handleBlur()
             })
             let alfrescoData = config?.alfrescoMetaData?.alfresco;
-            alfrescoData = this.props.isCiteChanged ? this.props.changedSiteData : alfrescoData
+            if(this.props.isCiteChanged){
+                this.setState({alfrescoSiteData: this.props.changedSiteData })
+            }
             let alfrescoSiteLocation = this.state.alfrescoSiteData
+            alfrescoData = this.props.isCiteChanged ? this.props.changedSiteData : alfrescoSiteLocation
             if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '' || this.props.isCiteChanged)){
                 handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
             }
