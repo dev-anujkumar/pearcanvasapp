@@ -84,30 +84,31 @@ class Interactive extends React.Component {
         return null;
     }
 
-   componentDidUpdate(prevProps) { 
-       const { assessmentReducer,  elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup  } = this.props;
-       const { itemID, interactiveTitle, elementType } = this.state;
-       if (!config.savingInProgress && !config.isSavingElement && (elementType === ELM_INT) && assessmentReducer) {
-           const { dataFromElm } = assessmentReducer;
-           if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elementUrn === this.props.model?.id) {
-               if (dataFromElm?.type == ELM_CREATE_IN_PLACE && dataFromElm.elmUrl) {
-                   window.open(dataFromElm.elmUrl);
-                   handlePostMsgOnAddAssess(this.addElmInteractive, dataFromElm.usageType);
-               } else if (dataFromElm?.type == SAVE_ELM_DATA && dataFromElm.pufObj) {
-                   this.addElmInteractive(dataFromElm.pufObj);
-               }
-               this.props.setElmPickerData({});
-           } else if ((itemID && assessmentReducer[itemID])) {
-               const newPropsTitle = assessmentReducer[itemID]?.assessmentTitle;
-               if ((assessmentReducer[itemID].showUpdateStatus === false && (interactiveTitle !== newPropsTitle))) {
-                   this.updateElmOnSaveEvent(this.props);
-               }
-           }
-       }
-       if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId  && !launchAlfrescoPopup) {
-           this.dataFromAlfresco(alfrescoAssetData)
-       }
-   }
+    componentDidUpdate(prevProps) {
+        const { assessmentReducer, model, elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props;
+        const { itemID, interactiveTitle } = this.state;
+        const isElmInteractive = model?.figuredata?.interactiveformat === ELM_INT ? true : false
+        if (!config.savingInProgress && !config.isSavingElement && (isElmInteractive) && assessmentReducer) {
+            const { dataFromElm } = assessmentReducer;
+            if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elementUrn === this.props.model?.id) {
+                if (dataFromElm?.type == ELM_CREATE_IN_PLACE && dataFromElm.elmUrl) {
+                    window.open(dataFromElm.elmUrl);
+                    handlePostMsgOnAddAssess(this.addElmInteractive, dataFromElm.usageType, Resource_Type.INTERACTIVE, 'add', 'fromCreate');
+                } else if (dataFromElm?.type == SAVE_ELM_DATA && dataFromElm.pufObj) {
+                    this.addElmInteractive(dataFromElm.pufObj);
+                }
+                this.props.setElmPickerData({});
+            } else if ((itemID && assessmentReducer[itemID])) {
+                const newPropsTitle = assessmentReducer[itemID]?.assessmentTitle;
+                if ((assessmentReducer[itemID].showUpdateStatus === false && (interactiveTitle !== newPropsTitle))) {
+                    this.updateElmOnSaveEvent(this.props);
+                }
+            }
+        }
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
+            this.dataFromAlfresco(alfrescoAssetData)
+        }
+    }
 
      /*** @description This function is to show Approved/Unapproved Status on interative */
     showElmVersionStatus = () => {
@@ -155,25 +156,39 @@ class Interactive extends React.Component {
         })
         this.showCanvasBlocker(toggleValue);
     }
+    closeUpdatePopup = (toggleValue,event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            showUpdatePopup: toggleValue
+        })
+        hideTocBlocker();
+        disableHeader(false);
+        this.props.showBlocker(false);
+    }
     /*** @description - This function is to disable all components when update Popups are open in window */
     showCanvasBlocker = (value) => {
         if (value === true) {
             showTocBlocker();
             hideToc();
         } else {
-            hideTocBlocker(value);
+            hideTocBlocker();
+            disableHeader(false);
         }
+        this.props.showBlocker(value);
         disableHeader(value);
         showBlocker(value);
     }
       /*** @description This function is used to render Version update Popup */
     showCustomPopup = () => {
         this.showCanvasBlocker(true);
+        this.props.showBlocker(true);
         return (
             <PopUp
                 dialogText={ELM_UPDATE_MSG}
                 active={true}
-                togglePopup={this.toggleUpdatePopup}
+                togglePopup={this.closeUpdatePopup}
                 isElmUpdatePopup={true}
                 updateElmAssessment={this.updateElmAssessment}
                 isInputDisabled={true}
@@ -457,13 +472,17 @@ class Interactive extends React.Component {
         let pufObj = {
             id: this.state.itemID,
             title: props.assessmentReducer[this.state.itemID].assessmentTitle,
-            usagetype: this.state.elementType
+            usagetype: this.state.elementType,
+            elementUrn: props.model.id
         }
         this.addElmInteractive(pufObj, () => {
             hideTocBlocker();
             disableHeader(false);
         });
-        this.props.setNewItemFromElm({});
+        if (props?.assessmentReducer?.item?.calledFrom === 'createElm') {
+            this.props.setNewItemFromElm({});
+        }
+        // handlePostMsgOnAddAssess("", "", "", "remove","");
     }
 
     /**
