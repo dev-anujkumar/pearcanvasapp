@@ -183,8 +183,10 @@ class Interactive extends React.Component {
         )
     }
     updateElmAssessment = async (event) => {
-        this.toggleUpdatePopup(false, event);
-        this.showCanvasBlocker(false);
+        const { INTERACTIVE_TYPES : { VIDEO_MCQ, GUIDED_EXAMPLE}} = elementTypeConstant;
+        const thumbnailTypes = [ VIDEO_MCQ, GUIDED_EXAMPLE ];
+        let thumbnailImage="";
+        this.closeUpdatePopup(false, event);
         let oldWorkUrn = this.props?.model?.figuredata?.interactiveid;
         let oldReducerData = this.props.assessmentReducer[oldWorkUrn]??{};
         oldReducerData.targetId = oldWorkUrn;
@@ -204,10 +206,17 @@ class Interactive extends React.Component {
             figureData.interactiveid = newVersion.id;
             figureData.interactivetitle = latestVersion.title;
         }
+        if (interactivetype && thumbnailTypes.indexOf(interactivetype) > -1) {
+            const thumbnailData = await this.getVideoMCQandGuidedThumbnail(figureData.interactiveid);
+            figureData.posterimage = thumbnailData?.posterImage;
+            figureData.alttext = thumbnailData?.alttext;
+            thumbnailImage = thumbnailData?.posterImage?.path
+        }
         this.setState({
             itemID: figureData.interactiveid,
             interactiveTitle: figureData.interactivetitle,
-            elementType: interactivetype
+            elementType: interactivetype,
+            imagePath: thumbnailImage
         }, () => {
             this.props.fetchAssessmentMetadata("interactive", "",
                  { targetId: figureData.interactiveid }
@@ -795,8 +804,8 @@ class Interactive extends React.Component {
         else{
             let itemId = citeTdxObj.singleAssessmentID.versionUrn ? citeTdxObj.singleAssessmentID.versionUrn : "";
             let interactiveData ={};
-            let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?String.prototype.toLowerCase.apply(citeTdxObj.singleAssessmentID.taxonomicTypes).split(","):"cite-interactive-video-with-interactive";
-            tempInteractiveType = utils.getTaxonomicType(tempInteractiveType);
+            let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?String.prototype.toLowerCase.apply(citeTdxObj.singleAssessmentID.taxonomicTypes).split(","):"";
+            tempInteractiveType = tempInteractiveType ? utils.getTaxonomicType(tempInteractiveType) : this.state.elementType;
             if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
                await getMCQGuidedData(itemId).then((responseData) => {
                     if(responseData && responseData['data'] && responseData['data']["thumbnail"]){

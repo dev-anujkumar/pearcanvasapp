@@ -220,6 +220,9 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
         }
         else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
             let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT, CONTAINER_BUTTON, WORKED_EXP ];                  
+            if(config.isPopupSlate){
+                MultiColumnPicker.length = MultiColumnPicker.length -2;
+            }
             return MultiColumnPicker.includes(buttonType);
         } 
         else {
