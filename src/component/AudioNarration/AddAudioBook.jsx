@@ -1,11 +1,10 @@
 import React from 'react';
-import { addAudioNarrationForContainer , showWrongAudioPopup } from './AudioNarration_Actions'
 import { accessDenied } from '../SlateWrapper/SlateWrapper_Actions'
 import { connect } from 'react-redux';
-import { showTocBlocker, hideTocBlocker, disableHeader} from '../../js/toggleLoader'
-import { c2MediaModule } from '../../js/c2_media_module';
+import { showTocBlocker} from '../../js/toggleLoader'
 import config from '../../config/config';
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
+import { alfrescoPopup } from '../AlfrescoPopup/Alfresco_Action'
 import axios from 'axios';
 
 /**
@@ -16,7 +15,8 @@ class AddAudioBook extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-            projectMetadata: false
+            assetData: null,
+            projectMetadata: false,
         }
     }
 
@@ -27,50 +27,32 @@ class AddAudioBook extends React.Component {
         this.props.closeAddAudioBook();
         this.handleC2MediaClick(this)
     }
-
-     /**
-    * @description - dataFromAlfresco function responsible for bringing data from the alfresco.
-    */
-    dataFromAlfresco = (data) => {
-        hideTocBlocker();
-        disableHeader(false);
-        let imageData = data;
-        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-        let smartLinkType = data && data.desc && data.desc.smartLinkType
-        let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
-        
-        if (figureType === "audio" || smartLinkType === "Audio" || smartLinkAssetType == "Audio") {
-                let audioData = {
-                    "narrativeAudioUrn": data.uniqueID || "",
-                    "location": data.smartLinkURl,
-                    "title": {
-                        "en": data.displayName || data.displayTitle
-                    },
-                    "format": data.mimetype
+    
+    handleSiteOptionsDropdown = (alfrescoPath, id, isGlossary) => {
+        let that = this
+        let url = 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000';
+        let SSOToken = config.ssoToken;
+        return axios.get(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'ApiKey': config.CMDS_APIKEY,
+                    'Content-Type': 'application/json',
+                    'PearsonSSOSession': SSOToken
                 }
-                this.props.addAudioNarrationForContainer(audioData,this.props.isGlossary);
-                hideTocBlocker();
-                return false;
-
-        }
-        else if (figureType != "audio" || smartLinkType != "Audio") {
-            this.props.showWrongAudioPopup(true)
-            return false;
-        }
-    }
-    /**
-     * @description Open C2 module with predefined Alfresco location
-     * @param {*} locationData alfresco locationData
-     */
-    handleC2ExtendedClick = (locationData) => {
-        let data_1 = locationData;
-        let that = this;
-        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                that.dataFromAlfresco(data);
             })
-        })
-
+            .then(function (response) {
+               let payloadObj = {launchAlfrescoPopup: true, 
+                alfrescoPath: alfrescoPath, 
+                alfrescoListOption: response.data.list.entries,
+                id,
+                isGlossary
+            }
+                that.props.alfrescoPopup(payloadObj);
+            })
+            .catch(function (error) {
+                console.log("Error IN SITE API", error)
+            });
     }
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
@@ -84,94 +66,26 @@ class AddAudioBook extends React.Component {
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
         }
-        var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
-        if (alfrescoPath.alfresco.nodeRef) {                     //if alfresco location is available
-            if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    {    
-            data_1 = alfrescoPath.alfresco;
-            /*
-                data according to new project api 
-            */
-            data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
-            data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
-            data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
-            data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
-
-            /*
-                data according to old core api and c2media
-            */
-            data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
-            data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
-            data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
-            data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
-
-            this.handleC2ExtendedClick(data_1)
-            } else {
+            if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {          //if alfresco location is available
+                if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                    const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder   
+                    let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
+                        citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                        elementId: this.props.elementId,
+                        calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary }
+                        sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                } else {
                     this.props.accessDenied(true)
+                }
             }
-        }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-                    data_1 = { ...alfrescoData };
-                    let request = {
-                        eTag: alfrescoPath.etag,
-                        projectId: alfrescoPath.id,
-                        ...alfrescoPath,
-                        additionalMetadata: { ...alfrescoData },
-                        alfresco: { ...alfrescoData }
-                    };
-
-                    /*
-                        preparing data according to Project api
-                    */
-
-                    request.additionalMetadata['repositoryName'] = data_1['repoName'];
-                    request.additionalMetadata['repositoryFolder'] = data_1['name'];
-                    request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
-                    request.additionalMetadata['visibility'] = data_1['siteVisibility'];
-
-                    request.alfresco['repositoryName'] = data_1['repoName'];
-                    request.alfresco['repositoryFolder'] = data_1['name'];
-                    request.alfresco['repositoryUrl'] = data_1['repoInstance'];
-                    request.alfresco['visibility'] = data_1['siteVisibility'];
-
-                    that.handleC2ExtendedClick(data_1)
-                    /*
-                        API to set alfresco location on dashboard
-                    */
-                    let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
-                    let SSOToken = request.ssoToken;
-                    return axios.patch(url, request.alfresco,
-                        {
-                            headers: {
-                                'Accept': 'application/json',
-                                'ApiKey': config.STRUCTURE_APIKEY,
-                                'Content-Type': 'application/json',
-                                'PearsonSSOSession': SSOToken,
-                                'If-Match': request.eTag
-                            }
-                        })
-                        .then(function (response) {
-                            let tempData = { alfresco: alfrescoData };
-                            that.setState({
-                                projectMetadata: tempData
-                            })
-                        })
-                        .catch(function (error) {
-                            console.log("error", error)
-                        });
-                })
-            }
-            else {
+                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isGlossary)
+            } else {
                 this.props.accessDenied(true)
             }
         }
-
-    }
-
-    shouldComponentUpdate() {
-        return false;
     }
 
     openConfirmationBox = (e) => {
@@ -191,17 +105,19 @@ class AddAudioBook extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        addAudio: state.audioReducer.addAudio,
-        openAudio: state.audioReducer.openAudio,
-        openRemovePopUp: state.audioReducer.openRemovePopUp,
         permissions : state.appStore.permissions
     }
 }
 
-const mapActionToProps = {
-    addAudioNarrationForContainer,
-    showWrongAudioPopup,
-    accessDenied
+const mapActionToProps = (dispatch) =>{
+    return{
+        accessDenied: (payloadObj) => {
+            dispatch(accessDenied(payloadObj))
+        },
+        alfrescoPopup: (payloadObj) => {
+            dispatch(alfrescoPopup(payloadObj))
+        },
+    }
 }
 
-export default connect(mapStateToProps, mapActionToProps)(AddAudioBook);
+export default connect(mapStateToProps,mapActionToProps)(AddAudioBook);

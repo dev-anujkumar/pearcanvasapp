@@ -25,7 +25,7 @@ import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, se
 import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
-import { fetchAudioNarrationForContainer ,audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer ,audioGlossaryPopup, saveDataFromAlfresco, showWrongAudioPopup} from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import RootContext from './PageNumberContext.js';
 import {publishContent,logout} from '../../js/header'
@@ -36,6 +36,7 @@ import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/A
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
+import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -272,7 +273,8 @@ const mapStateToProps = state => {
         ErrorPopup: state.errorPopup,
         pageNumberToggle: state.toolbarReducer.pageNumberToggle,
         audioGlossaryData:state.audioReducer.audioGlossaryData,
-        currentSlateLF: state.metadataReducer.currentSlateLF
+        currentSlateLF: state.metadataReducer.currentSlateLF,
+        alfrescoEditor: state.alfrescoReducer.editor
     };
 };
 
@@ -319,6 +321,11 @@ export default connect(
         fetchLearnosityContent,
         fetchProjectLFs,
         currentSlateLOType,
-        setElmPickerData
+        setElmPickerData,
+        saveSelectedAssetData,
+        saveInlineImageData,
+        alfrescoPopup,
+        saveDataFromAlfresco,
+        showWrongAudioPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

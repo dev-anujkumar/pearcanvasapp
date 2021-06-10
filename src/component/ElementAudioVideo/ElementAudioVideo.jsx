@@ -11,9 +11,10 @@ import axios from 'axios';
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
-import { hasReviewerRole, getLabelNumberTitleHTML } from '../../constants/utility.js'
+import { hasReviewerRole, getLabelNumberTitleHTML, sendDataToIframe } from '../../constants/utility.js'
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
-
+import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
+import { connect } from 'react-redux';
 
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
@@ -40,30 +41,33 @@ class ElementAudioVideo extends Component {
         let imageData = data;
         let clipInfo;
         let audioDes;
-        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-        let figureType = imageData['assetType'] ? imageData['assetType'].toLowerCase() : "";
-        let width = imageData['width'] ? imageData['width'] : "";
-        let height = imageData['height'] ? imageData['height'] : "";
-        let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
-        smartLinkAssetType = smartLinkAssetType.toLowerCase();
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
+        let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
+        checkFormat = checkFormat && checkFormat[0]
+        let figureType = imageData?.content?.mimeType?.split('/')[0]
+        let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
+        let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
+        let smartLinkAssetType = (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
+        smartLinkAssetType = smartLinkAssetType?.toLowerCase();
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
-            if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
-                epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
+            if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined || checkFormat == null)) {
+                const imageReference = JSON.parse(imageData.properties['avs:jsonString'])
+                epsURL = imageReference.imageReferenceURL ? imageReference.imageReferenceURL : "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
             }
-            let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
-            if (imageData['clipinfo']) {
-                if (typeof (imageData['clipinfo']) == "string") {
-                    let clipInfoData = JSON.parse(imageData['clipinfo'])
+            let smartLinkURl = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
+            if (imageData.properties["cp:clips"]) {
+                if (typeof (imageData.properties["cp:clips"]) == "string") {
+                    let clipInfoData = JSON.parse(imageData.properties["cp:clips"])
                     if (clipInfoData === null) {
                         clipInfo = null;
                     }
                     else {
                         clipInfo = {
-                            "clipid": clipInfoData.id ? clipInfoData.id : "",
-                            "starttime": clipInfoData.start ? clipInfoData.start : "",
-                            "endtime": clipInfoData.end ? clipInfoData.end : "",
-                            "description": clipInfoData.description ? clipInfoData.description : "",
-                            "duration": clipInfoData.duration ? clipInfoData.duration : ""
+                            "clipid": clipInfoData[0].id ? clipInfoData[0].id : "",
+                            "starttime": clipInfoData[0].start ? clipInfoData[0].start : "",
+                            "endtime": clipInfoData[2].end ? clipInfoData[2].end : "",
+                            "description": clipInfoData[0].description ? clipInfoData[0].description : "",
+                            "duration": clipInfoData[0].duration ? clipInfoData[0].duration : ""
                         }
                     }
                 }
@@ -82,13 +86,16 @@ class ElementAudioVideo extends Component {
                     }
                 }
             }
-            let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
-            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-            let ensubtitle = imageData['subtitle'] ? imageData['subtitle'] : "";
-            let frenchSubtitle = imageData['frenchsubtitle'] ? imageData['frenchsubtitle'] : "";
-            let spanishSubtitle = imageData['spanishsubtitle'] ? imageData['spanishsubtitle'] : "";
+            let videoFormat = imageData.mimetype ? imageData.mimetype : "";
+            let uniqID = imageData.id ? imageData.id : "";
+            let ensubtitle
+            let frenchSubtitle
+            let spanishSubtitle
             try{
-                audioDes = JSON.parse(JSON.parse(data.text).results[0].properties['s.avs:jsonString'].value[0]);
+                audioDes = JSON.parse(imageData.properties['avs:jsonString'])
+                ensubtitle = audioDes.englishCC ? audioDes.englishCC : "";
+                frenchSubtitle = audioDes.frenchCC ? audioDes.frenchCC : "";
+                spanishSubtitle = audioDes.spanishCC ? audioDes.spanishCC : "";
             }catch(err){
                 console.log(err)
             }
@@ -137,7 +144,7 @@ class ElementAudioVideo extends Component {
                 )
             }
             
-            this.setState({ imgSrc: epsURL,assetData :smartLinkURl })
+            this.setState({ imgSrc: epsURL,assetData :epsURL })
             let figureData = {
                 height : height,
                 width : width,
@@ -153,7 +160,7 @@ class ElementAudioVideo extends Component {
                 if (uniqIDString) {
                     uniqueIDSmartlink = uniqIDString.split('s.cmis:objectId = ')[1].replace(/\'/g, '');
                 }
-                let uniqueID = imageData['uniqueID'] ? imageData['uniqueID'] : (uniqueIDSmartlink ? uniqueIDSmartlink : '');
+                let uniqueID = imageData.id ? imageData.id : (uniqueIDSmartlink ? uniqueIDSmartlink : '');
                 if (uniqueID) {
                     uniqID = uniqueID;
                 }
@@ -190,7 +197,7 @@ class ElementAudioVideo extends Component {
                         },
                         audio: {
                             format: videoFormat,
-                            path: smartLinkURl
+                            path: epsURL
                         },
                         schema: "http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio"
                     }
@@ -203,20 +210,26 @@ class ElementAudioVideo extends Component {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur(true)
             })
-            const alfrescoData = config?.alfrescoMetaData?.alfresco;
+            let alfrescoData = config?.alfrescoMetaData?.alfresco;
+            alfrescoData = this.props.isCiteChanged ? this.props.changedSiteData : alfrescoData
             let alfrescoSiteLocation = this.state.alfrescoSiteData
-            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
+            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '' || this.props.isCiteChanged)){
                 handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
             }
-            this.updateAlfrescoSiteUrl()
+            let payloadObj = {
+                asset: {}, 
+                id: ''
+            }
+            this.props.saveSelectedAssetData(payloadObj)
+            this.updateAlfrescoSiteUrl(alfrescoData)
         }
     }
 
-    updateAlfrescoSiteUrl = () => {
-        let repositoryData = this.state.alfrescoSiteData
-        if(repositoryData?.repositoryFolder){
+    updateAlfrescoSiteUrl = (alfrescoData) => {
+        let repositoryData = alfrescoData.title ? alfrescoData.title : alfrescoData.repositoryFolder
+        if(repositoryData){
             this.setState({
-                alfrescoSite: repositoryData.repositoryFolder
+                alfrescoSite: repositoryData
             })  
         }else {
             this.setState({
@@ -224,14 +237,48 @@ class ElementAudioVideo extends Component {
             }) 
         }
     }
+
+    handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{
+        let that = this
+        let url = 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000';
+        let SSOToken = config.ssoToken;
+        return axios.get(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'ApiKey': config.CMDS_APIKEY,
+                    'Content-Type': 'application/json',
+                    'PearsonSSOSession': SSOToken
+                }
+            })
+            .then(function (response) {
+               let payloadObj = {launchAlfrescoPopup: true, 
+                alfrescoPath: alfrescoPath, 
+                alfrescoListOption: response.data.list.entries,
+                id,
+                locationData
+            }
+                that.props.alfrescoPopup(payloadObj)
+            })
+            .catch(function (error) {
+                console.log("Error IN SITE API", error)
+            });
+    }
     
     componentDidMount() {
         getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.repositoryFolder,
+                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
                 alfrescoSiteData:{...response}
             })
         })
+    }
+
+    componentDidUpdate(prevProps) {
+        const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
+            this.dataFromAlfresco(alfrescoAssetData)
+        }
     }
     
     /**
@@ -283,27 +330,38 @@ class ElementAudioVideo extends Component {
         }
         var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
-            if (alfrescoPath.alfresco.nodeRef) {
+            if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                    data_1 = alfrescoPath.alfresco;
-                    data_1.currentAsset = currentAsset;
-                    /*
-                        data according to new project api 
-                    */
-                    data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
-                    data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
-                    data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
-                    data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
+                    let alfrescoLocationData = this.state.alfrescoSiteData
+                    let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
+                    alfrescoSiteName = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
+                    let nodeRefs = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
+                    const locationSiteDataNodeRef =alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData?.guid
+                    nodeRefs = locationSiteDataNodeRef ? locationSiteDataNodeRef : nodeRefs;
+                    const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
+                    let messageObj = { citeName: locationSiteDataTitle? locationSiteDataTitle : alfrescoSiteName, 
+                        citeNodeRef: nodeRefs, 
+                        elementId: this.props.elementId }
+                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                    // data_1 = alfrescoPath.alfresco;
+                    // data_1.currentAsset = currentAsset;
+                    // /*
+                    //     data according to new project api 
+                    // */
+                    // data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
+                    // data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
+                    // data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
+                    // data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
 
-                    /*
-                        data according to old core api and c2media
-                    */
-                    data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
-                    data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
-                    data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
-                    data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
+                    // /*
+                    //     data according to old core api and c2media
+                    // */
+                    // data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
+                    // data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
+                    // data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
+                    // data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
-                    this.handleC2ExtendedClick(data_1)
+                    // this.handleC2ExtendedClick(data_1)
                 }
                 else {
                     this.props.accessDenied(true)
@@ -313,60 +371,61 @@ class ElementAudioVideo extends Component {
         }
         else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-                    data_1 = { 
-                        ...alfrescoData,
-                        currentAsset: currentAsset,
-                    };
+                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData)
+                // c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
+                //     data_1 = { 
+                //         ...alfrescoData,
+                //         currentAsset: currentAsset,
+                //     };
                     
-                    let request = {
-                        eTag: alfrescoPath.etag,
-                        projectId: alfrescoPath.id,
-                        ...alfrescoPath,
-                        additionalMetadata: { ...alfrescoData },
-                        alfresco: { ...alfrescoData }
-                    };
+                //     let request = {
+                //         eTag: alfrescoPath.etag,
+                //         projectId: alfrescoPath.id,
+                //         ...alfrescoPath,
+                //         additionalMetadata: { ...alfrescoData },
+                //         alfresco: { ...alfrescoData }
+                //     };
 
-                    /*
-                        preparing data according to Project api
-                    */
+                //     /*
+                //         preparing data according to Project api
+                //     */
 
-                    request.additionalMetadata['repositoryName'] = data_1['repoName'];
-                    request.additionalMetadata['repositoryFolder'] = data_1['name'];
-                    request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
-                    request.additionalMetadata['visibility'] = data_1['siteVisibility'];
+                //     request.additionalMetadata['repositoryName'] = data_1['repoName'];
+                //     request.additionalMetadata['repositoryFolder'] = data_1['name'];
+                //     request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
+                //     request.additionalMetadata['visibility'] = data_1['siteVisibility'];
 
-                    request.alfresco['repositoryName'] = data_1['repoName'];
-                    request.alfresco['repositoryFolder'] = data_1['name'];
-                    request.alfresco['repositoryUrl'] = data_1['repoInstance'];
-                    request.alfresco['visibility'] = data_1['siteVisibility'];
+                //     request.alfresco['repositoryName'] = data_1['repoName'];
+                //     request.alfresco['repositoryFolder'] = data_1['name'];
+                //     request.alfresco['repositoryUrl'] = data_1['repoInstance'];
+                //     request.alfresco['visibility'] = data_1['siteVisibility'];
 
-                    that.handleC2ExtendedClick(data_1)
-                    /*
-                        API to set alfresco location on dashboard
-                    */
-                    let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
-                    let SSOToken = request.ssoToken;
-                    return axios.patch(url, request.alfresco,
-                        {
-                            headers: {
-                                'Accept': 'application/json',
-                                'ApiKey': config.STRUCTURE_APIKEY,
-                                'Content-Type': 'application/json',
-                                'PearsonSSOSession': SSOToken,
-                                'If-Match': request.eTag
-                            }
-                        })
-                        .then(function (response) {
-                            let tempData = { alfresco: alfrescoData };
-                            that.setState({
-                                projectMetadata: tempData
-                            })
-                        })
-                        .catch(function (error) {
-                            console.log("error", error)
-                        });
-                })
+                //     that.handleC2ExtendedClick(data_1)
+                //     /*
+                //         API to set alfresco location on dashboard
+                //     */
+                //     let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
+                //     let SSOToken = request.ssoToken;
+                //     return axios.patch(url, request.alfresco,
+                //         {
+                //             headers: {
+                //                 'Accept': 'application/json',
+                //                 'ApiKey': config.STRUCTURE_APIKEY,
+                //                 'Content-Type': 'application/json',
+                //                 'PearsonSSOSession': SSOToken,
+                //                 'If-Match': request.eTag
+                //             }
+                //         })
+                //         .then(function (response) {
+                //             let tempData = { alfresco: alfrescoData };
+                //             that.setState({
+                //                 projectMetadata: tempData
+                //             })
+                //         })
+                //         .catch(function (error) {
+                //             console.log("error", error)
+                //         });
+                // })
             }
             else {
                 this.props.accessDenied(true)
@@ -508,4 +567,29 @@ ElementAudioVideo.propTypes = {
 
 }
 
-export default ElementAudioVideo;
+const mapActionToProps = (dispatch) =>{
+    return{
+        alfrescoPopup: (payloadObj) => {
+            dispatch(alfrescoPopup(payloadObj))
+        },
+        saveSelectedAssetData: (payloadObj) => {
+            dispatch(saveSelectedAssetData(payloadObj))
+        }
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
+        alfrescoElementId : state.alfrescoReducer.elementId,
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        isCiteChanged : state.alfrescoReducer.isCiteChanged,
+        changedSiteData: state.alfrescoReducer.changedSiteData
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapActionToProps
+)(ElementAudioVideo);

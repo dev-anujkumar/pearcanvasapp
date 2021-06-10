@@ -18,6 +18,7 @@ import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem,
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
 import { getProjectDetails } from '../../CanvasWrapper/CanvasWrapper_Actions.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { showWrongAudioPopup } from '../../AudioNarration/AudioNarration_Actions';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -254,8 +255,24 @@ function CommunicationChannel(WrappedComponent) {
                 case 'unlinkLOFailForWarningPopup':
                     this.handleUnlinkedLOData(message)
                     break;
+                case 'selectedAlfrescoAssetData' :
+                    console.log('ASSET DATA FROM ALFRESCO', message.asset)
+                    if(message.isEditor){
+                        this.handleEditorSave(message)
+                    }
+                     if (message.calledFrom || message.calledFromGlossaryFootnote) {
+                        this.handleAudioData(message)
+                    }
+                    this.props.saveSelectedAssetData(message)
+                    break;
+                case 'saveAlfrescoDataToConfig' : 
+                config.alfrescoMetaData = message
+                break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
+                    break;
+                case 'openInlineAlsfrescoPopup' :
+                    this.props.alfrescoPopup(message);
                     break;
             }
         }
@@ -371,6 +388,32 @@ function CommunicationChannel(WrappedComponent) {
             }, 500);
         }
 
+        handleEditorSave = (message) =>{
+            let params = {
+                element: message.id,
+                editor: this.props.alfrescoEditor,
+                asset: message.asset,
+                launchAlfrescoPopup: false,
+                isInlineEditor: message.isEditor                
+            }
+            this.props.saveInlineImageData(params)
+        }
+
+        handleAudioData = (message) => {
+            let fileName = message.asset.name;
+            let fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+            let allowedExtentions = ["mp3", "aac", "wav"];
+            if (allowedExtentions.includes(fileExtension)) {
+                this.props.saveDataFromAlfresco(message);
+                let payloadObj = {
+                    asset: {}, 
+                    id: ''
+                }
+                this.props.saveSelectedAssetData(payloadObj)
+            } else {
+                this.props.showWrongAudioPopup(true);
+            }
+        }        
         /**
          * Releases slate lock and logs user out.
          */
