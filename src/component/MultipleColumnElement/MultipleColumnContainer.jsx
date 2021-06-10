@@ -66,7 +66,7 @@ class MultipleColumnContainer extends PureComponent {
             element : this.context.element
         };
         try {
-            if (_elements !== null && _elements !== undefined) {
+            if (_elements !== null && _elements !== undefined && parentUrn.columnName === this.props.selectedColumn) {
                 if (_elements.length === 0) {
                     return this.renderBlankContainer(this.context, parentUrn, asideData, parentIndex)
                 }
@@ -255,10 +255,16 @@ class MultipleColumnContainer extends PureComponent {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        selectedColumn: state.appStore.threeColumnData.id
+    }
+};
+
 const mapDispatchToProps = {
     swapElement
 }
 
 MultipleColumnContainer.contextType = MultiColumnContainerContext;
 MultipleColumnContainer.displayName = "MultipleColumnContainer";
-export default connect(null, mapDispatchToProps)(MultipleColumnContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(MultipleColumnContainer)
