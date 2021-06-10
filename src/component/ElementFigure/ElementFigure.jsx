@@ -128,7 +128,7 @@ class ElementFigure extends Component {
             if(this.props.isCiteChanged){
                 this.setState({alfrescoSiteData: this.props.changedSiteData })
             }
-            let alfrescoSiteLocation = this.state.alfrescoSiteData
+            let alfrescoSiteLocation = this.state.alfrescoSiteData.id  ? this.state.alfrescoSiteData  : alfrescoData
             alfrescoData = this.props.isCiteChanged ? this.props.changedSiteData : alfrescoSiteLocation
             if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '' || this.props.isCiteChanged)){
                 handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
