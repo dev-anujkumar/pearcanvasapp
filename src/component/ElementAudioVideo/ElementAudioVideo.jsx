@@ -211,11 +211,15 @@ class ElementAudioVideo extends Component {
                 this.props.handleBlur(true)
             })
             let alfrescoData = config?.alfrescoMetaData?.alfresco;
-            alfrescoData = this.props.isCiteChanged ? this.props.changedSiteData : alfrescoData
-            let alfrescoSiteLocation = this.state.alfrescoSiteData
+            if(this.props.isCiteChanged){
+                this.setState({alfrescoSiteData: this.props.changedSiteData })
+            }
+            let alfrescoSiteLocation = this.state.alfrescoSiteData?.id  ? this.state.alfrescoSiteData  : alfrescoData
+            alfrescoData = this.props.isCiteChanged ? this.props.changedSiteData : alfrescoSiteLocation
             if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '' || this.props.isCiteChanged)){
                 handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
             }
+            // to blank the elementId and asset data after update
             let payloadObj = {
                 asset: {}, 
                 id: ''
