@@ -132,7 +132,6 @@
 
 .save-button, .metadata-import-button{
     border-radius: 2px;
-    border: 0;
     float: right;
     font-family: inherit;
     background: #005a70;
