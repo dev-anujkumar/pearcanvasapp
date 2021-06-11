@@ -620,9 +620,10 @@ export const storeOldAssetForTCM = (value) => {
     }
 }
 
-export const updateThreeColumnData = (threeColumnObjData) => (dispatch) => {
+export const updateThreeColumnData = (threeColumnObjData, objKey) => (dispatch) => {
     dispatch({
         type: UPDATE_THREE_COLUMN_INFO,
+        key: objKey,
         payload: threeColumnObjData
     })
 }

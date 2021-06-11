@@ -59,6 +59,16 @@ class MultipleColumnContainer extends PureComponent {
      * @param {Number} parentIndex - Index of column
      */
      renderElement = (_elements, parentUrn, parentIndex) => {
+        let columnId;
+        for (let element of this.props.threeColumnData) {
+            if (element.containerId === parentUrn.mcId) {
+                columnId = element.columnId;
+            }
+        }
+        if (!columnId && parentUrn.columnName === "C1") {
+            columnId = parentUrn.manifestUrn;
+        }
+
         let asideData = {
             type: "groupedcontent",
             id: this.context.element.id,
@@ -66,7 +76,7 @@ class MultipleColumnContainer extends PureComponent {
             element : this.context.element
         };
         try {
-            if (_elements !== null && _elements !== undefined && parentUrn.columnName === this.props.selectedColumn) {
+            if (_elements !== null && _elements !== undefined && parentUrn.manifestUrn === columnId) {
                 if (_elements.length === 0) {
                     return this.renderBlankContainer(this.context, parentUrn, asideData, parentIndex)
                 }
@@ -257,7 +267,7 @@ class MultipleColumnContainer extends PureComponent {
 
 const mapStateToProps = state => {
     return {
-        selectedColumn: state.appStore.threeColumnData.id
+        threeColumnData: state.appStore.threeColumnData
     }
 };
 

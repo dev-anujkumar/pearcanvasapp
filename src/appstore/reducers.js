@@ -77,11 +77,7 @@ const INITIAL_STATE = {
     oldFiguredata : {},
     wirisAltText : {},
     isLearnosityProjectInfo:{},
-    threeColumnData: {
-        id: "C1",
-        elementId: "",
-        columnId: ""
-    }
+    threeColumnData: []
 };
 
 const INITIAL_ACTION = {
@@ -269,11 +265,15 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             isLearnosityProjectInfo : action.payload
         }
 
-        case UPDATE_THREE_COLUMN_INFO : 
-        return {
-            ...state,
-            threeColumnData : action.payload
-        }
+        case UPDATE_THREE_COLUMN_INFO:
+            let threeColumnData = state.threeColumnData;
+            threeColumnData = threeColumnData.filter(function (data) {
+                return data.containerId !== action.key
+            })
+            return {
+                ...state,
+                threeColumnData: [...threeColumnData, action.payload]
+            }
 
         default:
             return state;

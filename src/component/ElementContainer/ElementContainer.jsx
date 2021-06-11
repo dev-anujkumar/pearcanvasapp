@@ -1685,24 +1685,30 @@ class ElementContainer extends Component {
 
     // function to render multiple columns for 3 column container based on bodymatter
     renderMultipleColumnLabels = (element) => {
-        console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeee", element);
+        let activeColumnLabel = "C1"
+        for (let propsElementObject of this.props.threeColumnData) {
+            if (propsElementObject.containerId === element.id) {
+                activeColumnLabel = propsElementObject.columnIndex;
+            }
+        }
         if (element && 'groupeddata' in element && element.groupeddata && 'bodymatter' in element.groupeddata &&
             element.groupeddata.bodymatter && element.groupeddata.bodymatter.length > 0) {
             return element.groupeddata.bodymatter.map((bodymatter, index)=>{
                 return (
-                    <Button key={index} labelText={`C${index+1}`} onClick={() => this.updateColumnValues(index, element)} type="label-clickable-button"/>
+                    <Button key={index} btnClassName={activeColumnLabel === `C${index+1}` ? "activeTagBgColor" : ""} labelText={`C${index+1}`} onClick={() => this.updateColumnValues(index, element)} type="label-clickable-button"/>
                 )
             });
         }
     }
 
     updateColumnValues = (index, element) => {
+        let objKey = element.id;
         let threeColumnObjData = {
-            id: `C${index+1}`,
-            elementId: element.id,
+            containerId: objKey,
+            columnIndex: `C${index + 1}`,
             columnId: element.groupeddata.bodymatter[index].id
         }
-        this.props.updateThreeColumnData(threeColumnObjData);
+        this.props.updateThreeColumnData(threeColumnObjData, objKey);
     }
 
     /**
@@ -2043,8 +2049,8 @@ const mapDispatchToProps = (dispatch) => {
         editElmAssessmentId: (assessmentId, assessmentItemId) => {
             dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
         },
-        updateThreeColumnData: (threeColumnObjData) => {
-            dispatch(updateThreeColumnData(threeColumnObjData))
+        updateThreeColumnData: (threeColumnObjData, objKey) => {
+            dispatch(updateThreeColumnData(threeColumnObjData, objKey))
         }
     }
 }
@@ -2071,7 +2077,8 @@ const mapStateToProps = (state) => {
         currentSlateAncestorData : state.appStore.currentSlateAncestorData,
         elementSelection: state.selectionReducer.selection,
         slateLevelData: state.appStore.slateLevelData,
-        assessmentReducer: state.assessmentReducer
+        assessmentReducer: state.assessmentReducer,
+        threeColumnData: state.appStore.threeColumnData
     }
 }
 
