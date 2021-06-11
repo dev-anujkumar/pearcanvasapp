@@ -112,7 +112,7 @@ function AlfrescoPopup(props) {
     }
 
     return (
-        <div>
+        <div id="alfresco-picker">
             <Dialog
                 open={open}
                 aria-labelledby="alert-dialog-title"
