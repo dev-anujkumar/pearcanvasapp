@@ -468,7 +468,7 @@ class Interactive extends React.Component {
         let pufObj = {
             id: this.state.itemID,
             title: props.assessmentReducer[this.state.itemID].assessmentTitle,
-            usagetype: this.state.elementType,
+            interactiveType: props?.model?.figuredata?.interactivetype ?? this.state.elementType,
             elementUrn: props.model.id
         }
         this.addElmInteractive(pufObj, () => {
