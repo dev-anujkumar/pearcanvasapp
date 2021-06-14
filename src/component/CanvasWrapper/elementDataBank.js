@@ -121,6 +121,9 @@ const elementDataBank = {
             },
             "image25Text" : {
                 "secondaryOption" : "secondary-image-figure-quarter"
+            },
+            "image75Text" : {
+                "secondaryOption" : "secondary-image-figure-three-quarter"
             }
         },
         "mathImage" : {

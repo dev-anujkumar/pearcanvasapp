@@ -1,14 +1,14 @@
 /*--------------- Assessment Format Dropdown -------------------*/
 export const assessmentFormats = {
-    'cite': 'Full Assessment CITE',
-    'tdx': 'Full Assessment TDX',
     'puf': 'Full Assessment Elm',
+    'cite': 'Full Assessment QuAD CITE',
+    'tdx': 'Full Assessment TDX',
     'learningtemplate': 'Learning App Type',
     'learnosity': 'Full Assessment Learnosity',
 }
 
 /*--------------- Full Assessment Constants -------------------*/
-export const FULL_ASSESSMENT_CITE = 'Full Assessment CITE'
+export const FULL_ASSESSMENT_CITE = 'Full Assessment QuAD CITE'
 export const FULL_ASSESSMENT_TDX = 'Full Assessment TDX'
 export const FULL_ASSESSMENT_PUF = 'Full Assessment Elm'
 export const LEARNING_APP_TYPE = 'Learning App Type'
