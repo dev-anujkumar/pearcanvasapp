@@ -8,7 +8,7 @@ import {
     AddEditLearningObjectiveDropdown,
     ViewLearningObjectiveSlateDropdown,
     UnlinkSlateDropdown,
-    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToCypress, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AlignToCypressSlateDropdown
+    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToCypress, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AlignToCypressSlateDropdown, AddEditLOsAssessmentSlate, ViewLOsAssessmentSlate
 }
     from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
@@ -141,6 +141,8 @@ class SlateTagDropdown extends React.Component {
       if(elementInfo.x < 800){
         setTimeout(() => {
           this.node2.style.left = '10px';
+          this.node3.style.left = '10px';
+          this.node3.style.top = '65px';
         }, 0);
       }
     }
@@ -201,7 +203,7 @@ class SlateTagDropdown extends React.Component {
   /** Enable/Disable External LOs Link Option based on External LF linked to Project*/
   checkExternalFramework = () => {
     let enableExtLF = false;
-    if (config.slateType !== 'assessment' && this?.props?.projectLearningFrameworks?.externalLF?.length) {
+    if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
       enableExtLF = true;
     }
     return enableExtLF;
@@ -229,11 +231,33 @@ class SlateTagDropdown extends React.Component {
     return enableStatus;
   }
 
+   /** Enable/Disable External LOs Link Option on assessment slate based on External LF linked to Project*/
+   checkExternalFrameworkAS = () => {
+    let enableExtLF = false;
+    if (config.slateType === 'assessment' &&  this?.props?.projectLearningFrameworks?.externalLF?.length) {
+      enableExtLF = true;
+    }
+    return enableExtLF;
+  }
+
+  toggleLoOptionsDropdownAS = () => {
+    sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
+    sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
+    if(this.node3.style.display=='block'){
+      this.node3.style.display='none'
+    }
+    else{
+      this.node3.style.display='block'
+    }
+  }
+
+
     render = () => {
       const enableExtLO =this.checkExternalFramework();
       const liOptionStatus = this.handleCypressLODropdownOptions()
       /* @-isLoOption4Slate-@ - TO check is LO dropdown options allowed for current slate or not */
       const isLoOption4Slate = [SLATE_TYPE_SECTION, SLATE_TYPE_PDF].includes(config.slateType);
+      const isExternalLoInAssessment = this.checkExternalFrameworkAS()
         return (
         <div>
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
@@ -242,11 +266,16 @@ class SlateTagDropdown extends React.Component {
                 <li onClick={this.toggleLoOptionsDropdown}><span>{AlignToCypressSlateDropdown}</span><span className='lo-navigation-icon'>{loNextIcon}</span></li>
                 </div>
                 <div>
-                <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO === true ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
+                  {
+                    !isExternalLoInAssessment?                
+                    <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
+                    :
+                    <li onClick={this.toggleLoOptionsDropdownAS} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
+                  }
                 </div>
               </ul>
             </div>
-                <div className="learningobjectivedropdown2" ref={node2 => this.node2 = node2}>
+              <div className="learningobjectivedropdown2" ref={node2 => this.node2 = node2}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && isLoOption4Slate &&
                         <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}> {AddLearningObjectiveSlateDropdown}</li>}
@@ -257,6 +286,12 @@ class SlateTagDropdown extends React.Component {
                     <li className={liOptionStatus.viewLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{ViewLearningObjectiveSlateDropdown}</li>
                     {isLoOption4Slate && !hasReviewerRole() &&
                         <li className={liOptionStatus.unlinkLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
+                </ul>
+            </div> 
+            <div className="learningobjectivedropdown2" ref={node3 => this.node3 = node3}>
+                <ul>
+                      <li onClick={()=> {}}>{AddEditLOsAssessmentSlate}</li>
+                      <li onClick={()=> {}}>{ViewLOsAssessmentSlate}</li>
                 </ul>
             </div> 
         </div>            

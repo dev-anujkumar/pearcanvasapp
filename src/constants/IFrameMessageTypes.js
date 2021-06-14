@@ -28,6 +28,8 @@ export const AddLearningObjectiveAssessmentDropdown ="Add From Existing"
 export const AlignToCypressSlateDropdown = "Align to Cypress Framework"
 export const AlignToExternalFrameworkSlateDropdown = "Align to External Framework"
 export const WarningPopupAction = "WarningPopupAction"
+export const AddEditLOsAssessmentSlate ="Add/ Edit Learning Objective"
+export const ViewLOsAssessmentSlate = "View/ Unlink Learning Objective"
 
 export const LaunchTOCForCrossLinking = "launchTOCForCrossLinking"
 export const SlateLockStatus = "SlateLockStatus"
