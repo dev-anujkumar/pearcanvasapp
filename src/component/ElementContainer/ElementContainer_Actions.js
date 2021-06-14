@@ -351,18 +351,29 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
         return elm;
     })
 }
-
-export const createShowHideElement = (elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => (dispatch, getState) => {
+/**
+* @function createShowHideElement
+* @description-This function is to create elements inside showhide
+* @param {String} elementId - id of parent element (ShowHide)   
+* @param {String} type - type of section in showhide element - show|hide|revealAnswer
+* @param {Object} index - Array of indexs
+* @param {String} parentContentUrn - contentUrn of parent element(showhide)
+* @param {Function} cb - )
+* @param {Object} parentElement - parent element(showhide)
+* @param {String} parentElementIndex - index of parent element(showhide) on slate
+* @param {String} type2BAdded - type of new element to be addedd - text|image 
+*/
+export const createShowHideElement = (elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex, type2BAdded) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
-    let newShowhideIndex = parseInt(newIndex[newIndex.length-1])+1
+    let newShowhideIndex = parseInt(newIndex[newIndex.length-1]); //+1
     const { asideData, parentUrn ,showHideObj } = getState().appStore
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
         "index": newShowhideIndex,
-        "type": "TEXT",
+        "type": type2BAdded || "TEXT",
         "parentType":"showhide",
         "sectionType": type
 

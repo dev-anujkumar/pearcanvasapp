@@ -1359,9 +1359,9 @@ class ElementContainer extends Component {
                 case elementTypeConstant.NEW_SHOW_HIDE:
                     editor = <ShowHide
                         onListSelect= {this.props.onListSelect}
-                        showHideId = {this.props.showHideId}
-                        createShowHideElement = {this.props.createShowHideElement}
-                        deleteShowHideUnit = {this.props.deleteShowHideUnit}
+                        //showHideId = {this.props.showHideId}
+                        //createShowHideElement = {this.props.createShowHideElement}
+                        //deleteShowHideUnit = {this.props.deleteShowHideUnit}
                         activeElement = {this.props.activeElement}
                         showBlocker = {this.props.showBlocker}
                         permissions = {permissions}
@@ -1369,16 +1369,17 @@ class ElementContainer extends Component {
                         handleBlur = {this.handleBlur}
                         index = {index}
                         element = {element}
-                        model = {element.html}
+                        //model = {element.html}
                         slateLockInfo = {slateLockInfo}
-                        onClick = {this.handleFocus}
+                        //onClick = {this.handleFocus}
                         glossaryFootnoteValue = {this.props.glossaryFootnoteValue}
-                        elementStatus = {config.elementStatus}
+                        //elementStatus = {config.elementStatus}
                         openAssetPopoverPopUp = {this.openAssetPopoverPopUp}
                         openGlossaryFootnotePopUp = {this.openGlossaryFootnotePopUp}
                         getElementStatus = {this.props.getElementStatus}
                         userRole = {this.props.userRole}
-                        elementSepratorProps = {elementSepratorProps}
+                        //elementSepratorProps = {elementSepratorProps}
+                        onClickCapture = {this.props.onClickCapture}
                     />;
                     labelText = 'SH'
                     break;
