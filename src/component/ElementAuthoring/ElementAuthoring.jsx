@@ -28,6 +28,7 @@ export class ElementAuthoring extends Component {
           glossaryFootnoteValue={glossaryFootnoteValue}
           glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
           handleAudioPopupLocation ={this.props.handleAudioPopupLocation}
+          showHideType = {this.props?.showHideType}
         />
     )
 

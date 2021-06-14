@@ -18,7 +18,7 @@ function ShowHideUiBlock(props) {
 			const indexSepra = sectionType === "show" ? `${index}-0-${i+1}` : `${index}-2-${i+1}`;
 			return (
 					<>
-						{ showElements(item, indexs) }
+						{ showElements(item, indexs, sectionType) }
 						{ showSeprator(indexSepra, sectionType) }
 					</>
 				)
@@ -59,8 +59,9 @@ function ShowHideUiBlock(props) {
 	* @description-This function is to display different elements inside showhide
 	* @param {Object} item - data of element(Text|Image) inside ShowHide   
 	* @param {String} i - indexs of elements - "showhide-show|hide|revealAnswer-element"
+	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer
 	*/
-	function showElements(item, i) {
+	function showElements(item, i, sectionType) {
 		return <ElementContainer
 			element = {item}
 			index = {i}
@@ -71,13 +72,13 @@ function ShowHideUiBlock(props) {
 			handleCommentspanel = {props.handleCommentspanel}
 			isBlockerActive = {props.isBlockerActive}
 			onClickCapture = {props.onClickCapture}
-			parentElement =   {props.element}
+			parentElement = {element}
 			onListSelect = {props.onListSelect}
 			userRole = {props.userRole}
 			elementSepratorProps = {props.elementSepratorProps}
 			splithandlerfunction = {props.splithandlerfunction}
 			pasteElement = {props.pasteElement}
-			//showHideType = "show"
+			showHideType = {sectionType}
 		/>
 	}
 
