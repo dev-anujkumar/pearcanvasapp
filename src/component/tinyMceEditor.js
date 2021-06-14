@@ -702,7 +702,14 @@ export class TinyMceEditor extends Component {
                     id: e.target?.dataset?.id,
                     handleBlur:this.handleBlur
                 }
-                handleC2MediaClick(this.props.permissions, editor, imageArgs);
+                let params = {
+                    element: this.props.element,
+                    permissions: this.props.permissions,
+                    editor,
+                    imageArgs
+                }
+                this.props.saveInlineImageData(params)
+                handleC2MediaClick(this.props.permissions, editor, this.props.element);
             }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
@@ -2888,7 +2895,7 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup, isInlineEditor} = this.props
+        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup, isInlineEditor, imageArgs} = this.props
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
@@ -2911,7 +2918,7 @@ export class TinyMceEditor extends Component {
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
          if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup && isInlineEditor) {
-            dataFromAlfresco(alfrescoAssetData, alfrescoEditor)
+            dataFromAlfresco(alfrescoAssetData, alfrescoEditor, imageArgs)
         }
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
@@ -3757,7 +3764,8 @@ const mapStateToProps = (state) => {
         alfrescoEditor: state.alfrescoReducer.editor,
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
-        isInlineEditor: state.alfrescoReducer.isInlineEditor
+        isInlineEditor: state.alfrescoReducer.isInlineEditor,
+        imageArgs: state.alfrescoReducer.imageArgs
     }
 }
 

@@ -274,7 +274,8 @@ const mapStateToProps = state => {
         pageNumberToggle: state.toolbarReducer.pageNumberToggle,
         audioGlossaryData:state.audioReducer.audioGlossaryData,
         currentSlateLF: state.metadataReducer.currentSlateLF,
-        alfrescoEditor: state.alfrescoReducer.editor
+        alfrescoEditor: state.alfrescoReducer.editor,
+        imageArgs: state.alfrescoReducer.imageArgs
     };
 };
 

@@ -394,7 +394,8 @@ function CommunicationChannel(WrappedComponent) {
                 editor: this.props.alfrescoEditor,
                 asset: message.asset,
                 launchAlfrescoPopup: false,
-                isInlineEditor: message.isEditor                
+                isInlineEditor: message.isEditor,
+                imageArgs: this.props.imageArgs                
             }
             this.props.saveInlineImageData(params)
         }
