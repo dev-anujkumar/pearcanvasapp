@@ -63,7 +63,7 @@ function ShowHideUiBlock(props) {
 	function showElements(item, i) {
 		return <ElementContainer
 			element = {item}
-			index = {`${index}-${i}`}
+			index = {i}
 			parentUrn = {parentUrn}
 			showBlocker = {props.showBlocker}
 			asideData = {asideData}
@@ -77,6 +77,7 @@ function ShowHideUiBlock(props) {
 			elementSepratorProps = {props.elementSepratorProps}
 			splithandlerfunction = {props.splithandlerfunction}
 			pasteElement = {props.pasteElement}
+			//showHideType = "show"
 		/>
 	}
 
