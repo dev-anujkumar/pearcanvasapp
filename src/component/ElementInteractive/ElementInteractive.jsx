@@ -566,7 +566,7 @@ class Interactive extends React.Component {
                     epsURL = avsStringData.imageReferenceURL ? avsStringData.imageReferenceURL : INTERACTIVE_FPO;
                 }
                 let vendorName = avsStringData.smartLinkThirdPartyVendorVal;
-                let mobileready = avsStringData.smartLinkOptimizedMobileVal;
+                let mobileready = avsStringData.smartLinkOptimizedMobileVal === "yes" ? true : false;
 
                 this.setState({ itemID: uniqueIDInteractive, posterImage: epsURL })
                 let figuredata = {
