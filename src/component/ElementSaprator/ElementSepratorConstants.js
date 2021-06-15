@@ -45,6 +45,7 @@ export const containerTypeArray = {
         "Add Quad Interactive": "interactive-elem",
         "Add Smart Link": "smartlink-elem",
         "Add Show Hide": "show-hide-elem",
+        "New Show Hide": "show-hide-elem",
         "Add Pop Up": "popup-elem",
         "Add Discussion": "element-discussion"
     },

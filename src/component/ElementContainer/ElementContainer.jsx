@@ -61,6 +61,7 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
+import ShowHide from '../ShowHide/ShowHide.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -270,7 +271,7 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
-            config.lastActiveElementId=element.id
+            config.lastActiveElementId=element?.id
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
             this.props.fetchCommentByElement(this.props.element.id);
         }
@@ -1228,7 +1229,10 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation}/>;
+                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation}
+                                showHideType = {this.props?.showHideType}
+                                parentElement = {this.props?.parentElement}
+                            />;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
                     editor = <ElementAuthoring tagName="blockquote" permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
@@ -1329,7 +1333,7 @@ class ElementContainer extends Component {
                     />;
                     labelText = 'Pop'
                     break;
-                case elementTypeConstant.SHOW_HIDE:
+               /* case elementTypeConstant.SHOW_HIDE:
                     editor = <ElementContainerContext.Provider value={{
                         onListSelect: this.props.onListSelect,
                         showHideId: this.props.showHideId,
@@ -1352,6 +1356,34 @@ class ElementContainer extends Component {
                         getElementStatus: this.props.getElementStatus
                     }}><ElementShowHide userRole={this.props.userRole} />
                     </ElementContainerContext.Provider >;
+                    labelText = 'SH'
+                    break;
+                */
+                case elementTypeConstant.NEW_SHOW_HIDE:
+                    editor = <ShowHide
+                        onListSelect= {this.props.onListSelect}
+                        //showHideId = {this.props.showHideId}
+                        //createShowHideElement = {this.props.createShowHideElement}
+                        //deleteShowHideUnit = {this.props.deleteShowHideUnit}
+                        activeElement = {this.props.activeElement}
+                        showBlocker = {this.props.showBlocker}
+                        permissions = {permissions}
+                        handleFocus = {this.handleFocus}
+                        handleBlur = {this.handleBlur}
+                        index = {index}
+                        element = {element}
+                        //model = {element.html}
+                        slateLockInfo = {slateLockInfo}
+                        //onClick = {this.handleFocus}
+                        glossaryFootnoteValue = {this.props.glossaryFootnoteValue}
+                        //elementStatus = {config.elementStatus}
+                        openAssetPopoverPopUp = {this.openAssetPopoverPopUp}
+                        openGlossaryFootnotePopUp = {this.openGlossaryFootnotePopUp}
+                        getElementStatus = {this.props.getElementStatus}
+                        userRole = {this.props.userRole}
+                        //elementSepratorProps = {elementSepratorProps}
+                        onClickCapture = {this.props.onClickCapture}
+                    />;
                     labelText = 'SH'
                     break;
 
