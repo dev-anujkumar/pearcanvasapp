@@ -42,19 +42,27 @@ class ElementAudioVideo extends Component {
         let clipInfo;
         let audioDes;
         let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
-        let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
-        checkFormat = checkFormat && checkFormat[0]
+        let assetType = data?.content?.mimetype?.split('/')[0];        
+        //let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
+        //checkFormat = checkFormat && checkFormat[0]
         let figureType = imageData?.content?.mimeType?.split('/')[0]
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
         let smartLinkAssetType = (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
         smartLinkAssetType = smartLinkAssetType?.toLowerCase();
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
-            if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined || checkFormat == null)) {
-                const imageReference = JSON.parse(imageData.properties['avs:jsonString'])
-                epsURL = imageReference.imageReferenceURL ? imageReference.imageReferenceURL : "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
+            if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
+                const imageReference = imageData.properties['avs:jsonString']?JSON.parse(imageData.properties['avs:jsonString']):"https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
+                
+                epsURL = imageReference
             }
-            let smartLinkURl = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
+            let smartLinkURl ="";
+            if(figureType === "video" || figureType === "audio"){
+                smartLinkURl=imageData["institution-urls"] && imageData["institution-urls"][0]?.publicationUrl
+            }
+            else if(smartLinkAssetType == "video" || smartLinkAssetType == "audio"){
+                smartLinkURl = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
+            }
             if (imageData.properties["cp:clips"]) {
                 if (typeof (imageData.properties["cp:clips"]) == "string") {
                     let clipInfoData = JSON.parse(imageData.properties["cp:clips"])
@@ -63,10 +71,10 @@ class ElementAudioVideo extends Component {
                     }
                     else {
                         clipInfo = {
-                            "clipid": clipInfoData[0].id ? clipInfoData[0].id : "",
-                            "starttime": clipInfoData[0].start ? clipInfoData[0].start : "",
-                            "endtime": clipInfoData[2].end ? clipInfoData[2].end : "",
-                            "description": clipInfoData[0].description ? clipInfoData[0].description : "",
+                            "clipid": clipInfoData[0]?.id ? clipInfoData[0].id : "",
+                            "starttime": clipInfoData[0]?.start ? clipInfoData[0].start : "",
+                            "endtime": clipInfoData[2]?.end ? clipInfoData[2].end : "",
+                            "description": clipInfoData[0]?.description ? clipInfoData[0].description : "",
                             "duration": clipInfoData[0].duration ? clipInfoData[0].duration : ""
                         }
                     }
@@ -144,7 +152,7 @@ class ElementAudioVideo extends Component {
                 )
             }
             
-            this.setState({ imgSrc: epsURL,assetData :epsURL })
+            this.setState({ imgSrc: epsURL,assetData :smartLinkURl })
             let figureData = {
                 height : height,
                 width : width,
