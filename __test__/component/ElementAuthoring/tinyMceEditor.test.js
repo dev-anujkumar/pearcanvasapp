@@ -928,7 +928,8 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     },
                     dispatchEvent: () => { }
                 },
-                selection: editor.selection,
+                insertContent: () => { },
+                selection: {...editor.selection, getNode : ()=>{ return {className:'callout' }}},
                 dom: domObj,
                 setContent: () => { },
             }
