@@ -446,6 +446,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     const isPopupOrShowhideElement = allowedParentType.includes(parentElement?.type) && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
+    console.log("collectDataAndPrepareTCMSnapshot1111", responseData.type, elementTypeTCM.indexOf(responseData.type) !== -1, isPopupOrShowhideElement, noAdditionalFields);
     if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
         const containerElement = {
             asideData,

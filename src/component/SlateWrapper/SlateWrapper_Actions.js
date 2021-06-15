@@ -36,6 +36,7 @@ Array.prototype.move = function (from, to) {
 };
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
+    console.log("type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData", type, index, parentUrn, asideData)
     config.currentInsertedIndex = index;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
@@ -90,6 +91,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
             }
             else {
+                console.log("tcmSnapshotsForCreate tcmSnapshotsForCreate")
                 tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
             }
         }

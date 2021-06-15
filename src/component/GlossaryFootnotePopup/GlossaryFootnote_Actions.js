@@ -14,7 +14,6 @@ const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockf
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
 
-    console.log("status = " +status, "glossaaryFootnote = " +glossaaryFootnote, "glossaryfootnoteid = " +glossaryfootnoteid, "elementWorkId = " +elementWorkId, "elementType = " +elementType, "index = " +index, "elementSubType = " +elementSubType, "glossaryTermText = " +glossaryTermText, "typeWithPopup = " +typeWithPopup)
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
