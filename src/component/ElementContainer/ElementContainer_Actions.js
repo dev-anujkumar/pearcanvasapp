@@ -10,6 +10,10 @@ import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Act
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { findSectionType } from '../ShowHide/ShowHide_Helper';
+
+import ElementConstants from "./ElementConstants";
+const { SHOW_HIDE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
@@ -248,7 +252,14 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
                 }
             }
         } else if (indexesLen == 3) {
-            if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
+             if (newBodymatter[indexes[0]].type === SHOW_HIDE) { /*For showhide container on slate not inside other container */
+                const section = findSectionType(indexes[1]); /* Get the section type */
+                condition = newBodymatter[indexes[0]].interactivedata[section][indexes[2]];
+                if (condition.versionUrn === elementId) {
+                    dataToSend = condition.figuredata
+                    condition.figuredata = figureData
+                }
+            } else if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
                 condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                 if (condition.versionUrn == elementId) {
                     dataToSend = condition.figuredata

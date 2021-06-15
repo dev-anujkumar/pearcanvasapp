@@ -16,6 +16,9 @@ import ElementConstants, {
 } from "./ElementConstants";
 
 import config from '../../config/config';
+import { findSectionType } from '../ShowHide/ShowHide_Helper';
+
+const { AUTHORED_TEXT, SHOW_HIDE } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -401,12 +404,17 @@ export const updateElementInStore = (paramsObj) => {
                     element.contents.bodymatter = newPoetryBodymatter;
                 }
             }
-            else if (element.type === "showhide") {
-                if (showHideType) {
-                    element.interactivedata[showHideType].forEach((showHideElement) => {
+            else if (element.type === SHOW_HIDE) { 
+                /* When showhide Element is placed on slate not inside other container */
+                const indexs = elementIndex?.toString()?.split("-") || [];
+                if (indexs?.length == 3) {
+                    const section = findSectionType(indexs[1]); /* Get the section type of showhide */
+                    section && element.interactivedata[section].forEach((showHideElement) => {
                         if (showHideElement.id == updatedData.id) {
-                            showHideElement.elementdata.text = updatedData.elementdata.text;
-                            showHideElement.html = updatedData.html;
+                            showHideElement.html = updatedData.html; /* For figure/Text/ */
+                            if(showHideElement?.type === AUTHORED_TEXT) { /* For update paragraph - TEXT */
+                                showHideElement.elementdata.text = updatedData.elementdata.text;
+                            }
                         }
                     })
                 }
