@@ -8,7 +8,7 @@ import {
     AddEditLearningObjectiveDropdown,
     ViewLearningObjectiveSlateDropdown,
     UnlinkSlateDropdown,
-    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToCypress, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AlignToCypressSlateDropdown, AddEditLOsAssessmentSlate, ViewLOsAssessmentSlate
+    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToCypress, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AlignToCypressSlateDropdown, AddEditLOsAssessmentSlate, ViewLOsAssessmentSlate, AddToExternalFrameworkAS, ViewExternalFrameworkAS
 }
     from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
@@ -251,6 +251,27 @@ class SlateTagDropdown extends React.Component {
     }
   }
 
+  addExternalFrameworkPopup = () => {
+    sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
+    sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
+    sendDataToIframe({
+      'type': OpenLOPopup,
+      'message': {
+        'text': AddToExternalFrameworkAS
+      }
+    })
+    this.props.closeLODropdown();
+  }
+
+  viewExternalFrameworkPopup = () => {
+    sendDataToIframe({
+      'type': OpenLOPopup,
+      'message': {
+        'text': ViewExternalFrameworkAS
+      }
+    })
+    this.props.closeLODropdown();
+  }
 
     render = () => {
       const enableExtLO =this.checkExternalFramework();
@@ -290,8 +311,8 @@ class SlateTagDropdown extends React.Component {
             </div> 
             <div className="learningobjectivedropdown2" ref={node3 => this.node3 = node3}>
                 <ul>
-                      <li onClick={()=> {}}>{AddEditLOsAssessmentSlate}</li>
-                      <li onClick={()=> {}}>{ViewLOsAssessmentSlate}</li>
+                      <li onClick={this.addExternalFrameworkPopup}>{AddEditLOsAssessmentSlate}</li>
+                      <li onClick={this.viewExternalFrameworkPopup}>{ViewLOsAssessmentSlate}</li>
                 </ul>
             </div> 
         </div>            

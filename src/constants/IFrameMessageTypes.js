@@ -19,6 +19,9 @@ export const UnlinkSlate ="UNLINK SLATE"
 export const NoSlateTagOnSlate ="SLATE TAG NOT FOUND"
 export const AlignToCypress = "ALIGN TO CYPRESS"
 export const AlignToExternalFramework= "ALIGN TO EXTERNAL FRAMEWORK"
+export const AddToExternalFrameworkAS = "ADD EXTERNAL FRAMEWORK ASSESSMENT SLATE"
+export const ViewExternalFrameworkAS = "VIEW EXTERNAL FRAMEWORK ASSESSMENT SLATE"
+
 //dropdown values of slate tag
 export const AddLearningObjectiveSlateDropdown ="Add a New Learning Objective"
 export const AddEditLearningObjectiveDropdown ="Add From Existing or Edit"
