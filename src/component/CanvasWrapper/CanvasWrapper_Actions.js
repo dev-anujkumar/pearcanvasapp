@@ -731,7 +731,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
             if (condition.versionUrn == activeElement.id) {
                 oldPath = condition.figuredata.path || ""
             }
-        } else if (indexesLen == 3) {
+        } else if (indexesLen == 3 && newBodymatter[indexes[0]].type !== "showhide") {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
@@ -767,7 +767,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = condition.figuredata.audioid || ""
                     }
-                } else if (indexesLen == 3) {
+                } else if (indexesLen == 3 && newBodymatter[indexes[0]].type !== "showhide") {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audioid 
@@ -795,7 +795,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = condition.figuredata.videoid || ""
                     }
-                } else if (indexesLen == 3) {
+                } else if (indexesLen == 3 && newBodymatter[indexes[0]].type !== "showhide") {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.videoid

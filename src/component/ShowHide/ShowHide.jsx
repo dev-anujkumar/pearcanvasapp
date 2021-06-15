@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import config from '../../config/config.js';
 import { createShowHideElement } from '../ElementContainer/ElementContainer_Actions.js';
+import { VIDEO, IMAGE, TEXT } from '../SlateWrapper/SlateWrapperConstants.js';
 import ShowHideUiBlock from './Components/ShowHideUiBlock.jsx';
 
 /**
@@ -14,13 +15,18 @@ class ShowHide extends React.Component {
 	elementList2Add = (index, firstOne, parentUrn, asideData, sectionType) => {
         return [{
                 buttonType: 'text-elem',
-                buttonHandler: () => this.addElementInShowHide(index, firstOne, sectionType, "TEXT"),
+                buttonHandler: () => this.addElementInShowHide(index, firstOne, sectionType, TEXT),
                 tooltipText: 'Text',
                 tooltipDirection: 'left'
             },{
                 buttonType: 'image-elem',
-                buttonHandler: () => this.addElementInShowHide(index, firstOne, sectionType, "IMAGE"),
+                buttonHandler: () => this.addElementInShowHide(index, firstOne, sectionType, IMAGE),
                 tooltipText: 'Image',
+                tooltipDirection: 'left'
+            },{
+                buttonType: 'audio-elem',
+                buttonHandler: () => this.addElementInShowHide(index, firstOne, sectionType, VIDEO),
+                tooltipText: 'Audio/Video',
                 tooltipDirection: 'left'
             }
 		]
