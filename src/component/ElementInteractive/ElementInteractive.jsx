@@ -194,6 +194,9 @@ class Interactive extends React.Component {
         )
     }
     updateElmAssessment = async (event) => {
+        const { INTERACTIVE_TYPES : { VIDEO_MCQ, GUIDED_EXAMPLE}} = elementTypeConstant;
+        const thumbnailTypes = [ VIDEO_MCQ, GUIDED_EXAMPLE ];
+        let thumbnailImage="";
         this.closeUpdatePopup(false, event);
         let oldWorkUrn = this.props?.model?.figuredata?.interactiveid;
         let oldReducerData = this.props.assessmentReducer[oldWorkUrn]??{};
@@ -214,10 +217,17 @@ class Interactive extends React.Component {
             figureData.interactiveid = newVersion.id;
             figureData.interactivetitle = latestVersion.title;
         }
+        if (interactivetype && thumbnailTypes.indexOf(interactivetype) > -1) {
+            const thumbnailData = await this.getVideoMCQandGuidedThumbnail(figureData.interactiveid);
+            figureData.posterimage = thumbnailData?.posterImage;
+            figureData.alttext = thumbnailData?.alttext;
+            thumbnailImage = thumbnailData?.posterImage?.path
+        }
         this.setState({
             itemID: figureData.interactiveid,
             interactiveTitle: figureData.interactivetitle,
-            elementType: interactivetype
+            elementType: interactivetype,
+            imagePath: thumbnailImage
         }, () => {
             this.props.fetchAssessmentMetadata("interactive", "",
                  { targetId: figureData.interactiveid }
@@ -408,7 +418,10 @@ class Interactive extends React.Component {
      * @description This function is to add Elm Interactive Asset ot Interactive Element 
      * @param {Object} pufObj Objeact containing elmInteractive Asset details
     */
-    addElmInteractive = (pufObj, cb) => {
+    addElmInteractive = async (pufObj, cb) => {
+        const { INTERACTIVE_TYPES : { VIDEO_MCQ, GUIDED_EXAMPLE}} = elementTypeConstant;
+        const thumbnailTypes = [ VIDEO_MCQ, GUIDED_EXAMPLE ];
+        let thumbnailImage="";
         if(pufObj.elementUrn === this.props.elementId){
             showTocBlocker();
             disableHeader(true);
@@ -420,10 +433,18 @@ class Interactive extends React.Component {
                 interactivetitle: pufObj.title,
                 interactiveformat: ELM_INT
             }
+            const interactiveType = pufObj.interactiveType ?? this.props?.model?.figuredata?.interactivetype;
+            if (interactiveType && thumbnailTypes.indexOf(interactiveType) > -1) {
+                const thumbnailData = await this.getVideoMCQandGuidedThumbnail(pufObj.id);
+                figureData.posterimage = thumbnailData?.posterImage;
+                figureData.alttext = thumbnailData?.alttext;
+                thumbnailImage = thumbnailData?.posterImage?.path
+            }
             this.setState({
                 itemID: pufObj.id,
                 interactiveTitle: pufObj.title,
-                elementType: pufObj.interactiveType
+                elementType: pufObj.interactiveType,
+                imagePath: thumbnailImage
             }, () => {
                 this.props.fetchAssessmentMetadata("interactive", "",{ targetId: pufObj.id });
             })
@@ -447,7 +468,7 @@ class Interactive extends React.Component {
         let pufObj = {
             id: this.state.itemID,
             title: props.assessmentReducer[this.state.itemID].assessmentTitle,
-            usagetype: this.state.elementType,
+            interactiveType: props?.model?.figuredata?.interactivetype ?? this.state.elementType,
             elementUrn: props.model.id
         }
         this.addElmInteractive(pufObj, () => {
@@ -458,6 +479,30 @@ class Interactive extends React.Component {
             this.props.setNewItemFromElm({});
         }
         // handlePostMsgOnAddAssess("", "", "", "remove","");
+    }
+
+    /**
+     * Method to fetch thumbnail images for Video-MCQ & Guided-Example
+     * @param {*} elementInteractiveType 
+     * @returns 
+     */
+    getVideoMCQandGuidedThumbnail = async (assetId) => {
+        let interactiveData ={};
+        await getMCQGuidedData(assetId).then((resData) => {
+            if (resData?.data?.thumbnail?.src) {
+                interactiveData['imageId'] = resData['data']["thumbnail"]['id'];
+                interactiveData['path'] = resData['data']["thumbnail"]['src'];
+                interactiveData['alttext'] = resData['data']["thumbnail"]['alt'];
+            }
+        })
+        let posterImage = {};
+        posterImage['imageid'] = interactiveData['imageId'] ?? '';
+        posterImage['path'] = interactiveData['path'] ?? '';
+        const alttext = interactiveData['alttext'] ?? '';
+        return {
+            posterImage,
+            alttext
+        }
     }
     /**------------------------------------------------------------------------------------------*/
     
@@ -732,8 +777,8 @@ class Interactive extends React.Component {
         else{
             let itemId = citeTdxObj.singleAssessmentID.versionUrn ? citeTdxObj.singleAssessmentID.versionUrn : "";
             let interactiveData ={};
-            let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?String.prototype.toLowerCase.apply(citeTdxObj.singleAssessmentID.taxonomicTypes).split(","):"cite-interactive-video-with-interactive";
-            tempInteractiveType = utils.getTaxonomicType(tempInteractiveType);
+            let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?String.prototype.toLowerCase.apply(citeTdxObj.singleAssessmentID.taxonomicTypes).split(","):"";
+            tempInteractiveType = tempInteractiveType ? utils.getTaxonomicType(tempInteractiveType) : this.state.elementType;
             if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
                await getMCQGuidedData(itemId).then((responseData) => {
                     if(responseData && responseData['data'] && responseData['data']["thumbnail"]){

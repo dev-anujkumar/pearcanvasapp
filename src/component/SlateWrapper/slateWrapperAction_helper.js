@@ -70,9 +70,10 @@ export const onPasteSuccess = async (params) => {
                 cutCopyParentUrn: {
                     ...deleteElm.cutCopyParentUrn,
                     manifestUrn: deleteElm.cutCopyParentUrn.sourceSlateManifestUrn
-                }
+                },
+                element: responseData
             }
-            await prepareTCMSnapshotsForDelete(tcmDeleteArgs);
+            await prepareTCMSnapshotsForDelete(tcmDeleteArgs, operationType);
         }
 
         let deleteParams = {

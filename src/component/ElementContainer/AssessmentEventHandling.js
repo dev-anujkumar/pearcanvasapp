@@ -19,6 +19,7 @@ export const handleElmPortalEvents = (action,eventType) => {
         let elmAssessmentUpdate = async (event) => {
             try {
                 const { data } = event;
+                console.log('%c Interactive edit-in-place messages>>>BEFORE>>>','background: #222; color: white',data)
                 if (eventType == 'fromUpdate') {
                     if (action == 'add' && data && data.source == 'elm') {
                         //console.log('Event From ELM Portal>>>', data)
@@ -34,6 +35,7 @@ export const handleElmPortalEvents = (action,eventType) => {
                             handleRefreshSlate(store.dispatch);
                         }
                     } else {
+                        console.log('%c Interactive edit-in-place messages>>>','background: #222; color: #bada55',data)
                         /* To edit interactive using edit button */
                         const intObj = getInteractivePostMsg(data)
                         window.removeEventListener('message', elmAssessmentUpdate, false);
@@ -100,10 +102,11 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action
         const getMsgafterAddAssessment = async (event) => {
             try {
                 const { data = {} } = event;
-                /* Get the item data from store */
-                const itemData = store.getState().assessmentReducer?.item ?? {};
+                console.log('%c create-in-place messages>>>BEFORE>>>','background: #222; color: red',data)
                 /* Get Assessment data from Post message */
                 if(eventType == 'fromCreate'){
+                    /* Get the item data from store */
+                    const itemData = store.getState().assessmentReducer?.item ?? {};
                     if (data.source === "elm") {                  
                         const items = data.type?.split("|") ?? []; 
                         if(items.length >= 4){                  
@@ -117,6 +120,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action
                             }
                         }
                     } else if(type === 'interactive'){
+                        console.log('%c create-in-place messages>>>BEFORE>>>','background: #222; color: pink',data)
                         /* Get Interactive data from Post message */
                         const intObj = getInteractivePostMsg(data);
                         if(intObj?.id && intObj.title && intObj.interactiveType){
@@ -142,13 +146,26 @@ function getInteractivePostMsg(data){
     /* get data from post message */
     if (typeof data === "string") {
         const interactives = data?.split("|") ?? [];
-        if (interactives?.length === 6 && interactives[0] === "interactive") {
-            return {
-                id: interactives[1]?.split("_")[1],
-                elementUrn: interactives[2]?.split("_")[1],
-                title: interactives[3]?.split("_")[1],
-                interactiveType: interactives[4]?.split("_")[1]                               
-            };
+        if (interactives?.length && interactives[0] === "interactive") {
+            let dataToSend = {}
+            interactives.map((key) => {
+                const itemKey = key?.split("_");
+                switch (itemKey[0]) {
+                    case 'wUrn':
+                        dataToSend.id = itemKey[1];
+                        break;
+                    case 'elementUrn':
+                        dataToSend.elementUrn = itemKey[1];
+                        break;
+                    case 'title':
+                        dataToSend.title = itemKey[1];
+                        break;
+                    case 'type':
+                        dataToSend.interactiveType = itemKey[1];
+                        break;
+                }
+            })
+            return dataToSend
         }
     }  
 }
@@ -166,13 +183,27 @@ function getAssessmentItemPostMsg(items){
 /* get Assessment data from post message and send to server */
 function getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment){
     /* Single Assessment - get data form post messages and update the server */
+    let itemsData = items?.splice(1, items.length - 1)
     let assessmentDataMsg = {
-        id: items[1]?.split("_")[1],
-        elementUrn: items[2]?.split("_")[1],
-        title: items[3]?.split("_")[1],
-        usagetype: items[4]?.split("_")[1] || usagetype, 
         calledFrom:'createElm'
     };
+    itemsData.map((key) => {
+        const itemKey = key?.split("_");
+        switch (itemKey[0]) {
+            case 'wUrn':
+                assessmentDataMsg.id = itemKey[1];
+                break;
+            case 'elementUrn':
+                assessmentDataMsg.elementUrn = itemKey[1];
+                break;
+            case 'title':
+                assessmentDataMsg.title = itemKey[1];
+                break;
+            case 'usageType':
+                assessmentDataMsg.usagetype = itemKey[1]  || usagetype;
+                break;
+        }
+    })
     const { elementUrn, itemid, itemTitle } = itemData || {};
     if((assessmentDataMsg.elementUrn === elementUrn) && itemid && itemTitle) {
         assessmentDataMsg = { ...assessmentDataMsg, ...itemData };
