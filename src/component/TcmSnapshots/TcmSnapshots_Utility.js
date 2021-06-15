@@ -89,7 +89,6 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     } else if((figureElementList.includes(type) || actionStatus?.action === "update" ||  actionStatus?.action === "create" ||
         actionStatus?.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
-            alert("alert");
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
             tag.grandParent = multiColumnType + ":" + columnName;
             elementId.grandParentId = `${id}+${columnId}`;
