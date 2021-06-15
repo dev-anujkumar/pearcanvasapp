@@ -43,7 +43,7 @@ function ShowHideUiBlock(props) {
 			parentUrn = {newParentUrn}
 			asideData = {asideData}
 			//parentIndex = {i}
-			esProps = {elementList2Add(i, true, newParentUrn, asideData, sectionType)}
+			esProps = {elementList2Add(i, newParentUrn, asideData, sectionType, props)}
 			elementType = {element?.type}
 			permissions = {props.permissions}
 			onClickCapture = {props.onClickCapture}

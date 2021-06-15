@@ -3,7 +3,7 @@ import { TinyMceEditor } from '../../tinyMceEditor';
 
 
 function RevealAnswer(props) {
-	const { index, slateLockInfo, asideData, element } = props || {};
+	const { index, slateLockInfo, element } = props || {};
 
 
 	return (
@@ -12,7 +12,7 @@ function RevealAnswer(props) {
 			<TinyMceEditor 
 				permissions = {props.permissions}
 				openGlossaryFootnotePopUp = {props.openGlossaryFootnotePopUp}
-				index = {`${index}-2`} 
+				index = {`${index}-1-0`} 
 				placeholder = "Enter call to action..." 
 				className = {"actionPU formatted-text"} 
 				id = {props.id}
@@ -26,6 +26,7 @@ function RevealAnswer(props) {
 				popupField = "postertextobject" 
 				//createPopupUnit = {createPopupUnit}
 				handleAudioPopupLocation = {props.handleAudioPopupLocation}
+				parentElement = {element}
 			/>
 		</div>
 	)
