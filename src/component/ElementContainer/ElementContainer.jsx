@@ -1781,9 +1781,10 @@ class ElementContainer extends Component {
             sourceEntityUrn: (parentUrn && 'contentUrn' in parentUrn) ? parentUrn.contentUrn : config.slateEntityURN,
             deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData, cutCopyParentUrn},
             inputType,
-            inputSubType
+            inputSubType,
             //type: enum type to be included
-        }
+            multiColumnType: (element.type === 'groupedcontent' && element?.groupeddata?.bodymatter) ? `${element?.groupeddata?.bodymatter.length}C` : undefined
+        } 
 
         if('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
             let elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {

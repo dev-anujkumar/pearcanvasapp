@@ -64,7 +64,6 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
 }
 
 const callSnapshotAPI = async (snapshotData) => {
-    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA", snapshotData[0].elementType);
     return axios.post(config.TCM_SNAPSHOT_URL, snapshotData, {
         headers: {
             PearsonSSOSession: config.ssoToken

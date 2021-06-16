@@ -64,11 +64,11 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
     const parentData = store?.getState()?.appStore?.asideData?.parent || {};
+    const selectionMultiColumnType = store?.getState()?.selectionReducer?.selection?.multiColumnType || "";
     const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT, POPUP_ELEMENT,SHOWHIDE];
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
     let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback);
-    console.log("wipDatatttttttttttttttt", wipData);
     /* Tag of elements*/
     let tag = {
         parentTag: fetchElementsTag(wipData)
@@ -80,7 +80,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
-    const multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType;
+    const multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : selectionMultiColumnType;
     if(wipData?.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;

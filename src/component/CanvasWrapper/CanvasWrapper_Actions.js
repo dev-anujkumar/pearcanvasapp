@@ -20,7 +20,8 @@ import {
     PROJECT_LEARNING_FRAMEWORKS,
     UPDATE_PROJECT_INFO,
     UPDATE_USAGE_TYPE,
-    UPDATE_DISCUSSION_ITEMS
+    UPDATE_DISCUSSION_ITEMS,
+    UPDATE_THREE_COLUMN_INFO
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -620,6 +621,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             type: SET_ACTIVE_ELEMENT,
                             payload: {}
                         });
+                        dispatch({
+                            type: UPDATE_THREE_COLUMN_INFO,
+                        })
+    
 
                         let slateWrapperNode = document.getElementById('slateWrapper');
                         if (slateWrapperNode) {

@@ -266,13 +266,20 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         }
 
         case UPDATE_THREE_COLUMN_INFO:
-            let threeColumnData = state.threeColumnData;
-            threeColumnData = threeColumnData.filter(function (data) {
-                return data.containerId !== action.key
-            })
-            return {
-                ...state,
-                threeColumnData: [...threeColumnData, action.payload]
+            if (action.key) {
+                let threeColumnData = state.threeColumnData;
+                threeColumnData = threeColumnData.filter(function (data) {
+                    return data.containerId !== action.key
+                })
+                return {
+                    ...state,
+                    threeColumnData: [...threeColumnData, action.payload]
+                }
+            } else {
+                return {
+                    ...state,
+                    threeColumnData: []
+                }
             }
 
         default:
