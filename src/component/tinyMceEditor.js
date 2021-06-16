@@ -3037,7 +3037,7 @@ export class TinyMceEditor extends Component {
             showHideObj = {
                 currentElement: this.props.currentElement,
                 index: this.props.index,
-                element: tthis.props.element,
+                element: this.props.element,
                 showHideType: this.props.showHideType
             }
         }

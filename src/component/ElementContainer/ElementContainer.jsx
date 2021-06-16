@@ -571,7 +571,7 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
+    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex) => {
         const { parentUrn, asideData } = this.props
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
@@ -675,7 +675,13 @@ class ElementContainer extends Component {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
-                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
+                    /** 
+                    * @description {String} indexParam - showhide Element,for RevealAnswer text update
+                    * sending RevealAnswer element index
+                    */
+                    const indexParam = ((this.props.element?.type === elementTypeConstant.SHOW_HIDE) && (showHideType === "postertextobject")) ? 
+                            elemIndex : this.props.index;
+                    this.props.updateElement(dataToSend, indexParam, parentUrn, asideData, showHideType, parentElement, poetryData);
                 }
                 break;
 
@@ -801,7 +807,7 @@ class ElementContainer extends Component {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
             this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType);
         } else {
-            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
+            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex)
         }
     }
 

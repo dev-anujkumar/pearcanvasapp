@@ -27,6 +27,7 @@ function RevealAnswer(props) {
 				//createPopupUnit = {createPopupUnit}
 				handleAudioPopupLocation = {props.handleAudioPopupLocation}
 				parentElement = {element}
+				showHideType = "postertextobject"
 			/>
 		</div>
 	)
