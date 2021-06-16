@@ -252,12 +252,25 @@ class SlateTagDropdown extends React.Component {
   }
 
   addExternalFrameworkPopup = () => {
+    const {
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+    } = this.prepareExtFrameworkData();
+    const currentSlateLF=this.props.currentSlateLF;
     sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
     sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
     sendDataToIframe({
       'type': OpenLOPopup,
       'message': {
-        'text': AddToExternalFrameworkAS
+        'text': AddToExternalFrameworkAS,
+        'data': currentSlateLOData,
+        'isLOExist': true,
+          'editAction': '',
+          'selectedLOs': selectedLOs,
+          'apiConstants': apiKeys_LO,
+          'externalLFUrn': externalLFUrn,
+          'currentSlateId': slateManifestURN,
+          'chapterContainerUrn': '',
+          'currentSlateLF': currentSlateLF        
       }
     })
     this.props.closeLODropdown();
