@@ -83,7 +83,7 @@ const AssessmentAPIHandlers = {
         let createDate = new Date(nextData.dateCreated);
         const checkVersionIsClean = AssessmentAPIHandlers.checkElmVersionIsClean(nextData);
         // || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)
-        if ((nextData.status.includes('final')) || (checkVersionIsClean == false) || (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10))) {
+        if ((nextData.status.includes('final')) || (checkVersionIsClean == false) || (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10))|| (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)) {
             return true /*Update*/
         }
         return false    /*Approved*/
