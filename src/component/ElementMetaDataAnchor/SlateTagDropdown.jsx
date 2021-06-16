@@ -302,9 +302,9 @@ class SlateTagDropdown extends React.Component {
                 <div>
                   {
                     !isExternalLoInAssessment?                
-                    <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
+                    <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span><span className='lo-navigation-icon2'>{loNextIcon}</span></li>
                     :
-                    <li onClick={this.toggleLoOptionsDropdownAS} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
+                    <li onClick={this.toggleLoOptionsDropdownAS} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span><span className='lo-navigation-icon2'>{loNextIcon}</span></li>
                   }
                 </div>
               </ul>
