@@ -12,7 +12,7 @@ import ShowHideUiBlock from './Components/ShowHideUiBlock.jsx';
 class ShowHide extends React.Component {
 
 	/* List of Elements can be added inside showhide; Will be displayed on click of 'Seprator + Icon' */
-	elementList2Add = (index, firstOne, parentUrn, asideData, sectionType) => {
+	nestedElementsList = (index, firstOne, parentUrn, asideData, sectionType) => {
         return [{
                 buttonType: 'text-elem',
                 buttonHandler: () => this.addElementInShowHide(index, firstOne, sectionType, TEXT),
@@ -59,7 +59,7 @@ class ShowHide extends React.Component {
 		return (
 			<div className="show-hide-component">
 				<ShowHideUiBlock 
-					elementList2Add = {this.elementList2Add}
+					nestedElementsList = {this.nestedElementsList}
 					{...this.props}/>
 			</div>
 		)

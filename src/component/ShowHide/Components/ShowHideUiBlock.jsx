@@ -4,7 +4,7 @@ import { ElementSaprator } from '../../ElementSaprator/ElementSaprator.jsx';
 import RevealAnswer from './RevealAnswer.jsx';
 
 function ShowHideUiBlock(props) {
-	const { index, parentUrn, asideData, element, elementList2Add } = props || {};
+	const { index, parentUrn, asideData, element, nestedElementsList } = props || {};
 
 	/**
 	* @function showDifferentElements
@@ -14,12 +14,12 @@ function ShowHideUiBlock(props) {
 	function showDifferentElements(sectionType) {
 		return element?.interactivedata[sectionType]?.map((item, i) => {
 			/* Form the indexes */
-			const indexs = sectionType === "show" ? `${index}-0-${i}` : `${index}-2-${i}`;
-			const indexSepra = sectionType === "show" ? `${index}-0-${i+1}` : `${index}-2-${i+1}`;
+			const indexes = sectionType === "show" ? `${index}-0-${i}` : `${index}-2-${i}`;
+			const sepratorIndex = sectionType === "show" ? `${index}-0-${i+1}` : `${index}-2-${i+1}`;
 			return (
 					<>
-						{ showElements(item, indexs, sectionType) }
-						{ showSeprator(indexSepra, sectionType) }
+						{ showElements(item, indexes, sectionType) }
+						{ showSeprator(sepratorIndex, sectionType) }
 					</>
 				)
 		})
@@ -28,7 +28,7 @@ function ShowHideUiBlock(props) {
 	/**
 	* @function showSeprator
 	* @description-This function is to display seprator at different levels inside showhide
-	* @param {String} i - indexs of elements - "showhide-show|hide|revealAnswer-element"
+	* @param {String} i - indexes of elements - "showhide-show|hide|revealAnswer-element"
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer   
 	* @param {Boolean} isFirst - is this first seprator in section of showhide
 	*/
@@ -43,7 +43,7 @@ function ShowHideUiBlock(props) {
 			parentUrn = {newParentUrn}
 			asideData = {asideData}
 			//parentIndex = {i}
-			esProps = {elementList2Add(i, true, newParentUrn, asideData, sectionType)}
+			esProps = {nestedElementsList(i, true, newParentUrn, asideData, sectionType)}
 			elementType = {element?.type}
 			permissions = {props.permissions}
 			onClickCapture = {props.onClickCapture}
@@ -58,13 +58,20 @@ function ShowHideUiBlock(props) {
 	* @function showElements
 	* @description-This function is to display different elements inside showhide
 	* @param {Object} item - data of element(Text|Image) inside ShowHide   
-	* @param {String} i - indexs of elements - "showhide-show|hide|revealAnswer-element"
+	* @param {String} i - indexes of elements - "showhide-show|hide|revealAnswer-element"
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer
 	*/
-	function showElements(item, i, sectionType) {
+	function showElements(item, eleIndex, sectionType) {
+		let elementParentData = {
+			elementParentType: element.type,
+			showHideType: sectionType,
+			elementParent: element,
+			elementParentIndex: index
+		}
+		console.log(eleIndex, '<<',index,">>", elementParentData)
 		return <ElementContainer
 			element = {item}
-			index = {i}
+			index = {eleIndex}
 			parentUrn = {parentUrn}
 			showBlocker = {props.showBlocker}
 			asideData = {asideData}
@@ -79,6 +86,7 @@ function ShowHideUiBlock(props) {
 			splithandlerfunction = {props.splithandlerfunction}
 			pasteElement = {props.pasteElement}
 			showHideType = {sectionType}
+			elementParentData = {elementParentData}
 		/>
 	}
 

@@ -974,7 +974,7 @@ class ElementContainer extends Component {
      */
     deleteElement = (e) => {
         let { id, type } = this.props.element;
-        let { parentUrn, asideData, element, poetryData } = this.props;
+        let { parentUrn, asideData, element, poetryData, elementParentData } = this.props;
         let { contentUrn } = this.props.element
         let index = this.props.index
 
@@ -987,10 +987,11 @@ class ElementContainer extends Component {
             contentUrn = this.state.sectionBreak.contentUrn
             id = this.state.sectionBreak.id
         }
-        this.handleCommentPopup(false,e);
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        console.log('index',index,'type',type,'elementParentData',elementParentData)
+        //this.handleCommentPopup(false,e);
+        //sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
-        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element);
+        //this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null, elementParentData);
         this.setState({
             sectionBreak: null
         })

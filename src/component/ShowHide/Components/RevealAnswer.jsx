@@ -12,7 +12,7 @@ function RevealAnswer(props) {
 			<TinyMceEditor 
 				permissions = {props.permissions}
 				openGlossaryFootnotePopUp = {props.openGlossaryFootnotePopUp}
-				index = {`${index}-2`} 
+				index = {`${index}-1`} 
 				placeholder = "Enter call to action..." 
 				className = {"actionPU formatted-text"} 
 				id = {props.id}
