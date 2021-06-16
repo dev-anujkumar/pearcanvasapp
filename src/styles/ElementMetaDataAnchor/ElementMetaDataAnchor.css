@@ -107,6 +107,10 @@ div.learningObjectiveContainer .Container {
     background-color: transparent !important;
 }
 
+.lo-navigation-icon2 svg#right-dropdown-arrow, .lo-navigation-icon2 svg#right-dropdown-arrow:hover{
+    background-color: transparent !important;
+}
+
 .tick-icon{
     position:absolute;
     margin: 8px 8px 8px 8px;
