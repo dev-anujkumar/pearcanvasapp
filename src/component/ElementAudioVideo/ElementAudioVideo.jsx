@@ -203,14 +203,16 @@ class ElementAudioVideo extends Component {
                         ...figureData,
                         audioid: `urn:pearson:alfresco:${uniqID}`,
                         posterimage: {
-                            imageid: `urn:pearson:alfresco:${uniqID}`,
-                            path: epsURL,
+                            imageid: `urn:pearson:alfresco:${uniqID}`
                         },
                         audio: {
                             format: videoFormat,
                             path: smartLinkUrl
                         },
                         schema: "http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio"
+                    }
+                    if (epsURL?.match(/.(jpg|jpeg|png|gif)$/i)) {
+                        figureData.posterimage.path = epsURL
                     }
                     break;
             }
