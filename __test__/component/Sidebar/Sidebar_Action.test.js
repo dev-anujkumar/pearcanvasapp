@@ -1125,5 +1125,191 @@ describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
         let nextStore = slateData.SlateData4
         await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
     });
-    
 });
+
+describe('1 Test convertElement ', () => {
+  
+    it('1.1 Test convertElement  Image ', () => {
+        const oldElementData = {
+            "id":"urn:pearson:work:1d3f6612-66e2-46bb-a748-f836353ecedc",
+            "type":"figure",
+            "figuretype":"table",
+            "subtype":"image50TextTableImage",
+            "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+            "alignment":"half-text",
+            "title":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":""
+            },
+            "captions":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":""
+            },
+            "credits":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":""
+            },
+            "figuredata":{
+                "schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imageid":"",
+                "path":"https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                "height":"422",
+                "width":"680",
+                "podwidth":"",
+                "srctype":"src",
+                "interactivetype":"elm",
+                "postertext": {"text":"hello world"}
+            },
+            "html":{
+                "title":"<p><br></p>",
+                "text":"",
+                "postertext":"",
+                "captions":"<p><br></p>",
+                "credits":"<p><br></p>",
+                "footnotes":{},
+                "assetsPopover":{},
+                "glossaryentries":{}
+            },
+            "versionUrn":"urn:pearson:work:1d3f6612-66e2-46bb-a748-f836353ecedc",
+            "contentUrn":"urn:pearson:entity:73489985-c5d4-4757-8e4f-3a7cccf15a22"
+        }
+        const newElementData = {
+            "elementId":"urn:pearson:work:1d3f6612-66e2-46bb-a748-f836353ecedc",
+            "elementType":"figure",
+            "primaryOption":"primary-image-figure",
+            "secondaryOption":"secondary-image-figure-width",
+            "labelText":"Fg",
+            "toolbar":[
+                "insertMedia",
+                "formatSelector",
+                "crossLinkingIcon",
+                "assetpopover",
+                "glossary",
+                "decreaseindent",
+                "alignment",
+                "calloutIcon"
+            ]
+        }
+        const oldElementInfo  = {
+        "elementType":"figure",
+        "primaryOption":"primary-image-table",
+        "altText":"",
+        "longDesc":"",
+        "podwidth":"",
+        "secondaryOption":"secondary-image-table-half",
+        "elementId":"urn:pearson:work:1d3f6612-66e2-46bb-a748-f836353ecedc",
+        "index":0,
+        "elementWipType":"figure",
+        "toolbar":[
+            "insertMedia",
+            "formatSelector",
+            "crossLinkingIcon",
+            "assetpopover",
+            "glossary",
+            "decreaseindent",
+            "alignment",
+            "calloutIcon"
+        ],
+        "tag":"TB"
+        }
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+        
+    });
+    it('1.2 Test convertElement - codelisting Element ', () => {
+        const oldElementData = {
+            "id":"urn:pearson:work:312c6572-701b-4c28-bdbf-9befc939a0f2",
+            "type":"figure",
+            "figuretype":"codelisting",
+            "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+            "title":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":""
+            },
+            "captions":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":""
+            },
+            "credits":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":""
+            },
+            "figuredata":{
+                "schema":"http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+                "type":"codelistingformatted",
+                "numbered":true,
+                "startNumber":"1",
+                "preformattedtext":[
+                    
+                ],
+                "syntaxhighlighting":true,
+                "programlanguage":"Select"
+            },
+            "html":{
+                "title":"<p><br></p>",
+                "preformattedtext":"<p></p>",
+                "captions":"<p><br></p>",
+                "credits":"<p><br></p>"
+            },
+            "versionUrn":"urn:pearson:work:312c6572-701b-4c28-bdbf-9befc939a0f2",
+            "contentUrn":"urn:pearson:entity:bc8cbe82-7e32-4c6b-8ccd-c90d5a63d2bc",
+            "status":"wip"
+        }
+        const newElementData = {
+            "elementId":"urn:pearson:work:312c6572-701b-4c28-bdbf-9befc939a0f2",
+            "elementType":"figure",
+            "primaryOption":"primary-blockcode-equation",
+            "secondaryOption":"secondary-blockcode-language-default",
+            "labelText":"BCE",
+            "toolbar":[
+                "insertMedia",
+                "formatSelector",
+                "crossLinkingIcon",
+                "assetpopover",
+                "glossary",
+                "decreaseindent",
+                "alignment",
+                "calloutIcon"
+            ]                   
+        }
+        const oldElementInfo = {
+            "elementType":"figure",
+            "primaryOption":"primary-blockcode-equation",
+            "numbered":true,
+            "startNumber":"1",
+            "syntaxhighlighting":true,
+            "secondaryOption":"secondary-blockcode-language-default",
+            "elementId":"urn:pearson:work:312c6572-701b-4c28-bdbf-9befc939a0f2",
+            "index":0,
+            "elementWipType":"figure",
+            "toolbar":[
+                "insertMedia",
+                "formatSelector",
+                "crossLinkingIcon",
+                "assetpopover",
+                "glossary",
+                "decreaseindent",
+                "alignment",
+                "calloutIcon"
+            ],
+            "tag":"BCE"
+        }
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+        
+    });
+});
+
+
+//console.log("oldElementData = ",JSON.stringify(oldElementData));
+// console.log("newElementData = ",JSON.stringify(newElementData));
+// console.log("oldElementInfo = ",JSON.stringify(oldElementInfo));
+// console.log("store = ",JSON.stringify(store));
+// console.log("indexes = ",JSON.stringify(indexes));
+//console.log("fromToolbar = ",JSON.stringify(fromToolbar));
