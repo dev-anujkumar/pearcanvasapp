@@ -358,11 +358,13 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
         wipData.interactivedata[SHType]?.map((item) => {
             const showhide = {
                 element: wipData,
-                showHideType: showhidetag
+                //showHideType: showhidetag
             }
             elementId.childId = item.id;
-            tag.childTag = fetchElementsTag(item);
-            let isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
+            /* if section is RevealAnswer than tag will be "CTA"; ELSE element tag (P/Fig)*/
+            tag.childTag = (SHType === 'postertextobject') ? "CTA" : fetchElementsTag(item);
+            /** @param {String} isHead - If SH is inside the WE/AS */
+            const isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
             elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
         })
@@ -751,7 +753,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
 export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}) => {
-    const { asideData } = containerElement
+    const { asideData, parentUrn } = containerElement
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
@@ -761,8 +763,8 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
     }
     
     if (parentElement?.element?.type === SHOWHIDE) {    //showhide
-        let showHideSection = getShowHideTag(parentElement.showHideType)
-        elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
+        //let showHideSection = getShowHideTag(parentElement.showHideType)
+        elementTag = `${tag.parentTag}:${tag.childTag}`; //${tag.childTag ? ":" + tag.childTag : ""}
         if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
             elementTag = `AS:${elementTag}`
             elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
@@ -778,6 +780,11 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
+        else if (asideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:SH */
+            const {columnName, manifestUrn, mcId} = parentUrn || {};
+            elementTag = `2C:${columnName}:${elementTag}`;
+            elementId = `${mcId}+${manifestUrn}+${elementId}`;
         }
     }
     else if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
