@@ -284,6 +284,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let focusedElement = bodymatter;
         //Separate case for element conversion in showhide
         if (showHideObj) {//newElementData.asideData && newElementData.asideData.hasOwnProperty('type') &&
+            const figElements = ['figure', "interactive", "audio", "video"];
+            const textElements = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives'];
+            const activeElemType = oldElementInfo['elementType']
             switch (indexes.length) {
                 case 3:
                     /**
@@ -293,7 +296,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]] = res.data
                     break;
                 case 4:
-                    focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]] = res.data
+                    if (textElements.includes(activeElemType)) {
+                        focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[2]] = res.data
+                    } else if (figElements.includes(activeElemType)) {
+                        focusedElement[indexes[0]].interactivedata[showHideObj.showHideType][indexes[1]] = res.data
+                    }
+                    //focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]] = res.data
                     break
                 case 5:
                     focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = res.data
@@ -532,24 +540,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         indexes = indexes.toString().split("-");
         //Separate case for element conversion in showhide
         if(showHideObj) {
-            let oldElementData
-            switch(indexes.length) {
-                case 3:
-                    oldElementData = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
-                    break;
-                case 4:
-                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]]
-                    break;
-                case 5:
-                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]]
-                    break;
-                case 6:
-                    oldElementData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]]
-                    break;
-                case 7:
-                    oldElementData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]]
-                    break;
-            }
+            let oldElementData = showHideInnerElements(bodymatter, showHideObj,activeElement,indexes)
             dispatch(convertElement(oldElementData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
@@ -608,4 +599,40 @@ export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
         payload: activeElement
     });
 
+}
+
+
+const showHideInnerElements = (bodymatter, showHideObj,activeElement,indexes) =>{
+    if(showHideObj) {
+        let oldElementData
+        const activeElemType = activeElement.elementType;
+        const figElements = ['figure', "interactive", "audio", "video"];
+        const textElements = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives'];
+        switch(indexes.length) {
+            case 3:
+                oldElementData = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
+                break;
+            case 4:
+                if (textElements.includes(activeElemType)) {
+                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]]
+                } else if (figElements.includes(activeElemType)) {
+                    oldElementData = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
+                }
+                break;
+            case 5:
+                if (textElements.includes(activeElemType)) {
+                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]]
+                } else if (figElements.includes(activeElemType)) {
+                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[2]]
+                }
+                break;
+            // case 6:
+            //     oldElementData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]]
+            //     break;
+            // case 7:
+            //     oldElementData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]]
+            //     break;
+        }
+      return oldElementData
+    }
 }

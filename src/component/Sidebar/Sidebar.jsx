@@ -162,7 +162,7 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'primary') {
                     active = 'active';
                 }
-                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+                const sidebarDisableCondition = ((this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable": ""}`}>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>

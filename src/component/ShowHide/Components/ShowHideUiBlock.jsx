@@ -4,7 +4,7 @@ import { ElementSaprator } from '../../ElementSaprator/ElementSaprator.jsx';
 import RevealAnswer from './RevealAnswer.jsx';
 
 function ShowHideUiBlock(props) {
-	const { index, parentUrn, asideData, element, nestedElementsList } = props || {};
+	const { index, parentUrn, asideData, element, nestedElementsList, setActiveElement } = props || {};
 
 	/**
 	* @function showDifferentElements
@@ -68,7 +68,7 @@ function ShowHideUiBlock(props) {
 			elementParent: element,
 			elementParentIndex: index
 		}
-		console.log(eleIndex, '<<',index,">>", elementParentData)
+		//console.log(eleIndex, '<<',index,">>", elementParentData)
 		return <ElementContainer
 			element = {item}
 			index = {eleIndex}
