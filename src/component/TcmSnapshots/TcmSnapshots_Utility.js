@@ -930,6 +930,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
     formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
     formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
     formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
+    
     let snapshotData = {
         title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
         figurenumber: handleBlankLineDom(formattedNumber, 'BlankLine') || "",
@@ -959,7 +960,9 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
             }
             break;
         case 'assessment': 
-            snapshotData["metadata"] = element.id
+            snapshotData = {
+                ...(element?.figuredata?.elementdata || {})
+            }          
             break;
         case "image":
         case "table":
