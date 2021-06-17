@@ -202,7 +202,7 @@ class ElementAudioVideo extends Component {
                         },
                         audio: {
                             format: videoFormat,
-                            path: epsURL
+                            path: smartLinkUrl
                         },
                         schema: "http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio"
                     }
