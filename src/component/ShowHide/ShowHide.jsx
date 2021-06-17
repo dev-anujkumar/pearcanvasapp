@@ -29,7 +29,6 @@ class ShowHide extends React.Component {
             contentURN =element?.contentUrn;
             sectionObj = element?.interactivedata[sectionType];
         }
-
         if(sectionObj[event.oldDraggableIndex]) {
             swappedElementData = sectionObj[event.oldDraggableIndex];
         }

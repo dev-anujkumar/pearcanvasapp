@@ -81,6 +81,7 @@ function ShowHideUiBlock(props) {
 			elementSepratorProps = {props.elementSepratorProps}
 			splithandlerfunction = {props.splithandlerfunction}
 			pasteElement = {props.pasteElement}
+			handleFocus = {props.handleFocus}
 			//showHideType = {sectionType}
 		/>
 	}
