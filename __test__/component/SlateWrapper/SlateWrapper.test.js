@@ -687,6 +687,9 @@ describe('splihandler function', () => {
     it('Simulating splithandlerfunction with slate data function for citations-group-elem', () => {
         slateWrapperInstance.splithandlerfunction('citations-group-elem', '', '', {}, { contentUrn: '' }, '')
     })
+    it('Simulating splithandlerfunction with slate data function for multi-column-group-column-3', () => {
+        slateWrapperInstance.splithandlerfunction('multi-column-group-column-3', '', '', {}, { contentUrn: '' }, '')
+    })
     it('openWrongAudioPopup', () => {
         let props = {
             slateData,
