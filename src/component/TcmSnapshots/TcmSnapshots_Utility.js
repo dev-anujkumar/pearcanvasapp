@@ -958,6 +958,9 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
                 ...getInteractiveSubtypeData(element.figuredata, element.html)
             }
             break;
+        case 'assessment': 
+            snapshotData["metadata"] = element.id
+            break;
         case "image":
         case "table":
         case "mathImage":
