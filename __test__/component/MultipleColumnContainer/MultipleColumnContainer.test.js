@@ -133,7 +133,7 @@ describe('Testing MultipleColumn component', () => {
         </MultiColumnContainerContext.Provider>);
     const MultipleColumnContainerInstance = wrapper.find('MultipleColumnContainer').instance();
 
-    it('prepareSwapData method', () => {
+    it('prepareSwapData method with bodymatter', () => {
         const spyprepareSwapData = jest.spyOn(MultipleColumnContainerInstance, 'prepareSwapData');
         const event = {
             oldDraggableIndex: 0,
@@ -143,11 +143,42 @@ describe('Testing MultipleColumn component', () => {
         expect(spyprepareSwapData).toHaveBeenCalled();
     });
 
+    it('prepareSwapData method without bodymatter', () => {
+        contextValue.element.groupeddata.bodymatter = [{
+            'groupdata': { 'bodymatter': null }
+        }];
+        const spyprepareSwapData = jest.spyOn(MultipleColumnContainerInstance, 'prepareSwapData');
+        const event = {
+            oldDraggableIndex: 0,
+            newDraggableIndex: 1
+        };
+        MultipleColumnContainerInstance.prepareSwapData(event, { columnIndex: 0, contentUrn: multipleColumnContainer.contentUrn });
+        expect(spyprepareSwapData).toHaveBeenCalled();
+    });
+    
     it('handleFocus method', () => {
         const spyhandleFocus = jest.spyOn(MultipleColumnContainerInstance, 'handleFocus');
         const event = {};
         MultipleColumnContainerInstance.handleFocus(event);
         expect(spyhandleFocus).toHaveBeenCalled();
+    });
+
+    it('handleFocus method - event testing', () => {
+        const spyhandleFocusEvent = jest.spyOn(MultipleColumnContainerInstance, 'handleFocus');
+        const event = {
+            target: { classList: { contains: () => { return false } } }
+        };
+        MultipleColumnContainerInstance.handleFocus(event);
+        expect(spyhandleFocusEvent).toHaveBeenCalled();
+    });
+
+    it('handleFocus method - slate lock testing', () => {
+        contextValue.slateLockInfo.isLocked = true;
+        config.userId = '';
+        const spyhandleFocusSlateLocked = jest.spyOn(MultipleColumnContainerInstance, 'handleFocus');
+        const event = {};
+        MultipleColumnContainerInstance.handleFocus(event);
+        expect(spyhandleFocusSlateLocked).toHaveBeenCalled();
     });
 
     it('renderContainer method without context', () => {
@@ -169,4 +200,46 @@ describe('Testing MultipleColumn component', () => {
         expect(spyrenderContainer).toHaveBeenCalled();
     });
 
+    it('renderElement method without elements', () => {
+        const spyrenderElement = jest.spyOn(MultipleColumnContainerInstance, 'renderElement');
+        let parentUrn = {
+            mcId: 'urn:pearson:manifest:5a3a5bac-bea1-4ff8-a8d3-38de4c15613b',
+            manifestUrn: 'urn:pearson:manifest:d9ddbc13-2252-4a2f-8b4d-dbbe03452385'
+        }
+        MultipleColumnContainerInstance.renderElement([], parentUrn);
+        expect(spyrenderElement).toHaveBeenCalled();
+    });
+
+    it('Sortable onStart function testing', () => {
+        const instance = wrapper.find('Sortable').at(0).instance();
+        instance.props.options.onStart({});
+        instance.props.onChange();
+    });
+
+    it('Sortable onUpdate function testing', () => {
+        const instance = wrapper.find('Sortable').at(0).instance();
+        instance.props.options.onUpdate({});
+    });
+
+    it('Sortable onUpdate function testing - IF savingInProgress is true', () => {
+        config.savingInProgress = true
+        const instance = wrapper.find('Sortable').at(0).instance();
+        const event = {
+            oldDraggableIndex : 0,
+            newDraggableIndex : 1,
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn()
+        }
+        instance.props.options.onUpdate(event);
+    });
+
+    it('renderElement function - catch block', () => {
+        const spyrenderElement = jest.spyOn(MultipleColumnContainerInstance, 'renderElement');
+        let parentUrn = {
+            mcId: 'urn:pearson:manifest:5a3a5bac-bea1-4ff8-a8d3-38de4c15613b',
+            manifestUrn: 'urn:pearson:manifest:d9ddbc13-2252-4a2f-8b4d-dbbe03452385'
+        }
+        MultipleColumnContainerInstance.renderElement({}, parentUrn);
+        expect(spyrenderElement).toThrow();
+    });
 })
