@@ -44,6 +44,7 @@ class ElementAudioVideo extends Component {
         let epsURL = imageData?.epsUrl ? imageData.epsUrl : "";   
         //let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
         //checkFormat = checkFormat && checkFormat[0]
+        let assetFormat=""
         let figureType = imageData?.content?.mimeType?.split('/')[0]
         let width = imageData?.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData?.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
@@ -51,16 +52,21 @@ class ElementAudioVideo extends Component {
         smartLinkAssetType = smartLinkAssetType?.toLowerCase();
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
             if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
-                const imageReference = imageData?.properties['avs:jsonString'] ? JSON.parse(imageData.properties['avs:jsonString']): DEFAULT_VIDEO_POSTER_IMAGE;
-                
-                epsURL = imageReference
+                if(imageData?.properties['avs:jsonString']){
+                    const avsJsonString = JSON.parse(imageData.properties['avs:jsonString']);
+                    const imageReference = avsJsonString?.imageReferenceURL ?? DEFAULT_VIDEO_POSTER_IMAGE;
+                    epsURL = imageReference
+                }
             }
             let smartLinkUrl = "";
             if(figureType === "video" || figureType === "audio"){
                 smartLinkUrl = imageData["institution-urls"] && imageData["institution-urls"][0]?.publicationUrl
             }
-            else if(smartLinkAssetType == "video" || smartLinkAssetType == "audio"){
+            else if (smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
                 smartLinkUrl = imageData?.properties["avs:url"] ? imageData.properties["avs:url"] : "";
+                if (smartLinkUrl && smartLinkUrl?.split('=') && smartLinkUrl?.split('=').length > 1) {
+                    assetFormat = smartLinkAssetType + "/" + smartLinkUrl?.split('=')[1]
+                }
             }
             if (imageData?.properties["cp:clips"]) {
                 if (typeof (imageData.properties["cp:clips"]) == "string") {
@@ -93,11 +99,11 @@ class ElementAudioVideo extends Component {
                     }
                 }
             }
-            let videoFormat = imageData?.mimetype ?? "";
+            const videoFormat = imageData?.mimetype ?? imageData?.content?.mimeType ?? assetFormat ?? "";
             let uniqID = imageData?.id ?? "";
-            let ensubtitle
-            let frenchSubtitle
-            let spanishSubtitle
+            let ensubtitle = ""
+            let frenchSubtitle = ""
+            let spanishSubtitle = ""
             
             audioDes = imageData?.properties['avs:jsonString'] && JSON.parse(imageData.properties['avs:jsonString'])
             ensubtitle = audioDes?.englishCC ?? "";
@@ -154,7 +160,7 @@ class ElementAudioVideo extends Component {
                 height : height,
                 width : width,
                 srctype: this.props.model.figuredata.srctype,
-                figureType: figureType || smartLinkAssetType,
+                figuretype: figureType || smartLinkAssetType,
             }
             if (audioDes && audioDes.navXML) {
                 figureData.markupurl = audioDes.navXML;
@@ -170,7 +176,7 @@ class ElementAudioVideo extends Component {
                     uniqID = uniqueID;
                 }
             }
-            switch(figureType || smartLinkAssetType){
+            switch(this.state.elementType || figureType || smartLinkAssetType){
                 case "video":
                     figureData = {
                         ...figureData,
@@ -225,11 +231,11 @@ class ElementAudioVideo extends Component {
                 handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
             }
             // to blank the elementId and asset data after update
-            let payloadObj = {
-                asset: {}, 
-                id: ''
-            }
-            this.props.saveSelectedAssetData(payloadObj)
+            // let payloadObj = {
+            //     asset: {}, 
+            //     id: ''
+            // }
+            // this.props.saveSelectedAssetData(payloadObj)
             this.updateAlfrescoSiteUrl(alfrescoData)
         }
     }
@@ -288,6 +294,12 @@ class ElementAudioVideo extends Component {
         const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.dataFromAlfresco(alfrescoAssetData)
+            // to blank the elementId and asset data after update
+            const payloadObj = {
+                asset: {},
+                id: ''
+            }
+            this.props.saveSelectedAssetData(payloadObj)
         }
     }
     
