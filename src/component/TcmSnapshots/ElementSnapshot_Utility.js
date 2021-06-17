@@ -261,6 +261,7 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, ac
  * @returns {String} Element Tags for elementType key in Snapshots
 */
 export const fetchElementsTag = (element,metadataField) => {
+    console.log("i will give element tag", element);
     const interactiveArray = ["3rd-party","pdf","web-link","pop-up-web-link","table"];
     let labelText, eleTag, eleType, eleSubType;
     eleType = element && element.type ? element.type :  element?.elementType;
@@ -298,7 +299,7 @@ export const fetchElementsTag = (element,metadataField) => {
         eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
     }
     labelText = eleTag ? `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`:"P"
-
+    console.log("the lement is ", labelText, eleSubType, eleType);
     return labelText;
 }
 
@@ -448,6 +449,9 @@ const setElementTag = {
     },
     "figure": {
         subtype: {
+            'assessment': {
+                parentTag: 'Qu'
+            },
             'image': {
                 parentTag: "Fg"
             },
