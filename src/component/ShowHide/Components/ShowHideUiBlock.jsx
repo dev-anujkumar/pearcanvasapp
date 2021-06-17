@@ -1,25 +1,28 @@
 import React from 'react';
 import ElementContainer from '../../ElementContainer/ElementContainer.jsx';
 import { ElementSaprator } from '../../ElementSaprator/ElementSaprator.jsx';
-import RevealAnswer from './RevealAnswer.jsx';
+import SortElement from './SortElement.jsx';
 
 function ShowHideUiBlock(props) {
-	const { index, parentUrn, asideData, element, elementList2Add } = props || {};
+	const { index, parentUrn, asideData, element, elementList2Add,
+			sepratorIndex, sectionType, onSortUpdate } = props || {};
+	/** @description sectionHeading - get the heading of section of showhide */
+	const sectionHeading = sectionType === "show" ? "Show" : "Hide";
 
 	/**
 	* @function showDifferentElements
 	* @description-This function is to display seprator and elements in show|hide section inside showhide
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer   
 	*/
-	function showDifferentElements(sectionType) {
+	function showDifferentElements() {
 		return element?.interactivedata[sectionType]?.map((item, i) => {
 			/* Form the indexes */
 			const indexs = sectionType === "show" ? `${index}-0-${i}` : `${index}-2-${i}`;
 			const indexSepra = sectionType === "show" ? `${index}-0-${i+1}` : `${index}-2-${i+1}`;
 			return (
 					<>
-						{ showElements(item, indexs, sectionType) }
-						{ showSeprator(indexSepra, sectionType) }
+						{ showElements(item, indexs) }
+						{ showSeprator(indexSepra) }
 					</>
 				)
 		})
@@ -32,7 +35,7 @@ function ShowHideUiBlock(props) {
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer   
 	* @param {Boolean} isFirst - is this first seprator in section of showhide
 	*/
-	function showSeprator(i, sectionType, isFirst) {
+	function showSeprator(i, isFirst) {
 		const newParentUrn = {
 			contentUrn: element?.contentUrn
 		}
@@ -61,7 +64,7 @@ function ShowHideUiBlock(props) {
 	* @param {String} i - indexs of elements - "showhide-show|hide|revealAnswer-element"
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer
 	*/
-	function showElements(item, i, sectionType) {
+	function showElements(item, i) {
 		return <ElementContainer
 			element = {item}
 			index = {i}
@@ -78,25 +81,22 @@ function ShowHideUiBlock(props) {
 			elementSepratorProps = {props.elementSepratorProps}
 			splithandlerfunction = {props.splithandlerfunction}
 			pasteElement = {props.pasteElement}
-			showHideType = {sectionType}
+			//showHideType = {sectionType}
 		/>
 	}
 
 	return (
 		<div>
-			{/* Show Section */}
-			<div className="showhide-heading-div">Show Element</div>
-			{ showSeprator(`${index}-0-0`, 'show', true) }
-			{ showDifferentElements('show') }
-
-			{/* Reveal Answer Component*/}
-			<RevealAnswer {...props} />
-
-			{/* Hide Section */}
-			<div className="showhide-heading-div">Hide Element</div>
-			{ showSeprator(`${index}-2-0`, 'hide', true) }
-			{ showDifferentElements('hide') }
-			
+			{/* Show/Hide Section */}
+			<div className="showhide-heading-div">{ sectionHeading } Element</div>
+			{ showSeprator(sepratorIndex, true) }
+			{/* SortElement to sort innner elements */}
+			<SortElement 
+				onSortUpdate = {onSortUpdate}
+				sectionType = {sectionType}
+			>
+				{ showDifferentElements() }
+			</SortElement>	
 		</div>
 	)
 }
