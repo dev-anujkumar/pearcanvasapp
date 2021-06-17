@@ -116,6 +116,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if (props.isTCMCanvasPopup) {
+            return (
+                <div className={`dialog-buttons`}>
+                    <span className={`lo-save-button`} onClick={(e) => props.yesButtonHandler(e)}>Accept</span>
+                    <span className="cancel-button" onClick={(e) => props.yesButtonHandler(e)}>Revert</span>
+                </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -131,7 +139,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.isTCMCanvasPopup) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -251,6 +259,10 @@ class PopUp extends React.Component {
                 <>
                     <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
                     <div className={`${props.lOPopupClass}`}>{props.dialogText}<br/>{'Do you wish to continue?'}</div>                </>
+            )
+        } else if (props.isTCMCanvasPopup) {
+            return (
+                <div className={`dialog-window ${props.splitSlateClass}`} >{props.dialogText}</div>
             )
         }
         else {
