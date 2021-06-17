@@ -30,7 +30,7 @@ class AddAudioBook extends React.Component {
     
     handleSiteOptionsDropdown = (alfrescoPath, id, isGlossary) => {
         let that = this
-        let url = 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000';
+        let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
         return axios.get(url,
             {
