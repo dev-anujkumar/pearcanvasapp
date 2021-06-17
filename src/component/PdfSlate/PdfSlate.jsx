@@ -56,12 +56,17 @@ class PdfSlate extends Component {
 			if (isPdf && isPdf == "pdf") {
 				/* Get data from alfresco and save to react state to update UI and call API */
 				const smartLinkPath = pdfData && pdfData.epsUrl
-				if (pdfData?.id && pdfData.properties["cm:title"]) {
+				/** Non-Smartlink PDFs */
+				const nonSmartlinkPdfData = {
+					publicationUrl : pdfData?.institution-urls[0]?.publicationUrl,
+					pdfTitle : pdfData.name
+				}
+				if (pdfData?.id) {
 					this.setState({
 						showDetails: true,
-						filetitle: pdfData.properties["cm:title"],
+						filetitle: pdfData?.properties["cm:title"] ?? nonSmartlinkPdfData?.pdfTitle,
 						pdfId: "urn:pearson:alfresco:" + pdfData?.id,
-						path: smartLinkPath
+						path: smartLinkPath ?? nonSmartlinkPdfData?.publicationUrl
 					}, () =>{
 						that.sumbitElement();
 					})
