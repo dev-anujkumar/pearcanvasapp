@@ -527,11 +527,11 @@ class Interactive extends React.Component {
         let smartLinkString = (imageData.properties["cm:description"] && imageData.properties["cm:description"].toLowerCase() !== "eps media") ? imageData.properties["cm:description"] : "{}";
         let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
         let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-        let avsStringData = JSON.parse(imageData.properties["avs:jsonString"]);
-        let altText = avsStringData.imageAltText ? avsStringData.imageAltText : "";
-        let longDescription = avsStringData.linkLongDesc ? avsStringData.linkLongDesc : "";
-        let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
-        checkFormat = checkFormat && checkFormat[0]
+        let avsStringData =imageData.properties["avs:jsonString"]&& JSON.parse(imageData.properties["avs:jsonString"]);
+        let altText = avsStringData?.imageAltText ? avsStringData.imageAltText : "";
+        let longDescription = avsStringData?.linkLongDesc ? avsStringData.linkLongDesc : "";
+        //let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
+        //checkFormat = checkFormat && checkFormat[0]
         if (smartLinkType) {
             let uniqueIDInteractive;
             let uniqInter = imageData.id
@@ -562,11 +562,11 @@ class Interactive extends React.Component {
                         break;
                 }
                 // let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
-                if (epsURL == "" || epsURL == undefined || checkFormat === null) {
+                if (epsURL == "" || epsURL == undefined) {
                     epsURL = avsStringData.imageReferenceURL ? avsStringData.imageReferenceURL : INTERACTIVE_FPO;
                 }
-                let vendorName = avsStringData.smartLinkThirdPartyVendorVal;
-                let mobileready = avsStringData.smartLinkOptimizedMobileVal === "yes" ? true : false;
+                let vendorName = avsStringData?.smartLinkThirdPartyVendorVal;
+                let mobileready = avsStringData?.smartLinkOptimizedMobileVal === "yes" ? true : false;
 
                 this.setState({ itemID: uniqueIDInteractive, posterImage: epsURL })
                 let figuredata = {

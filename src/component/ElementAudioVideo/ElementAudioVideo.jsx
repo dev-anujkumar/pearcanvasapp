@@ -98,14 +98,12 @@ class ElementAudioVideo extends Component {
             let ensubtitle
             let frenchSubtitle
             let spanishSubtitle
-            try{
-                audioDes = imageData?.properties['avs:jsonString'] && JSON.parse(imageData.properties['avs:jsonString'])
-                ensubtitle = audioDes?.englishCC ?? "";
-                frenchSubtitle = audioDes?.frenchCC ?? "";
-                spanishSubtitle = audioDes?.spanishCC ?? "";
-            }catch(err){
-                console.log(err)
-            }
+            
+            audioDes = imageData?.properties['avs:jsonString'] && JSON.parse(imageData.properties['avs:jsonString'])
+            ensubtitle = audioDes?.englishCC ?? "";
+            frenchSubtitle = audioDes?.frenchCC ?? "";
+            spanishSubtitle = audioDes?.spanishCC ?? "";
+        
             if(audioDes?.audioDescEnabled === "Yes"){
                 tracks.push(
                     {
@@ -251,7 +249,7 @@ class ElementAudioVideo extends Component {
 
     handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{
         let that = this
-        // let url = 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000';
+        //let url = 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000';
         let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
         return axios.get(url,
