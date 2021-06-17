@@ -107,7 +107,7 @@ class ElementAudioVideo extends Component {
             if(audioDes?.audioDescEnabled === "Yes"){
                 tracks.push(
                     {
-                        path: audioDes.audioDescription,//.split("?")[0];
+                        path: audioDes?.audioDescription,//.split("?")[0];
                         language: "en",
                         tracktype: "audiodescriptions",
                         label: `English AD`
@@ -117,10 +117,10 @@ class ElementAudioVideo extends Component {
             if (ensubtitle) {
                 tracks.push(
                     {
-                        format: 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1],
+                        format: 'text/' + ensubtitle?.split("?")[1]?.split("&")[0]?.split("=")[1],
                         direction: "lefttoright",
                         path: ensubtitle,//.split("?")[0];
-                        language: ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us",
+                        language: ensubtitle?.split("?")[1]?.split("&")[1]?.split("=")[1] + "-us",
                         tracktype: "captions",
                         label: `English CC`
                     }
@@ -129,7 +129,7 @@ class ElementAudioVideo extends Component {
             if (frenchSubtitle) {
                 tracks.push(
                     {
-                        format: 'text/' + frenchSubtitle.split("?")[1].split("&")[0].split("=")[1],
+                        format: 'text/' + frenchSubtitle?.split("?")[1]?.split("&")[0]?.split("=")[1],
                         path: frenchSubtitle,//.split("?")[0];
                         language: "fr-fr",
                         tracktype: "captions",
@@ -140,7 +140,7 @@ class ElementAudioVideo extends Component {
             if (spanishSubtitle) {
                 tracks.push(
                     {
-                        format: 'text/' + spanishSubtitle.split("?")[1].split("&")[0].split("=")[1],
+                        format: 'text/' + spanishSubtitle?.split("?")[1]?.split("&")[0]?.split("=")[1],
                         path: spanishSubtitle,//.split("?")[0];
                         language: "es-es",
                         tracktype:  "captions",
@@ -165,7 +165,7 @@ class ElementAudioVideo extends Component {
                 if (uniqIDString) {
                     uniqueIDSmartlink = uniqIDString.split('s.cmis:objectId = ')[1]?.replace(/\'/g, '');
                 }
-                let uniqueID = imageData.id ? imageData.id : (uniqueIDSmartlink ? uniqueIDSmartlink : '');
+                let uniqueID = imageData?.id ? imageData.id : (uniqueIDSmartlink ? uniqueIDSmartlink : '');
                 if (uniqueID) {
                     uniqID = uniqueID;
                 }
