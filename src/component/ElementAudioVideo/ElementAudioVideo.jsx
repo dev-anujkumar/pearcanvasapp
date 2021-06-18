@@ -224,34 +224,50 @@ class ElementAudioVideo extends Component {
                 this.props.handleBlur(true)
             })
             let alfrescoData = config?.alfrescoMetaData?.alfresco;
+            let alfrescoSiteLocation = this.state.alfrescoSiteData;
             if(this.props.isCiteChanged){
-                this.setState({alfrescoSiteData: this.props.changedSiteData })
+                let changeSiteAlfrescoData={
+                    currentAsset: {},
+                    nodeRef: this.props.changedSiteData.guid,
+                    repositoryFolder: this.props.changedSiteData.title,
+                    siteId: this.props.changedSiteData.id,
+                    visibility: this.props.changedSiteData.visibility
+                }
+                handleAlfrescoSiteUrl(this.props.elementId, changeSiteAlfrescoData)
+                this.setState({
+                    alfrescoSite: changeSiteAlfrescoData?.repositoryFolder
+                })
+            }else{
+                if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
+                    handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
+                    this.updateAlfrescoSiteUrl()
+                }
             }
-            let alfrescoSiteLocation = this.state.alfrescoSiteData?.id  ? this.state.alfrescoSiteData  : alfrescoData
-            alfrescoData = this.props.isCiteChanged ? this.props.changedSiteData : alfrescoSiteLocation
-            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '' || this.props.isCiteChanged)){
-                handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
-            }
+            //let alfrescoData = config?.alfrescoMetaData?.alfresco;
+            // if(this.props.isCiteChanged){
+            //     this.setState({alfrescoSiteData: this.props.changedSiteData })
+            // }
+           
             // to blank the elementId and asset data after update
             // let payloadObj = {
             //     asset: {}, 
             //     id: ''
             // }
             // this.props.saveSelectedAssetData(payloadObj)
-            this.updateAlfrescoSiteUrl(alfrescoData)
+            //this.updateAlfrescoSiteUrl(alfrescoData)
         }
     }
 
-    updateAlfrescoSiteUrl = (alfrescoData) => {
-        let repositoryData = alfrescoData.title ? alfrescoData.title : alfrescoData.repositoryFolder
-        if(repositoryData){
+    updateAlfrescoSiteUrl = () => {
+        let repositoryData = this.state.alfrescoSiteData
+        if (repositoryData?.repositoryFolder) {
             this.setState({
-                alfrescoSite: repositoryData
-            })  
-        }else {
+                alfrescoSite: repositoryData.repositoryFolder
+            })
+        } else {
             this.setState({
                 alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
-            }) 
+            })
         }
     }
 
