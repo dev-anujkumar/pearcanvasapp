@@ -164,7 +164,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     }
     /* action on element in WE/PE/CG/2C */
     else if (poetryData || asideData || parentUrn || showHideObj) {
-        tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
+        tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType)
     }
     /* action on PE and CG */
     else if (wipData.type === CITATION_GROUP || wipData.type === POETRY_ELEMENT) {
@@ -354,7 +354,7 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
     const typeArray = ['show', 'postertextobject', 'hide']
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     for (const SHType of typeArray) {
-        const showhidetag = SHType !== 'postertextobject' ? SHType : 'revel'
+        //const showhidetag = SHType !== 'postertextobject' ? SHType : 'revel'
         wipData.interactivedata[SHType]?.map((item) => {
             const showhide = {
                 element: wipData,
@@ -401,12 +401,20 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
  * @param {Object} containerElement - Element Parent Data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate) => {
+export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
     parentElement = showHideObj ? showHideObj : parentElement
+
+    //if(asideData?.grandParent?.asideData?.type === ELEMENT_ASIDE) {
+    //    const newContainer = { ...containerElement,
+    //        asideData: asideData.grandParent.asideData,
+    //        parentUrn: asideData.grandParent.parentUrn
+    //    };
+    //    prepareTcmSnapshots(wipData, actionStatus, newContainer, "", index, "", operationType);
+    //}
     /* 2C:AS/WE:FIGURE */
     const { isExist, asideData: asideFigObj } = asideData?.figureIn2cAside || {};
     parentElement =  isExist ? asideFigObj : parentElement;
@@ -416,7 +424,9 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     elementId.childId = wipData.id;
     elementId.columnId = parentUrn && parentUrn.elementType === MULTI_COLUMN_GROUP && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     tag.parentTag = showHideObj ? fetchElementsTag(parentElement.element) : fetchElementsTag(parentElement);
-    tag.childTag = fetchElementsTag(wipData);
+    /* On update of reveal answers inside showhide element; "-childTag-" will be CTA not P */
+    tag.childTag = (showHideObj?.element?.type === SHOWHIDE && showHideObj?.showHideType === "postertextobject") ?
+                    "CTA" : fetchElementsTag(wipData);
     let isHead;
     if(isExist) {
         /* if Figure converion inside 2C:ASIDE; UPDATA Action */
@@ -428,7 +438,7 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
             isHead = sectionOfWE?.id ? "HEAD" : "BODY";
         }
     } else{
-        isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
+        isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn?.manifestUrn == asideData?.id ? "HEAD" : "BODY" : "";
     }
     elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn });
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
@@ -1192,7 +1202,7 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
             parentData.parentStatus = asideData?.element?.status ?? undefined;
             parentData.popupStatus = popupElem && popupElem.status ? popupElem.status : undefined; /** Check Popup Status */
             parentData.showHideStatus = showHideElem && showHideElem.status ? showHideElem.status : undefined;
-            if (asideData?.element?.id !== parentUrn.manifestUrn) {
+            if (asideData?.element?.id !== parentUrn?.manifestUrn) {
                 asideData?.element?.elementdata?.bodymatter.map((ele) => {
                     parentData.childStatus = parentUrn && ele.id === parentUrn.manifestUrn ? ele.status : undefined;
                 })
