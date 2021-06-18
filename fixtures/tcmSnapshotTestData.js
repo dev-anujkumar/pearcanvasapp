@@ -48,6 +48,12 @@ export default {
             elementdata: {
                 "subtype": "disc"
             }
+        },
+        'groupedContent': {
+            type: 'groupedcontent',
+            groupeddata: {
+                bodymatter: [{}, {}, {}]
+            }
         }
     },
     slate1: {

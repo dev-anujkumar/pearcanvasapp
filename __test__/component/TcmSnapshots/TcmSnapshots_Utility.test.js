@@ -906,5 +906,25 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.setContentSnapshot(element, elementDetails, actionStatus, CurrentSlateStatus);
             expect(spyFunction).toHaveReturnedWith(expectedText);
         })
+        it('setElementTypeAndUrn - MultiColumn - 3 Column', () => {
+            const eleId = {
+                parentId: "urn:pearson:manifest:as242342asd3:32sf4314",
+                childId : "urn:pearson:work:as242342asd3:32sf43sdd",
+                columnId: "urn:pearson:work:as242342asd3:32sf43sdd"
+            },
+            tag = {
+                parentTag: "3C",
+                childTag : "P"
+            },
+            isHead = "BODY",
+            eleIndex = 2,
+            spyFunction = jest.spyOn(tcmSnapshotUtility, 'setElementTypeAndUrn');
+            tcmSnapshotUtility.setElementTypeAndUrn(eleId, tag, isHead, "" , eleIndex);  
+            let expectedResult = {
+                "elementUrn": "undefined+urn:pearson:manifest:as242342asd3:32sf4314+urn:pearson:work:as242342asd3:32sf43sdd+urn:pearson:work:as242342asd3:32sf43sdd",
+                'elementType': 'POP:BODY:3C:C3:P'
+            }
+            expect(spyFunction).toHaveReturnedWith(expectedResult);
+        });
     })
 })
