@@ -86,7 +86,7 @@ export const updateElementInStore = (paramsObj) => {
 
     const iList = elementIndex?.toString()?.split("-") || [];
     /* update the store on update of showhide elements inside container elements */
-    if(!asideData && !parentUrn && iList?.length >= 3) {
+    if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
         try {
             let sh_Object;
             switch(iList?.length) {

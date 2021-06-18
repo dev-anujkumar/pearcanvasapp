@@ -678,7 +678,7 @@ class ElementContainer extends Component {
                      
                     /*** @description For showhide Element, ON RevealAnswer text update, sending RevealAnswer element index */
                     if((this.props.element?.type === elementTypeConstant.SHOW_HIDE) && (showHideType === "postertextobject")){
-                        this.props.updateElement(dataToSend, elemIndex, undefined, undefined, showHideType, parentElement, poetryData);
+                        this.props.updateElement(dataToSend, elemIndex, undefined, {...this.props.element}, showHideType, parentElement, poetryData);
                     } else {
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                     }
@@ -1386,6 +1386,8 @@ class ElementContainer extends Component {
                         userRole = {this.props.userRole}
                         //elementSepratorProps = {elementSepratorProps}
                         onClickCapture = {this.props.onClickCapture}
+                        asideData = {this.props?.asideData}
+                        parentUrn = {this.props?.parentUrn}
                     />;
                     labelText = 'SH'
                     break;

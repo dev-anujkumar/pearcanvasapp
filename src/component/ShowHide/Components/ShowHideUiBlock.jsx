@@ -39,12 +39,19 @@ function ShowHideUiBlock(props) {
 		const newParentUrn = {
 			contentUrn: element?.contentUrn
 		}
+		const elementLineage = {
+		 	...element ,
+			grandParent: {
+				asideData,
+				parentUrn
+			}
+		}
 		return <ElementSaprator
 			index = {i}
 			//upperOne = {true}
 			firstOne = {isFirst || false}
 			parentUrn = {newParentUrn}
-			asideData = {asideData}
+			asideData = {elementLineage}
 			//parentIndex = {i}
 			esProps = {elementList2Add(i, newParentUrn, asideData, sectionType, props)}
 			elementType = {element?.type}
@@ -65,12 +72,20 @@ function ShowHideUiBlock(props) {
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer
 	*/
 	function showElements(item, i) {
+		const elementLineage = {
+		 	...element ,
+			grandParent: {
+				asideData,
+				parentUrn
+			}
+		}
+
 		return <ElementContainer
 			element = {item}
 			index = {i}
 			parentUrn = {parentUrn}
 			showBlocker = {props.showBlocker}
-			asideData = {asideData}
+			asideData = {elementLineage}
 			permissions = {props.permissions}
 			handleCommentspanel = {props.handleCommentspanel}
 			isBlockerActive = {props.isBlockerActive}
