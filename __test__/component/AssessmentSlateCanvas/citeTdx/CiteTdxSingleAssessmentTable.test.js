@@ -24,7 +24,7 @@ let initialState = {
 };
 describe('Table component', () => {
     let props = {
-        assessmentType: "Full Assessment CITE",
+        assessmentType: "Full Assessment QuAD CITE",
         assessmenterrFlag: false,
         isLoading: false,
         citeApiData: { assessments: { "dfsarfw": "Sdfa" } },
