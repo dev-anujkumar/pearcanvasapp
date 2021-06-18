@@ -256,6 +256,10 @@ class SlateTagDropdown extends React.Component {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
     } = this.prepareExtFrameworkData();
     const currentSlateLF=this.props.currentSlateLF;
+    let assessmentuRN="";
+    if(config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length){
+      assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+      }
     sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
     sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
     sendDataToIframe({
@@ -270,7 +274,8 @@ class SlateTagDropdown extends React.Component {
           'externalLFUrn': externalLFUrn,
           'currentSlateId': slateManifestURN,
           'chapterContainerUrn': '',
-          'currentSlateLF': currentSlateLF        
+          'currentSlateLF': currentSlateLF,
+          'assessmentUrn': assessmentuRN
       }
     })
     this.props.closeLODropdown();
