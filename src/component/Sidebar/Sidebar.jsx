@@ -648,7 +648,7 @@ class Sidebar extends Component {
                 {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value)=>{this.handleSyntaxHighlightingPopup(value)}} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true}/>}
             </div>
     }   
-            {this.props.isTCMCanvasPopupLaunched && <PopUp isTCMCanvasPopup={true} dialogText="HELLO THERE" assessmentClass={'tcm-canvas-popup'}/>}
+            {this.props.isTCMCanvasPopupLaunched && <PopUp isTCMCanvasPopup={true} dialogText="HELLO THERE" assessmentClass={'tcm-canvas-popup'} handleTCMRedirection={this.props.handleTCMRedirection}/>}
             </>
         );
     }

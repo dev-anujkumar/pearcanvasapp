@@ -77,7 +77,8 @@ let cypressConfig = {
     isSavingElement:false,
     tcmslatemanifest:"",
     saveElmOnAS: false,
-    fullName:'c5test01'
+    fullName:'c5test01',
+    TCM_CANVAS_POPUP_DATA: process.env.NODE_ENV === 'production' ? `/tctx` :"http://localhost:5000/tctx",
 }
 
 

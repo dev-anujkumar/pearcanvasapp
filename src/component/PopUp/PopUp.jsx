@@ -8,6 +8,9 @@ import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
 import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
+import TcmCloseIcon from '../../images/CanvasTCMPopup/TcmCloseIcon.png'
+import TcmExpandIcon from '../../images/CanvasTCMPopup/TcmExpandIcon.png'
+import TcmRefreshIcon from '../../images/CanvasTCMPopup/TcmRefreshIcon.png'
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -272,6 +275,27 @@ class PopUp extends React.Component {
         }
     }
 
+    renderTcmPopupIcons = (props) => {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup) {
+            return null
+        }
+        else {
+            return (
+                <div>
+                    <span className="btn-element citation-elem">
+                        {TcmRefreshIcon}
+                    </span>
+                    <span className="btn-element citation-elem" onClick={(e) => props.handleTCMRedirection(e)}>
+                        {TcmExpandIcon}
+                    </span>
+                    <span className="btn-element">
+                        {TcmCloseIcon}
+                    </span>
+                </div>
+            )
+        }
+    }
+
     render() {
         const { active, assessmentClass, isGlossary } = this.props;
         return (
@@ -280,6 +304,7 @@ class PopUp extends React.Component {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass?? assessmentClass}`} ref={this.modelRef}>
                             <div className={this.props.isWordPastePopup ? 'wordPasteClass' : `modal-content ${assessmentClass}`} id = {isGlossary ? 'popup': ''}>
+                                {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
                                 <div className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
