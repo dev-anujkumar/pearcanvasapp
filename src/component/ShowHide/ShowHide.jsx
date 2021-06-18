@@ -34,6 +34,7 @@ class ShowHide extends React.Component {
         }
 		/* Form payload to send swap api */
         const payload = {
+			parentType: element?.type,
             oldIndex: event.oldDraggableIndex,
             newIndex: event.newDraggableIndex,
             swappedElementData: swappedElementData,
