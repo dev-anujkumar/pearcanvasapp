@@ -407,11 +407,10 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
     parentElement = showHideObj ? showHideObj : parentElement
-    console.log("1111111111111111111111111111111", parentElement);
+
     /* 2C:AS/WE:FIGURE */
     const { isExist, asideData: asideFigObj } = asideData?.figureIn2cAside || {};
     parentElement =  isExist ? asideFigObj : parentElement;
-    console.log("2222222222222222222222222222222", parentElement);
 
     elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     elementId.parentId = parentElement && parentElement.element && parentElement.element.type === SHOWHIDE ? parentElement.element.id : elementId.parentId;

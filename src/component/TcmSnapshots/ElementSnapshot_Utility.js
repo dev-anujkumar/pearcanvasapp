@@ -265,7 +265,6 @@ export const fetchElementsTag = (element,metadataField) => {
     let labelText, eleTag, eleType, eleSubType;
     eleType = element && element.type ? element.type :  element?.elementType;
     eleType = eleType === 'groupedcontent' ? element.groupeddata ? `groupedcontent-${element?.groupeddata?.bodymatter?.length}` : `groupedcontent-${element.element?.groupeddata?.bodymatter?.length}` : eleType;
-    console.log("KKKKKKKKKKKKKKKKKKKKKKKKKK", eleType);
     eleType = metadataField ? setMetadataType[element.type][metadataField] : eleType;
     switch (eleType) {
         case AUTHORED_TEXT:

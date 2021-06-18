@@ -351,7 +351,7 @@ class ElementAsideContainer extends Component {
             id: this.props.element.id,
             contentUrn: this.props.element.contentUrn,
             element : this.props.element,
-            index: this.props.index,
+            index: this.props.index
         };
          /* @columnIndex@ */
         const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
