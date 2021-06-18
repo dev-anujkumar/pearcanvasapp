@@ -636,7 +636,8 @@ class Sidebar extends Component {
 
     render = () => {
         return (
-            this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
+            <>
+            {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
                 <div className="canvas-sidebar-heading">Settings</div>
                 {this.primaryOption()}
                 {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
@@ -646,6 +647,9 @@ class Sidebar extends Component {
                 {this.podOption()}
                 {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value)=>{this.handleSyntaxHighlightingPopup(value)}} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true}/>}
             </div>
+    }   
+            {this.props.isTCMCanvasPopupLaunched && <PopUp isTCMCanvasPopup={true} dialogText="HELLO THERE" assessmentClass={'tcm-canvas-popup'} handleTCMRedirection={this.props.handleTCMRedirection}/>}
+            </>
         );
     }
 }
@@ -667,7 +671,8 @@ const mapStateToProps = state => {
         showHideObj:state.appStore.showHideObj,
         slateLevelData: state.appStore.slateLevelData,
         cutCopySelection: state.selectionReducer.selection,
-        isLearnosityProject: state.appStore.isLearnosityProjectInfo
+        isLearnosityProject: state.appStore.isLearnosityProjectInfo,
+        isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
     };
 };
 

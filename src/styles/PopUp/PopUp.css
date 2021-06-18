@@ -507,3 +507,18 @@
 #altText_AM::placeholder {
   font-size: 14px;
 }
+.model-popup.tcm-canvas-popup{
+left: unset;
+overflow: unset;
+}
+
+.modal-content.tcm-canvas-popup{
+  width: 280px;
+  transform: none;
+  animation-name: none;
+  animation-duration: unset;
+  top: 0;
+  left: -35%;
+  margin-top: 100px; /* Negative half of height. */
+  margin-left: 500px;
+}

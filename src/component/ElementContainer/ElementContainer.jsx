@@ -31,7 +31,7 @@ import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from './UpdateElements.js';
-import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
+import { launchTCMPopup } from '../CanvasWrapper/TCM_Integration_Actions';
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
@@ -61,6 +61,7 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
+import axios from 'axios';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -555,11 +556,25 @@ class ElementContainer extends Component {
      * This function opens TCM w.r.t. current Element
      */
     handleTCM = (e) => {
-        if(config.isSavingElement){
-            return false
-        }
-        e.stopPropagation();
-        loadTrackChanges(this.props.element.id)
+        const tcmObject = {isTCMCanvasPopup: true}
+        // let that = this
+        // const currentProjectUrn = config.projectUrn;
+        // const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
+        // const currentElementUrn = this.props.activeElement.elementId
+        // let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}/elem/${currentElementUrn}?sortBy=desc&start=1&count=1`
+        // return axios.get(url, {
+        //       headers:  {
+        //         PearsonSSOSession: config.ssoToken,
+        //     }
+        // }).then((res) => {
+        //     let data = res.data[0].elemSnapshot
+        //     data = JSON.parse(data)
+        //       console.log("CHECKING RESPONSE", data.contentSnapshot.text)
+        //       that.props.launchTCMPopup(tcmObject)
+        // }).catch((error) => {
+        //     console.error(error)
+        // })
+        this.props.launchTCMPopup(tcmObject)
     }
     /**
      * Calls API for element updation
@@ -1994,6 +2009,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         editElmAssessmentId: (assessmentId, assessmentItemId) => {
             dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
+        },
+        launchTCMPopup: (tcmObject) => {
+            dispatch(launchTCMPopup(tcmObject))
         }
     }
 }
