@@ -31,6 +31,19 @@
     cursor: move;
     background-color: grey;
 }
+.btn-element.element-label-clickable-button {
+    font-size: 14px;
+    font-weight: 200;
+    position: sticky;
+    color: white;
+    padding: 6px 0px;
+    align-items: center;
+    text-align: center;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+    background-color: grey;
+}
 .btn-element.element-label.quad-interactive{
     font-size: 12px;
 }

@@ -264,6 +264,7 @@ export const fetchElementsTag = (element,metadataField) => {
     const interactiveArray = ["3rd-party","pdf","web-link","pop-up-web-link","table"];
     let labelText, eleTag, eleType, eleSubType;
     eleType = element && element.type ? element.type :  element?.elementType;
+    eleType = eleType === 'groupedcontent' ? element.groupeddata ? `groupedcontent-${element?.groupeddata?.bodymatter?.length}` : `groupedcontent-${element.element?.groupeddata?.bodymatter?.length}` : eleType;
     eleType = metadataField ? setMetadataType[element.type][metadataField] : eleType;
     switch (eleType) {
         case AUTHORED_TEXT:
@@ -383,8 +384,11 @@ const setElementTag = {
     "stanza": {
         parentTag: "ST"
     },
-    "groupedcontent": {
+    "groupedcontent-2": {
         parentTag: "2C"
+    },
+    "groupedcontent-3": {
+        parentTag: "3C"
     },
     "manifest": {
         parentTag: "WE"
