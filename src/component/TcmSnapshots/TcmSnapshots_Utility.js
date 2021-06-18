@@ -1182,6 +1182,22 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
                 parentData.showHideStatus = showHideElem && showHideElem.status ? showHideElem.status : undefined;
                 break;
         }
+        /** When AS/WE in MUlti-Column */
+        if(asideData?.parent?.type === MULTI_COLUMN){
+            const multiColElem =  bodymatter.find(item => item.id == asideData?.parent?.id);
+            parentData.multiColParentStatus = multiColElem?.status ?? undefined;
+            const columnIndex = asideData.parent.columnName == 'C3' ? 2 : asideData.parent.columnName == 'C2' ? 1 : 0;
+            const columnValue = multiColElem.groupeddata.bodymatter[columnIndex];
+            parentData.multiColChildStatus = columnValue.status ?? undefined;
+            parentData.parentStatus = asideData?.element?.status ?? undefined;
+            parentData.popupStatus = popupElem && popupElem.status ? popupElem.status : undefined; /** Check Popup Status */
+            parentData.showHideStatus = showHideElem && showHideElem.status ? showHideElem.status : undefined;
+            if (asideData?.element?.id !== parentUrn.manifestUrn) {
+                asideData?.element?.elementdata?.bodymatter.map((ele) => {
+                    parentData.childStatus = parentUrn && ele.id === parentUrn.manifestUrn ? ele.status : undefined;
+                })
+            }
+        }
     }
     return parentData
 }
@@ -1239,6 +1255,22 @@ export const checkContainerElementVersion = async (containerElement, versionStat
             }
             containerElement.showHideObj.element.id = newPopupManifestUrn;
             containerElement.showHideObj.element.versionUrn = newPopupManifestUrn;
+        }
+    }
+    if(containerElement?.asideData?.parent?.type === MULTI_COLUMN){
+        if (versionStatus.multiColParentStatus === "approved") {
+            let updatedMulColParentUrn = containerElement?.asideData?.parent?.parentContentUrn ?? "";
+            if (updatedMulColParentUrn) {
+                let newMulColManifestUrn = await getLatestVersion(updatedMulColParentUrn);
+                containerElement.asideData.parent.id = newMulColManifestUrn;
+            }
+        }
+        if (versionStatus.multiColChildStatus === "approved") {
+            let updatedMulColChildUrn = containerElement?.asideData?.parent?.columnContentUrn ?? "";
+            if (updatedMulColChildUrn) {
+                let newMulColGroupManifestUrn = await getLatestVersion(updatedMulColChildUrn);
+                containerElement.asideData.parent.columnId = newMulColGroupManifestUrn;
+            }
         }
     }
     /** latest version for slate*/

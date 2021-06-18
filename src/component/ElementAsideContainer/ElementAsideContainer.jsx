@@ -344,7 +344,7 @@ class ElementAsideContainer extends Component {
     renderElement(_elements, parentUrn, parentIndex, elementLength) {
         let firstSection = true;
         let showSectionBreak;
-        const { id, type, groupeddata } = this.props?.parentElement || {};
+        const { id, type, groupeddata, contentUrn } = this.props?.parentElement || {};
         let asideData = {
             type: "element-aside",
             subtype :this.props.element.subtype, 
@@ -356,8 +356,10 @@ class ElementAsideContainer extends Component {
          /* @columnIndex@ */
         const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
         const columnId = groupeddata?.bodymatter[columnIndex]?.id;
+        const parentContentUrn = contentUrn;
+        const columnContentUrn = groupeddata?.bodymatter[columnIndex]?.contentUrn;
         /* Adding parent id and type to update redux store while creating new element inside 2c->Aside->New */
-        asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : "C2"  }} : asideData;
+        asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : "C2" ,parentContentUrn,columnContentUrn }} : asideData;
         try {
             if (_elements !== undefined) {
                 if (_elements.length == 0) {
