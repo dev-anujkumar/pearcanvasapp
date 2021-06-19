@@ -16,6 +16,9 @@ import ElementConstants, {
 } from "./ElementConstants";
 
 import config from '../../config/config';
+import { findSectionType } from '../ShowHide/ShowHide_Helper';
+
+const { AUTHORED_TEXT, SHOW_HIDE, MULTI_COLUMN } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -81,7 +84,35 @@ export const updateElementInStore = (paramsObj) => {
         { bodymatter: _slateBodyMatter } = _slateContent,
         elementId = updatedData.id;
 
-    if(parentElement && parentElement.type === "citations"){
+    const iList = elementIndex?.toString()?.split("-") || [];
+    /* update the store on update of showhide elements inside container elements */
+    if(!asideData && !parentUrn && iList?.length >= 3) {
+        try {
+            let sh_Object;
+            switch(iList?.length) {
+                case 3: /* SH:Element */
+                    sh_Object = _slateBodyMatter[iList[0]];
+                    break;
+                case 4: /* AS/WE-Head:SH:Element */
+                    sh_Object = _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
+                    break;
+                case 5:
+                    sh_Object = _slateBodyMatter[iList[0]].type === MULTI_COLUMN ? 
+                        _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]] : /* 2C:SH:Element */
+                        _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]]?.contents.bodymatter[iList[2]]; /* WE:Body:SH:Element */
+                    break;
+                case 6: /* 2C:AS/WE-Head:SH:Element */
+                    sh_Object = _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
+                    break;
+                case 7: /* 2C:WE-Body:SH:Element */
+                    sh_Object = _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
+                    break;
+            }
+            updateShowhideElements(sh_Object, updatedData, iList);
+        } catch(e){
+            console.error("Something went wrong while accessing showhide object...", e);
+        }
+    } else if(parentElement && parentElement.type === "citations"){
         if(updatedData.type === "element-citation"){
             const indexes = elementIndex.split("-")
             _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {...updatedData,
@@ -401,16 +432,13 @@ export const updateElementInStore = (paramsObj) => {
                     element.contents.bodymatter = newPoetryBodymatter;
                 }
             }
-            else if (element.type === "showhide") {
-                if (showHideType) {
-                    element.interactivedata[showHideType].forEach((showHideElement) => {
-                        if (showHideElement.id == updatedData.id) {
-                            showHideElement.elementdata.text = updatedData.elementdata.text;
-                            showHideElement.html = updatedData.html;
-                        }
-                    })
-                }
-            }
+            //else if (element.type === SHOW_HIDE) { 
+            //    /* When showhide Element is placed on slate not inside other container */
+            //    const indexs = elementIndex?.toString()?.split("-") || [];
+            //    if (indexs?.length == 3) {
+            //        updateShowhideElements(element, updatedData, indexs)
+            //    }
+            //}
 
             return element
         })
@@ -423,6 +451,25 @@ export const updateElementInStore = (paramsObj) => {
             slateLevelData: newslateData
         }
     })
+}
+/**
+*  @description {Function} updateShowhideElements -  To update the store on update of showhide inner elemetns 
+*  @param {Object} element - showhide object data 
+*  @param {Object} updatedData - updated data of inner elements 
+*  @param {Array}  indexs - indexs of element heirarchy */
+function updateShowhideElements(element, updatedData, indexs) {
+    if(element?.type === SHOW_HIDE) {
+        /* Get the section type of showhide; Index of section (indexs?.length - 2) */
+        const section = findSectionType(indexs[indexs?.length - 2]);
+        section && element.interactivedata[section].forEach((showHideElement) => {
+            if (showHideElement.id == updatedData.id) {
+                showHideElement.html = updatedData.html; /* For figure/Text */
+                if(showHideElement?.type === AUTHORED_TEXT) { /* For update paragraph - TEXT */
+                    showHideElement.elementdata.text = updatedData.elementdata.text;
+                }
+            }
+        })
+    }
 }
 
 export const collectDataAndPrepareTCMSnapshot = async (params) => {

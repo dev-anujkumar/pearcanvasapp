@@ -572,7 +572,7 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
+    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex) => {
         const { parentUrn, asideData } = this.props
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
@@ -676,7 +676,13 @@ class ElementContainer extends Component {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
-                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
+                     
+                    /*** @description For showhide Element, ON RevealAnswer text update, sending RevealAnswer element index */
+                    if((this.props.element?.type === elementTypeConstant.SHOW_HIDE) && (showHideType === "postertextobject")){
+                        this.props.updateElement(dataToSend, elemIndex, undefined, undefined, showHideType, parentElement, poetryData);
+                    } else {
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
+                    }
                 }
                 break;
 
@@ -802,7 +808,7 @@ class ElementContainer extends Component {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
             this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType);
         } else {
-            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
+            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex)
         }
     }
 
@@ -997,8 +1003,12 @@ class ElementContainer extends Component {
         this.handleCommentPopup(false,e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
-        this.props.deleteElementAction(id, type, index, this.props.element, elementParentData,containerElements, this.props.showBlocker);
-        //this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null, elementParentData);
+        if (elementParentData) {
+            this.props.deleteElementAction(id, type, index, this.props.element, elementParentData, containerElements, this.props.showBlocker);
+        }
+        else {
+            this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null, elementParentData);
+        }
         this.setState({
             sectionBreak: null
         })
@@ -1216,14 +1226,7 @@ class ElementContainer extends Component {
         tcmStatus = this.showTCMButton(tcmData, element)
         tcm = tcmStatus.tcm
         feedback = tcmStatus.feedback
-        /** OLD TCM ICON FLOW -----> to be removed
-        tcm = tcmData.filter(tcmelm => {
-            let elementUrn = tcmelm.elemURN;
-            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0}).length>0;
-        feedback = tcmData.filter(feedbackelm => {
-            let elementUrn = feedbackelm.elemURN;
-            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && feedbackelm.feedback && feedbackelm.feedback !== null}).length>0;
-        */
+
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         const commonProps = {
             index,
