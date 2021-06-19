@@ -30,6 +30,8 @@ import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.j
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
+import ElementConstants from '../ElementContainer/ElementConstants';
+const { SHOW_HIDE } = ElementConstants;
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -339,7 +341,10 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         "type": swappedElementData.type,
         "index": newIndex
     }
-
+    /* If swapping for inner elements of showhide then add section type also, show|hide */
+    if(dataObj.parentType === SHOW_HIDE){
+        _requestData.sectionType =  dataObj?.containerTypeElem   
+    }
     let parentData = getState().appStore.slateLevelData;
     let currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
