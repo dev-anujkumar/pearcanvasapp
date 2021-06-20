@@ -60,7 +60,7 @@ class ShowHide extends React.Component {
 			<div className="show-hide-component">
 				{/* Show Section of Component*/}
 				<ShowHideUiBlock 
-					elementList2Add = {addNestedElements}
+					addNestedElements = {addNestedElements}
 					sectionType = {"show"}
 					sepratorIndex = {`${index}-0-0`}
 					onSortUpdate = {this.onSortUpdate}
@@ -70,7 +70,7 @@ class ShowHide extends React.Component {
 				<RevealAnswer {...this.props} />
 				{/* Hide Section of Component*/}
 				<ShowHideUiBlock 
-					elementList2Add = {elementList2Add}
+					addNestedElements = {addNestedElements}
 					sectionType = {"hide"}
 					sepratorIndex = {`${index}-2-0`}
 					onSortUpdate = {this.onSortUpdate}

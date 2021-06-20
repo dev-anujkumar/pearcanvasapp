@@ -981,7 +981,7 @@ class ElementContainer extends Component {
      */
     deleteElement = (e) => {
         let { id, type } = this.props.element;
-        let { parentUrn, asideData, element, poetryData, elementParentData } = this.props;
+        let { parentUrn, asideData, element, poetryData, parentElement } = this.props;
         let { contentUrn } = this.props.element
         let index = this.props.index
 
@@ -997,17 +997,17 @@ class ElementContainer extends Component {
         const containerElements = {
             parentUrn,
             asideData,
-            poetryData
+            poetryData,
+            parentElement
         }
-        //console.log('index',index,'type',type,'elementParentData',elementParentData)
         this.handleCommentPopup(false,e);
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+       sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
-        if (elementParentData) {
-            this.props.deleteElementAction(id, type, index, this.props.element, elementParentData, containerElements, this.props.showBlocker);
+        if (parentElement?.type === elementTypeConstant.SHOW_HIDE || element.type === elementTypeConstant.SHOW_HIDE) {
+            this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
         }
         else {
-            this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null, elementParentData);
+            this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
         }
         this.setState({
             sectionBreak: null
@@ -1230,11 +1230,9 @@ class ElementContainer extends Component {
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         const commonProps = {
             index,
-            element,
             elementId: element.id,
             permissions,
             slateLockInfo,
-            onListSelect: this.props.onListSelect,
             handleBlur: this.handleBlur,
             handleFocus: this.handleFocus,
             showHideType: this.props?.showHideType,
@@ -1257,13 +1255,13 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring model={element.html} { ...commonProps} />;
+                    editor = <ElementAuthoring element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} />;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
-                    editor = <ElementAuthoring tagName="blockquote" permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>;
+                    editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} { ...commonProps}/>;
                     break;
                 case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
-                    editor = <ElementLearningObjectiveItem permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>;
+                    editor = <ElementLearningObjectiveItem model={element.html} element={element} {...commonProps} />;
                     break;
                 case elementTypeConstant.FIGURE:
                     switch (element.figuretype) {
@@ -1273,12 +1271,12 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  parentEntityUrn={this.props.parentUrn} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>;
+                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} parentElement={this.props?.parentElement}  showHideType = {this.props?.showHideType}/>;
+                            editor = <ElementAudioVideo model={element} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:

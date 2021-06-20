@@ -59,7 +59,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
         })
 }
 
-export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData, element,cutCopyParentUrn, elementParentData) => async (dispatch, getState) => {
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index, poetryData, element,cutCopyParentUrn) => async (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
         switch (elementType) {
@@ -115,8 +115,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             cutCopyParentUrn,
             fetchSlateData,
             showHideObj,
-            element,
-            elementParentData
+            element
         }
         onDeleteSuccess(deleteArgs)
     } 

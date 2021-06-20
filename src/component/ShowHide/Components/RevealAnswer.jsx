@@ -1,6 +1,6 @@
 import React from 'react';
 import { TinyMceEditor } from '../../tinyMceEditor';
-
+import { showHideConstants } from '../ShowHide_Helper';
 
 function RevealAnswer(props) {
 	const { index, slateLockInfo, element } = props || {};
@@ -23,11 +23,11 @@ function RevealAnswer(props) {
 				handleBlur = {props.handleBlur} 
 				slateLockInfo = {slateLockInfo} 
 				elementId = {props?.element?.id}
-				popupField = "postertextobject" 
+				popupField = {showHideConstants.REVEAL_TEXT} 
 				//createPopupUnit = {createPopupUnit}
 				handleAudioPopupLocation = {props.handleAudioPopupLocation}
 				parentElement = {element}
-				showHideType = "postertextobject"
+				showHideType = {showHideConstants.REVEAL_TEXT}
 			/>
 		</div>
 	)

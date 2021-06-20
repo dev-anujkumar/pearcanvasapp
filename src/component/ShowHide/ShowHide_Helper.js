@@ -1,6 +1,14 @@
 import config from '../../config/config.js';
 import { VIDEO, IMAGE, TEXT } from '../SlateWrapper/SlateWrapperConstants.js';
 
+export const showHideConstants = {
+	SHOW: "show",
+	HIDE: "hide",
+	REVEAL_TEXT: "postertextobject"
+}
+
+const figElements = ['figure', "interactive", "audio", "video"];
+const textElements = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives'];
 
 /** 
 * @description findSectionType - Return the section type of showhide element
@@ -59,4 +67,144 @@ const addElementInShowHide = (index, sectionType, elementToAdd, props) => {
 	* @param {String} elementToAdd - type of new element to be addedd - text|image 
 	*/
 	props.createShowHideElement(id, sectionType, index, contentUrn, null, props?.element, props?.index, elementToAdd);
+}
+
+/**
+ * @function handleElementsInShowHide
+ * @description This function finds the inner element in show-hide to add G/Fn or Convert
+ * @param {*} bodymatter slate bodymatter
+ * @param {*} indexes Array of indexs
+ * @param {*} elementType type of inner element
+ * @param {*} showHideObj showHide details
+ */
+export const handleElementsInShowHide = (bodymatter, indexes, elementType, showHideObj) => {
+    let currentElement
+    if (textElements.includes(elementType)) {
+        currentElement = getTextElementInShowHide(bodymatter, indexes, showHideObj)
+    } else if (figElements.includes(elementType)) {
+        currentElement = getFigureElementsInShowHide(bodymatter, indexes, showHideObj)
+    }
+    return currentElement
+}
+
+/**
+ * @function getTextElementInShowHide
+ * @description This function finds the inner text element in show-hide to add G/Fn or Convert
+ * @param {*} bodymatter slate bodymatter
+ * @param {*} indexes Array of indexs
+ * @param {*} showHideObj showHide details
+ */
+const getTextElementInShowHide = (bodymatter, indexes, showHideObj) => {
+    let currentElement = {}
+    switch (indexes.length) {
+        case 3:
+            currentElement = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
+            break;
+        case 4:
+            currentElement = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]]
+            break;
+        case 5:
+            currentElement = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]]
+            break;
+        case 6:
+            currentElement = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]]
+            break;
+        case 7:
+            currentElement = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]]
+            break;
+    }
+    return currentElement
+}
+/**
+ * @function getFigureElementsInShowHide
+ * @description This function finds the inner figure element in show-hide to add G/Fn or Convert
+ * @param {*} bodymatter slate bodymatter
+ * @param {*} indexes Array of indexs
+ * @param {*} showHideObj showHide details
+ */
+const getFigureElementsInShowHide = (bodymatter, indexes, showHideObj) => {
+    let currentElement = {}
+    switch (indexes.length) {
+        case 4:
+            currentElement = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
+            break;
+        case 5:
+            currentElement = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]]
+            break;
+        case 6:
+            currentElement = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]]
+            break;
+        case 7:
+            currentElement = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]]
+            break;
+        case 8:
+            currentElement = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]]
+            break;
+    }
+    return currentElement
+}
+
+/**
+ * @function getShowHideIndex
+ * @description This function prepares the index of figure element inside ShowHide
+ * @param {*} tempIndex 
+ */
+export const getShowHideIndex = (tempIndex) => {
+    let eleIndex;
+    let index = tempIndex;
+    index.length = index.length - 1;
+    eleIndex = index.join('-');
+    return eleIndex;
+}
+
+/**
+ * @function onUpdateSuccessInShowHide
+ * @description This function updates the store with the API response
+ * @param {*} resData  API response
+ * @param {*} bodymatter slate bodymatter
+ * @param {*} activeElemType type of inner element
+ * @param {*} showHideObj showHide details
+ * @param {*} indexes element index
+ * @returns 
+ */
+export const onUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
+    switch (indexes.length) {
+        case 3:
+            bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]] = resData
+            break;
+        case 4:
+            if (textElements.includes(activeElemType)) {
+                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[2]] = resData
+            } else if (figElements.includes(activeElemType)) {
+                bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]] = resData
+            }
+            break
+        case 5:
+            if (textElements.includes(activeElemType)) {
+                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = resData
+            } else if (figElements.includes(activeElemType)) {
+                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]] = resData
+            }
+            break
+        case 6:
+            if (textElements.includes(activeElemType)) {
+                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]] = resData
+            } else if (figElements.includes(activeElemType)) {
+                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = resData
+            }
+            break
+        case 7:
+            if (textElements.includes(activeElemType)) {
+                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]] = resData
+            } else if (figElements.includes(activeElemType)) {
+                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]] = resData
+            }
+            break
+        case 8:
+            if (figElements.includes(activeElemType)) {
+                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]] = resData
+            }
+            break
+    }
+    return bodymatter
 }

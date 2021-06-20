@@ -6,20 +6,20 @@ import axios from 'axios';
 import config from '../../config/config';
 import { hideBlocker } from '../../js/toggleLoader';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { AUTHORING_ELEMENT_UPDATE, ERROR_POPUP } from "./../../constants/Action_Constants";
 import tinymce from 'tinymce';
 
-export const deleteElementAction = (elementId, type, eleIndex, activeElement, elementParentData, containerElements, cb) => (dispatch, getState) => {
+export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
     const elementIndex = eleIndex.toString().split('-')
-    const { asideData, showHideObj } = getState().appStore
-    const { cutCopyParentUrn, parentUrn } = containerElements
-    const parentElementUrn = getState().appStore.parentUrn
+    const { showHideObj } = getState().appStore
+    const { cutCopyParentUrn, parentUrn, parentElement, asideData } = containerElements
+    // const parentElementUrn = getState().appStore.parentUrn
     if(type === 'popup'){
         dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
     }
-    const _requestData = prepareDeleteRequestData(type, { elementId, elementIndex, elementParentData, parentUrn: parentElementUrn, activeElement })
+    const _requestData = prepareDeleteRequestData(type, { elementId, elementIndex, parentElement, parentUrn, activeElement, cutCopyParentUrn })
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -48,7 +48,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, el
             index: eleIndex,
             showHideObj,
             type,
-            parentUrn: parentElementUrn,
+            parentUrn,
             asideData,
             contentUrn: activeElement.contentUrn,
             sectionType: showHideType[elementIndex[elementIndex.length - 2].toString()],
@@ -70,7 +70,8 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, el
         const deleteParams = {
             newIndex,
             index: elementIndex[elementIndex.length - 1].toString(),
-            newParentData
+            newParentData,
+            dispatch
         }
         updateStorePostDelete(deleteParams);
 
@@ -96,7 +97,8 @@ const updateStorePostDelete = (deleteParams) => {
     const {
         index,
         newIndex,
-        newParentData
+        newParentData,
+        dispatch
     } = deleteParams
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
     let elementToUpdate;
@@ -104,38 +106,39 @@ const updateStorePostDelete = (deleteParams) => {
     switch (newIndex.length) {
         case 2:
             elementToUpdate = newBodymatter[newIndex[0]]
-            if (elementToUpdate.type == 'element-aside') {
+            if (elementToUpdate?.type == 'element-aside') {
                 elementToUpdate.elementdata.bodymatter.splice(index, 1);
             }
             newBodymatter[newIndex[0]] = elementToUpdate;
             break;
         case 3: // sh:show:p
             elementToUpdate = newBodymatter[newIndex[0]]
-            if (elementToUpdate.type == 'showhide') {
+            if (elementToUpdate?.type == 'showhide') {
                 newBodymatter[newIndex[0]].interactivedata[showHideType[newIndex[1]]].splice(index, 1)
             }
             break;
         case 4:// we:head:sh:show:p | as:sh:show:p
             elementToUpdate = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
-            if (elementToUpdate.type == 'showhide') {
+            if (elementToUpdate?.type == 'showhide') {
                 newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].interactivedata[showHideType[newIndex[2]]].splice(index, 1)
             }
             break;
         case 5: // we:body:sh:show:p
             elementToUpdate = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
-            if (elementToUpdate.type == 'showhide') {
+            if (elementToUpdate?.type == 'showhide') {
                 newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]].interactivedata[showHideType[newIndex[3]]].splice(index, 1)
             }
             break;
         case 6: // 2c:c1:we:head:sh:show:p | 2c:c1:as:sh:show:p
             elementToUpdate = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]];
-            if (elementToUpdate.type == 'showhide') {
-                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].interactivedata[showHideType[newIndex[5]]].splice(index, 1)
+            if (elementToUpdate?.type == 'showhide') {
+                elementToUpdate.interactivedata[showHideType[newIndex[5]]].splice(index, 1)
             }
+            newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]] = elementToUpdate;
             break;
         case 7: // 2c:c1:we:body:sh:show:p
             elementToUpdate = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
-            if (elementToUpdate.type == 'showhide') {
+            if (elementToUpdate?.type == 'showhide') {
                 elementToUpdate.interactivedata[showHideType[newIndex[6]]].splice(index, 1)
             }
             newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]] = elementToUpdate;
@@ -171,23 +174,24 @@ const prepareDeleteRequestData = (elementType, payloadParams) => {
         parentUrn,
         elementIndex,
         activeElement,
-        // cutCopyParentUrn,
-        elementParentData
+        cutCopyParentUrn,
+        parentElement
     } = payloadParams
     const containerElements = ["element-aside", "element-workedexample", "showhide", "popup", "citations", "poetry", "groupedcontent"];
     let requestPayload = {
         "index": elementIndex[elementIndex.length - 1]?.toString() || "0",
-        "projectUrn": config.projectUrn,
-        "elementParentEntityUrn": parentUrn != null && parentUrn != undefined ? parentUrn.contentUrn : elementParentData?.elementParent?.contentUrn
+        "projectUrn": config.projectUrn        
     }
     if (containerElements.indexOf(elementType) > -1) {
         requestPayload.entityUrn = activeElement.contentUrn
+        requestPayload.elementParentEntityUrn = cutCopyParentUrn? cutCopyParentUrn.contentUrn: parentUrn ? parentUrn.contentUrn : config.slateEntityURN
     } else {
         requestPayload.workUrn = elementId;
-        const parentEntity = elementParentData?.elementParent?.contentUrn
+        const parentEntity = parentElement?.contentUrn
         requestPayload.entityUrn = parentEntity ?? config.slateEntityURN
+        requestPayload.elementParentEntityUrn = parentEntity ?? config.slateEntityURN
     }
-    if (elementType === 'showhide' || elementParentData?.elementParentType === 'showhide') {
+    if (elementType === 'showhide' || parentElement.type === 'showhide') {
         requestPayload.sectionType = showHideType[elementIndex[elementIndex.length - 2].toString()]
     }
     return requestPayload
