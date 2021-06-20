@@ -239,7 +239,7 @@ export class CanvasWrapper extends Component {
                                 {
                                     () => {
                                         if (this.props.glossaryFootnoteValue.popUpStatus) {
-                                            return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData}/>)
+                                            return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData} isImageGlossary={this.props.isImageGlossary}/>)
                                         }
                                         else {
                                             return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
@@ -272,7 +272,9 @@ const mapStateToProps = state => {
         ErrorPopup: state.errorPopup,
         pageNumberToggle: state.toolbarReducer.pageNumberToggle,
         audioGlossaryData:state.audioReducer.audioGlossaryData,
-        currentSlateLF: state.metadataReducer.currentSlateLF
+        currentSlateLF: state.metadataReducer.currentSlateLF,
+        figureGlossaryData:state.appStore.figureGlossaryData,
+        isImageGlossary:state.appStore.addfigureGlossarypopup
     };
 };
 

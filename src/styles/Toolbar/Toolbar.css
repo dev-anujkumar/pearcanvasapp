@@ -548,7 +548,7 @@ margin-left:6px;
   pointer-events: none;
 }
 
-.glossary-audiodropdown{
+.glossary-audiodropdown, .glossary-figuredropdown{
   left:0;
   top:0;
   width: 325px; 

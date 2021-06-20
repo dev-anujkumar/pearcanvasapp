@@ -153,6 +153,10 @@ export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 /* --------------- Learnosity Project ------------------------*/
 export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO";
 
+/* ---------------  Figure Glossary ------------------------*/
+export const SET_FIGURE_GLOSSARY = "SET_FIGURE_GLOSSARY";
+export const ADD_FIGURE_GLOSSARY_POPUP = 'ADD_FIGURE_GLOSSARY_POPUP';
+
 /*---------------- Cypress Project Info ------------------------*/
 export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
 export const UPDATE_DISCUSSION_ITEMS = 'UPDATE_DISCUSSION_ITEMS';

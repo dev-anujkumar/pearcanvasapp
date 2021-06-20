@@ -42,7 +42,9 @@ import {
     SHOW_TOAST_MESSAGE,
     STORE_OLD_ASSET_FOR_TCM,
     WIRIS_ALT_TEXT_POPUP,
-    LEARNOSITY_PROJECT_INFO
+    LEARNOSITY_PROJECT_INFO,
+    SET_FIGURE_GLOSSARY,
+    ADD_FIGURE_GLOSSARY_POPUP
 } from '../constants/Action_Constants';
 
 /**
@@ -75,7 +77,9 @@ const INITIAL_STATE = {
     showToast:false,
     oldFiguredata : {},
     wirisAltText : {},
-    isLearnosityProjectInfo:{}
+    isLearnosityProjectInfo:{},
+    figureGlossaryData : {},
+    addfigureGlossarypopup:false
 };
 
 const INITIAL_ACTION = {
@@ -262,6 +266,16 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             ...state,
             isLearnosityProjectInfo : action.payload
         }
+        case SET_FIGURE_GLOSSARY : 
+        return {
+            ...state,
+            figureGlossaryData : action.payload
+        }
+        case ADD_FIGURE_GLOSSARY_POPUP:
+            return{
+                ...state,
+                addfigureGlossarypopup:action.payload
+            }
 
         default:
             return state;

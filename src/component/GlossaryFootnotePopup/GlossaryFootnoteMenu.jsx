@@ -23,7 +23,7 @@ class GlossaryFootnoteMenu extends React.Component {
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
             /** Case - event target is not even wiris modal */
-            if (!(document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) && !document.getElementById('openAudioBook') && !document.getElementById('ext_AddAnAsset') && !document.getElementById('ext_ProductLink') && !document.getElementById('popup') && !document.querySelector('div.modal-content.wiris-alt-text-popup')?.contains(event.target)) {
+            if (!(document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) && !document.getElementById('openAudioBook') && !document.getElementById('openFigureGlossary') && !document.getElementById('ext_AddAnAsset') && !document.getElementById('ext_ProductLink') && !document.getElementById('popup') && !document.querySelector('div.modal-content.wiris-alt-text-popup')?.contains(event.target)) {
                 this.saveContent()
             }
         }
@@ -99,6 +99,8 @@ class GlossaryFootnoteMenu extends React.Component {
      * Checks difference in glossary/footnote data
      */
     glossaryFootnoteDifference = (newTerm, newDef, oldTerm, oldDef, type) => {
+        console.log("oldDef",oldDef);
+        console.log("newDef",newDef);
         let domparser, newTermDom, newDefDom, oldTermDom, oldDefDom, tempVar, tempTerm;
         tempVar = oldDef;
         tempTerm = oldTerm;
@@ -129,7 +131,7 @@ class GlossaryFootnoteMenu extends React.Component {
     */
     saveContent = () => {
         if (!hasReviewerRole()) {
-            const { glossaryFootnoteValue,audioGlossaryData } = this.props;
+            const { glossaryFootnoteValue,audioGlossaryData,figureGlossaryData, isImageGlossary } = this.props;
             let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup, poetryField} = glossaryFootnoteValue;
             let term = null;
             let definition = null;
@@ -173,16 +175,25 @@ class GlossaryFootnoteMenu extends React.Component {
                 }
              }
             let isAudioDataPresent = audioGlossaryData && Object.keys(audioGlossaryData).length > 0;
-            const audioTerm = `<p audio-id=${audioGlossaryData.narrativeAudioUrn} audio-path=${audioGlossaryData.location}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
+            let isFigureDataPresent = figureGlossaryData && Object.keys(figureGlossaryData).length > 0;
+            const audioTerm = isImageGlossary ? `<p image-id=${figureGlossaryData.imageid} image-path=${figureGlossaryData.path} class="imageAssetContent"  width=${figureGlossaryData.width} height=${figureGlossaryData.height} alt=${figureGlossaryData.alttext} longdescription=${figureGlossaryData.longdescription}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>` :`<p audio-id=${audioGlossaryData.narrativeAudioUrn} audio-path=${audioGlossaryData.location}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
             term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
-                : isAudioDataPresent ? audioTerm : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
-            definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+                : isAudioDataPresent || isFigureDataPresent  ? audioTerm : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+                
+        //    console.log('term22222',term)
+        //         let isFigureDataPresent = figureGlossaryData && Object.keys(figureGlossaryData).length > 0;
+        //         const imageTerm = `<p image-id=${figureGlossaryData.imageid} image-path=${figureGlossaryData.path}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
+        //         term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
+        //             : isFigureDataPresent ? imageTerm : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+            let imagedefinition =  `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}<image-path=${figureGlossaryData.path} image-id=${figureGlossaryData.imageid} class="imageAssetContent" width=${figureGlossaryData.width} height=${figureGlossaryData.height} alt=${figureGlossaryData.alttext} longdescription=${figureGlossaryData.longdescription}</p>`
+            
+            definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") : isImageGlossary ? imagedefinition :   `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             term = this.replaceUnwantedtags(term)
             definition = this.replaceUnwantedtags(definition)
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
                 config.isGlossarySaving = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField,audioGlossaryData)
+                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField,audioGlossaryData,figureGlossaryData)
             }
         }
         this.props.showGlossaaryFootnote(false);

@@ -317,6 +317,20 @@ dfn[audio-id] sup::after {
     position: relative;
     background: transparent;
 }
+
+dfn[image-id]:not(.sup):not(.sub)::after,
+dfn[image-id] sub::after,
+dfn[image-id] sup::after {
+    content: url('./../images/ElementButtons/figureGlossary.svg');
+    top: 3px;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    margin: 0 auto;
+    padding: 0 2px;
+    position: relative;
+    background: transparent;
+}
 /*  Cross Link dropdown color Design  */
 .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled){
     background-color: #efefef !important;
