@@ -86,3 +86,12 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList) {
             console.error("Something went wrong while accessing showhide object...", e);
     	}
 }
+
+/* Return the section type using index */
+export function indexOfSectionType(indexes){
+	const indexList = indexes ? indexes?.toString().split("-") : [];
+	const ilength = indexList?.length
+	if(ilength >= 3) {
+		return findSectionType(indexList[ilength - 2])
+	}
+}

@@ -13,6 +13,7 @@ import TcmConstants from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
+import { indexOfSectionType } from '../ShowHide/ShowHide_Helper.js';
 
 let operType = "";
 const {
@@ -406,15 +407,7 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
-    parentElement = showHideObj ? showHideObj : parentElement
-
-    //if(asideData?.grandParent?.asideData?.type === ELEMENT_ASIDE) {
-    //    const newContainer = { ...containerElement,
-    //        asideData: asideData.grandParent.asideData,
-    //        parentUrn: asideData.grandParent.parentUrn
-    //    };
-    //    prepareTcmSnapshots(wipData, actionStatus, newContainer, "", index, "", operationType);
-    //}
+    parentElement = showHideObj ? showHideObj : parentElement;
     /* 2C:AS/WE:FIGURE */
     const { isExist, asideData: asideFigObj } = asideData?.figureIn2cAside || {};
     parentElement =  isExist ? asideFigObj : parentElement;
@@ -443,7 +436,33 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn });
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
 }
-
+/**
+* @function prepareSnapshots_ShowHide
+* @description This function will prepare the data of containerElement to get snapshots 
+*  of parent elements - 2C/Aside/POP:SH:New 
+*/
+function prepareSnapshots_ShowHide(containerElement, wipData, index) {
+    const { asideData, parentUrn } =  containerElement?.asideData?.grandParent || {};
+    let showhideElement = { ...containerElement?.asideData };
+    /* Delete the grandparent data form asideData */
+    delete showhideElement.grandParent;
+    /* Get the sectionType using index of element */
+    const sectionType = indexOfSectionType(index);
+    /* Prepare and return container data for showhide inner element update */
+    return {
+        ...containerElement,
+        asideData: asideData,
+        parentUrn: parentUrn,
+        parentElement: asideData,
+        showHideObj: {
+            currentElement: wipData,
+            element: showhideElement,
+            index: index,
+            showHideType: sectionType
+        },
+        sectionType: sectionType
+    };  
+}
 /**
  * @function tcmSnapshotsMultiColumn
  * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = Mutli-column
@@ -1062,6 +1081,14 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     } 
     else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
+    }
+    /** 
+    * @description For SHOWHIDE Element - prepare parent element data
+    * Update - 2C/Aside/POP:SH:New 
+    */
+    const typeOfElement = containerElement?.asideData?.grandParent?.asideData?.type;
+    if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
+        containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex);
     }
     
     let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
