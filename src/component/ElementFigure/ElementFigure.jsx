@@ -125,7 +125,7 @@ class ElementFigure extends Component {
                 this.props.handleBlur()
             })
             let alfrescoData = config?.alfrescoMetaData?.alfresco;
-            let alfrescoSiteLocation = this.state.alfrescoSiteData?.id  ? this.state.alfrescoSiteData  : alfrescoData
+            let alfrescoSiteLocation = this.state.alfrescoSiteData;
             if(this.props.isCiteChanged){
                 let changeSiteAlfrescoData={
                     currentAsset: {},
