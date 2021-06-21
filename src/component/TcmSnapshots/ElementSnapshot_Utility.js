@@ -308,7 +308,7 @@ export const fetchElementsTag = (element,metadataField) => {
  * @param {Object} obj - object to be checked
  * @returns {Boolean}
 */
-const isEmpty = (obj) => {
+export const isEmpty = (obj) => {
     if ((Object.keys(obj).length === 0 && obj.constructor === Object)) {
         return true;
     }
