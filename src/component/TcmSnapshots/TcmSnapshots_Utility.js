@@ -988,17 +988,18 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
             break;
         case 'assessment': {
         const elementData = element?.figuredata?.elementdata; 
-        if(elementData)
-            snapshotData = {
-                assessmentTitle: `<p>${elementData?.assessmenttitle}</p>`,
-                assessmentItemTitle: `<p>${elementData?.assessmentitemtitle}</p>`,
-                assessmentId: `<p>${elementData?.assessmentid}</p>`,
-                assessmentItemId: `<p>${elementData?.assessmentitemid}</p>`,
-                assessmentUsageType: `<p>${elementData?.usagetype}</p>`,
-                // only sent in case of elm and learnosity
-                assessmentStatus: `<p>Unapproved</p>`,
-                assessmentType: `<p>${elementData?.assessmentformat}<p>`
-            }  
+        if(elementData){
+                snapshotData = {
+                    assessmentTitle: `<p>${elementData?.assessmenttitle}</p>`,
+                    assessmentItemTitle: `<p>${elementData?.assessmentitemtitle}</p>`,
+                    assessmentId: `<p>${elementData?.assessmentid}</p>`,
+                    assessmentItemId: `<p>${elementData?.assessmentitemid}</p>`,
+                    assessmentUsageType: `<p>${elementData?.usagetype}</p>`,
+                    // only sent in case of elm and learnosity
+                    assessmentStatus: `<p>Unapproved</p>`,
+                    assessmentType: `<p>${elementData?.assessmentformat}<p>`
+                }  
+            }
             break;   
         }
         case "image":
