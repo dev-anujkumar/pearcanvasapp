@@ -31,6 +31,8 @@ import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
 import ElementConstants from '../ElementContainer/ElementConstants';
+import { getShowHideElement } from '../ShowHide/ShowHide_Helper';
+import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE } = ElementConstants;
 
 Array.prototype.move = function (from, to) {
@@ -329,7 +331,8 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
 
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId, parentElement, elementIndex } = dataObj || {};
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem,
+         asideId, poetryId, parentElement, elementIndex, sectionType } = dataObj || {};
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -342,8 +345,8 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         "index": newIndex
     }
     /* If swapping for inner elements of showhide then add section type also, show|hide */
-    if(dataObj.parentType === SHOW_HIDE){
-        _requestData.sectionType =  dataObj?.containerTypeElem   
+    if(containerTypeElem === SHOW_HIDE){
+        _requestData.sectionType = sectionType   
     }
     let parentData = getState().appStore.slateLevelData;
     let currentParentData = JSON.parse(JSON.stringify(parentData));
@@ -377,7 +380,16 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     return false;
                 }
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
-                if (containerTypeElem && containerTypeElem == 'we') {
+                if(containerTypeElem === SHOW_HIDE) { /* Swap inner elements of ShowHide */
+                    const indexes = elementIndex?.toString().split('-') || [];
+                    /* Get the showhide element object from slate data using indexes */
+                    const shObject = getShowHideElement(newBodymatter, (indexes?.length + 2), indexes);
+                    /* After getting showhide Object, swap the elements */
+                    if(!isEmpty(shObject) && shObject?.contentUrn === currentSlateEntityUrn) {
+                        shObject?.interactivedata[sectionType]?.move(oldIndex, newIndex);
+                    }
+                }
+                else if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
                     const indexs = elementIndex?.split('-') || [];
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */

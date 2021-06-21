@@ -20,7 +20,7 @@ class ShowHide extends React.Component {
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer   
 	*/
 	onSortUpdate = (event, sectionType) => {
-		const { element, index, parentElement, swapElement, setActiveElement } = this.props || {};
+		const { element, index, parentElement, setActiveElement } = this.props || {};
 
 		let swappedElementData;
         let sectionObj = [];
@@ -34,24 +34,24 @@ class ShowHide extends React.Component {
         }
 		/* Form payload to send swap api */
         const payload = {
-			parentType: element?.type,
+			sectionType,
             oldIndex: event.oldDraggableIndex,
             newIndex: event.newDraggableIndex,
             swappedElementData: swappedElementData,
             currentSlateEntityUrn: contentURN,
-            containerTypeElem: sectionType,
+            containerTypeElem: element?.type,
             asideId: element?.id,
             elementIndex: index,
             parentElement: { type: parentElement?.type }
         }
 		/* call swap api */
-        swapElement(payload, (bodyObj) => { })
+        this.props.swapElement(payload, (bodyObj) => { })
         setActiveElement(payload.swappedElementData, payload.newIndex);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        const showHideNode = document.querySelector('.show-hide-active')
-        if(showHideNode){
-            showHideNode.classList.remove("show-hide-active")
-        }
+        //const showHideNode = document.querySelector('.show-hide-active')
+        //if(showHideNode){
+        //    showHideNode.classList.remove("show-hide-active")
+        //}
 	}
 
 	render() {
