@@ -343,6 +343,20 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
                 elmUrn.push(item.id)
             })
             break;
+        case slateWrapperConstants.MULTI_COLUMN_3C:
+            /** First Column */
+            createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
+                elmUrn.push(item.id)
+            })
+            /** Second Column */
+            createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
+                elmUrn.push(item.id)
+            })
+            /** Third Column */
+            createdElementData.groupeddata.bodymatter[2].groupdata.bodymatter.map(item => {
+                elmUrn.push(item.id)
+            })
+            break;
         case slateWrapperConstants.POP_UP:
             elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
             createdElementData.popupdata.bodymatter.length>0 && elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
