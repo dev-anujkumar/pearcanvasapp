@@ -522,3 +522,14 @@ overflow: unset;
   margin-top: 100px; /* Negative half of height. */
   margin-left: 500px;
 }
+.tcmIcon{
+  border: solid 1px transparent !important;
+  background-color: transparent !important;
+}
+.tcmIconContainer,.userNametcmIconContainer,.tcmdStatusContainer{
+  display: flex;
+}
+.tcmContainer{
+  display: flex;
+  flex-direction: column;
+}
