@@ -885,20 +885,17 @@ const prepareStandAloneSlateSnapshot = (element, actionStatus, index, semanticSn
 
     let elementSnapshot = {};
     elementSnapshot = {
-        contentSnapshot : {
             assessmentTitle: `<p>Assessment Title</p>`,
             assessmentItemTitle: `<p>Assessment Item Title</p>`,
             assessmentId: `<p>urn:pearson:work:72dea980-364d-49d3-b17e-391b2d80a9b7</p>`,
             assessmentItemId: `<p>Assessment Item Id</p>`,
             assessmentUsageType: `<p>Diagonistic</p>`,
             assessmentStatus: `<p>Unapproved</p>`,
-            assessmentType: `<p>CITE<p>`
-        },
-        glossorySnapshot: JSON.stringify([]),
-        footnoteSnapshot:  JSON.stringify([]),
-        assetPopOverSnapshot: JSON.stringify([])
-    }
-    
+            assessmentType: `<p>CITE<p>`,
+            glossorySnapshot: '[]',
+            footnoteSnapshot: '[]',
+            assetPopOverSnapshot: '[]'
+        }
     return elementSnapshot;
 }
 
@@ -934,11 +931,19 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
 export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails, CurrentSlateStatus) => {
     let elementSnapshot = {};
     let semanticSnapshots = (element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
-    elementSnapshot = {
-        contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
-        glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
-        footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
-        assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
+    if(element.type !== ELEMENT_ASSESSMENT) {
+        elementSnapshot = {
+            contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
+            glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
+            footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
+            assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
+        }
+    }
+    else {
+        elementSnapshot = {
+            ...prepareStandAloneSlateSnapshot(),
+           
+        }
     }
     return elementSnapshot;
 }
@@ -1025,9 +1030,7 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
         snapshotData = '<p></p>'          
-    } else if (element?.type === ELEMENT_ASSESSMENT) {
-        snapshotData = JSON.stringify(prepareStandAloneSlateSnapshot());
-    }   
+    }  
     /**else if(element.type === ELEMENT_LIST && element.html && element.html.text){
         snapshotData = element.html.text.replace(/<br>/g,"")
     }*/
