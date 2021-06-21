@@ -886,13 +886,13 @@ const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
     const elementData =element?.elementdata;
     let elementSnapshot = {};
     elementSnapshot = {
-            assessmentTitle: `<p>${elementData?.assessmenttitle}</p>`,
-            assessmentItemTitle: `<p>${elementData?.assessmentitemtitle}</p>`,
-            assessmentId: `<p>${elementData?.assessmentid}</p>`,
-            assessmentItemId: `<p>${elementData?.assessmentitemid}</p>`,
-            assessmentUsageType: `<p>${elementData?.usagetype}</p>`,
+            assessmentTitle: `<p>${elementData?.assessmenttitle || ''}</p>`,
+            assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
+            assessmentId: `<p>${elementData?.assessmentid|| ''}</p>`,
+            assessmentItemId: `<p>${elementData?.assessmentitemid|| ''}</p>`,
+            assessmentUsageType: `<p>${elementData?.usagetype|| ''}</p>`,
             assessmentStatus: `<p>Unapproved</p>`,
-            assessmentType: `<p>${elementData?.assessmentformat}<p>`,
+            assessmentType: `<p>${elementData?.assessmentformat|| ''}<p>`,
             glossorySnapshot: '[]',
             footnoteSnapshot: '[]',
             assetPopOverSnapshot: '[]'
@@ -991,14 +991,14 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
         const elementData = element?.figuredata?.elementdata; 
         if(elementData){
                 snapshotData = {
-                    assessmentTitle: `<p>${elementData?.assessmenttitle}</p>`,
-                    assessmentItemTitle: `<p>${elementData?.assessmentitemtitle}</p>`,
-                    assessmentId: `<p>${elementData?.assessmentid}</p>`,
-                    assessmentItemId: `<p>${elementData?.assessmentitemid}</p>`,
-                    assessmentUsageType: `<p>${elementData?.usagetype}</p>`,
+                    assessmentTitle: `<p>${elementData?.assessmenttitle|| ''}</p>`,
+                    assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
+                    assessmentId: `<p>${elementData?.assessmentid || ''}</p>`,
+                    assessmentItemId: `<p>${elementData?.assessmentitemid || ''}</p>`,
+                    assessmentUsageType: `<p>${elementData?.usagetype || ''}</p>`,
                     // only sent in case of elm and learnosity
                     assessmentStatus: `<p>Unapproved</p>`,
-                    assessmentType: `<p>${elementData?.assessmentformat}<p>`
+                    assessmentType: `<p>${elementData?.assessmentformat || ''}<p>`
                 }  
             }
             break;   
