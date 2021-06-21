@@ -675,13 +675,12 @@ class ElementContainer extends Component {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
-                     
-                    /*** @description For showhide Element, ON RevealAnswer text update, sending RevealAnswer element index */
-                    if((this.props.element?.type === elementTypeConstant.SHOW_HIDE) && (showHideType === "postertextobject")){
-                        this.props.updateElement(dataToSend, elemIndex, undefined, {...this.props.element}, showHideType, parentElement, poetryData);
-                    } else {
-                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
-                    }
+                    /** 
+                    * @param {String} indexParam - For showhide Element,for RevealAnswer text update
+                    * sending RevealAnswer element index */
+                    const indexParam = ((this.props.element?.type === elementTypeConstant.SHOW_HIDE) && (showHideType === "postertextobject")) ? 
+                            elemIndex : this.props.index;
+                    this.props.updateElement(dataToSend, indexParam, parentUrn, asideData, showHideType, parentElement, poetryData);
                 }
                 break;
 
