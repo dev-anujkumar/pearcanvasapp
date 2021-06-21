@@ -260,17 +260,16 @@ class ElementAudioVideo extends Component {
 
     updateAlfrescoSiteUrl = () => {
         let repositoryData = this.state.alfrescoSiteData
-        if (repositoryData?.repositoryFolder) {
+        if (repositoryData?.repositoryFolder || repositoryData?.title ) {
             this.setState({
-                alfrescoSite: repositoryData.repositoryFolder
+                alfrescoSite: repositoryData?.repositoryFolder || repositoryData?.title
             })
         } else {
             this.setState({
-                alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
+                alfrescoSite: config.alfrescoMetaData?.alfresco?.repositoryFolder || config.alfrescoMetaData?.alfresco?.title
             })
         }
     }
-
     handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{
         let that = this
         //let url = 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000';

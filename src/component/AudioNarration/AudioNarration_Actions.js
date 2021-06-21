@@ -162,19 +162,19 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
      * Get MP3 location when smarLinkURL is linked with smart link
      */
     let fileName, fileExtension;
-    fileName = audioData.location;
-    fileExtension = fileName.replace(/^.*\./, '');
-    audioData.format= audioData.format? audioData.format: fileExtension ?`audio/${fileExtension}`:"audio/mpeg"
+    fileName = audioData?.location;
+    fileExtension = fileName?.replace(/^.*\./, '');
+    audioData.format= audioData?.format? audioData.format: fileExtension ?`audio/${fileExtension}`:"audio/mpeg"
     try {
         if (fileExtension != 'mp3' && fileExtension != 'ogg' && fileExtension != 'opus' && fileExtension != 'wav') {
           //  document.getElementsByClassName('.audio-block').style.pointerEvents  = "none"
             let redirectionURL = await fetch(fileName);
-            let mp3LocationData = redirectionURL.url;
+            let mp3LocationData = redirectionURL?.url;
             audioData = {
-                "narrativeAudioUrn": audioData.narrativeAudioUrn || "4567",
+                "narrativeAudioUrn": audioData?.narrativeAudioUrn || "4567",
                 "location": mp3LocationData,
                 "title": {
-                    "en": audioData.title.en || mp3LocationData.split('/').reverse()[0].split('.')[0]
+                    "en": audioData?.title?.en || mp3LocationData?.split('/').reverse()[0].split('.')[0]
                 },
                 "format": "audio/mpeg"
             }
@@ -219,16 +219,16 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
 }
 
 export const saveDataFromAlfresco = (message) => dispatch => {
-    let assetData = message.asset;
+    let assetData = message?.asset;
     let audioData = {
         "narrativeAudioUrn": assetData.id || "",
-        "location": assetData.epsUrl,
+        "location": assetData?.epsUrl,
         "title": {
-            "en": assetData.name
+            "en": assetData?.name
         },
-        "format": assetData.content.mimeType
+        "format": assetData?.content?.mimeType
     }
-    let calledfromGlossaryFootnote = message.calledFromGlossaryFootnote ? message.calledFromGlossaryFootnote : false;
+    let calledfromGlossaryFootnote = message?.calledFromGlossaryFootnote ? message.calledFromGlossaryFootnote : false;
     dispatch(addAudioNarrationForContainer(audioData,calledfromGlossaryFootnote));
     hideTocBlocker();                    
 }

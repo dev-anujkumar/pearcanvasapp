@@ -62,13 +62,13 @@ class ElementFigure extends Component {
 
     updateAlfrescoSiteUrl = () => {
         let repositoryData = this.state.alfrescoSiteData
-        if (repositoryData?.repositoryFolder) {
+        if (repositoryData?.repositoryFolder || repositoryData?.title ) {
             this.setState({
-                alfrescoSite: repositoryData.repositoryFolder
+                alfrescoSite: repositoryData?.repositoryFolder || repositoryData?.title
             })
         } else {
             this.setState({
-                alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
+                alfrescoSite: config.alfrescoMetaData?.alfresco?.repositoryFolder || config.alfrescoMetaData?.alfresco?.title
             })
         }
     }
@@ -278,7 +278,7 @@ class ElementFigure extends Component {
 
     handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
+        let url = `https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
         return axios.get(url,
             {
@@ -290,6 +290,7 @@ class ElementFigure extends Component {
                 }
             })
             .then(function (response) {
+            
                let payloadObj = {launchAlfrescoPopup: true, 
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
