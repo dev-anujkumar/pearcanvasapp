@@ -992,13 +992,14 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
             snapshotData = {
                 assessmentTitle: `<p>${elementData?.assessmenttitle}</p>`,
                 assessmentItemTitle: `<p>${elementData?.assessmentitemtitle}</p>`,
-                assessmentId: `<p>urn:pearson:work:72dea980-364d-49d3-b17e-391b2d80a9b7</p>`,
+                assessmentId: `<p>${elementData?.assessmentid}</p>`,
                 assessmentItemId: `<p>${elementData?.assessmentitemid}</p>`,
-                assessmentUsageType: `<p>Diagonistic</p>`,
+                assessmentUsageType: `<p>${elementData?.usagetype}</p>`,
+                // only sent in case of elm and learnosity
                 assessmentStatus: `<p>Unapproved</p>`,
                 assessmentType: `<p>${elementData?.assessmentformat}<p>`
-            }          
-            break;
+            }  
+            break;   
         }
         case "image":
         case "table":
