@@ -881,17 +881,18 @@ export const setSlateType = (wipData, containerElement, type) => {
     return isContainer
 }
 
-const prepareStandAloneSlateSnapshot = (element, actionStatus, index, semanticSnapshots) => {
-
+const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
+    console.log("the element is ", element, elementDetails);
+    const elementData =element?.elementdata;
     let elementSnapshot = {};
     elementSnapshot = {
-            assessmentTitle: `<p>Assessment Title</p>`,
-            assessmentItemTitle: `<p>Assessment Item Title</p>`,
-            assessmentId: `<p>urn:pearson:work:72dea980-364d-49d3-b17e-391b2d80a9b7</p>`,
-            assessmentItemId: `<p>Assessment Item Id</p>`,
-            assessmentUsageType: `<p>Diagonistic</p>`,
+            assessmentTitle: `<p>${elementData?.assessmenttitle}</p>`,
+            assessmentItemTitle: `<p>${elementData?.assessmentitemtitle}</p>`,
+            assessmentId: `<p>${elementData?.assessmentid}</p>`,
+            assessmentItemId: `<p>${elementData?.assessmentitemid}</p>`,
+            assessmentUsageType: `<p>${elementData?.usagetype}</p>`,
             assessmentStatus: `<p>Unapproved</p>`,
-            assessmentType: `<p>CITE<p>`,
+            assessmentType: `<p>${elementData?.assessmentformat}<p>`,
             glossorySnapshot: '[]',
             footnoteSnapshot: '[]',
             assetPopOverSnapshot: '[]'
@@ -941,7 +942,7 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
     }
     else {
         elementSnapshot = {
-            ...prepareStandAloneSlateSnapshot(),
+            ...prepareStandAloneSlateSnapshot(element, elementDetails),
            
         }
     }
