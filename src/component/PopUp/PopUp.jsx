@@ -57,7 +57,7 @@ class PopUp extends React.Component {
             wordPasteProceed: toggleState
         })
     }
-    
+
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
     * @param {event} 
@@ -99,7 +99,7 @@ class PopUp extends React.Component {
             return (
                 <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
                     <span className={`save-button ${props.isElmUpdateClass}`} onClick={(e) => props.updateElmAssessment(e)}>Update</span>
-                    <span className={`cancel-button ${props.isElmUpdateClass}`} id='close-container' onClick={(e) => props.togglePopup(false,e)}>Cancel</span>
+                    <span className={`cancel-button ${props.isElmUpdateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
         }
@@ -107,7 +107,7 @@ class PopUp extends React.Component {
             return (
                 <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
                     <span className={`powerpaste-save-button ${this.state.wordPasteProceed ? '' : "disabled"}`} onClick={props.handlePowerPaste}>Proceed</span>
-                    <span className="powerpaste-cancel-button"  onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
+                    <span className="powerpaste-cancel-button" onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
                 </div>
             )
         }
@@ -157,13 +157,13 @@ class PopUp extends React.Component {
             )
         } else if (props.WordPastePopup) {
             return (
-                <PowerPasteElement 
-                index={props.index} 
-                onPowerPaste={props.onPowerPaste}
-                toggleWordPasteProceed={this.toggleWordPasteProceed}
-              />
+                <PowerPasteElement
+                    index={props.index}
+                    onPowerPaste={props.onPowerPaste}
+                    toggleWordPasteProceed={this.toggleWordPasteProceed}
+                />
             )
-        } 
+        }
         else {
             return (
                 <textarea autoFocus className={`dialog-input-textarea ${props.assessmentClass}`} type="text" onChange={(event) => props.handleChange(event.target.value)} onClick={(event) => this.handleClickTextArea(event)}
@@ -177,7 +177,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.isTCMCanvasPopup) {
             return null
         }
         else {
@@ -209,7 +209,7 @@ class PopUp extends React.Component {
             //jsx dialog text
             return (
                 <>
-                    <h2 className = 'tocDeleteHeader'>Warning</h2>
+                    <h2 className='tocDeleteHeader'>Warning</h2>
                     {<div className={`dialog-window  ${props.tocDeleteClass}`} >{props.dialogText}</div>}
                 </>
             )
@@ -242,7 +242,7 @@ class PopUp extends React.Component {
                 </>
             )
         }
-        else if(props.altText) {
+        else if (props.altText) {
             return (
                 <>
                     <h2 className='tocDeleteHeader'>{this.props.altHeaderText}</h2>
@@ -254,14 +254,15 @@ class PopUp extends React.Component {
             return (
                 <>
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
-                    <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>            
+                    <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>
                 </>
             )
-        }else if (props.LOPopup) {
+        } else if (props.LOPopup) {
             return (
                 <>
                     <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
-                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br/>{'Do you wish to continue?'}</div>                </>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br />{'Do you wish to continue?'}</div>
+                </>
             )
         } else if (props.isTCMCanvasPopup) {
             return (
@@ -281,16 +282,28 @@ class PopUp extends React.Component {
         }
         else {
             return (
-                <div>
-                    <span className="btn-element citation-elem">
-                        {TcmRefreshIcon}
-                    </span>
-                    <span className="btn-element citation-elem" onClick={(e) => props.handleTCMRedirection(e)}>
-                        {TcmExpandIcon}
-                    </span>
-                    <span className="btn-element">
-                        {TcmCloseIcon}
-                    </span>
+                <div className="tcmContainer">
+                    <div className="userNametcmIconContainer">
+                        <div >
+                            <span>Marbit, Kira</span>
+                            <span> 12.30pm</span>
+                        </div>
+                        <div className="tcmIconContainer">
+                            <span className="btn-element tcmIcon">
+                                {<img src={TcmRefreshIcon} alt="TcmRefreshIcon" />}
+                            </span>
+                            <span className="btn-element tcmIcon" onClick={(e) => props.handleTCMRedirection(e)}>
+                                {<img src={TcmExpandIcon} alt="TcmExpandIcon" />}
+                            </span>
+                            <span className="btn-element tcmIcon" onClick={() => props.closeTcmPopup()}>
+                                {<img src={TcmCloseIcon} alt="TcmCloseIcon" />}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="tcmdStatusContainer">
+                        <div>31.3.21</div>
+                        <div><span>Lable Added</span></div>
+                    </div>
                 </div>
             )
         }
@@ -302,8 +315,8 @@ class PopUp extends React.Component {
             <div className="model">
                 {
                     active ?
-                        <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : `modal-content ${assessmentClass}`} id = {isGlossary ? 'popup': ''}>
+                        <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
+                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : `modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : ''}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
