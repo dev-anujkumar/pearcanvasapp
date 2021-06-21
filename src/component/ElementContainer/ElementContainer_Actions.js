@@ -489,6 +489,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     })
 }
 
+/** 
 export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, parentId, cb, parentElement, parentElementIndex) => (dispatch, getState) => {
     let _requestData = {
         projectUrn : config.projectUrn,
@@ -517,7 +518,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
 
-        /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+        // [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------
 
         const deleteData = {
             deleteElemData: response.data,
@@ -591,6 +592,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         showError(error, dispatch, "error while creating element")
     })
 }
+*/
 
 export const showError = (error, dispatch, errorMessage) => {
     dispatch({type: ERROR_POPUP, payload:{show: true}})

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { createShowHideElement } from '../ElementContainer/ElementContainer_Actions.js';
 import RevealAnswer from './Components/RevealAnswer.jsx';
 import ShowHideUiBlock from './Components/ShowHideUiBlock.jsx';
-import { elementList2Add } from './ShowHide_Helper.js';
+import { addNestedElements } from './ShowHide_Helper.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -61,7 +61,7 @@ class ShowHide extends React.Component {
 			<div className="show-hide-component">
 				{/* Show Section of Component*/}
 				<ShowHideUiBlock 
-					elementList2Add = {elementList2Add}
+					addNestedElements = {addNestedElements}
 					sectionType = {"show"}
 					sepratorIndex = {`${index}-0-0`}
 					onSortUpdate = {this.onSortUpdate}
@@ -71,7 +71,7 @@ class ShowHide extends React.Component {
 				<RevealAnswer {...this.props} />
 				{/* Hide Section of Component*/}
 				<ShowHideUiBlock 
-					elementList2Add = {elementList2Add}
+					addNestedElements = {addNestedElements}
 					sectionType = {"hide"}
 					sepratorIndex = {`${index}-2-0`}
 					onSortUpdate = {this.onSortUpdate}

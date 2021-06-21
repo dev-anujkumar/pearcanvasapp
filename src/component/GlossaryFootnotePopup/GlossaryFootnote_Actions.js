@@ -10,6 +10,7 @@ const {
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
 import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA} from "./../../constants/Action_Constants";
+import { handleElementsInShowHide, getShowHideIndex, onUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -32,13 +33,17 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
+        const showHideElement = store.getState().appStore?.showHideObj;
         if(currentSlateData.type==="popup" && currentSlateData.status === "approved" && (config.isCreateFootnote || config.isCreateGlossary)){
             return false;
         }
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
-        if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
+        if (showHideElement) { /** Glossary-Footnotes inside Show-Hide */
+            glossaryFootElem = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement)
+        }
+        else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
         }else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent"){ //Figure inside Multi-Column
             glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]]
@@ -48,7 +53,6 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         }
         else if (tempIndex.length == 5 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
             glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]];
-            
         }
         else if (tempIndex.length == 6 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
             glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]]?.contents?.bodymatter[tempIndex[4]];
@@ -238,7 +242,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let newBodymatter = newParentData[slateId].contents.bodymatter;
     let workEditor, workContainer;
     let currentElement = store.getState().appStore.activeElement;
-
+    const showHideElement = store.getState().appStore?.showHideObj;
     /** Feedback status from elementData */
     let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
     let tcmFeedback =  elementNodeData;
@@ -264,7 +268,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         else {
             elementIndex = tempIndex[0]
         }
-
+        if(showHideElement){ /** Glossary-Footnotes inside Show-Hide */
+            elementIndex = getShowHideIndex(tempIndex)
+        }
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
         number = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
         title = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
@@ -420,13 +426,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
 
     let tcmParentData,tcmMainBodymatter,tcmBodymatter;
-    if (elementTypeData.indexOf(elementType) !== -1 && store.getState().appStore.showHideType == undefined) {
-        /** For TCM snapshots */
-        let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
-        tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-        tcmParentData = fetchParentData(tcmBodymatter, index);
-        tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
-    }
+    // if (elementTypeData.indexOf(elementType) !== -1 && store.getState().appStore.showHideType == undefined) {
+    //     /** For TCM snapshots */
+    //     let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
+    //     tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+    //     tcmParentData = fetchParentData(tcmBodymatter, index);
+    //     tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
+    // }
     /** ----------------- */
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     return axios.put(url, JSON.stringify(data), {
@@ -447,16 +453,16 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 updatedId:elementWorkId
             },
                 containerElement = {
-                    asideData:tcmParentData.asideData,
-                    parentUrn:tcmParentData.parentUrn,
-                    parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
-                    metaDataField: data.metaDataField ? data.metaDataField : undefined
+                    // asideData:tcmParentData.asideData,
+                    // parentUrn:tcmParentData.parentUrn,
+                    // parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
+                    // metaDataField: data.metaDataField ? data.metaDataField : undefined
                 };
             if (currentSlateData && currentSlateData.status === 'approved') {
-                await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+                // await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
             }
             else {
-                tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+                // tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
             }
         }
         /**-------------------------------------------------------------------------------------------------------------*/
@@ -464,7 +470,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
-        if (tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
+        if (showHideElement) {/** Glossary-Footnotes inside Show-Hide */
+            newBodymatter = onUpdateSuccessInShowHide(res.data, newBodymatter, elementType, showHideElement, tempIndex)
+        }
+        else if (tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data
         } else if (tempIndex.length == 4 && elementType == 'figure' && typeWithPopup !== "popup") {//Figure inside a WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data

@@ -1,28 +1,29 @@
 import React from 'react';
 import ElementContainer from '../../ElementContainer/ElementContainer.jsx';
 import { ElementSaprator } from '../../ElementSaprator/ElementSaprator.jsx';
+import { showHideConstants } from '../ShowHide_Helper';
 import SortElement from './SortElement.jsx';
 
-function ShowHideUiBlock(props) {
-	const { index, parentUrn, asideData, element, elementList2Add,
-			sepratorIndex, sectionType, onSortUpdate } = props || {};
+const ShowHideUiBlock = (props) => {
+	const { index, parentUrn, asideData, element, addNestedElements,
+			sepratorIndex, sectionType, onSortUpdate, elementAncestors } = props || {};
 	/** @description sectionHeading - get the heading of section of showhide */
-	const sectionHeading = sectionType === "show" ? "Show" : "Hide";
+	const sectionHeading = sectionType === showHideConstants.SHOW ? "Show" : "Hide";
 
 	/**
-	* @function showDifferentElements
+	* @function renderNestedElements
 	* @description-This function is to display seprator and elements in show|hide section inside showhide
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer   
 	*/
-	function showDifferentElements() {
+	function renderNestedElements() {
 		return element?.interactivedata[sectionType]?.map((item, i) => {
 			/* Form the indexes */
-			const indexs = sectionType === "show" ? `${index}-0-${i}` : `${index}-2-${i}`;
-			const indexSepra = sectionType === "show" ? `${index}-0-${i+1}` : `${index}-2-${i+1}`;
+			const indexes = sectionType === showHideConstants.SHOW ? `${index}-0-${i}` : `${index}-2-${i}`;
+			const elemSepratorIndex = sectionType === showHideConstants.SHOW ? `${index}-0-${i+1}` : `${index}-2-${i+1}`;
 			return (
 					<>
-						{ showElements(item, indexs) }
-						{ showSeprator(indexSepra) }
+						{ renderElements(item, indexes) }
+						{ showSeprator(elemSepratorIndex, sectionType) }
 					</>
 				)
 		})
@@ -31,7 +32,7 @@ function ShowHideUiBlock(props) {
 	/**
 	* @function showSeprator
 	* @description-This function is to display seprator at different levels inside showhide
-	* @param {String} i - indexs of elements - "showhide-show|hide|revealAnswer-element"
+	* @param {String} i - indexes of elements - "showhide-show|hide|revealAnswer-element"
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer   
 	* @param {Boolean} isFirst - is this first seprator in section of showhide
 	*/
@@ -53,7 +54,7 @@ function ShowHideUiBlock(props) {
 			parentUrn = {newParentUrn}
 			asideData = {elementLineage}
 			//parentIndex = {i}
-			esProps = {elementList2Add(i, newParentUrn, asideData, sectionType, props)}
+			esProps = {addNestedElements(i, newParentUrn, asideData, sectionType, props)}
 			elementType = {element?.type}
 			permissions = {props.permissions}
 			onClickCapture = {props.onClickCapture}
@@ -65,13 +66,13 @@ function ShowHideUiBlock(props) {
 	}
 
 	/**
-	* @function showElements
+	* @function renderElements
 	* @description-This function is to display different elements inside showhide
 	* @param {Object} item - data of element(Text|Image) inside ShowHide   
-	* @param {String} i - indexs of elements - "showhide-show|hide|revealAnswer-element"
+	* @param {String} eleIndex - indexes of elements - "showhide-show|hide|revealAnswer-element"
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer
 	*/
-	function showElements(item, i) {
+	function renderElements(item, eleIndex) {
 		const elementLineage = {
 		 	...element ,
 			grandParent: {
@@ -79,10 +80,9 @@ function ShowHideUiBlock(props) {
 				parentUrn
 			}
 		}
-
 		return <ElementContainer
 			element = {item}
-			index = {i}
+			index = {eleIndex}
 			parentUrn = {parentUrn}
 			showBlocker = {props.showBlocker}
 			asideData = {elementLineage}
@@ -96,8 +96,8 @@ function ShowHideUiBlock(props) {
 			elementSepratorProps = {props.elementSepratorProps}
 			splithandlerfunction = {props.splithandlerfunction}
 			pasteElement = {props.pasteElement}
+			showHideType = {sectionType}
 			handleFocus = {props.handleFocus}
-			//showHideType = {sectionType}
 		/>
 	}
 
@@ -111,7 +111,7 @@ function ShowHideUiBlock(props) {
 				onSortUpdate = {onSortUpdate}
 				sectionType = {sectionType}
 			>
-				{ showDifferentElements() }
+				{ renderNestedElements() }
 			</SortElement>	
 		</div>
 	)

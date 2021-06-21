@@ -15,6 +15,7 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus } from './ElementContainer_Actions';
+import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
@@ -979,7 +980,7 @@ class ElementContainer extends Component {
      */
     deleteElement = (e) => {
         let { id, type } = this.props.element;
-        let { parentUrn, asideData, element, poetryData } = this.props;
+        let { parentUrn, asideData, element, poetryData, parentElement } = this.props;
         let { contentUrn } = this.props.element
         let index = this.props.index
 
@@ -992,10 +993,21 @@ class ElementContainer extends Component {
             contentUrn = this.state.sectionBreak.contentUrn
             id = this.state.sectionBreak.id
         }
+        const containerElements = {
+            parentUrn,
+            asideData,
+            poetryData,
+            parentElement
+        }
         this.handleCommentPopup(false,e);
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+       sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
-        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element);
+        if (parentElement?.type === elementTypeConstant.SHOW_HIDE || element.type === elementTypeConstant.SHOW_HIDE) {
+            this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
+        }
+        else {
+            this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
+        }
         this.setState({
             sectionBreak: null
         })
@@ -1213,15 +1225,23 @@ class ElementContainer extends Component {
         tcmStatus = this.showTCMButton(tcmData, element)
         tcm = tcmStatus.tcm
         feedback = tcmStatus.feedback
-        /** OLD TCM ICON FLOW -----> to be removed
-        tcm = tcmData.filter(tcmelm => {
-            let elementUrn = tcmelm.elemURN;
-            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0}).length>0;
-        feedback = tcmData.filter(feedbackelm => {
-            let elementUrn = feedbackelm.elemURN;
-            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && feedbackelm.feedback && feedbackelm.feedback !== null}).length>0;
-        */
+
         /* TODO need better handling with a function and dynamic component rendering with label text*/
+        const commonProps = {
+            index,
+            elementId: element.id,
+            permissions,
+            slateLockInfo,
+            handleBlur: this.handleBlur,
+            handleFocus: this.handleFocus,
+            showHideType: this.props?.showHideType,
+            parentElement: this.props?.parentElement,
+            glossaryFootnoteValue: this.props.glossaryFootnoteValue,
+            glossaaryFootnotePopup: this.props.glossaaryFootnotePopup,
+            openAssetPopoverPopUp: this.openAssetPopoverPopUp,
+            openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
+            handleAudioPopupLocation: this.handleAudioPopupLocation
+        }
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
@@ -1234,13 +1254,13 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
+                    editor = <ElementAuthoring element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} />;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
-                    editor = <ElementAuthoring tagName="blockquote" permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
+                    editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} { ...commonProps}/>;
                     break;
                 case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
-                    editor = <ElementLearningObjectiveItem permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} />;
+                    editor = <ElementLearningObjectiveItem model={element.html} element={element} {...commonProps} />;
                     break;
                 case elementTypeConstant.FIGURE:
                     switch (element.figuretype) {
@@ -1250,27 +1270,27 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  parentEntityUrn={this.props.parentUrn} />;
+                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>;
+                            editor = <ElementAudioVideo model={element} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} parentElement={this.props?.parentElement}/>;
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation} editInteractiveId = {this.state.editInteractiveId} />;
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation} editInteractiveId = {this.state.editInteractiveId} parentElement={this.props?.parentElement}/>;
                             labelText = LABELS[element.figuredata.interactiveformat];
                             isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
                             break;
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} parentElement={this.props?.parentElement}/>;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -1332,6 +1352,7 @@ class ElementContainer extends Component {
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         activeElement={this.props.activeElement}
                         handleAudioPopupLocation = {this.handleAudioPopupLocation}
+                        parentElement={this.props?.parentElement}
                     />;
                     labelText = 'Pop'
                     break;
@@ -2030,7 +2051,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         editElmAssessmentId: (assessmentId, assessmentItemId) => {
             dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
-        }
+        },
+        deleteElementAction: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
+            dispatch(deleteElementAction(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
+        },
     }
 }
 
