@@ -10,9 +10,10 @@ import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Act
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { findSectionType } from '../ShowHide/ShowHide_Helper';
+import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 
 import ElementConstants from "./ElementConstants";
+import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
@@ -428,7 +429,15 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             return false;
         }
         let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-        let condition;
+        /* Create inner elements in ShowHide */
+        const indexes = index?.toString().split('-') || [];
+        /* Get the showhide element object from slate data using indexes */
+        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+        /* After getting showhide Object, add the new element */
+        if(!isEmpty(shObject) && shObject?.id === elementId) {
+            shObject?.interactivedata[type]?.splice(newShowhideIndex, 0, createdElemData.data);
+        }
+        /* let condition;
         if (newIndex.length == 4) {
             condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
             if (condition.versionUrn == elementId) {
@@ -456,7 +465,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             if(condition.versionUrn == elementId){
                 newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
             }
-        }
+        } */
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
 
         if (config.tcmStatus) {

@@ -1,5 +1,6 @@
 import config from '../../config/config.js';
 import { VIDEO, IMAGE, TEXT } from '../SlateWrapper/SlateWrapperConstants.js';
+import ElementConstants from '../ElementContainer/ElementConstants';
 
 
 /** 
@@ -38,8 +39,7 @@ export const elementList2Add = (index, parentUrn, asideData, sectionType, props)
 	]
 }
 
-
-	/* On Clicking of icons on Seprator Dropdown; */
+/* On Clicking of icons on Seprator Dropdown; */
 const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
 	/*if (this.checkLockStatus()) {
 	    this.togglePopup(true)
@@ -59,4 +59,30 @@ const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
 	* @param {String} type2BAdded - type of new element to be addedd - text|image 
 	*/
 	props.createShowHideElement(id, sectionType, index, contentUrn, null, props?.element, props?.index, type2BAdded);
+}
+/** 
+* @description getShowHideElement - Return the showhide element object from slate data
+* @param {Object} _slateBodyMatter - slate data from store
+* @param {Number} indexlength - indexlength of showhide element on slate
+* @param {Array} iList - array of index heirarchy of showhide element on slate
+*/
+export function getShowHideElement(_slateBodyMatter, indexlength, iList) {
+	try {
+		switch(indexlength) {
+			case 3: /* SH:Element */
+				return _slateBodyMatter[iList[0]];
+			case 4: /* AS/WE-Head:SH:Element */
+				return _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
+			case 5:
+				return _slateBodyMatter[iList[0]].type === ElementConstants.MULTI_COLUMN ? 
+					_slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]] : /* 2C:SH:Element */
+					_slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]]?.contents.bodymatter[iList[2]]; /* WE:Body:SH:Element */
+			case 6: /* 2C:AS/WE-Head:SH:Element */
+				return _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
+			case 7: /* 2C:WE-Body:SH:Element */
+				return _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
+		}
+    } catch(e) {
+            console.error("Something went wrong while accessing showhide object...", e);
+    	}
 }
