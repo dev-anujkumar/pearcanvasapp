@@ -13,6 +13,7 @@ const {
     AUTHORED_TEXT,
     BLOCKFEATURE,
     ELEMENT_LIST,
+    ELEMENT_ASSESSMENT,
     HEADING,
     PARAGRAPH,
     SLATE,
@@ -278,6 +279,9 @@ export const fetchElementsTag = (element,metadataField) => {
         case BLOCKFEATURE:
             eleSubType = element.elementdata.type
             break;
+        case ELEMENT_ASSESSMENT: 
+            eleSubType = element.type
+            break;
         case FIGURE:
             eleSubType = element.figuretype
             break;
@@ -331,6 +335,13 @@ const setElementTag = {
             'blockquote': {
                 parentTag: "BQ",
                 childTag: 'blockquote',
+            }
+        }
+    },
+    "element-assessment": {
+        subtype: {
+            'element-assessment' : {
+                parentTag: 'As'
             }
         }
     },

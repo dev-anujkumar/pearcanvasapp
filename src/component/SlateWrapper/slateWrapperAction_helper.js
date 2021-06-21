@@ -322,6 +322,7 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             break;
         case slateWrapperConstants.TEXT:
         case slateWrapperConstants.ASSESSMENT:
+        case slateWrapperConstants.ELEMENT_ASSESSMENT:
         case slateWrapperConstants.ELEMENT_CITATION:
         case slateWrapperConstants.STANZA:
         case slateWrapperConstants.IMAGE:

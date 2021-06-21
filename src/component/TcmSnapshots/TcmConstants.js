@@ -3,6 +3,7 @@ export default {
     AUTHORED_TEXT: "element-authoredtext",
     BLOCKFEATURE: "element-blockfeature",
     ELEMENT_LIST: "element-list",
+    ELEMENT_ASSESSMENT: 'element-assessment',
     HEADING: "heading",
     HAND_WRITING: 'handwriting',
     PARAGRAPH: "paragraph",

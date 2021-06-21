@@ -44,6 +44,7 @@ const {
     bqAttrHtmlFalse,
     bqHiddenText,
     FIGURE,
+    ELEMENT_ASSESSMENT,
     allowedFigureTypesForTCM,
     SHOWHIDE,
     SHOW_HIDE,
@@ -880,6 +881,27 @@ export const setSlateType = (wipData, containerElement, type) => {
     return isContainer
 }
 
+const prepareStandAloneSlateSnapshot = (element, actionStatus, index, semanticSnapshots) => {
+
+    let elementSnapshot = {};
+    elementSnapshot = {
+        contentSnapshot : {
+            assessmentTitle: `<p>Assessment Title</p>`,
+            assessmentItemTitle: `<p>Assessment Item Title</p>`,
+            assessmentId: `<p>urn:pearson:work:72dea980-364d-49d3-b17e-391b2d80a9b7</p>`,
+            assessmentItemId: `<p>Assessment Item Id</p>`,
+            assessmentUsageType: `<p>Diagonistic</p>`,
+            assessmentStatus: `<p>Unapproved</p>`,
+            assessmentType: `<p>CITE<p>`
+        },
+        glossorySnapshot: JSON.stringify([]),
+        footnoteSnapshot:  JSON.stringify([]),
+        assetPopOverSnapshot: JSON.stringify([])
+    }
+    
+    return elementSnapshot;
+}
+
 /**
  * @function prepareFigureElementSnapshots
  * @description This function is to set the keys for tcm snapshots for FIGURE ELEMENT
@@ -959,11 +981,20 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
                 ...getInteractiveSubtypeData(element.figuredata, element.html)
             }
             break;
-        case 'assessment': 
+        case 'assessment': {
+        const elementData = element?.figuredata?.elementdata; 
+        if(elementData)
             snapshotData = {
-                ...(element?.figuredata?.elementdata || {})
+                assessmentTitle: `<p>${elementData?.assessmenttitle}</p>`,
+                assessmentItemTitle: `<p>${elementData?.assessmentitemtitle}</p>`,
+                assessmentId: `<p>urn:pearson:work:72dea980-364d-49d3-b17e-391b2d80a9b7</p>`,
+                assessmentItemId: `<p>${elementData?.assessmentitemid}</p>`,
+                assessmentUsageType: `<p>Diagonistic</p>`,
+                assessmentStatus: `<p>Unapproved</p>`,
+                assessmentType: `<p>${elementData?.assessmentformat}<p>`
             }          
             break;
+        }
         case "image":
         case "table":
         case "mathImage":
@@ -994,7 +1025,9 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
         snapshotData = '<p></p>'          
-    } 
+    } else if (element?.type === ELEMENT_ASSESSMENT) {
+        snapshotData = JSON.stringify(prepareStandAloneSlateSnapshot());
+    }   
     /**else if(element.type === ELEMENT_LIST && element.html && element.html.text){
         snapshotData = element.html.text.replace(/<br>/g,"")
     }*/
