@@ -648,7 +648,7 @@ class Sidebar extends Component {
                 {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value)=>{this.handleSyntaxHighlightingPopup(value)}} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true}/>}
             </div>
     }   
-            {this.props.isTCMCanvasPopupLaunched && <PopUp isTCMCanvasPopup={true} dialogText="HELLO THERE" assessmentClass={'tcm-canvas-popup'} handleTCMRedirection={this.props.handleTCMRedirection}/>}
+            {this.props.isTCMCanvasPopupLaunched && <PopUp isTCMCanvasPopup={true} dialogText="HELLO THERE" assessmentClass={'tcm-canvas-popup'} handleTCMRedirection={this.props.handleTCMRedirection} tcmSnapshotData={this.props.tcmSnapshotData}/>}
             </>
         );
     }
@@ -673,6 +673,7 @@ const mapStateToProps = state => {
         cutCopySelection: state.selectionReducer.selection,
         isLearnosityProject: state.appStore.isLearnosityProjectInfo,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
+        tcmSnapshotData: state.tcmReducer.tcmSnapshotData
     };
 };
 

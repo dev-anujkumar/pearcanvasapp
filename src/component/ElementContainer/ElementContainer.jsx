@@ -556,25 +556,30 @@ class ElementContainer extends Component {
      * This function opens TCM w.r.t. current Element
      */
     handleTCM = (e) => {
-        const tcmObject = {isTCMCanvasPopup: true}
-        // let that = this
-        // const currentProjectUrn = config.projectUrn;
-        // const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
-        // const currentElementUrn = this.props.activeElement.elementId
-        // let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}/elem/${currentElementUrn}?sortBy=desc&start=1&count=1`
-        // return axios.get(url, {
-        //       headers:  {
-        //         PearsonSSOSession: config.ssoToken,
-        //     }
-        // }).then((res) => {
-        //     let data = res.data[0].elemSnapshot
-        //     data = JSON.parse(data)
-        //       console.log("CHECKING RESPONSE", data.contentSnapshot.text)
-        //       that.props.launchTCMPopup(tcmObject)
-        // }).catch((error) => {
-        //     console.error(error)
-        // })
-        this.props.launchTCMPopup(tcmObject)
+        let that = this
+        const currentProjectUrn = config.projectUrn;
+        const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
+        let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}`
+        return axios.get(url, {
+              headers:  {
+                PearsonSSOSession: config.ssoToken,
+            }
+        }).then((res) => {
+            that.processTCMData(res.data)
+        }).catch((error) => {
+            console.error(error)
+        })
+    }
+
+    processTCMData = (data) =>{
+        const that = this
+        const Id = this.props.activeElement.elementId
+        data.map((elemData)=>{
+           if(elemData.elemURN === Id){
+            const tcmObject = {isTCMCanvasPopup: true, tcmElemData: elemData }
+            that.props.launchTCMPopup(tcmObject)
+           }
+       })
     }
     /**
      * Calls API for element updation
