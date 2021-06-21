@@ -523,7 +523,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
 
-                    if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
+                    if(editor.selection.getNode().className.includes('callout')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
                             editor.insertContent(textSelected);
@@ -2754,7 +2754,7 @@ export class TinyMceEditor extends Component {
                             this.fromtinyInitBlur = false;
                         }
                     }
-                })
+                }).catch((err) => console.log(err))
             }
         }
     }
@@ -3282,7 +3282,7 @@ export class TinyMceEditor extends Component {
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
                 }
-            });
+            }).catch((err) => console.log(err));
             this.setToolbarByElementType(); 
         }
         /**
@@ -3374,7 +3374,7 @@ export class TinyMceEditor extends Component {
                         }
                     }, 10)
                 }
-            })
+            }).catch((err) => console.log(err));
         });
         if (isSameTarget) {
             this.editorOnClick(event);
