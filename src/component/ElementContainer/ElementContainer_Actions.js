@@ -9,7 +9,7 @@ import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ER
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 
 import ElementConstants from "./ElementConstants";
@@ -380,7 +380,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
     let newShowhideIndex = parseInt(newIndex[newIndex.length-1]); //+1
-    const { asideData, parentUrn ,showHideObj } = getState().appStore
+    //const { asideData, parentUrn ,showHideObj } = getState().appStore
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
@@ -405,11 +405,12 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-         let containerElement = {
+        /* let containerElement = {
             asideData,
             parentUrn,
             showHideObj
-        };
+        }; */
+        const containerElement = prepareSnapshots_ShowHide({ asideData: {...parentElement}}, createdElemData.data, index);
         let slateData = {
             currentParentData: newParentData,
             bodymatter: currentSlateData.contents.bodymatter,

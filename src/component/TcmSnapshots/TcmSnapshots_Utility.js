@@ -441,7 +441,7 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
 * @description This function will prepare the data of containerElement to get snapshots 
 *  of parent elements - 2C/Aside/POP:SH:New 
 */
-function prepareSnapshots_ShowHide(containerElement, wipData, index) {
+export function prepareSnapshots_ShowHide(containerElement, wipData, index) {
     const { asideData, parentUrn } =  containerElement?.asideData?.grandParent || {};
     let showhideElement = { ...containerElement?.asideData };
     /* Delete the grandparent data form asideData */
