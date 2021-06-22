@@ -137,8 +137,13 @@ export function indexOfSectionType(indexes){
  * @param {*} indexes Array of indexs
  * @param {*} showHideObj showHide details
  */
-const getTextElementInShowHide = (bodymatter, indexes, showHideObj) => {
-    let currentElement = {}
+const getTextElementInShowHide = (bodymatter, indexes, {showHideType}) => {
+    const indexlength = Array.isArray(indexes) ? indexes.length : 0;
+    const showHideElement = getShowHideElement(bodymatter, indexlength, indexes);
+
+    return showHideElement?.interactivedata[showHideType][indexes[(indexlength - 1)]];
+
+    /* let currentElement = {}
     switch (indexes.length) {
         case 3:
             currentElement = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
@@ -156,7 +161,7 @@ const getTextElementInShowHide = (bodymatter, indexes, showHideObj) => {
             currentElement = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]]
             break;
     }
-    return currentElement
+    return currentElement */
 }
 /**
  * @function getFigureElementsInShowHide
