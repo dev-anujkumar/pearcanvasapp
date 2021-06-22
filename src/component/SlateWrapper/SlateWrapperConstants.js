@@ -23,6 +23,7 @@ export const TABLE_EDITOR = "TABLE_EDITOR";
 export const FIGURE_MML = "MATH_ML_CHEM_EDITOR";
 export const MULTI_COLUMN_GROUP = "GROUPED_CONTENT";
 export const MULTI_COLUMN = "MULTI_COLUMN";
+export const MULTI_COLUMN_3C = "MULTI_COLUMN_3C";
 export const MMI_ELM = "MMI_ELM";
 export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have access to the Linked Alfresco site. please contact the Manager for this project";
 export const ELEMENT_DIALOGUE = "ELEMENT_DIALOGUE";
@@ -54,7 +55,7 @@ export const DELETE_DIALOG_TEXT = 'Are you sure you want to delete, This action 
 export const TYPE_SINGLE_CONTAINER_DELETE = 'singleContainerDelete'
 export const TYPE_WITH_PENDING_TRACK = 'withPendingTrack'
 export const TYPE_UNLINK = 'unlink'
-export const elementType = ['ASSESSMENT', 'ELEMENT_ASSESSMENT','WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE"];
+export const elementType = ['ASSESSMENT', 'ELEMENT_ASSESSMENT','WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN', 'MULTI_COLUMN_3C','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE"];
 
 export const CLONE_STATUS_INTERVAL = 2000
 export const checkTCM = element => {
