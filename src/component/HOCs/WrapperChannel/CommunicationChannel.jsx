@@ -414,8 +414,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.saveSelectedAssetData(payloadObj);
                 hideBlocker();
             } else {
-                this.props.showWrongAudioPopup(true)
-                return false;
+                this.props.showWrongAudioPopup(true);
             }
         }
         /**
