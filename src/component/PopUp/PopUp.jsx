@@ -11,6 +11,7 @@ import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 import TcmCloseIcon from '../../images/CanvasTCMPopup/TcmCloseIcon.png'
 import TcmExpandIcon from '../../images/CanvasTCMPopup/TcmExpandIcon.png'
 import TcmRefreshIcon from '../../images/CanvasTCMPopup/TcmRefreshIcon.png'
+import TCMUtiles from '../../component/TcmSnapshots/TCMpopup_Utilty'
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -63,6 +64,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderButtons = (props) => {
+        console.log("pops", props)
         if (props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText) { //Slate lock popup
             showBlocker(true); showTocBlocker();
             return (
@@ -122,8 +124,8 @@ class PopUp extends React.Component {
         if (props.isTCMCanvasPopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span className={`lo-save-button`} onClick={(e) => props.yesButtonHandler(e)}>Accept</span>
-                    <span className="cancel-button" onClick={(e) => props.yesButtonHandler(e)}>Revert</span>
+                    <span className={`lo-save-button`} onClick={() => props.tcmButtonHandler('Accept')}>Accept</span>
+                    <span className="cancel-button" onClick={() => props.tcmButtonHandler('Reject')}>Revert</span>
                 </div>
             )
         }
@@ -136,7 +138,6 @@ class PopUp extends React.Component {
             )
         }
     }
-
     /**
     * @description - This function is responsible for handling the Input box of the popup.
     * @param {event} 
@@ -276,36 +277,45 @@ class PopUp extends React.Component {
         }
     }
 
+
     renderTcmPopupIcons = (props) => {
         if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup) {
             return null
         }
         else {
-            return (
-                <div className="tcmContainer">
-                    <div className="userNametcmIconContainer">
-                        <div >
-                            <span>Marbit, Kira</span>
-                            <span> 12.30pm</span>
+            if (props.isTCMCanvasPopup) {
+                // let userName = props?.tcmSnapshotData?.latestPendingTransaction?.elementEditor
+                let date = props.tcmSnapshotData?.latestPendingTransaction?.changeTime
+                console.log("object", date)
+                let userName = "C5 Test02 C5"
+                let readableDate = TCMUtiles.formatDateTime(date)
+                let readableTime = TCMUtiles.formatTime(date)
+                return (
+                    <div className="tcmContainer">
+                        <div className="userNametcmIconContainer">
+                            <div className="userName">
+                                <span>{userName}</span>
+                                <span>{readableTime}</span>
+                            </div>
+                            <div className="tcmIconContainer">
+                                <span className="btn-element tcmIcon">
+                                    {<img src={TcmRefreshIcon} alt="TcmRefreshIcon" />}
+                                </span>
+                                <span className="btn-element tcmIcon" onClick={(e) => props.handleTCMRedirection(e)}>
+                                    {<img src={TcmExpandIcon} alt="TcmExpandIcon" />}
+                                </span>
+                                <span className="btn-element tcmIcon" onClick={() => props.closeTcmPopup()}>
+                                    {<img src={TcmCloseIcon} alt="TcmCloseIcon" />}
+                                </span>
+                            </div>
                         </div>
-                        <div className="tcmIconContainer">
-                            <span className="btn-element tcmIcon">
-                                {<img src={TcmRefreshIcon} alt="TcmRefreshIcon" />}
-                            </span>
-                            <span className="btn-element tcmIcon" onClick={(e) => props.handleTCMRedirection(e)}>
-                                {<img src={TcmExpandIcon} alt="TcmExpandIcon" />}
-                            </span>
-                            <span className="btn-element tcmIcon" onClick={() => props.closeTcmPopup()}>
-                                {<img src={TcmCloseIcon} alt="TcmCloseIcon" />}
-                            </span>
+                        <div className="tcmdStatusContainer">
+                            <div>{readableDate}</div>
+                            <div><span>Lable Added</span></div>
                         </div>
                     </div>
-                    <div className="tcmdStatusContainer">
-                        <div>31.3.21</div>
-                        <div><span>Lable Added</span></div>
-                    </div>
-                </div>
-            )
+                )
+            }
         }
     }
 
