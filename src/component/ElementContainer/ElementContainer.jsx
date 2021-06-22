@@ -62,7 +62,7 @@ import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
 import axios from 'axios';
-
+import FetchAllDataMapper from '../TcmSnapshots/FetchAllDataMapper/FetchTcmDataMapper'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -572,11 +572,13 @@ class ElementContainer extends Component {
     }
 
     processTCMData = (data) =>{
-        const that = this
-        const Id = this.props.activeElement.elementId
+        let that = this
+        const eURN = this.props.activeElement.elementId
         data.map((elemData)=>{
-           if(elemData.elemURN === Id){
-            const tcmObject = {isTCMCanvasPopup: true, tcmElemData: elemData }
+           if(elemData.elemURN === eURN){
+            const elemIndex = [{index: this.props.index, urn: eURN}]
+            const tcmData = FetchAllDataMapper.processResponse([elemData], eURN, elemIndex);
+            const tcmObject = {isTCMCanvasPopup: true, tcmElemData: tcmData.result[0] }
             that.props.launchTCMPopup(tcmObject)
            }
        })

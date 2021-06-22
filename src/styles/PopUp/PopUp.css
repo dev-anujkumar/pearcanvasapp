@@ -522,3 +522,10 @@ overflow: unset;
   margin-top: 100px; /* Negative half of height. */
   margin-left: 500px;
 }
+
+ins{
+  background-color: lightgreen;
+}
+del{
+  background-color: red;
+}

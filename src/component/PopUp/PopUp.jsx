@@ -265,7 +265,7 @@ class PopUp extends React.Component {
             )
         } else if (props.isTCMCanvasPopup) {
             return (
-                <div className={`dialog-window ${props.splitSlateClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window ${props.splitSlateClass}`} dangerouslySetInnerHTML={{ __html: props.dialogText }}></div>
             )
         }
         else {
