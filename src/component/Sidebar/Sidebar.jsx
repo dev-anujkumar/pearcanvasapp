@@ -19,6 +19,7 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { launchTCMPopup } from '../CanvasWrapper/TCM_Integration_Actions';
+import axios from 'axios';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -639,7 +640,24 @@ class Sidebar extends Component {
         const tcmObject = { isTCMCanvasPopup: false }
         this.props.launchTCMPopup(tcmObject)
     }
-
+    tcmButtonHandler = (status) => {
+        const currentProjectUrn = config.projectUrn;
+        const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
+        let timeStamp = this.props.tcmSnapshotData?.latestPendingTransaction?.lastUpdatedTimestamp
+        let elemSURN = this.props.tcmSnapshotData?.latestPendingTransaction?.elemSURN
+        let body = { "lastUpdatedTimestamp": timeStamp, "changeStatus": status };
+        let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}/elem/${elemSURN}`
+        return axios.patch(url, body, {
+            headers: {
+                PearsonSSOSession: config.ssoToken,
+            }
+        }).then((res) => {
+            console.log(res.data)
+            this.closeTcmPopup()
+        }).catch((error) => {
+            console.error(error)
+        })
+    }
     render = () => {
         return (
             <>
@@ -654,7 +672,7 @@ class Sidebar extends Component {
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
                 </div>
                 }
-                {this.props.isTCMCanvasPopupLaunched && <PopUp isTCMCanvasPopup={this.props.isTCMCanvasPopupLaunched} assessmentClass={'tcm-canvas-popup'} handleTCMRedirection={this.props.handleTCMRedirection} closeTcmPopup={this.closeTcmPopup}/>}
+                {this.props.isTCMCanvasPopupLaunched && <PopUp isTCMCanvasPopup={this.props.isTCMCanvasPopupLaunched} assessmentClass={'tcm-canvas-popup'} handleTCMRedirection={this.props.handleTCMRedirection} closeTcmPopup={this.closeTcmPopup} tcmButtonHandler={this.tcmButtonHandler} tcmSnapshotData={this.props.tcmSnapshotData} />}
             </>
         );
     }
@@ -679,6 +697,7 @@ const mapStateToProps = state => {
         cutCopySelection: state.selectionReducer.selection,
         isLearnosityProject: state.appStore.isLearnosityProjectInfo,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
+        tcmSnapshotData: state.tcmReducer.tcmSnapshotData
     };
 };
 
