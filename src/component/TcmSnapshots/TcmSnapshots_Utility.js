@@ -894,7 +894,7 @@ const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
             assessmentId: `<p>${elementData?.assessmentid|| ''}</p>`,
             assessmentItemId: `<p>${elementData?.assessmentitemid|| ''}</p>`,
             assessmentUsageType: `<p>${elementData?.usagetype|| ''}</p>`,
-            assessmentStatus: `<p>Unapproved</p>`,
+            assessmentStatus: `<p>${elementData?.assessmentStatus}</p>`,
             assessmentType: `<p>${elementData?.assessmentformat|| ''}<p>`,
             glossorySnapshot: '[]',
             footnoteSnapshot: '[]',
@@ -1000,7 +1000,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
                     assessmentItemId: `<p>${elementData?.assessmentitemid || ''}</p>`,
                     assessmentUsageType: `<p>${elementData?.usagetype || ''}</p>`,
                     // only sent in case of elm and learnosity
-                    assessmentStatus: `<p>Unapproved</p>`,
+                    assessmentStatus: `<p>${elementData?.assessmentStatus}</p>`,
                     assessmentType: `<p>${elementData?.assessmentformat || ''}<p>`
                 }  
             }
