@@ -397,24 +397,27 @@ function CommunicationChannel(WrappedComponent) {
                 isInlineEditor: message.isEditor,
                 imageArgs: this.props.imageArgs                
             }
-            this.props.saveInlineImageData(params)
+            this.props.saveInlineImageData(params);
+            hideBlocker();
         }
 
         handleAudioData = (message) => {
-            let fileName = message.asset.name;
-            let fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
-            let allowedExtentions = ["mp3", "aac", "wav"];
-            if (allowedExtentions.includes(fileExtension)) {
+            let imageData = message.asset;
+            let figureType = imageData?.content?.mimeType?.split('/')[0]
+            let smartLinkAssetType = imageData?.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
+            if (figureType == "audio" || smartLinkAssetType?.toLowerCase() == "audio") {
                 this.props.saveDataFromAlfresco(message);
                 let payloadObj = {
-                    asset: {}, 
+                    asset: {},
                     id: ''
                 }
-                this.props.saveSelectedAssetData(payloadObj)
+                this.props.saveSelectedAssetData(payloadObj);
+                hideBlocker();
             } else {
-                this.props.showWrongAudioPopup(true);
+                this.props.showWrongAudioPopup(true)
+                return false;
             }
-        }        
+        }
         /**
          * Releases slate lock and logs user out.
          */

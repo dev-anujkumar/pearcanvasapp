@@ -219,16 +219,30 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
 }
 
 export const saveDataFromAlfresco = (message) => dispatch => {
-    let assetData = message?.asset;
+    let imageData = message?.asset;
     let audioData = {
-        "narrativeAudioUrn": assetData.id || "",
-        "location": assetData?.epsUrl,
+        "narrativeAudioUrn": imageData.id ?? "",
         "title": {
-            "en": assetData?.name
-        },
-        "format": assetData?.content?.mimeType
+            "en": imageData?.name
+        }
+    }
+    let figureType = imageData?.content?.mimeType?.split('/')[0]
+    let smartLinkAssetType = imageData?.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
+    const audioFormat = imageData?.mimetype ?? imageData?.content?.mimeType ?? "";
+    if (figureType === 'audio') {
+        let nonSmartLinkUrl = imageData["institution-urls"] && imageData["institution-urls"][0]?.publicationUrl
+        audioData.location = nonSmartLinkUrl
+        audioData.format = audioFormat
+    } else if (smartLinkAssetType.toLowerCase() === 'audio') {
+        let assetFormat = "";
+        let smartLinkUrl = imageData?.properties["avs:url"] ? imageData.properties["avs:url"] : "";
+        if (smartLinkUrl && smartLinkUrl?.split('=') && smartLinkUrl?.split('=').length > 1) {
+            assetFormat = 'audio' + "/" + smartLinkUrl?.split('=')[1]
+        }
+        audioData.location = smartLinkUrl
+        audioData.format = audioFormat ?? assetFormat ?? ""
     }
     let calledfromGlossaryFootnote = message?.calledFromGlossaryFootnote ? message.calledFromGlossaryFootnote : false;
-    dispatch(addAudioNarrationForContainer(audioData,calledfromGlossaryFootnote));
-    hideTocBlocker();                    
+    dispatch(addAudioNarrationForContainer(audioData, calledfromGlossaryFootnote));
+    hideTocBlocker();
 }
