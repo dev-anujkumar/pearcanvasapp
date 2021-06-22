@@ -884,8 +884,17 @@ export const setSlateType = (wipData, containerElement, type) => {
     return isContainer
 }
 
+const getAssessmentStatus = (assessmentId) => {
+    if(assessmentId) {
+        const assessmentData = store?.getState()?.assessmentReducer?.[assessmentId];
+        const assessmentStatus = assessmentData?.assessmentStatus;
+        if(assessmentStatus) {
+            return (assessmentStatus === 'final' ?  "Approved" : "Unapproved");
+        }
+    }
+}
+
 const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
-    console.log("the element is ", element, elementDetails);
     const elementData =element?.elementdata;
     let elementSnapshot = {};
     elementSnapshot = {
@@ -894,7 +903,7 @@ const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
             assessmentId: `<p>${elementData?.assessmentid|| ''}</p>`,
             assessmentItemId: `<p>${elementData?.assessmentitemid|| ''}</p>`,
             assessmentUsageType: `<p>${elementData?.usagetype|| ''}</p>`,
-            assessmentStatus: `<p>${elementData?.assessmentStatus || ''}</p>`,
+            assessmentStatus: `<p>${getAssessmentStatus(elementData?.assessmentId) || ''}</p>`,
             assessmentType: `<p>${elementData?.assessmentformat|| ''}<p>`,
             glossorySnapshot: '[]',
             footnoteSnapshot: '[]',
@@ -999,8 +1008,8 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
                     assessmentId: `<p>${elementData?.assessmentid || ''}</p>`,
                     assessmentItemId: `<p>${elementData?.assessmentitemid || ''}</p>`,
                     assessmentUsageType: `<p>${elementData?.usagetype || ''}</p>`,
-                    // only sent in case of elm and learnosity
-                    assessmentStatus: `<p>${elementData?.assessmentStatus || ''}</p>`,
+                    // status only sent in case of elm and learnosity
+                    assessmentStatus: `<p>${getAssessmentStatus(elementData.assessmentid) || ''}</p>`,
                     assessmentType: `<p>${elementData?.assessmentformat || ''}<p>`
                 }  
             }

@@ -468,26 +468,6 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             figureData: oldFigureData,
             
         }
-        if((responseData.type === 'figure' && responseData.figuretype === 'assessment')) {
-            const assessmentId = elementUpdateData?.response?.figuredata?.elementdata?.assessmentid;
-            if(assessmentId) {
-                const assessmentData = getState()?.assessmentReducer?.[assessmentId];
-                const assessmentStatus = assessmentData?.assessmentStatus;
-                if(assessmentStatus) {
-                    elementUpdateData.response.figuredata.elementdata.assessmentStatus = assessmentStatus === 'final' ?  "Approved" : "Unapproved"   
-                }
-            }
-        }
-        if(responseData.type === "element-assessment") {
-            const assessmentId = elementUpdateData?.response?.elementdata?.assessmentid;
-            if(assessmentId) {
-                const assessmentData = getState()?.assessmentReducer?.[assessmentId];
-                const assessmentStatus = assessmentData?.assessmentStatus;
-                if(assessmentStatus) {
-                    elementUpdateData.response.elementdata.assessmentStatus = assessmentStatus === 'final' ?  "Approved" : "Unapproved"   
-                }
-            }
-        }
 
         if (!config.isCreateGlossary) {
             await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
