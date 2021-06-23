@@ -31,6 +31,7 @@ class OpenGlossaryAssets extends Component {
     componentDidMount() {
         document.addEventListener('mousedown', this.handleClick, false);
         const {  figureGlossaryData, audioGlossaryData } = this.props;
+        
         if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {
             this.setState({ tabValue: "audio" });
         } else if (figureGlossaryData && Object.keys(figureGlossaryData).length > 0) {
@@ -42,8 +43,8 @@ class OpenGlossaryAssets extends Component {
     * @description - handleClick function responsible for closing the dropdown whenever clicked outside.
     */
     handleClick = (e) => {
-        alert("handleclickkkkkkkkkkkkkkkkkkk", this.state.tabValue, this.node?.contains(e.target));
-        if (this.node?.contains(e.target)) {
+        // console.log("handleclickkkkkkkkkkkkkkkkkkk " + this.node);
+        if (this.node.contains(e.target)) {
             return;
         }
         this.props.closeAssetsPopup();
@@ -75,8 +76,9 @@ class OpenGlossaryAssets extends Component {
 
     render = () => {
         const {  figureGlossaryData, audioGlossaryData, position } = this.props;
-        const { tabValue, replaceAudioToggle, replaceImageToggle } = this.state;
+        let { tabValue, replaceAudioToggle, replaceImageToggle } = this.state;
         let imageMediaSrc, imageMediaTitle, audioMediaSrc, audioMediaTitle = "";
+        
         
         if (figureGlossaryData && Object.keys(figureGlossaryData).length > 0) {
             imageMediaSrc = figureGlossaryData.path;
@@ -99,9 +101,9 @@ class OpenGlossaryAssets extends Component {
                             <div onClick={() => this.handleTab('image')} className={`tabs ${tabValue === 'image' ? "active-tabs" : ""}`}>Image</div>
                         }
                     </div>
-                {/* <div className="audio-close">
+                <div className="audio-close" style={{backgroundColor:"pink"}}>
                     <span className="close-icon-image" onClick={() => this.props.closeAssetsPopup()}>{audioNarrationCloseIcon}</span>
-                </div> */}
+                </div>
 
                 {
                     audioGlossaryData && Object.keys(audioGlossaryData).length > 0 &&
