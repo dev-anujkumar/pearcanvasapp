@@ -886,8 +886,13 @@ export const setSlateType = (wipData, containerElement, type) => {
     return isContainer
 }
 const getAssessmentType = (key) => {
-    return ASSESSMENT_TYPE.find(item => item.type === key)?.label;
+    const assessmentType =  ASSESSMENT_TYPE.find(item => item.type === key);
+    if(assessmentType) {
+        return assessmentType.label
+    }
+    return key;
 }
+
 const getAssessmentStatus = (assessmentId) => {
     if(assessmentId) {
         const assessmentData = store?.getState()?.assessmentReducer?.[assessmentId];
