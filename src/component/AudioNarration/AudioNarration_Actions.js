@@ -243,6 +243,8 @@ export const saveDataFromAlfresco = (message) => dispatch => {
         audioData.format = audioFormat ?? assetFormat ?? ""
     }
     let calledfromGlossaryFootnote = message?.calledFromGlossaryFootnote ? message.calledFromGlossaryFootnote : false;
-    dispatch(addAudioNarrationForContainer(audioData, calledfromGlossaryFootnote));
+    if (audioData?.location?.trim() !== "" && audioData?.narrativeAudioUrn?.trim() !== "") {
+        dispatch(addAudioNarrationForContainer(audioData, calledfromGlossaryFootnote));
+    }
     hideTocBlocker();
 }

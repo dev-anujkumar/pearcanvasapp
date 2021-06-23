@@ -107,6 +107,11 @@ class Interactive extends React.Component {
         }
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
             this.dataFromAlfresco(alfrescoAssetData)
+            const payloadObj = {
+                asset: {}, 
+                id: ''
+            }
+            this.props.saveSelectedAssetData(payloadObj)
         }
     }
 
@@ -599,11 +604,11 @@ class Interactive extends React.Component {
                         textsemantics: []
                     }
                 }
-                let payloadObj = {
+                /**let payloadObj = {
                     asset: {}, 
                     id: ''
                 }
-                this.props.saveSelectedAssetData(payloadObj)
+                this.props.saveSelectedAssetData(payloadObj) */
                 this.props.updateFigureData(figuredata, this.props.index, this.props.elementId,()=>{
                     this.props.handleFocus("updateFromC2")
                     this.props.handleBlur()
