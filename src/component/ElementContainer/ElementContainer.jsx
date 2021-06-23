@@ -31,7 +31,6 @@ import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from './UpdateElements.js';
-import { launchTCMPopup } from '../CanvasWrapper/TCM_Integration_Actions';
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
@@ -61,8 +60,7 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
-import axios from 'axios';
-import FetchAllDataMapper from '../TcmSnapshots/FetchAllDataMapper/FetchTcmDataMapper'
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -552,37 +550,6 @@ class ElementContainer extends Component {
         } 
     }
 
-    /**
-     * This function opens TCM w.r.t. current Element
-     */
-    handleTCM = (e) => {
-        let that = this
-        const currentProjectUrn = config.projectUrn;
-        const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
-        let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}`
-        return axios.get(url, {
-              headers:  {
-                PearsonSSOSession: config.ssoToken,
-            }
-        }).then((res) => {
-            that.processTCMData(res.data)
-        }).catch((error) => {
-            console.error(error)
-        })
-    }
-
-    processTCMData = (data) =>{
-        let that = this
-        const eURN = this.props.activeElement.elementId
-        data.map((elemData)=>{
-           if(elemData.elemURN === eURN){
-            const elemIndex = [{index: this.props.index, urn: eURN}]
-            const tcmData = FetchAllDataMapper.processResponse([elemData], eURN, elemIndex);
-            const tcmObject = {isTCMCanvasPopup: true, tcmElemData: tcmData.result[0] }
-            that.props.launchTCMPopup(tcmObject)
-           }
-       })
-    }
     /**
      * Calls API for element updation
      * @param {*} node
@@ -1613,7 +1580,7 @@ class ElementContainer extends Component {
             }
         }
 
-        let noTCM = ['TE', 'Qu', 'PS','MA', 'DE'];
+        let noTCM = ['TE', 'PS','MA', 'DE'];
         if(noTCM.indexOf(labelText) >= 0) {
             tcm = false;
         }
@@ -1643,7 +1610,7 @@ class ElementContainer extends Component {
                         }} type="comment-flag" />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
-                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCM(event)} />)}
+                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.props.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.props.handleTCM(event)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={this.handleCommentPopup}
@@ -2016,9 +1983,6 @@ const mapDispatchToProps = (dispatch) => {
         },
         editElmAssessmentId: (assessmentId, assessmentItemId) => {
             dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
-        },
-        launchTCMPopup: (tcmObject) => {
-            dispatch(launchTCMPopup(tcmObject))
         }
     }
 }

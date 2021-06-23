@@ -36,7 +36,9 @@ import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/A
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
-import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
+import { loadTrackChanges, launchTCMPopup } from '../CanvasWrapper/TCM_Integration_Actions';
+import axios from 'axios';
+import FetchAllDataMapper from '../TcmSnapshots/FetchAllDataMapper/FetchTcmDataMapper'
 
 export class CanvasWrapper extends Component {
     constructor(props) {
@@ -175,6 +177,46 @@ export class CanvasWrapper extends Component {
         loadTrackChanges(this.props.activeElement.elementId)
     }
 
+      /**
+     * This function opens TCM w.r.t. current Element
+     */
+       handleTCM = (e) => {
+        if(this.props.activeElement.elementType === "element-authoredtext"){
+            let that = this
+            const currentProjectUrn = config.projectUrn;
+            const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
+            let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}`
+            return axios.get(url, {
+                  headers:  {
+                    PearsonSSOSession: config.ssoToken,
+                }
+            }).then((res) => {
+                that.processTCMData(res.data)
+            }).catch((error) => {
+                console.error(error)
+            })
+        } else {
+            if(config.isSavingElement){
+                return false
+            }
+            e.stopPropagation();
+            loadTrackChanges(this.props.activeElement.elementId)
+        }
+    }
+
+    processTCMData = (data) =>{
+        let that = this
+        const eURN = this.props.activeElement.elementId
+        data.map((elemData)=>{
+           if(elemData.elemURN === eURN){
+            const elemIndex = [{index: this.props.index, urn: eURN}]
+            const tcmData = FetchAllDataMapper.processResponse([elemData], eURN, elemIndex);
+            const tcmObject = {isTCMCanvasPopup: true, tcmElemData: tcmData.result[0] }
+            that.props.launchTCMPopup(tcmObject)
+           }
+       })
+    }
+
     render() {
         let slateData = this.props.slateLevelData
         let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : "";
@@ -222,7 +264,7 @@ export class CanvasWrapper extends Component {
                                     {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink}/>
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} handleTCM={this.handleTCM}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
@@ -253,7 +295,7 @@ export class CanvasWrapper extends Component {
                                             return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData}/>)
                                         }
                                         else {
-                                            return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} handleTCMRedirection={this.handleTCMRedirection}/>)
+                                            return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} handleTCMRedirection={this.handleTCMRedirection} handleTCM={this.handleTCM}/>)
                                         }
                                     }
                                 }
@@ -331,6 +373,8 @@ export default connect(
         fetchLearnosityContent,
         fetchProjectLFs,
         currentSlateLOType,
-        setElmPickerData
+        setElmPickerData,
+        launchTCMPopup,
+        loadTrackChanges
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

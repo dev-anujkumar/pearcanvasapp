@@ -298,7 +298,6 @@ export const fetchElementsTag = (element,metadataField) => {
         eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
     }
     labelText = eleTag ? `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`:"P"
-
     return labelText;
 }
 
@@ -448,6 +447,9 @@ const setElementTag = {
     },
     "figure": {
         subtype: {
+            'assessment': {
+                parentTag: 'Qu'
+            },
             'image': {
                 parentTag: "Fg"
             },

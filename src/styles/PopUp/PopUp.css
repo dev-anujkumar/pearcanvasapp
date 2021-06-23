@@ -513,12 +513,12 @@ overflow: unset;
 }
 
 .modal-content.tcm-canvas-popup{
-  width: 280px;
+  width: 340px;
   transform: none;
   animation-name: none;
   animation-duration: unset;
   top: 0;
-  left: -35%;
+  left: -38%;
   margin-top: 100px; /* Negative half of height. */
   margin-left: 500px;
 }
@@ -528,4 +528,33 @@ ins{
 }
 del{
   background-color: red;
+}
+.tcmIcon{
+  border: solid 1px transparent !important;
+  background-color: transparent !important;
+}
+.tcmIconContainer,.userNametcmIconContainer,.tcmdStatusContainer{
+  display: flex;
+}
+.tcmContainer{
+  display: flex;
+  flex-direction: column;
+}
+.userName{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+span{
+  padding: 10px;
+}
+.dialog-window.tcm-canvas-popup{
+  word-break: break-all;
+  padding: 15px 0 15px 0;
+  font-size: 12px !important;
+}
+
+.dialog-window p {
+  margin: 0 0 0 0 !important;
 }
