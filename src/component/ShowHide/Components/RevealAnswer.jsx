@@ -3,8 +3,15 @@ import { TinyMceEditor } from '../../tinyMceEditor';
 import { showHideConstants } from '../ShowHide_Helper';
 
 function RevealAnswer(props) {
-	const { index, slateLockInfo, element } = props || {};
-
+	const { index, slateLockInfo, element, asideData, parentUrn } = props || {};
+	/* Contains the data of parent elemens Ex.- 2C/Aside/POP||AgainContainer:SH */
+	const elementLineage = {
+		...element ,
+		grandParent: {
+			asideData,
+			parentUrn
+		}
+	}
 
 	return (
 		<div className="showhide-reveal-ans-block">
@@ -23,11 +30,11 @@ function RevealAnswer(props) {
 				handleBlur = {props.handleBlur} 
 				slateLockInfo = {slateLockInfo} 
 				elementId = {props?.element?.id}
-				popupField = {showHideConstants.REVEAL_TEXT} 
-				//createPopupUnit = {createPopupUnit}
-				handleAudioPopupLocation = {props.handleAudioPopupLocation}
 				parentElement = {element}
+				popupField = {showHideConstants.REVEAL_TEXT} 
+				handleAudioPopupLocation = {props.handleAudioPopupLocation}
 				showHideType = {showHideConstants.REVEAL_TEXT}
+				asideData = {elementLineage}
 			/>
 		</div>
 	)

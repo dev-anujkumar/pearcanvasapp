@@ -7,6 +7,7 @@ import ShowHideUiBlock from './Components/ShowHideUiBlock.jsx';
 import { addNestedElements } from './ShowHide_Helper.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions.js';
 import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 
 /**
 * @ShowHide is container class of showhide element. 

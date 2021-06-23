@@ -27,7 +27,7 @@ export function findSectionType(index){
 }
 
 /* List of Elements can be added inside showhide; Will be displayed on click of 'Seprator + Icon' */
-export const addNestedElements = (index, parentUrn, asideData, sectionType, props) => {
+export const addNestedElements = (index, sectionType, props) => {
 	return [{
 			buttonType: 'text-elem',
 			buttonHandler: () => addElementInShowHide(index, sectionType, TEXT, props),
@@ -56,7 +56,15 @@ const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
 	if (config.savingInProgress) {
 		return false
 	}
-	const { id, contentUrn, } = props?.element || {};
+    const { element, asideData, parentUrn } = props || {};
+	const { id, contentUrn, } = element || {};
+    const elementLineage = {
+        ...element ,
+        grandParent: {
+            asideData,
+            parentUrn
+        }
+    }
 	/**
 	* @function createShowHideElement
 	* @description - This function is to create elements inside showhide
@@ -66,7 +74,7 @@ const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
 	* @param {String} contentUrn - of parent element(showhide)
 	* @param {String} elementToAdd - type of new element to be addedd - text|image 
 	*/
-	props.createShowHideElement(id, sectionType, index, contentUrn, null, props?.element, props?.index, type2BAdded);
+	props.createShowHideElement(id, sectionType, index, contentUrn, null, elementLineage, props?.index, type2BAdded);
 }
 /** 
 * @description getShowHideElement - Return the showhide element object from slate data
@@ -95,6 +103,14 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList) {
     	}
 }
 
+/* Return the section type using index */
+export function indexOfSectionType(indexes){
+	const indexList = indexes ? indexes?.toString().split("-") : [];
+	const ilength = indexList?.length
+	if(ilength >= 3) {
+		return findSectionType(indexList[ilength - 2])
+	}
+}
 
 /**
  * @function handleElementsInShowHide
@@ -121,8 +137,13 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList) {
  * @param {*} indexes Array of indexs
  * @param {*} showHideObj showHide details
  */
-const getTextElementInShowHide = (bodymatter, indexes, showHideObj) => {
-    let currentElement = {}
+const getTextElementInShowHide = (bodymatter, indexes, {showHideType}) => {
+    const indexlength = Array.isArray(indexes) ? indexes.length : 0;
+    const showHideElement = getShowHideElement(bodymatter, indexlength, indexes);
+
+    return showHideElement?.interactivedata[showHideType][indexes[(indexlength - 1)]];
+
+    /* let currentElement = {}
     switch (indexes.length) {
         case 3:
             currentElement = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
@@ -140,7 +161,7 @@ const getTextElementInShowHide = (bodymatter, indexes, showHideObj) => {
             currentElement = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]]
             break;
     }
-    return currentElement
+    return currentElement */
 }
 /**
  * @function getFigureElementsInShowHide

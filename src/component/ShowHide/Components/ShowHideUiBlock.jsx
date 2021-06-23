@@ -54,7 +54,7 @@ const ShowHideUiBlock = (props) => {
 			parentUrn = {newParentUrn}
 			asideData = {elementLineage}
 			//parentIndex = {i}
-			esProps = {addNestedElements(i, newParentUrn, asideData, sectionType, props)}
+			esProps = {addNestedElements(i, sectionType, props)}
 			elementType = {element?.type}
 			permissions = {props.permissions}
 			onClickCapture = {props.onClickCapture}

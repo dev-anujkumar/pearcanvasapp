@@ -9,11 +9,10 @@ import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ER
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 
 import ElementConstants from "./ElementConstants";
-import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
@@ -380,7 +379,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
     let newShowhideIndex = parseInt(newIndex[newIndex.length-1]); //+1
-    const { asideData, parentUrn ,showHideObj } = getState().appStore
+    //const { asideData, parentUrn ,showHideObj } = getState().appStore
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
@@ -405,11 +404,12 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-         let containerElement = {
+        /* let containerElement = {
             asideData,
             parentUrn,
             showHideObj
-        };
+        }; */
+        const containerElement = prepareSnapshots_ShowHide({ asideData: {...parentElement}}, createdElemData.data, index);
         let slateData = {
             currentParentData: newParentData,
             bodymatter: currentSlateData.contents.bodymatter,
@@ -434,8 +434,14 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         /* Get the showhide element object from slate data using indexes */
         const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
         /* After getting showhide Object, add the new element */
-        if(!isEmpty(shObject) && shObject?.id === elementId) {
-            shObject?.interactivedata[type]?.splice(newShowhideIndex, 0, createdElemData.data);
+        if(shObject?.id === elementId) {
+            if(shObject?.interactivedata?.hasOwnProperty(type)) {
+                shObject?.interactivedata[type]?.splice(newShowhideIndex, 0, createdElemData.data);
+            } else { /* if interactivedata dont have sectiontype [when all elements of show/hide deleted] */
+                let sectionOfSH = [];
+                sectionOfSH.push(createdElemData.data);
+                shObject.interactivedata[type] = sectionOfSH;
+            }   
         }
         /* let condition;
         if (newIndex.length == 4) {
