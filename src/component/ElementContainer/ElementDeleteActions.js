@@ -192,7 +192,7 @@ const prepareDeleteRequestData = (elementType, payloadParams) => {
         requestPayload.elementParentEntityUrn = parentEntity ?? config.slateEntityURN
     }
     if (elementType === 'showhide' || parentElement.type === 'showhide') {
-        requestPayload.sectionType = showHideType[elementIndex[elementIndex.length - 2].toString()]
+        requestPayload.sectionType = showHideType[elementIndex[elementIndex.length - 2]?.toString()]
     }
     return requestPayload
 }

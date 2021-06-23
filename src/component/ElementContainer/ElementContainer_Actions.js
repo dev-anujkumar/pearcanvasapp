@@ -13,7 +13,6 @@ import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshot
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 
 import ElementConstants from "./ElementConstants";
-import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
@@ -435,8 +434,14 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         /* Get the showhide element object from slate data using indexes */
         const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
         /* After getting showhide Object, add the new element */
-        if(!isEmpty(shObject) && shObject?.id === elementId) {
-            shObject?.interactivedata[type]?.splice(newShowhideIndex, 0, createdElemData.data);
+        if(shObject?.id === elementId) {
+            if(shObject?.interactivedata?.hasOwnProperty(type)) {
+                shObject?.interactivedata[type]?.splice(newShowhideIndex, 0, createdElemData.data);
+            } else { /* if interactivedata dont have sectiontype [when all elements of show/hide deleted] */
+                let sectionOfSH = [];
+                sectionOfSH.push(createdElemData.data);
+                shObject.interactivedata[type] = sectionOfSH;
+            }   
         }
         /* let condition;
         if (newIndex.length == 4) {
