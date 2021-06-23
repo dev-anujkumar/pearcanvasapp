@@ -77,10 +77,24 @@ class GlossaryFootnotePopup extends Component {
     
 
     render() {
-        const { glossaryFootnoteValue, closePopup, saveContent,permissions } = this.props;
+        const { glossaryFootnoteValue, closePopup, saveContent, permissions, glossaryFootNoteCurrentValue } = this.props;
         const glossaryFootnote = glossaryFootnoteValue.type;
         let id = glossaryFootnote === GLOSSARY ? 'glossary-1' : 'footnote-0';
         let accessToolbar = (permissions && permissions.includes('access_formatting_bar')) ? "" : " disableToolbar"
+
+        let footnoteContentText = glossaryFootNoteCurrentValue.footnoteContentText;
+        if (glossaryFootNoteCurrentValue.footnoteContentText && glossaryFootNoteCurrentValue.footnoteContentText.includes('imageAssetContent')) {
+            let domparser = new DOMParser();
+            let definitionDom = domparser.parseFromString(glossaryFootNoteCurrentValue.footnoteContentText, "text/html");
+            let tempDiv = document.createElement('div');
+            tempDiv.innerHTML = definitionDom.body?.childNodes[0]?.innerHTML;
+            tinyMCE.$(tempDiv).find('img.imageAssetContent').remove();
+            console.log("tempDiv", tempDiv, tempDiv.innerHTML);
+            footnoteContentText = `<p>${tempDiv.innerHTML}</p>`;
+        }
+        console.log("this.props.glossaryFootNoteCurrentValue.footnoteContentText", glossaryFootNoteCurrentValue.footnoteContentText);
+        console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        console.log("footnoteContentText.footnoteContentText", footnoteContentText);
 
         return (
             <div ref={this.props.setWrapperRef} className="glossary-toolbar-wrapper">
@@ -111,14 +125,14 @@ class GlossaryFootnotePopup extends Component {
                         <div className="glossary-word-header">
                             <div className="glossary-word-title">Term:</div>
                             <div className="glossary-word-name glossary-word-description" id='glossary-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                                <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue.glossaryContentText} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
+                                <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {glossaryFootNoteCurrentValue.glossaryContentText} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
                             </div>
                         </div>
                     }
                     <div className="glossary-definition-header">
                         <div className="glossary-definition-label">{(glossaryFootnote === GLOSSARY) ? 'Definition:' : 'Note:'}</div>
                         <div className="glossary-editor glossary-definition-description" id="glossary-editor-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                            <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue.footnoteContentText} className='definition-editor place-holder' placeholder="Type Something" id={id} />
+                            <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {footnoteContentText} className='definition-editor place-holder' placeholder="Type Something" id={id} />
                         </div>
                     </div>
                     <div className="glossary-definition-buttons">

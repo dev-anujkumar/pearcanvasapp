@@ -61,7 +61,7 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
-import OpenFigureGlossary from '../ElementFigure/OpenFigureGlossary.jsx';
+import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -83,9 +83,9 @@ class ElementContainer extends Component {
             audioPopupStatus:false,
             position:{},
             editInteractiveId:"",
-            isfigurePopup:false,
+            isfigurePopup: false,
             figureUrl:"",
-            figurePopupStatus:false
+            assetsPopupStatus: false
         };
 
 
@@ -1126,10 +1126,11 @@ class ElementContainer extends Component {
         })
     }
 
-    handleFigurePopupLocation =(status,position)=>{
+    handleAssetsPopupLocation = (status , position) => {
+        // alert("2");
         this.setState({
-            figurePopupStatus:status,
-            position:position
+            assetsPopupStatus: status,
+            position: position
         })
     }
     /**
@@ -1237,7 +1238,7 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation} handleFigurePopupLocation={this.handleFigurePopupLocation}/>;
+                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation} handleAssetsPopupLocation={this.handleAssetsPopupLocation}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
                     editor = <ElementAuthoring tagName="blockquote" permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
@@ -1621,8 +1622,8 @@ class ElementContainer extends Component {
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
-                {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>}
-                {this.state.figurePopupStatus && <OpenFigureGlossary closeAudioBookDialog={()=>{this.handleFigurePopupLocation(false)}} position = {this.state.position} /> }
+                {/* {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>} */}
+                {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={()=>{this.handleAssetsPopupLocation(false)}} position = {this.state.position} /> }
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}

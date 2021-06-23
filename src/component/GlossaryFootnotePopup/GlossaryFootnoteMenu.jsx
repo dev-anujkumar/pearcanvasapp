@@ -101,6 +101,8 @@ class GlossaryFootnoteMenu extends React.Component {
     glossaryFootnoteDifference = (newTerm, newDef, oldTerm, oldDef, type) => {
         console.log("oldDef",oldDef);
         console.log("newDef",newDef);
+        console.log("oldTerm",oldTerm);
+        console.log("newTerm",newTerm);
         let domparser, newTermDom, newDefDom, oldTermDom, oldDefDom, tempVar, tempTerm;
         tempVar = oldDef;
         tempTerm = oldTerm;
@@ -112,11 +114,23 @@ class GlossaryFootnoteMenu extends React.Component {
         newDefDom = domparser.parseFromString(newDef, "text/html")
         let defImag = oldDefDom.getElementsByTagName('img')
         for (let index = 0; index < defImag.length; index++) {
-            defImag[index].removeAttribute('style')
-            defImag[index].removeAttribute('draggable')
-            defImag[index].removeAttribute('class')
-            defImag[index].classList.add("temp_Wirisformula")
+            if (!(defImag[index].classList.contains('imageAssetContent'))) {
+                defImag[index].removeAttribute('draggable');
+                defImag[index].removeAttribute('style');
+                defImag[index].removeAttribute('class');
+                defImag[index].classList.add('temp_Wirisformula')
+            }
         }
+        let newDefImag = newDefDom.getElementsByTagName('img')
+        for (let index = 0; index < newDefImag.length; index++) {
+            if (!(newDefImag[index].classList.contains('imageAssetContent'))) {
+                newDefImag[index].removeAttribute('draggable')
+                newDefImag[index].removeAttribute('style');
+                newDefImag[index].removeAttribute('class');
+                newDefImag[index].classList.add('temp_Wirisformula');
+            }
+        }
+        console.log("newTermDom", newTermDom.isEqualNode(oldTermDom), newDefDom.isEqualNode(oldDefDom), type);
 
         switch(type){
             case "glossary":
@@ -183,17 +197,21 @@ class GlossaryFootnoteMenu extends React.Component {
             term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
                 : isAudioDataPresent ? audioTerm : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
                 
-        //    console.log('term22222',term)
-        //         let isFigureDataPresent = figureGlossaryData && Object.keys(figureGlossaryData).length > 0;
-        //         const imageTerm = `<p image-id=${figureGlossaryData.imageid} image-path=${figureGlossaryData.path}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
-        //         term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
-        //             : isFigureDataPresent ? imageTerm : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
-            const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}<img src=${figureGlossaryData.path} class="imageAssetContent" width=${figureGlossaryData.width} height=${figureGlossaryData.height} imageid=${figureGlossaryData.imageid} alt=${figureGlossaryData.alttext} longdescription=${figureGlossaryData.longdescription}></p>`
-            
+            console.log("2222222222222222222---------------------", definition.innerHTML);
+            // console.log("figureGlossaryData figureGlossaryData", figureGlossaryData);
+            // let tempDiv = document.createElement('div');
+            // definition.innerHTML = definition.innerHTML.trim();
+            // tempDiv.innerHTML = definition.innerHTML;
+            // tinyMCE.$(tempDiv).find('img.imageAssetContent').remove();
+            // console.log("tempDiv", tempDiv, tempDiv.innerHTML);
+            // definition.innerHTML = tempDiv.innerHTML;
+            const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}<img src=${figureGlossaryData.path} class="imageAssetContent" width=${figureGlossaryData.width} height=${figureGlossaryData.height} image-id=${figureGlossaryData.imageid} alt=${figureGlossaryData.alttext} longdescription=${figureGlossaryData.longdescription}></p>`;
+            console.log("definition innerrrrrrrrrrrr", definition)
             definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") 
                         : isFigureDataPresent ? imageDefinition : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
-            term = this.replaceUnwantedtags(term)
-            definition = this.replaceUnwantedtags(definition)
+            term = this.replaceUnwantedtags(term);
+            definition = this.replaceUnwantedtags(definition);
+            console.log("definition innerrrrrrrrrrrr22222222222222", definition.innerHTML)
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
                 config.isGlossarySaving = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
