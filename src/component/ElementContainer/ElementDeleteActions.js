@@ -12,7 +12,7 @@ import { AUTHORING_ELEMENT_UPDATE, ERROR_POPUP } from "./../../constants/Action_
 import tinymce from 'tinymce';
 
 export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
-    const elementIndex = eleIndex.toString().split('-')
+    const elementIndex = eleIndex?.toString()?.split('-')
     const { showHideObj } = getState().appStore
     const { cutCopyParentUrn, parentUrn, parentElement, asideData } = containerElements
     // const parentElementUrn = getState().appStore.parentUrn
@@ -31,7 +31,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
         }
     ).then(async (response) => {
         console.log('delete success')
-        let newIndex = eleIndex.split("-")
+        let newIndex = typeof eleIndex == 'number' ? eleIndex : eleIndex.split("-")
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
         hideBlocker()
         const parentData = getState().appStore.slateLevelData;
@@ -51,7 +51,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             parentUrn,
             asideData,
             contentUrn: activeElement.contentUrn,
-            sectionType: showHideType[elementIndex[elementIndex.length - 2].toString()],
+            // sectionType: showHideType[elementIndex[elementIndex.length - 2].toString()],
             newIndex,
             element: activeElement,
             // poetryData,
@@ -191,7 +191,7 @@ const prepareDeleteRequestData = (elementType, payloadParams) => {
         requestPayload.entityUrn = parentEntity ?? config.slateEntityURN
         requestPayload.elementParentEntityUrn = parentEntity ?? config.slateEntityURN
     }
-    if (elementType === 'showhide' || parentElement.type === 'showhide') {
+    if (parentElement?.type === 'showhide') {
         requestPayload.sectionType = showHideType[elementIndex[elementIndex.length - 2].toString()]
     }
     return requestPayload
