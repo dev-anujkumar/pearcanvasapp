@@ -124,8 +124,8 @@ class PopUp extends React.Component {
         if (props.isTCMCanvasPopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span className={`lo-save-button`} onClick={() => props.tcmButtonHandler('Accept')}>Accept</span>
                     <span className="cancel-button" onClick={() => props.tcmButtonHandler('Reject')}>Revert</span>
+                    <span className={`lo-save-button`} onClick={() => props.tcmButtonHandler('Accept')}>Accept</span>
                 </div>
             )
         }
@@ -267,7 +267,7 @@ class PopUp extends React.Component {
             )
         } else if (props.isTCMCanvasPopup) {
             return (
-                <div className={`dialog-window ${props.splitSlateClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window ${props.splitSlateClass}`} dangerouslySetInnerHTML={{ __html: props.dialogText }}></div>
             )
         }
         else {
@@ -284,11 +284,11 @@ class PopUp extends React.Component {
         }
         else {
             if (props.isTCMCanvasPopup) {
-                // let userName = props?.tcmSnapshotData?.latestPendingTransaction?.elementEditor
-                let date = props.tcmSnapshotData?.latestPendingTransaction?.changeTime
+                let userName = props?.tcmSnapshotData?.elementEditor
+                let date = props.tcmSnapshotData?.originalLastUpdatedTimestamp
                 console.log("object", date)
-                let userName = "C5 Test02 C5"
-                let readableDate = TCMUtiles.formatDateTime(date)
+                // let userName = "C5 Test02 C5"
+                let readableDate = props.tcmSnapshotData?.lastUpdatedTimestamp
                 let readableTime = TCMUtiles.formatTime(date)
                 return (
                     <div className="tcmContainer">
@@ -310,8 +310,8 @@ class PopUp extends React.Component {
                             </div>
                         </div>
                         <div className="tcmdStatusContainer">
-                            <div>{readableDate}</div>
-                            <div><span>Lable Added</span></div>
+                            <div>{readableDate}, </div>
+                            <div><span>Added</span></div>
                         </div>
                     </div>
                 )
