@@ -58,7 +58,7 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
         })
     });
     describe('Test-2-Function--2--fetchElementsTag', () => {
-        const { paragraph, heading, list, blockquote, aside, workedexample, stanza, figure, interactive, list1 } = tcmTestData.fetchElementTagData
+        const { paragraph, heading, list, blockquote, aside, workedexample, stanza, figure, interactive, list1, groupedContent } = tcmTestData.fetchElementTagData
         it('Test-2.1-Function--2--fetchElementsTag - Paragraph', () => {
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
             elementSnapshotUtilityFn.fetchElementsTag(paragraph)
@@ -108,6 +108,16 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
             elementSnapshotUtilityFn.fetchElementsTag(list1)
             expect(spyFunction).toHaveReturnedWith('UL+disc')
+        })
+        it('Test-2.10-Function--2--fetchElementsTag - GroupedContent with data ', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
+            elementSnapshotUtilityFn.fetchElementsTag(groupedContent)
+            expect(spyFunction).toHaveReturnedWith('3C')
+        })
+        it('Test-2.11-Function--2--fetchElementsTag - GroupedContent without data ', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
+            elementSnapshotUtilityFn.fetchElementsTag({ type: groupedContent.type })
+            expect(spyFunction).toHaveReturnedWith('P')
         })
     });
     describe('Test-3-Function--3--generateWipDataForFigure', () => {

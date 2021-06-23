@@ -321,6 +321,8 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             })
             break;
         case slateWrapperConstants.TEXT:
+        case slateWrapperConstants.ASSESSMENT:
+        case slateWrapperConstants.ELEMENT_ASSESSMENT:
         case slateWrapperConstants.ELEMENT_CITATION:
         case slateWrapperConstants.STANZA:
         case slateWrapperConstants.IMAGE:
@@ -340,6 +342,20 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             })
             /** Second Column */
             createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
+                elmUrn.push(item.id)
+            })
+            break;
+        case slateWrapperConstants.MULTI_COLUMN_3C:
+            /** First Column */
+            createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
+                elmUrn.push(item.id)
+            })
+            /** Second Column */
+            createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
+                elmUrn.push(item.id)
+            })
+            /** Third Column */
+            createdElementData.groupeddata.bodymatter[2].groupdata.bodymatter.map(item => {
                 elmUrn.push(item.id)
             })
             break;

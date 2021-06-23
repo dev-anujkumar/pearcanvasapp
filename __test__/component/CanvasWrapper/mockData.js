@@ -788,7 +788,158 @@ export const slateTestData = {
                         },
                         "versionUrn": "urn:pearson:work:4eb7b66a-e4c8-4b9c-afed-5aae44c937f6",
                         "contentUrn": "urn:pearson:entity:1c0efa65-a5ef-4837-bd67-b6f37aa03288"
+                    },
+                    {
+                        "id": "urn:pearson:manifest:1a447208-32e7-4e4b-95e6-ff1cbf735b9c",
+                        "type": "groupedcontent",
+                        "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                        "width": "wider",
+                        "groupproportions": "33-33-33",
+                        "versionUrn": "urn:pearson:manifest:1a447208-32e7-4e4b-95e6-ff1cbf735b9c",
+                        "contentUrn": "urn:pearson:entity:fb2c00c8-6db0-4adb-9e4f-6a97afabf739",
+                        "groupeddata": {
+                            "bodymatter": [{
+                                "id": "urn:pearson:manifest:147b71d5-ce02-42ff-9a34-f399cfad314e",
+                                "type": "group",
+                                "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                "versionUrn": "urn:pearson:manifest:147b71d5-ce02-42ff-9a34-f399cfad314e",
+                                "contentUrn": "urn:pearson:entity:f055178c-dd56-4d60-90f3-3e2134ed3f45",
+                                "groupdata": {
+                                    "bodymatter": [{
+                                        "id": "urn:pearson:work:85e925c1-9d97-42bf-a700-3ecdac370f6b",
+                                        "type": "figure",
+                                        "figuretype": "image",
+                                        "subtype": "imageTextWidth",
+                                        "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                                        "alignment": "text-width",
+                                        "figuredata": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                                            "imageid": "",
+                                            "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                                            "height": "422",
+                                            "width": "680"
+                                        },
+                                        "html": {
+                                            "title": "<p></p>",
+                                            "subtitle": "<p></p>",
+                                            "text": "",
+                                            "postertext": "",
+                                            "captions": "<p></p>",
+                                            "credits": "<p></p>",
+                                            "footnotes": {},
+                                            "assetsPopover": {},
+                                            "glossaryentries": {}
+                                        },
+                                        "versionUrn": "urn:pearson:work:85e925c1-9d97-42bf-a700-3ecdac370f6b",
+                                        "contentUrn": "urn:pearson:entity:118eb6fd-6c0c-409a-b2c9-ca06e3a19c37",
+                                        ...commonFigureTextData
+                                    }, {
+                                        "id": "urn:pearson:work:00eafb5a-6ce7-47fe-b2e6-fd5353c50bc8",
+                                        "type": "figure",
+                                        "figuretype": "audio",
+                                        "subtype": "figureAudioSL",
+                                        "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                                        "alignment": "full",
+                                        "figuredata": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio",
+                                            "height": "399",
+                                            "width": "600",
+                                            "audioid": "",
+                                            "posterimage": {
+                                                "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png",
+                                                "imageid": ""
+                                            },
+                                            "srctype": "externallink"
+                                        },
+                                        "html": {
+                                            "title": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                            "subtitle": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                            "text": "",
+                                            "postertext": "",
+                                            "captions": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                            "credits": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                            "footnotes": {},
+                                            "assetsPopover": {},
+                                            "glossaryentries": {}
+                                        },
+                                        "versionUrn": "urn:pearson:work:00eafb5a-6ce7-47fe-b2e6-fd5353c50bc8",
+                                        "contentUrn": "urn:pearson:entity:f08af9f8-0fb4-4829-a0f0-899950e79eb4"
+                                    }]
+                                },
+                                "status": "wip"
+                            }, {
+                                "id": "urn:pearson:manifest:c53a966f-7b4e-47c4-b0df-9db4d0c1d202",
+                                "type": "group",
+                                "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                                "versionUrn": "urn:pearson:manifest:c53a966f-7b4e-47c4-b0df-9db4d0c1d202",
+                                "contentUrn": "urn:pearson:entity:a40a1373-30f5-4012-926e-acf9c67f8254",
+                                "groupdata": {
+                                    "bodymatter": [{
+                                        "id": "urn:pearson:work:3bf55984-7e1e-48d9-8f8e-240ea4707c23",
+                                        "type": "figure",
+                                        "figuretype": "video",
+                                        "subtype": "figureVideo",
+                                        "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                                        "figuredata": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+                                            "height": "399",
+                                            "width": "600",
+                                            "videoid": "",
+                                            "posterimage": {
+                                                "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png",
+                                                "imageid": ""
+                                            },
+                                            "videos": [{
+                                                "path": ""
+                                            }]
+                                        },
+                                        "html": {
+                                            "title": "<p></p>",
+                                            "subtitle": "<p></p>",
+                                            "text": "",
+                                            "preformattedtext": "<p></p>",
+                                            "captions": "<p></p>",
+                                            "credits": "<p></p>",
+                                            "footnotes": {},
+                                            "assetsPopover": {},
+                                            "glossaryentries": {}
+                                        },
+                                        "versionUrn": "urn:pearson:work:3bf55984-7e1e-48d9-8f8e-240ea4707c23",
+                                        "contentUrn": "urn:pearson:entity:0bf36bb4-c164-41b5-9b89-3434f178d082"
+                                    }, {
+                                        "id": "urn:pearson:work:68304481-1c49-4611-a7b4-3a650944ecd4",
+                                        "type": "figure",
+                                        "figuretype": "interactive",
+                                        "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                                        "figuredata": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                                            "interactiveid": "",
+                                            "interactivetype": "fpo",
+                                            "interactiveformat": "mmi"
+                                        },
+                                        "html": {
+                                            "title": "<p></p>",
+                                            "subtitle": "<p></p>",
+                                            "text": "",
+                                            "preformattedtext": "<p></p>",
+                                            "captions": "<p></p>",
+                                            "credits": "<p></p>",
+                                            "footnotes": {},
+                                            "assetsPopover": {},
+                                            "glossaryentries": {}
+                                        },
+                                        "versionUrn": "urn:pearson:work:68304481-1c49-4611-a7b4-3a650944ecd4",
+                                        "contentUrn": "urn:pearson:entity:9b83e728-57c1-4e8d-af7b-9545e7ee4e73",
+                                        ...commonFigureTextData
+                                    }]
+                                },
+                                "status": "wip"
+                            },
+                            ]
+                        },
+                        "status": "wip"
                     }
+
                 ],
                 "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
             },

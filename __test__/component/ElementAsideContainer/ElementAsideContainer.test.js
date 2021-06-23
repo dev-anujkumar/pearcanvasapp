@@ -4,7 +4,8 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
 import ElementAsideContainer from '../../../src/component/ElementAsideContainer/ElementAsideContainer';
-import { elementAsideWorkExample, element, section } from '../../../fixtures/elementAsideData';
+import { elementAsideWorkExample, elementAside, element, section } from '../../../fixtures/elementAsideData';
+import { threeMultiColumnContainer } from '../../../fixtures/multiColumnContainer';
 import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { Provider } from 'react-redux';
 import config from '../../../src/config/config.js';
@@ -310,5 +311,29 @@ describe('Testing ElementAside component with props', () => {
         
         instance.props.options.onUpdate(evt);
         expect(instance.props.options.onUpdate).toHaveLength(1);
+    })
+    it('aside/WE inside 3c data testing for column 0', () => {
+        let props = {
+            element: elementAsideWorkExample,
+            parentElement: threeMultiColumnContainer,
+            index: "0-0-0"
+        }  
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>)
+    })
+    it('aside/WE inside 3c data testing for column 1', () => {
+        let props = {
+            element: elementAsideWorkExample,
+            parentElement: threeMultiColumnContainer,
+            index: "0-1-0"
+        }  
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>)
+    })
+    it('aside/WE inside 3c data testing for column 2', () => {
+        let props = {
+            element: elementAsideWorkExample,
+            parentElement: threeMultiColumnContainer,
+            index: "0-2-0"
+        }  
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>)
     })
 })

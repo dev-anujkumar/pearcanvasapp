@@ -493,6 +493,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     const isPopupOrShowhideElement = allowedParentType.includes(parentElement?.type) && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
+    
     if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
         const containerElement = {
             asideData,
@@ -511,7 +512,8 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             updatedId: updatedData.id,
             slateManifestUrn: config.slateManifestURN,
             CurrentSlateStatus: currentSlateData.status,
-            figureData: oldFigureData
+            figureData: oldFigureData,
+            
         }
 
         if (!config.isCreateGlossary) {

@@ -121,6 +121,9 @@ const elementDataBank = {
             },
             "image25Text" : {
                 "secondaryOption" : "secondary-image-figure-quarter"
+            },
+            "image75Text" : {
+                "secondaryOption" : "secondary-image-figure-three-quarter"
             }
         },
         "mathImage" : {
@@ -355,6 +358,9 @@ const elementDataBank = {
         },
         "text-width-50-50" : {
             "secondaryOption" : "secondary-multicolumn-half-text"
+        },
+        "wider-33-33-33" : {
+            "secondaryOption" : "secondary-multicolumn-3c-wider"
         }
     },
     "element-dialogue" : {

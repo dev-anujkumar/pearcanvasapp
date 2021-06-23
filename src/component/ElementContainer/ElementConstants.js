@@ -91,7 +91,7 @@ export const LABELS = {
     "element-pdf": "PDF"
 }
 
-export const elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup', 'figure','showhide'];
+export const elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup', 'figure','showhide', 'element-assessment'];
 export const containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup', 'showhide'];
-export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
+export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive", "assessment"]
 export const allowedParentType = ['popup', 'showhide']

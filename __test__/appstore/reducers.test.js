@@ -22,11 +22,35 @@ import {
     UPDATE_PAGENUMBER_FAIL,
     ACCESS_DENIED_POPUP,
     STORE_OLD_ASSET_FOR_TCM,
-    LEARNOSITY_PROJECT_INFO
+    LEARNOSITY_PROJECT_INFO,
+    PAGE_NUMBER_LOADER,
+    CREATE_SHOW_HIDE_ELEMENT,
+    OPEN_POPUP_SLATE,
+    CLOSE_POPUP_SLATE,
+    SET_PARENT_ASIDE_DATA,
+    SET_PARENT_SHOW_DATA,
+    GET_ALL_SLATES_DATA,
+    SET_CURRENT_SLATE_DATA,
+    GET_USAGE_TYPE,
+    SET_SLATE_LENGTH,
+    SET_TOAST_MESSAGE,
+    SHOW_TOAST_MESSAGE,
+    WIRIS_ALT_TEXT_POPUP,
+    UPDATE_THREE_COLUMN_INFO
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
-import { createstoreWithFigure, newslateData, figureDataTCM, learnosityData } from '../../fixtures/slateTestingData';
+import { createstoreWithFigure, newslateData, figureDataTCM, learnosityData, popupSlateData } from '../../fixtures/slateTestingData';
+import { slateLevelData } from '../../fixtures/containerActionsTestingData';
+import { threeMultiColumnContainer } from '../../fixtures/multiColumnContainer';
+
+const threeColumnData = [
+    {
+        containerId: "urn:pearson:manifest:0beacb79-ee4c-4c26-abcc-dd973c6893c9",
+        columnIndex: "C3",
+        columnId: "urn:pearson:manifest:73c11fa8-acec-4b8e-b435-0ec6cb3e5912"
+    }
+]
 
 const initialState = {
     slateLevelData: {},
@@ -34,7 +58,8 @@ const initialState = {
     splittedElementIndex: 0,
     pageNumberData: [],
     permissions: [],
-    allElemPageData:[]
+    allElemPageData: [],
+    threeColumnData: threeColumnData
 };
 
 const splittedElementIndexValue = "5";
@@ -46,6 +71,32 @@ const newActiveElement = {
     primaryOption: "primary-list",
     secondaryOption: "secondary-list-3",
     tag: "OL"
+}
+
+const currentSlateAncestorData = {
+    ancestor: {
+        ancestor: {
+            containerUrn: "urn:pearson:distributable:0a823f79-68fd-4c10-ac4a-4018b6c6a96c",
+            entityUrn: "urn:pearson:entity:73b79fc3-ab89-464e-ade4-2a306a054a8a",
+            label: "project",
+            title: "Children API Test Purpose"
+        },
+        containerUrn: "urn:pearson:manifest:90141a17-7c11-495e-a5b2-520c8c6e21dd",
+        entityUrn: "urn:pearson:entity:708a552c-4030-4378-932b-b7a58f564999",
+        label: "module",
+        title: "M12"
+    },
+    containerUrn: "urn:pearson:manifest:975a3f20-bba1-4c7f-919a-9731ef4a426b",
+    entityUrn: "urn:pearson:entity:30a8db2c-1b91-43e7-aabb-58133456f396",
+    label: "section",
+    matterType: "FrontMatter",
+    title: "3c create api testing"
+}
+
+const usageTypeListData = {
+    apiStatus: 200,
+    entityType: "assessment",
+    usageTypeList: ["Concept Check", "Diagnostic", "Homework", "Journal", "Non-Scored", "Poll", "Practice", "Quiz", "Remediation", "Shared Writing", "Study Tools", "Test"]
 }
 
 const slateTitle = "1918";
@@ -102,11 +153,11 @@ const permissionsData = ["login",
     "note_search_comment",
     "note_viewer",
     "lo_edit_metadata",]
-    const INITIAL_ACTION = {
-        type: '',
-        payload: {}
-    }
-    
+const INITIAL_ACTION = {
+    type: '',
+    payload: {}
+}
+
 describe('testing SLATE LEVEL REDUCER cases -->', () => {
 
     xit('should return the initial state', () => {
@@ -140,7 +191,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         expect(reducer(initialState, {
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
-                slateLevelData:createstoreWithFigure.slateLevelData
+                slateLevelData: createstoreWithFigure.slateLevelData
             }
         })).toEqual(output)
     });
@@ -192,14 +243,14 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         let output = {
             ...initialState,
             pageNumberData: [],
-            allElemPageData:[]
-            
+            allElemPageData: []
+
         };
         expect(reducer(initialState, {
             type: GET_PAGE_NUMBER,
             payload: {
                 pageNumberData: [],
-                allElemPageData:[]
+                allElemPageData: []
             }
         })).toEqual(output)
     });
@@ -219,7 +270,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         let output = {
             ...initialState,
             permissions: permissionsData,
-            roleId : 10
+            roleId: 10
         };
         expect(reducer(initialState, {
             type: GET_PROJECT_PERMISSIONS,
@@ -361,7 +412,8 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         expect(reducer(initialState, {
             type: STORE_OLD_ASSET_FOR_TCM,
             payload: {
-                oldFiguredata : figureDataTCM}
+                oldFiguredata: figureDataTCM
+            }
         })).toEqual(output)
     });
     it('case 23- LEARNOSITY_PROJECT_INFO', () => {
@@ -372,6 +424,191 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         expect(reducer(initialState, {
             type: LEARNOSITY_PROJECT_INFO,
             payload: learnosityData
+        })).toEqual(output)
+    });
+    it('case 24- PAGE_NUMBER_LOADER', () => {
+        let output = {
+            ...initialState,
+            pageNumberLoading: newslateData
+        };
+        expect(reducer(initialState, {
+            type: PAGE_NUMBER_LOADER,
+            payload: {
+                pageNumberLoading: newslateData
+            }
+        })).toEqual(output)
+    });
+    it('case 25- CREATE_SHOW_HIDE_ELEMENT', () => {
+        let output = {
+            ...initialState,
+            slateLevelData: newslateData,
+            showHideId: 'urn:pearson:manifest:abed0bd0-371a-4d03-872c-c40670dd73ce'
+        };
+        expect(reducer(initialState, {
+            type: CREATE_SHOW_HIDE_ELEMENT,
+            payload: {
+                slateLevelData: newslateData,
+                showHideId: 'urn:pearson:manifest:abed0bd0-371a-4d03-872c-c40670dd73ce'
+            }
+        })).toEqual(output)
+    });
+    it('case 26- OPEN_POPUP_SLATE', () => {
+        let output = {
+            ...initialState,
+            slateLevelData: {
+                ...initialState.slateLevelData,
+                [Object.keys(popupSlateData)[0]]: popupSlateData[Object.keys(popupSlateData)[0]]
+            }
+        };
+        expect(reducer(initialState, {
+            type: OPEN_POPUP_SLATE,
+            payload: {
+                [Object.keys(popupSlateData)[0]]: popupSlateData[Object.keys(popupSlateData)[0]]
+            }
+        })).toEqual(output)
+    });
+    it('case 27- CLOSE_POPUP_SLATE', () => {
+        let output = {
+            ...initialState,
+            slateLevelData: {
+                ...initialState.slateLevelData,
+            }
+        };
+        expect(reducer(initialState, {
+            type: CLOSE_POPUP_SLATE,
+            payload: {}
+        })).toEqual(output)
+    });
+    it('case 28- SET_PARENT_ASIDE_DATA', () => {
+        let output = {
+            ...initialState,
+            parentUrn: {},
+            asideData: {}
+        };
+        expect(reducer(initialState, {
+            type: SET_PARENT_ASIDE_DATA,
+            payload: {
+                parentUrn: {},
+                asideData: {}
+            }
+        })).toEqual(output)
+    });
+    it('case 29- SET_PARENT_SHOW_DATA', () => {
+        let output = {
+            ...initialState,
+            showHideObj: {}
+        };
+        expect(reducer(initialState, {
+            type: SET_PARENT_SHOW_DATA,
+            payload: {
+                showHideObj: {}
+            }
+        })).toEqual(output)
+    });
+    it('case 30- GET_ALL_SLATES_DATA', () => {
+        let output = {
+            ...initialState,
+            allSlateData: {}
+        };
+        expect(reducer(initialState, {
+            type: GET_ALL_SLATES_DATA,
+            payload: {
+                allSlateData: {}
+            }
+        })).toEqual(output)
+    });
+    it('case 31- SET_CURRENT_SLATE_DATA', () => {
+        let output = {
+            ...initialState,
+            currentSlateAncestorData: currentSlateAncestorData
+        };
+        expect(reducer(initialState, {
+            type: SET_CURRENT_SLATE_DATA,
+            payload: {
+                currentSlateAncestorData: currentSlateAncestorData
+            }
+        })).toEqual(output)
+    });
+    it('case 32- GET_USAGE_TYPE', () => {
+        let output = {
+            ...initialState,
+            usageTypeListData: usageTypeListData
+        };
+        expect(reducer(initialState, {
+            type: GET_USAGE_TYPE,
+            payload: usageTypeListData
+        })).toEqual(output)
+    });
+    it('case 33- SET_SLATE_LENGTH', () => {
+        let output = {
+            ...initialState,
+            slateLength: "25"
+        };
+        expect(reducer(initialState, {
+            type: SET_SLATE_LENGTH,
+            payload: "25"
+        })).toEqual(output)
+    });
+    it('case 34- SET_TOAST_MESSAGE', () => {
+        let output = {
+            ...initialState,
+            toastMessage: "TESTING MESSAGE"
+        };
+        expect(reducer(initialState, {
+            type: SET_TOAST_MESSAGE,
+            payload: "TESTING MESSAGE"
+        })).toEqual(output)
+    });
+    it('case 35- SHOW_TOAST_MESSAGE', () => {
+        let output = {
+            ...initialState,
+            showToast: true
+        };
+        expect(reducer(initialState, {
+            type: SHOW_TOAST_MESSAGE,
+            payload: true
+        })).toEqual(output)
+    });
+    it('case 36- WIRIS_ALT_TEXT_POPUP', () => {
+        let output = {
+            ...initialState,
+            wirisAltText: {}
+        };
+        expect(reducer(initialState, {
+            type: WIRIS_ALT_TEXT_POPUP,
+            payload: {}
+        })).toEqual(output)
+    });
+    it('case 37- UPDATE_THREE_COLUMN_INFO IF CONDITION', () => {
+        let output = {
+            ...initialState,
+            threeColumnData: threeColumnData
+        };
+        expect(reducer(initialState, {
+            type: UPDATE_THREE_COLUMN_INFO,
+            key: 'urn:pearson:manifest:0beacb79-ee4c-4c26-abcc-dd973c6893c9',
+            payload: {
+                containerId: "urn:pearson:manifest:0beacb79-ee4c-4c26-abcc-dd973c6893c9",
+                columnIndex: "C3",
+                columnId: "urn:pearson:manifest:73c11fa8-acec-4b8e-b435-0ec6cb3e5912"
+            }
+        })).toEqual(output)
+    });
+    it('case 38- UPDATE_THREE_COLUMN_INFO ELSE CONDITION', () => {
+        let output = {
+            ...initialState,
+            threeColumnData: []
+        };
+        expect(reducer(initialState, {
+            type: UPDATE_THREE_COLUMN_INFO,
+        })).toEqual(output)
+    });
+    it('case 39- INITIAL_ACTION DEFAULT CASE', () => {
+        let output = {
+            ...initialState,
+        };
+        expect(reducer(initialState, {
+            type: INITIAL_ACTION,
         })).toEqual(output)
     });
 });

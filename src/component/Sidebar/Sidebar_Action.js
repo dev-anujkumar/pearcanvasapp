@@ -468,7 +468,9 @@ const prepareAssessmentDataForConversion = (oldElementData, format) => {
     let usageType = document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText;
     let assessmentFormat = format == "Elm" ? "puf" : format.toLowerCase();
     let assessmentItemType = assessmentFormat == 'tdx' ? "tdxAssessmentItem" : "assessmentItem";
-
+	if (assessmentFormat === "quad cite") {
+        assessmentFormat = "cite"
+    }
     oldElementData.figuredata.elementdata={
         usagetype : usageType,
         assessmentid : "",

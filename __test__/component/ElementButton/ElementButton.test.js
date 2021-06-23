@@ -187,4 +187,24 @@ describe('Testing Button component with props', () => {
         const component = mount(<Button type={buttonTypes.APPROVE_TICK_ICON} />);
         expect(component.find('span.btn-element').hasClass('approve-icon')).toBe(true);
     })
+    it('render POWERPASTE Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.POWERPASTE} />);
+        expect(component.find('span.btn-element').hasClass('power-paste-icon')).toBe(true);
+    })
+    it('render ALFRESCO_METADATA Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.ALFRESCO_METADATA} />);
+        expect(component.find('span.btn-element').hasClass('alfresco-metadata-icon')).toBe(true);
+    })
+    it('render STAGE_DIRECTION Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.STAGE_DIRECTION} />);
+        expect(component.find('span.btn-element').hasClass('text-elem')).toBe(true);
+    })
+    it('render DIALOGUE_ELEMENT Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.DIALOGUE_ELEMENT} />);
+        expect(component.find('span.btn-element').hasClass('text-elem')).toBe(true);
+    })
+    it('render ELEMENT_LABEL_CLICKABLE Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.ELEMENT_LABEL_CLICKABLE} />);
+        expect(component.find('span.btn-element').hasClass('element-label-clickable-button')).toBe(true);
+    })
 })
