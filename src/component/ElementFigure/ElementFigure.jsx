@@ -136,7 +136,8 @@ class ElementFigure extends Component {
                 }
                 handleAlfrescoSiteUrl(this.props.elementId, changeSiteAlfrescoData)
                 this.setState({
-                    alfrescoSite: changeSiteAlfrescoData?.repositoryFolder
+                    alfrescoSite: changeSiteAlfrescoData?.repositoryFolder,
+                    alfrescoSiteData:changeSiteAlfrescoData
                 })
             }else{
                 if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
