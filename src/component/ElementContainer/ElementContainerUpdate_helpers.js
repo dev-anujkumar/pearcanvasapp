@@ -465,7 +465,8 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             updatedId: updatedData.id,
             slateManifestUrn: config.slateManifestURN,
             CurrentSlateStatus: currentSlateData.status,
-            figureData: oldFigureData
+            figureData: oldFigureData,
+            
         }
 
         if (!config.isCreateGlossary) {

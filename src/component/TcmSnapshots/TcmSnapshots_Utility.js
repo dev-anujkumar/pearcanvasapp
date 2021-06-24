@@ -9,10 +9,11 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
 import { getTitleSubtitleModel } from '../../constants/utility';
 /*************************Import Constants*************************/
-import TcmConstants from './TcmConstants.js';
+import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
+
 
 let operType = "";
 const {
@@ -44,6 +45,7 @@ const {
     bqAttrHtmlFalse,
     bqHiddenText,
     FIGURE,
+    ELEMENT_ASSESSMENT,
     allowedFigureTypesForTCM,
     SHOWHIDE,
     SHOW_HIDE,
@@ -882,6 +884,41 @@ export const setSlateType = (wipData, containerElement, type) => {
     }
     return isContainer
 }
+const getAssessmentType = (key, isStandAlone) => {
+    const assessmentType =  ASSESSMENT_TYPE.find(item => item.type === key);
+    if(assessmentType) {
+        return isStandAlone? assessmentType.standAloneLabel : assessmentType.label
+    }
+    return key;
+}
+
+const getAssessmentStatus = (assessmentId) => {
+    if(assessmentId) {
+        const assessmentData = store?.getState()?.assessmentReducer?.[assessmentId];
+        const assessmentStatus = assessmentData?.assessmentStatus;
+        if(assessmentStatus) {
+            return (assessmentStatus === 'final' ?  "Approved" : "Unapproved");
+        }
+    }
+}
+
+const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
+    const elementData =element?.elementdata;
+    let elementSnapshot = {};
+    elementSnapshot = {
+            assessmentTitle: `<p>${elementData?.assessmenttitle || ''}</p>`,
+            assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
+            assessmentId: `<p>${elementData?.assessmentid|| ''}</p>`,
+            assessmentItemId: `<p>${elementData?.assessmentitemid|| ''}</p>`,
+            assessmentUsageType: `<p>${elementData?.usagetype|| ''}</p>`,
+            assessmentStatus: `<p>${getAssessmentStatus(elementData?.assessmentId) || ''}</p>`,
+            assessmentType: `<p>${getAssessmentType(elementData?.assessmentformat, true) || ''}<p>`,
+            glossorySnapshot: '[]',
+            footnoteSnapshot: '[]',
+            assetPopOverSnapshot: '[]'
+        }
+    return elementSnapshot;
+}
 
 /**
  * @function prepareFigureElementSnapshots
@@ -915,11 +952,19 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
 export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails, CurrentSlateStatus) => {
     let elementSnapshot = {};
     let semanticSnapshots = (element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
-    elementSnapshot = {
-        contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
-        glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
-        footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
-        assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
+    if(element.type !== ELEMENT_ASSESSMENT) {
+        elementSnapshot = {
+            contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
+            glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
+            footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
+            assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
+        }
+    }
+    else {
+        elementSnapshot = {
+            ...prepareStandAloneSlateSnapshot(element, elementDetails),
+           
+        }
     }
     return elementSnapshot;
 }
@@ -933,6 +978,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
     formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
     formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
     formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
+    
     let snapshotData = {
         title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
         figurenumber: handleBlankLineDom(formattedNumber, 'BlankLine') || "",
@@ -961,6 +1007,22 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
                 ...getInteractiveSubtypeData(element.figuredata, element.html)
             }
             break;
+        case 'assessment': {
+        const elementData = element?.figuredata?.elementdata; 
+        if(elementData){
+                snapshotData = {
+                    assessmentTitle: `<p>${elementData?.assessmenttitle|| ''}</p>`,
+                    assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
+                    assessmentId: `<p>${elementData?.assessmentid || ''}</p>`,
+                    assessmentItemId: `<p>${elementData?.assessmentitemid || ''}</p>`,
+                    assessmentUsageType: `<p>${elementData?.usagetype || ''}</p>`,
+                    // status only sent in case of elm and learnosity
+                    assessmentStatus: `<p>${getAssessmentStatus(elementData.assessmentid) || ''}</p>`,
+                    assessmentType: `<p>${getAssessmentType(elementData?.assessmentformat, false) || ''}<p>`
+                }  
+            }
+            break;   
+        }
         case "image":
         case "table":
         case "mathImage":
@@ -991,7 +1053,7 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
         snapshotData = '<p></p>'          
-    } 
+    }  
     /**else if(element.type === ELEMENT_LIST && element.html && element.html.text){
         snapshotData = element.html.text.replace(/<br>/g,"")
     }*/
