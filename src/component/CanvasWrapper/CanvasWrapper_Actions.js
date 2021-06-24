@@ -620,11 +620,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         dispatch({
                             type: SET_ACTIVE_ELEMENT,
                             payload: {}
-                        });
-                        dispatch({
-                            type: UPDATE_THREE_COLUMN_INFO,
-                        })
-    
+                        });    
 
                         let slateWrapperNode = document.getElementById('slateWrapper');
                         if (slateWrapperNode) {
