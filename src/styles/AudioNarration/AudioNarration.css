@@ -53,14 +53,13 @@ figure> audio {
 .audio-image-tab{
     display: flex;
 }
-.audio-text, .image-text{
-    float: left;
+.audio-text, .image-glossary-text{
     color: #3298B5;
-    padding: 15px 0 0 10px;
+    padding: 20px 0 0 10px;
     font-size: 20px;
 }
 .image-media-title, .audio-media-title{
-    padding: 10px;
+    padding: 0 10px 10px 10px;
     float: left;
 }
 .close-icon-image{

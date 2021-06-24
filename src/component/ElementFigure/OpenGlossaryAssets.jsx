@@ -140,7 +140,7 @@ class OpenGlossaryAssets extends Component {
                 {
                     figureGlossaryData && Object.keys(figureGlossaryData).length > 0 &&
                     <div className={tabValue === 'image' ? "show-content" : "content"}>
-                        <h2 className="image-text" >Image</h2>
+                        <h2 className="image-glossary-text" >Image</h2>
                         <figure>
                             <figcaption className="image-media-title">{imageMediaTitle}</figcaption>
                             <img src={imageMediaSrc}
