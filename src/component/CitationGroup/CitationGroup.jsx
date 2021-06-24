@@ -93,6 +93,7 @@ export class CitationGroup extends Component {
                                     onClickCapture={this.context.onClickCapture}
                                     parentElement = {this.context.element}
                                     userRole={this.props.userRole}
+                                    handleTCM={this.props.handleTCM}
                                 >
                                 </ElementContainer>
                                 {

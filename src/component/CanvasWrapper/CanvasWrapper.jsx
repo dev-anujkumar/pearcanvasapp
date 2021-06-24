@@ -180,8 +180,8 @@ export class CanvasWrapper extends Component {
       /**
      * This function opens TCM w.r.t. current Element
      */
-       handleTCM = (e) => {
-        if(this.props.activeElement.elementType === "element-authoredtext"){
+       handleTCM = (e, element, refreshEvent) => {
+        if(refreshEvent || element.type && element.type === "element-authoredtext" || element.type === "element-citation" || element.type === "stanza"){
             let that = this
             const currentProjectUrn = config.projectUrn;
             const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
@@ -191,7 +191,7 @@ export class CanvasWrapper extends Component {
                     PearsonSSOSession: config.ssoToken,
                 }
             }).then((res) => {
-                that.processTCMData(res.data)
+                that.processTCMData(res.data, element.id)
             }).catch((error) => {
                 console.error(error)
             })
@@ -204,13 +204,16 @@ export class CanvasWrapper extends Component {
         }
     }
 
-    processTCMData = (data) =>{
+    processTCMData = (data, id) =>{
         let that = this
-        const eURN = this.props.activeElement.elementId
         data.map((elemData)=>{
-           if(elemData.elemURN === eURN){
-            const elemIndex = [{index: this.props.index, urn: eURN}]
-            const tcmData = FetchAllDataMapper.processResponse([elemData], eURN, elemIndex);
+            // to check the element ids which has manifest + work id
+            let Check = elemData.elemURN.includes('+')
+            let elementId = Check === true && elemData.elemURN.split('+') 
+            elemData.elemURN = Check === true ? elementId[elementId.length - 1] : elemData.elemURN
+           if(elemData.elemURN === id){
+            const elemIndex = [{index: this.props.index, urn: id}]
+            const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
             const tcmObject = {isTCMCanvasPopup: true, tcmElemData: tcmData.result[0] }
             that.props.launchTCMPopup(tcmObject)
            }

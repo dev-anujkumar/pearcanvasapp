@@ -124,8 +124,8 @@ class PopUp extends React.Component {
         if (props.isTCMCanvasPopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span className={`lo-save-button`} onClick={() => props.tcmButtonHandler('Accept')}>Accept</span>
                     <span className="cancel-button" onClick={() => props.tcmButtonHandler('Reject')}>Revert</span>
+                    <span className={`lo-save-button`} onClick={() => props.tcmButtonHandler('Accept')}>Accept</span>
                 </div>
             )
         }
@@ -284,11 +284,12 @@ class PopUp extends React.Component {
         }
         else {
             if (props.isTCMCanvasPopup) {
-                // let userName = props?.tcmSnapshotData?.latestPendingTransaction?.elementEditor
-                let date = props.tcmSnapshotData?.latestPendingTransaction?.changeTime
+                const element = {id: this.props.tcmSnapshotData.eURN}
+                let userName = props?.tcmSnapshotData?.elementEditor
+                let date = props.tcmSnapshotData?.originalLastUpdatedTimestamp
                 console.log("object", date)
-                let userName = "C5 Test02"
-                let readableDate = TCMUtiles.formatDateTime(date)
+                // let userName = "C5 Test02 C5"
+                let readableDate = props.tcmSnapshotData?.lastUpdatedTimestamp
                 let readableTime = TCMUtiles.formatTime(date)
                 return (
                     <div className="tcmContainer">
@@ -299,7 +300,7 @@ class PopUp extends React.Component {
                             </div>
                             <div className="tcmIconContainer">
                                 <span className="btn-element tcmIcon">
-                                    {<img src={TcmRefreshIcon} alt="TcmRefreshIcon" onClick={(e) => props.handleTCM(e)}/>}
+                                    {<img src={TcmRefreshIcon} alt="TcmRefreshIcon" onClick={(e) => props.handleTCM(e, element, true)}/>}
                                 </span>
                                 <span className="btn-element tcmIcon" onClick={(e) => props.handleTCMRedirection(e)}>
                                     {<img src={TcmExpandIcon} alt="TcmExpandIcon" />}
@@ -310,8 +311,8 @@ class PopUp extends React.Component {
                             </div>
                         </div>
                         <div className="tcmdStatusContainer">
-                            <div>{readableDate}</div>
-                            <div><span>Lable Added</span></div>
+                            <span>{readableDate}, </span>
+                            <span>Added</span>
                         </div>
                     </div>
                 )

@@ -643,10 +643,12 @@ class Sidebar extends Component {
     tcmButtonHandler = (status) => {
         const currentProjectUrn = config.projectUrn;
         const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
-        let timeStamp = this.props.tcmSnapshotData?.latestPendingTransaction?.lastUpdatedTimestamp
-        let elemSURN =  this.props.activeElement.elementId
+            console.log("object",this.props.tcmSnapshotData)
+        let timeStamp = this.props.tcmSnapshotData?.originalLastUpdatedTimestamp;
+        let elemSURN = this.props.tcmSnapshotData.eURN
+        let replacedElemSURN = elemSURN.replace(":", "%3A");
         let body = { "lastUpdatedTimestamp": timeStamp, "changeStatus": status };
-        let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}/elem/${elemSURN}`
+        let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}/elem/${elemSURN}/${replacedElemSURN}`
         return axios.patch(url, body, {
             headers: {
                 PearsonSSOSession: config.ssoToken,

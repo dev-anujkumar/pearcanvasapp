@@ -1288,6 +1288,7 @@ class ElementContainer extends Component {
                         userRole={this.props.userRole}
                         handleAudioPopupLocation = {this.handleAudioPopupLocation}
                         parentElement={this.props.parentElement}
+                        handleTCM={this.props.handleTCM}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1315,6 +1316,7 @@ class ElementContainer extends Component {
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         activeElement={this.props.activeElement}
                         handleAudioPopupLocation = {this.handleAudioPopupLocation}
+                        handleTCM={this.props.handleTCM}
                     />;
                     labelText = 'Pop'
                     break;
@@ -1360,8 +1362,10 @@ class ElementContainer extends Component {
                         setActiveElement : this.props.setActiveElement,
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
-                        deleteElement: this.deleteElement
-                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        deleteElement: this.deleteElement,
+                        handleTCM : this.props.handleTCM
+                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} handleTCM={this.props.handleTCM}
+                    />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
                     break;
@@ -1413,6 +1417,7 @@ class ElementContainer extends Component {
                     elementSepratorProps={elementSepratorProps}
                     pasteElement={this.props.pasteElement}
                     userRole={this.props.userRole}
+                    handleTCM={this.props.handleTCM}
                    />
                     labelText = 'PE'
                     break;
@@ -1463,7 +1468,9 @@ class ElementContainer extends Component {
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
                         splithandlerfunction: this.props.splithandlerfunction,
-                    }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        handleTCM: this.props.handleTCM
+                    }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} handleTCM={this.props.handleTCM}
+                    />
                     </MultiColumnContext.Provider>;
                     labelText = '2C'
                     break;
@@ -1610,7 +1617,7 @@ class ElementContainer extends Component {
                         }} type="comment-flag" />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
-                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.props.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.props.handleTCM(event)} />)}
+                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.props.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.props.handleTCM(event, element)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={this.handleCommentPopup}

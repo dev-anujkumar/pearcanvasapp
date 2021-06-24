@@ -124,7 +124,6 @@ const FetchAllDataMapper = {
    * @param {*} data
    */
   processContainers(eURN, data) {
-    debugger
     let result = {};
     result.elementID = data.elemURN;
     result.eURN = eURN;

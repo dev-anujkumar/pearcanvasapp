@@ -513,48 +513,68 @@ overflow: unset;
 }
 
 .modal-content.tcm-canvas-popup{
-  width: 340px;
+  width: 310px;
   transform: none;
   animation-name: none;
   animation-duration: unset;
   top: 0;
   left: -38%;
-  margin-top: 100px; /* Negative half of height. */
+  margin-top: 85px; /* Negative half of height. */
   margin-left: 500px;
-}
-
-ins{
-  background-color: lightgreen;
-}
-del{
-  background-color: red;
+  max-height: 600px;
+  overflow-y: auto;
 }
 .tcmIcon{
-  border: solid 1px transparent !important;
+  padding: 2px !important;
   background-color: transparent !important;
 }
-.tcmIconContainer,.userNametcmIconContainer,.tcmdStatusContainer{
+.tcmIconContainer,.userNametcmIconContainer{
   display: flex;
 }
 .tcmContainer{
   display: flex;
   flex-direction: column;
 }
+.tcmdStatusContainer{
+  display: flex;
+  width: 54%;
+  justify-content: space-between;
+  height: 30px;
+  font-family: 'Open Sans';
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.67;
+  color: #333333;
+  padding: 10px 0 10px 0;
+}
 .userName{
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-span{
-  padding: 10px;
+  padding-right: 20px;
+  height: 30px;
+  font-family: 'Open Sans';
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 0.8;
+  color: #333333;
 }
 .dialog-window.tcm-canvas-popup{
   word-break: break-all;
-  padding: 15px 0 15px 0;
+  padding: 10px 0 10px 0;
   font-size: 12px !important;
 }
 
 .dialog-window p {
   margin: 0 0 0 0 !important;
+}
+.tcmIcon > img {
+  width: 24px !important;
+}
+ins{
+  background-color: lightgreen;
+}
+del{
+  background-color: red;
 }
