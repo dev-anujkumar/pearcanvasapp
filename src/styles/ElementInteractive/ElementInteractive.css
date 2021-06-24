@@ -45,3 +45,8 @@ a.buttonWidgetPDF , a.buttonWidgetPUSL, a.buttonWidgetPU {
 img.imageWidgetAccountingtable {
     width: 100%;
 }
+
+.id-info span {
+    padding-left: 10px;
+    word-break: break-all;
+}

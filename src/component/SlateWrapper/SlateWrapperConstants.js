@@ -55,7 +55,7 @@ export const DELETE_DIALOG_TEXT = 'Are you sure you want to delete, This action 
 export const TYPE_SINGLE_CONTAINER_DELETE = 'singleContainerDelete'
 export const TYPE_WITH_PENDING_TRACK = 'withPendingTrack'
 export const TYPE_UNLINK = 'unlink'
-export const elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN', 'MULTI_COLUMN_3C','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE"];
+export const elementType = ['ASSESSMENT', 'ELEMENT_ASSESSMENT','WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN', 'MULTI_COLUMN_3C','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE"];
 
 export const CLONE_STATUS_INTERVAL = 2000
 export const checkTCM = element => {
@@ -68,9 +68,7 @@ export const checkTCM = element => {
                 case 'assessment': return ASSESSMENT;
                 default: return TEXT;
             }
-
-        case 'element-assessment': return ELEMENT_ASSESSMENT;
-
+            
         case 'showhide': return SHOW_HIDE;
 
         case "element-aside": return CONTAINER;
