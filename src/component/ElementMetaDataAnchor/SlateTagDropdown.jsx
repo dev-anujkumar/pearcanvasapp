@@ -251,43 +251,76 @@ class SlateTagDropdown extends React.Component {
     }
   }
 
-  addExternalFrameworkPopup = () => {
+  openAssessmentExternalPopup = (popupType) => {
     const {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
     } = this.prepareExtFrameworkData();
     const currentSlateLF=this.props.currentSlateLF;
     let assessmentuRN="";
+    let assessmentType="";
+    let assessmentTypeLO="";
     if(config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length){
       assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+      assessmentType = document.getElementsByClassName("slate_assessment_data_format_lo")[0].innerText;
       }
+      switch (assessmentType) {
+        case TDX:
+            assessmentTypeLO = ASSESSMENT_ITEM_TDX
+            break;
+        case CITE:
+        case LEARNING_TEMPLATE:
+        case PUF:
+        case LEARNOSITY:
+        default: 
+            assessmentTypeLO = ASSESSMENT_ITEM
+            break;
+    }
+    let previewData={
+        previewUrl:config.PREVIEW_ASSESSMENT_LO_ENDPOINT,
+        bookId: config.citeUrn,
+        assessmentUrn:assessmentuRN,
+        assessmentType: assessmentTypeLO
+    }
     sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
     sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
-    sendDataToIframe({
-      'type': OpenLOPopup,
-      'message': {
-        'text': AddToExternalFrameworkAS,
-        'data': currentSlateLOData,
-        'isLOExist': true,
-          'editAction': '',
-          'selectedLOs': selectedLOs,
-          'apiConstants': apiKeys_LO,
-          'externalLFUrn': externalLFUrn,
-          'currentSlateId': slateManifestURN,
-          'chapterContainerUrn': '',
-          'currentSlateLF': currentSlateLF,
-          'assessmentUrn': assessmentuRN
-      }
-    })
-    this.props.closeLODropdown();
-  }
-
-  viewExternalFrameworkPopup = () => {
-    sendDataToIframe({
-      'type': OpenLOPopup,
-      'message': {
-        'text': ViewExternalFrameworkAS
-      }
-    })
+    if(popupType==='add'){
+      sendDataToIframe({
+        'type': OpenLOPopup,
+        'message': {
+          'text': AddToExternalFrameworkAS,
+          'data': currentSlateLOData,
+          'isLOExist': true,
+            'editAction': '',
+            'selectedLOs': selectedLOs,
+            'apiConstants': apiKeys_LO,
+            'externalLFUrn': externalLFUrn,
+            'currentSlateId': slateManifestURN,
+            'chapterContainerUrn': '',
+            'currentSlateLF': currentSlateLF,
+            'assessmentUrn': assessmentuRN,
+            'previewData': previewData
+        }
+      })
+    }
+    else{
+      sendDataToIframe({
+        'type': OpenLOPopup,
+        'message': {
+          'text': ViewExternalFrameworkAS,
+          'data': currentSlateLOData,
+          'isLOExist': true,
+            'editAction': '',
+            'selectedLOs': selectedLOs,
+            'apiConstants': apiKeys_LO,
+            'externalLFUrn': externalLFUrn,
+            'currentSlateId': slateManifestURN,
+            'chapterContainerUrn': '',
+            'currentSlateLF': currentSlateLF,
+            'assessmentUrn': assessmentuRN,
+            'previewData': previewData
+        }
+      })
+    }
     this.props.closeLODropdown();
   }
 
@@ -329,8 +362,8 @@ class SlateTagDropdown extends React.Component {
             </div> 
             <div className="learningobjectivedropdown2" ref={node3 => this.node3 = node3}>
                 <ul>
-                      <li onClick={this.addExternalFrameworkPopup}>{AddEditLOsAssessmentSlate}</li>
-                      <li onClick={this.viewExternalFrameworkPopup}>{ViewLOsAssessmentSlate}</li>
+                      <li onClick={() =>this.openAssessmentExternalPopup('add')}>{AddEditLOsAssessmentSlate}</li>
+                      <li onClick={() =>this.openAssessmentExternalPopup('view')}>{ViewLOsAssessmentSlate}</li>
                 </ul>
             </div> 
         </div>            
