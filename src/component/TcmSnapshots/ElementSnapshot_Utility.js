@@ -13,6 +13,7 @@ const {
     AUTHORED_TEXT,
     BLOCKFEATURE,
     ELEMENT_LIST,
+    ELEMENT_ASSESSMENT,
     HEADING,
     PARAGRAPH,
     SLATE,
@@ -279,6 +280,9 @@ export const fetchElementsTag = (element,metadataField) => {
         case BLOCKFEATURE:
             eleSubType = element.elementdata.type
             break;
+        case ELEMENT_ASSESSMENT: 
+            eleSubType = element.type
+            break;
         case FIGURE:
             eleSubType = element.figuretype
             break;
@@ -299,7 +303,6 @@ export const fetchElementsTag = (element,metadataField) => {
         eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
     }
     labelText = eleTag ? `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`:"P"
-
     return labelText;
 }
 
@@ -333,6 +336,13 @@ const setElementTag = {
             'blockquote': {
                 parentTag: "BQ",
                 childTag: 'blockquote',
+            }
+        }
+    },
+    "element-assessment": {
+        subtype: {
+            'element-assessment' : {
+                parentTag: 'As'
             }
         }
     },
@@ -452,6 +462,9 @@ const setElementTag = {
     },
     "figure": {
         subtype: {
+            'assessment': {
+                parentTag: 'Qu'
+            },
             'image': {
                 parentTag: "Fg"
             },
