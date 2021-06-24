@@ -360,11 +360,11 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
     const typeArray = ['show', 'postertextobject', 'hide']
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     for (const SHType of typeArray) {
-        //const showhidetag = SHType !== 'postertextobject' ? SHType : 'revel'
+        const showhidetag = SHType !== 'postertextobject' ? SHType : 'revel'
         wipData.interactivedata[SHType]?.map((item) => {
             const showhide = {
                 element: wipData,
-                //showHideType: showhidetag
+                showHideType: showhidetag
             }
             elementId.childId = item.id;
             /* if section is RevealAnswer than tag will be "CTA"; ELSE element tag (P/Fig)*/
@@ -797,8 +797,8 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
     }
     
     if (parentElement?.element?.type === SHOWHIDE) {    //showhide
-        //let showHideSection = getShowHideTag(parentElement.showHideType)
-        elementTag = `${tag.parentTag}:${tag.childTag}`; //${tag.childTag ? ":" + tag.childTag : ""}
+        let showHideSection = getShowHideTag(parentElement.showHideType);
+        elementTag = `${tag.parentTag}:${showHideSection}:${tag.childTag}`; //${tag.childTag ? ":" + tag.childTag : ""}
         if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
             elementTag = `AS:${elementTag}`
             elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
