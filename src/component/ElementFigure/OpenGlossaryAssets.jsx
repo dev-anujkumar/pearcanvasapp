@@ -92,6 +92,7 @@ class OpenGlossaryAssets extends Component {
         return (
             <div className={'glossary-figuredropdown'} style={position} id='openFigureGlossary' ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
                 <div className="tabs-container">
+                    <div className="audio-image-tab">
                         {
                             audioGlossaryData && Object.keys(audioGlossaryData).length > 0 &&
                             <div onClick={() => this.handleTab('audio')} className={`tabs ${tabValue === 'audio' ? "active-tabs" : ""}`}>Audio</div>
@@ -101,16 +102,18 @@ class OpenGlossaryAssets extends Component {
                             <div onClick={() => this.handleTab('image')} className={`tabs ${tabValue === 'image' ? "active-tabs" : ""}`}>Image</div>
                         }
                     </div>
-                <div className="audio-close" style={{backgroundColor:"pink"}}>
-                    <span className="close-icon-image" onClick={() => this.props.closeAssetsPopup()}>{audioNarrationCloseIcon}</span>
+                    <div className="close-icon-image">
+                      <span className="close-icon" onClick={() => this.props.closeAssetsPopup(false)}>{audioNarrationCloseIcon}</span>
+                    </div>
                 </div>
+                
 
                 {
                     audioGlossaryData && Object.keys(audioGlossaryData).length > 0 &&
-                    <div className={tabValue === 'audio' ? "showconetnt" : "content"}>
-                        <h2 className="audio-book-text">Audio Book</h2>
+                    <div className={tabValue === 'audio' ? "show-content" : "content"}>
+                        <h2 className="audio-text">Audio Book</h2>
                         <figure>
-                            <figcaption className="media-title">{audioMediaTitle}</figcaption>
+                            <figcaption className="audio-media-title">{audioMediaTitle}</figcaption>
                             <audio
                                 controls
                                 controlsList="nodownload"
@@ -136,10 +139,10 @@ class OpenGlossaryAssets extends Component {
 
                 {
                     figureGlossaryData && Object.keys(figureGlossaryData).length > 0 &&
-                    <div className={tabValue === 'image' ? "showconetnt" : "content"}>
-                        <h2 className="audio-book-text">Image Book</h2>
+                    <div className={tabValue === 'image' ? "show-content" : "content"}>
+                        <h2 className="image-text" >Image</h2>
                         <figure>
-                            <figcaption className="media-title">{imageMediaTitle}</figcaption>
+                            <figcaption className="image-media-title">{imageMediaTitle}</figcaption>
                             <img src={imageMediaSrc}
                                 data-src={imageMediaSrc}
                                 title = ""

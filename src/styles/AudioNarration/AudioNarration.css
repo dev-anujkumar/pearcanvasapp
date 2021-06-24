@@ -40,6 +40,7 @@ figure> audio {
 }
 .tabs-container{
     display: flex;
+    justify-content: space-between;
 }
 .tabs {
     padding: 10px;
@@ -48,4 +49,24 @@ figure> audio {
 }
 .active-tabs{
     border-bottom: 2px solid #3298B5;
+}
+.audio-image-tab{
+    display: flex;
+}
+.audio-text, .image-text{
+    float: left;
+    color: #3298B5;
+    padding: 15px 0 0 10px;
+    font-size: 20px;
+}
+.image-media-title, .audio-media-title{
+    padding: 10px;
+    float: left;
+}
+.close-icon-image{
+    padding: 10px;
+    z-index: 1500;
+}
+.close-icon{
+    cursor: pointer;
 }
