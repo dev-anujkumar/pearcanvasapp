@@ -257,7 +257,8 @@ class ElementFigure extends Component {
                 PATTERN_PRODUCT_LINK: config.PATTERNS.PATTERN_PRODUCT_LINK
             },
             PROJECTAPI_ENDPOINT: config.PROJECTAPI_ENDPOINT,
-            STRUCTURE_APIKEY:config.STRUCTURE_APIKEY
+            STRUCTURE_APIKEY:config.STRUCTURE_APIKEY,
+            AlfrescoSiteAPIUrl: config.ALFRESCO_EDIT_METADATA
         }
         const configAPIKey = JSON.parse(JSON.stringify(tableConfig));
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
