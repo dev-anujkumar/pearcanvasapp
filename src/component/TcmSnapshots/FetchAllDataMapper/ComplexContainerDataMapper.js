@@ -90,29 +90,6 @@ const ComplexContainerDataMapper = {
     });
     return [...headChildArray, ...bodyChildArray];
   },
-
-  processNestedShowHideElement(nestedData, level) { /** To sort data inside Show-Hide Element */
-    const showChildArray = [];
-    const hideChildArray = [];
-    const ctaChildArray = [];
-    nestedData.map((childElem) => {
-      const tagName = childElem.elementTag[level + 1];
-      switch (tagName) {
-        case 'Show':
-          showChildArray.push(childElem);
-          break;
-        case 'Hide':
-          hideChildArray.push(childElem);
-          break;
-        default:
-          ctaChildArray.push(childElem);
-          break;
-      }
-    });
-    let showHideContent = [...showChildArray, ...ctaChildArray, ...hideChildArray];
-    showHideContent = orderBy(showHideContent, ['elemIndex'], ['asc']);
-    return showHideContent
-  },
   createNestedContainerElements(data, level, indexOfElements) {
     let parentArray = [];
     let childArray = [];
@@ -137,11 +114,7 @@ const ComplexContainerDataMapper = {
         parentArray.push(childArray);
         childArray = [];
       }
-      if (parentArray && parentArray[0] && parentArray[0].elementTag && TCMUtils.setContainerElementTag(parentArray[0].elementTag, level)[level - 1] == 'SH') {
-        parentArray = this.processNestedShowHideElement(parentArray, level);
-      } else {
         parentArray = this.processNestedContainerElements(parentArray, level);
-      }
       return parentArray;
     }
   },

@@ -1,7 +1,6 @@
 import TCMUtils from '../../../js/tcmUtils';
 import GlossaryDataMapper from './GlossaryDataMapper';
 import FootnotesDataMapper from './FootnotesDataMapper';
-import FigureDataMapper from './FigureDataMapper';
 import { setPopupKeys } from './PopupHelperFunction';
 /**
  * Service Mapper is responsible for converting the API structure to Application structure
@@ -87,13 +86,6 @@ const LatestTransactionsDataMapper = {
     result.nextElementType = elementChangeType === 'create' || elementChangeType === 'update' ? pendingElementType && TCMUtils.getElementType(pendingElementType) : '';
 
     result.theme = elementChangeType === 'create' ? 'new' : elementChangeType === 'delete' ? 'deleted' : '';
-    if (JSON.parse(pendingElementSnapshot).captions) {
-      const figureData = FigureDataMapper.prepareLatestTransactionFigureData(JSON.parse(acceptedElementSnapshot),JSON.parse(pendingElementSnapshot))
-
-      result.lastAcceptedFigureContent = figureData.lastAcceptedFigureContent;
-      result.acceptedFigureContentBeforeChange = figureData.acceptedFigureContentBeforeChange;
-      result.figureContentDifference = figureData.figureContentDifference
-    } else {
       result.lastAcceptedContent = JSON.parse(pendingElementSnapshot).contentSnapshot;
       result.acceptedContentBeforeChange = JSON.parse(acceptedElementSnapshot).contentSnapshot;
       result.contentDifference = TCMUtils.getDiffContent(
@@ -111,7 +103,6 @@ const LatestTransactionsDataMapper = {
           JSON.parse(pendingElementSnapshot).contentSnapshot,
         );
       }
-    }
     
     
     result.elementChangeType = elementChangeType;

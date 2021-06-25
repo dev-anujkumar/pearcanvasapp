@@ -1,7 +1,6 @@
 import TCMUtils from '../../../js/tcmUtils.js';
 import GlossaryDataMapper from './GlossaryDataMapper';
 import FootnotesDataMapper from './FootnotesDataMapper';
-import FigureDataMapper from './FigureDataMapper';
 import {setPopupKeys} from './PopupHelperFunction';
 /**
  * Service Mapper is responsible for converting the API structure to Application structure
@@ -35,29 +34,16 @@ const PendingTransactionsDataMapper = {
       parentElement = popupDataKeys.parentElement
       pendingElementType=popupDataKeys.pendingElementType
     }
-    // if (splitElementType.length === 3) {
-    //   [parentElement, pendingSecondLevel, pendingElementType] = splitElementType;
-    //   bodyTypeList=[pendingSecondLevel]
-    // }
-    // if (splitElementType.length === 2) {
-    //   [parentElement, pendingElementType] = splitElementType;
-    // }
     elementChangeType = elementChangeType.toLowerCase();
     returnValue.elementChangeType = elementChangeType;
     returnValue.theme = elementChangeType === 'create' ? 'new' : elementChangeType === 'delete' ? 'deleted' : '';
     returnValue.nextElementType = elementChangeType === 'create' || elementChangeType === 'update' ? pendingElementType && TCMUtils.getElementType(pendingElementType) : '';
     returnValue.prevElementType = elementChangeType === 'delete' ? pendingElementType && TCMUtils.getElementType(pendingElementType) : '';
-    if(JSON.parse(pendingElementSnapshot).captions){
-      const figureData = FigureDataMapper.preparePendingTransactionFigureData(acceptedValue, JSON.parse(pendingElementSnapshot));
-      returnValue.figureContentDifference = figureData.figureContentDifference
-      returnValue.lastAcceptedFigureContent = figureData.lastAcceptedFigureContent;
-    }else{
       returnValue.contentDifference = TCMUtils.getDiffContent(
         acceptedValue,
         JSON.parse(pendingElementSnapshot).contentSnapshot,
       );
       returnValue.lastAcceptedContent = JSON.parse(pendingElementSnapshot).contentSnapshot;
-    }
    
     returnValue.pendingSecondLevel = pendingSecondLevel !== undefined ? pendingSecondLevel : '';
     returnValue.parentElement = parentElement;

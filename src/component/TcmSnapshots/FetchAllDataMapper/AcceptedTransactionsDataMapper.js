@@ -1,6 +1,5 @@
 import TCMUtils from '../../../js/tcmUtils';
 import {setPopupKeys} from './PopupHelperFunction.js';
-import FigureDataMapper from './FigureDataMapper';
 /**
  * Service Mapper is responsible for converting the API structure to Application structure
  * returns  data
@@ -53,15 +52,9 @@ const AcceptedTransactionsDataMapper = {
     returnValue.originalLastUpdatedTimestamp = lastUpdatedTimestamp;
     returnValue.lastUpdatedTimestamp = TCMUtils.formatDateTime(parseInt(lastUpdatedTimestamp, 10));
     returnValue.changeTime = TCMUtils.formatChangeDateTime(parseInt(changeTime, 10));
-    if (JSON.parse(acceptedElementSnapshot).captions) {
-      const figureData = FigureDataMapper.prepareAcceptedTransactionFigureData(JSON.parse(acceptedElementSnapshot))
-      returnValue.figureContentDifference = figureData.lastAcceptedFigureContent;
-      returnValue.lastAcceptedFigureContent = figureData.lastAcceptedFigureContent;
-    }
-    else {
+
       returnValue.contentDifference = JSON.parse(acceptedElementSnapshot).contentSnapshot;
       returnValue.lastAcceptedContent = JSON.parse(acceptedElementSnapshot).contentSnapshot;
-    }
     
     returnValue.trackChangeApprover = authorName;
     returnValue.changeStatus = changeStatus.toLowerCase();

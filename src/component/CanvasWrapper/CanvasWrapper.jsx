@@ -181,7 +181,7 @@ export class CanvasWrapper extends Component {
      * This function opens TCM w.r.t. current Element
      */
        handleTCM = (e, element, refreshEvent) => {
-        if(refreshEvent || element.type && element.type === "element-authoredtext" || element.type === "element-citation" || element.type === "stanza"){
+        if(refreshEvent || element.type && element.type === "element-authoredtext" || element.type === "element-citation" || element.type === "stanza" || element.type === "element-list"){
             let that = this
             const currentProjectUrn = config.projectUrn;
             const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;

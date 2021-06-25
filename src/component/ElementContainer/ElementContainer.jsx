@@ -60,6 +60,7 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
+import {launchTCMPopup} from '../CanvasWrapper/TCM_Integration_Actions'
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -230,6 +231,11 @@ class ElementContainer extends Component {
         }
         let element = this.props.element,
             index = this.props.index
+            const lastFocusedElementId = config.lastActiveElementId
+            if(element.id !== lastFocusedElementId && element.id !== this.props.tcmSnapshotData?.eURN){
+                const tcmObject = { isTCMCanvasPopup: false }
+                this.props.launchTCMPopup(tcmObject)
+            }
         if(showHideObj) {
             element = showHideObj.currentElement
             index = showHideObj.index
@@ -1990,7 +1996,11 @@ const mapDispatchToProps = (dispatch) => {
         },
         editElmAssessmentId: (assessmentId, assessmentItemId) => {
             dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
+        },
+        launchTCMPopup: (tcmObject) => {
+            dispatch(launchTCMPopup(tcmObject))
         }
+        
     }
 }
 
@@ -2016,7 +2026,8 @@ const mapStateToProps = (state) => {
         currentSlateAncestorData : state.appStore.currentSlateAncestorData,
         elementSelection: state.selectionReducer.selection,
         slateLevelData: state.appStore.slateLevelData,
-        assessmentReducer: state.assessmentReducer
+        assessmentReducer: state.assessmentReducer,
+        tcmSnapshotData: state.tcmReducer.tcmSnapshotData
     }
 }
 
