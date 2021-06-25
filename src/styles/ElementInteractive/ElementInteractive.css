@@ -57,7 +57,24 @@ img.imageWidgetAccountingtable {
 }
 .showhide-heading-div {
     padding: 2px 10px;
-    background: rgba(0, 0, 0, 0.12);
+    background: #d4eae4;
     margin-top: 10px;
+}
+.show-hide-component hr.horizontalLine {
+    margin-left: -30px;
+}
+.show-hide-component .dropdown{
+    margin-left: -23px;
+}
+.container-multi-column-group.wider-60-40.column-0 .container-aside .show-hide-component hr.horizontalLine,
+.container-multi-column-group.wider-60-40.column-1 .container-aside .show-hide-component hr.horizontalLine,
+.container-multi-column-group.wider-50-50.column-0 .container-aside .show-hide-component hr.horizontalLine,
+.container-multi-column-group.wider-50-50.column-1 .container-aside .show-hide-component hr.horizontalLine,
+.container-multi-column-group.text-width-50-50.column-1 .container-aside .show-hide-component hr.horizontalLine,
+.container-multi-column-group.text-width-50-50.column-0 .container-aside .show-hide-component hr.horizontalLine,
+.container-multi-column-group.text-width-60-40.column-0 .container-aside .show-hide-component hr.horizontalLine,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .show-hide-component hr.horizontalLine{
+   margin-left:-4%;
+    width: 100%;
 }
 /* END  ----------------------------------------- */
