@@ -643,12 +643,10 @@ class Sidebar extends Component {
     tcmButtonHandler = (status) => {
         const currentProjectUrn = config.projectUrn;
         const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
-            console.log("object",this.props.tcmSnapshotData)
         let timeStamp = this.props.tcmSnapshotData?.originalLastUpdatedTimestamp;
-        let elemSURN = this.props.tcmSnapshotData.eURN
-        let replacedElemSURN = elemSURN.replace(":", "%3A");
+        let eURN = this.props.elementData
         let body = { "lastUpdatedTimestamp": timeStamp, "changeStatus": status };
-        let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}/elem/${elemSURN}/${replacedElemSURN}`
+        let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}/elem/${eURN}`
         return axios.patch(url, body, {
             headers: {
                 PearsonSSOSession: config.ssoToken,
@@ -674,17 +672,17 @@ class Sidebar extends Component {
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
                 </div>
                 }
-                {this.props.isTCMCanvasPopupLaunched && 
-                <PopUp 
-                isTCMCanvasPopup={this.props.isTCMCanvasPopupLaunched} 
-                assessmentClass={'tcm-canvas-popup'} 
-                handleTCMRedirection={this.props.handleTCMRedirection} 
-                closeTcmPopup={this.closeTcmPopup} 
-                tcmButtonHandler={this.tcmButtonHandler} 
-                tcmSnapshotData={this.props.tcmSnapshotData} 
-                dialogText={this.props.tcmSnapshotData.contentDifference}
-                handleTCM={this.props.handleTCM}
-                />}
+                {this.props.isTCMCanvasPopupLaunched &&
+                    <PopUp
+                        isTCMCanvasPopup={this.props.isTCMCanvasPopupLaunched}
+                        assessmentClass={'tcm-canvas-popup'}
+                        handleTCMRedirection={this.props.handleTCMRedirection}
+                        closeTcmPopup={this.closeTcmPopup}
+                        tcmButtonHandler={this.tcmButtonHandler}
+                        tcmSnapshotData={this.props.tcmSnapshotData}
+                        dialogText={this.props.tcmSnapshotData.contentDifference}
+                        handleTCM={this.props.handleTCM}
+                    />}
             </>
         );
     }
@@ -709,7 +707,8 @@ const mapStateToProps = state => {
         cutCopySelection: state.selectionReducer.selection,
         isLearnosityProject: state.appStore.isLearnosityProjectInfo,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
-        tcmSnapshotData: state.tcmReducer.tcmSnapshotData
+        tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
+        elementData: state.tcmReducer.elementData
     };
 };
 
