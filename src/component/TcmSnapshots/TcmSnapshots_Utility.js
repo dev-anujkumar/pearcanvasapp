@@ -9,13 +9,12 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
 import { getTitleSubtitleModel } from '../../constants/utility';
 /*************************Import Constants*************************/
-import TcmConstants from './TcmConstants.js';
+import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper.js';
 
-const ASSESSMENT_TYPE = [{type: 'tdx', label: 'TDX'}, {type: 'cite', label: 'QuAD CITE'}, {type: 'puf', label: 'Elm'}, {type: 'learnosity', label: 'Learnosity'}]
 
 let operType = "";
 const {
@@ -920,9 +919,14 @@ export const setSlateType = (wipData, containerElement, type) => {
     }
     return isContainer
 }
-const getAssessmentType = (key) => {
-    return ASSESSMENT_TYPE.find(item => item.type === key)?.label;
+const getAssessmentType = (key, isStandAlone) => {
+    const assessmentType =  ASSESSMENT_TYPE.find(item => item.type === key);
+    if(assessmentType) {
+        return isStandAlone? assessmentType.standAloneLabel : assessmentType.label
+    }
+    return key;
 }
+
 const getAssessmentStatus = (assessmentId) => {
     if(assessmentId) {
         const assessmentData = store?.getState()?.assessmentReducer?.[assessmentId];
@@ -943,7 +947,7 @@ const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
             assessmentItemId: `<p>${elementData?.assessmentitemid|| ''}</p>`,
             assessmentUsageType: `<p>${elementData?.usagetype|| ''}</p>`,
             assessmentStatus: `<p>${getAssessmentStatus(elementData?.assessmentId) || ''}</p>`,
-            assessmentType: `<p>${getAssessmentType(elementData?.assessmentformat) || ''}<p>`,
+            assessmentType: `<p>${getAssessmentType(elementData?.assessmentformat, true) || ''}<p>`,
             glossorySnapshot: '[]',
             footnoteSnapshot: '[]',
             assetPopOverSnapshot: '[]'
@@ -1049,7 +1053,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
                     assessmentUsageType: `<p>${elementData?.usagetype || ''}</p>`,
                     // status only sent in case of elm and learnosity
                     assessmentStatus: `<p>${getAssessmentStatus(elementData.assessmentid) || ''}</p>`,
-                    assessmentType: `<p>${getAssessmentType(elementData?.assessmentformat) || ''}<p>`
+                    assessmentType: `<p>${getAssessmentType(elementData?.assessmentformat, false) || ''}<p>`
                 }  
             }
             break;   

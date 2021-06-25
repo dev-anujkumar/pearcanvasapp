@@ -59,14 +59,14 @@ class MultipleColumnContainer extends PureComponent {
      * @param {Number} parentIndex - Index of column
      */
      renderElement = (_elements, parentUrn, parentIndex) => {
-        let columnId;
+        let columnIndex;
         for (let element of this.props.threeColumnData) {
             if (element.containerId === parentUrn.mcId) {
-                columnId = element.columnId;
+                columnIndex = element.columnIndex;
             }
         }
-        if (!columnId && parentUrn.columnName === "C1") {
-            columnId = parentUrn.manifestUrn;
+        if (!columnIndex && parentUrn.columnName === "C1") {
+            columnIndex = parentUrn.columnName;
         }
 
         let asideData = {
@@ -76,7 +76,7 @@ class MultipleColumnContainer extends PureComponent {
             element : this.context.element
         };
         try {
-            if (_elements !== null && _elements !== undefined && parentUrn.manifestUrn === columnId) {
+            if (_elements !== null && _elements !== undefined && parentUrn.columnName === columnIndex) {
                 if (_elements.length === 0) {
                     return this.renderBlankContainer(this.context, parentUrn, asideData, parentIndex)
                 }
