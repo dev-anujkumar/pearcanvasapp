@@ -57,7 +57,13 @@ img.imageWidgetAccountingtable {
 }
 .showhide-heading-div {
     padding: 2px 10px;
-    background: rgba(0, 0, 0, 0.12);
+    background: #d4eae4;
     margin-top: 10px;
+}
+.show-hide-component hr.horizontalLine {
+    margin-left: -30px;
+}
+.show-hide-component .dropdown{
+    margin-left: -23px;
 }
 /* END  ----------------------------------------- */
