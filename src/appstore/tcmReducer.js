@@ -7,7 +7,8 @@ const INITIAL_STATE = {
     tcmSnapshot: [],
     tcmActivatedOnProjectLevel: false,
     isTCMCanvasPopupLaunched : false,
-    tcmSnapshotData: []
+    tcmSnapshotData: [],
+    elementData:""
 }
 
 const INITIAL_ACTION = {
@@ -31,7 +32,8 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 return {
                     ...state,
                     isTCMCanvasPopupLaunched: action.payload.isTCMCanvasPopup,
-                    tcmSnapshotData: action.payload.tcmElemData
+                    tcmSnapshotData: action.payload.tcmElemData,
+                    elementData:action.payload.elemData
                 }
         default:
             return state
