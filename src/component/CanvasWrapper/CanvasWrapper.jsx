@@ -207,6 +207,7 @@ export class CanvasWrapper extends Component {
     processTCMData = (data, id) =>{
         let that = this
         data.map((elemData)=>{
+            let eURN = elemData.elemURN
             // to check the element ids which has manifest + work id
             let Check = elemData.elemURN.includes('+')
             let elementId = Check === true && elemData.elemURN.split('+') 
@@ -214,7 +215,7 @@ export class CanvasWrapper extends Component {
            if(elemData.elemURN === id){
             const elemIndex = [{index: this.props.index, urn: id}]
             const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
-            const tcmObject = {isTCMCanvasPopup: true, tcmElemData: tcmData.result[0] }
+            const tcmObject = {isTCMCanvasPopup: true, tcmElemData: tcmData.result[0] ,elemData:eURN}
             that.props.launchTCMPopup(tcmObject)
            }
        })
