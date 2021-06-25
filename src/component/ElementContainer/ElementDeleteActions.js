@@ -13,8 +13,8 @@ import tinymce from 'tinymce';
 
 export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
     const elementIndex = eleIndex?.toString()?.split('-')
-    const { showHideObj } = getState().appStore
-    const { cutCopyParentUrn, parentUrn, parentElement, asideData } = containerElements
+    //const { showHideObj } = getState().appStore
+    const { cutCopyParentUrn, parentUrn, parentElement, asideData, showHideObj } = containerElements
     // const parentElementUrn = getState().appStore.parentUrn
     if(type === 'popup'){
         dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
