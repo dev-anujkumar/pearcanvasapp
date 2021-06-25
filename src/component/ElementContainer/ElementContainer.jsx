@@ -980,10 +980,10 @@ class ElementContainer extends Component {
      * For deleting slate level element
      */
     deleteElement = (e) => {
-        let { id, type } = this.props.element;
-        let { parentUrn, asideData, element, poetryData, parentElement } = this.props;
-        let { contentUrn } = this.props.element
-        let index = this.props.index
+        let { id, type, contentUrn } = this.props.element;
+        let { parentUrn, asideData, element, poetryData, parentElement, showHideType, index } = this.props;
+        //let { contentUrn } = this.props.element
+        //let index = this.props.index
 
         if (this.state.sectionBreak) {
             parentUrn = {
@@ -998,7 +998,13 @@ class ElementContainer extends Component {
             parentUrn,
             asideData,
             poetryData,
-            parentElement
+            parentElement,
+            showHideObj: {
+                currentElement: element,
+                element: parentElement,
+                index: index,
+                showHideType
+            },
         }
         this.handleCommentPopup(false,e);
        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
