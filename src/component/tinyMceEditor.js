@@ -522,7 +522,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
 
-                    if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
+                    if(editor.selection.getNode().className.includes('callout')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
                             editor.insertContent(textSelected);
@@ -1169,12 +1169,13 @@ export class TinyMceEditor extends Component {
                     textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 }
                 textPicker?.click();
-            } else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
-                this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
-            }
-            else if ((this.props.element && this.props.element.type === 'showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length > 1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length > 1)) && !isContainsMath && !isContainsBlankLine) {
-                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex, this.props.index, this.props.element.id)
-            }
+            } 
+            // else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
+            //     this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
+            // }
+            // else if ((this.props.element && this.props.element.type === 'showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length > 1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length > 1)) && !isContainsMath && !isContainsBlankLine) {
+            //     this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex, this.props.index, this.props.element.id)
+            // }
             else if (key === 13 && this.props.element.type === 'stanza') {
                 let currentElement = editor.selection.getNode();
                 if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
@@ -2745,7 +2746,7 @@ export class TinyMceEditor extends Component {
                             this.fromtinyInitBlur = false;
                         }
                     }
-                })
+                }).catch((err) => console.log(err))
             }
         }
     }
@@ -2957,9 +2958,11 @@ export class TinyMceEditor extends Component {
             else {
                 toolbar = config.codeListingToolbarEnabled;
             }
-        } else if (this.props.placeholder === "Enter Show text" || (this.props.placeholder === "Enter Hide text")) {
-            toolbar = config.showHideToolbar
-        } else if (this.props && this.props.showHideType && this.props.showHideType == 'revel') {
+        } 
+        // else if (this.props.placeholder === "Enter Show text" || (this.props.placeholder === "Enter Hide text")) {
+        //     toolbar = config.showHideToolbar
+        // } 
+        else if (this.props && this.props.showHideType && this.props.showHideType == 'revel') {
             toolbar = config.revelToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
@@ -3033,14 +3036,14 @@ export class TinyMceEditor extends Component {
             tinymceToolbar.classList.remove('toolbar-disabled')
         }
         let showHideObj;
-        if (this.props.showHideType) {
-            showHideObj = {
-                currentElement: this.props.element,
-                index: this.props.index,
-                element: this.props.parentElement,
-                showHideType: this.props.showHideType
-            }
-        }
+        // if (this.props.showHideType) {
+        //     showHideObj = {
+        //         currentElement: this.props.element,
+        //         index: this.props.index,
+        //         element: this.props.parentElement,
+        //         showHideType: this.props.showHideType
+        //     }
+        // }
         clickedX = e.clientX;
         clickedY = e.clientY;
         setTimeout(this.removeMultiTinyInstance, 0)
@@ -3268,7 +3271,7 @@ export class TinyMceEditor extends Component {
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
                 }
-            });
+            }).catch((err) => console.log(err));
             this.setToolbarByElementType(); 
         }
         /**
@@ -3360,7 +3363,7 @@ export class TinyMceEditor extends Component {
                         }
                     }, 10)
                 }
-            })
+            }).catch((err) => console.log(err));
         });
         if (isSameTarget) {
             this.editorOnClick(event);

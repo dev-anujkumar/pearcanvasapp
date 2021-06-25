@@ -14,13 +14,13 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateThreeColumnData } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -45,6 +45,7 @@ import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 import MultiColumnContext from "./MultiColumnContext.js"
 import MultiColumnContainer from "../MultiColumnElement"
+import MultipleColumnContainer from "../MultipleColumnElement/MultipleColumnContainer.jsx";
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
@@ -979,10 +980,10 @@ class ElementContainer extends Component {
      * For deleting slate level element
      */
     deleteElement = (e) => {
-        let { id, type } = this.props.element;
-        let { parentUrn, asideData, element, poetryData, parentElement } = this.props;
-        let { contentUrn } = this.props.element
-        let index = this.props.index
+        let { id, type, contentUrn } = this.props.element;
+        let { parentUrn, asideData, element, poetryData, parentElement, showHideType, index } = this.props;
+        //let { contentUrn } = this.props.element
+        //let index = this.props.index
 
         if (this.state.sectionBreak) {
             parentUrn = {
@@ -997,12 +998,18 @@ class ElementContainer extends Component {
             parentUrn,
             asideData,
             poetryData,
-            parentElement
+            parentElement,
+            showHideObj: {
+                currentElement: element,
+                element: parentElement,
+                index: index,
+                showHideType
+            },
         }
         this.handleCommentPopup(false,e);
        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
-        if (parentElement?.type === elementTypeConstant.SHOW_HIDE || element.type === elementTypeConstant.SHOW_HIDE) {
+        if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {// || element.type === elementTypeConstant.SHOW_HIDE
             this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
         }
         else {
@@ -1514,26 +1521,49 @@ class ElementContainer extends Component {
                     break;
                 
                 case elementTypeConstant.MULTI_COLUMN:
-                    editor = <MultiColumnContext.Provider value={{
-                        activeElement: this.props.activeElement,
-                        showBlocker: this.props.showBlocker,
-                        permissions: permissions,
-                        index: index,
-                        element: element,
-                        slateLockInfo: slateLockInfo,
-                        handleCommentspanel : handleCommentspanel,
-                        isBlockerActive : this.props.isBlockerActive,
-                        onClickCapture : this.props.onClickCapture,
-                        elementSepratorProps : elementSepratorProps,
-                        setActiveElement : this.props.setActiveElement,
-                        onListSelect : this.props.onListSelect,
-                        handleFocus: this.handleFocus,
-                        handleBlur: this.handleBlur,
-                        deleteElement: this.deleteElement,
-                        splithandlerfunction: this.props.splithandlerfunction,
-                    }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
-                    </MultiColumnContext.Provider>;
-                    labelText = '2C'
+                    // checking if labelText is 3C to render 3 column component
+                    if (labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) {
+                        editor = editor = <MultiColumnContext.Provider value={{
+                            activeElement: this.props.activeElement,
+                            showBlocker: this.props.showBlocker,
+                            permissions: permissions,
+                            index: index,
+                            element: element,
+                            slateLockInfo: slateLockInfo,
+                            handleCommentspanel: handleCommentspanel,
+                            isBlockerActive: this.props.isBlockerActive,
+                            onClickCapture: this.props.onClickCapture,
+                            elementSepratorProps: elementSepratorProps,
+                            setActiveElement: this.props.setActiveElement,
+                            onListSelect: this.props.onListSelect,
+                            handleFocus: this.handleFocus,
+                            handleBlur: this.handleBlur,
+                            deleteElement: this.deleteElement,
+                            splithandlerfunction: this.props.splithandlerfunction,
+                        }}><MultipleColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        </MultiColumnContext.Provider>;
+                    } else {
+                        editor = <MultiColumnContext.Provider value={{
+                            activeElement: this.props.activeElement,
+                            showBlocker: this.props.showBlocker,
+                            permissions: permissions,
+                            index: index,
+                            element: element,
+                            slateLockInfo: slateLockInfo,
+                            handleCommentspanel : handleCommentspanel,
+                            isBlockerActive : this.props.isBlockerActive,
+                            onClickCapture : this.props.onClickCapture,
+                            elementSepratorProps : elementSepratorProps,
+                            setActiveElement : this.props.setActiveElement,
+                            onListSelect : this.props.onListSelect,
+                            handleFocus: this.handleFocus,
+                            handleBlur: this.handleBlur,
+                            deleteElement: this.deleteElement,
+                            splithandlerfunction: this.props.splithandlerfunction,
+                        }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        </MultiColumnContext.Provider>;
+                        labelText = '2C'
+                    }
                     break;
 
                     case elementTypeConstant.ELEMENT_DIALOGUE:
@@ -1648,7 +1678,7 @@ class ElementContainer extends Component {
             }
         }
 
-        let noTCM = ['TE', 'Qu', 'PS','MA', 'DE'];
+        let noTCM = ['TE', 'PS','MA', 'DE'];
         if(noTCM.indexOf(labelText) >= 0) {
             tcm = false;
         }
@@ -1661,13 +1691,15 @@ class ElementContainer extends Component {
                 {this.renderCopyComponent(this.props, index, inContainer)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
+                    {/* render 3 column labels when labelText is 3C  */}
+                    {labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME && <div> {this.renderMultipleColumnLabels(element)}</div>}
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
                     {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
+                <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column" : "multi-column " +labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
                 {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>}
                 </div>
@@ -1712,6 +1744,34 @@ class ElementContainer extends Component {
                 }
             </div >
         );
+    }
+
+    // function to render multiple columns for 3 column container based on bodymatter
+    renderMultipleColumnLabels = (element) => {
+        let activeColumnLabel = "C1"
+        for (let propsElementObject of this.props.threeColumnData) {
+            if (propsElementObject.containerId === element.id) {
+                activeColumnLabel = propsElementObject.columnIndex;
+            }
+        }
+        if (element && 'groupeddata' in element && element.groupeddata && 'bodymatter' in element.groupeddata &&
+            element.groupeddata.bodymatter && element.groupeddata.bodymatter.length > 0) {
+            return element.groupeddata.bodymatter.map((bodymatter, index)=>{
+                return (
+                    <Button key={index} btnClassName={activeColumnLabel === `C${index+1}` ? "activeTagBgColor" : ""} labelText={`C${index+1}`} onClick={() => this.updateColumnValues(index, element)} type="label-clickable-button"/>
+                )
+            });
+        }
+    }
+
+    updateColumnValues = (index, element) => {
+        let objKey = element.id;
+        let threeColumnObjData = {
+            containerId: objKey,
+            columnIndex: `C${index + 1}`,
+            columnId: element.groupeddata.bodymatter[index].id
+        }
+        this.props.updateThreeColumnData(threeColumnObjData, objKey);
     }
 
     /**
@@ -1784,9 +1844,10 @@ class ElementContainer extends Component {
             sourceEntityUrn: (parentUrn && 'contentUrn' in parentUrn) ? parentUrn.contentUrn : config.slateEntityURN,
             deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData, cutCopyParentUrn},
             inputType,
-            inputSubType
+            inputSubType,
             //type: enum type to be included
-        }
+            multiColumnType: (element.type === 'groupedcontent' && element?.groupeddata?.bodymatter) ? `${element?.groupeddata?.bodymatter.length}C` : undefined
+        } 
 
         if('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
             let elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
@@ -2055,6 +2116,9 @@ const mapDispatchToProps = (dispatch) => {
         deleteElementAction: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
             dispatch(deleteElementAction(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
         },
+        updateThreeColumnData: (threeColumnObjData, objKey) => {
+            dispatch(updateThreeColumnData(threeColumnObjData, objKey))
+        }
     }
 }
 
@@ -2080,7 +2144,8 @@ const mapStateToProps = (state) => {
         currentSlateAncestorData : state.appStore.currentSlateAncestorData,
         elementSelection: state.selectionReducer.selection,
         slateLevelData: state.appStore.slateLevelData,
-        assessmentReducer: state.assessmentReducer
+        assessmentReducer: state.assessmentReducer,
+        threeColumnData: state.appStore.threeColumnData
     }
 }
 

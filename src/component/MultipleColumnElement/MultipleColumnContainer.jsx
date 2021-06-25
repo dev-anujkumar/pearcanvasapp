@@ -1,31 +1,27 @@
 /** Libraries */
-import React, { PureComponent } from 'react'
-import Sortable from 'react-sortablejs'
-import { connect } from 'react-redux'
+import React, { PureComponent } from 'react';
+import Sortable from 'react-sortablejs';
+import { connect } from 'react-redux';
 
 /** Contants and utitlity functions */
-import constants from "./constants.js"
-import { guid, sendDataToIframe } from '../../constants/utility.js'
-import config from "../../config/config.js"
-import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
-import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext.js'
-import { checkSlateLock } from '../../js/slateLockUtility.js'
+import constants from "./constants.js";
+import { guid, sendDataToIframe } from '../../constants/utility.js';
+import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext';
 import { MULTICOLUMN_SOURCE } from '../../constants/Element_Constants.js';
-
+import { checkSlateLock } from '../../js/slateLockUtility.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import config from "../../config/config.js";
 
 /** External Components */
-import ElementSaprator from '../ElementSaprator'
-import ElementContainer from '../ElementContainer'
+import ElementSaprator from '../ElementSaprator';
+import ElementContainer from '../ElementContainer';
 
 /** Action Creators */
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 
-/** Style/CSS */
-import './../../styles/MultiColumn/style.css'
-
 let random = guid();
 
-class MultiColumnContainer extends PureComponent {
+class MultipleColumnContainer extends PureComponent {
 
     /**
      * Renders blank container with an element picker (Separator)
@@ -34,7 +30,7 @@ class MultiColumnContainer extends PureComponent {
      * @param {object} asideData - object containing Multicolumn container information
      * @param {Number} parentIndex - Index of column
      */
-    renderBlankContainer = (_context, parentUrn, asideData, parentIndex) => {
+     renderBlankContainer = (_context, parentUrn, asideData, parentIndex) => {
         let index = 0
         return (
             <ElementSaprator
@@ -55,14 +51,24 @@ class MultiColumnContainer extends PureComponent {
             />
         )
     }
-    
+
     /**
      * Render elements in a column group
      * @param {Array} _elements - Array of elements in the group
      * @param {object} parentUrn - object containing immediate parent information
      * @param {Number} parentIndex - Index of column
      */
-    renderElement = (_elements, parentUrn, parentIndex) => {
+     renderElement = (_elements, parentUrn, parentIndex) => {
+        let columnId;
+        for (let element of this.props.threeColumnData) {
+            if (element.containerId === parentUrn.mcId) {
+                columnId = element.columnId;
+            }
+        }
+        if (!columnId && parentUrn.columnName === "C1") {
+            columnId = parentUrn.manifestUrn;
+        }
+
         let asideData = {
             type: "groupedcontent",
             id: this.context.element.id,
@@ -70,7 +76,7 @@ class MultiColumnContainer extends PureComponent {
             element : this.context.element
         };
         try {
-            if (_elements !== null && _elements !== undefined) {
+            if (_elements !== null && _elements !== undefined && parentUrn.manifestUrn === columnId) {
                 if (_elements.length === 0) {
                     return this.renderBlankContainer(this.context, parentUrn, asideData, parentIndex)
                 }
@@ -136,23 +142,23 @@ class MultiColumnContainer extends PureComponent {
             console.error(error)
         }
     }
-    
+
     /**
      * Prepares data of elements to be swapped
      * @param {object} event - event object
      * @param {object} parentUrn - contains data about parent container
      */
-    prepareSwapData = (event, parentUrn) => {
+     prepareSwapData = (event, parentUrn) => {
         let swappedElementData;
         let bodyMatterObj = [];
         bodyMatterObj = this.context.element.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter || [];
-        swappedElementData = bodyMatterObj[event.oldDraggableIndex]
+        swappedElementData = bodyMatterObj[event.oldDraggableIndex];
         let dataObj = {
             oldIndex: event.oldDraggableIndex,
             newIndex: event.newDraggableIndex,
             swappedElementData: swappedElementData,
             currentSlateEntityUrn: parentUrn.contentUrn,
-            containerTypeElem: '2C',
+            containerTypeElem: '3C',
             columnIndex: parentUrn.columnIndex,
             containerIndex: this.context.index
         }
@@ -164,23 +170,23 @@ class MultiColumnContainer extends PureComponent {
      * @param {object} group - event object
      * @param {Number} columnIndex - Index of column
      */
-    renderGroup = (group, columnIndex) => {
+     renderGroup = (group, columnIndex) => {
         try {
             let { id: _containerId, type: _containerType, groupdata: _groupdata } = group
             let { bodymatter: _bodyMatter } = _groupdata
             let index = `${this.context.index}-${columnIndex}`
             let parentUrn = {
-                columnName: columnIndex === 0 ? "C1" : "C2",
+                columnName: `C${columnIndex+1}`,
                 columnIndex: columnIndex,
                 manifestUrn: _containerId,
                 contentUrn: group.contentUrn,
                 elementType: _containerType,
                 mcId: this.context?.element?.id, /* Will be used in tcm snapshot -2c->we */
-                multiColumnType: "2C", /* Will be used in tcm snapshot -2c->we */
+                multiColumnType: "3C" /* Will be used in tcm snapshot -2c->we */
             }
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
-                <div className={`container-multi-column-group ${constants.setClassByElementType(this.context.element)} column-${columnIndex}`} data-id={_containerId} container-type={_containerType}>
+                <div className={`container-multi-column-group-3c ${constants.setClassByElementType(this.context.element)} column-${columnIndex}`} data-id={_containerId} container-type={_containerType}>
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
@@ -220,12 +226,11 @@ class MultiColumnContainer extends PureComponent {
     }
 
     /**
-     * Renders MultiColumn container
+     * Renders MultipleColumn container
      * @param {object} context - Context (Data about container)
      */
-    renderContainer = (context) => {
-        const groupedDataBodymatter = context.element && context.element.groupeddata && context.element.groupeddata.bodymatter || []
-
+     renderContainer = (context) => {
+        let groupedDataBodymatter = context.element && context.element.groupeddata && context.element.groupeddata.bodymatter || [];
         return groupedDataBodymatter.map((group, index) => {
             return (
                 <React.Fragment key={group.id}>
@@ -236,34 +241,41 @@ class MultiColumnContainer extends PureComponent {
         
     }
 
-    /**
+     /**
      * Handles focus
      * @param {Object} event 
      */
-    handleFocus = (event) => {
+      handleFocus = (event) => {
         if(checkSlateLock(this.context.slateLockInfo)){
             return false
         }
-        if(event && event.target && !(event.target.classList.contains('container-multi-column-group'))){
+        if(event && event.target && !(event.target.classList.contains('container-multi-column-group-3c'))){
             return false
         }
         this.context.handleFocus("", "", event)
     }
-    
+
     render() {
-        const { context } = this
+        const { context } = this;
         return (
-            <div className = "multi-column-container" onMouseUp = {this.handleFocus}>
+            <div className = "multi-column-container-3c" onMouseUp = {this.handleFocus}>
+                {/* Please select a column to start editing */}
                 {this.renderContainer(context)}
             </div>
         )
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        threeColumnData: state.appStore.threeColumnData
+    }
+};
+
 const mapDispatchToProps = {
     swapElement
 }
 
-MultiColumnContainer.contextType = MultiColumnContainerContext;
-MultiColumnContainer.displayName = "MultiColumnContainer";
-export default connect(null, mapDispatchToProps)(MultiColumnContainer)
+MultipleColumnContainer.contextType = MultiColumnContainerContext;
+MultipleColumnContainer.displayName = "MultipleColumnContainer";
+export default connect(mapStateToProps, mapDispatchToProps)(MultipleColumnContainer)

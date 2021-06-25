@@ -236,7 +236,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
             }
             else {
-                tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
+                /**
+                * @param {Object} newAppStore 
+                * @description - Adding showhide data into appstore variable to form snapshots of conversion
+                */
+                const newAppStore = showHideObj?.element?.type === "showhide" ? {...appStore, showHideObj } : appStore;
+                tcmSnapshotsForConversion(elementConversionData, indexes, newAppStore, dispatch)
             }
 
         }
@@ -468,7 +473,9 @@ const prepareAssessmentDataForConversion = (oldElementData, format) => {
     let usageType = document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText;
     let assessmentFormat = format == "Elm" ? "puf" : format.toLowerCase();
     let assessmentItemType = assessmentFormat == 'tdx' ? "tdxAssessmentItem" : "assessmentItem";
-
+	if (assessmentFormat === "quad cite") {
+        assessmentFormat = "cite"
+    }
     oldElementData.figuredata.elementdata={
         usagetype : usageType,
         assessmentid : "",
@@ -513,10 +520,16 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         //Separate case for element conversion in showhide
-        if(showHideObj) {
+        if(showHideObj || (appStore?.asideData?.type === 'showhide')) {
             const innerElementType = activeElement.elementType
             let oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj)
-            dispatch(convertElement(oldElementData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+            let showhideElement = {
+                currentElement: oldElementData.currentElement,
+                index: activeElement.index,
+                element: appStore?.asideData,
+                showHideType: oldElementData.showHideType
+            }
+            dispatch(convertElement(oldElementData.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement))
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))

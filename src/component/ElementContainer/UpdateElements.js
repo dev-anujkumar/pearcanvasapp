@@ -688,11 +688,14 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
     return dataToReturn;
 }
 export const handleBlankLineDom = (html,replaceText)=>{
-    if(replaceText){
-        html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><br><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
-        html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
-        return html;
-    } else {
-        return html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,'<span contenteditable="false" id="blankLine" class="answerLineContent"><br></span>')
+    if(typeof html === 'string' && typeof replaceText === 'string') {
+        if(replaceText){
+            html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><br><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
+            html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
+            return html;
+        } else {
+            return html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,'<span contenteditable="false" id="blankLine" class="answerLineContent"><br></span>')
+        }
     }
+    else return html;
 }

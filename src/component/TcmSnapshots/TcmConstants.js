@@ -3,6 +3,7 @@ export default {
     AUTHORED_TEXT: "element-authoredtext",
     BLOCKFEATURE: "element-blockfeature",
     ELEMENT_LIST: "element-list",
+    ELEMENT_ASSESSMENT: 'element-assessment',
     HEADING: "heading",
     HAND_WRITING: 'handwriting',
     PARAGRAPH: "paragraph",
@@ -73,5 +74,5 @@ export default {
     bqAttrHtmlTrue:'<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>',
     bqAttrHtmlFalse:'<p class="blockquoteTextCredit" contenteditable="false" data-placeholder="Attribution Text"></p>',
     bqHiddenText:'<p class="blockquote-hidden" contenteditable="false" style="visibility: hidden; height: 20px;">hidden</p>',
-    allowedFigureTypesForTCM : ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
+    allowedFigureTypesForTCM : ['assessment','image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
 }

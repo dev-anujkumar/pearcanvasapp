@@ -220,16 +220,17 @@ class ElementButton extends Component {
                 buttonJSX = <span className= {`btn-element alfresco-metadata-icon ${btnClassName}`} onClick={clickHandlerFn} title="Expand in Alfresco" ><img src={alfrescoMetadata} /></span>
                 break;
             case ButtonTypes.STAGE_DIRECTION:
-                    buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
-                        {stageDirectionIcon}
-                    </span>
-                    break;
+                buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
+                    {stageDirectionIcon}
+                </span>
+                break;
             case ButtonTypes.DIALOGUE_ELEMENT:
-                    buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
-                        {dialougeElementIcon}
-                    </span>
-                    break;
-
+                buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
+                    {dialougeElementIcon}
+                </span>
+                break;
+            case buttonTypes.ELEMENT_LABEL_CLICKABLE:
+                buttonJSX = <span className={`btn-element element-label-clickable-button ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
                 break;
         }
         return buttonJSX

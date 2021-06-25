@@ -352,3 +352,17 @@
     min-width: 115px;
     word-wrap: break-word;
 }
+
+
+/* ...............................3C................................. */
+/*style for element picker inside Multi-Column element*/
+.container-multi-column-group-3c .horizontalLine {
+    margin-left: -1%;
+    width: 100%;
+}
+.container-multi-column-group-3c .dropdown {
+    cursor: pointer;
+}
+.container-multi-column-group-3c .elemDiv-expand{
+    right: 1%;
+}
