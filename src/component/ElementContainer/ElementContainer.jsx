@@ -1003,7 +1003,7 @@ class ElementContainer extends Component {
         this.handleCommentPopup(false,e);
        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
-        if (parentElement?.type === elementTypeConstant.SHOW_HIDE || element.type === elementTypeConstant.SHOW_HIDE) {
+        if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {// || element.type === elementTypeConstant.SHOW_HIDE
             this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
         }
         else {

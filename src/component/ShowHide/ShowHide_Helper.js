@@ -120,14 +120,18 @@ export function indexOfSectionType(indexes){
  * @param {*} elementType type of inner element
  * @param {*} showHideObj showHide details
  */
- export const handleElementsInShowHide = (bodymatter, indexes, elementType, showHideObj) => {
-    let currentElement
-    if (textElements.includes(elementType)) {
-        currentElement = getTextElementInShowHide(bodymatter, indexes, showHideObj)
-    } else if (figElements.includes(elementType)) {
-        currentElement = getFigureElementsInShowHide(bodymatter, indexes, showHideObj)
+export const handleElementsInShowHide = (bodymatter, indexes, elementType, showHideObj, calledFrom) => {
+    let dataToSend = {}
+    if (calledFrom == 'glossaryFootnote') {
+        if (textElements.includes(elementType)) {
+            dataToSend = getTextElementInShowHide(bodymatter, indexes, showHideObj)
+        } else if (figElements.includes(elementType)) {
+            dataToSend = getFigureElementsInShowHide(bodymatter, indexes, showHideObj)
+        }
+        return dataToSend
+    } else {
+        return getTextElementInShowHide(bodymatter, indexes, showHideObj)//dataToSend
     }
-    return currentElement
 }
 
 /**
@@ -137,31 +141,30 @@ export function indexOfSectionType(indexes){
  * @param {*} indexes Array of indexs
  * @param {*} showHideObj showHide details
  */
-const getTextElementInShowHide = (bodymatter, indexes, {showHideType}) => {
-    const indexlength = Array.isArray(indexes) ? indexes.length : 0;
-    const showHideElement = getShowHideElement(bodymatter, indexlength, indexes);
+const getTextElementInShowHide = (bodymatter, indexes, showHideObj) => {
+    const indexLength = Array.isArray(indexes) ? indexes.length : 0;
+    let currentElement = {}, showHideElement = {};
 
-    return showHideElement?.interactivedata[showHideType][indexes[(indexlength - 1)]];
-
-    /* let currentElement = {}
     switch (indexes.length) {
         case 3:
-            currentElement = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
+            showHideElement = bodymatter[indexes[0]]
             break;
         case 4:
-            currentElement = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]]
+            showHideElement = bodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]
             break;
         case 5:
-            currentElement = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]]
+            showHideElement = bodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]
             break;
         case 6:
-            currentElement = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]]
+            showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]
             break;
         case 7:
-            currentElement = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]]
+            showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]?.contents?.bodymatter[indexes[4]]
             break;
     }
-    return currentElement */
+    const showHideType = findSectionType(indexes[indexLength -2])
+    currentElement = showHideType && showHideElement && showHideElement.interactivedata[showHideType][indexes[indexLength -1]]
+    return {currentElement,showHideType}
 }
 /**
  * @function getFigureElementsInShowHide
@@ -171,25 +174,28 @@ const getTextElementInShowHide = (bodymatter, indexes, {showHideType}) => {
  * @param {*} showHideObj showHide details
  */
 const getFigureElementsInShowHide = (bodymatter, indexes, showHideObj) => {
-    let currentElement = {}
+    const indexLength = Array.isArray(indexes) ? indexes.length : 0;
+    let currentElement = {}, showHideElement = {};
     switch (indexes.length) {
         case 4:
-            currentElement = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
+            showHideElement = bodymatter[indexes[0]]//.interactivedata[showHideObj.showHideType][indexes[2]]
             break;
         case 5:
-            currentElement = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]]
+            showHideElement = bodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]//.interactivedata[showHideObj.showHideType][indexes[3]]
             break;
         case 6:
-            currentElement = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]]
+            showHideElement = bodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]//.interactivedata[showHideObj.showHideType][indexes[4]]
             break;
         case 7:
-            currentElement = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]]
+            showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]//.interactivedata[showHideObj.showHideType][indexes[5]]
             break;
         case 8:
-            currentElement = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]]
+            showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]?.contents?.bodymatter[indexes[4]]//.interactivedata[showHideObj.showHideType][indexes[6]]
             break;
     }
-    return currentElement
+    const showHideType = (indexLength > 2) && findSectionType(indexes[indexLength -3])
+    currentElement = showHideType && showHideElement?.interactivedata[showHideType][indexes[indexLength -2]]
+    return {currentElement,showHideType}
 }
 
 /**
@@ -216,43 +222,78 @@ export const getShowHideIndex = (tempIndex) => {
  * @returns 
  */
 export const onUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
-    switch (indexes.length) {
-        case 3:
-            bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]] = resData
-            break;
-        case 4:
-            if (textElements.includes(activeElemType)) {
-                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[2]] = resData
-            } else if (figElements.includes(activeElemType)) {
-                bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]] = resData
-            }
-            break
-        case 5:
-            if (textElements.includes(activeElemType)) {
-                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = resData
-            } else if (figElements.includes(activeElemType)) {
-                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]] = resData
-            }
-            break
-        case 6:
-            if (textElements.includes(activeElemType)) {
-                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]] = resData
-            } else if (figElements.includes(activeElemType)) {
-                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = resData
-            }
-            break
-        case 7:
-            if (textElements.includes(activeElemType)) {
-                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]] = resData
-            } else if (figElements.includes(activeElemType)) {
-                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]] = resData
-            }
-            break
-        case 8:
-            if (figElements.includes(activeElemType)) {
-                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]] = resData
-            }
-            break
+    const indexLength = Array.isArray(indexes) ? indexes.length : 0;
+    const showHideIndex = (indexLength > 2) ? indexes[indexLength - 2] : "" 
+    const showHideType = findSectionType(showHideIndex)
+    if (activeElemType && showHideType) {
+        switch (indexes.length) {
+            case 3:
+                bodymatter[indexes[0]].interactivedata[showHideType][indexes[2]] = resData
+                break;
+            case 4:
+                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideType][indexes[2]] = resData
+                break
+            case 5:
+                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideType][indexes[4]] = resData
+
+                break
+            case 6:
+                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType][indexes[5]] = resData
+                break
+            case 7:
+                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
+                break
+            case 8:
+                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
+                break
+        }
+    }
+    return bodymatter
+}
+
+export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
+    const indexLength = Array.isArray(indexes) ? indexes.length : 0;
+    const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 2] : "" : ""
+    const showHideType = findSectionType(showHideIndex)
+    if (activeElemType && showHideType) {
+        switch (indexes.length) {
+            case 3:
+                bodymatter[indexes[0]].interactivedata[showHideType][indexes[2]] = resData
+                break;
+            case 4:
+                if (textElements.includes(activeElemType)) {
+                    bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideType][indexes[2]] = resData
+                } else if (figElements.includes(activeElemType)) {
+                    bodymatter[indexes[0]].interactivedata[showHideType][indexes[2]] = resData
+                }
+                break
+            case 5:
+                if (textElements.includes(activeElemType)) {
+                    bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideType][indexes[4]] = resData
+                } else if (figElements.includes(activeElemType)) {
+                    bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideType][indexes[3]] = resData
+                }
+                break
+            case 6:
+                if (textElements.includes(activeElemType)) {
+                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType][indexes[5]] = resData
+                } else if (figElements.includes(activeElemType)) {
+                    bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideType][indexes[4]] = resData
+                }
+                break
+            case 7:
+                if (textElements.includes(activeElemType)) {
+                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
+                } else if (figElements.includes(activeElemType)) {
+                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType][indexes[5]] = resData
+                }
+                break
+            case 8:
+                if (figElements.includes(activeElemType)) {
+                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
+                }
+                break
+        }
     }
     return bodymatter
 }

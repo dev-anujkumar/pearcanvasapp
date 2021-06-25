@@ -10,7 +10,7 @@ const {
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
 import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA} from "./../../constants/Action_Constants";
-import { handleElementsInShowHide, getShowHideIndex, onUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
+import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -40,8 +40,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
-        if (showHideElement) { /** Glossary-Footnotes inside Show-Hide */
-            glossaryFootElem = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement)
+        const asideParent = store.getState().appStore?.asideData
+        if (showHideElement || asideParent?.type === 'showhide') { /** Glossary-Footnotes inside Show-Hide */
+            let showHideChild = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement, 'glossaryFootnote')
+            glossaryFootElem = showHideChild?.currentElement
         }
         else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
@@ -246,7 +248,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     /** Feedback status from elementData */
     let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
     let tcmFeedback =  elementNodeData;
-
+    let asideParent = store.getState().appStore?.asideData
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
         let label, number, title, captions, credits, elementIndex, text, postertext;
@@ -268,7 +270,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         else {
             elementIndex = tempIndex[0]
         }
-        if(showHideElement){ /** Glossary-Footnotes inside Show-Hide */
+        if(showHideElement ||  asideParent?.type === 'showhide'){ /** Glossary-Footnotes inside Show-Hide */
             elementIndex = getShowHideIndex(tempIndex)
         }
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
@@ -470,8 +472,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
-        if (showHideElement) {/** Glossary-Footnotes inside Show-Hide */
-            newBodymatter = onUpdateSuccessInShowHide(res.data, newBodymatter, elementType, showHideElement, tempIndex)
+
+        if (showHideElement || asideParent?.type === 'showhide') {/** Glossary-Footnotes inside Show-Hide */
+            newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, showHideElement, tempIndex)
         }
         else if (tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data

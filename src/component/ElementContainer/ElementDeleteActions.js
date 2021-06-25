@@ -114,32 +114,32 @@ const updateStorePostDelete = (deleteParams) => {
         case 3: // sh:show:p
             elementToUpdate = newBodymatter[newIndex[0]]
             if (elementToUpdate?.type == 'showhide') {
-                newBodymatter[newIndex[0]].interactivedata[showHideType[newIndex[1]]].splice(index, 1)
+                newBodymatter[newIndex[0]]?.interactivedata[showHideType[newIndex[1]]].splice(index, 1)
             }
             break;
         case 4:// we:head:sh:show:p | as:sh:show:p
             elementToUpdate = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
             if (elementToUpdate?.type == 'showhide') {
-                newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].interactivedata[showHideType[newIndex[2]]].splice(index, 1)
+                newBodymatter[newIndex[0]]?.elementdata?.bodymatter[newIndex[1]]?.interactivedata[showHideType[newIndex[2]]].splice(index, 1)
             }
             break;
         case 5: // we:body:sh:show:p
-            elementToUpdate = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
+            elementToUpdate = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]?.contents.bodymatter[newIndex[2]]
             if (elementToUpdate?.type == 'showhide') {
-                newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]].interactivedata[showHideType[newIndex[3]]].splice(index, 1)
+                newBodymatter[newIndex[0]]?.elementdata?.bodymatter[newIndex[1]]?.contents?.bodymatter[newIndex[2]]?.interactivedata[showHideType[newIndex[3]]].splice(index, 1)
             }
             break;
         case 6: // 2c:c1:we:head:sh:show:p | 2c:c1:as:sh:show:p
-            elementToUpdate = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]];
+            elementToUpdate = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]?.elementdata?.bodymatter[newIndex[3]];
             if (elementToUpdate?.type == 'showhide') {
-                elementToUpdate.interactivedata[showHideType[newIndex[5]]].splice(index, 1)
+                elementToUpdate?.interactivedata[showHideType[newIndex[4]]].splice(index, 1)
             }
             newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]] = elementToUpdate;
             break;
         case 7: // 2c:c1:we:body:sh:show:p
             elementToUpdate = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
             if (elementToUpdate?.type == 'showhide') {
-                elementToUpdate.interactivedata[showHideType[newIndex[6]]].splice(index, 1)
+                elementToUpdate.interactivedata[showHideType[newIndex[5]]].splice(index, 1)
             }
             newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]] = elementToUpdate;
             break;

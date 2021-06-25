@@ -515,10 +515,16 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         //Separate case for element conversion in showhide
-        if(showHideObj) {
+        if(showHideObj || (appStore?.asideData?.type === 'showhide')) {
             const innerElementType = activeElement.elementType
             let oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj)
-            dispatch(convertElement(oldElementData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+            let showhideElement = {
+                currentElement: oldElementData.currentElement,
+                index: activeElement.index,
+                element: appStore?.asideData,
+                showHideType: oldElementData.showHideType
+            }
+            dispatch(convertElement(oldElementData.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement))
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
