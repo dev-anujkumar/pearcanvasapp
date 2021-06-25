@@ -287,8 +287,6 @@ class PopUp extends React.Component {
                 const element = {id: this.props.tcmSnapshotData.eURN}
                 let userName = props?.tcmSnapshotData?.elementEditor
                 let date = props.tcmSnapshotData?.originalLastUpdatedTimestamp
-                console.log("object", date)
-                // let userName = "C5 Test02 C5"
                 let readableDate = props.tcmSnapshotData?.lastUpdatedTimestamp
                 let readableTime = TCMUtiles.formatTime(date)
                 return (
