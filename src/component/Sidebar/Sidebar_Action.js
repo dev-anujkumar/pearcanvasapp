@@ -236,7 +236,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
             }
             else {
-                tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
+                /**
+                * @param {Object} newAppStore 
+                * @description - Adding showhide data into appstore variable to form snapshots of conversion
+                */
+                const newAppStore = showHideObj?.element?.type === "showhide" ? {...appStore, showHideObj } : appStore;
+                tcmSnapshotsForConversion(elementConversionData, indexes, newAppStore, dispatch)
             }
 
         }
