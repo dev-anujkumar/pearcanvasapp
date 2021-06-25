@@ -450,7 +450,7 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index) {
     const { asideData, parentUrn } =  containerElement?.asideData?.grandParent || {};
     let showhideElement = { ...containerElement?.asideData };
     /* Delete the grandparent data form asideData */
-    delete showhideElement.grandParent;
+    showhideElement?.grandParent && delete showhideElement.grandParent;
     /* Get the sectionType using index of element */
     const sectionType = indexOfSectionType(index);
     /* Prepare and return container data for showhide inner element update */

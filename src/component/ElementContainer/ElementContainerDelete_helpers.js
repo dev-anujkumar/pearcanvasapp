@@ -246,8 +246,9 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-        const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
-        const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
+        //const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
+        //const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
+        const wipData = showHideObj?.currentElement || fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete");
         let containerElement = {
             asideData,
             parentUrn,
@@ -256,7 +257,7 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
             metaDataField: wipData && wipData.type == 'popup' && wipData.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
             sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined,
             cutCopyParentUrn,
-            showHideObj: showHideCondition ? showHideObj : null
+            showHideObj: showHideObj //showHideCondition ? showHideObj : null
         }
         const deleteData = {
             wipData: wipData && Object.keys(wipData).length > 0 ? wipData : element, /** Inside Multi-Column->Aside/WE */
