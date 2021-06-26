@@ -12,8 +12,10 @@ import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
-import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
+import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+const { ELEMENT_ASIDE, MULTI_COLUMN } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
 
@@ -464,6 +466,14 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         actionStatusVersioning.action="create"
         actionStatusVersioning.status ="accepted"
         prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "",indexes);
+    }
+    /** 
+    * @description For SHOWHIDE Element - prepare parent element data
+    * Update - 2C/Aside/POP:SH:New 
+    */
+    const typeOfElement = convertParentData?.asideData?.grandParent?.asideData?.type;
+    if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
+        convertParentData = prepareSnapshots_ShowHide(convertParentData, response, indexes);
     }
     prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes);
 }
