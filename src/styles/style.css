@@ -310,7 +310,7 @@ dfn[audio-id] sup::after,
 dfn[image-id]:not(.sup):not(.sub)::after,
 dfn[image-id] sub::after,
 dfn[image-id] sup::after {
-    content: url('./../images/GlossaryAudio/audioEnable.svg');
+    content: url('./../images/ImageGlossary/imageglossary.svg');
     top: 3px;
     right: 0;
     left: 0;

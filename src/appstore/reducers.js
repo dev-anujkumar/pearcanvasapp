@@ -44,7 +44,8 @@ import {
     WIRIS_ALT_TEXT_POPUP,
     LEARNOSITY_PROJECT_INFO,
     SET_FIGURE_GLOSSARY,
-    ADD_FIGURE_GLOSSARY_POPUP
+    ADD_FIGURE_GLOSSARY_POPUP,
+    WRONG_IMAGE_POPUP
 } from '../constants/Action_Constants';
 
 /**
@@ -79,7 +80,8 @@ const INITIAL_STATE = {
     wirisAltText : {},
     isLearnosityProjectInfo:{},
     figureGlossaryData : {},
-    addfigureGlossarypopup:false
+    addfigureGlossarypopup:false,
+    openWrongImagePopup:false
 };
 
 const INITIAL_ACTION = {
@@ -276,7 +278,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 addfigureGlossarypopup:action.payload
             }
-
+        case WRONG_IMAGE_POPUP:
+            return{
+                ...state,
+                openWrongImagePopup:action.payload
+            }
         default:
             return state;
     }

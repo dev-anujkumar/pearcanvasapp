@@ -86,8 +86,8 @@ class GlossaryFootnoteMenu extends React.Component {
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
-        tinyMCE.$(tempDiv).find('img').removeAttr('height');
-        tinyMCE.$(tempDiv).find('img').removeAttr('width');
+        tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeAttr('height');
+        tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeAttr('width');
         tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
         tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
@@ -205,7 +205,7 @@ class GlossaryFootnoteMenu extends React.Component {
             // tinyMCE.$(tempDiv).find('img.imageAssetContent').remove();
             // console.log("tempDiv", tempDiv, tempDiv.innerHTML);
             // definition.innerHTML = tempDiv.innerHTML;
-            const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}<img src=${figureGlossaryData.path} class="imageAssetContent" width=${figureGlossaryData.width} height=${figureGlossaryData.height} image-id=${figureGlossaryData.imageid} alt=${figureGlossaryData.alttext} longdescription=${figureGlossaryData.longdescription}></p>`;
+            const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}<img src=${figureGlossaryData.path} class="imageAssetContent" width=${figureGlossaryData.width} height=${figureGlossaryData.height} imageid=${figureGlossaryData.imageid} alt=${figureGlossaryData.alttext} ></p>`;
             console.log("definition innerrrrrrrrrrrr", definition)
             definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") 
                         : isFigureDataPresent ? imageDefinition : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`

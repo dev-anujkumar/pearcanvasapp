@@ -9,7 +9,7 @@ const {
     REACT_APP_API_URL
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
-import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY} from "./../../constants/Action_Constants";
+import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP} from "./../../constants/Action_Constants";
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -176,31 +176,32 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
     } else {
        store.dispatch( handleGlossaryActions(false,{}))
     }
-    let footnoteContentTex1 = `<p>yu<img src="https://cite-media-stg.pearson.com/legacy_paths/153d790b-921e-411c-8dab-26d966921c2f/default_catalog.jpg" class="imageAssetContent" image-id="153d790b-921e-411c-8dab-26d966921c2f" alt="PerfTestedit01" longdescription="PerfTest"></p>`
-    let footnoteContentTex2 = `<p>yu<img align="middle" class="temp_Wirisformula" src="https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/f9/48/f9487210f7d0bb6d0478fd147bf87fc1.png?1624365155146" data-temp-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«msqrt»«mn»8«/mn»«/msqrt»«/math»" alt="square root of 8" role="math"><img src="https://cite-media-stg.pearson.com/legacy_paths/153d790b-921e-411c-8dab-26d966921c2f/default_catalog.jpg" class="imageAssetContent" image-id="153d790b-921e-411c-8dab-26d966921c2f" alt="PerfTestedit01" longdescription="PerfTest"></p>`
-    let footnoteContentTex3 = `<p>yu<img align="middle" class="temp_Wirisformula" src="https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/f9/48/f9487210f7d0bb6d0478fd147bf87fc1.png?1624365155146" data-temp-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«msqrt»«mn»8«/mn»«/msqrt»«/math»" alt="square root of 8" role="math"><img align="middle" class="temp_Wirisformula" src="https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/f9/48/f9487210f7d0bb6d0478fd147bf87fc1.png?1624365155146" data-temp-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«msqrt»«mn»8«/mn»«/msqrt»«/math»" alt="square root of 8" role="math"><img src="https://cite-media-stg.pearson.com/legacy_paths/153d790b-921e-411c-8dab-26d966921c2f/default_catalog.jpg" class="imageAssetContent" image-id="153d790b-921e-411c-8dab-26d966921c2f" alt="PerfTestedit01" longdescription="PerfTest"></p>`
-    if(footnoteContentTex1 && footnoteContentTex1.includes('image-id')) {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", footnoteContentTex1.indexOf('image-id'), footnoteContentTex1.slice(footnoteContentTex1.indexOf('image-id')).split("\""));
-        console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", footnoteContentTex2.indexOf('image-id'), footnoteContentTex2.slice(footnoteContentTex2.indexOf('image-id')).split("\""));
-        console.log("**********************************", footnoteContentTex3.indexOf('image-id'), footnoteContentTex3.slice(footnoteContentTex3.indexOf('image-id')).split("\""));
-        // const imageId = footnoteContentTex.slice(footnoteContentTex.indexOf('image-id')).split("\"")[1];
-        // const alttext = footnoteContentTex.slice(footnoteContentTex.indexOf('alt')).split("\"")[1];
-        // const longdescription = footnoteContentTex.slice(footnoteContentTex.indexOf('longdescription')).split("\"")[1];
-        // const height = footnoteContentTex.slice(footnoteContentTex.indexOf('height')).split("\"")[1];
-        // const class1 = footnoteContentTex.slice(footnoteContentTex.indexOf('class')).split("\"")[1];
-        // const width = footnoteContentTex.slice(footnoteContentTex.indexOf('width')).split("\"")[1];
-        // const imagePath =footnoteContentTex.slice(footnoteContentTex.indexOf('src')).split("\"")[1]
-        // const title = audioPath.split("/").pop();
-    //     const data = {
-    //         imageid: imageId,
-    //         path:imagePath,
-    //         alttext:alttext,
-    //         longdescription:longdescription,
-    //         height:height,
-    //         width:width,
-    //         class:class1
-    //     }
-    //    store.dispatch(handleFigureGlossaryActions(true, data));
+    
+    if(footnoteContentText && footnoteContentText.includes('imageAssetContent')) {
+        let div = document.createElement('div');
+        div.innerHTML = footnoteContentText
+        let imagepath = div.getElementsByTagName('img');
+        for (let i = 0; i < imagepath.length; i++) {
+            if(imagepath[i]?.attributes?.class?.nodeValue ==='imageAssetContent'){
+                const imagePath = imagepath[i]?.attributes?.src?.nodeValue
+                const imageId = imagepath[i]?.attributes?.imageid?.nodeValue
+                const altText = imagepath[i]?.attributes?.alt?.nodeValue
+                const classValue = imagepath[i]?.attributes?.class?.nodeValue
+                const imageHeight = imagepath[i]?.attributes?.height?.nodeValue
+                const imageWidth = imagepath[i]?.attributes?.width?.nodeValue
+                const title = imagePath.split("/").pop();
+                const data = {
+                        imageid: imageId,
+                        path:imagePath,
+                        alttext:altText,
+                        height:imageHeight,
+                        width:imageWidth,
+                        class:classValue,
+                        title:title
+                    }
+                store.dispatch(handleFigureGlossaryActions(true, data));
+            }
+        }
     } else {
        store.dispatch(handleFigureGlossaryActions(false,{}))
     }
@@ -867,4 +868,11 @@ export const setFormattingToolbar = (action) => {
             isSuperscriptButton && isSuperscriptButton.classList.add('tox-tbtn--select')
             break;
     }
+}
+
+export const showWrongImagePopup = (value) => (dispatch, getState) => {
+    dispatch({
+        type: WRONG_IMAGE_POPUP,
+        payload: value
+    })
 }

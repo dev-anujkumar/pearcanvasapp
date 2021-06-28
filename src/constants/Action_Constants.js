@@ -156,6 +156,7 @@ export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO";
 /* ---------------  Figure Glossary ------------------------*/
 export const SET_FIGURE_GLOSSARY = "SET_FIGURE_GLOSSARY";
 export const ADD_FIGURE_GLOSSARY_POPUP = 'ADD_FIGURE_GLOSSARY_POPUP';
+export const WRONG_IMAGE_POPUP = 'WRONG_IMAGE_POPUP'
 
 /*---------------- Cypress Project Info ------------------------*/
 export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';

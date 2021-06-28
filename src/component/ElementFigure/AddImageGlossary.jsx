@@ -8,11 +8,12 @@ import config from '../../config/config';
 import { hasReviewerRole } from '../../constants/utility.js'
 import store from '../../appstore/store.js';
 import axios from 'axios';
+import {showWrongImagePopup} from '../GlossaryFootnotePopup/GlossaryFootnote_Actions.js'
 
 /**
-* @description - AddFigureImage is a class based component. It is defined simply for adding image in glossary.
+* @description - AddImageGlossary is a class based component. It is defined simply for adding image in glossary.
 */
-class AddFigureImage extends Component {
+class AddImageGlossary extends Component {
 
     constructor(props) {
         super(props);
@@ -41,7 +42,7 @@ class AddFigureImage extends Component {
         let width = imageData['width'] ? imageData['width'] : "";
         let height = imageData['height'] ? imageData['height'] : "";
 
-        if (figureType === "image" || figureType === "table" || figureType === "mathImage") {
+        if (figureType === "image") {
 
             let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
@@ -61,10 +62,10 @@ class AddFigureImage extends Component {
                 height: height,
                 width: width,
                 schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-                imageid: uniqID,
+                imageid: `urn:pearson:alfresco:${uniqID}`,
                 alttext: altText,
                 longdescription: longDesc,
-                type: figureType,
+                title: data.displayName || data.displayTitle
             }
             
             store.dispatch({
@@ -76,7 +77,10 @@ class AddFigureImage extends Component {
                 payload:true
             })
             hideTocBlocker();
-            // this.props.addFigureImagePopup()
+        } 
+        else if(figureType !== "image") {
+            this.props.showWrongImagePopup(true)
+            return false;
         }
     }
     /**
@@ -217,7 +221,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapActionToProps = {
-    accessDenied
+    accessDenied,
+    showWrongImagePopup
 }
 
-export default connect(mapStateToProps, mapActionToProps)(AddFigureImage);
+export default connect(mapStateToProps, mapActionToProps)(AddImageGlossary);

@@ -2,8 +2,9 @@ import React,{Component} from 'react';
 import { connect } from 'react-redux'
 import { hideTocBlocker } from '../../js/toggleLoader';
 import { audioNarrationCloseIcon } from '../../images/TinyMce/TinyMce.jsx'
-import AddFigureImage from './AddFigureImage.jsx';
+import AddImageGlossary from './AddImageGlossary.jsx';
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
+import { showAudioRemovePopup } from '../../component/AudioNarration/AudioNarration_Actions.js'
 import { hasReviewerRole } from '../../constants/utility.js'
 import '../../styles/AudioNarration/AudioNarration.css';
 /**
@@ -68,6 +69,12 @@ class OpenGlossaryAssets extends Component {
         })
     }
 
+    closeAddAudioBook=()=>{
+        this.setState({
+            replaceToggle:false
+        })
+    }
+
     handleTab = (index) =>{
         this.setState({
             tabValue:index
@@ -75,14 +82,14 @@ class OpenGlossaryAssets extends Component {
       }
 
     render = () => {
-        const {  figureGlossaryData, audioGlossaryData, position } = this.props;
+        const {  figureGlossaryData, audioGlossaryData, position, imageGlossaryRemovePopup } = this.props;
         let { tabValue, replaceAudioToggle, replaceImageToggle } = this.state;
         let imageMediaSrc, imageMediaTitle, audioMediaSrc, audioMediaTitle = "";
         
         
         if (figureGlossaryData && Object.keys(figureGlossaryData).length > 0) {
             imageMediaSrc = figureGlossaryData.path;
-            imageMediaTitle = figureGlossaryData.imageid;
+            imageMediaTitle = figureGlossaryData.title;
         }
         if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {
             audioMediaSrc = audioGlossaryData.location;
@@ -153,12 +160,12 @@ class OpenGlossaryAssets extends Component {
                                 draggable = "false" />
                         </figure>
 
-                        {replaceImageToggle && <AddFigureImage isGlossary={true} closeFigurePopup={this.closeFigurePopup} />}
+                        {replaceImageToggle && <AddImageGlossary  closeFigurePopup={this.closeFigurePopup} />}
 
                         <div className="remove-button">
 
                             {!hasReviewerRole() &&
-                                <button className="remove-text" onClick={() => this.openConfirmationBox(true)} className="audioRemoveButton audioRemoveRound">Remove</button>
+                                <button className="remove-text" onClick={() => imageGlossaryRemovePopup(true)} className="audioRemoveButton audioRemoveRound">Remove</button>
                             }
                             {
                                 <button className="remove-text" onClick={() => this.handleReplaceImageButton()} className="audioReplaceeButton audioRemoveRound">Replace</button>
@@ -176,11 +183,12 @@ class OpenGlossaryAssets extends Component {
 const mapStateToProps = (state) => {
     return {
         figureGlossaryData: state.appStore.figureGlossaryData,
-        audioGlossaryData: state.audioReducer.audioGlossaryData
+        audioGlossaryData: state.audioReducer.audioGlossaryData,
     }
 }
 
 const mapActionToProps = {
+    showAudioRemovePopup
 }
 
 export default connect(mapStateToProps, mapActionToProps)(OpenGlossaryAssets)

@@ -13,7 +13,7 @@ import { setFormattingToolbar } from './GlossaryFootnote_Actions.js';
 import AudioTinyMceGlossary from '../AudioTinyMceGlossary';
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import FigureTinyMceGlossary from '../ElementFigure/FigureTinyMceGlosaary.jsx'
-import AddFigureImage from '../ElementFigure/AddFigureImage.jsx';
+import AddImageGlossary from '../ElementFigure/AddImageGlossary.jsx';
 
 class GlossaryFootnotePopup extends Component {
     constructor() {
@@ -116,7 +116,7 @@ class GlossaryFootnotePopup extends Component {
                 {
                     glossaryFootnote === GLOSSARY &&<div className = {'image-wrapper'+ accessToolbar} id='glossary-figure-image'><FigureTinyMceGlossary handleFigureToggle={this.handleFigureToggle} figureImagePopup ={this.state.figureImagePopup} /></div>
                 }
-                {this.state.figureToggle && <AddFigureImage isGlossary={true} closeFigurePopup={this.closeFigurePopup} addFigureImagePopup={this.addFigureImagePopup} />}
+                {this.state.figureToggle && <AddImageGlossary  closeFigurePopup={this.closeFigurePopup} addFigureImagePopup={this.addFigureImagePopup} />}
                 </div>
                 <div className="glossary-body">
                     <div id="glossary-toolbar"></div>

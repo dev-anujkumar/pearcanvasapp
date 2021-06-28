@@ -61,6 +61,7 @@ figure> audio {
 .image-media-title, .audio-media-title{
     padding: 0 10px 10px 10px;
     float: left;
+    word-break: break-all;
 }
 .close-icon-image{
     padding: 10px;
