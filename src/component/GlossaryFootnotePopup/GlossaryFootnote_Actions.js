@@ -73,6 +73,12 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 case 4:
                     glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-title"];
                     break;
+                /*
+                    footnote for popup title inside aside element inside multicolumn BG-4750
+                */
+               case 5:
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].popupdata["formatted-title"];
+                    break;
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
@@ -515,6 +521,17 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     }
                     responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text)
                     newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-title"] = responseElement;
+                    break;
+                }
+                // footnote for popup title inside aside inside multicolumn
+                case 5: {
+                    let titleDOM = document.getElementById(`cypress-${tempIndex[0]}-${tempIndex[1]}-${tempIndex[2]}-${tempIndex[3]}-0`)
+                    let titleHTML = ""
+                    if (titleDOM) {
+                        titleHTML = titleDOM.innerHTML
+                    }
+                    responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text)
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].popupdata["formatted-title"] = responseElement;
                     break;
                 }
             }
