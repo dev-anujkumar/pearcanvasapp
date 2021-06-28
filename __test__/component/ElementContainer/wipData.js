@@ -1,4 +1,4 @@
-import { multiColumnContainer } from "../../../fixtures/multiColumnContainer";
+import { multiColumnContainer, threeMultiColumnContainer } from "../../../fixtures/multiColumnContainer";
 export default {
     "opener":{
         "id": "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
@@ -1824,5 +1824,6 @@ text: "mathml text"
             "text": "<span><br /></span>"
         }
     },
-    "multicolumn": multiColumnContainer
+    "multicolumn": multiColumnContainer,
+    "threeMulticolumn": threeMultiColumnContainer
 }

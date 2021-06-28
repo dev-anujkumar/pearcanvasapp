@@ -433,7 +433,7 @@ class Interactive extends React.Component {
                 interactivetitle: pufObj.title,
                 interactiveformat: ELM_INT
             }
-            const interactiveType = this.props?.model?.figuredata?.interactivetype;
+            const interactiveType = pufObj.interactiveType ?? this.props?.model?.figuredata?.interactivetype;
             if (interactiveType && thumbnailTypes.indexOf(interactiveType) > -1) {
                 const thumbnailData = await this.getVideoMCQandGuidedThumbnail(pufObj.id);
                 figureData.posterimage = thumbnailData?.posterImage;
@@ -468,7 +468,7 @@ class Interactive extends React.Component {
         let pufObj = {
             id: this.state.itemID,
             title: props.assessmentReducer[this.state.itemID].assessmentTitle,
-            usagetype: this.state.elementType,
+            interactiveType: props?.model?.figuredata?.interactivetype ?? this.state.elementType,
             elementUrn: props.model.id
         }
         this.addElmInteractive(pufObj, () => {

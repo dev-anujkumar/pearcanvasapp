@@ -43,9 +43,13 @@ import {
     STORE_OLD_ASSET_FOR_TCM,
     WIRIS_ALT_TEXT_POPUP,
     LEARNOSITY_PROJECT_INFO,
+<<<<<<< HEAD
     SET_FIGURE_GLOSSARY,
     ADD_FIGURE_GLOSSARY_POPUP,
     WRONG_IMAGE_POPUP
+=======
+    UPDATE_THREE_COLUMN_INFO
+>>>>>>> cfc8a1646f4a74a7d9e71e8937c2295c79efe047
 } from '../constants/Action_Constants';
 
 /**
@@ -79,9 +83,13 @@ const INITIAL_STATE = {
     oldFiguredata : {},
     wirisAltText : {},
     isLearnosityProjectInfo:{},
+<<<<<<< HEAD
     figureGlossaryData : {},
     addfigureGlossarypopup:false,
     openWrongImagePopup:false
+=======
+    threeColumnData: []
+>>>>>>> cfc8a1646f4a74a7d9e71e8937c2295c79efe047
 };
 
 const INITIAL_ACTION = {
@@ -283,6 +291,24 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 openWrongImagePopup:action.payload
             }
+
+        case UPDATE_THREE_COLUMN_INFO:
+            if (action.key) {
+                let threeColumnData = state.threeColumnData;
+                threeColumnData = threeColumnData.filter(function (data) {
+                    return data.containerId !== action.key
+                })
+                return {
+                    ...state,
+                    threeColumnData: [...threeColumnData, action.payload]
+                }
+            } else {
+                return {
+                    ...state,
+                    threeColumnData: []
+                }
+            }
+
         default:
             return state;
     }

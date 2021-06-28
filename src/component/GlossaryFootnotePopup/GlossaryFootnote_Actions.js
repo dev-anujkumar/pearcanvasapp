@@ -73,6 +73,12 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 case 4:
                     glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-title"];
                     break;
+                /*
+                    footnote for popup title inside aside element inside multicolumn BG-4750
+                */
+               case 5:
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].popupdata["formatted-title"];
+                    break;
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
@@ -91,7 +97,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         break;
                 }
             }
-        } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // 2C->PS or 2C->As->PS or 2C->WE->PS
+        } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // MultiColumn->PS or MultiColumn->As->PS or MultiColumn->WE->PS
             let elementInside2C = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
             if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "sidebar") {
                 glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
@@ -142,10 +148,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     }
                 }
            
-                else if (indexesLen == 4) {  // to support glossary in text elements inside WE/AS of 2C
+                else if (indexesLen == 4) {  // to support glossary in text elements inside WE/AS of MultiColumn
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                     
-                } else if (indexesLen == 5) { // to support glossary in section break inside WE of 2C
+                } else if (indexesLen == 5) { // to support glossary in section break inside WE of MultiColumn
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
                 }
 
@@ -579,6 +585,17 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-title"] = responseElement;
                     break;
                 }
+                // footnote for popup title inside aside inside multicolumn
+                case 5: {
+                    let titleDOM = document.getElementById(`cypress-${tempIndex[0]}-${tempIndex[1]}-${tempIndex[2]}-${tempIndex[3]}-0`)
+                    let titleHTML = ""
+                    if (titleDOM) {
+                        titleHTML = titleDOM.innerHTML
+                    }
+                    responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text)
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].popupdata["formatted-title"] = responseElement;
+                    break;
+                }
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
@@ -604,7 +621,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         break;
                 }
             }
-        } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // 2C->PS or 2C->As->PS or 2C->WE->PS
+        } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // MultiColumn->PS or MultiColumn->As->PS or MultiColumn->WE->PS
             if (res.data.html.hasOwnProperty('text')) {
                 delete res.data.html.text;
             }

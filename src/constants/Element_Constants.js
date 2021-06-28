@@ -99,10 +99,11 @@ export const disabledPrimaryOption = [
     "primary-single-assessment",
     "primary-citations-group",
     "primary-element-citation",
-    "primary-multicolumn"
+    "primary-multicolumn",
+    "primary-multicolumn-3c",
 ];
-
-export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
+// this constant is used by sidebar
+export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive", 'assessment']
 
 /*******************************GlossaryfootnotePopup ***************************/
 export const GLOSSARY = 'Glossary'
@@ -144,3 +145,10 @@ export const cypressLOWarningtxt = `Performing this action will remove the curre
 export const externalLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to external framework.`
 export const CYPRESS_LF = "cypressLF";
 export const EXTERNAL_LF =  "externalLF";
+
+/** Multi column - 3 column constants */
+export const MULTI_COLUMN_3C = {
+    "ELEMENT_TAG_NAME": "3C",
+    "ELEMENT_NAME" : "primary-multicolumn-3c",
+    "ELEMENT_PROPORTION": "33-33-33"
+}

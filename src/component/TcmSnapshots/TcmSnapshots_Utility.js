@@ -9,10 +9,11 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
 import { getTitleSubtitleModel } from '../../constants/utility';
 /*************************Import Constants*************************/
-import TcmConstants from './TcmConstants.js';
+import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
+
 
 let operType = "";
 const {
@@ -44,6 +45,7 @@ const {
     bqAttrHtmlFalse,
     bqHiddenText,
     FIGURE,
+    ELEMENT_ASSESSMENT,
     allowedFigureTypesForTCM,
     SHOWHIDE,
     SHOW_HIDE,
@@ -64,6 +66,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
     const parentData = store?.getState()?.appStore?.asideData?.parent || {};
+    const selectionMultiColumnType = store?.getState()?.selectionReducer?.selection?.multiColumnType || "";
     const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT, POPUP_ELEMENT,SHOWHIDE];
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
@@ -79,16 +82,17 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
+    const multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
     if(wipData?.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
-        tag.grandParent = "2C:" + parentUrn?.columnName;
+        tag.grandParent = multiColumnType + ":" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
     } else if((figureElementList.includes(type) || actionStatus?.action === "update" ||  actionStatus?.action === "create" ||
         actionStatus?.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
-            tag.grandParent = "2C:" + columnName;
+            tag.grandParent = multiColumnType + ":" + columnName;
             elementId.grandParentId = `${id}+${columnId}`;
     } else if(wipData?.type === FIGURE && asideData?.figureIn2cAside?.isExist && actionStatus?.action === "update") {
         /* figure element conversion inside; 2C:ASIDE:FIGURE */ 
@@ -99,7 +103,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     } else if(actionStatus?.action === "delete" && parentData?.type === MULTI_COLUMN ) {
         /* snapshots for Delete the section break inside 2c/we */
         const { id: sc_id, columnName: sb_cName, columnId: sb_cId } = parentData || {};
-        tag.grandParent = "2C:" + sb_cName;
+        tag.grandParent = multiColumnType + ":" + sb_cName;
         elementId.grandParentId = `${sc_id}+${sb_cId}`;
     }
     
@@ -405,6 +409,7 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
     parentElement = showHideObj ? showHideObj : parentElement
+
     /* 2C:AS/WE:FIGURE */
     const { isExist, asideData: asideFigObj } = asideData?.figureIn2cAside || {};
     parentElement =  isExist ? asideFigObj : parentElement;
@@ -755,8 +760,8 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
-    if(tag.parentTag === "2C" && eleIndex > -1){
-        elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
+    if((tag.parentTag === "2C" || tag.parentTag === "3C") && eleIndex > -1){
+        elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : (eleIndex == 1) ? ':C2' : ':C3'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
     
@@ -879,6 +884,41 @@ export const setSlateType = (wipData, containerElement, type) => {
     }
     return isContainer
 }
+const getAssessmentType = (key, isStandAlone) => {
+    const assessmentType =  ASSESSMENT_TYPE.find(item => item.type === key);
+    if(assessmentType) {
+        return isStandAlone? assessmentType.standAloneLabel : assessmentType.label
+    }
+    return key;
+}
+
+const getAssessmentStatus = (assessmentId) => {
+    if(assessmentId) {
+        const assessmentData = store?.getState()?.assessmentReducer?.[assessmentId];
+        const assessmentStatus = assessmentData?.assessmentStatus;
+        if(assessmentStatus) {
+            return (assessmentStatus === 'final' ?  "Approved" : "Unapproved");
+        }
+    }
+}
+
+const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
+    const elementData =element?.elementdata;
+    let elementSnapshot = {};
+    elementSnapshot = {
+            assessmentTitle: `<p>${elementData?.assessmenttitle || ''}</p>`,
+            assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
+            assessmentId: `<p>${elementData?.assessmentid|| ''}</p>`,
+            assessmentItemId: `<p>${elementData?.assessmentitemid|| ''}</p>`,
+            assessmentUsageType: `<p>${elementData?.usagetype|| ''}</p>`,
+            assessmentStatus: `<p>${getAssessmentStatus(elementData?.assessmentId) || ''}</p>`,
+            assessmentType: `<p>${getAssessmentType(elementData?.assessmentformat, true) || ''}<p>`,
+            glossorySnapshot: '[]',
+            footnoteSnapshot: '[]',
+            assetPopOverSnapshot: '[]'
+        }
+    return elementSnapshot;
+}
 
 /**
  * @function prepareFigureElementSnapshots
@@ -912,11 +952,19 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
 export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails, CurrentSlateStatus) => {
     let elementSnapshot = {};
     let semanticSnapshots = (element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
-    elementSnapshot = {
-        contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
-        glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
-        footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
-        assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
+    if(element.type !== ELEMENT_ASSESSMENT) {
+        elementSnapshot = {
+            contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
+            glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
+            footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
+            assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
+        }
+    }
+    else {
+        elementSnapshot = {
+            ...prepareStandAloneSlateSnapshot(element, elementDetails),
+           
+        }
     }
     return elementSnapshot;
 }
@@ -930,6 +978,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
     formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
     formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
     formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
+    
     let snapshotData = {
         title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
         figurenumber: handleBlankLineDom(formattedNumber, 'BlankLine') || "",
@@ -958,6 +1007,22 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
                 ...getInteractiveSubtypeData(element.figuredata, element.html)
             }
             break;
+        case 'assessment': {
+        const elementData = element?.figuredata?.elementdata; 
+        if(elementData){
+                snapshotData = {
+                    assessmentTitle: `<p>${elementData?.assessmenttitle|| ''}</p>`,
+                    assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
+                    assessmentId: `<p>${elementData?.assessmentid || ''}</p>`,
+                    assessmentItemId: `<p>${elementData?.assessmentitemid || ''}</p>`,
+                    assessmentUsageType: `<p>${elementData?.usagetype || ''}</p>`,
+                    // status only sent in case of elm and learnosity
+                    assessmentStatus: `<p>${getAssessmentStatus(elementData.assessmentid) || ''}</p>`,
+                    assessmentType: `<p>${getAssessmentType(elementData?.assessmentformat, false) || ''}<p>`
+                }  
+            }
+            break;   
+        }
         case "image":
         case "table":
         case "mathImage":
@@ -988,7 +1053,7 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
         snapshotData = '<p></p>'          
-    } 
+    }  
     /**else if(element.type === ELEMENT_LIST && element.html && element.html.text){
         snapshotData = element.html.text.replace(/<br>/g,"")
     }*/
@@ -1081,7 +1146,13 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                 }
             }
             else {
-                oldData.elementdata = wipData.elementdata;
+                if(oldData.type === ELEMENT_ASSESSMENT) {
+                    oldData.elementdata = elementUpdateData?.figureData
+                    dispatch(storeOldAssetForTCM({}))
+                } else {
+                    oldData.elementdata = wipData.elementdata;
+                }
+                
             }
         }
         oldData.html = wipData.html;
