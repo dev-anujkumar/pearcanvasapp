@@ -99,10 +99,6 @@ class GlossaryFootnoteMenu extends React.Component {
      * Checks difference in glossary/footnote data
      */
     glossaryFootnoteDifference = (newTerm, newDef, oldTerm, oldDef, type) => {
-        console.log("oldDef",oldDef);
-        console.log("newDef",newDef);
-        console.log("oldTerm",oldTerm);
-        console.log("newTerm",newTerm);
         let domparser, newTermDom, newDefDom, oldTermDom, oldDefDom, tempVar, tempTerm;
         tempVar = oldDef;
         tempTerm = oldTerm;
@@ -130,8 +126,6 @@ class GlossaryFootnoteMenu extends React.Component {
                 newDefImag[index].classList.add('temp_Wirisformula');
             }
         }
-        console.log("newTermDom", newTermDom.isEqualNode(oldTermDom), newDefDom.isEqualNode(oldDefDom), type);
-
         switch(type){
             case "glossary":
                 return !(newTermDom.isEqualNode(oldTermDom) && newDefDom.isEqualNode(oldDefDom))
@@ -196,22 +190,11 @@ class GlossaryFootnoteMenu extends React.Component {
             const audioTerm = `<p audio-id=${audioGlossaryData.narrativeAudioUrn} audio-path=${audioGlossaryData.location}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
             term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
                 : isAudioDataPresent ? audioTerm : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
-                
-            console.log("2222222222222222222---------------------", definition.innerHTML);
-            // console.log("figureGlossaryData figureGlossaryData", figureGlossaryData);
-            // let tempDiv = document.createElement('div');
-            // definition.innerHTML = definition.innerHTML.trim();
-            // tempDiv.innerHTML = definition.innerHTML;
-            // tinyMCE.$(tempDiv).find('img.imageAssetContent').remove();
-            // console.log("tempDiv", tempDiv, tempDiv.innerHTML);
-            // definition.innerHTML = tempDiv.innerHTML;
-            const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}<img src=${figureGlossaryData.path} class="imageAssetContent" width=${figureGlossaryData.width} height=${figureGlossaryData.height} imageid=${figureGlossaryData.imageid} alt=${figureGlossaryData.alttext} ></p>`;
-            console.log("definition innerrrrrrrrrrrr", definition)
+            const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}<img src=${figureGlossaryData.path} class="imageAssetContent" width="${figureGlossaryData.width}" height="${figureGlossaryData.height}" imageid="${figureGlossaryData.imageid}" alt="${figureGlossaryData.alttext}" ></p>`;
             definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") 
                         : isFigureDataPresent ? imageDefinition : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             term = this.replaceUnwantedtags(term);
             definition = this.replaceUnwantedtags(definition);
-            console.log("definition innerrrrrrrrrrrr22222222222222", definition.innerHTML)
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
                 config.isGlossarySaving = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });

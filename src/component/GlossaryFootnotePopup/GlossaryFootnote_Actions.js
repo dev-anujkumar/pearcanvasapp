@@ -383,7 +383,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
 
         workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
-        console.log('workConatiner',workContainer);
         figureDataObj = {
             "text": workContainer
         }
@@ -444,8 +443,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
             break;
 
-        case "GLOSSARY":
-            glossaryEntry[glossaryfootnoteid] = JSON.stringify({
+        case "GLOSSARY":   
+        glossaryEntry[glossaryfootnoteid] = JSON.stringify({
                 term,
                 definition
             })
@@ -587,25 +586,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     case "1":
                         let responseElement = {...res.data}
                         newBodymatter[tempIndex[0]].contents['formatted-title']
-                        // let labelHTML = newBodymatter[tempIndex[0]].contents['formatted-title'].html.text
-                        // if(labelHTML.match(/<label>.*?<\/label>/g)){
-                        //     labelHTML = labelHTML.match(/<label>.*?<\/label>/g)[0].replace(/<label>|<\/label>/g, "")
-                        // }
-                        // else{
-                        //     labelHTML = ""
-                        // }
-
-                        // let parser = new DOMParser();
-                        // let htmlDoc = parser.parseFromString(res.data.html.text, 'text/html');
-                        // let removeP_Tag = htmlDoc.getElementsByTagName("p");
-                        // console.log("removeP_Tag[0].innerHTML",removeP_Tag[0].innerHTML)
-                        // if(removeP_Tag && removeP_Tag.length){
-                        //     responseElement.html.text = createTitleSubtitleModel("", removeP_Tag[0].innerHTML) 
-                        // }
-                        // else {
                         res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
                         responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
-                        // }
                         newBodymatter[tempIndex[0]].contents['formatted-title'] = responseElement;
                         break;
                     // case "3":
