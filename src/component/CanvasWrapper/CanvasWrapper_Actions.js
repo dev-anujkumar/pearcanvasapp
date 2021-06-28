@@ -316,6 +316,24 @@ export const getProjectDetails = () => (dispatch, getState) => {
         const data = JSON.parse(JSON.stringify(response.data))
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
+            // Api to get Element Permissions
+            const lobPermissionsURL = `${config.REACT_APP_API_URL}v1/lobs/permissions/setting/${lineOfBusiness}`;
+            axios.get(lobPermissionsURL, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then (response => {
+                const { elementPermissions } = response.data;
+                console.log("Element Permissions Data w.r.t LOB: ",elementPermissions);
+                // dispatch({
+                //     type: UPDATE_PROJECT_INFO,
+                //     payload: response.data
+                // })
+            }).catch(error => {
+                console.log("API Failed!!")
+            })
+
             // call api to get usage types
             
             const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
