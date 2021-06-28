@@ -102,8 +102,8 @@ export const disabledPrimaryOption = [
     "primary-multicolumn",
     "primary-multicolumn-3c",
 ];
-
-export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
+// this constant is used by sidebar
+export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive", 'assessment']
 
 /*******************************GlossaryfootnotePopup ***************************/
 export const GLOSSARY = 'Glossary'

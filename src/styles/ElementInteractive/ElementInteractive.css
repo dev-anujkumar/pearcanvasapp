@@ -67,3 +67,9 @@ img.imageWidgetAccountingtable {
     margin-left: -23px;
 }
 /* END  ----------------------------------------- */
+/* END  ----------------------------------------- */
+
+.id-info span {
+    padding-left: 10px;
+    word-break: break-all;
+}
