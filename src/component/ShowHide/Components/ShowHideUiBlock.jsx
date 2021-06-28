@@ -82,13 +82,13 @@ const ShowHideUiBlock = (props) => {
 				parentUrn
 			}
 		}
-		//const shParentUrn = {
-		//	contentUrn: element.contentUrn
-		//}
+		const shParentUrn = {
+			contentUrn: element.contentUrn
+		}
 		return <ElementContainer
 			element = {item}
 			index = {eleIndex}
-			parentUrn = {parentUrn}
+			parentUrn = {shParentUrn}
 			showBlocker = {props.showBlocker}
 			asideData = {elementLineage}
 			permissions = {props.permissions}
