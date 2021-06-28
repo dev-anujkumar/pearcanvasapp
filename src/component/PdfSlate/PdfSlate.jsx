@@ -8,7 +8,7 @@ import { ELEMENT_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConsta
 import config from '../../config/config.js';
 import TinyMceEditor from '../tinyMceEditor.js';
 import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
-
+import { hideBlocker } from '../../js/toggleLoader';
 class PdfSlate extends Component {
     constructor(props) {
         super(props);
@@ -114,6 +114,7 @@ class PdfSlate extends Component {
 		}
 		/* ------ Call Update element API to save data ------- */
 		this.props.updateElement(reqBody, this.props.index, "", "", null, "", null)
+		hideBlocker();
 	}
 	
 	render(){
