@@ -337,6 +337,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     data={data}
                     sectionBreak={sectionBreak}
                     elementType={elementType}
+                    showPlayscript={props.showPlayscript}
+                    showDiscussion={props.showDiscussion}
                 >
                 </ElementContainerType>
             }
@@ -399,7 +401,9 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
 
 const mapStateToProps = (state) => ({
     setSlateParent :  state.appStore.setSlateParent,
-    elementSelection: state.selectionReducer.selection
+    elementSelection: state.selectionReducer.selection,
+    showPlayscript: state.projectInfo.showPlayscript,
+    showDiscussion: state.projectInfo.showDiscussion
 })
 
 export default connect(mapStateToProps, { cloneContainer })(ElementSaprator)

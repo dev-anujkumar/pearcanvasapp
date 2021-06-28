@@ -34,9 +34,45 @@ export default function ElementContainerType(props) {
         item.buttonHandler();
     }
 
+    const indexOfObject = (array, value) => {
+        let myArray = [...array];
+        let index = myArray.findIndex((item) => {
+            if(item.text == `${value}`)
+                return true;
+        });
+        return index;
+    }
+    
+    const removeObject = (array, value) => {
+        const index = indexOfObject(array, value);
+        if(index > -1) {
+            array.splice(index, 1);
+        }
+        return array;
+    }
+
+    const checkObject = (array, value) => {
+        let found = array.find(function(post) {
+            if(post.text == `${value}`)
+                return true;
+        });
+        return found ? true : false
+    }
+
     const renderMenu = (propsData) => {
-        let {elementType,text} = props
-        return propsData && propsData.map((item, index) => {
+        let {elementType,text,showPlayscript,showDiscussion} = props
+        console.log("Show Playscript: ",showPlayscript)
+        console.log("Show Discussion: ",showDiscussion)
+        let newpropsData = [...propsData];
+        if(!showDiscussion && checkObject(propsData,'Add Discussion')) {
+            let tempArray = [...propsData];
+            newpropsData = removeObject(tempArray,'Add Discussion');
+        }
+        if(!showPlayscript && checkObject(propsData,'Playscript')) {
+            let tempArray = [...propsData];
+            newpropsData = removeObject(tempArray,'Playscript');
+        }
+        return newpropsData && newpropsData.map((item, index) => {
             if (((elementType === "element-aside" || elementType === "group") && text === "block-text-button" && item.text === "Block Poetry") ||
             (text === "interactive-elem-button" && (elementType === "group" && (item.text === "Add Show Hide" || item.text === "Add Pop Up")))
             || (config.isPopupSlate && item.text === "Add Pop Up")) {

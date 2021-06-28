@@ -21,7 +21,9 @@ import {
     UPDATE_PROJECT_INFO,
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
-    UPDATE_THREE_COLUMN_INFO
+    UPDATE_THREE_COLUMN_INFO,
+    UPDATE_SHOW_PLAYSCRIPT,
+    UPDATE_SHOW_DISCUSSION
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -316,8 +318,9 @@ export const getProjectDetails = () => (dispatch, getState) => {
         const data = JSON.parse(JSON.stringify(response.data))
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
-            // Api to get Element Permissions
+            // Api to get LOB Permissions
             const lobPermissionsURL = `${config.REACT_APP_API_URL}v1/lobs/permissions/setting/${lineOfBusiness}`;
+            // const lobPermissionsURL = `https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1/lobs/permissions/setting/${lineOfBusiness}`;
             axios.get(lobPermissionsURL, {
                 headers: {
                     "Content-Type": "application/json",
@@ -325,11 +328,19 @@ export const getProjectDetails = () => (dispatch, getState) => {
                 }
             }).then (response => {
                 const { elementPermissions } = response.data;
+                // const elementPermissions = {
+                //     playscript: true,
+                //     discussion: true
+                // }
                 console.log("Element Permissions Data w.r.t LOB: ",elementPermissions);
-                // dispatch({
-                //     type: UPDATE_PROJECT_INFO,
-                //     payload: response.data
-                // })
+                dispatch({
+                    type: UPDATE_SHOW_PLAYSCRIPT,
+                    payload: elementPermissions.playscript
+                })
+                dispatch({
+                    type: UPDATE_SHOW_DISCUSSION,
+                    payload: elementPermissions.discussion
+                })
             }).catch(error => {
                 console.log("API Failed!!")
             })
