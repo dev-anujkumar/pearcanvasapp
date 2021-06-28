@@ -4,6 +4,12 @@
     max-width: 100%;
     height: 100%;
 }
+
+.multi-column-container-3c {
+    max-width: 100%;
+    height: 100%;
+    margin-right: 8px;
+}
 /* Scroller for list inside multi column */
 .container-multi-column-group .element-container.ul ul[treelevel='1'], .container-multi-column-group .element-container.ol ol[treelevel='1']{
     overflow-y: unset;
