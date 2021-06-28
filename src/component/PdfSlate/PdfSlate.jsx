@@ -36,6 +36,11 @@ class PdfSlate extends Component {
         const {alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
         if (this.props.element.id === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.getAlfrescoData(alfrescoAssetData)
+			const payloadObj = {
+				asset: {}, 
+				id: ''
+			}
+			this.props.saveSelectedAssetData(payloadObj)
         }
     }
 
@@ -53,28 +58,28 @@ class PdfSlate extends Component {
 		try {
 			/* Check "desc" property should not be other than "PDF" */
 			const isPdf = pdfData && pdfData?.content?.mimeType?.split('/')[1]
-			if (isPdf && isPdf == "pdf") {
+			const smartLinkString = (pdfData.properties["cm:description"] && pdfData.properties["cm:description"].toLowerCase() !== "eps media") ? pdfData.properties["cm:description"] : "{}";
+			const smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+			const smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+
+			if ((isPdf?.toLowerCase() == "pdf") || (smartLinkType?.toLowerCase() === 'pdf')) {
 				/* Get data from alfresco and save to react state to update UI and call API */
-				const smartLinkPath = pdfData && pdfData.epsUrl
+				const smartLinkPath = pdfData.properties["avs:url"] ? pdfData.properties["avs:url"] : "";
 				/** Non-Smartlink PDFs */
 				const nonSmartlinkPdfData = {
 					publicationUrl : pdfData && pdfData['institution-urls'] && pdfData['institution-urls'][0]?.publicationUrl,
 					pdfTitle : pdfData?.name
 				}
 				if (pdfData?.id) {
+					const isSmartLink = (smartLinkType?.toLowerCase() === 'pdf') ? true :  false
 					this.setState({
 						showDetails: true,
-						filetitle: pdfData?.properties["cm:title"] ?? nonSmartlinkPdfData.pdfTitle,
+						filetitle: isSmartLink && pdfData?.properties["cm:title"] ? pdfData.properties["cm:title"] : nonSmartlinkPdfData.pdfTitle,
 						pdfId: "urn:pearson:alfresco:" + pdfData?.id,
-						path: smartLinkPath ?? nonSmartlinkPdfData?.publicationUrl
+						path: isSmartLink && smartLinkPath?.trim() != "" ? smartLinkPath : nonSmartlinkPdfData?.publicationUrl
 					}, () =>{
 						that.sumbitElement();
 					})
-					let payloadObj = {
-						asset: {}, 
-						id: ''
-					}
-					this.props.saveSelectedAssetData(payloadObj)
 					/* Send retrived data to server to save */
 				} 
 			} else {
