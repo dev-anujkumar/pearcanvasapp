@@ -60,11 +60,11 @@ class PdfSlate extends Component {
 			const isPdf = pdfData && pdfData?.content?.mimeType?.split('/')[1]
 			const smartLinkString = (pdfData.properties["cm:description"] && pdfData.properties["cm:description"].toLowerCase() !== "eps media") ? pdfData.properties["cm:description"] : "{}";
 			const smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-			const smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+			const smartLinkType = smartLinkDesc !== "" && smartLinkDesc.smartLinkType ? smartLinkDesc.smartLinkType : "";
 
 			if ((isPdf?.toLowerCase() == "pdf") || (smartLinkType?.toLowerCase() === 'pdf')) {
 				/* Get data from alfresco and save to react state to update UI and call API */
-				const smartLinkPath = pdfData.properties["avs:url"] ? pdfData.properties["avs:url"] : "";
+				const smartLinkPath = pdfData?.properties["avs:url"] ? pdfData.properties["avs:url"] : "";
 				/** Non-Smartlink PDFs */
 				const nonSmartlinkPdfData = {
 					publicationUrl : pdfData && pdfData['institution-urls'] && pdfData['institution-urls'][0]?.publicationUrl,
