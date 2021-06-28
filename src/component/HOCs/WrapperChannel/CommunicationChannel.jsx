@@ -185,6 +185,10 @@ function CommunicationChannel(WrappedComponent) {
                     this.setState({
                         showBlocker: false
                     });
+                    if(message.hasOwnProperty('slateTagEnabled')){
+                        let messageData = {assessmentResponseMsg:message.slateTagEnabled}
+                        this.props.isLOExist(messageData);
+                    }
                     break;
                 case 'slatePreview':
                 case 'projectPreview':

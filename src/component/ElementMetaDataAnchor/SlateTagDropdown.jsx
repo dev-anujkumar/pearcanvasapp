@@ -363,7 +363,7 @@ class SlateTagDropdown extends React.Component {
             <div className="learningobjectivedropdown2" ref={node3 => this.node3 = node3}>
                 <ul>
                       <li onClick={() =>this.openAssessmentExternalPopup('add')}>{AddEditLOsAssessmentSlate}</li>
-                      <li onClick={() =>this.openAssessmentExternalPopup('view')}>{ViewLOsAssessmentSlate}</li>
+                      <li className={this.props.isLOExist ? '' : 'disabled'} onClick={() =>this.openAssessmentExternalPopup('view')}>{ViewLOsAssessmentSlate}</li>
                 </ul>
             </div> 
         </div>            
