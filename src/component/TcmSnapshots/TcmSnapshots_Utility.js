@@ -241,7 +241,8 @@ const tcmSnapshotsPopup =(wipData,index,containerElement,actionStatus,item,opera
         parentUrn: {
             contentUrn: wipData.contentUrn,
             elementType: wipData.type,
-            manifestUrn: wipData.id
+            manifestUrn: wipData.id,
+            multiColumnType: parentUrn?.multiColumnType /* 2C||3C */
         },
         metaDataField: item.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
         parentElement: item
@@ -267,12 +268,13 @@ const tcmSnapshotsPopup =(wipData,index,containerElement,actionStatus,item,opera
 }
 /* Form @parent@ data for cut/copy operation of aside/we:popup/showhide in multicolumn */
 function parentData4CutCopyASWE_2C(asideData, parentUrn) {
-    const { mcId, manifestUrn, columnName } = parentUrn || {};
+    const { mcId, manifestUrn, columnName, multiColumnType } = parentUrn || {};
     return { 
         id: mcId || asideData?.id,
         type: "groupedcontent",
         columnId: manifestUrn,
-        columnName: columnName
+        columnName: columnName,
+        multiColumnType /* 2C||3C */
     }
 }
 
@@ -290,7 +292,8 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, o
         parentUrn: {
             contentUrn: wipData.contentUrn,
             elementType: wipData.type,
-            manifestUrn: wipData.id
+            manifestUrn: wipData.id,
+            multiColumnType: parentUrn?.multiColumnType /* 2C||3C */
         }
     }
     let newContainerElement = {}
@@ -327,7 +330,8 @@ const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,item, co
                 type: "groupedcontent",
                 columnId: wipData?.groupeddata?.bodymatter[columnIndex]?.id,
                 columnName: (columnIndex == 0) ? "C1" : "C2",
-                source:"fromCutCopy"
+                source:"fromCutCopy",
+                multiColumnType: wipData?.groupeddata.bodymatter?.length === 2 ? "2C" : "3C" /* 2C||3C */
             }
         },
         parentUrn: {
@@ -1150,8 +1154,9 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     * @description For SHOWHIDE Element - prepare parent element data
     * Update - 2C/Aside/POP:SH:New 
     */
-    const typeOfElement = containerElement?.asideData?.grandParent?.asideData?.type;
-    if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
+    const typeOfElement = containerElement?.asideData?.type;//?.grandParent?.asideData?.type;
+    //if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
+    if(typeOfElement === SHOWHIDE) {
         containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex);
     }
     

@@ -32,7 +32,6 @@ export default {
     ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside",
     SHOW_HIDE: "showhide",
-    NEW_SHOW_HIDE: "showhide",
     ELEMENT_SECTION_BREAK: 'manifest',
 /****************Metadata Anchor************************ */  
     METADATA_ANCHOR : "element-learningobjectivemapping",

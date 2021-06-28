@@ -4,7 +4,6 @@ import Sortable from 'react-sortablejs';
 function SortElement(props) {
 
 	return (
-		<div>
 			<Sortable
 				options={{
 					sort: true,  // sorting inside list
@@ -32,7 +31,6 @@ function SortElement(props) {
 			>
 				{props.children}
 			</Sortable>
-		</div>
 	)
 }
 

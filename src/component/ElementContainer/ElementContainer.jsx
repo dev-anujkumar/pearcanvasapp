@@ -677,12 +677,16 @@ class ElementContainer extends Component {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
-                    /** 
-                    * @param {String} indexParam - For showhide Element,for RevealAnswer text update
-                    * sending RevealAnswer element index */
-                    const indexParam = ((this.props.element?.type === elementTypeConstant.SHOW_HIDE) && (showHideType === "postertextobject")) ? 
-                            elemIndex : this.props.index;
-                    this.props.updateElement(dataToSend, indexParam, parentUrn, asideData, showHideType, parentElement, poetryData);
+                    /*** @description For showhide Element, ON RevealAnswer text update, sending RevealAnswer element index */
+                    if((this.props.element?.type === elementTypeConstant.SHOW_HIDE) && (showHideType === "postertextobject")) {
+                        /* Contains the data of parent elemens Ex.- 2C/Aside/POP||AgainContainer:SH */
+                        const elementLineage = {
+                            ...this.props.element, grandParent: { asideData, parentUrn }
+                        }
+                        this.props.updateElement(dataToSend, elemIndex, parentUrn, elementLineage, showHideType, parentElement, poetryData);
+                    } else {
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
+                    }
                 }
                 break;
 
@@ -802,8 +806,11 @@ class ElementContainer extends Component {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
-        let element = currrentElement ? currrentElement : this.props.element
-        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && (this.props.parentElement.type === 'poetry' || this.props.parentElement.type === "groupedcontent"))) ? this.props.parentElement : this.props.element
+        let element = currrentElement ? currrentElement : this.props.element;
+        /* setting parent element for showhide inner elements on update */
+        const { SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT } = elementTypeConstant;
+        const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
+        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || containerParent) ? this.props.parentElement : this.props.element
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
             this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType);
@@ -1389,7 +1396,7 @@ class ElementContainer extends Component {
                     labelText = 'SH'
                     break;
                 */
-                case elementTypeConstant.NEW_SHOW_HIDE:
+                case elementTypeConstant.SHOW_HIDE:
                     editor = <ShowHide
                         onListSelect={this.props.onListSelect}
                         showDeleteElemPopup={this.showDeleteElemPopup}
