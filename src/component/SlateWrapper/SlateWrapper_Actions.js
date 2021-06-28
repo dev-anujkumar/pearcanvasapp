@@ -31,7 +31,7 @@ import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
 import ElementConstants from '../ElementContainer/ElementConstants';
-import { getShowHideElement } from '../ShowHide/ShowHide_Helper';
+import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE } = ElementConstants;
 
@@ -894,6 +894,12 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "destinationSlateUrn": slateEntityUrn
             }]
         };
+        /* if parent Element type showhide then get index of child element */
+        if(asideData?.type === SHOW_HIDE) {
+            const indexList = cutIndex?.toString().split("-") || [];
+            _requestData.content[0].index = parseInt(indexList[indexList?.length - 1]);
+            //_requestData.content[0].sectionType = indexOfSectionType(cutIndex)
+        }
 
         if(selection.operationType.toUpperCase() === "COPY") {
             delete _requestData.content[0].slateVersionUrn;
