@@ -1415,6 +1415,7 @@ class ElementContainer extends Component {
                         onClickCapture = {this.props.onClickCapture}
                         asideData = {this.props?.asideData}
                         parentUrn = {this.props?.parentUrn}
+                        pasteElement={this.props.pasteElement}
                     />;
                     labelText = 'SH'
                     break;

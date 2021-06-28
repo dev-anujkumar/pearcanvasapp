@@ -81,9 +81,13 @@ class ShowHide extends React.Component {
 		)
 	}
 }
-
+const mapStateToProps = (state) => {
+    return {
+        elementSelection: state.selectionReducer.selection
+    }
+}
 const dispatchActions = {
     createShowHideElement,
 	swapElement
 }
-export default connect(null, dispatchActions)(ShowHide);
+export default connect(mapStateToProps, dispatchActions)(ShowHide);

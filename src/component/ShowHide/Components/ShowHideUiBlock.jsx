@@ -1,4 +1,5 @@
 import React from 'react';
+import { SHOW_HIDE } from '../../../constants/Element_Constants.js';
 import ElementContainer from '../../ElementContainer/ElementContainer.jsx';
 import { ElementSaprator } from '../../ElementSaprator/ElementSaprator.jsx';
 import { showHideConstants } from '../ShowHide_Helper';
@@ -6,7 +7,7 @@ import SortElement from './SortElement.jsx';
 
 const ShowHideUiBlock = (props) => {
 	const { index, parentUrn, asideData, element, addNestedElements,
-			sepratorIndex, sectionType, onSortUpdate, elementAncestors } = props || {};
+			sepratorIndex, sectionType, onSortUpdate } = props || {};
 	/** @description sectionHeading - get the heading of section of showhide */
 	const sectionHeading = sectionType === showHideConstants.SHOW ? "Show" : "Hide";
 
@@ -61,7 +62,8 @@ const ShowHideUiBlock = (props) => {
 			splithandlerfunction = {props.splithandlerfunction}
 			userRole = {props.userRole}
 			pasteElement = {props.pasteElement}
-			//source={ASIDE_SOURCE}
+			source={SHOW_HIDE}
+			elementSelection = {props?.elementSelection}
 		/>
 	}
 
@@ -80,6 +82,9 @@ const ShowHideUiBlock = (props) => {
 				parentUrn
 			}
 		}
+		//const shParentUrn = {
+		//	contentUrn: element.contentUrn
+		//}
 		return <ElementContainer
 			element = {item}
 			index = {eleIndex}
