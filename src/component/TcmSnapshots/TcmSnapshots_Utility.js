@@ -1146,7 +1146,13 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                 }
             }
             else {
-                oldData.elementdata = wipData.elementdata;
+                if(oldData.type === ELEMENT_ASSESSMENT) {
+                    oldData.elementdata = elementUpdateData?.figureData
+                    dispatch(storeOldAssetForTCM({}))
+                } else {
+                    oldData.elementdata = wipData.elementdata;
+                }
+                
             }
         }
         oldData.html = wipData.html;

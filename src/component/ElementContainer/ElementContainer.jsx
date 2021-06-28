@@ -813,6 +813,8 @@ class ElementContainer extends Component {
      */
     handleBlurAssessmentSlate = (assessmentData) => {
         // const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        const oldAssessmentData = JSON.parse(JSON.stringify(this.props.element));
+        this.props.storeOldAssetForTCM(oldAssessmentData.elementdata);
         let dataToSend = { ...this.props.element }
         if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
