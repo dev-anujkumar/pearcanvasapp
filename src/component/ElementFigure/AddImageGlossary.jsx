@@ -42,7 +42,7 @@ class AddImageGlossary extends Component {
         let width = imageData['width'] ? imageData['width'] : "";
         let height = imageData['height'] ? imageData['height'] : "";
 
-        if (figureType === "image") {
+        if (figureType === "image" || figureType === "table" || figureType === "mathImage") {
 
             let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
@@ -67,7 +67,7 @@ class AddImageGlossary extends Component {
                 longdescription: longDesc,
                 title: data.displayName || data.displayTitle
             }
-            
+            console.log("test",setFigureData);
             store.dispatch({
                 type: SET_FIGURE_GLOSSARY,
                 payload:setFigureData 
@@ -77,6 +77,7 @@ class AddImageGlossary extends Component {
                 payload:true
             })
             hideTocBlocker();
+            return false;
         } 
         else if(figureType !== "image") {
             this.props.showWrongImagePopup(true)

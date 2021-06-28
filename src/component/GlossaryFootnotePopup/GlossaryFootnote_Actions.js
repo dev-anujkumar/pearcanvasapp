@@ -176,20 +176,21 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
     } else {
        store.dispatch( handleGlossaryActions(false,{}))
     }
-    
+
     if(footnoteContentText && footnoteContentText.includes('imageAssetContent')) {
         let div = document.createElement('div');
         div.innerHTML = footnoteContentText
-        let imagepath = div.getElementsByTagName('img');
-        for (let i = 0; i < imagepath.length; i++) {
-            if(imagepath[i]?.attributes?.class?.nodeValue ==='imageAssetContent'){
-                const imagePath = imagepath[i]?.attributes?.src?.nodeValue
-                const imageId = imagepath[i]?.attributes?.imageid?.nodeValue
-                const altText = imagepath[i]?.attributes?.alt?.nodeValue
-                const classValue = imagepath[i]?.attributes?.class?.nodeValue
-                const imageHeight = imagepath[i]?.attributes?.height?.nodeValue
-                const imageWidth = imagepath[i]?.attributes?.width?.nodeValue
+        let glossaryImageAssets = div.getElementsByTagName('img');
+        for (let i = 0; i < glossaryImageAssets.length; i++) {
+            if(glossaryImageAssets[i]?.attributes?.class?.nodeValue ==='imageAssetContent'){
+                const imagePath = glossaryImageAssets[i]?.attributes?.src?.nodeValue
+                const imageId = glossaryImageAssets[i]?.attributes?.imageid?.nodeValue
+                const altText = glossaryImageAssets[i]?.attributes?.alt?.nodeValue
+                const classValue = glossaryImageAssets[i]?.attributes?.class?.nodeValue
+                const imageHeight = glossaryImageAssets[i]?.attributes?.height?.nodeValue
+                const imageWidth = glossaryImageAssets[i]?.attributes?.width?.nodeValue
                 const title = imagePath.split("/").pop();
+                const Longdescription = glossaryImageAssets[i]?.attributes?.longdescription?.nodeValue
                 const data = {
                         imageid: imageId,
                         path:imagePath,
@@ -197,12 +198,14 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         height:imageHeight,
                         width:imageWidth,
                         class:classValue,
-                        title:title
+                        title:title,
+                        longdescription:Longdescription
                     }
                 store.dispatch(handleFigureGlossaryActions(true, data));
             }
         }
-    } else {
+    }
+     else {
        store.dispatch(handleFigureGlossaryActions(false,{}))
     }
 

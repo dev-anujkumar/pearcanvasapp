@@ -20,8 +20,7 @@ class GlossaryFootnotePopup extends Component {
         super();
         this.state = {
             audioToggle:false,
-            figureToggle:false,
-            figureImagePopup:false
+            figureToggle:false
         }
 
     }
@@ -46,12 +45,6 @@ class GlossaryFootnotePopup extends Component {
         this.setState({
             figureToggle:false
         })
-    }
-
-    addFigureImagePopup = () =>{
-       this.setState({
-        figureImagePopup:true
-       })
     }
 
     toolbarHandling = (e, action = "") => {
@@ -89,12 +82,8 @@ class GlossaryFootnotePopup extends Component {
             let tempDiv = document.createElement('div');
             tempDiv.innerHTML = definitionDom.body?.childNodes[0]?.innerHTML;
             tinyMCE.$(tempDiv).find('img.imageAssetContent').remove();
-            console.log("tempDiv", tempDiv, tempDiv.innerHTML);
             footnoteContentText = `<p>${tempDiv.innerHTML}</p>`;
         }
-        console.log("this.props.glossaryFootNoteCurrentValue.footnoteContentText", glossaryFootNoteCurrentValue.footnoteContentText);
-        console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-        console.log("footnoteContentText.footnoteContentText", footnoteContentText);
 
         return (
             <div ref={this.props.setWrapperRef} className="glossary-toolbar-wrapper">
@@ -114,9 +103,9 @@ class GlossaryFootnotePopup extends Component {
                 {this.state.audioToggle && <AddAudioBook isGlossary={true} closeAddAudioBook={this.closeAddAudioBook}/>}
 
                 {
-                    glossaryFootnote === GLOSSARY &&<div className = {'image-wrapper'+ accessToolbar} id='glossary-figure-image'><FigureTinyMceGlossary handleFigureToggle={this.handleFigureToggle} figureImagePopup ={this.state.figureImagePopup} /></div>
+                    glossaryFootnote === GLOSSARY &&<div className = {'image-wrapper'+ accessToolbar} id='glossary-figure-image'><FigureTinyMceGlossary handleFigureToggle={this.handleFigureToggle} /></div>
                 }
-                {this.state.figureToggle && <AddImageGlossary  closeFigurePopup={this.closeFigurePopup} addFigureImagePopup={this.addFigureImagePopup} />}
+                {this.state.figureToggle && <AddImageGlossary  closeFigurePopup={this.closeFigurePopup}  />}
                 </div>
                 <div className="glossary-body">
                     <div id="glossary-toolbar"></div>
