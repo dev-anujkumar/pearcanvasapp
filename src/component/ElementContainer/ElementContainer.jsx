@@ -14,7 +14,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateThreeColumnData } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateThreeColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
@@ -702,6 +702,9 @@ class ElementContainer extends Component {
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
+                        
+                        const data =  JSON.parse(JSON.stringify(previousElementData));
+                        this.props.storeOldAssetForTCM(data.figuredata);
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         config.isSavingElement = true
@@ -2051,7 +2054,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateThreeColumnData: (threeColumnObjData, objKey) => {
             dispatch(updateThreeColumnData(threeColumnObjData, objKey))
-        }
+        },
+        storeOldAssetForTCM: (data) => {
+            dispatch(storeOldAssetForTCM(data))
+        },
     }
 }
 
