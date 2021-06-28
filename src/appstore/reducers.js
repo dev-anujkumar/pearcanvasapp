@@ -83,13 +83,10 @@ const INITIAL_STATE = {
     oldFiguredata : {},
     wirisAltText : {},
     isLearnosityProjectInfo:{},
-<<<<<<< HEAD
     figureGlossaryData : {},
     addfigureGlossarypopup:false,
-    openWrongImagePopup:false
-=======
+    openWrongImagePopup:false,
     threeColumnData: []
->>>>>>> cfc8a1646f4a74a7d9e71e8937c2295c79efe047
 };
 
 const INITIAL_ACTION = {
