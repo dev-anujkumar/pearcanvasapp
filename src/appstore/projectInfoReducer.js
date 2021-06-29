@@ -3,8 +3,8 @@ import { UPDATE_PROJECT_INFO, UPDATE_DISCUSSION_ITEMS, UPDATE_USAGE_TYPE, UPDATE
 const initialState = {
   usageType: [],
   discussionItems: [],
-  showPlayscript: false,
-  showDiscussion: false
+  showPlayscript: true,
+  showDiscussion: true
 }
 
 export const projectInfo = (state = initialState, action={type:'', payload:{}}) => {
