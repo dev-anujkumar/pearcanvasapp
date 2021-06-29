@@ -83,7 +83,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
-    const multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : selectionMultiColumnType;
+    const multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
     if(wipData?.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
@@ -1194,7 +1194,13 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                 }
             }
             else {
-                oldData.elementdata = wipData.elementdata;
+                if(oldData.type === ELEMENT_ASSESSMENT) {
+                    oldData.elementdata = elementUpdateData?.figureData
+                    dispatch(storeOldAssetForTCM({}))
+                } else {
+                    oldData.elementdata = wipData.elementdata;
+                }
+                
             }
         }
         oldData.html = wipData.html;

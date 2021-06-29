@@ -59,6 +59,9 @@ export const elementType = ['ASSESSMENT', 'ELEMENT_ASSESSMENT','WORKED_EXAMPLE',
 
 export const CLONE_STATUS_INTERVAL = 2000
 export const checkTCM = element => {
+    if (element.type === 'groupedcontent' && element.groupeddata?.bodymatter?.length === 3) {
+        return MULTI_COLUMN_3C;
+    }
     switch(element.type) {
         case 'openerelement': return OPENER;
 
