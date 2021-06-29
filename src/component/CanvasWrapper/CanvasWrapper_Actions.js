@@ -21,9 +21,6 @@ import {
     UPDATE_PROJECT_INFO,
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
-    UPDATE_THREE_COLUMN_INFO,
-    UPDATE_SHOW_PLAYSCRIPT,
-    UPDATE_SHOW_DISCUSSION,
     UPDATE_LOB_PERMISSIONS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
