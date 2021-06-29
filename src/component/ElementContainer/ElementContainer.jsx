@@ -1164,16 +1164,10 @@ class ElementContainer extends Component {
     }
 
     handleAssetsPopupLocation = (status, position) => {
-        if (this.state.assetsPopupStatus) {
-            this.setState({
-                assetsPopupStatus: false
-            })
-        } else {
-            this.setState({
-                assetsPopupStatus: status,
-                position: position
-            })
-        }
+        this.setState({
+            assetsPopupStatus: status,
+            position: position
+        })
     }
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element

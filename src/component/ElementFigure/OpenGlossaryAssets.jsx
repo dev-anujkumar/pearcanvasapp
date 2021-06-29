@@ -17,7 +17,9 @@ class OpenGlossaryAssets extends Component {
         this.state ={
             replaceAudioToggle: false,
             replaceImageToggle: false,
-            tabValue: ""
+            tabValue: "",
+            figureGlossaryData: {},
+            audioGlossaryData: {}
         }
     }
 
@@ -31,13 +33,39 @@ class OpenGlossaryAssets extends Component {
 
     componentDidMount() {
         document.addEventListener('mousedown', this.handleClick, false);
-        const {  figureGlossaryData, audioGlossaryData } = this.props;
+        let {  figureGlossaryData, audioGlossaryData } = this.props;
         
         if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {
-            this.setState({ tabValue: "audio" });
+            this.setState({
+                tabValue: "audio",
+                audioGlossaryData: audioGlossaryData
+            });
         } else if (figureGlossaryData && Object.keys(figureGlossaryData).length > 0) {
-            this.setState({ tabValue: "image" });
+            this.setState({
+                tabValue: "image",
+                figureGlossaryData: figureGlossaryData
+            });
         }
+    }
+
+    static getDerivedStateFromProps(nextProps, state) {
+        if (nextProps.figureGlossaryData !== state.figureGlossaryData) {
+            return {
+                figureGlossaryData: nextProps.figureGlossaryData,
+                tabValue: "image"
+            }
+        }
+        if (nextProps.audioGlossaryData !== state.audioGlossaryData) {
+            return {
+                audioGlossaryData: nextProps.audioGlossaryData
+            }
+        }
+        if (!state.figureGlossaryData && state.audioGlossaryData) {
+            return {
+                tabValue: "audio"
+            }
+        }
+        return null;
     }
 
     /**
@@ -82,8 +110,8 @@ class OpenGlossaryAssets extends Component {
       }
 
     render = () => {
-        const {  figureGlossaryData, audioGlossaryData, position, imageGlossaryRemovePopup } = this.props;
-        let { tabValue, replaceAudioToggle, replaceImageToggle } = this.state;
+        const { position, imageGlossaryRemovePopup } = this.props;
+        let { tabValue, replaceAudioToggle, replaceImageToggle, figureGlossaryData, audioGlossaryData } = this.state;
         let imageMediaSrc, imageMediaTitle, audioMediaSrc, audioMediaTitle = "";
         
         if (figureGlossaryData && Object.keys(figureGlossaryData).length > 0) {
