@@ -226,8 +226,15 @@ export const getShowHideIndex = (tempIndex) => {
  * @param {*} indexes element index
  * @returns 
  */
-export const onUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
-    const indexLength = Array.isArray(indexes) ? indexes.length : 0;
+export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => { // activeElemType, showHideObj
+    let showHideElement = getShowHideElement(bodymatter, indexes?.length, indexes);
+    if(showHideElement?.type === ElementConstants.SHOW_HIDE) {
+        const showHideType = indexOfSectionType(indexes);
+        if(showHideType) {
+            showHideElement.interactivedata[showHideType][indexes[indexes.length - 1]] = resData;
+        }
+    }
+    /*const indexLength = Array.isArray(indexes) ? indexes.length : 0;
     const showHideIndex = (indexLength > 2) ? indexes[indexLength - 2] : "" 
     const showHideType = findSectionType(showHideIndex)
     if (activeElemType && showHideType) {
@@ -236,7 +243,7 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, s
                 bodymatter[indexes[0]].interactivedata[showHideType][indexes[2]] = resData
                 break;
             case 4:
-                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideType][indexes[2]] = resData
+                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideType][indexes[3]] = resData
                 break
             case 5:
                 bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideType][indexes[4]] = resData
@@ -253,7 +260,7 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, s
                 break
         }
     }
-    return bodymatter
+    return bodymatter */
 }
 
 export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
