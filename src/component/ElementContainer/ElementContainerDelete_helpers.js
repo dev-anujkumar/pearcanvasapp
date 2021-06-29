@@ -3,7 +3,8 @@ import {
     prepareTcmSnapshots,
     fetchElementWipData,
     checkContainerElementVersion,
-    fetchManifestStatus 
+    fetchManifestStatus, 
+    prepareSnapshots_ShowHide
 } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 //Constants
 import { 
@@ -14,6 +15,8 @@ import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./Eleme
 import config from '../../config/config';
 import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning } from '../../constants/IFrameMessageTypes.js';
 import tinymce from 'tinymce'
+import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+const { ELEMENT_ASIDE, MULTI_COLUMN } = TcmConstants;
 
 export const onDeleteSuccess = (params) => {
     const {
@@ -243,9 +246,10 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-        const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
-        const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
-        const containerElement = {
+        //const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
+        //const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
+        const wipData = showHideObj?.currentElement || fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete");
+        let containerElement = {
             asideData,
             parentUrn,
             poetryData,
@@ -253,13 +257,21 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
             metaDataField: wipData && wipData.type == 'popup' && wipData.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
             sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined,
             cutCopyParentUrn,
-            showHideObj: showHideCondition ? showHideObj : null
+            showHideObj: showHideObj //showHideCondition ? showHideObj : null
         }
         const deleteData = {
             wipData: wipData && Object.keys(wipData).length > 0 ? wipData : element, /** Inside Multi-Column->Aside/WE */
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
             index
+        }
+        /** 
+        * @description For SHOWHIDE Element - prepare parent element data
+        * Update - 2C/Aside/POP:SH:New 
+        */
+        const typeOfElement = containerElement?.asideData?.grandParent?.asideData?.type;
+        if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
+            containerElement = prepareSnapshots_ShowHide(containerElement, deleteData.wipData, index);
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)
     }
