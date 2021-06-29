@@ -262,17 +262,18 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
     padding-left: 120px !important;
 }
 
-.learningobjectivedropdown li:hover, .learningobjectivedropdown2 li:hover {
+.learningobjectivedropdown li:hover, .learningobjectivedropdown2 li:hover, .learningobjectivedropdown3 li:hover {
     background-color: #efefef;
     font-family: 'Open Sans',sans-serif;
     cursor: pointer;
 }
-.learningobjectivedropdown li.disable-buttton, .learningobjectivedropdown2 li.disable-buttton, .option-disabled{
+.learningobjectivedropdown li.disable-buttton, .learningobjectivedropdown2 li.disable-buttton, .option-disabled , .learningobjectivedropdown3 li.disable-buttton{
     pointer-events: none;
     opacity: 0.6;
     cursor: not-allowed;
     color: gray;
 }
+
 /* .mce-content-body .Wirisformula[data-custom-editor="chemistry"]{
     vertical-align: -1px!important;
 } */
@@ -306,8 +307,11 @@ abbr[title="Slate Link"] sup::after {
 }
 dfn[audio-id]:not(.sup):not(.sub)::after,
 dfn[audio-id] sub::after,
-dfn[audio-id] sup::after {
-    content: url('./../images/GlossaryAudio/audioEnable.svg');
+dfn[audio-id] sup::after,
+dfn[image-id]:not(.sup):not(.sub)::after,
+dfn[image-id] sub::after,
+dfn[image-id] sup::after {
+    content: url('./../images/ImageGlossary/imageglossary.svg');
     top: 3px;
     right: 0;
     left: 0;
@@ -317,6 +321,7 @@ dfn[audio-id] sup::after {
     position: relative;
     background: transparent;
 }
+
 /*  Cross Link dropdown color Design  */
 .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled){
     background-color: #efefef !important;

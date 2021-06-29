@@ -21,14 +21,14 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
-import { hideBlocker, showTocBlocker, hideTocBlocker } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
@@ -47,7 +47,12 @@ import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
+import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
+import store from '../../appstore/store';
+import { showWrongImagePopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
+import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
 
 let random = guid();
 
@@ -69,7 +74,8 @@ class SlateWrapper extends Component {
             showpocpopup:false,
             pastedindex:null,
             powerPasteData: [],
-            updatedindex:''
+            updatedindex:'',
+            isImageGlossaryPopup:false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -985,6 +991,7 @@ class SlateWrapper extends Component {
                                         isLOExist={this.props.isLOExist}
                                         splithandlerfunction={this.splithandlerfunction}
                                         pasteElement={this.props.pasteElement}
+                                        imageGlossaryRemovePopup = {this.toggleImageGlossaryPopup}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -1142,6 +1149,96 @@ class SlateWrapper extends Component {
         else {
             return null
         }
+    }
+
+    /**
+    * @description - showImageGlossaryRemoveConfirmationPopup function responsible for opening confirmation popup for remove glosssary image .
+    */
+    showImageGlossaryRemoveConfirmationPopup = () => {
+        let dialogText;
+        let imageRemoveClass;
+        if(this.state.isImageGlossaryPopup){
+           dialogText = REMOVE_LINKED_IMAGE_GLOSSARY
+           imageRemoveClass = 'remove-glossary-image'
+        } else if (this.props.openWrongImagePopup){
+           dialogText = NOT_IMAGE_ASSET
+           imageRemoveClass = 'remove-glossary-image'
+        }
+
+        if(this.state.isImageGlossaryPopup){
+            this.props.showBlocker(true)
+            showTocBlocker()
+            return (
+                <PopUp
+                    dialogText={dialogText}
+                    active={true}
+                    imageGlossary={true}
+                    imageRemoveClass={imageRemoveClass}
+                    saveButtonText='OK'
+                    removeImageContent={this.processRemoveImageGlossaryConfirmation}
+                    togglePopup={this.toggleImageGlossaryPopup}
+                />
+            )
+        }else if (this.props.openWrongImagePopup) {
+            this.props.showBlocker(true)
+            showTocBlocker()
+            return (
+                <PopUp
+                    dialogText={dialogText}
+                    active={true}
+                    wrongImage={true}
+                    imageRemoveClass={imageRemoveClass}
+                    saveButtonText='OK'
+                    togglePopup={this.toggleWrongImagePopup}
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+
+   /**
+   * @description - toggleImageGlossaryPopup function responsible for toggle Image glossary popup.
+   */
+    toggleImageGlossaryPopup = (toggle) => {
+        this.props.showBlocker(false)
+        hideTocBlocker()
+        hideBlocker()
+        this.setState({
+            isImageGlossaryPopup:toggle
+        })
+    }
+
+    /**
+   * @description - toggleWrongImagePopup function responsible for wrong Image selection popup.
+   */
+    toggleWrongImagePopup = () => {
+        this.props.showBlocker(false)
+        hideTocBlocker()
+        hideBlocker()
+        if(this.props.accesDeniedPopup){
+            this.props.accessDenied(false)
+        }
+        else{
+        this.props.showWrongImagePopup(false)
+        }
+    }
+
+    /**
+   * @description - processRemoveImageGlossaryConfirmation function responsible for removing Image Glossary.
+   */
+    processRemoveImageGlossaryConfirmation = () => {
+        hideBlocker()
+        hideTocBlocker()
+        store.dispatch(this.handleFigureGlossaryActions(false,{}))
+        this.toggleImageGlossaryPopup(false)
+        this.props.showBlocker(false)
+    }
+
+     handleFigureGlossaryActions = (imagepopup,figuredata) => dispatch => {
+        dispatch({ type: ADD_FIGURE_GLOSSARY_POPUP, payload: imagepopup })
+        dispatch({ type: SET_FIGURE_GLOSSARY, payload: figuredata })
     }
 
     /**
@@ -1336,6 +1433,34 @@ class SlateWrapper extends Component {
         this.props.toggleLOWarningPopup(false, "");
     }
 
+       /**
+     * This method renders Alfresco Product Link Popup based on Selection 
+     */
+        showAlfrescoPopup = () => {
+            if (this.props.launchAlfrescoPopup) {
+                this.props.showBlocker(true)
+                showTocBlocker();
+                return (
+                    <AlfrescoPopup 
+                    alfrescoPath = {this.props.alfrescoPath}
+                    alfrescoListOption= {this.props.alfrescoListOption}
+                    handleCloseAlfrescoPicker={this.handleCloseAlfrescoPicker}
+                    />
+                )
+            }
+            else {
+                return null
+            }
+        }
+
+        handleCloseAlfrescoPicker = () => {
+            this.props.showBlocker(false)
+            hideTocBlocker()
+            disableHeader(false)
+            let payloadObj = { launchAlfrescoPopup: false, alfrescoPath: {} }
+            this.props.alfrescoPopup(payloadObj)
+        };
+
     /**
      * render | renders title and slate wrapper
      */
@@ -1386,12 +1511,15 @@ class SlateWrapper extends Component {
                 {this.showSplitSlatePopup()}
                 {/* ***************Audio Narration remove Popup **************** */}
                 {this.showAudioRemoveConfirmationPopup()}
+                {this.showImageGlossaryRemoveConfirmationPopup()}
                 {this.showLockReleasePopup()}
                 {this.showAssessmentConfirmationPopup()}
                 {this.wirisAltTextPopup()}
                 {/* **************** Word Paste Popup ************ */}
                 {this.showWordPastePopup()}
                 {this.showLOWarningPopup()}{/* **************** LO Warning Popup ************ */}
+               {/* **************** Alfresco Popup ************ */}
+               {this.showAlfrescoPopup()}
             </React.Fragment>
         );
     }
@@ -1441,7 +1569,11 @@ const mapStateToProps = state => {
         wirisAltText: state.appStore.wirisAltText,
         currentSlateLF: state.metadataReducer.currentSlateLF,
         loWarningPopupData: state.metadataReducer.loWarningPopupData,
-        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
+        openWrongImagePopup:state.appStore.openWrongImagePopup,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        alfrescoPath : state.alfrescoReducer.alfrescoPath,
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
     };
 };
 
@@ -1475,6 +1607,8 @@ export default connect(
         audioGlossaryPopup,
         createPowerPasteElements,
         getMetadataAnchorLORef,
-        toggleLOWarningPopup
+        toggleLOWarningPopup,
+        showWrongImagePopup,
+        alfrescoPopup
     }
 )(SlateWrapper);

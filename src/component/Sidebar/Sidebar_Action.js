@@ -12,7 +12,10 @@ import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
-import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import {  handleElementsInShowHide, onUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
+import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+const { ELEMENT_ASIDE, MULTI_COLUMN } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
 
@@ -235,7 +238,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
             }
             else {
-                tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
+                /**
+                * @param {Object} newAppStore 
+                * @description - Adding showhide data into appstore variable to form snapshots of conversion
+                */
+                const newAppStore = showHideObj?.element?.type === "showhide" ? {...appStore, showHideObj } : appStore;
+                tcmSnapshotsForConversion(elementConversionData, indexes, newAppStore, dispatch)
             }
 
         }
@@ -284,27 +292,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let focusedElement = bodymatter;
         //Separate case for element conversion in showhide
         if (showHideObj) {//newElementData.asideData && newElementData.asideData.hasOwnProperty('type') &&
-            switch (indexes.length) {
-                case 3:
-                    /**
-                     * [PCAT-7808] | Conversion to a List element in Show is not reflected immediately on converting the element type after versioning. 
-                     *             Browser refresh is required for the element to be converted to a list in canvas.
-                     */
-                    focusedElement[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]] = res.data
-                    break;
-                case 4:
-                    focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]] = res.data
-                    break
-                case 5:
-                    focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = res.data
-                    break
-                case 6:
-                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]]= res.data
-                        break
-                case 7:
-                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]] = res.data
-                    break
-            }
+            const activeElemType = oldElementInfo['elementType']
+            focusedElement = onUpdateSuccessInShowHide(res.data, focusedElement, activeElemType, showHideObj, indexes)
         } else if (appStore.parentUrn.elementType === "group") {
             focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
         } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
@@ -478,6 +467,14 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         actionStatusVersioning.status ="accepted"
         prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "",indexes);
     }
+    /** 
+    * @description For SHOWHIDE Element - prepare parent element data
+    * Update - 2C/Aside/POP:SH:New 
+    */
+    const typeOfElement = convertParentData?.asideData?.grandParent?.asideData?.type;
+    if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
+        convertParentData = prepareSnapshots_ShowHide(convertParentData, response, indexes);
+    }
     prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes);
 }
 
@@ -533,26 +530,16 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         //Separate case for element conversion in showhide
-        if(showHideObj) {
-            let oldElementData
-            switch(indexes.length) {
-                case 3:
-                    oldElementData = bodymatter[indexes[0]].interactivedata[showHideObj.showHideType][indexes[2]]
-                    break;
-                case 4:
-                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideObj.showHideType][indexes[3]]
-                    break;
-                case 5:
-                    oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]]
-                    break;
-                case 6:
-                    oldElementData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]]
-                    break;
-                case 7:
-                    oldElementData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]]
-                    break;
+        if(showHideObj || (appStore?.asideData?.type === 'showhide')) {
+            const innerElementType = activeElement.elementType
+            let oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj)
+            let showhideElement = {
+                currentElement: oldElementData.currentElement,
+                index: activeElement.index,
+                element: appStore?.asideData,
+                showHideType: oldElementData.showHideType
             }
-            dispatch(convertElement(oldElementData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+            dispatch(convertElement(oldElementData.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement))
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))

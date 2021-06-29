@@ -9,7 +9,11 @@ import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ER
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
+
+import ElementConstants from "./ElementConstants";
+const { SHOW_HIDE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
@@ -248,7 +252,14 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
                 }
             }
         } else if (indexesLen == 3) {
-            if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
+             if (newBodymatter[indexes[0]].type === SHOW_HIDE) { /*For showhide container on slate not inside other container */
+                const section = findSectionType(indexes[1]); /* Get the section type */
+                condition = newBodymatter[indexes[0]].interactivedata[section][indexes[2]];
+                if (condition.versionUrn === elementId) {
+                    dataToSend = condition.figuredata
+                    condition.figuredata = figureData
+                }
+            } else if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
                 condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                 if (condition.versionUrn == elementId) {
                     dataToSend = condition.figuredata
@@ -351,18 +362,29 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
         return elm;
     })
 }
-
-export const createShowHideElement = (elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => (dispatch, getState) => {
+/**
+* @function createShowHideElement
+* @description-This function is to create elements inside showhide
+* @param {String} elementId - id of parent element (ShowHide)   
+* @param {String} type - type of section in showhide element - show|hide|revealAnswer
+* @param {Object} index - Array of indexs
+* @param {String} parentContentUrn - contentUrn of parent element(showhide)
+* @param {Function} cb - )
+* @param {Object} parentElement - parent element(showhide)
+* @param {String} parentElementIndex - index of parent element(showhide) on slate
+* @param {String} type2BAdded - type of new element to be addedd - text|image 
+*/
+export const createShowHideElement = (elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex, type2BAdded) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
-    let newShowhideIndex = parseInt(newIndex[newIndex.length-1])+1
-    const { asideData, parentUrn ,showHideObj } = getState().appStore
+    let newShowhideIndex = parseInt(newIndex[newIndex.length-1]); //+1
+    //const { asideData, parentUrn ,showHideObj } = getState().appStore
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
         "index": newShowhideIndex,
-        "type": "TEXT",
+        "type": type2BAdded || "TEXT",
         "parentType":"showhide",
         "sectionType": type
 
@@ -382,11 +404,12 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-         let containerElement = {
+        /* let containerElement = {
             asideData,
             parentUrn,
             showHideObj
-        };
+        }; */
+        const containerElement = prepareSnapshots_ShowHide({ asideData: {...parentElement}}, createdElemData.data, index);
         let slateData = {
             currentParentData: newParentData,
             bodymatter: currentSlateData.contents.bodymatter,
@@ -406,7 +429,21 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             return false;
         }
         let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-        let condition;
+        /* Create inner elements in ShowHide */
+        const indexes = index?.toString().split('-') || [];
+        /* Get the showhide element object from slate data using indexes */
+        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+        /* After getting showhide Object, add the new element */
+        if(shObject?.id === elementId) {
+            if(shObject?.interactivedata?.hasOwnProperty(type)) {
+                shObject?.interactivedata[type]?.splice(newShowhideIndex, 0, createdElemData.data);
+            } else { /* if interactivedata dont have sectiontype [when all elements of show/hide deleted] */
+                let sectionOfSH = [];
+                sectionOfSH.push(createdElemData.data);
+                shObject.interactivedata[type] = sectionOfSH;
+            }   
+        }
+        /* let condition;
         if (newIndex.length == 4) {
             condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
             if (condition.versionUrn == elementId) {
@@ -434,7 +471,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             if(condition.versionUrn == elementId){
                 newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
             }
-        }
+        } */
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
 
         if (config.tcmStatus) {
@@ -458,6 +495,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     })
 }
 
+/** 
 export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, parentId, cb, parentElement, parentElementIndex) => (dispatch, getState) => {
     let _requestData = {
         projectUrn : config.projectUrn,
@@ -486,7 +524,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
 
-        /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+        // [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------
 
         const deleteData = {
             deleteElemData: response.data,
@@ -560,6 +598,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         showError(error, dispatch, "error while creating element")
     })
 }
+*/
 
 export const showError = (error, dispatch, errorMessage) => {
     dispatch({type: ERROR_POPUP, payload:{show: true}})

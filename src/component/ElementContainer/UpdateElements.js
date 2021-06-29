@@ -7,6 +7,7 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel, getTitleSubtitleModel } from '../../constants/utility';
+import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -666,6 +667,10 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }
     if (config.elementStatus[dataToReturn.id] && config.elementStatus[dataToReturn.id] === "approved") {
         config.savingInProgress = true
+    }
+    /* On update the inner elements of SH; add section type */
+    if(showHideType && asideData?.type === elementTypeConstant.SHOW_HIDE) {
+        dataToReturn.sectionType = indexOfSectionType(index);
     }
     return dataToReturn
 }
