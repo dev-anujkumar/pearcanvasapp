@@ -977,12 +977,25 @@ class ElementContainer extends Component {
         let { parentUrn, asideData, element, poetryData } = this.props;
         let { contentUrn } = this.props.element
         let index = this.props.index
+        console.log("11111111111111111111", this.props.parentUrn);
 
         if (this.state.sectionBreak) {
             parentUrn = {
                 elementType: element.type,
                 manifestUrn: element.id,
                 contentUrn: element.contentUrn,
+            }
+            if (this.props.parentUrn.elementType === "group") {
+                parentUrn = {
+                    ...parentUrn,
+                    multiColumnType: this.props.parentUrn.multiColumnType,
+                    multiColumnDetails: {
+                        columnName: this.props.parentUrn.columnName,
+                        manifestUrn: this.props.parentUrn.manifestUrn,
+                        mcId: this.props.parentUrn.mcId,
+                        type: "groupedcontent"
+                    }
+                }
             }
             contentUrn = this.state.sectionBreak.contentUrn
             id = this.state.sectionBreak.id

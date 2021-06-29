@@ -82,7 +82,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
-    const multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
+    let multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
     if(wipData?.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
@@ -92,6 +92,10 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         actionStatus?.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
+            if (!multiColumnType) {
+                let multiColumnObj = store?.getState()?.appStore?.slateLevelData[config.slateManifestURN].contents?.bodymatter.find(x => x.id === id);
+                multiColumnType = `${multiColumnObj?.groupeddata?.bodymatter.length}C`
+            }
             tag.grandParent = multiColumnType + ":" + columnName;
             elementId.grandParentId = `${id}+${columnId}`;
     } else if(wipData?.type === FIGURE && asideData?.figureIn2cAside?.isExist && actionStatus?.action === "update") {
@@ -658,9 +662,9 @@ export const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defa
     tag.popupParentTag = `${tag.popupParentTag}${headWE ? ":"+headWE : ""}`
     elementId.popupParentId = `${elementId.popupParentId}${headWE == "BODY" ? "+"+bodyWE : ""}`
     /* If popup inside the 2C-WE/Aside; Get the Data of 2C */
-    const { id, type: gPType, columnName, columnId } = popupAsideData?.parent || {};
+    const { id, type: gPType, columnName, columnId, multiColumnType } = popupAsideData?.parent || {};
     if (gPType === "groupedcontent") {
-        tag.grandParent = "2C:" + columnName;
+        tag.grandParent = multiColumnType + ':' + columnName;
         elementId.grandParentId = `${id}+${columnId}`;
     }
     let popupData = {
