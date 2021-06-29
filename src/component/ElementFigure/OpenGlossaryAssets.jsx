@@ -86,7 +86,6 @@ class OpenGlossaryAssets extends Component {
         let { tabValue, replaceAudioToggle, replaceImageToggle } = this.state;
         let imageMediaSrc, imageMediaTitle, audioMediaSrc, audioMediaTitle = "";
         
-        
         if (figureGlossaryData && Object.keys(figureGlossaryData).length > 0) {
             imageMediaSrc = figureGlossaryData.path;
             imageMediaTitle = figureGlossaryData.title;

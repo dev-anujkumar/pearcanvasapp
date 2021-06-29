@@ -139,7 +139,7 @@ class GlossaryFootnoteMenu extends React.Component {
     */
     saveContent = () => {
         if (!hasReviewerRole()) {
-            const { glossaryFootnoteValue,audioGlossaryData,figureGlossaryData, isImageGlossary } = this.props;
+            const { glossaryFootnoteValue,audioGlossaryData,figureGlossaryData } = this.props;
             let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup, poetryField} = glossaryFootnoteValue;
             let term = null;
             let definition = null;

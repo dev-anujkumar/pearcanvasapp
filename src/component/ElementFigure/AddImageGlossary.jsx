@@ -67,7 +67,6 @@ class AddImageGlossary extends Component {
                 longdescription: longDesc,
                 title: data.displayName || data.displayTitle
             }
-            console.log("test",setFigureData);
             store.dispatch({
                 type: SET_FIGURE_GLOSSARY,
                 payload:setFigureData 

@@ -803,30 +803,6 @@ export class TinyMceEditor extends Component {
                     this.props.handleAssetsPopupLocation(true, audioPopupPosition);
                 }
             }
-
-            // if (isFigureImageExists) {
-            //     if (e.currentTarget.classList.contains('mce-edit-focus')) {
-            //         const parentPosition = getParentPosition(e.currentTarget);
-            //         const slateWrapperNode = document.getElementById('slateWrapper')
-            //         const scrollTop = slateWrapperNode && slateWrapperNode.scrollTop || 0;
-
-            //         const xOffSet = 0;
-            //         const yOffSet = 10
-            //         let copyClickedX = e.clientX - parentPosition.x + xOffSet;
-            //         const copyClickedY = e.clientY - parentPosition.y + scrollTop + yOffSet;
-            //         if(copyClickedX > 350){
-            //             copyClickedX = 380
-            //         }
-            //         let audioPopupPosition = {
-            //             left: `${(copyClickedX)}px`,
-            //             top: `${(copyClickedY)}px`
-            //         }
-            //         if(parentPosition.x +325 >800){
-            //             audioPopupPosition.left = '0'
-            //         }
-            //         this.props.handleFigurePopupLocation(true, audioPopupPosition);
-            //     }
-            // }
         }
         /**
          * Case - clicking over Asset text

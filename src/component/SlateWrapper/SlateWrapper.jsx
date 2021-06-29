@@ -1234,11 +1234,9 @@ class SlateWrapper extends Component {
         this.props.showBlocker(false)
     }
 
-     handleFigureGlossaryActions = (imagepopup,figuredata) => {
-        return dispatch =>{
-            dispatch({ type: ADD_FIGURE_GLOSSARY_POPUP, payload: imagepopup })
-            dispatch({ type: SET_FIGURE_GLOSSARY, payload: figuredata })
-        }
+     handleFigureGlossaryActions = (imagepopup,figuredata) => dispatch => {
+        dispatch({ type: ADD_FIGURE_GLOSSARY_POPUP, payload: imagepopup })
+        dispatch({ type: SET_FIGURE_GLOSSARY, payload: figuredata })
     }
 
     /**
