@@ -16,6 +16,9 @@ import ElementConstants, {
 } from "./ElementConstants";
 
 import config from '../../config/config';
+import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
+
+const { AUTHORED_TEXT, SHOW_HIDE } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -81,6 +84,12 @@ export const updateElementInStore = (paramsObj) => {
         { bodymatter: _slateBodyMatter } = _slateContent,
         elementId = updatedData.id;
 
+    const iList = elementIndex?.toString()?.split("-") || [];
+    /* update the store on update of showhide elements inside container elements */
+    if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
+        const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList);
+        updateShowhideElements(sh_Object, updatedData, iList);
+    } else
     if(parentElement && parentElement.type === "citations"){
         if(updatedData.type === "element-citation"){
             const indexes = elementIndex.split("-")
@@ -401,16 +410,13 @@ export const updateElementInStore = (paramsObj) => {
                     element.contents.bodymatter = newPoetryBodymatter;
                 }
             }
-            else if (element.type === "showhide") {
-                if (showHideType) {
-                    element.interactivedata[showHideType].forEach((showHideElement) => {
-                        if (showHideElement.id == updatedData.id) {
-                            showHideElement.elementdata.text = updatedData.elementdata.text;
-                            showHideElement.html = updatedData.html;
-                        }
-                    })
-                }
-            }
+            //else if (element.type === SHOW_HIDE) { 
+            //    /* When showhide Element is placed on slate not inside other container */
+            //    const indexs = elementIndex?.toString()?.split("-") || [];
+            //    if (indexs?.length == 3) {
+            //        updateShowhideElements(element, updatedData, indexs)
+            //    }
+            //}
 
             return element
         })
@@ -423,6 +429,25 @@ export const updateElementInStore = (paramsObj) => {
             slateLevelData: newslateData
         }
     })
+}
+/**
+*  @description {Function} updateShowhideElements -  To update the store on update of showhide inner elemetns 
+*  @param {Object} element - showhide object data 
+*  @param {Object} updatedData - updated data of inner elements 
+*  @param {Array}  indexs - indexs of element heirarchy */
+function updateShowhideElements(element, updatedData, indexs) {
+    if(element?.type === SHOW_HIDE) {
+        /* Get the section type of showhide; Index of section (indexs?.length - 2) */
+        const section = findSectionType(indexs[indexs?.length - 2]);
+        section && element.interactivedata[section].forEach((showHideElement) => {
+            if (showHideElement.id == updatedData.id) {
+                showHideElement.html = updatedData.html; /* For figure/Text */
+                if(showHideElement?.type === AUTHORED_TEXT) { /* For update paragraph - TEXT */
+                    showHideElement.elementdata.text = updatedData.elementdata.text;
+                }
+            }
+        })
+    }
 }
 
 export const collectDataAndPrepareTCMSnapshot = async (params) => {

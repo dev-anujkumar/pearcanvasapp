@@ -28,7 +28,7 @@ import PageNumberElement from './PageNumberElement.jsx';
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
-import { hideBlocker, showTocBlocker, hideTocBlocker } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
@@ -47,10 +47,12 @@ import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
+import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
 import store from '../../appstore/store';
 import { showWrongImagePopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
+import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
 
 let random = guid();
 
@@ -1431,6 +1433,34 @@ class SlateWrapper extends Component {
         this.props.toggleLOWarningPopup(false, "");
     }
 
+       /**
+     * This method renders Alfresco Product Link Popup based on Selection 
+     */
+        showAlfrescoPopup = () => {
+            if (this.props.launchAlfrescoPopup) {
+                this.props.showBlocker(true)
+                showTocBlocker();
+                return (
+                    <AlfrescoPopup 
+                    alfrescoPath = {this.props.alfrescoPath}
+                    alfrescoListOption= {this.props.alfrescoListOption}
+                    handleCloseAlfrescoPicker={this.handleCloseAlfrescoPicker}
+                    />
+                )
+            }
+            else {
+                return null
+            }
+        }
+
+        handleCloseAlfrescoPicker = () => {
+            this.props.showBlocker(false)
+            hideTocBlocker()
+            disableHeader(false)
+            let payloadObj = { launchAlfrescoPopup: false, alfrescoPath: {} }
+            this.props.alfrescoPopup(payloadObj)
+        };
+
     /**
      * render | renders title and slate wrapper
      */
@@ -1488,6 +1518,8 @@ class SlateWrapper extends Component {
                 {/* **************** Word Paste Popup ************ */}
                 {this.showWordPastePopup()}
                 {this.showLOWarningPopup()}{/* **************** LO Warning Popup ************ */}
+               {/* **************** Alfresco Popup ************ */}
+               {this.showAlfrescoPopup()}
             </React.Fragment>
         );
     }
@@ -1538,7 +1570,10 @@ const mapStateToProps = state => {
         currentSlateLF: state.metadataReducer.currentSlateLF,
         loWarningPopupData: state.metadataReducer.loWarningPopupData,
         projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
-        openWrongImagePopup:state.appStore.openWrongImagePopup
+        openWrongImagePopup:state.appStore.openWrongImagePopup,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        alfrescoPath : state.alfrescoReducer.alfrescoPath,
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
     };
 };
 
@@ -1573,6 +1608,7 @@ export default connect(
         createPowerPasteElements,
         getMetadataAnchorLORef,
         toggleLOWarningPopup,
-        showWrongImagePopup
+        showWrongImagePopup,
+        alfrescoPopup
     }
 )(SlateWrapper);

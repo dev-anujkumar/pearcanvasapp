@@ -115,7 +115,7 @@
     color: black;
     position: absolute;
     width: 270px;
-    overflow: auto;
+    /* overflow: auto; */
     z-index: 1;
     font-size: 14px;
     font-weight: 400;
