@@ -167,6 +167,7 @@ export const WRONG_IMAGE_POPUP = 'WRONG_IMAGE_POPUP'
 export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
 export const UPDATE_DISCUSSION_ITEMS = 'UPDATE_DISCUSSION_ITEMS';
 export const UPDATE_USAGE_TYPE = 'UPDATE_USAGE_TYPE';
+export const UPDATE_LOB_PERMISSIONS = 'UPDATE_LOB_PERMISSIONS';
 
 /*---------------- 3Column details Info ------------------------*/
 export const UPDATE_THREE_COLUMN_INFO = 'UPDATE_THREE_COLUMN_INFO';
