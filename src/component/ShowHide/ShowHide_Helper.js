@@ -104,9 +104,14 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList) {
 }
 
 /* Return the section type using index */
-export function indexOfSectionType(indexes){
-	const indexList = indexes ? indexes?.toString().split("-") : [];
-	const ilength = indexList?.length
+export function indexOfSectionType(indexes) {
+	let indexList = [];
+    if(Array.isArray(indexes)) {
+        indexList = indexes;
+    } else if(typeof indexes === "string") {
+        indexList = indexes ? indexes?.toString().split("-") : [];
+    }
+	const ilength = indexList?.length;
 	if(ilength >= 3) {
 		return findSectionType(indexList[ilength - 2])
 	}
