@@ -1,10 +1,10 @@
-import { UPDATE_PROJECT_INFO, UPDATE_DISCUSSION_ITEMS, UPDATE_USAGE_TYPE, UPDATE_SHOW_PLAYSCRIPT, UPDATE_SHOW_DISCUSSION } from "../constants/Action_Constants";
+import { UPDATE_PROJECT_INFO, UPDATE_DISCUSSION_ITEMS, UPDATE_USAGE_TYPE, UPDATE_LOB_PERMISSIONS } from "../constants/Action_Constants";
 
 const initialState = {
   usageType: [],
   discussionItems: [],
-  showPlayscript: true,
-  showDiscussion: true
+  showPlayscript: false,
+  showDiscussion: false
 }
 
 export const projectInfo = (state = initialState, action={type:'', payload:{}}) => {
@@ -30,17 +30,11 @@ export const projectInfo = (state = initialState, action={type:'', payload:{}}) 
           }
         }
 
-        case UPDATE_SHOW_PLAYSCRIPT: {
+        case UPDATE_LOB_PERMISSIONS: {
           return {
             ...state,
-            showPlayscript: action.payload
-          }
-        }
-
-        case UPDATE_SHOW_DISCUSSION: {
-          return {
-            ...state,
-            showDiscussion: action.payload
+            showPlayscript: action.payload.playscript,
+            showDiscussion: action.payload.discussion
           }
         }
         default : {

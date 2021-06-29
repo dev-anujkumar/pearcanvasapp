@@ -34,26 +34,26 @@ export default function ElementContainerType(props) {
         item.buttonHandler();
     }
 
-    const indexOfObject = (array, value) => {
-        let myArray = [...array];
-        let index = myArray.findIndex((item) => {
-            if(item.text == `${value}`)
+    const indexOfObject = (renderListOptions, value) => {
+        let myArray = [...renderListOptions];
+        let index = myArray.findIndex((option) => {
+            if(option.text == `${value}`)
                 return true;
         });
         return index;
     }
     
-    const removeObject = (array, value) => {
-        const index = indexOfObject(array, value);
+    const removeObject = (renderListOptions, value) => {
+        const index = indexOfObject(renderListOptions, value);
         if(index > -1) {
-            array.splice(index, 1);
+            renderListOptions.splice(index, 1);
         }
-        return array;
+        return renderListOptions;
     }
 
-    const checkObject = (array, value) => {
-        let found = array.find(function(post) {
-            if(post.text == `${value}`)
+    const checkObject = (renderListOptions, value) => {
+        let found = renderListOptions.find(function(option) {
+            if(option.text == `${value}`)
                 return true;
         });
         return found ? true : false
@@ -61,8 +61,6 @@ export default function ElementContainerType(props) {
 
     const renderMenu = (propsData) => {
         let {elementType,text,showPlayscript,showDiscussion} = props
-        console.log("Show Playscript: ",showPlayscript)
-        console.log("Show Discussion: ",showDiscussion)
         let newpropsData = [...propsData];
         if(!showDiscussion && checkObject(propsData,'Add Discussion')) {
             let tempArray = [...propsData];
