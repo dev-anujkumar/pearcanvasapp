@@ -34,43 +34,19 @@ export default function ElementContainerType(props) {
         item.buttonHandler();
     }
 
-    const indexOfObject = (renderListOptions, value) => {
-        let myArray = [...renderListOptions];
-        let index = myArray.findIndex((option) => {
-            if(option.text == `${value}`)
-                return true;
-        });
-        return index;
-    }
-    
-    const removeObject = (renderListOptions, value) => {
-        const index = indexOfObject(renderListOptions, value);
-        if(index > -1) {
-            renderListOptions.splice(index, 1);
-        }
-        return renderListOptions;
-    }
-
-    const checkObject = (renderListOptions, value) => {
-        let found = renderListOptions.find(function(option) {
-            if(option.text == `${value}`)
-                return true;
-        });
-        return found ? true : false
-    }
-
     const renderMenu = (propsData) => {
-        let {elementType,text,showPlayscript,showDiscussion} = props
-        let newpropsData = [...propsData];
-        if(!showDiscussion && checkObject(propsData,'Add Discussion')) {
-            let tempArray = [...propsData];
-            newpropsData = removeObject(tempArray,'Add Discussion');
+        let {elementType, text, showPlayscript, showDiscussion} = props;
+        if (!showDiscussion) {
+            propsData = propsData.filter( (obj) => {
+                return obj.text !== 'Add Discussion';
+            });
         }
-        if(!showPlayscript && checkObject(propsData,'Playscript')) {
-            let tempArray = [...propsData];
-            newpropsData = removeObject(tempArray,'Playscript');
+        if (!showPlayscript) {
+            propsData = propsData.filter( (obj) => {
+                return obj.text !== 'Playscript';
+            });
         }
-        return newpropsData && newpropsData.map((item, index) => {
+        return propsData && propsData.map((item, index) => {
             if (((elementType === "element-aside" || elementType === "group") && text === "block-text-button" && item.text === "Block Poetry") ||
             (text === "interactive-elem-button" && (elementType === "group" && (item.text === "Add Show Hide" || item.text === "Add Pop Up")))
             || (config.isPopupSlate && item.text === "Add Pop Up")) {

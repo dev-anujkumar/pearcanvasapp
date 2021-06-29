@@ -325,10 +325,12 @@ export const getProjectDetails = () => (dispatch, getState) => {
                 }
             }).then (response => {
                 const { elementPermissions } = response.data;
-                dispatch({
-                    type: UPDATE_LOB_PERMISSIONS,
-                    payload: elementPermissions
-                })
+                if (Object.keys(elementPermissions).length > 0) {
+                    dispatch({
+                        type: UPDATE_LOB_PERMISSIONS,
+                        payload: elementPermissions
+                    })
+                }
             }).catch(error => {
                 console.log("API Failed!!")
             })
