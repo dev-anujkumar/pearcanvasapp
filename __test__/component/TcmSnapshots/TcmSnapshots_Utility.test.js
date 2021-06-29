@@ -13,7 +13,8 @@ jest.mock('../../../src/component/TcmSnapshots/ElementSnapshot_Utility.js', () =
     return {
         fetchElementsTag: jest.fn(),
         generateWipDataForFigure: jest.fn(),
-        getInteractiveSubtypeData: jest.fn()
+        getInteractiveSubtypeData: jest.fn(),
+        removeCalloutTitle: jest.fn()
     }
 })
 

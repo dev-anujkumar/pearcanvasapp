@@ -53,7 +53,7 @@ const store = mockStore({
 
 });
 
-describe('Testing Opener component with props', () => {
+xdescribe('Testing Opener component with props', () => {
     const props = {
         slateLockInfo: {
             isLocked: false,

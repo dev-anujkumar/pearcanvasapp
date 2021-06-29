@@ -19,7 +19,7 @@ global.fetch = jest.fn().mockImplementation(() => {
       resolve({json:jest.fn(),id:'urn:pearson134'});
    });
  });
-describe('Testing Figure element component', () => {
+xdescribe('Testing Figure element component', () => {
     const initialState = {
         permissions:[
             'add_multimedia_via_alfresco'
@@ -275,7 +275,7 @@ describe('Testing Figure element component', () => {
             expect(component.find('.divCodeSnippetFigure.blockCodeFigure')).toHaveLength(1)
         })
     });
-    describe('Testing Element figure - C2 Media Handling Functions', () => {
+    xdescribe('Testing Element figure - C2 Media Handling Functions', () => {
         let type = "figure";
         let props = {
             slateLockInfo: {

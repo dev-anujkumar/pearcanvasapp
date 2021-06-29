@@ -561,7 +561,7 @@ describe('Testing Interactive element component', () => {
             spytogglePopup.mockClear()
         })    
     })
-    describe('Testing Element interactive - C2 Interactive Media Handling Functions', () => {
+    xdescribe('Testing Element interactive - C2 Interactive Media Handling Functions', () => {
         let type = "figure";
         let props = {
             slateLockInfo: {
