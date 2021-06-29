@@ -16,9 +16,9 @@ import ElementConstants, {
 } from "./ElementConstants";
 
 import config from '../../config/config';
-import { findSectionType } from '../ShowHide/ShowHide_Helper';
+import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 
-const { AUTHORED_TEXT, SHOW_HIDE, MULTI_COLUMN } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -87,32 +87,10 @@ export const updateElementInStore = (paramsObj) => {
     const iList = elementIndex?.toString()?.split("-") || [];
     /* update the store on update of showhide elements inside container elements */
     if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
-        try {
-            let sh_Object;
-            switch(iList?.length) {
-                case 3: /* SH:Element */
-                    sh_Object = _slateBodyMatter[iList[0]];
-                    break;
-                case 4: /* AS/WE-Head:SH:Element */
-                    sh_Object = _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
-                    break;
-                case 5:
-                    sh_Object = _slateBodyMatter[iList[0]].type === MULTI_COLUMN ? 
-                        _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]] : /* 2C:SH:Element */
-                        _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]]?.contents.bodymatter[iList[2]]; /* WE:Body:SH:Element */
-                    break;
-                case 6: /* 2C:AS/WE-Head:SH:Element */
-                    sh_Object = _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
-                    break;
-                case 7: /* 2C:WE-Body:SH:Element */
-                    sh_Object = _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
-                    break;
-            }
-            updateShowhideElements(sh_Object, updatedData, iList);
-        } catch(e){
-            console.error("Something went wrong while accessing showhide object...", e);
-        }
-    } else if(parentElement && parentElement.type === "citations"){
+        const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList);
+        updateShowhideElements(sh_Object, updatedData, iList);
+    } else
+    if(parentElement && parentElement.type === "citations"){
         if(updatedData.type === "element-citation"){
             const indexes = elementIndex.split("-")
             _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {...updatedData,
