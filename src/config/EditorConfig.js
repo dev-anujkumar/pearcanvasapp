@@ -161,7 +161,7 @@ export const elementTypeOptions = Object.freeze({
 const insertImageHandler = (params) => {
     let { element, permissions, editor } = params;
     if (element?.type === ElementConstants.ELEMENT_LIST) {
-        handleC2MediaClick(permissions, editor);
+        handleC2MediaClick(permissions, editor, element);
     }
 }
 /** Insert Media-Selector Dropdown Handler */
