@@ -358,8 +358,9 @@ class ElementAsideContainer extends Component {
         const columnId = groupeddata?.bodymatter[columnIndex]?.id;
         const parentContentUrn = contentUrn;
         const columnContentUrn = groupeddata?.bodymatter[columnIndex]?.contentUrn;
+        const multiColumnType = groupeddata?.bodymatter?.length ? `${groupeddata?.bodymatter?.length}C` : undefined;
         /* Adding parent id and type to update redux store while creating new element inside 2c->Aside->New */
-        asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : "C2" ,parentContentUrn,columnContentUrn }} : asideData;
+        asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : asideData;
         try {
             if (_elements !== undefined) {
                 if (_elements.length == 0) {

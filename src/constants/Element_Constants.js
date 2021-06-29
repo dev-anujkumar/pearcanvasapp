@@ -99,10 +99,11 @@ export const disabledPrimaryOption = [
     "primary-single-assessment",
     "primary-citations-group",
     "primary-element-citation",
-    "primary-multicolumn"
+    "primary-multicolumn",
+    "primary-multicolumn-3c",
 ];
-
-export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
+// this constant is used by sidebar
+export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive", 'assessment']
 
 /*******************************GlossaryfootnotePopup ***************************/
 export const GLOSSARY = 'Glossary'
@@ -120,6 +121,7 @@ export const SOURCE_MAP = {
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
     [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','SHOW_HIDE','POP_UP'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
     [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] },
+    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE'], 'notSupport': [] }
 };
 
 export const getPasteValidated = (sourceType, selectionType) => {
@@ -144,3 +146,10 @@ export const cypressLOWarningtxt = `Performing this action will remove the curre
 export const externalLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to external framework.`
 export const CYPRESS_LF = "cypressLF";
 export const EXTERNAL_LF =  "externalLF";
+
+/** Multi column - 3 column constants */
+export const MULTI_COLUMN_3C = {
+    "ELEMENT_TAG_NAME": "3C",
+    "ELEMENT_NAME" : "primary-multicolumn-3c",
+    "ELEMENT_PROPORTION": "33-33-33"
+}

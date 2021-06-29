@@ -53,5 +53,9 @@ export const containerTypeArray = {
         "Block Code": "blockcode-elem",
         "Block Poetry": "poetry-elem",
         "Playscript": "element-dialogue"
+    },
+    "multi-column-group": {
+        "2-column": "multi-column-group",
+        "3-column": "multi-column-group-column-3"
     }
 }

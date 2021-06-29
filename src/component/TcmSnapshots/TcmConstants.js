@@ -3,6 +3,7 @@ export default {
     AUTHORED_TEXT: "element-authoredtext",
     BLOCKFEATURE: "element-blockfeature",
     ELEMENT_LIST: "element-list",
+    ELEMENT_ASSESSMENT: 'element-assessment',
     HEADING: "heading",
     HAND_WRITING: 'handwriting',
     PARAGRAPH: "paragraph",
@@ -75,3 +76,12 @@ export default {
     bqHiddenText:'<p class="blockquote-hidden" contenteditable="false" style="visibility: hidden; height: 20px;">hidden</p>',
     allowedFigureTypesForTCM : ['assessment','image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
 }
+
+
+export const ASSESSMENT_TYPE = [
+        {type: 'tdx', label: 'TDX', standAloneLabel: 'Full Assessment TDX'},
+        {type: 'cite', label: 'QuAD CITE', standAloneLabel: 'Full Assessment QuAD CITE'},
+        {type: 'puf', label: 'Elm', standAloneLabel: 'Full Assessment Elm'},
+        {type: 'learnosity', label: 'Learnosity', standAloneLabel: 'Full Assessment Learnosity'},
+        {type: 'learningtemplate',label: 'Learning App Type', standAloneLabel: 'Learning App Type'},
+]

@@ -25,7 +25,7 @@ import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, se
 import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
-import { fetchAudioNarrationForContainer ,audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer ,audioGlossaryPopup, saveDataFromAlfresco, showWrongAudioPopup} from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import RootContext from './PageNumberContext.js';
 import {publishContent,logout} from '../../js/header'
@@ -39,7 +39,7 @@ import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Ac
 import { loadTrackChanges, launchTCMPopup } from '../CanvasWrapper/TCM_Integration_Actions';
 import axios from 'axios';
 import FetchAllDataMapper from '../TcmSnapshots/FetchAllDataMapper/FetchTcmDataMapper'
-
+import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -331,6 +331,8 @@ const mapStateToProps = state => {
         audioGlossaryData:state.audioReducer.audioGlossaryData,
         currentSlateLF: state.metadataReducer.currentSlateLF,
         activeElement: state.appStore.activeElement,
+        alfrescoEditor: state.alfrescoReducer.editor,
+        imageArgs: state.alfrescoReducer.imageArgs
     };
 };
 
@@ -379,6 +381,11 @@ export default connect(
         currentSlateLOType,
         setElmPickerData,
         launchTCMPopup,
-        loadTrackChanges
+        loadTrackChanges,
+        saveSelectedAssetData,
+        saveInlineImageData,
+        alfrescoPopup,
+        saveDataFromAlfresco,
+        showWrongAudioPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

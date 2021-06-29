@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { hasReviewerRole } from '../../constants/utility.js';
-import { c2MediaModule } from '../../js/c2_media_module.js';
 import { handleC2MediaClick } from './Alfresco.js';
 import PdfSlateComponent from "./PdfSlateComponent.jsx"
 import { updateElement } from "../ElementContainer/ElementContainer_Actions.js";
@@ -9,7 +7,8 @@ import { ELEMENT_PDF } from '../SlateWrapper/SlateWrapperConstants.js';
 import { ELEMENT_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import config from '../../config/config.js';
 import TinyMceEditor from '../tinyMceEditor.js';
-
+import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
+import { hideBlocker } from '../../js/toggleLoader';
 class PdfSlate extends Component {
     constructor(props) {
         super(props);
@@ -32,47 +31,56 @@ class PdfSlate extends Component {
 			})
 		}
     }
+
+    componentDidUpdate(prevProps) {
+        const {alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
+        if (this.props.element.id === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
+            this.getAlfrescoData(alfrescoAssetData)
+			const payloadObj = {
+				asset: {}, 
+				id: ''
+			}
+			this.props.saveSelectedAssetData(payloadObj)
+        }
+    }
+
 	/* --- Open alfresco Picker --- */
 	OpenAlfresco = () => {
-		handleC2MediaClick(this.props, this.handleC2ExtendedClick);
+		handleC2MediaClick(this.props);
 	}
 	/** @description Open C2 module with predefined Alfresco location
 	* @param {*} locationData alfresco locationData
 	*/
-	handleC2ExtendedClick = (locationData) => {
-		const location = { 
-			...locationData,
-			currentAsset: { 
-				id: this.state?.pdfId?.split(":")[3],
-			}
-		}
-		const that = this;
-		!hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(location, function (data_2) {
-			c2MediaModule.AddanAssetCallBack(data_2, function (pdfData) {
-				that.getAlfrescoData(pdfData);
-			})
-		},"fromPdfSlate")
-	}
+
 	/* Getting data from alfresco picker */
 	getAlfrescoData = (pdfData) => {
+		let that = this
 		try {
 			/* Check "desc" property should not be other than "PDF" */
-			const isPdf = pdfData && pdfData.desc && pdfData.desc.toLowerCase() !== "eps media" ? 
-				JSON.parse(pdfData.desc)?.smartLinkType === "PDF" : false;
-			if (isPdf) {
+			const isPdf = pdfData && pdfData?.content?.mimeType?.split('/')[1]
+			const smartLinkString = (pdfData.properties["cm:description"] && pdfData.properties["cm:description"].toLowerCase() !== "eps media") ? pdfData.properties["cm:description"] : "{}";
+			const smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+			const smartLinkType = smartLinkDesc !== "" && smartLinkDesc.smartLinkType ? smartLinkDesc.smartLinkType : "";
+
+			if ((isPdf?.toLowerCase() == "pdf") || (smartLinkType?.toLowerCase() === 'pdf')) {
 				/* Get data from alfresco and save to react state to update UI and call API */
-				const results = pdfData?.body?.results || [] ;
-				const smartLinkPath = results[0]?.properties['s.avs:url']?.value ?
-						results[0].properties['s.avs:url'].value : [""];
-				if (pdfData?.uniqueID && pdfData.displayName) {
+				const smartLinkPath = pdfData?.properties["avs:url"] ? pdfData.properties["avs:url"] : "";
+				/** Non-Smartlink PDFs */
+				const nonSmartlinkPdfData = {
+					publicationUrl : pdfData && pdfData['institution-urls'] && pdfData['institution-urls'][0]?.publicationUrl,
+					pdfTitle : pdfData?.name
+				}
+				if (pdfData?.id) {
+					const isSmartLink = (smartLinkType?.toLowerCase() === 'pdf') ? true :  false
 					this.setState({
 						showDetails: true,
-						filetitle: pdfData?.displayName,
-						pdfId: "urn:pearson:alfresco:" + pdfData?.uniqueID,
-						path: smartLinkPath[0]
+						filetitle: isSmartLink && pdfData?.properties["cm:title"] ? pdfData.properties["cm:title"] : nonSmartlinkPdfData.pdfTitle,
+						pdfId: "urn:pearson:alfresco:" + pdfData?.id,
+						path: isSmartLink && smartLinkPath?.trim() != "" ? smartLinkPath : nonSmartlinkPdfData?.publicationUrl
+					}, () =>{
+						that.sumbitElement();
 					})
 					/* Send retrived data to server to save */
-					this.sumbitElement();
 				} 
 			} else {
 				console.info("Please import pdf");
@@ -106,6 +114,7 @@ class PdfSlate extends Component {
 		}
 		/* ------ Call Update element API to save data ------- */
 		this.props.updateElement(reqBody, this.props.index, "", "", null, "", null)
+		hideBlocker();
 	}
 	
 	render(){
@@ -132,6 +141,20 @@ class PdfSlate extends Component {
 }
 
 const dispatchActions = {
-    updateElement
+    updateElement,
+	alfrescoPopup,
+	saveSelectedAssetData
+
 }
-export default connect(null, dispatchActions)(PdfSlate);
+
+const mapStateToProps = (state) => {
+    return {
+        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
+        alfrescoElementId : state.alfrescoReducer.elementId,
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        isCiteChanged : state.alfrescoReducer.isCiteChanged,
+        changedSiteData: state.alfrescoReducer.changedSiteData
+    }
+}
+export default connect(mapStateToProps, dispatchActions)(PdfSlate);

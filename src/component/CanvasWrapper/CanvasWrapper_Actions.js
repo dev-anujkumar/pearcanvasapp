@@ -20,7 +20,8 @@ import {
     PROJECT_LEARNING_FRAMEWORKS,
     UPDATE_PROJECT_INFO,
     UPDATE_USAGE_TYPE,
-    UPDATE_DISCUSSION_ITEMS
+    UPDATE_DISCUSSION_ITEMS,
+    UPDATE_THREE_COLUMN_INFO
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -31,7 +32,7 @@ import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
@@ -244,6 +245,8 @@ export const findElementType = (element, index) => {
                     primaryOption: elementDataBank[element.type]["primaryOption"]  
                 }
                 if (element.width && element.groupproportions) {
+                    // checking for column 3 proportion to set primaryOption 
+                    if(element.groupproportions === MULTI_COLUMN_3C.ELEMENT_PROPORTION) elementType["primaryOption"] = MULTI_COLUMN_3C.ELEMENT_NAME; 
                     elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
                 }
                 else {
@@ -617,7 +620,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         dispatch({
                             type: SET_ACTIVE_ELEMENT,
                             payload: {}
-                        });
+                        });    
 
                         let slateWrapperNode = document.getElementById('slateWrapper');
                         if (slateWrapperNode) {
@@ -731,7 +734,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
             if (condition.versionUrn == activeElement.id) {
                 oldPath = condition.figuredata.path || ""
             }
-        } else if (indexesLen == 3) {
+        } else if (indexesLen == 3 && newBodymatter[indexes[0]].type !== "showhide") {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
@@ -767,7 +770,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = condition.figuredata.audioid || ""
                     }
-                } else if (indexesLen == 3) {
+                } else if (indexesLen == 3 && newBodymatter[indexes[0]].type !== "showhide") {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audioid 
@@ -795,7 +798,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = condition.figuredata.videoid || ""
                     }
-                } else if (indexesLen == 3) {
+                } else if (indexesLen == 3 && newBodymatter[indexes[0]].type !== "showhide") {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.videoid

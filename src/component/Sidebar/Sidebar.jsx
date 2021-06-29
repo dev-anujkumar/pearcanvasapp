@@ -14,7 +14,7 @@ import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
-import { disabledPrimaryOption } from '../../constants/Element_Constants.js';
+import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
@@ -163,7 +163,7 @@ class Sidebar extends Component {
                 if (this.state.elementDropdown === 'primary') {
                     active = 'active';
                 }
-                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+                const sidebarDisableCondition = ((this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
@@ -223,7 +223,8 @@ class Sidebar extends Component {
 
     secondaryOption = () => {
         let secondaryOptions = '';
-        if (this.state.activeElementType) {
+        let enableColumn3SecondaryOption = false;
+        if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
             let secondaryOptionList = Object.keys(secondaryOptionObject);
@@ -232,7 +233,11 @@ class Sidebar extends Component {
             if (this.state.activePrimaryOption === "primary-blockcode-equation" && this.state.activeSecondaryOption !== "secondary-blockcode-language-default") {
                 secondaryOptionList.splice(0, 1)
             }
-            if (secondaryOptionList.length > 1) {
+            // checking active element and primary option to allow column 3 secondary option
+            if (this.state.activeElementType === "groupedcontent" && this.state.activePrimaryOption === MULTI_COLUMN_3C.ELEMENT_NAME) {
+                enableColumn3SecondaryOption = true;
+            }
+            if(secondaryOptionList.length > 1 || enableColumn3SecondaryOption) {
                 secondaryOptions = secondaryOptionList.map(item => {
                     let addClass = '';
                     if (item === SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY) {
@@ -262,10 +267,10 @@ class Sidebar extends Component {
                 }
                 const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 secondaryOptions = <div
-                    className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable" : ""} `}>
-                    <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={this.toggleElementDropdown}>
+                    className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
+                    <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
-                        {(isLearnosityProject && showLearnosityDropdown) ? "" : <span> {dropdownArrow} </span>}
+                        {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
                     </div>
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}

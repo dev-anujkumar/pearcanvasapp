@@ -151,7 +151,12 @@ export const WIRIS_ALT_TEXT_POPUP = 'WIRIS_ALT_TEXT_POPUP';
 export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 
 /* --------------- Learnosity Project ------------------------*/
-export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO";
+export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
+
+/* --------------- Alfresco Project ------------------------*/
+export const SET_ALFRESCO_POPUP = "SET_ALFRESCO_POPUP"
+export const SAVE_ALFRESCO_ASSET_DATA = "SAVE_ALFRESCO_ASSET_DATA"
+export const SAVE_INLINE_IMAGE_DATA = "SAVE_INLINE_IMAGE_DATA"
 
 /*---------------- Cypress Project Info ------------------------*/
 export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
@@ -160,3 +165,5 @@ export const UPDATE_USAGE_TYPE = 'UPDATE_USAGE_TYPE';
 
 /*---------------- TCM POPUP ON CANVAS ------------------------*/
 export const LAUNCH_TCM_CANVAS_POPUP = 'LAUNCH_TCM_CANVAS_POPUP';
+/*---------------- 3Column details Info ------------------------*/
+export const UPDATE_THREE_COLUMN_INFO = 'UPDATE_THREE_COLUMN_INFO';

@@ -32,7 +32,8 @@ import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco }  from '../js/TinyMceUtility.js';
+import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
 let clickedX = 0;
@@ -522,7 +523,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
 
-                    if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
+                    if(editor.selection.getNode().className.includes('callout')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
                             editor.insertContent(textSelected);
@@ -701,7 +702,14 @@ export class TinyMceEditor extends Component {
                     id: e.target?.dataset?.id,
                     handleBlur:this.handleBlur
                 }
-                handleC2MediaClick(this.props.permissions, editor, imageArgs);
+                let params = {
+                    element: this.props.element,
+                    permissions: this.props.permissions,
+                    editor,
+                    imageArgs
+                }
+                this.props.saveInlineImageData(params)
+                handleC2MediaClick(this.props.permissions, editor, this.props.element);
             }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
@@ -1169,12 +1177,13 @@ export class TinyMceEditor extends Component {
                     textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 }
                 textPicker?.click();
-            } else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
-                this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
-            }
-            else if ((this.props.element && this.props.element.type === 'showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length > 1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length > 1)) && !isContainsMath && !isContainsBlankLine) {
-                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex, this.props.index, this.props.element.id)
-            }
+            } 
+            // else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
+            //     this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
+            // }
+            // else if ((this.props.element && this.props.element.type === 'showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length > 1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length > 1)) && !isContainsMath && !isContainsBlankLine) {
+            //     this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex, this.props.index, this.props.element.id)
+            // }
             else if (key === 13 && this.props.element.type === 'stanza') {
                 let currentElement = editor.selection.getNode();
                 if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== 'poetryLine') {
@@ -1639,6 +1648,7 @@ export class TinyMceEditor extends Component {
                     permissions: self.props.permissions,
                     editor: editor
                 }
+                self.props.saveInlineImageData(params)
                 const items = insertMediaSelectors(params);
                 callback(items);
             }
@@ -2745,7 +2755,7 @@ export class TinyMceEditor extends Component {
                             this.fromtinyInitBlur = false;
                         }
                     }
-                })
+                }).catch((err) => console.log(err))
             }
         }
     }
@@ -2886,6 +2896,7 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
+        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup, isInlineEditor, imageArgs} = this.props
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
@@ -2907,6 +2918,9 @@ export class TinyMceEditor extends Component {
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
+         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup && isInlineEditor) {
+            dataFromAlfresco(alfrescoAssetData, alfrescoEditor, imageArgs)
+        }
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
     }
 
@@ -2957,9 +2971,11 @@ export class TinyMceEditor extends Component {
             else {
                 toolbar = config.codeListingToolbarEnabled;
             }
-        } else if (this.props.placeholder === "Enter Show text" || (this.props.placeholder === "Enter Hide text")) {
-            toolbar = config.showHideToolbar
-        } else if (this.props && this.props.showHideType && this.props.showHideType == 'revel') {
+        } 
+        // else if (this.props.placeholder === "Enter Show text" || (this.props.placeholder === "Enter Hide text")) {
+        //     toolbar = config.showHideToolbar
+        // } 
+        else if (this.props && this.props.showHideType && this.props.showHideType == 'revel') {
             toolbar = config.revelToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
@@ -3033,15 +3049,14 @@ export class TinyMceEditor extends Component {
             tinymceToolbar.classList.remove('toolbar-disabled')
         }
         let showHideObj;
-        if (this.props.showHideType) {
-            showHideObj =
-            {
-                currentElement: this.props.currentElement,
-                index: this.props.index,
-                element: this.props.element,
-                showHideType: this.props.showHideType
-            }
-        }
+        // if (this.props.showHideType) {
+        //     showHideObj = {
+        //         currentElement: this.props.element,
+        //         index: this.props.index,
+        //         element: this.props.parentElement,
+        //         showHideType: this.props.showHideType
+        //     }
+        // }
         clickedX = e.clientX;
         clickedY = e.clientY;
         setTimeout(this.removeMultiTinyInstance, 0)
@@ -3269,7 +3284,7 @@ export class TinyMceEditor extends Component {
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
                 }
-            });
+            }).catch((err) => console.log(err));
             this.setToolbarByElementType(); 
         }
         /**
@@ -3361,7 +3376,7 @@ export class TinyMceEditor extends Component {
                         }
                     }, 10)
                 }
-            })
+            }).catch((err) => console.log(err));
         });
         if (isSameTarget) {
             this.editorOnClick(event);
@@ -3744,7 +3759,19 @@ TinyMceEditor.defaultProps = {
     error: null,
 };
 
+const mapStateToProps = (state) => {
+    return {
+        alfrescoPermission: state.alfrescoReducer.Permission,
+        alfrescoElementId : state.alfrescoReducer.elementId,
+        alfrescoEditor: state.alfrescoReducer.editor,
+        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        isInlineEditor: state.alfrescoReducer.isInlineEditor,
+        imageArgs: state.alfrescoReducer.imageArgs
+    }
+}
+
 export default connect(
-    null,
-    { conversionElement, wirisAltTextPopup }
+    mapStateToProps,
+    { conversionElement, wirisAltTextPopup, saveInlineImageData }
 )(TinyMceEditor);

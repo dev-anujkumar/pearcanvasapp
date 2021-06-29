@@ -14,12 +14,13 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateThreeColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
+import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -43,6 +44,7 @@ import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 import MultiColumnContext from "./MultiColumnContext.js"
 import MultiColumnContainer from "../MultiColumnElement"
+import MultipleColumnContainer from "../MultipleColumnElement/MultipleColumnContainer.jsx";
 import {handleTCMData} from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
@@ -61,6 +63,7 @@ import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
 import {launchTCMPopup} from '../CanvasWrapper/TCM_Integration_Actions'
+import ShowHide from '../ShowHide/ShowHide.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -275,7 +278,7 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
-            config.lastActiveElementId=element.id
+            config.lastActiveElementId=element?.id
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
             this.props.fetchCommentByElement(this.props.element.id);
         }
@@ -565,7 +568,7 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType) => {
+    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex) => {
         const { parentUrn, asideData } = this.props
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
@@ -669,7 +672,16 @@ class ElementContainer extends Component {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
-                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
+                    /*** @description For showhide Element, ON RevealAnswer text update, sending RevealAnswer element index */
+                    if((this.props.element?.type === elementTypeConstant.SHOW_HIDE) && (showHideType === "postertextobject")) {
+                        /* Contains the data of parent elemens Ex.- 2C/Aside/POP||AgainContainer:SH */
+                        const elementLineage = {
+                            ...this.props.element, grandParent: { asideData, parentUrn }
+                        }
+                        this.props.updateElement(dataToSend, elemIndex, parentUrn, elementLineage, showHideType, parentElement, poetryData);
+                    } else {
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
+                    }
                 }
                 break;
 
@@ -696,6 +708,9 @@ class ElementContainer extends Component {
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
+                        
+                        const data =  JSON.parse(JSON.stringify(previousElementData));
+                        this.props.storeOldAssetForTCM(data.figuredata);
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         config.isSavingElement = true
@@ -789,13 +804,16 @@ class ElementContainer extends Component {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
-        let element = currrentElement ? currrentElement : this.props.element
-        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || (this.props.parentElement && (this.props.parentElement.type === 'poetry' || this.props.parentElement.type === "groupedcontent"))) ? this.props.parentElement : this.props.element
+        let element = currrentElement ? currrentElement : this.props.element;
+        /* setting parent element for showhide inner elements on update */
+        const { SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT } = elementTypeConstant;
+        const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
+        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || containerParent) ? this.props.parentElement : this.props.element
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
             this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType);
         } else {
-            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType)
+            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex)
         }
     }
 
@@ -804,6 +822,8 @@ class ElementContainer extends Component {
      */
     handleBlurAssessmentSlate = (assessmentData) => {
         // const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        const oldAssessmentData = JSON.parse(JSON.stringify(this.props.element));
+        this.props.storeOldAssetForTCM(oldAssessmentData.elementdata);
         let dataToSend = { ...this.props.element }
         if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
@@ -967,10 +987,10 @@ class ElementContainer extends Component {
      * For deleting slate level element
      */
     deleteElement = (e) => {
-        let { id, type } = this.props.element;
-        let { parentUrn, asideData, element, poetryData } = this.props;
-        let { contentUrn } = this.props.element
-        let index = this.props.index
+        let { id, type, contentUrn } = this.props.element;
+        let { parentUrn, asideData, element, poetryData, parentElement, showHideType, index } = this.props;
+        //let { contentUrn } = this.props.element
+        //let index = this.props.index
 
         if (this.state.sectionBreak) {
             parentUrn = {
@@ -981,10 +1001,27 @@ class ElementContainer extends Component {
             contentUrn = this.state.sectionBreak.contentUrn
             id = this.state.sectionBreak.id
         }
+        const containerElements = {
+            parentUrn,
+            asideData,
+            poetryData,
+            parentElement,
+            showHideObj: {
+                currentElement: element,
+                element: parentElement,
+                index: index,
+                showHideType
+            },
+        }
         this.handleCommentPopup(false,e);
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+       sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
-        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element);
+        if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {// || element.type === elementTypeConstant.SHOW_HIDE
+            this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
+        }
+        else {
+            this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
+        }
         this.setState({
             sectionBreak: null
         })
@@ -1202,15 +1239,23 @@ class ElementContainer extends Component {
         tcmStatus = this.showTCMButton(tcmData, element)
         tcm = tcmStatus.tcm
         feedback = tcmStatus.feedback
-        /** OLD TCM ICON FLOW -----> to be removed
-        tcm = tcmData.filter(tcmelm => {
-            let elementUrn = tcmelm.elemURN;
-            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && tcmelm.txCnt && tcmelm.txCnt > 0}).length>0;
-        feedback = tcmData.filter(feedbackelm => {
-            let elementUrn = feedbackelm.elemURN;
-            return (element.id.includes('urn:pearson:work') && elementUrn.indexOf(element.id) !== -1) && feedbackelm.feedback && feedbackelm.feedback !== null}).length>0;
-        */
+
         /* TODO need better handling with a function and dynamic component rendering with label text*/
+        const commonProps = {
+            index,
+            elementId: element.id,
+            permissions,
+            slateLockInfo,
+            handleBlur: this.handleBlur,
+            handleFocus: this.handleFocus,
+            showHideType: this.props?.showHideType,
+            parentElement: this.props?.parentElement,
+            glossaryFootnoteValue: this.props.glossaryFootnoteValue,
+            glossaaryFootnotePopup: this.props.glossaaryFootnotePopup,
+            openAssetPopoverPopUp: this.openAssetPopoverPopUp,
+            openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
+            handleAudioPopupLocation: this.handleAudioPopupLocation
+        }
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
@@ -1223,13 +1268,13 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation}/>;
+                    editor = <ElementAuthoring element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} />;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
-                    editor = <ElementAuthoring tagName="blockquote" permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
+                    editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} { ...commonProps}/>;
                     break;
                 case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
-                    editor = <ElementLearningObjectiveItem permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} />;
+                    editor = <ElementLearningObjectiveItem model={element.html} element={element} {...commonProps} />;
                     break;
                 case elementTypeConstant.FIGURE:
                     switch (element.figuretype) {
@@ -1239,27 +1284,27 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  parentEntityUrn={this.props.parentUrn} />;
+                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>;
+                            editor = <ElementAudioVideo model={element} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} parentElement={this.props?.parentElement}/>;
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation} editInteractiveId = {this.state.editInteractiveId} />;
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation} editInteractiveId = {this.state.editInteractiveId} parentElement={this.props?.parentElement}/>;
                             labelText = LABELS[element.figuredata.interactiveformat];
                             isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
                             break;
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} parentElement={this.props?.parentElement}/>;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -1323,10 +1368,11 @@ class ElementContainer extends Component {
                         activeElement={this.props.activeElement}
                         handleAudioPopupLocation = {this.handleAudioPopupLocation}
                         handleTCM={this.props.handleTCM}
+                        parentElement={this.props?.parentElement}
                     />;
                     labelText = 'Pop'
                     break;
-                case elementTypeConstant.SHOW_HIDE:
+               /* case elementTypeConstant.SHOW_HIDE:
                     editor = <ElementContainerContext.Provider value={{
                         onListSelect: this.props.onListSelect,
                         showHideId: this.props.showHideId,
@@ -1349,6 +1395,47 @@ class ElementContainer extends Component {
                         getElementStatus: this.props.getElementStatus
                     }}><ElementShowHide userRole={this.props.userRole} />
                     </ElementContainerContext.Provider >;
+                    labelText = 'SH'
+                    break;
+                */
+                case elementTypeConstant.SHOW_HIDE:
+                    editor = <ShowHide
+                        onListSelect={this.props.onListSelect}
+                        showDeleteElemPopup={this.showDeleteElemPopup}
+                        setActiveElement={this.props.setActiveElement}
+                        btnClassName={this.state.btnClassName}
+                        borderToggle={this.state.borderToggle}
+                        elemBorderToggle={this.props.elemBorderToggle}
+                        deleteElement={this.deleteElement}
+                        showHideId = {this.props.showHideId}
+                        //createShowHideElement = {this.props.createShowHideElement}
+                        //deleteShowHideUnit = {this.props.deleteShowHideUnit}
+                        activeElement={this.props.activeElement}
+                        showBlocker={this.props.showBlocker}
+                        permissions={permissions}
+                        handleFocus={this.handleFocus}
+                        handleBlur={this.handleBlur}
+                        index={index}
+                        element={element}
+                        elementId={element.id}
+                        type={element.type}
+                        updatePageNumber={this.props.updatePageNumber}
+                        isBlockerActive={this.props.isBlockerActive}
+                        slateLockInfo={slateLockInfo}
+                        onClick = {this.handleFocus}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        openAssetPopoverPopUp={this.openAssetPopoverPopUp}
+                        openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
+                        getElementStatus={this.props.getElementStatus}
+                        userRole={this.props.userRole}
+                        elementSepratorProps={elementSepratorProps}
+                        onClickCapture={this.props.onClickCapture}
+                        asideData={this.props?.asideData}
+                        parentUrn={this.props?.parentUrn}
+                        handleCommentspanel={handleCommentspanel}
+                        pasteElement={this.props.pasteElement}
+                    />;
                     labelText = 'SH'
                     break;
 
@@ -1457,28 +1544,49 @@ class ElementContainer extends Component {
                     break;
                 
                 case elementTypeConstant.MULTI_COLUMN:
-                    editor = <MultiColumnContext.Provider value={{
-                        activeElement: this.props.activeElement,
-                        showBlocker: this.props.showBlocker,
-                        permissions: permissions,
-                        index: index,
-                        element: element,
-                        slateLockInfo: slateLockInfo,
-                        handleCommentspanel : handleCommentspanel,
-                        isBlockerActive : this.props.isBlockerActive,
-                        onClickCapture : this.props.onClickCapture,
-                        elementSepratorProps : elementSepratorProps,
-                        setActiveElement : this.props.setActiveElement,
-                        onListSelect : this.props.onListSelect,
-                        handleFocus: this.handleFocus,
-                        handleBlur: this.handleBlur,
-                        deleteElement: this.deleteElement,
-                        splithandlerfunction: this.props.splithandlerfunction,
-                        handleTCM: this.props.handleTCM
-                    }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} handleTCM={this.props.handleTCM}
-                    />
-                    </MultiColumnContext.Provider>;
-                    labelText = '2C'
+                    // checking if labelText is 3C to render 3 column component
+                    if (labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) {
+                        editor = editor = <MultiColumnContext.Provider value={{
+                            activeElement: this.props.activeElement,
+                            showBlocker: this.props.showBlocker,
+                            permissions: permissions,
+                            index: index,
+                            element: element,
+                            slateLockInfo: slateLockInfo,
+                            handleCommentspanel: handleCommentspanel,
+                            isBlockerActive: this.props.isBlockerActive,
+                            onClickCapture: this.props.onClickCapture,
+                            elementSepratorProps: elementSepratorProps,
+                            setActiveElement: this.props.setActiveElement,
+                            onListSelect: this.props.onListSelect,
+                            handleFocus: this.handleFocus,
+                            handleBlur: this.handleBlur,
+                            deleteElement: this.deleteElement,
+                            splithandlerfunction: this.props.splithandlerfunction,
+                        }}><MultipleColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} handleTCM={this.props.handleTCM}/>
+                        </MultiColumnContext.Provider>;
+                    } else {
+                        editor = <MultiColumnContext.Provider value={{
+                            activeElement: this.props.activeElement,
+                            showBlocker: this.props.showBlocker,
+                            permissions: permissions,
+                            index: index,
+                            element: element,
+                            slateLockInfo: slateLockInfo,
+                            handleCommentspanel : handleCommentspanel,
+                            isBlockerActive : this.props.isBlockerActive,
+                            onClickCapture : this.props.onClickCapture,
+                            elementSepratorProps : elementSepratorProps,
+                            setActiveElement : this.props.setActiveElement,
+                            onListSelect : this.props.onListSelect,
+                            handleFocus: this.handleFocus,
+                            handleBlur: this.handleBlur,
+                            deleteElement: this.deleteElement,
+                            splithandlerfunction: this.props.splithandlerfunction,
+                        }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} handleTCM={this.props.handleTCM}/>
+                        </MultiColumnContext.Provider>;
+                        labelText = '2C'
+                    }
                     break;
 
                     case elementTypeConstant.ELEMENT_DIALOGUE:
@@ -1606,13 +1714,15 @@ class ElementContainer extends Component {
                 {this.renderCopyComponent(this.props, index, inContainer)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
+                    {/* render 3 column labels when labelText is 3C  */}
+                    {labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME && <div> {this.renderMultipleColumnLabels(element)}</div>}
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
                     {this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
+                <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" +labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
                 {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>}
                 </div>
@@ -1657,6 +1767,33 @@ class ElementContainer extends Component {
                 }
             </div >
         );
+    }
+
+    // function to render multiple columns for 3 column container based on bodymatter
+    renderMultipleColumnLabels = (element) => {
+        let activeColumnLabel = "C1"
+        for (let propsElementObject of this.props.threeColumnData) {
+            if (propsElementObject.containerId === element.id) {
+                activeColumnLabel = propsElementObject.columnIndex;
+            }
+        }
+        if (element && 'groupeddata' in element && element.groupeddata && 'bodymatter' in element.groupeddata &&
+            element.groupeddata.bodymatter && element.groupeddata.bodymatter.length > 0) {
+            return element.groupeddata.bodymatter.map((bodymatter, index)=>{
+                return (
+                    <Button key={index} btnClassName={activeColumnLabel === `C${index+1}` ? "activeTagBgColor" : ""} labelText={`C${index+1}`} onClick={() => this.updateColumnValues(index, element)} type="label-clickable-button"/>
+                )
+            });
+        }
+    }
+
+    updateColumnValues = (index, element) => {
+        let objKey = element.id;
+        let threeColumnObjData = {
+            containerId: objKey,
+            columnIndex: `C${index + 1}`
+        }
+        this.props.updateThreeColumnData(threeColumnObjData, objKey);
     }
 
     /**
@@ -1729,9 +1866,10 @@ class ElementContainer extends Component {
             sourceEntityUrn: (parentUrn && 'contentUrn' in parentUrn) ? parentUrn.contentUrn : config.slateEntityURN,
             deleteElm: { id, type, parentUrn, asideData, contentUrn, index, poetryData, cutCopyParentUrn},
             inputType,
-            inputSubType
+            inputSubType,
             //type: enum type to be included
-        }
+            multiColumnType: (element.type === 'groupedcontent' && element?.groupeddata?.bodymatter) ? `${element?.groupeddata?.bodymatter.length}C` : undefined
+        } 
 
         if('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
             let elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
@@ -1999,8 +2137,16 @@ const mapDispatchToProps = (dispatch) => {
         },
         launchTCMPopup: (tcmObject) => {
             dispatch(launchTCMPopup(tcmObject))
-        }
-        
+        },
+        deleteElementAction: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
+            dispatch(deleteElementAction(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
+        },
+        updateThreeColumnData: (threeColumnObjData, objKey) => {
+            dispatch(updateThreeColumnData(threeColumnObjData, objKey))
+        },
+        storeOldAssetForTCM: (data) => {
+            dispatch(storeOldAssetForTCM(data))
+        },
     }
 }
 
@@ -2027,7 +2173,8 @@ const mapStateToProps = (state) => {
         elementSelection: state.selectionReducer.selection,
         slateLevelData: state.appStore.slateLevelData,
         assessmentReducer: state.assessmentReducer,
-        tcmSnapshotData: state.tcmReducer.tcmSnapshotData
+        tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
+        threeColumnData: state.appStore.threeColumnData
     }
 }
 
