@@ -9,7 +9,7 @@ const {
     REACT_APP_API_URL
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
-import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA} from "./../../constants/Action_Constants";
+import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP} from "./../../constants/Action_Constants";
 import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
@@ -185,11 +185,42 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             'location':audioPath
         }
        store.dispatch(handleGlossaryActions(true,data));
-    }
-    else {
+    } else {
        store.dispatch( handleGlossaryActions(false,{}))
-
     }
+
+    if(footnoteContentText && footnoteContentText.includes('imageAssetContent')) {
+        let div = document.createElement('div');
+        div.innerHTML = footnoteContentText
+        let glossaryImageAssets = div.getElementsByTagName('img');
+        for (let i = 0; i < glossaryImageAssets.length; i++) {
+            if(glossaryImageAssets[i]?.attributes?.class?.nodeValue ==='imageAssetContent'){
+                const imagePath = glossaryImageAssets[i]?.attributes?.src?.nodeValue
+                const imageId = glossaryImageAssets[i]?.attributes?.imageid?.nodeValue
+                const altText = glossaryImageAssets[i]?.attributes?.alt?.nodeValue
+                const classValue = glossaryImageAssets[i]?.attributes?.class?.nodeValue
+                const imageHeight = glossaryImageAssets[i]?.attributes?.height?.nodeValue
+                const imageWidth = glossaryImageAssets[i]?.attributes?.width?.nodeValue
+                const title = imagePath.split("/").pop();
+                const Longdescription = glossaryImageAssets[i]?.attributes?.longdescription?.nodeValue
+                const data = {
+                        imageid: imageId,
+                        path:imagePath,
+                        alttext:altText,
+                        height:imageHeight,
+                        width:imageWidth,
+                        class:classValue,
+                        title:title,
+                        longdescription:Longdescription
+                    }
+                store.dispatch(handleFigureGlossaryActions(true, data));
+            }
+        }
+    }
+     else {
+       store.dispatch(handleFigureGlossaryActions(false,{}))
+    }
+
     return await dispatch({
         type: OPEN_GLOSSARY_FOOTNOTE,
         payload: {
@@ -201,6 +232,13 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             elementIndex: index
         }
     });
+}
+
+function handleFigureGlossaryActions(figurepopup,figuredata){
+    return dispatch =>{
+        dispatch({ type: ADD_FIGURE_GLOSSARY_POPUP, payload: figurepopup })
+        dispatch({ type: SET_FIGURE_GLOSSARY, payload: figuredata })
+    }
 }
 
 function handleGlossaryActions(addAudioData, GlossaryAudioData) {
@@ -230,6 +268,25 @@ function alterAttr(type, audioGlossaryData, addAttributeInDfn, glossaryfootnotei
     return workContainer;
 }
 
+function alterFigureAttr(type, figureGlossaryData, addAttributeInDfn, glossaryfootnoteid, workEditor, workContainer) {
+    for (let i = 0; i < addAttributeInDfn.length; i++) {
+        let currentAddAttributeInDfn = addAttributeInDfn[i];
+        let currentData = addAttributeInDfn[i].outerHTML
+        let currentDataUri = currentData.slice(currentData.indexOf('data-uri')).split("\"")[1];
+        if (currentDataUri === glossaryfootnoteid) {
+            if (type == 'add') {
+                currentAddAttributeInDfn.setAttribute('image-id', figureGlossaryData.imageid)
+                currentAddAttributeInDfn.setAttribute('image-path', figureGlossaryData.path)
+            } else if (type == 'remove') {
+                currentAddAttributeInDfn.removeAttribute('image-id')
+                currentAddAttributeInDfn.removeAttribute('image-path')
+            }
+        }
+        workContainer = workEditor.innerHTML;
+    }
+    return workContainer;
+}
+
 /**
  * saveGlossaryAndFootnote | this method is used for to save glossary and footnote
  * @param {*} elementWorkId, element's workurn of which glosssary&footnote is being saved
@@ -237,7 +294,7 @@ function alterAttr(type, audioGlossaryData, addAttributeInDfn, glossaryfootnotei
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField,audioGlossaryData) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField,audioGlossaryData,figureGlossaryData) => {
     if(!glossaryfootnoteid) return false
     let glossaryEntry = Object.create({})
     let footnoteEntry = Object.create({})
@@ -327,7 +384,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     } else {
         workEditor = document.getElementById('cypress-' + index)
          workContainer = workEditor.innerHTML;
-
+        
         let addAttributeInDfn = workEditor.getElementsByTagName('dfn');
 
         if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {
@@ -336,8 +393,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             workContainer= alterAttr('remove',audioGlossaryData, addAttributeInDfn, glossaryfootnoteid, workEditor,workContainer);
         }
 
-        workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
+        if (figureGlossaryData && Object.keys(figureGlossaryData).length > 0) {
+            workContainer = alterFigureAttr('add',figureGlossaryData, addAttributeInDfn, glossaryfootnoteid, workEditor,workContainer);
+        }else{
+            workContainer= alterFigureAttr('remove',figureGlossaryData, addAttributeInDfn, glossaryfootnoteid, workEditor,workContainer);
+        }
 
+        workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
         figureDataObj = {
             "text": workContainer
         }
@@ -398,8 +460,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
             break;
 
-        case "GLOSSARY":
-            glossaryEntry[glossaryfootnoteid] = JSON.stringify({
+        case "GLOSSARY":   
+        glossaryEntry[glossaryfootnoteid] = JSON.stringify({
                 term,
                 definition
             })
@@ -556,25 +618,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     case "1":
                         let responseElement = {...res.data}
                         newBodymatter[tempIndex[0]].contents['formatted-title']
-                        // let labelHTML = newBodymatter[tempIndex[0]].contents['formatted-title'].html.text
-                        // if(labelHTML.match(/<label>.*?<\/label>/g)){
-                        //     labelHTML = labelHTML.match(/<label>.*?<\/label>/g)[0].replace(/<label>|<\/label>/g, "")
-                        // }
-                        // else{
-                        //     labelHTML = ""
-                        // }
-
-                        // let parser = new DOMParser();
-                        // let htmlDoc = parser.parseFromString(res.data.html.text, 'text/html');
-                        // let removeP_Tag = htmlDoc.getElementsByTagName("p");
-                        // console.log("removeP_Tag[0].innerHTML",removeP_Tag[0].innerHTML)
-                        // if(removeP_Tag && removeP_Tag.length){
-                        //     responseElement.html.text = createTitleSubtitleModel("", removeP_Tag[0].innerHTML) 
-                        // }
-                        // else {
                         res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
                         responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
-                        // }
                         newBodymatter[tempIndex[0]].contents['formatted-title'] = responseElement;
                         break;
                     // case "3":
@@ -837,4 +882,11 @@ export const setFormattingToolbar = (action) => {
             isSuperscriptButton && isSuperscriptButton.classList.add('tox-tbtn--select')
             break;
     }
+}
+
+export const showWrongImagePopup = (value) => (dispatch, getState) => {
+    dispatch({
+        type: WRONG_IMAGE_POPUP,
+        payload: value
+    })
 }

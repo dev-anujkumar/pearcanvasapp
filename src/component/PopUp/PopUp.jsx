@@ -60,7 +60,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderButtons = (props) => {
-        if (props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText) { //Slate lock popup
+        if (props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage) { //Slate lock popup
             showBlocker(true); showTocBlocker();
             return (
                 <div className={`dialog-buttons ${props.slateLockClass}`}>
@@ -89,6 +89,14 @@ class PopUp extends React.Component {
                 <div className={`dialog-buttons ${props.assessmentAndInteractive}`}>
                     <span className={`save-button ${props.splitSlateClass}`} onClick={() => { props.handleC2Click(document.getElementById("inputUUID").value) }}>Ok</span>
                     <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(e, false)}>Cancel</span>
+                </div>
+            )
+        }
+        if (props.imageGlossary) {
+            return (
+                <div className={`dialog-buttons ${props.splitSlateClass}`}>
+                    <span className={`save-button ${props.splitSlateClass}`} onClick={props.removeImageContent}>Ok</span>
+                    <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
         }
@@ -131,7 +139,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -166,7 +174,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary) {
             return null
         }
         else {
@@ -216,6 +224,11 @@ class PopUp extends React.Component {
         else if (props.isLockPopup || props.sytaxHighlight) {
             return (
                 <div className={`dialog-window ${props.slateLockClass}`} >{props.dialogText}</div>
+            )
+        }
+        else if (props.imageGlossary || props.wrongImage ) {
+            return (
+                <div className={`dialog-window ${props.imageRemoveClass}`} >{props.dialogText}</div>
             )
         }
         else if (props.removeConfirmation || props.wrongAudio) {
