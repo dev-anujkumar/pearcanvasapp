@@ -49,20 +49,22 @@ class OpenGlossaryAssets extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, state) {
-        if (nextProps.figureGlossaryData !== state.figureGlossaryData) {
+        if ((nextProps.figureGlossaryData !== state.figureGlossaryData) && Object.keys(nextProps.audioGlossaryData).length === 0 && Object.keys(nextProps.figureGlossaryData).length > 0) {
             return {
                 figureGlossaryData: nextProps.figureGlossaryData,
                 tabValue: "image"
             }
         }
-        if (nextProps.audioGlossaryData !== state.audioGlossaryData) {
+        if ((nextProps.audioGlossaryData !== state.audioGlossaryData) && Object.keys(nextProps.figureGlossaryData).length === 0 && Object.keys(nextProps.audioGlossaryData).length > 0) {
             return {
-                audioGlossaryData: nextProps.audioGlossaryData
+                audioGlossaryData: nextProps.audioGlossaryData,
+                tabValue: "audio"
             }
         }
-        if (!state.figureGlossaryData && state.audioGlossaryData) {
+        if (Object.keys(nextProps.figureGlossaryData).length > 0 && Object.keys(nextProps.audioGlossaryData).length > 0) {
             return {
-                tabValue: "audio"
+                figureGlossaryData: nextProps.figureGlossaryData,
+                audioGlossaryData: nextProps.audioGlossaryData,
             }
         }
         return null;
