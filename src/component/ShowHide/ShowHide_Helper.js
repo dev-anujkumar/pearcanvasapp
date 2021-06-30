@@ -10,6 +10,7 @@ export const showHideConstants = {
 
 const figElements = ['figure', "interactive", "audio", "video"];
 const textElements = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives'];
+export const REVEAL_TEXT_PLACEHOLDER = "This field cannot be empty, either add specific content or add in the default content of Reveal Answer"
 
 /** 
 * @description findSectionType - Return the section type of showhide element
