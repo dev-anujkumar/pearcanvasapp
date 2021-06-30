@@ -158,10 +158,17 @@ export const SET_ALFRESCO_POPUP = "SET_ALFRESCO_POPUP"
 export const SAVE_ALFRESCO_ASSET_DATA = "SAVE_ALFRESCO_ASSET_DATA"
 export const SAVE_INLINE_IMAGE_DATA = "SAVE_INLINE_IMAGE_DATA"
 
+/* ---------------  Figure Glossary ------------------------*/
+export const SET_FIGURE_GLOSSARY = "SET_FIGURE_GLOSSARY";
+export const ADD_FIGURE_GLOSSARY_POPUP = 'ADD_FIGURE_GLOSSARY_POPUP';
+export const WRONG_IMAGE_POPUP = 'WRONG_IMAGE_POPUP'
+export const SHOW_REMOVE_GLOSSARY_IMAGE = 'SHOW_REMOVE_GLOSSARY_IMAGE'
+
 /*---------------- Cypress Project Info ------------------------*/
 export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
 export const UPDATE_DISCUSSION_ITEMS = 'UPDATE_DISCUSSION_ITEMS';
 export const UPDATE_USAGE_TYPE = 'UPDATE_USAGE_TYPE';
+export const UPDATE_LOB_PERMISSIONS = 'UPDATE_LOB_PERMISSIONS';
 
 /*---------------- TCM POPUP ON CANVAS ------------------------*/
 export const LAUNCH_TCM_CANVAS_POPUP = 'LAUNCH_TCM_CANVAS_POPUP';

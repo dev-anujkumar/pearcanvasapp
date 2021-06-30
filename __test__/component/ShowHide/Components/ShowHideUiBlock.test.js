@@ -101,7 +101,14 @@ describe('1. ShowHideUiBlock test cases', () => {
 		accessDenied: jest.fn(),
 		handleBlur: jest.fn(),
         model:{},
-		elementList2Add: jest.fn()
+		elementList2Add: jest.fn(),
+		addNestedElements: () => [{
+			buttonType: 'text-elem',
+			buttonHandler: jest.fn(),
+			tooltipText: 'Text',
+			tooltipDirection: 'left'
+		}],
+		sectionType: "show"
 	};
     it('1.1 ShowHideUiBlock render successfully', () => {
         const component = showhideInstance(props);

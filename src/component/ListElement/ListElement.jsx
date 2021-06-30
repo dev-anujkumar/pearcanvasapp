@@ -91,6 +91,7 @@ export class ListElement extends Component {
                     currentElement={this.props.currentElement}
                     deleteShowHideUnit={this.props.deleteShowHideUnit}
                     handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
+                    handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
                 />
             </React.Fragment>
         )

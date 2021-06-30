@@ -766,6 +766,9 @@ export class TinyMceEditor extends Component {
             let uri = e.target.dataset.uri;
             let audioNode = e.target.closest("dfn");
             let isAudioExists = audioNode.hasAttribute('audio-id');
+            
+            let imageNode = e.target.closest('dfn');
+            let isFigureImageExists = imageNode.hasAttribute('image-id');
 
             if (e.target.nodeName == "DFN") {
                 uri = e.target.dataset.uri;
@@ -784,7 +787,7 @@ export class TinyMceEditor extends Component {
             else {
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
-            if (isAudioExists) {
+            if (isAudioExists || isFigureImageExists) {
                 if (e.currentTarget.classList.contains('mce-edit-focus')) {
                     const parentPosition = getParentPosition(e.currentTarget);
                     const slateWrapperNode = document.getElementById('slateWrapper')
@@ -804,7 +807,8 @@ export class TinyMceEditor extends Component {
                     if(parentPosition.x +325 >800){
                         audioPopupPosition.left = '0'
                     }
-                    this.props.handleAudioPopupLocation(true, audioPopupPosition);
+                    // this.props.handleAudioPopupLocation(true, audioPopupPosition);
+                    this.props.handleAssetsPopupLocation(true, audioPopupPosition);
                 }
             }
         }

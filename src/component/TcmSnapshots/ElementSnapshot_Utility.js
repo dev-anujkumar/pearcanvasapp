@@ -568,7 +568,7 @@ export const generateWipDataForFigure = (bodymatter, index) => {
             break;
         case 4:
             if (bodymatter[eleIndex[0]].type === ELEMENT_ASIDE) { /** WE */
-                wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]
+                wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]]?.contents?.bodymatter[eleIndex[2]]
             }
             else if (bodymatter[eleIndex[0]].type === MULTI_COLUMN) { /** Multi-column */
                 const elementInColumn = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]];

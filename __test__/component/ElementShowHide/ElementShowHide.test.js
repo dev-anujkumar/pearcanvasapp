@@ -40,7 +40,7 @@ jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions', ()
     
 })
 
-describe('Testing Element Show Hide component', () => {
+xdescribe('Testing Element Show Hide component', () => {
     let props = {
         model:{},
         index:"" ,
