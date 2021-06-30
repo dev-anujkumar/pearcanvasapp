@@ -58,11 +58,11 @@ export const handleTCMSPALaunch = (e, elementId) => {
     * This function handle Accept and Revert functionality w.r.t. current Element
    */
 
-export const tcmButtonHandler = (status) => {
+export const tcmButtonHandler = (status, tcmSnapshotData, elementData) => (dispatch) => {
     const currentProjectUrn = config.projectUrn;
     const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
-    let timeStamp = this.props.tcmSnapshotData?.originalLastUpdatedTimestamp;
-    let eURN = this.props.elementData
+    let timeStamp = tcmSnapshotData?.originalLastUpdatedTimestamp;
+    let eURN = elementData
     let body = { "lastUpdatedTimestamp": timeStamp, "changeStatus": status };
     let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}/elem/${eURN}`
     return axios.patch(url, body, {
@@ -70,7 +70,11 @@ export const tcmButtonHandler = (status) => {
             PearsonSSOSession: config.ssoToken,
         }
     }).then((res) => {
-        closeTcmPopup()
+        const tcmObject = { isTCMCanvasPopup: false }
+        dispatch({
+            type: LAUNCH_TCM_CANVAS_POPUP,
+            payload: tcmObject
+        })
     }).catch((error) => {
         console.error(error)
     })

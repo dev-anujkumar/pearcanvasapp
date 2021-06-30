@@ -662,6 +662,7 @@ class Sidebar extends Component {
                         tcmButtonHandler={this.props.tcmButtonHandler}
                         tcmSnapshotData={this.props.tcmSnapshotData}
                         dialogText={this.props.tcmSnapshotData.contentDifference}
+                        elementData={this.props.elementData}
                     />}
             </>
         );

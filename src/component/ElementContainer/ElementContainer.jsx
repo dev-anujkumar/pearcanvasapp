@@ -62,7 +62,7 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
-import {closeTcmPopup} from '../CanvasWrapper/TCM_Integration_Actions'
+import {closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import ShowHide from '../ShowHide/ShowHide.jsx';
 import {handleTCM, handleTCMSPALaunch} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
