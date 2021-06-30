@@ -383,7 +383,10 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
     }
     const index = separatorProps.index;
     const firstOne = separatorProps.firstOne || false;
-    const insertionIndex = firstOne ? index : index + 1
+    let insertionIndex = firstOne ? index : index + 1;
+    if(separatorProps?.elementType === SHOW_HIDE) {
+        insertionIndex = index;
+    }
     const selectedElement = separatorProps.elementSelection.element
     const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,SHOW_HIDE,POPUP]
     if ((acceptedTypes.includes(selectedElement.type)) && type === 'copy'){
