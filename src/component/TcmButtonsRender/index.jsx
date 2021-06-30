@@ -14,7 +14,7 @@ class RenderTCMIcons extends React.Component {
     
     render() {
         const element = {id: this.props.tcmSnapshotData?.eURN}
-        let userName = this.props?.tcmSnapshotData?.elementEditor
+        let userName = this.props.elementEditor
         let date = this.props.tcmSnapshotData?.originalLastUpdatedTimestamp
         let readableDate = this.props.tcmSnapshotData?.lastUpdatedTimestamp
         let readableTime = TCMUtiles.formatTime(date)
@@ -48,7 +48,8 @@ class RenderTCMIcons extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        tcmSnapshotData: state.tcmReducer.tcmSnapshotData
+        tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
+        elementEditor: state.tcmReducer.elementEditor,
     };
 };
 

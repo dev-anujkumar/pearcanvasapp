@@ -8,7 +8,8 @@ const INITIAL_STATE = {
     tcmActivatedOnProjectLevel: false,
     isTCMCanvasPopupLaunched : false,
     tcmSnapshotData: [],
-    elementData:""
+    elementData:"",
+    elementEditor: ''
 }
 
 const INITIAL_ACTION = {
@@ -33,7 +34,8 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                     ...state,
                     isTCMCanvasPopupLaunched: action.payload.isTCMCanvasPopup,
                     tcmSnapshotData: action.payload.tcmElemData,
-                    elementData:action.payload.elemData
+                    elementData:action.payload.elemData,
+                    elementEditor: action.payload.elementEditor
                 }
         default:
             return state
