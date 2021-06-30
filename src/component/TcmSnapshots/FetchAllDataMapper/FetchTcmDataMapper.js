@@ -97,12 +97,6 @@ const FetchAllDataMapper = {
       if (complexElementsPartition[1].length > 0) {
         processedResponse = complexElementsPartition[1]
           .map(this.processContainers.bind(this, eURN));
-        processedResponse.forEach((data) => {
-          footnoteData = [...footnoteData, ...data.footnoteSnapshot];
-          glossaryData = [...glossaryData, ...data.glossorySnapshot];
-          let assetData = data.assetPopOverSnapshot && data.assetPopOverSnapshot.length ? JSON.parse(data.assetPopOverSnapshot) : [];
-          assetpopoverData = [...assetpopoverData, ...assetData];
-        });
       }
       processedResponse = OrderElementsData.sortSimpleElements(processedResponse, indexOfElements);
       processedResponse = processedResponse.concat(processedComplexResponse);
@@ -130,67 +124,16 @@ const FetchAllDataMapper = {
     if (Object.prototype.hasOwnProperty.call(data, 'latestAcceptedTransaction')
       && Object.prototype.hasOwnProperty.call(data, 'latestPendingTransaction')) {
       result = this.getLatestTransactions(data, result);
-      result.assetPopOverSnapshot = this.processAssetpopoverSnapshot(JSON.parse(data.latestAcceptedTransaction.elemSnapshot).assetPopOverSnapshot, JSON.parse(data.latestPendingTransaction.elemSnapshot).assetPopOverSnapshot)
-      // JSON.parse(data.latestPendingTransaction.elemSnapshot).assetPopOverSnapshot || [];
-
     }
     if (Object.prototype.hasOwnProperty.call(data, 'latestAcceptedTransaction')
       && !Object.prototype.hasOwnProperty.call(data, 'latestPendingTransaction')) {
       result = this.getAcceptedTranscations(data, result);
-      result.assetPopOverSnapshot = this.processAcceptedAssetPopoverStatus(JSON.parse(data.latestAcceptedTransaction.elemSnapshot).assetPopOverSnapshot || []);
     }
     if (!Object.prototype.hasOwnProperty.call(data, 'latestAcceptedTransaction')
       && Object.prototype.hasOwnProperty.call(data, 'latestPendingTransaction')) {
       result = this.getPendingTranscations(data, result);
-      result.assetPopOverSnapshot = JSON.parse(data.latestPendingTransaction.elemSnapshot).assetPopOverSnapshot || [];
     }
     return result;
-  },
-  processAcceptedAssetPopoverStatus(latestpendingData = []) {
-    if (latestpendingData.length) {
-      latestpendingData = JSON.parse(latestpendingData);
-    }
-    else{
-      latestpendingData = [];
-    }
-    latestpendingData.map((data,pos) => {
-      return latestpendingData[pos].isAccepted = true;
-    });
-    return JSON.stringify(latestpendingData);
-  },
-  processAssetpopoverSnapshot(latestAcceptedData = [], latestpendingData = []) {
-    let latestAccepted = [];
-    let latestpending = [];
-    if (latestAcceptedData.length) {
-      latestAcceptedData = JSON.parse(latestAcceptedData);
-      latestAccepted = [...latestAcceptedData];
-    }
-    if (latestpendingData.length) {
-      latestpendingData = JSON.parse(latestpendingData);
-      latestpending = [...latestpendingData];
-    }
-    let dataToReturn = [];
-    latestAccepted.forEach((dataAccepted) => {
-      latestpending.forEach((datapending) => {
-        const newObj = {};
-        if (dataAccepted.assetid === datapending.assetid) {
-          newObj.assetid = datapending.assetid;
-          newObj.label = datapending.label;
-          newObj.linkID = datapending.linkID;
-          newObj.oldLabel = dataAccepted.label;
-          newObj.type = datapending.type;
-          if(JSON.stringify(dataAccepted)===JSON.stringify(datapending)){
-            newObj.isAccepted=true;
-          }
-          dataToReturn.push(newObj);
-          latestAcceptedData.splice(latestAcceptedData.indexOf(dataAccepted), 1);
-          latestpendingData.splice(latestpendingData.indexOf(datapending), 1)
-        }
-      });
-    });
-    // latestAcceptedData = JSON.parse(this.processAcceptedAssetPopoverStatus(JSON.stringify(latestAcceptedData)));
-    dataToReturn = [...dataToReturn, ...latestAcceptedData, ...latestpendingData];
-    return JSON.stringify(dataToReturn);
   },
 };
 

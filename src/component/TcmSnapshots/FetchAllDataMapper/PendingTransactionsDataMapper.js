@@ -1,7 +1,5 @@
 import TCMUtils from '../../../js/tcmUtils.js';
-import GlossaryDataMapper from './GlossaryDataMapper';
-import FootnotesDataMapper from './FootnotesDataMapper';
-import {setPopupKeys} from './PopupHelperFunction';
+
 /**
  * Service Mapper is responsible for converting the API structure to Application structure
  * returns  data
@@ -10,11 +8,6 @@ const PendingTransactionsDataMapper = {
   getPendingTranscations(data, result) {
     const returnValue = result;
     const acceptedValue = '';
-    let splitElementType = [];
-    let pendingSecondLevel = '';
-    let parentElement = '';
-    let popupDataKeys = {};
-    let bodyTypeList=[];
     let {
       latestPendingTransaction: {
         elemSnapshot: pendingElementSnapshot,
@@ -27,13 +20,6 @@ const PendingTransactionsDataMapper = {
       },
     } = data;
     pendingElementSnapshot = TCMUtils.replaceNBSPWithSpace(pendingElementSnapshot);
-    splitElementType = pendingElementType.split(':');
-    if (splitElementType.length > 1) {
-      popupDataKeys = setPopupKeys(splitElementType)
-      pendingSecondLevel = popupDataKeys.pendingSecondLevel !== undefined ? popupDataKeys.pendingSecondLevel : "";
-      parentElement = popupDataKeys.parentElement
-      pendingElementType=popupDataKeys.pendingElementType
-    }
     elementChangeType = elementChangeType.toLowerCase();
     returnValue.elementChangeType = elementChangeType;
     returnValue.theme = elementChangeType === 'create' ? 'new' : elementChangeType === 'delete' ? 'deleted' : '';
@@ -44,32 +30,14 @@ const PendingTransactionsDataMapper = {
         JSON.parse(pendingElementSnapshot).contentSnapshot,
       );
       returnValue.lastAcceptedContent = JSON.parse(pendingElementSnapshot).contentSnapshot;
-   
-    returnValue.pendingSecondLevel = pendingSecondLevel !== undefined ? pendingSecondLevel : '';
-    returnValue.parentElement = parentElement;
     returnValue.originalLastUpdatedTimestamp = lastUpdatedTimestamp;
     returnValue.lastUpdatedTimestamp = TCMUtils.formatDateTime(parseInt(lastUpdatedTimestamp, 10));
     returnValue.changeTime = TCMUtils.formatChangeDateTime(parseInt(changeTime, 10));
-    returnValue.glossorySnapshot =GlossaryDataMapper.getPendingGlossaryTransactionDifference(JSON.parse(JSON.parse(pendingElementSnapshot).glossorySnapshot));
-    returnValue.footnoteSnapshot = FootnotesDataMapper.getPendingFootnoteDifference(JSON.parse(JSON.parse(pendingElementSnapshot).footnoteSnapshot));
     returnValue.feedback = feedBackData;
     returnValue.trackChangeApprover = authorName;
     returnValue.changeStatus = changeStatus;
     returnValue.elemIndex=parseInt(index);
     returnValue.onlyPendingTransaction = true;
-    if (splitElementType.length > 1 && popupDataKeys) {
-      returnValue.firstParentElement = popupDataKeys.firstParentElement !== undefined ? popupDataKeys.firstParentElement : '';
-      returnValue.firstParentLevel = popupDataKeys.firstParentLevel !== undefined ? popupDataKeys.firstParentLevel : '';
-      returnValue.popupElement = popupDataKeys.popupElement !== undefined ? popupDataKeys.popupElement : '';
-      returnValue.popupBody = popupDataKeys.popupBody !== undefined ? popupDataKeys.popupBody : '';
-      returnValue.secondParentElement = popupDataKeys.secondParentElement !== undefined ? popupDataKeys.secondParentElement : '';
-      returnValue.secondParentLevel = popupDataKeys.secondParentLevel !== undefined ? popupDataKeys.secondParentLevel : '';
-      returnValue.finalChildElement = popupDataKeys.finalChildElement !== undefined ? TCMUtils.getElementType(popupDataKeys.finalChildElement) : '';
-      bodyTypeList = popupDataKeys.bodyTypeList && popupDataKeys.bodyTypeList.length > 0 ? popupDataKeys.bodyTypeList : [];
-      returnValue.pendingElementType = popupDataKeys.pendingElementType !== undefined ? popupDataKeys.pendingElementType : '';
-    }
-    returnValue.bodyTypeList = bodyTypeList && bodyTypeList.length > 0 ? bodyTypeList : [];
-    returnValue.elementTag = splitElementType
     return returnValue;
   },
 

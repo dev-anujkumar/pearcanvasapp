@@ -3,6 +3,7 @@ import axios from 'axios';
 import { loadTrackChanges } from './TCM_Integration_Actions'
 import FetchAllDataMapper from '../TcmSnapshots/FetchAllDataMapper/FetchTcmDataMapper';
 import { LAUNCH_TCM_CANVAS_POPUP } from '../../constants/Action_Constants'
+import {handleSlateRefresh} from '../CanvasWrapper/SlateRefresh_Actions'
 
 /**
 * This function opens TCM w.r.t. current Element
@@ -75,6 +76,7 @@ export const tcmButtonHandler = (status, tcmSnapshotData, elementData) => (dispa
             type: LAUNCH_TCM_CANVAS_POPUP,
             payload: tcmObject
         })
+        dispatch(handleSlateRefresh(currentSlateUrn, () => {}))
     }).catch((error) => {
         console.error(error)
     })
