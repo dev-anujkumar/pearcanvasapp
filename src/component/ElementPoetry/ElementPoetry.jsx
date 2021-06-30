@@ -183,8 +183,7 @@ class ElementPoetry extends Component {
                                 showDeleteElemPopup={this.props.showDeleteElemPopup}
                                 parentElement = {this.props.element}
                                 onListSelect={this.props.onListSelect}
-                                userRole={this.props.userRole}
-                                handleTCM={this.props.handleTCM}>
+                                userRole={this.props.userRole}>
                             </ElementContainer>
                             <ElementSaprator
                                 index={index}

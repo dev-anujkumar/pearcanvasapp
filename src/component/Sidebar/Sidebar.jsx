@@ -18,8 +18,7 @@ import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
-import { launchTCMPopup } from '../CanvasWrapper/TCM_Integration_Actions';
-import axios from 'axios';
+import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -639,30 +638,8 @@ class Sidebar extends Component {
             )
         }
         return null
-    }
+    }  
 
-    closeTcmPopup = () => {
-        const tcmObject = { isTCMCanvasPopup: false }
-        this.props.launchTCMPopup(tcmObject)
-    }
-    tcmButtonHandler = (status) => {
-        const currentProjectUrn = config.projectUrn;
-        const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
-        let timeStamp = this.props.tcmSnapshotData?.originalLastUpdatedTimestamp;
-        let eURN = this.props.elementData
-        let body = { "lastUpdatedTimestamp": timeStamp, "changeStatus": status };
-        let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}/elem/${eURN}`
-        return axios.patch(url, body, {
-            headers: {
-                PearsonSSOSession: config.ssoToken,
-            }
-        }).then((res) => {
-            console.log(res.data)
-            this.closeTcmPopup()
-        }).catch((error) => {
-            console.error(error)
-        })
-    }
     render = () => {
         return (
             <>
@@ -681,12 +658,10 @@ class Sidebar extends Component {
                     <PopUp
                         isTCMCanvasPopup={this.props.isTCMCanvasPopupLaunched}
                         assessmentClass={'tcm-canvas-popup'}
-                        handleTCMRedirection={this.props.handleTCMRedirection}
                         closeTcmPopup={this.closeTcmPopup}
-                        tcmButtonHandler={this.tcmButtonHandler}
+                        tcmButtonHandler={this.props.tcmButtonHandler}
                         tcmSnapshotData={this.props.tcmSnapshotData}
                         dialogText={this.props.tcmSnapshotData.contentDifference}
-                        handleTCM={this.props.handleTCM}
                     />}
             </>
         );
@@ -724,6 +699,6 @@ export default connect(
         setCurrentModule,
         conversionElement,
         setBCEMetadata,
-        launchTCMPopup
+        tcmButtonHandler
     }
 )(Sidebar);

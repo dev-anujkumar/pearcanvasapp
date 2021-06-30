@@ -456,7 +456,6 @@ class ElementAsideContainer extends Component {
                                         elementSepratorProps={this.props.elementSepratorProps}
                                         splithandlerfunction={this.props.splithandlerfunction}
                                         pasteElement={this.props.pasteElement}
-                                        handleTCM={this.props.handleTCM}
                                     >
                                     </ElementContainer>
                                     <ElementSaprator

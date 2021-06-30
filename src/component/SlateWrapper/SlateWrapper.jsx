@@ -987,7 +987,6 @@ class SlateWrapper extends Component {
                                         isLOExist={this.props.isLOExist}
                                         splithandlerfunction={this.splithandlerfunction}
                                         pasteElement={this.props.pasteElement}
-                                        handleTCM={this.props.handleTCM}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (

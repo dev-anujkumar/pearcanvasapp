@@ -8,10 +8,7 @@ import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
 import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
-import TcmCloseIcon from '../../images/CanvasTCMPopup/TcmCloseIcon.png'
-import TcmExpandIcon from '../../images/CanvasTCMPopup/TcmExpandIcon.png'
-import TcmRefreshIcon from '../../images/CanvasTCMPopup/TcmRefreshIcon.png'
-import TCMUtiles from '../../component/TcmSnapshots/TCMpopup_Utilty'
+import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -64,7 +61,6 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderButtons = (props) => {
-        console.log("pops", props)
         if (props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText) { //Slate lock popup
             showBlocker(true); showTocBlocker();
             return (
@@ -284,35 +280,8 @@ class PopUp extends React.Component {
         }
         else {
             if (props.isTCMCanvasPopup) {
-                const element = {id: this.props.tcmSnapshotData.eURN}
-                let userName = props?.tcmSnapshotData?.elementEditor
-                let date = props.tcmSnapshotData?.originalLastUpdatedTimestamp
-                let readableDate = props.tcmSnapshotData?.lastUpdatedTimestamp
-                let readableTime = TCMUtiles.formatTime(date)
                 return (
-                    <div className="tcmContainer">
-                        <div className="userNametcmIconContainer">
-                            <div className="userName">
-                                <span>{userName}</span>
-                                <span>{readableTime}</span>
-                            </div>
-                            <div className="tcmIconContainer">
-                                <span className="btn-element tcmIcon">
-                                    {<img src={TcmRefreshIcon} alt="TcmRefreshIcon" onClick={(e) => props.handleTCM(e, element, true)}/>}
-                                </span>
-                                <span className="btn-element tcmIcon" onClick={(e) => props.handleTCMRedirection(e)}>
-                                    {<img src={TcmExpandIcon} alt="TcmExpandIcon" />}
-                                </span>
-                                <span className="btn-element tcmIcon" onClick={() => props.closeTcmPopup()}>
-                                    {<img src={TcmCloseIcon} alt="TcmCloseIcon" />}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="tcmdStatusContainer">
-                            <span>{readableDate}, </span>
-                            <span>Added</span>
-                        </div>
-                    </div>
+                    <RenderTCMIcons />
                 )
             }
         }

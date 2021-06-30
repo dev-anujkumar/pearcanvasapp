@@ -62,8 +62,10 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
-import {launchTCMPopup} from '../CanvasWrapper/TCM_Integration_Actions'
+import {closeTcmPopup} from '../CanvasWrapper/TCM_Integration_Actions'
 import ShowHide from '../ShowHide/ShowHide.jsx';
+import {handleTCM, handleTCMSPALaunch} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -236,8 +238,7 @@ class ElementContainer extends Component {
             index = this.props.index
             const lastFocusedElementId = config.lastActiveElementId
             if(element.id !== lastFocusedElementId && element.id !== this.props.tcmSnapshotData?.eURN){
-                const tcmObject = { isTCMCanvasPopup: false }
-                this.props.launchTCMPopup(tcmObject)
+                this.props.closeTcmPopup()
             }
         if(showHideObj) {
             element = showHideObj.currentElement
@@ -1339,7 +1340,6 @@ class ElementContainer extends Component {
                         userRole={this.props.userRole}
                         handleAudioPopupLocation = {this.handleAudioPopupLocation}
                         parentElement={this.props.parentElement}
-                        handleTCM={this.props.handleTCM}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1367,7 +1367,6 @@ class ElementContainer extends Component {
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         activeElement={this.props.activeElement}
                         handleAudioPopupLocation = {this.handleAudioPopupLocation}
-                        handleTCM={this.props.handleTCM}
                         parentElement={this.props?.parentElement}
                     />;
                     labelText = 'Pop'
@@ -1456,8 +1455,7 @@ class ElementContainer extends Component {
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
-                        handleTCM : this.props.handleTCM
-                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} handleTCM={this.props.handleTCM}
+                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement}
                     />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
@@ -1510,7 +1508,6 @@ class ElementContainer extends Component {
                     elementSepratorProps={elementSepratorProps}
                     pasteElement={this.props.pasteElement}
                     userRole={this.props.userRole}
-                    handleTCM={this.props.handleTCM}
                    />
                     labelText = 'PE'
                     break;
@@ -1563,7 +1560,7 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} handleTCM={this.props.handleTCM}/>
+                        }}><MultipleColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
                     } else {
                         editor = <MultiColumnContext.Provider value={{
@@ -1583,7 +1580,7 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} handleTCM={this.props.handleTCM}/>
+                        }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
                         labelText = '2C'
                     }
@@ -1733,7 +1730,7 @@ class ElementContainer extends Component {
                         }} type="comment-flag" />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
-                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.props.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.props.handleTCM(event, element)} />)}
+                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={this.handleCommentPopup}
@@ -2017,6 +2014,17 @@ class ElementContainer extends Component {
         }
         
     }
+
+    handleTCMLaunch = (event, element) => {
+        const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA } = TcmConstants
+        const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA]
+            if (element.type && tcmPopupSupportedElements.includes(element.type)) {
+                this.props.handleTCM(element, this.props.index)
+            } else {
+                this.props.handleTCMSPALaunch(event, this.props.activeElement.elementId)
+            }
+    }
+
     render = () => {
         const { element } = this.props;
         try {
@@ -2135,8 +2143,8 @@ const mapDispatchToProps = (dispatch) => {
         editElmAssessmentId: (assessmentId, assessmentItemId) => {
             dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
         },
-        launchTCMPopup: (tcmObject) => {
-            dispatch(launchTCMPopup(tcmObject))
+        closeTcmPopup: () => {
+            dispatch(closeTcmPopup())
         },
         deleteElementAction: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
             dispatch(deleteElementAction(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
@@ -2147,6 +2155,12 @@ const mapDispatchToProps = (dispatch) => {
         storeOldAssetForTCM: (data) => {
             dispatch(storeOldAssetForTCM(data))
         },
+        handleTCM: (element) => {
+            dispatch(handleTCM(element))
+        },
+        handleTCMSPALaunch: (elementId) =>{
+            dispatch(handleTCMSPALaunch(elementId))
+        }
     }
 }
 

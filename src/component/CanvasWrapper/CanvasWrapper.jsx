@@ -36,9 +36,6 @@ import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/A
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
-import { loadTrackChanges, launchTCMPopup } from '../CanvasWrapper/TCM_Integration_Actions';
-import axios from 'axios';
-import FetchAllDataMapper from '../TcmSnapshots/FetchAllDataMapper/FetchTcmDataMapper'
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
 export class CanvasWrapper extends Component {
     constructor(props) {
@@ -168,58 +165,6 @@ export class CanvasWrapper extends Component {
         }
         
     }
-    
-    handleTCMRedirection = (e) =>{
-         if(config.isSavingElement){
-            return false
-        }
-        e.stopPropagation();
-        loadTrackChanges(this.props.activeElement.elementId)
-    }
-
-      /**
-     * This function opens TCM w.r.t. current Element
-     */
-       handleTCM = (e, element, refreshEvent) => {
-        if(refreshEvent || element.type && element.type === "element-authoredtext" || element.type === "element-citation" || element.type === "stanza" || element.type === "element-list"){
-            let that = this
-            const currentProjectUrn = config.projectUrn;
-            const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
-            let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}`
-            return axios.get(url, {
-                  headers:  {
-                    PearsonSSOSession: config.ssoToken,
-                }
-            }).then((res) => {
-                that.processTCMData(res.data, element.id)
-            }).catch((error) => {
-                console.error(error)
-            })
-        } else {
-            if(config.isSavingElement){
-                return false
-            }
-            e.stopPropagation();
-            loadTrackChanges(this.props.activeElement.elementId)
-        }
-    }
-
-    processTCMData = (data, id) =>{
-        let that = this
-        data.map((elemData)=>{
-            let eURN = elemData.elemURN
-            // to check the element ids which has manifest + work id
-            let Check = elemData.elemURN.includes('+')
-            let elementId = Check === true && elemData.elemURN.split('+') 
-            elemData.elemURN = Check === true ? elementId[elementId.length - 1] : elemData.elemURN
-           if(elemData.elemURN === id){
-            const elemIndex = [{index: this.props.index, urn: id}]
-            const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
-            const tcmObject = {isTCMCanvasPopup: true, tcmElemData: tcmData.result[0] ,elemData:eURN}
-            that.props.launchTCMPopup(tcmObject)
-           }
-       })
-    }
 
     render() {
         let slateData = this.props.slateLevelData
@@ -268,7 +213,7 @@ export class CanvasWrapper extends Component {
                                     {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} handleTCM={this.handleTCM}/>
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
@@ -299,7 +244,7 @@ export class CanvasWrapper extends Component {
                                             return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData}/>)
                                         }
                                         else {
-                                            return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} handleTCMRedirection={this.handleTCMRedirection} handleTCM={this.handleTCM}/>)
+                                            return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
                                         }
                                     }
                                 }
@@ -380,8 +325,6 @@ export default connect(
         fetchProjectLFs,
         currentSlateLOType,
         setElmPickerData,
-        launchTCMPopup,
-        loadTrackChanges,
         saveSelectedAssetData,
         saveInlineImageData,
         alfrescoPopup,
