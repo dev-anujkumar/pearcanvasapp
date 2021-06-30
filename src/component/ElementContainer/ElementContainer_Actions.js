@@ -10,7 +10,7 @@ import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Act
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
 import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
+import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 
 import ElementConstants from "./ElementConstants";
 const { SHOW_HIDE } = ElementConstants;
@@ -223,7 +223,25 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
     let dataToSend = {};
-    if (typeof (index) == 'number') {
+
+    const { asideData } = getState()?.appStore || {};
+    const indexes = index?.toString().split('-') || [];
+    /* update figure elements in ShowHide */
+    if(asideData?.type === SHOW_HIDE && indexes?.length >= 3) {
+        /* Get the showhide element object from slate data using indexes */
+        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+        const section = indexOfSectionType(indexes); /* Get the section type */
+        /* After getting showhide Object, add the new element */
+        if(shObject?.type === SHOW_HIDE) {
+            /* Get the figure element */
+            let figure = shObject?.interactivedata[section][indexes[indexes?.length - 1]];
+            if (figure.versionUrn === elementId) {
+                dataToSend = figure?.figuredata;
+                /* update the data */
+                figure.figuredata = figureData;
+            }
+        }
+    } else if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
             if (newBodymatter[index].figuretype === "assessment") {
                 dataToSend =  newBodymatter[index].figuredata['elementdata']
@@ -252,14 +270,15 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
                 }
             }
         } else if (indexesLen == 3) {
-             if (newBodymatter[indexes[0]].type === SHOW_HIDE) { /*For showhide container on slate not inside other container */
-                const section = findSectionType(indexes[1]); /* Get the section type */
-                condition = newBodymatter[indexes[0]].interactivedata[section][indexes[2]];
-                if (condition.versionUrn === elementId) {
-                    dataToSend = condition.figuredata
-                    condition.figuredata = figureData
-                }
-            } else if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
+            // if (newBodymatter[indexes[0]].type === SHOW_HIDE) { /*For showhide container on slate not inside other container */
+            //    const section = findSectionType(indexes[1]); /* Get the section type */
+            //    condition = newBodymatter[indexes[0]].interactivedata[section][indexes[2]];
+            //    if (condition.versionUrn === elementId) {
+            //        dataToSend = condition.figuredata
+            //        condition.figuredata = figureData
+            //    }
+            //} else
+            if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
                 condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                 if (condition.versionUrn == elementId) {
                     dataToSend = condition.figuredata
