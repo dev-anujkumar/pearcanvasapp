@@ -25,7 +25,6 @@ function RevealAnswer(props) {
 				popupField = {showHideConstants.REVEAL_TEXT} 
 				handleAudioPopupLocation = {props.handleAudioPopupLocation}
 				showHideType = {showHideConstants.REVEAL_TEXT}
-				handleAssetsPopupLocation={this.handleAssetsPopupLocation}
 			/>
 		</div>
 	)
