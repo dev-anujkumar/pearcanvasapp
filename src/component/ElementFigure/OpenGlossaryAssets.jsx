@@ -7,6 +7,7 @@ import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import { showAudioRemovePopup } from '../../component/AudioNarration/AudioNarration_Actions.js'
 import { hasReviewerRole } from '../../constants/utility.js'
 import '../../styles/AudioNarration/AudioNarration.css';
+import {showRemoveImageGlossaryPopup} from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js'
 /**
 * @description - OpenFigureGlossary is a class based component. It is defined simply for opening the already figure glossary popup.
 */
@@ -30,6 +31,12 @@ class OpenGlossaryAssets extends Component {
         this.props.showAudioRemovePopup(true, isGlossary)
     }
 
+    /**
+    * @description - openImageConfirmationBox function responsible for opening confirmation popupfor removing the figure image.
+    */
+     openImageConfirmationBox = () => {
+        this.props.showRemoveImageGlossaryPopup(true)
+    }
 
     componentDidMount() {
         document.addEventListener('mousedown', this.handleClick, false);
@@ -192,7 +199,7 @@ class OpenGlossaryAssets extends Component {
                         <div className="remove-button">
 
                             {!hasReviewerRole() &&
-                                <button className="remove-text" onClick={() => imageGlossaryRemovePopup(true)} className="audioRemoveButton audioRemoveRound">Remove</button>
+                                <button className="remove-text" onClick={ this.openImageConfirmationBox} className="audioRemoveButton audioRemoveRound">Remove</button>
                             }
                             {
                                 <button className="remove-text" onClick={() => this.handleReplaceImageButton()} className="audioReplaceeButton audioRemoveRound">Replace</button>
@@ -215,7 +222,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapActionToProps = {
-    showAudioRemovePopup
+    showAudioRemovePopup,
+    showRemoveImageGlossaryPopup
 }
 
 export default connect(mapStateToProps, mapActionToProps)(OpenGlossaryAssets)

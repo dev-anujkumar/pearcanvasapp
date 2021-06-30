@@ -9,7 +9,7 @@ const {
     REACT_APP_API_URL
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
-import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP} from "./../../constants/Action_Constants";
+import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE} from "./../../constants/Action_Constants";
 import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
@@ -887,6 +887,13 @@ export const setFormattingToolbar = (action) => {
 export const showWrongImagePopup = (value) => (dispatch, getState) => {
     dispatch({
         type: WRONG_IMAGE_POPUP,
+        payload: value
+    })
+}
+
+export const showRemoveImageGlossaryPopup = (value) => (dispatch, getState) => {
+    dispatch({
+        type: SHOW_REMOVE_GLOSSARY_IMAGE,
         payload: value
     })
 }
