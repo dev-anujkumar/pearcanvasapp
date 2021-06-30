@@ -35,7 +35,17 @@ export default function ElementContainerType(props) {
     }
 
     const renderMenu = (propsData) => {
-        let {elementType,text} = props
+        let {elementType, text, showPlayscript, showDiscussion} = props;
+        if (!showDiscussion) {
+            propsData = propsData.filter( (obj) => {
+                return obj.text !== 'Add Discussion';
+            });
+        }
+        if (!showPlayscript) {
+            propsData = propsData.filter( (obj) => {
+                return obj.text !== 'Playscript';
+            });
+        }
         return propsData && propsData.map((item, index) => {
             if (((elementType === "element-aside" || elementType === "group") && text === "block-text-button" && item.text === "Block Poetry") ||
             (text === "interactive-elem-button" && (elementType === "group" && (item.text === "Add Show Hide" || item.text === "Add Pop Up")))

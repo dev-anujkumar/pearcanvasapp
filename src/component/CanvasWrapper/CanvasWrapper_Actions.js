@@ -21,7 +21,7 @@ import {
     UPDATE_PROJECT_INFO,
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
-    UPDATE_THREE_COLUMN_INFO
+    UPDATE_LOB_PERMISSIONS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -316,6 +316,25 @@ export const getProjectDetails = () => (dispatch, getState) => {
         const data = JSON.parse(JSON.stringify(response.data))
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
+            // Api to get LOB Permissions
+            const lobPermissionsURL = `${config.REACT_APP_API_URL}v1/lobs/permissions/setting/${lineOfBusiness}`;
+            axios.get(lobPermissionsURL, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then (response => {
+                const { elementPermissions } = response.data;
+                if (Object.keys(elementPermissions).length > 0) {
+                    dispatch({
+                        type: UPDATE_LOB_PERMISSIONS,
+                        payload: elementPermissions
+                    })
+                }
+            }).catch(error => {
+                console.log("API Failed!!")
+            })
+
             // call api to get usage types
             
             const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
