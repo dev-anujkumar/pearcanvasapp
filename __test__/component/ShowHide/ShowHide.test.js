@@ -10,12 +10,31 @@ import ShowHide from '../../../src/component/ShowHide/ShowHide.jsx';
 const mockStore = configureMockStore(middlewares);
 let initialState = {
 	appStore: {
-		asideData: {}, parentUrn: {} ,showHideObj: {}
-	}
+		asideData: {}, parentUrn: {} ,showHideObj: {}, permissions:[],
+		slateLevelData: { 
+			"urn:pearson:manifest:e62ba6f4-315c-4510-9200-f5cbe110a8bc": {
+				contentUrn: "urn:pearson:entity:2d34786c-e971-4246-b149-0e46e0769bd8",
+				id: "urn:pearson:manifest:520ecd5e-3002-41b4-9813-b37551427930",
+				interactivedata:{
+					hide: [{}],
+					postertextobject: [{}],
+					show: [{}, {}]
+				},
+				schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+				status: "wip",
+				type: "showhide",
+				versionUrn: "urn:pearson:manifest:520ecd5e-3002-41b4-9813-b37551427930"
+			}
+		}
+	},
+	selectionReducer: {selection: {}},
+	toolbarReducer: {elemBorderToggle:""},
+	slateLockReducer: {slateLockInfo:{}}
 };
 const event = {
 	stopPropagation: jest.fn(),
-	preventDefault: jest.fn()
+	preventDefault: jest.fn(),
+	oldDraggableIndex: 0
 }
 
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
@@ -24,6 +43,11 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
     }
 })
 jest.mock('../../../src/component/ShowHide/Components/ShowHideUiBlock.jsx', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
+jest.mock('../../../src/component/ShowHide/Components/RevealAnswer.jsx', () => {
     return function () {
         return (<div>null</div>)
     }
@@ -128,7 +152,22 @@ describe('1. ShowHide test cases', () => {
 		accessDenied: jest.fn(),
 		handleBlur: jest.fn(),
         model:{},
-		createShowHideElement: jest.fn()
+		createShowHideElement: jest.fn(),
+		setActiveElement: jest.fn(),
+		swapElement: jest.fn(),
+		parentElement: {
+			contentUrn: "urn:pearson:entity:2d34786c-e971-4246-b149-0e46e0769bd8",
+			id: "urn:pearson:manifest:520ecd5e-3002-41b4-9813-b37551427930",
+			interactivedata:{
+				hide: [{}],
+				postertextobject: [{}],
+				show: [{}, {}]
+			},
+			schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+			status: "wip",
+			type: "showhide",
+			versionUrn: "urn:pearson:manifest:520ecd5e-3002-41b4-9813-b37551427930"
+		}
 	};
     it('1.1 ShowHide render successfully', () => {
 		const store = mockStore(initialState);
@@ -141,19 +180,27 @@ describe('1. ShowHide test cases', () => {
         const compInstance = showhideInstance(props);
         expect(compInstance).toBeDefined();
     });
-	it('1.2 Test elementList2Add', () => {
+	it('1.2 Test onSortUpdate ', () => {
+		config.slateManifestURN = "urn:pearson:manifest:e62ba6f4-315c-4510-9200-f5cbe110a8bc";
 		const compInstance = showhideInstance(props);
-		const spy = jest.spyOn(compInstance, 'elementList2Add')
-		compInstance.elementList2Add(0,true,"","","show");
+		const spy = jest.spyOn(compInstance, 'onSortUpdate')
+		compInstance.onSortUpdate(event, "show");
 		expect(spy).toHaveBeenCalled();
 		spy.mockClear()
     });
-	it('1.3 Test addElementInShowHide ', () => {
-		config.savingInProgress = false;
-		const compInstance = showhideInstance(props);
-		const spy = jest.spyOn(compInstance, 'addElementInShowHide')
-		compInstance.addElementInShowHide("0-0-0","","show","TEXT");
-		expect(spy).toHaveBeenCalled();
-		spy.mockClear()
-    });
+	//it('1.2 Test elementList2Add', () => {
+	//	const compInstance = showhideInstance(props);
+	//	const spy = jest.spyOn(compInstance, 'elementList2Add')
+	//	compInstance.elementList2Add(0,true,"","","show");
+	//	expect(spy).toHaveBeenCalled();
+	//	spy.mockClear()
+    //});
+	//it('1.3 Test addElementInShowHide ', () => {
+	//	config.savingInProgress = false;
+	//	const compInstance = showhideInstance(props);
+	//	const spy = jest.spyOn(compInstance, 'addElementInShowHide')
+	//	compInstance.addElementInShowHide("0-0-0","","show","TEXT");
+	//	expect(spy).toHaveBeenCalled();
+	//	spy.mockClear()
+    //});
 });

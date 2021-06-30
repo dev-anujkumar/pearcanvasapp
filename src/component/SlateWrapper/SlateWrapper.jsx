@@ -51,7 +51,7 @@ import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
 import store from '../../appstore/store';
-import { showWrongImagePopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
+import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
 
 let random = guid();
@@ -74,8 +74,7 @@ class SlateWrapper extends Component {
             showpocpopup:false,
             pastedindex:null,
             powerPasteData: [],
-            updatedindex:'',
-            isImageGlossaryPopup:false
+            updatedindex:''
         }
         this.isDefaultElementInProgress = false;
     }
@@ -991,7 +990,6 @@ class SlateWrapper extends Component {
                                         isLOExist={this.props.isLOExist}
                                         splithandlerfunction={this.splithandlerfunction}
                                         pasteElement={this.props.pasteElement}
-                                        imageGlossaryRemovePopup = {this.toggleImageGlossaryPopup}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -1157,7 +1155,7 @@ class SlateWrapper extends Component {
     showImageGlossaryRemoveConfirmationPopup = () => {
         let dialogText;
         let imageRemoveClass;
-        if(this.state.isImageGlossaryPopup){
+        if(this.props.removeGlossaryImage){
            dialogText = REMOVE_LINKED_IMAGE_GLOSSARY
            imageRemoveClass = 'remove-glossary-image'
         } else if (this.props.openWrongImagePopup){
@@ -1165,7 +1163,7 @@ class SlateWrapper extends Component {
            imageRemoveClass = 'remove-glossary-image'
         }
 
-        if(this.state.isImageGlossaryPopup){
+        if(this.props.removeGlossaryImage){
             this.props.showBlocker(true)
             showTocBlocker()
             return (
@@ -1201,13 +1199,13 @@ class SlateWrapper extends Component {
    /**
    * @description - toggleImageGlossaryPopup function responsible for toggle Image glossary popup.
    */
-    toggleImageGlossaryPopup = (toggle) => {
+    toggleImageGlossaryPopup = () => {
         this.props.showBlocker(false)
         hideTocBlocker()
         hideBlocker()
-        this.setState({
-            isImageGlossaryPopup:toggle
-        })
+        if(this.props.removeGlossaryImage){
+            this.props.showRemoveImageGlossaryPopup(false);
+        }
     }
 
     /**
@@ -1231,8 +1229,10 @@ class SlateWrapper extends Component {
     processRemoveImageGlossaryConfirmation = () => {
         hideBlocker()
         hideTocBlocker()
-        store.dispatch(this.handleFigureGlossaryActions(false,{}))
-        this.toggleImageGlossaryPopup(false)
+        if(this.props.removeGlossaryImage){
+          this.props.showRemoveImageGlossaryPopup(false);
+          store.dispatch(this.handleFigureGlossaryActions(false,{}))
+        }
         this.props.showBlocker(false)
     }
 
@@ -1573,7 +1573,8 @@ const mapStateToProps = state => {
         openWrongImagePopup:state.appStore.openWrongImagePopup,
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         alfrescoPath : state.alfrescoReducer.alfrescoPath,
-        alfrescoListOption: state.alfrescoReducer.alfrescoListOption
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        removeGlossaryImage:state.appStore.removeGlossaryImage
     };
 };
 
@@ -1609,6 +1610,7 @@ export default connect(
         getMetadataAnchorLORef,
         toggleLOWarningPopup,
         showWrongImagePopup,
-        alfrescoPopup
+        alfrescoPopup,
+        showRemoveImageGlossaryPopup
     }
 )(SlateWrapper);
