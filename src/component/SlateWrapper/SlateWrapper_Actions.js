@@ -898,7 +898,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         if(asideData?.type === SHOW_HIDE) {
             const indexList = cutIndex?.toString().split("-") || [];
             _requestData.content[0].index = parseInt(indexList[indexList?.length - 1]);
-            //_requestData.content[0].sectionType = indexOfSectionType(cutIndex)
+            _requestData.content[0].sectionType = indexOfSectionType(cutIndex);
         }
 
         if(selection.operationType.toUpperCase() === "COPY") {
