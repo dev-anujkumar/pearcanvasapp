@@ -582,7 +582,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
-                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
+                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
             
