@@ -6,7 +6,7 @@ import { HideLoader, ShowLoader, projectPendingTcStatus } from '../../constants/
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
 import { sendDataToIframe, replaceWirisClassAndAttr, getShowhideChildUrns } from '../../constants/utility.js';
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
@@ -60,7 +60,7 @@ export const onPasteSuccess = async (params) => {
         }
 
         // if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
-        if(cutSnap) {
+        if(cutSnap || asideData?.type === SHOW_HIDE) {
             const tcmDeleteArgs = {
                 deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutcopyParentData)) : newParentData,
                 deleteElemData: { [deleteElm.id]: deleteElm.id },
@@ -131,7 +131,7 @@ export const onPasteSuccess = async (params) => {
     const currentSlateData = newParentData[config.slateManifestURN];
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
+    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE)) {
         const snapArgs = {
             newParentData,
             currentSlateData,
@@ -142,7 +142,7 @@ export const onPasteSuccess = async (params) => {
             responseData,
             dispatch,
             index,
-            elmFeedback: feedback
+            elmFeedback: feedback, index2ShowHide
         }
         await handleTCMSnapshotsForCreation(snapArgs, operationType)
     }
@@ -288,14 +288,18 @@ export const handleTCMSnapshotsForCreation = async (params, operationType = null
         responseData,
         dispatch,
         index,
-        elmFeedback
+        elmFeedback, index2ShowHide
     } = params
 
-    const containerElement = {
+    let containerElement = {
         asideData: asideData,
         parentUrn: parentUrn,
         poetryData: poetryData,
     };
+   /**/
+    if(asideData?.type === SHOW_HIDE) {
+        containerElement = prepareSnapshots_ShowHide(containerElement, responseData, index2ShowHide);
+    }
     if(responseData.type==="popup" && responseData.popupdata['formatted-title']){
         containerElement.parentElement = responseData;
         containerElement.metaDataField = "formattedTitle";

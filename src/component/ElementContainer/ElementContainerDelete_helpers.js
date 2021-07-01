@@ -285,8 +285,9 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
         * @description For SHOWHIDE Element - prepare parent element data
         * Update - 2C/Aside/POP:SH:New 
         */
-        const typeOfElement = containerElement?.asideData?.grandParent?.asideData?.type;
-        if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
+        //const typeOfElement = containerElement?.asideData?.grandParent?.asideData?.type;
+        const typeOfElement = asideData?.type;
+        if(typeOfElement === "showhide") {
             containerElement = prepareSnapshots_ShowHide(containerElement, deleteData.wipData, index);
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)

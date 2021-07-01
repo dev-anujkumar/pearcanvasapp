@@ -838,7 +838,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         localStorage.setItem('newElement', 1);
 
         let slateEntityUrn = config.slateEntityURN;
-        if(parentUrn && 'contentUrn' in parentUrn) {
+        if(sectionType && parentUrn && 'contentUrn' in parentUrn) {
             slateEntityUrn = parentUrn.contentUrn;
         } else if(poetryData && 'contentUrn' in poetryData) {
             slateEntityUrn = poetryData.contentUrn;
