@@ -264,8 +264,11 @@ function CommunicationChannel(WrappedComponent) {
                     if(message.isEditor){
                         this.handleEditorSave(message)
                     }
-                     if (message.calledFrom || message.calledFromGlossaryFootnote) {
+                     if (message.calledFrom === "NarrativeAudio" || message.calledFromGlossaryFootnote) {
                         this.handleAudioData(message)
+                    }
+                    if(message.calledFrom === "GlossaryImage") {
+                        this.handleImageData(message)
                     }
                     this.props.saveSelectedAssetData(message)
                     break;
@@ -419,6 +422,25 @@ function CommunicationChannel(WrappedComponent) {
                 hideBlocker();
             } else {
                 this.props.showWrongAudioPopup(true);
+            }
+        }
+
+        /**
+         * handle Glossary Image Data
+         */
+        handleImageData = (message) => {
+            let imageData = message.asset;
+            let figureType = imageData?.content?.mimeType?.split('/')[0]
+            if (figureType == "image") {
+                this.props.saveImageDataFromAlfresco(message);
+                let payloadObj = {
+                    asset: {},
+                    id: ''
+                }
+                this.props.saveSelectedAssetData(payloadObj);
+                hideBlocker();
+            } else {
+                this.props.showWrongImagePopup(true);
             }
         }
         /**
