@@ -39,6 +39,9 @@ import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSla
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
+import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import ElementConstants from "../ElementContainer/ElementConstants.js"
+const { SHOW_HIDE } = ElementConstants;
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -730,7 +733,7 @@ const setSlateDetail = (slateTitle, slateManifestURN) => {
 
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
     let parentData = getState().appStore.slateLevelData,
-        { parentUrn } = getState().appStore,
+        { parentUrn, asideData } = getState().appStore || {},
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -741,9 +744,23 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
             oldPath = bodymatter[index].figuredata.path || ""
         }
     } else {
-        let indexes = index.split('-');
-        let indexesLen = indexes.length, condition;
-        if (indexesLen == 2) {
+        let indexes = index?.split('-') || [];
+        let indexesLen = indexes?.length, condition;
+        /* update the store on update of figure elements inside showhide elements */
+        if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
+            /* Get the showhide */
+            const sh_Object = getShowHideElement(bodymatter, indexesLen, indexes);
+            if(sh_Object?.type === SHOW_HIDE) {
+                /* Get the sectiontype of showhide */
+                const sectionType = indexOfSectionType(indexes);
+                /* Get the Figure element of showhide */
+                let figureObject = sh_Object?.interactivedata[sectionType][indexes[indexesLen - 1]] || {};
+                if (figureObject.versionUrn === activeElement.id) {
+                    /* Get the image path of Figure element of showhide */
+                    oldPath = figureObject?.figuredata?.path;
+                }
+            }
+        } else if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path

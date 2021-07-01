@@ -18,7 +18,7 @@ import ElementConstants, {
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 
-const { AUTHORED_TEXT, SHOW_HIDE } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -444,6 +444,8 @@ function updateShowhideElements(element, updatedData, indexs) {
                 showHideElement.html = updatedData.html; /* For figure/Text */
                 if(showHideElement?.type === AUTHORED_TEXT) { /* For update paragraph - TEXT */
                     showHideElement.elementdata.text = updatedData.elementdata.text;
+                } else if(showHideElement?.type === FIGURE) { /* For update - FIGURE */
+                    showHideElement.figuredata = updatedData?.figuredata;
                 }
             }
         })

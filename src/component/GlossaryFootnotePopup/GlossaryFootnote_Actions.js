@@ -4,6 +4,7 @@ import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel, matchHTMLwithRegex, createLabelNumberTitleModel } from '../../constants/utility.js';
 import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { hideTocBlocker } from '../../js/toggleLoader'
 import { tcmSnapshotsForUpdate, fetchParentData, fetchElementWipData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 const {
     REACT_APP_API_URL
@@ -896,4 +897,29 @@ export const showRemoveImageGlossaryPopup = (value) => (dispatch, getState) => {
         type: SHOW_REMOVE_GLOSSARY_IMAGE,
         payload: value
     })
+}
+
+export const saveImageDataFromAlfresco = (message) => dispatch => {
+    let imageData = message?.asset;
+    let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
+    // let figureType = imageData?.content?.mimeType?.split('/')[0]
+    let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
+    let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
+    let uniqID = imageData.id ? imageData.id : "";
+    let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
+    let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
+    let displayTitle = imageData.name
+    let setImageGlossaryData = {
+        path: epsURL,
+        height: height,
+        width: width,
+        schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        imageid: `urn:pearson:alfresco:${uniqID}`,
+        alttext: altText,
+        longdescription: longDesc,
+        title: displayTitle
+    }
+    dispatch({ type: SET_FIGURE_GLOSSARY, payload: setImageGlossaryData })
+    dispatch({ type: ADD_FIGURE_GLOSSARY_POPUP, payload: true })
+    hideTocBlocker();
 }
