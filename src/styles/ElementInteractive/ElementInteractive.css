@@ -83,3 +83,13 @@ img.imageWidgetAccountingtable {
    margin-left:-4%;
    width: 100%;
 }
+
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh{
+    max-width: 75%;
+}
+
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .fg,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .fg{
+    max-width: 65%;
+}
