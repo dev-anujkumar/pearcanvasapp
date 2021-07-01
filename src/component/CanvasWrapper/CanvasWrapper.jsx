@@ -165,6 +165,7 @@ export class CanvasWrapper extends Component {
         }
         
     }
+
     render() {
         let slateData = this.props.slateLevelData
         let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : "";
@@ -274,6 +275,7 @@ const mapStateToProps = state => {
         pageNumberToggle: state.toolbarReducer.pageNumberToggle,
         audioGlossaryData:state.audioReducer.audioGlossaryData,
         currentSlateLF: state.metadataReducer.currentSlateLF,
+        activeElement: state.appStore.activeElement,
         figureGlossaryData:state.appStore.figureGlossaryData,
         alfrescoEditor: state.alfrescoReducer.editor,
         imageArgs: state.alfrescoReducer.imageArgs

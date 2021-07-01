@@ -16,7 +16,8 @@ import config from '../../config/config';
 import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning } from '../../constants/IFrameMessageTypes.js';
 import tinymce from 'tinymce'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-const { ELEMENT_ASIDE, MULTI_COLUMN } = TcmConstants;
+import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper.js';
+const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 
 export const onDeleteSuccess = (params) => {
     const {
@@ -119,11 +120,26 @@ export const deleteFromStore = (params) => {
         newParentData
     } = params
 
+    /* Get the slate bodymatter data */
+    let bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter || [];
+    const iList = index?.toString()?.split("-") || [];
+    /* update the store on /cut/paste of showhide elements */
+    if(asideData?.type === SHOWHIDE && iList?.length >= 3) {
+        /* Get the showhide Element */
+        const sh_Object = getShowHideElement(bodymatter, iList?.length, iList);
+        if(sh_Object?.type === SHOWHIDE) {
+            const cCIndex = iList[iList?.length - 1];
+            /* get the section type of showhide */
+            const sectionType = indexOfSectionType(iList);
+            /* delete the element inside showhide on cut from sh */
+            sh_Object?.interactivedata[sectionType]?.splice(cCIndex, 1);
+        }
+    } else
     if (parentUrn && parentUrn.elementType == "group") {
         const elIndex = index.toString().split('-') 
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
     } else {
-        let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+        
         bodymatter.forEach((element, key) => {
             if (element.id === elmId) {
                 bodymatter.splice(key, 1);

@@ -32,7 +32,6 @@ import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from './UpdateElements.js';
-import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
@@ -63,8 +62,11 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
+import {closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
+import {handleTCM, handleTCMSPALaunch} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -236,6 +238,10 @@ class ElementContainer extends Component {
         }
         let element = this.props.element,
             index = this.props.index
+            const lastFocusedElementId = config.lastActiveElementId
+            if(element.id !== lastFocusedElementId && element.id !== this.props.tcmSnapshotData?.eURN){
+                this.props.closeTcmPopup()
+            }
         if (showHideObj) {
             element = showHideObj.currentElement
             index = showHideObj.index
@@ -556,16 +562,6 @@ class ElementContainer extends Component {
         }
     }
 
-    /**
-     * This function opens TCM w.r.t. current Element
-     */
-    handleTCM = (e) => {
-        if (config.isSavingElement) {
-            return false
-        }
-        e.stopPropagation();
-        loadTrackChanges(this.props.element.id)
-    }
     /**
      * Calls API for element updation
      * @param {*} node
@@ -1470,8 +1466,9 @@ class ElementContainer extends Component {
                         setActiveElement: this.props.setActiveElement,
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
-                        deleteElement: this.deleteElement
-                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        deleteElement: this.deleteElement,
+                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement}
+                    />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
                     break;
@@ -1744,11 +1741,11 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
                     {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
-                        handleCommentspanel(event, element.id, this.props.index)
-                    }} type="comment-flag" />}
-                    {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
-                    {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
-                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCM(event)} />)}
+                        handleCommentspanel(event,element.id, this.props.index)
+                        }} type="comment-flag" />}
+                        {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
+                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={this.handleCommentPopup}
@@ -2032,6 +2029,17 @@ class ElementContainer extends Component {
         }
 
     }
+
+    handleTCMLaunch = (event, element) => {
+        const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA } = TcmConstants
+        const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA]
+            if (element.type && tcmPopupSupportedElements.includes(element.type)) {
+                this.props.handleTCM(element, this.props.index)
+            } else {
+                this.props.handleTCMSPALaunch(event, this.props.activeElement.elementId)
+            }
+    }
+
     render = () => {
         const { element } = this.props;
         try {
@@ -2150,6 +2158,9 @@ const mapDispatchToProps = (dispatch) => {
         editElmAssessmentId: (assessmentId, assessmentItemId) => {
             dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
         },
+        closeTcmPopup: () => {
+            dispatch(closeTcmPopup())
+        },
         deleteElementAction: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
             dispatch(deleteElementAction(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
         },
@@ -2159,6 +2170,12 @@ const mapDispatchToProps = (dispatch) => {
         storeOldAssetForTCM: (data) => {
             dispatch(storeOldAssetForTCM(data))
         },
+        handleTCM: (element) => {
+            dispatch(handleTCM(element))
+        },
+        handleTCMSPALaunch: (elementId) =>{
+            dispatch(handleTCMSPALaunch(elementId))
+        }
     }
 }
 
@@ -2185,6 +2202,7 @@ const mapStateToProps = (state) => {
         elementSelection: state.selectionReducer.selection,
         slateLevelData: state.appStore.slateLevelData,
         assessmentReducer: state.assessmentReducer,
+        tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
         threeColumnData: state.appStore.threeColumnData
     }
 }

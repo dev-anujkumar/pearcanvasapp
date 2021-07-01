@@ -13,7 +13,8 @@ jest.mock('../../../src/component/TcmSnapshots/ElementSnapshot_Utility.js', () =
     return {
         fetchElementsTag: jest.fn(),
         generateWipDataForFigure: jest.fn(),
-        getInteractiveSubtypeData: jest.fn()
+        getInteractiveSubtypeData: jest.fn(),
+        removeCalloutTitle: jest.fn()
     }
 })
 
@@ -82,6 +83,11 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 "id": "urn:pearson:manifest:6c092699-072d-4ada-8a3e-402be2ae0938",
                 "subtype": "workedexample",
                 "type": "element-aside",
+                parentUrn: {
+                    contentUrn: "urn:pearson:entity:e169b3d9-318f-470f-b308-5904f1dc693c",
+                    elementType: "group",
+                    manifestUrn: "urn:pearson:manifest:7e58d2dc-4d8d-4ef0-abff-ccc1ab56630d"
+                }
             }
             let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb"
              const { slate1 } = tcmTestData

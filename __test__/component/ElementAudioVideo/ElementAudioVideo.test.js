@@ -14,7 +14,7 @@ global.fetch = jest.fn().mockImplementation(() => {
       resolve({json:jest.fn(),id:'urn:pearson134'});
    });
  });
-describe('Testing Element Audio-Video component', () => {
+xdescribe('Testing Element Audio-Video component', () => {
 
     it('renders without crashing', () => {
         let props = {
@@ -115,7 +115,7 @@ describe('Testing Element Audio-Video component', () => {
         })
 
     });
-    describe('Testing handleC2MediaClick function', () => {
+    xdescribe('Testing handleC2MediaClick function', () => {
 
         let props = {
             slateLockInfo: {

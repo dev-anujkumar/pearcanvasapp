@@ -170,5 +170,7 @@ export const UPDATE_DISCUSSION_ITEMS = 'UPDATE_DISCUSSION_ITEMS';
 export const UPDATE_USAGE_TYPE = 'UPDATE_USAGE_TYPE';
 export const UPDATE_LOB_PERMISSIONS = 'UPDATE_LOB_PERMISSIONS';
 
+/*---------------- TCM POPUP ON CANVAS ------------------------*/
+export const LAUNCH_TCM_CANVAS_POPUP = 'LAUNCH_TCM_CANVAS_POPUP';
 /*---------------- 3Column details Info ------------------------*/
 export const UPDATE_THREE_COLUMN_INFO = 'UPDATE_THREE_COLUMN_INFO';
