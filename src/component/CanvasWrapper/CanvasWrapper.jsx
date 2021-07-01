@@ -26,7 +26,7 @@ import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType } from
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 import { fetchAudioNarrationForContainer ,audioGlossaryPopup, saveDataFromAlfresco, showWrongAudioPopup} from '../AudioNarration/AudioNarration_Actions'
-import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
+import { glossaaryFootnotePopup, saveImageDataFromAlfresco, showWrongImagePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import RootContext from './PageNumberContext.js';
 import {publishContent,logout} from '../../js/header'
 import store from './../../appstore/store'
@@ -328,6 +328,8 @@ export default connect(
         saveInlineImageData,
         alfrescoPopup,
         saveDataFromAlfresco,
-        showWrongAudioPopup
+        showWrongAudioPopup,
+        saveImageDataFromAlfresco,
+        showWrongImagePopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
