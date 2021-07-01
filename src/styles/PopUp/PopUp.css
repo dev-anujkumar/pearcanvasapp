@@ -110,7 +110,7 @@
    .cancel-button,.lo-save-button{
     border-radius: 2px;
     float: right;
-    margin: 0 0 0 16px;
+    margin: 15px 10px 0px 10px;
     font-family: inherit;
     background: #FFFFFF;
     color: #005a70;
@@ -170,10 +170,13 @@
   } 
 }
 
-.dialog-buttons{
+.dialog-buttons.tcm-canvas-popup{
     /* padding: 17px 8px 28px; */
-    height: 36px;
-    margin-top: 24px;
+    height: 70px;
+    margin: 10px -16px -16px -16px;
+    box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.14);
+    padding: 0px !important;
+    width: 310px;
 }
 .dialog-buttons.single_assessment{
   width:100%;
@@ -522,7 +525,6 @@ overflow: unset;
   margin-top: 85px; /* Negative half of height. */
   margin-left: 500px;
   max-height: 600px;
-  overflow-y: auto;
 }
 .tcmIcon{
   padding: 2px !important;
@@ -561,6 +563,8 @@ overflow: unset;
   word-break: break-all;
   padding: 10px 0 10px 0;
   font-size: 12px !important;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .dialog-window p {
@@ -574,4 +578,12 @@ ins{
 }
 del{
   background-color: red;
+}
+.dialog-window.tcm-canvas-popup::-webkit-scrollbar {
+    width: 8px;
+    margin: 4px 5px 605px;
+    opacity: 0.65;
+    border-radius: 3px;
+    background-color: #101010b3;
+    height: 30px
 }
