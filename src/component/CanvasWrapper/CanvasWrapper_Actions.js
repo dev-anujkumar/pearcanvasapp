@@ -748,7 +748,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
         let indexesLen = indexes?.length, condition;
         /* update the store on update of figure elements inside showhide elements */
         if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-            oldPath = getPath(bodymatter, indexes, "path", activeElement?.id);
+            oldPath = getPathOfFigureAsset(bodymatter, indexes, "path", activeElement?.id);
         } else if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
@@ -787,7 +787,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 let indexesLen = indexes?.length, condition;
                 /* update the store on update of figure elements inside showhide elements */
                 if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-                    oldPath = getPath(bodymatter, indexes, "audioid", activeElement?.id);
+                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "audioid", activeElement?.id);
                 } else
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -819,7 +819,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 let indexesLen = indexes?.length, condition;
                 /* update the store on update of figure elements inside showhide elements */
                 if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-                    oldPath = getPath(bodymatter, indexes, "videoid", activeElement?.id);
+                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "videoid", activeElement?.id);
                 } else
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -844,7 +844,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
     return oldPath || ""
 }
 /* Return the image/audio/vedio path/Id */
-function getPath(bodymatter, indexes, keyName, activeID) {
+function getPathOfFigureAsset(bodymatter, indexes, keyName, activeID) {
     const indexesLen = indexes?.length;
     /* Get the showhide */
     const sh_Object = getShowHideElement(bodymatter, indexesLen, indexes);

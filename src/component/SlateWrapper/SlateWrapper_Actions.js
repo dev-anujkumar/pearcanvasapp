@@ -832,7 +832,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             index,
             parentUrn,
             asideData,
-            poetryData
+            poetryData, sectionType, index2ShowHide
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
@@ -894,11 +894,9 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "destinationSlateUrn": slateEntityUrn
             }]
         };
-        /* if parent Element type showhide then get index of child element */
-        if(asideData?.type === SHOW_HIDE) {
-            const indexList = cutIndex?.toString().split("-") || [];
-            _requestData.content[0].index = parseInt(indexList[indexList?.length - 1]);
-            _requestData.content[0].sectionType = indexOfSectionType(cutIndex);
+        /* if parent Element type showhide then add sectionType where element tobe paste */
+        if(sectionType) {
+            _requestData.content[0].sectionType = sectionType;
         }
 
         if(selection.operationType.toUpperCase() === "COPY") {
@@ -976,7 +974,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     parentUrn,
                     asideData,
                     poetryData,
-                    slateEntityUrn
+                    slateEntityUrn, index2ShowHide
                 };
         
                 await onPasteSuccess(pasteSuccessArgs)

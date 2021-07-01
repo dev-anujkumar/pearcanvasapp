@@ -25,7 +25,7 @@ export const onPasteSuccess = async (params) => {
         parentUrn,
         asideData,
         poetryData,
-        slateEntityUrn
+        slateEntityUrn, index2ShowHide
     } = params
     
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -153,15 +153,9 @@ export const onPasteSuccess = async (params) => {
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
     }
-    const iList = index?.toString()?.split("-") || [];
+    const iList = index2ShowHide?.toString()?.split("-") || [];
     /* update the store on /cut/copy/paste of showhide elements */
     if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
-        /* Get the index of position at element will be paste */
-        if(operationType === 'cut'){
-            const source =  sourceElementIndex?.toString()?.split("-") || [];
-            const sourceLength = source?.length;
-            iList[sourceLength - 1] = source[source?.length - 1];
-        }
         /* Get the showhide Element */
         const sh_Object = getShowHideElement(currentSlateData?.contents?.bodymatter, iList?.length, iList);
         if(sh_Object?.type === SHOW_HIDE) {
