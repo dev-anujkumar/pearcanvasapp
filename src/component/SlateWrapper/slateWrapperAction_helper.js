@@ -10,6 +10,9 @@ import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
+import { getShowHideElement } from '../ShowHide/ShowHide_Helper';
+import ElementConstants from '../ElementContainer/ElementConstants.js';
+const { SHOW_HIDE } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
     const {
@@ -23,8 +26,8 @@ export const onPasteSuccess = async (params) => {
         asideData,
         poetryData,
         slateEntityUrn
-    } = params  
-
+    } = params
+    
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
     replaceWirisClassAndAttr(activeEditorId)
     // Store Update on Paste Element
@@ -150,7 +153,29 @@ export const onPasteSuccess = async (params) => {
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
     }
-
+    const iList = index?.toString()?.split("-") || [];
+    /* update the store on /cut/copy/paste of showhide elements */
+    if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
+        /* Get the index of position at element will be paste */
+        if(operationType === 'cut'){
+            const source =  sourceElementIndex?.toString()?.split("-") || [];
+            const sourceLength = source?.length;
+            iList[sourceLength - 1] = source[source?.length - 1];
+        }
+        /* Get the showhide Element */
+        const sh_Object = getShowHideElement(currentSlateData?.contents?.bodymatter, iList?.length, iList);
+        if(sh_Object?.type === SHOW_HIDE) {
+            const cCIndex = iList[iList?.length - 1];
+            /* paste the element inside showhide */
+            if(sh_Object?.interactivedata?.hasOwnProperty(responseData?.sectionType)) {
+                sh_Object?.interactivedata[responseData?.sectionType]?.splice(cCIndex, 0, responseData);
+            } else { /* if interactivedata dont have sectiontype [when all elements of show/hide deleted] */
+                let sectionOfSH = [];
+                sectionOfSH.push(responseData);
+                sh_Object.interactivedata[responseData?.sectionType] = sectionOfSH;
+            }   
+        }
+    } else
     if (asideData && asideData.type == 'element-aside') {
         newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
             if (item.id == parentUrn.manifestUrn) {
