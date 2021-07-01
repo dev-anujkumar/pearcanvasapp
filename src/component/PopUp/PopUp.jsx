@@ -35,6 +35,7 @@ class PopUp extends React.Component {
         if (this.modelRef && this.modelRef.current && this.modelRef.current.querySelector("input, textarea")) {
             this.modelRef.current.querySelector("input, textarea").focus();
         }
+        /**  Event Listner on glossary footnotes */
         this.contentRef.current.addEventListener("click", (e) => {
             refVal.processGlossaryFootnotes(e)
         });
@@ -51,6 +52,9 @@ class PopUp extends React.Component {
             this.props.hideCanvasBlocker(false)
         }
     }
+
+    /**  Function to open the TCM SPA on click of glossary and footnotes*/
+    
     processGlossaryFootnotes = (e) =>{
         if (e.target.matches('a') && e.target.getAttribute('data-footnoteelementid') 
         || e.target.matches('ins') && e.target.closest('a') && e.target.closest('a').getAttribute('data-footnoteelementid') 
