@@ -18,7 +18,7 @@ import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
-import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
+import { tcmButtonHandler, handleTCMSPALaunch } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -663,6 +663,7 @@ class Sidebar extends Component {
                         tcmSnapshotData={this.props.tcmSnapshotData}
                         dialogText={this.props.tcmSnapshotData.contentDifference}
                         elementData={this.props.elementData}
+                        handleTCMSPALaunch={this.props.handleTCMSPALaunch}
                     />}
             </>
         );
@@ -700,6 +701,7 @@ export default connect(
         setCurrentModule,
         conversionElement,
         setBCEMetadata,
-        tcmButtonHandler
+        tcmButtonHandler,
+        handleTCMSPALaunch
     }
 )(Sidebar);
