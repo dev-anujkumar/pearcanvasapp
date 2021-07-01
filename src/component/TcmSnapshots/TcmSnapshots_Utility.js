@@ -1140,24 +1140,21 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
     }
     const { metaDataField, sectionType, parentElement, showHideObj } = containerElement;
+    /* Get the element type */
+    const typeOfElement = containerElement?.asideData?.type;
     let wipData = {};
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
         wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
-    }
-    else if (showHideObj?.currentElement) { //showhide
-        wipData = showHideObj.currentElement
-    } 
-    else {
-        wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
-    }
+    } else
     /** 
     * @description For SHOWHIDE Element - prepare parent element data
     * Update - 2C/Aside/POP:SH:New 
     */
-    const typeOfElement = containerElement?.asideData?.type;//?.grandParent?.asideData?.type;
-    //if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
     if(typeOfElement === SHOWHIDE) {
         containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex);
+        wipData = containerElement?.showHideObj?.currentElement;
+    } else {
+        wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
     }
     
     let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
