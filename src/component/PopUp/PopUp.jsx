@@ -20,10 +20,12 @@ class PopUp extends React.Component {
             wordPasteProceed: false
         }
         this.modelRef = React.createRef();
+        this.contentRef = React.createRef();
+        this.processGlossaryFootnotes = this.processGlossaryFootnotes.bind(this)
     }
 
     componentDidMount() {
-
+        const refVal = this
         /**  Event Listner for close the popup on enter*/
         this.modelRef.current.addEventListener("keypress", (event) => {
             if (event.which == "13") {
@@ -33,6 +35,10 @@ class PopUp extends React.Component {
         if (this.modelRef && this.modelRef.current && this.modelRef.current.querySelector("input, textarea")) {
             this.modelRef.current.querySelector("input, textarea").focus();
         }
+        /**  Event Listner on glossary footnotes */
+        this.contentRef.current.addEventListener("click", (e) => {
+            refVal.processGlossaryFootnotes(e)
+        });
     }
 
     componentWillUnmount() {
@@ -44,6 +50,19 @@ class PopUp extends React.Component {
         if (this.props.showConfirmation) {
             hideBlocker();
             this.props.hideCanvasBlocker(false)
+        }
+    }
+
+    /**  Function to open the TCM SPA on click of glossary and footnotes*/
+    
+    processGlossaryFootnotes = (e) =>{
+        if (e.target.matches('a') && e.target.getAttribute('data-footnoteelementid') 
+        || e.target.matches('ins') && e.target.closest('a') && e.target.closest('a').getAttribute('data-footnoteelementid') 
+        || e.target.matches('ins') && e.target.closest('dfn')
+        || e.target.matches('em') && e.target.parentNode && e.target.parentNode.tagName == 'DFN' 
+        || e.target.matches('dfn')
+         ) {
+            this.props.handleTCMSPALaunch(e, this.props.tcmSnapshotData.eURN)
         }
     }
     /**
@@ -276,7 +295,7 @@ class PopUp extends React.Component {
             )
         } else if (props.isTCMCanvasPopup) {
             return (
-                <div className={`dialog-window ${props.assessmentClass}`} dangerouslySetInnerHTML={{ __html: props.dialogText }}></div>
+                <div ref={this.contentRef} className={`dialog-window ${props.assessmentClass}`} dangerouslySetInnerHTML={{ __html: props.dialogText }}></div>
             )
         }
         else {
