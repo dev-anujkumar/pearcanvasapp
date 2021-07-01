@@ -82,7 +82,6 @@ class AddImageGlossary extends Component {
                 }
             })
             .then(function (response) {
-               console.log("response",response);
                let payloadObj = { 
                 launchAlfrescoPopup: true, 
                 alfrescoPath: alfrescoPath, 
