@@ -83,7 +83,9 @@ const ShowHideUiBlock = (props) => {
 			}
 		}
 		const shParentUrn = {
-			contentUrn: element.contentUrn
+			contentUrn: element.contentUrn,
+			elementType: "showhide",
+			manifestUrn: element.id
 		}
 		return <ElementContainer
 			element = {item}

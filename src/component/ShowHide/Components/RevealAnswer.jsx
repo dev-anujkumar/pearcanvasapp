@@ -1,17 +1,17 @@
 import React from 'react';
 import { TinyMceEditor } from '../../tinyMceEditor';
-import { showHideConstants } from '../ShowHide_Helper';
+import { showHideConstants, REVEAL_TEXT_PLACEHOLDER } from '../ShowHide_Helper';
 
 function RevealAnswer(props) {
 	const { index, slateLockInfo, element } = props || {};
 	return (
-		<div className="showhide-reveal-ans-block">
+		<div className="showhide-reveal-ans-block revel">
 			<div className="showhide-call-action-text-div">Call to Action Button text:</div>
 			<TinyMceEditor 
 				permissions = {props.permissions}
 				openGlossaryFootnotePopUp = {props.openGlossaryFootnotePopUp}
 				index = {`${index}-1-0`} 
-				placeholder = "Enter call to action..." 
+				placeholder = {REVEAL_TEXT_PLACEHOLDER} 
 				className = {"actionPU formatted-text"} 
 				id = {props.id}
 				element = {element}
