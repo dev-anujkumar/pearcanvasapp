@@ -985,13 +985,13 @@ class ElementContainer extends Component {
                 manifestUrn: element.id,
                 contentUrn: element.contentUrn,
             }
-            if (this.props.parentUrn.elementType === "group") {
+            if (this.props.parentUrn?.elementType === "group") {
                 parentUrn = {
                     ...parentUrn,
                     multiColumnType: this.props.parentUrn.multiColumnType,
                     multiColumnDetails: {
                         columnName: this.props.parentUrn.columnName,
-                        manifestUrn: this.props.parentUrn.manifestUrn,
+                        columnId: this.props.parentUrn.manifestUrn,
                         mcId: this.props.parentUrn.mcId,
                         type: "groupedcontent"
                     }

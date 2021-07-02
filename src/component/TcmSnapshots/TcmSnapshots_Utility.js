@@ -104,9 +104,15 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
         tag.grandParent = "2C:" + figParent.columnName;
         elementId.grandParentId = `${figParent.id}+${figParent.columnId}`;
-    } else if(actionStatus?.action === "delete" && parentData?.type === MULTI_COLUMN ) {
+    } else if(actionStatus?.action === "delete" && (parentData?.type === MULTI_COLUMN || parentUrn?.multiColumnDetails?.type === MULTI_COLUMN) ) {
         /* snapshots for Delete the section break inside 2c/we */
-        const { id: sc_id, columnName: sb_cName, columnId: sb_cId } = parentData || {};
+        let { id: sc_id, columnName: sb_cName, columnId: sb_cId } = parentData || {};
+        if (Object.keys(parentData).length === 0) {
+            multiColumnType = parentUrn?.multiColumnType;
+            sc_id = parentUrn?.multiColumnDetails?.mcId;
+            sb_cName = parentUrn?.multiColumnDetails?.columnName;
+            sb_cId = parentUrn?.multiColumnDetails?.columnId;
+        }
         tag.grandParent = multiColumnType + ":" + sb_cName;
         elementId.grandParentId = `${sc_id}+${sb_cId}`;
     }
