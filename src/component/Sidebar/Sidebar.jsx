@@ -664,6 +664,7 @@ class Sidebar extends Component {
                         dialogText={this.props.tcmSnapshotData.contentDifference}
                         elementData={this.props.elementData}
                         handleTCMSPALaunch={this.props.handleTCMSPALaunch}
+                        tcmStatus = {this.props.tcmStatus}
                     />}
             </>
         );
@@ -690,7 +691,8 @@ const mapStateToProps = state => {
         isLearnosityProject: state.appStore.isLearnosityProjectInfo,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
-        elementData: state.tcmReducer.elementData
+        elementData: state.tcmReducer.elementData,
+        tcmStatus: state.tcmReducer.tcmStatus
     };
 };
 

@@ -107,22 +107,22 @@
     border:none;
     margin-top:10px;
 }
-   .cancel-button,.lo-save-button{
-    border-radius: 2px;
-    float: right;
-    margin: 15px 10px 0px 10px;
-    font-family: inherit;
-    background: #FFFFFF;
-    color: #005a70;
-    animation: blink 1.1s infinite;
-    padding: 8px 20px;
-    font-size: 14px;
-    line-height: 1.43;
-    letter-spacing: normal;
-    text-align: center;
-    font-weight: 500;
-    border: solid 1px #dcdcdc;
-  }
+.cancel-button,.lo-save-button{
+  border-radius: 2px;
+  float: right;
+  margin: 0 0 0 16px;
+  font-family: inherit;
+  background: #FFFFFF;
+  color: #005a70;
+  animation: blink 1.1s infinite;
+  padding: 8px 20px;
+  font-size: 14px;
+  line-height: 1.43;
+  letter-spacing: normal;
+  text-align: center;
+  font-weight: 500;
+  border: solid 1px #dcdcdc;
+}
 
   .cancel-button:hover,.lo-save-button:hover{
     background-color: #def8ff;
@@ -168,6 +168,12 @@
     -webkit-box-shadow: inset 0 0 0 300px transparent;
     box-shadow: inset 0 0 0 300px transparent; 
   } 
+}
+
+.dialog-buttons{
+  /* padding: 17px 8px 28px; */
+  height: 36px;
+  margin-top: 24px;
 }
 
 .dialog-buttons.tcm-canvas-popup{
@@ -586,4 +592,15 @@ del{
     border-radius: 3px;
     background-color: #101010b3;
     height: 30px
+}
+.tcm{
+  margin: 15px 10px 0px 10px !important;
+}
+.dialog-window.tcm-canvas-popup p.handwritingstyle{
+  font-family: 'Dancing Script', cursive !important;
+  font-size: 1.5em !important;
+}
+.cancel-button.tcm.disable{
+  pointer-events: none !important;
+  color: gray !important;
 }

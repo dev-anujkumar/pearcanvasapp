@@ -2031,9 +2031,9 @@ class ElementContainer extends Component {
     }
 
     handleTCMLaunch = (event, element) => {
-        const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA } = TcmConstants
-        const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA]
-            if (element.type && tcmPopupSupportedElements.includes(element.type)) {
+        const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE } = TcmConstants
+        const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE]
+            if (element?.type && tcmPopupSupportedElements.includes(element.type)) {
                 this.props.handleTCM(element, this.props.index)
             } else {
                 this.props.handleTCMSPALaunch(event, this.props.activeElement.elementId)

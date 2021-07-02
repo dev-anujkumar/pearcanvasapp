@@ -149,8 +149,8 @@ class PopUp extends React.Component {
         if (props.isTCMCanvasPopup) {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
-                    <span className="cancel-button" onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
-                    <span className={`lo-save-button`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
+                    <span className={`cancel-button tcm ${props.tcmStatus === false && "disable"}`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
+                    <span className="lo-save-button tcm" onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
                 </div>
             )
         }
