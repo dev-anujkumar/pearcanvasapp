@@ -1,4 +1,4 @@
-import  projectInfoReducer  from "../../src/appstore/projectInfoReducer";
+import { projectInfo }  from "../../src/appstore/projectInfoReducer";
 import { UPDATE_LOB_PERMISSIONS } from "../../src/constants/Action_Constants";
 
 const INITIAL_STATE = {
@@ -11,11 +11,11 @@ const INITIAL_STATE = {
 describe("Testing LOB permissions", () => {
 
     it('should return the initial state', () => {
-        expect(projectInfoReducer(undefined, {})).toEqual(INITIAL_STATE);
+        expect(projectInfo(undefined, {})).toEqual(INITIAL_STATE);
     });
 
     it('set showPlayscript true', () => {
-        expect(projectInfoReducer(INITIAL_STATE, {
+        expect(projectInfo(INITIAL_STATE, {
             type: UPDATE_LOB_PERMISSIONS,
             payload: {
                 playscript: true,
@@ -30,7 +30,7 @@ describe("Testing LOB permissions", () => {
     })
 
     it('set showPlayscript false', () => {
-        expect(projectInfoReducer(INITIAL_STATE, {
+        expect(projectInfo(INITIAL_STATE, {
             type: UPDATE_LOB_PERMISSIONS,
             payload: {
                 playscript: false,
@@ -45,7 +45,7 @@ describe("Testing LOB permissions", () => {
     })
 
     it('set showDiscussion true', () => {
-        expect(projectInfoReducer(INITIAL_STATE, {
+        expect(projectInfo(INITIAL_STATE, {
             type: UPDATE_LOB_PERMISSIONS,
             payload: {
                 playscript: false,
@@ -60,7 +60,7 @@ describe("Testing LOB permissions", () => {
     })
 
     it('set showDiscussion false', () => {
-        expect(projectInfoReducer(INITIAL_STATE, {
+        expect(projectInfo(INITIAL_STATE, {
             type: UPDATE_LOB_PERMISSIONS,
             payload: {
                 playscript: false,
