@@ -6,7 +6,7 @@ import { HideLoader, ShowLoader, projectPendingTcStatus } from '../../constants/
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
 import { sendDataToIframe, replaceWirisClassAndAttr, getShowhideChildUrns } from '../../constants/utility.js';
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
@@ -25,7 +25,7 @@ export const onPasteSuccess = async (params) => {
         parentUrn,
         asideData,
         poetryData,
-        slateEntityUrn
+        slateEntityUrn, index2ShowHide
     } = params
     
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -60,7 +60,7 @@ export const onPasteSuccess = async (params) => {
         }
 
         // if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
-        if(cutSnap) {
+        if(cutSnap || asideData?.type === SHOW_HIDE) {
             const tcmDeleteArgs = {
                 deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutcopyParentData)) : newParentData,
                 deleteElemData: { [deleteElm.id]: deleteElm.id },
@@ -131,7 +131,7 @@ export const onPasteSuccess = async (params) => {
     const currentSlateData = newParentData[config.slateManifestURN];
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
+    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE)) {
         const snapArgs = {
             newParentData,
             currentSlateData,
@@ -142,7 +142,7 @@ export const onPasteSuccess = async (params) => {
             responseData,
             dispatch,
             index,
-            elmFeedback: feedback
+            elmFeedback: feedback, index2ShowHide
         }
         await handleTCMSnapshotsForCreation(snapArgs, operationType)
     }
@@ -153,27 +153,27 @@ export const onPasteSuccess = async (params) => {
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
     }
-    const iList = index?.toString()?.split("-") || [];
     /* update the store on /cut/copy/paste of showhide elements */
-    if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
-        /* Get the index of position at element will be paste */
-        if(operationType === 'cut'){
-            const source =  sourceElementIndex?.toString()?.split("-") || [];
-            const sourceLength = source?.length;
-            iList[sourceLength - 1] = source[source?.length - 1];
-        }
-        /* Get the showhide Element */
-        const sh_Object = getShowHideElement(currentSlateData?.contents?.bodymatter, iList?.length, iList);
-        if(sh_Object?.type === SHOW_HIDE) {
-            const cCIndex = iList[iList?.length - 1];
-            /* paste the element inside showhide */
-            if(sh_Object?.interactivedata?.hasOwnProperty(responseData?.sectionType)) {
-                sh_Object?.interactivedata[responseData?.sectionType]?.splice(cCIndex, 0, responseData);
-            } else { /* if interactivedata dont have sectiontype [when all elements of show/hide deleted] */
-                let sectionOfSH = [];
-                sectionOfSH.push(responseData);
-                sh_Object.interactivedata[responseData?.sectionType] = sectionOfSH;
-            }   
+    if(asideData?.type === SHOW_HIDE) {
+        const manifestUrn = parentUrn?.manifestUrn;
+        try {
+            currentSlateData?.contents?.bodymatter?.map(item => {
+                if(item?.id === manifestUrn) {
+                    pasteInShowhide(item, responseData, index);
+                } else if(item?.type === 'element-aside') {
+                    pasteShowhideInAside(item, manifestUrn, responseData, index)
+                } else if(item?.type === "groupedcontent") {
+                    item?.groupeddata?.bodymatter?.map(item_4 => {
+                        item_4?.groupdata?.bodymatter?.map(item_5 => {
+                            if(item_5?.type === 'element-aside') {
+                                pasteShowhideInAside(item_5, manifestUrn, responseData, index);
+                            }
+                        })
+                    })
+                }
+            })
+        } catch(error){
+            console.error(error);
         }
     } else
     if (asideData && asideData.type == 'element-aside') {
@@ -250,7 +250,33 @@ export const onPasteSuccess = async (params) => {
     })
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
 }
-
+/**/
+function pasteInShowhide(element, responseData, cutIndex) {
+    /**/
+    if(element?.type === SHOW_HIDE) {
+        if(element?.interactivedata?.hasOwnProperty(responseData?.sectionType)) {
+            element?.interactivedata[responseData?.sectionType]?.splice(cutIndex, 0, responseData);
+        } else { /* if interactivedata dont have sectiontype [when all elements of show/hide deleted] */
+            let sectionOfSH = [];
+            sectionOfSH.push(responseData);
+            element.interactivedata[responseData?.sectionType] = sectionOfSH;
+        }
+    }
+}
+/**/
+function pasteShowhideInAside(item, manifestUrn, responseData, cutIndex) {
+    item?.elementdata?.bodymatter.map(item_2 => {
+        if(item_2?.id === manifestUrn) {
+            pasteInShowhide(item_2, responseData, cutIndex);
+        } else if(item_2?.type === "manifest") {
+            item_2?.contents?.bodymatter?.map(item_3 => {
+                if(item_3?.id === manifestUrn) {
+                    pasteInShowhide(item_3, responseData, cutIndex);
+                }
+            })
+        } 
+    })
+}
 export const checkElementExistence = async (slateEntityUrn = '', elementEntity = '') => {
     let exist = false;
     let bodymatter = [];
@@ -294,14 +320,18 @@ export const handleTCMSnapshotsForCreation = async (params, operationType = null
         responseData,
         dispatch,
         index,
-        elmFeedback
+        elmFeedback, index2ShowHide
     } = params
 
-    const containerElement = {
+    let containerElement = {
         asideData: asideData,
         parentUrn: parentUrn,
         poetryData: poetryData,
     };
+   /**/
+    if(asideData?.type === SHOW_HIDE) {
+        containerElement = prepareSnapshots_ShowHide(containerElement, responseData, index2ShowHide);
+    }
     if(responseData.type==="popup" && responseData.popupdata['formatted-title']){
         containerElement.parentElement = responseData;
         containerElement.metaDataField = "formattedTitle";

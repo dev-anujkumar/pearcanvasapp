@@ -14,6 +14,7 @@ import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
 import { getPasteValidated } from '../../constants/Element_Constants.js';
 import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
+import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 
 const { TEXT, 
     IMAGE, 
@@ -384,8 +385,13 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
     const index = separatorProps.index;
     const firstOne = separatorProps.firstOne || false;
     let insertionIndex = firstOne ? index : index + 1;
+    /* For cut/copy paste functionality in showhide element */
+    let sectionType, index2ShowHide;
     if(separatorProps?.elementType === SHOW_HIDE) {
-        insertionIndex = index;
+        const indexs = index?.toString()?.split("-") || [];
+        insertionIndex = indexs[indexs?.length - 1];
+        sectionType = indexOfSectionType(indexs);
+        index2ShowHide = index;
     }
     const selectedElement = separatorProps.elementSelection.element
     const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,SHOW_HIDE,POPUP]
@@ -398,7 +404,9 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
         index: insertionIndex,
         parentUrn: 'parentUrn' in separatorProps ? separatorProps.parentUrn : null,
         asideData: 'asideData' in separatorProps ? separatorProps.asideData : null,
-        poetryData: 'poetryData' in separatorProps ? separatorProps.poetryData : null
+        poetryData: 'poetryData' in separatorProps ? separatorProps.poetryData : null,
+        sectionType,
+        index2ShowHide
     }
     separatorProps?.pasteElement(pasteFnArgs)
 }
