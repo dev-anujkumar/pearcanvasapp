@@ -9,6 +9,8 @@ import { SECTION_BREAK_DELETE_TEXT } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
 import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
+import config from '../../config/config'
+import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -64,7 +66,11 @@ class PopUp extends React.Component {
         || e.target.matches('em') && e.target.parentNode && e.target.parentNode.tagName == 'DFN' 
         || e.target.matches('dfn')
          ) {
-            this.props.handleTCMSPALaunch(e, this.props.tcmSnapshotData.eURN)
+            if (config.isSavingElement) {
+                return false
+            }
+            e.stopPropagation();
+            loadTrackChanges(this.props.tcmSnapshotData.eURN)
         }
     }
     /**

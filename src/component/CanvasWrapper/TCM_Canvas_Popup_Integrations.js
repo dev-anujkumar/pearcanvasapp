@@ -44,18 +44,6 @@ export const handleTCM = (element, index) => (dispatch) => {
 }
 
 /**
-    * This function Launch TCM SPA w.r.t. current Element
-   */
-
-export const handleTCMSPALaunch = (e, elementId) => {
-    if (config.isSavingElement) {
-        return false
-    }
-    e.stopPropagation();
-    loadTrackChanges(elementId)
-}
-
-/**
     * This function handle Accept and Revert functionality w.r.t. current Element
    */
 
