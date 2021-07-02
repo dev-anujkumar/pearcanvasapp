@@ -61,6 +61,9 @@ class ElementAudioVideo extends Component {
             let smartLinkUrl = "";
             if(figureType === "video" || figureType === "audio"){
                 smartLinkUrl = imageData["institution-urls"] && imageData["institution-urls"][0]?.publicationUrl
+                if(!smartLinkUrl){
+                    smartLinkUrl = imageData?.smartLinkURl
+                }
             }
             else if (smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
                 smartLinkUrl = imageData?.properties["avs:url"] ? imageData.properties["avs:url"] : "";
@@ -273,7 +276,6 @@ class ElementAudioVideo extends Component {
     }
     handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{
         let that = this
-        //let url = 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000';
         let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
         return axios.get(url,
