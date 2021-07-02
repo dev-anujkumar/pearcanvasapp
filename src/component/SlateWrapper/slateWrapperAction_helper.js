@@ -159,14 +159,14 @@ export const onPasteSuccess = async (params) => {
         try {
             currentSlateData?.contents?.bodymatter?.map(item => {
                 if(item?.id === manifestUrn) {
-                    pasteInShowhide(item, responseData, cutIndex);
+                    pasteInShowhide(item, responseData, index);
                 } else if(item?.type === 'element-aside') {
-                    pasteShowhideInAside(item, manifestUrn, responseData, cutIndex)
+                    pasteShowhideInAside(item, manifestUrn, responseData, index)
                 } else if(item?.type === "groupedcontent") {
                     item?.groupeddata?.bodymatter?.map(item_4 => {
                         item_4?.groupdata?.bodymatter?.map(item_5 => {
                             if(item_5?.type === 'element-aside') {
-                                pasteShowhideInAside(item_5, manifestUrn, responseData, cutIndex);
+                                pasteShowhideInAside(item_5, manifestUrn, responseData, index);
                             }
                         })
                     })
