@@ -89,7 +89,51 @@ img.imageWidgetAccountingtable {
     max-width: 75%;
 }
 
-.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .fg,
-.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .fg{
+.container-multi-column-group.wider-50-50.column-0 .container-aside .sh,
+.container-multi-column-group.text-width-50-50.column-0 .container-aside .sh,
+.container-multi-column-group.wider-50-50.column-1 .container-aside .sh,
+.container-multi-column-group.text-width-50-50.column-1 .container-aside .sh{
+    max-width: 81%;
+}
+
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .fg ,
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .bq,
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .pq,
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .ul,
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .ol,
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .p,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .fg,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .bq,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .pq,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .ul,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .ol,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .p{
     max-width: 65%;
+}
+
+.container-multi-column-group.wider-50-50.column-1 .container-aside .sh .fg,
+.container-multi-column-group.wider-50-50.column-1 .container-aside .sh .bq,
+.container-multi-column-group.wider-50-50.column-1 .container-aside .sh .pq,
+.container-multi-column-group.wider-50-50.column-1 .container-aside .sh .ul,
+.container-multi-column-group.wider-50-50.column-1 .container-aside .sh .ol,
+.container-multi-column-group.wider-50-50.column-1 .container-aside .sh .p,
+.container-multi-column-group.text-width-50-50.column-1 .container-aside .sh .fg,
+.container-multi-column-group.text-width-50-50.column-1 .container-aside .sh .bq,
+.container-multi-column-group.text-width-50-50.column-1 .container-aside .sh .pq,
+.container-multi-column-group.text-width-50-50.column-1 .container-aside .sh .ul,
+.container-multi-column-group.text-width-50-50.column-1 .container-aside .sh .ol,
+.container-multi-column-group.text-width-50-50.column-1 .container-aside .sh .p,
+.container-multi-column-group.wider-50-50.column-0 .container-aside .sh .fg,
+.container-multi-column-group.wider-50-50.column-0 .container-aside .sh .bq,
+.container-multi-column-group.wider-50-50.column-0 .container-aside .sh .pq,
+.container-multi-column-group.wider-50-50.column-0 .container-aside .sh .ul,
+.container-multi-column-group.wider-50-50.column-0 .container-aside .sh .ol,
+.container-multi-column-group.wider-50-50.column-0 .container-aside .sh .p,
+.container-multi-column-group.text-width-50-50.column-0 .container-aside .sh .fg,
+.container-multi-column-group.text-width-50-50.column-0 .container-aside .sh .bq,
+.container-multi-column-group.text-width-50-50.column-0 .container-aside .sh .pq,
+.container-multi-column-group.text-width-50-50.column-0 .container-aside .sh .ul,
+.container-multi-column-group.text-width-50-50.column-0 .container-aside .sh .ol,
+.container-multi-column-group.text-width-50-50.column-0 .container-aside .sh .p{
+    max-width: 74%;
 }
