@@ -36,7 +36,7 @@ describe('testing FigureTinyMceGlossary component', () => {
     })
 })
 
-describe('testing FigureTinyMceGlossary component for audioNarrationEnable', () => {
+describe('testing FigureTinyMceGlossary component for imageGlossaryEnable', () => {
     const initialState = {
         appStore: {
             addfigureGlossarypopup: true
