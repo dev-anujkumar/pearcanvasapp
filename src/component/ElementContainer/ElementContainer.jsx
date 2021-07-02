@@ -65,7 +65,8 @@ import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
 import {closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
-import {handleTCM, handleTCMSPALaunch} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import {handleTCM} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 
 class ElementContainer extends Component {
@@ -2036,7 +2037,11 @@ class ElementContainer extends Component {
             if (element?.type && tcmPopupSupportedElements.includes(element.type)) {
                 this.props.handleTCM(element, this.props.index)
             } else {
-                this.props.handleTCMSPALaunch(event, this.props.activeElement.elementId)
+                if (config.isSavingElement) {
+                    return false
+                }
+                event.stopPropagation();
+                loadTrackChanges(element.id)
             }
     }
 
@@ -2173,9 +2178,6 @@ const mapDispatchToProps = (dispatch) => {
         handleTCM: (element) => {
             dispatch(handleTCM(element))
         },
-        handleTCMSPALaunch: (elementId) =>{
-            dispatch(handleTCMSPALaunch(elementId))
-        }
     }
 }
 
