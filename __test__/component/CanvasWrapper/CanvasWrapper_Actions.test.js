@@ -1,5 +1,5 @@
 /**************************Import Plugins**************************/
-import axios from 'axios';
+import axios,{ mockAxios } from 'axios';
 import { JSDOM } from 'jsdom'
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("getElementById")) {
@@ -24,12 +24,16 @@ import {
     SET_PARENT_SHOW_DATA,
     SET_PARENT_ASIDE_DATA,
     AUTHORING_ELEMENT_UPDATE,
-    OPEN_POPUP_SLATE
+    OPEN_POPUP_SLATE,
+    UPDATE_PROJECT_INFO,
+    UPDATE_LOB_PERMISSIONS
 } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
 /*************************Import Test Data*************************/
 import { slateTestData } from './mockData.js';
+import { debug } from 'webpack';
+import { response } from 'express';
 /**********************Mock Helper Functions***********************/
 jest.mock('axios');
 jest.mock('../../../src/constants/ga', () => {
@@ -1366,5 +1370,47 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
+    });
+    describe('Test-11- getProjectDetails', () => {
+        it('Test-11.1 Get Project Details - then Block', async () => {
+            let firstResponseData = {
+                "data": {
+                    "lineOfBusiness":"ukschools"
+                }
+            }
+            let lineOfBusiness = "ukschools"
+            let dispatch = jest.fn();
+            axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
+            await canvasActions.getProjectDetails(lineOfBusiness)(dispatch)
+            expect(dispatch).toHaveBeenCalled();
+        })
+
+        it('Test-11.2 Get Project Details - catch Block', async () => {
+            let firstResponseData = { }
+            let dispatch = jest.fn();
+            axios.get.mockImplementation(() => Promise.reject(firstResponseData))
+            await canvasActions.getProjectDetails()(dispatch)
+            expect(dispatch).not.toHaveBeenCalled();
+        })
+
+        it('Test-11.3 Get LOB Data - then Block', async () => {
+            let secondResponseData = {
+                'playscript': 'true',
+                'discussion': 'true'
+            }
+            let lineOfBusiness = "ukschools"
+            let dispatch = jest.fn();
+            axios.get.mockImplementation(() => Promise.resolve(secondResponseData))
+            await canvasActions.getProjectDetails(lineOfBusiness)(dispatch)
+            expect(dispatch).toHaveBeenCalled();
+        })
+
+        it('Test-11.4 Get LOB Data - catch Block' , async () => {
+            let secondResponseData = { }
+            let dispatch = jest.fn();
+            axios.get.mockImplementation(() => Promise.reject(secondResponseData))
+            await canvasActions.getProjectDetails()(dispatch)
+            expect(dispatch).not.toHaveBeenCalled();
+        })
     });
 });
