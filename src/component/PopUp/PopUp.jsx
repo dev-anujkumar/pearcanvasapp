@@ -36,7 +36,7 @@ class PopUp extends React.Component {
             this.modelRef.current.querySelector("input, textarea").focus();
         }
         /**  Event Listner on glossary footnotes */
-        if(this.currentRef){
+        if(this.contentRef){
         this.contentRef.current.addEventListener("click", (e) => {
             refVal.processGlossaryFootnotes(e)
         });
