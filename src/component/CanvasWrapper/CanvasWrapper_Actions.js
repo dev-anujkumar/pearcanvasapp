@@ -548,10 +548,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
-                if(versioning && (versioning.type === 'element-aside' || versioning.type === 'showhide')){
+                if(versioning && (versioning.type === 'element-aside')){
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
-                    let index =versioning.type === 'showhide'? versioning.indexes:versioning.indexes[0];
+                    let index = versioning.indexes[0];
                     newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     return dispatch({
                         type: AUTHORING_ELEMENT_UPDATE,
@@ -559,7 +559,26 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateLevelData: newslateData
                         }
                     })
-                } else if (versioning.type === 'citations' || versioning.type === 'poetry' || versioning.type === 'groupedcontent') {
+                }
+                else if ((versioning?.type === 'showhide' || (versioning.calledFrom == 'showhide'))) {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    let index ;
+                    if(typeof versioning.index === "number"){
+                        index = versioning.index;
+                    }
+                    else if(typeof versioning.index === "string"){
+                        index = versioning.index.split("-")[0];
+                    }
+                    newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+                }
+                else if (versioning.type === 'citations' || versioning.type === 'poetry' || versioning.type === 'groupedcontent') {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index
