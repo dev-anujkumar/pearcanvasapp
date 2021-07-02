@@ -9,6 +9,8 @@ import { SECTION_BREAK_DELETE_TEXT } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
 import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
+import config from '../../config/config'
+import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -36,7 +38,7 @@ class PopUp extends React.Component {
             this.modelRef.current.querySelector("input, textarea").focus();
         }
         /**  Event Listner on glossary footnotes */
-        if(this.currentRef){
+        if(this.props.isTCMCanvasPopup && this.contentRef !== null){
         this.contentRef.current.addEventListener("click", (e) => {
             refVal.processGlossaryFootnotes(e)
         });
@@ -64,7 +66,11 @@ class PopUp extends React.Component {
         || e.target.matches('em') && e.target.parentNode && e.target.parentNode.tagName == 'DFN' 
         || e.target.matches('dfn')
          ) {
-            this.props.handleTCMSPALaunch(e, this.props.tcmSnapshotData.eURN)
+            if (config.isSavingElement) {
+                return false
+            }
+            e.stopPropagation();
+            loadTrackChanges(this.props.tcmSnapshotData.eURN)
         }
     }
     /**
@@ -148,9 +154,9 @@ class PopUp extends React.Component {
         }
         if (props.isTCMCanvasPopup) {
             return (
-                <div className={`dialog-buttons`}>
-                    <span className="cancel-button" onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
-                    <span className={`lo-save-button`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
+                <div className={`dialog-buttons ${props.assessmentClass}`}>
+                    <span className={`cancel-button tcm ${props.tcmStatus === false && "disable"}`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
+                    <span className="lo-save-button tcm" onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
                 </div>
             )
         }

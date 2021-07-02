@@ -31,7 +31,7 @@ export const handleTCM = (element, index) => (dispatch) => {
             if (elemData.elemURN === id) {
                 const elemIndex = [{ index, urn: id }]
                 const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
-                const tcmObject = { isTCMCanvasPopup: true, tcmElemData: tcmData.result[0], elemData: eURN, elementEditor: elemData.latestPendingTransaction.elementEditor }
+                const tcmObject = { isTCMCanvasPopup: true, tcmElemData: tcmData.result[0], elemData: eURN, elementEditor: elemData.latestPendingTransaction?.elementEditor, tcmStatus: elemData.latestAcceptedTransaction ? true : false}
                 dispatch({
                     type: LAUNCH_TCM_CANVAS_POPUP,
                     payload: tcmObject
@@ -41,18 +41,6 @@ export const handleTCM = (element, index) => (dispatch) => {
     }).catch((error) => {
         console.error(error)
     })
-}
-
-/**
-    * This function Launch TCM SPA w.r.t. current Element
-   */
-
-export const handleTCMSPALaunch = (e, elementId) => {
-    if (config.isSavingElement) {
-        return false
-    }
-    e.stopPropagation();
-    loadTrackChanges(elementId)
 }
 
 /**

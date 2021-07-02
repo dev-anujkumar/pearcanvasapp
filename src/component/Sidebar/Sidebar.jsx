@@ -18,7 +18,7 @@ import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
-import { tcmButtonHandler, handleTCMSPALaunch } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
+import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -663,7 +663,7 @@ class Sidebar extends Component {
                         tcmSnapshotData={this.props.tcmSnapshotData}
                         dialogText={this.props.tcmSnapshotData.contentDifference}
                         elementData={this.props.elementData}
-                        handleTCMSPALaunch={this.props.handleTCMSPALaunch}
+                        tcmStatus = {this.props.tcmStatus}
                     />}
             </>
         );
@@ -690,7 +690,8 @@ const mapStateToProps = state => {
         isLearnosityProject: state.appStore.isLearnosityProjectInfo,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
-        elementData: state.tcmReducer.elementData
+        elementData: state.tcmReducer.elementData,
+        tcmStatus: state.tcmReducer.tcmStatus
     };
 };
 
@@ -701,7 +702,6 @@ export default connect(
         setCurrentModule,
         conversionElement,
         setBCEMetadata,
-        tcmButtonHandler,
-        handleTCMSPALaunch
+        tcmButtonHandler
     }
 )(Sidebar);
