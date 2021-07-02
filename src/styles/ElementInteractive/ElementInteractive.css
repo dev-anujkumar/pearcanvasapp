@@ -90,6 +90,16 @@ img.imageWidgetAccountingtable {
 }
 
 .container-multi-column-group.wider-60-40.column-1 .container-aside .sh .fg,
-.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .fg{
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .bq,
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .pq,
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .ul,
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .ol,
+.container-multi-column-group.wider-60-40.column-1 .container-aside .sh .p,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .fg,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .bq,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .pq,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .ul,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .ol,
+.container-multi-column-group.text-width-60-40.column-1 .container-aside .sh .p{
     max-width: 65%;
 }
