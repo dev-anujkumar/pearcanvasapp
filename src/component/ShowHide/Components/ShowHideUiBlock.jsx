@@ -39,7 +39,8 @@ const ShowHideUiBlock = (props) => {
 	*/
 	function showSeprator(i, isFirst) {
 		const newParentUrn = {
-			contentUrn: element?.contentUrn
+			contentUrn: element?.contentUrn,
+			manifestUrn: element.id
 		}
 		const elementLineage = {
 		 	...element ,
@@ -50,16 +51,12 @@ const ShowHideUiBlock = (props) => {
 		}
 		return <ElementSaprator
 			index = {i}
-			//upperOne = {true}
-			//firstOne = {isFirst || false}
 			parentUrn = {newParentUrn}
 			asideData = {elementLineage}
-			//parentIndex = {i}
 			esProps = {addNestedElements(i, sectionType, props)}
 			elementType = {element?.type}
 			permissions = {props.permissions}
 			onClickCapture = {props.onClickCapture}
-			//splithandlerfunction = {props.splithandlerfunction}
 			userRole = {props.userRole}
 			pasteElement = {props.pasteElement}
 			source={SHOW_HIDE}
@@ -83,7 +80,8 @@ const ShowHideUiBlock = (props) => {
 			}
 		}
 		const shParentUrn = {
-			contentUrn: element.contentUrn
+			contentUrn: element.contentUrn,
+			manifestUrn: element.id
 		}
 		return <ElementContainer
 			element = {item}
