@@ -26,7 +26,7 @@ import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType } from
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 import { fetchAudioNarrationForContainer ,audioGlossaryPopup, saveDataFromAlfresco, showWrongAudioPopup} from '../AudioNarration/AudioNarration_Actions'
-import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
+import { glossaaryFootnotePopup, saveImageDataFromAlfresco, showWrongImagePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import RootContext from './PageNumberContext.js';
 import {publishContent,logout} from '../../js/header'
 import store from './../../appstore/store'
@@ -165,6 +165,7 @@ export class CanvasWrapper extends Component {
         }
         
     }
+
     render() {
         let slateData = this.props.slateLevelData
         let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : "";
@@ -274,6 +275,7 @@ const mapStateToProps = state => {
         pageNumberToggle: state.toolbarReducer.pageNumberToggle,
         audioGlossaryData:state.audioReducer.audioGlossaryData,
         currentSlateLF: state.metadataReducer.currentSlateLF,
+        activeElement: state.appStore.activeElement,
         figureGlossaryData:state.appStore.figureGlossaryData,
         alfrescoEditor: state.alfrescoReducer.editor,
         imageArgs: state.alfrescoReducer.imageArgs
@@ -328,6 +330,8 @@ export default connect(
         saveInlineImageData,
         alfrescoPopup,
         saveDataFromAlfresco,
-        showWrongAudioPopup
+        showWrongAudioPopup,
+        saveImageDataFromAlfresco,
+        showWrongImagePopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

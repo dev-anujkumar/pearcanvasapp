@@ -278,7 +278,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             spyFunction.mockClear();
         });
     });
-    describe('Test-3- setActiveElement', () => {
+    xdescribe('Test-3- setActiveElement', () => {
         config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
         it('Test-3.1-setActiveElement - Citations', () => {
             let dispatch = (obj) => {

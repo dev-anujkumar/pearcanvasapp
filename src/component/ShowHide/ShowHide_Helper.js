@@ -10,6 +10,7 @@ export const showHideConstants = {
 
 const figElements = ['figure', "interactive", "audio", "video"];
 const textElements = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives'];
+export const REVEAL_TEXT_PLACEHOLDER = "This field cannot be empty, either add specific content or add in the default content of Reveal Answer"
 
 /** 
 * @description findSectionType - Return the section type of showhide element
@@ -84,20 +85,31 @@ const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
 */
 export function getShowHideElement(_slateBodyMatter, indexlength, iList) {
 	try {
+        let sh_Element;
 		switch(indexlength) {
 			case 3: /* SH:Element */
-				return _slateBodyMatter[iList[0]];
+				sh_Element =  _slateBodyMatter[iList[0]];
+                break;
 			case 4: /* AS/WE-Head:SH:Element */
-				return _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
+				sh_Element =  _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
+                break;
 			case 5:
-				return _slateBodyMatter[iList[0]].type === ElementConstants.MULTI_COLUMN ? 
+				sh_Element =  _slateBodyMatter[iList[0]].type === ElementConstants.MULTI_COLUMN ? 
 					_slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]] : /* 2C:SH:Element */
 					_slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]]?.contents.bodymatter[iList[2]]; /* WE:Body:SH:Element */
-			case 6: /* 2C:AS/WE-Head:SH:Element */
-				return _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
-			case 7: /* 2C:WE-Body:SH:Element */
-				return _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
-		}
+                break;
+            case 6: /* 2C:AS/WE-Head:SH:Element */
+				sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
+                break;
+            case 7: /* 2C:WE-Body:SH:Element */
+				sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
+                break;
+        }
+        if(sh_Element?.type === ElementConstants.SHOW_HIDE) {
+            return sh_Element;
+        } else {
+            console.error("Something went wrong while accessing Showhide element.")
+        }
     } catch(e) {
             console.error("Something went wrong while accessing showhide object...", e);
     	}
@@ -226,8 +238,15 @@ export const getShowHideIndex = (tempIndex) => {
  * @param {*} indexes element index
  * @returns 
  */
-export const onUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
-    const indexLength = Array.isArray(indexes) ? indexes.length : 0;
+export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => { // activeElemType, showHideObj
+    let showHideElement = getShowHideElement(bodymatter, indexes?.length, indexes);
+    if(showHideElement?.type === ElementConstants.SHOW_HIDE) {
+        const showHideType = indexOfSectionType(indexes);
+        if(showHideType) {
+            showHideElement.interactivedata[showHideType][indexes[indexes.length - 1]] = resData;
+        }
+    }
+    /*const indexLength = Array.isArray(indexes) ? indexes.length : 0;
     const showHideIndex = (indexLength > 2) ? indexes[indexLength - 2] : "" 
     const showHideType = findSectionType(showHideIndex)
     if (activeElemType && showHideType) {
@@ -236,7 +255,7 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, s
                 bodymatter[indexes[0]].interactivedata[showHideType][indexes[2]] = resData
                 break;
             case 4:
-                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideType][indexes[2]] = resData
+                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideType][indexes[3]] = resData
                 break
             case 5:
                 bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideType][indexes[4]] = resData
@@ -253,7 +272,7 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, s
                 break
         }
     }
-    return bodymatter
+    return bodymatter */
 }
 
 export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {

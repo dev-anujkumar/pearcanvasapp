@@ -41,6 +41,7 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     encodeHTMLInWiris: jest.fn(),
     matchHTMLwithRegex: jest.fn(),
     createTitleSubtitleModel: jest.fn(),
+    createLabelNumberTitleModel: jest.fn(),
     removeBlankTags: jest.fn(),
     removeUnoClass: jest.fn()
 }))

@@ -13,7 +13,7 @@ import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
-import { indexOfSectionType } from '../ShowHide/ShowHide_Helper.js';
+import { indexOfSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
 
 
 let operType = "";
@@ -449,13 +449,23 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
 * @description This function will prepare the data of containerElement to get snapshots 
 *  of parent elements - 2C/Aside/POP:SH:New 
 */
-export function prepareSnapshots_ShowHide(containerElement, wipData, index) {
+export function prepareSnapshots_ShowHide(containerElement, wipData, index, updateBodymatter) {
     const { asideData, parentUrn } =  containerElement?.asideData?.grandParent || {};
-    let showhideElement = { ...containerElement?.asideData };
-    /* Delete the grandparent data form asideData */
-    showhideElement?.grandParent && delete showhideElement.grandParent;
+    
+    let indexList = []
+    if(Array.isArray(index)) {
+        indexList = index;
+    } else if(typeof index === "string") {
+        indexList = index ? index?.toString().split("-") : [];
+    }
     /* Get the sectionType using index of element */
     const sectionType = indexOfSectionType(index);
+    const innerSH_Index = indexList[indexList.length-1]
+    // let showhideElement = getShowHideElement(updateBodymatter, indexList.length, indexList)
+    let showhideElement = { ...containerElement?.asideData };
+    let innerSH_Element = showhideElement?.element?.interactivedata[sectionType][innerSH_Index]
+    /* Delete the grandparent data form asideData */
+    showhideElement?.grandParent && delete showhideElement.grandParent;
     /* Prepare and return container data for showhide inner element update */
     return {
         ...containerElement,
@@ -463,7 +473,7 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index) {
         parentUrn: parentUrn,
         parentElement: asideData,
         showHideObj: {
-            currentElement: wipData,
+            currentElement: innerSH_Element,
             element: showhideElement,
             index: index,
             showHideType: sectionType
@@ -1140,24 +1150,21 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
     }
     const { metaDataField, sectionType, parentElement, showHideObj } = containerElement;
+    /* Get the element type */
+    const typeOfElement = containerElement?.asideData?.type;
     let wipData = {};
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
         wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
-    }
-    else if (showHideObj?.currentElement) { //showhide
-        wipData = showHideObj.currentElement
-    } 
-    else {
-        wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
-    }
+    } else
     /** 
     * @description For SHOWHIDE Element - prepare parent element data
     * Update - 2C/Aside/POP:SH:New 
     */
-    const typeOfElement = containerElement?.asideData?.type;//?.grandParent?.asideData?.type;
-    //if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
     if(typeOfElement === SHOWHIDE) {
-        containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex);
+        containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex, currentSlateData);
+        wipData = containerElement?.showHideObj?.currentElement;
+    } else {
+        wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
     }
     
     let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);

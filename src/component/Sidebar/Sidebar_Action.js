@@ -292,8 +292,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let focusedElement = bodymatter;
         //Separate case for element conversion in showhide
         if (showHideObj) {//newElementData.asideData && newElementData.asideData.hasOwnProperty('type') &&
-            const activeElemType = oldElementInfo['elementType']
-            focusedElement = onUpdateSuccessInShowHide(res.data, focusedElement, activeElemType, showHideObj, indexes)
+            //const activeElemType = oldElementInfo['elementType']
+            //focusedElement = onUpdateSuccessInShowHide(res.data, focusedElement, activeElemType, showHideObj, indexes)
+            onUpdateSuccessInShowHide(res?.data, bodymatter, indexes);
         } else if (appStore.parentUrn.elementType === "group") {
             focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
         } else if(appStore?.asideData?.parent?.type === "groupedcontent") {

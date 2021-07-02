@@ -497,8 +497,8 @@ const generateCitationElementData = (index, previousElementData, elementType, pr
  * @param {*} showHideType Section in ShowHide
  * @param {*} node HTML node containing content
  */
-const validateRevealAnswerData = (showHideType, node, elementType) => {
-    if(showHideType && (showHideType === "show" || showHideType === "hide") && elementType === elementTypeConstant.AUTHORED_TEXT){
+const validateRevealAnswerData = (showHideType, node, elementType, isHeader) => {
+    if(showHideType && (showHideType === "show" || showHideType === "hide") && (elementType === elementTypeConstant.AUTHORED_TEXT && isHeader !== 'HEADERS')){
         return {
             innerHTML : matchHTMLwithRegex(node.innerHTML) ? node.innerHTML : `<p class="paragraphNumeroUno">${node.innerHTML}</p>`,
             innerText : node.innerText
@@ -560,11 +560,13 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }    
             tinyMCE.$(node).find('.blockquote-hidden').remove();
             let innerHTML, innerText;
-            let revealTextData = validateRevealAnswerData(showHideType, node, type)
+
+            let inputElementType = elementTypes[elementTypeObj.elementType][elementTypeObj.primaryOption]['enum'];
+            let revealTextData = validateRevealAnswerData(showHideType, node, type, inputElementType)
             innerHTML = revealTextData.innerHTML
             innerText = revealTextData.innerText
             let attributionText=tinyMCE.$(node).find('.blockquoteTextCredit').text()
-            let inputElementType = elementTypes[elementTypeObj.elementType][elementTypeObj.primaryOption]['enum'];
+
             let inputElementSubType = elementTypes[elementTypeObj.elementType][elementTypeObj.primaryOption]['subtype'][elementTypeObj.secondaryOption]['enum'];
             if ((attributionText.length == 0 && inputElementSubType == "MARGINALIA") || (attributionText.length == 0 && inputElementSubType == "BLOCKQUOTE")) {
                 inputElementSubType = "BLOCKQUOTE"
@@ -582,7 +584,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
-                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
+                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
             
@@ -669,8 +671,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         config.savingInProgress = true
     }
     /* On update the inner elements of SH; add section type */
-    if(showHideType && asideData?.type === elementTypeConstant.SHOW_HIDE) {
-        dataToReturn.sectionType = indexOfSectionType(index);
+    if(asideData?.type === elementTypeConstant.SHOW_HIDE) {
+        dataToReturn.sectionType = indexOfSectionType(index) || "";
     }
     return dataToReturn
 }

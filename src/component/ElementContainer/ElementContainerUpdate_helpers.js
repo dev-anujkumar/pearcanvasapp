@@ -18,7 +18,7 @@ import ElementConstants, {
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 
-const { AUTHORED_TEXT, SHOW_HIDE } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -41,7 +41,10 @@ export const updateNewVersionElementInStore = (paramObj) => {
         versionedData.pageNumberRef = updatedData.pageNumberRef
     }
     let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
-    if (asideData && asideData.type == 'element-aside') {
+    if (asideData?.type == 'showhide') {
+        getShowhideParent({ asideData, dispatch, parentElementIndex: elementIndex, fetchSlateData })
+    }
+    else if (asideData && asideData.type == 'element-aside') {
         asideData.indexes = indexes;
         if (indexes.length === 2 || indexes.length === 3) {
             dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
@@ -444,6 +447,8 @@ function updateShowhideElements(element, updatedData, indexs) {
                 showHideElement.html = updatedData.html; /* For figure/Text */
                 if(showHideElement?.type === AUTHORED_TEXT) { /* For update paragraph - TEXT */
                     showHideElement.elementdata.text = updatedData.elementdata.text;
+                } else if(showHideElement?.type === FIGURE) { /* For update - FIGURE */
+                    showHideElement.figuredata = updatedData?.figuredata;
                 }
             }
         })
@@ -824,4 +829,32 @@ export const updateLOInStore = ({ oldLO_Data, newLO_Data, getState, dispatch, ac
             slateLevelData: newslateData
         }
     })
+}
+
+
+const getShowhideParent = async (shParentData) => {
+    const { asideData, dispatch, parentElementIndex, fetchSlateData } = shParentData;
+    let parentToCascade = {}
+    if (asideData && asideData.type == 'showhide') {
+        if (asideData?.grandParent?.asideData?.type == 'element-aside') {
+            if (asideData?.grandParent?.asideData?.parent?.type == 'groupedcontent') {
+                parentToCascade = asideData?.grandParent?.asideData?.parent
+                parentToCascade.contentUrn = parentToCascade.parentContentUrn
+            }
+            else {
+                parentToCascade = asideData?.grandParent?.asideData
+            }
+        } else {
+            parentToCascade = asideData
+        }
+    }
+    if (parentToCascade) {
+        await cascadeElement(parentToCascade, dispatch, parentElementIndex, fetchSlateData, 'showhide')
+    }
+}
+
+const cascadeElement = async (parentElement, dispatch, parentElementIndex, fetchSlateData, calledFrom) => {
+    parentElement.indexes = parentElementIndex;
+    parentElement.callFrom = calledFrom
+    await dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,"")); 
 }

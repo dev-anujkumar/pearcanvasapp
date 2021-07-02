@@ -98,7 +98,7 @@ describe('Tests ElementContainer Actions', () => {
     afterEach(() => {
         moxios.uninstall()
     });
-    describe('testing------- ADD COMMENT ------action', () => {
+    xdescribe('testing------- ADD COMMENT ------action', () => {
         it('testing------- ADD COMMENT for other elements ------action', () => {
             let store = mockStore(() => initialState);
             let newComment = {
@@ -706,7 +706,7 @@ describe('Tests ElementContainer Actions', () => {
             expect(spyAction).toHaveBeenCalled()
         })
     })
-    describe('testing------- Delete SHOW HIDE ELEMENT ------action', () => {
+    xdescribe('testing------- Delete SHOW HIDE ELEMENT ------action', () => {
         it('testing------- Delete SHOW HIDE ELEMENT------action', () => {
             let store = mockStore(() => initialState);
             let elementId = "urn:pearson:work:061ea1a7-f295-4954-910c-7145969011e0";

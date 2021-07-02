@@ -4,13 +4,14 @@ import store from '../../appstore/store.js'
 import { sendDataToIframe, createTitleSubtitleModel, matchHTMLwithRegex, createLabelNumberTitleModel } from '../../constants/utility.js';
 import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { hideTocBlocker } from '../../js/toggleLoader'
 import { tcmSnapshotsForUpdate, fetchParentData, fetchElementWipData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 const {
     REACT_APP_API_URL
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
-import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP} from "./../../constants/Action_Constants";
-import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
+import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE} from "./../../constants/Action_Constants";
+import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -312,6 +313,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
     let tcmFeedback =  elementNodeData;
     let asideParent = store.getState().appStore?.asideData
+    let innerSH_Index = index &&  typeof (index) !== 'number' && index.split('-');
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
         let label, number, title, captions, credits, elementIndex, text, postertext;
@@ -335,6 +337,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
         if(showHideElement ||  asideParent?.type === 'showhide'){ /** Glossary-Footnotes inside Show-Hide */
             elementIndex = getShowHideIndex(tempIndex)
+            innerSH_Index = elementIndex
         }
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
         number = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
@@ -496,13 +499,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
 
     let tcmParentData,tcmMainBodymatter,tcmBodymatter;
-    // if (elementTypeData.indexOf(elementType) !== -1 && store.getState().appStore.showHideType == undefined) {
-    //     /** For TCM snapshots */
-    //     let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
-    //     tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-    //     tcmParentData = fetchParentData(tcmBodymatter, index);
-    //     tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
-    // }
+    if (elementTypeData.indexOf(elementType) !== -1) {
+        /** For TCM snapshots */
+        let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
+        tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+        tcmParentData = fetchParentData(tcmBodymatter, index);
+        tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
+    }
     /** ----------------- */
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     return axios.put(url, JSON.stringify(data), {
@@ -516,23 +519,41 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
         if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
+            let showhideTypeVal = "", showHideObject = {}
+            if(showHideElement ||  asideParent?.type === 'showhide'){ /** Glossary-Footnotes inside Show-Hide */
+                let shTypeIndex = innerSH_Index?.length > 3 && elementType =='figure' ? innerSH_Index[innerSH_Index.length - 3] :  innerSH_Index[innerSH_Index.length - 2]
+                showhideTypeVal = findSectionType(shTypeIndex?.toString())
+                let showhideElement = getShowHideElement(tcmBodymatter, innerSH_Index.length, innerSH_Index)
+                let innerSH_Element = showhideTypeVal && showhideElement?.interactivedata[showhideTypeVal][innerSH_Index]
+                showHideObject = {
+                    currentElement: innerSH_Element,
+                    index: innerSH_Index,
+                    element: showhideElement,
+                    showHideType: showhideTypeVal
+                }
+            }
             let elementUpdateData ={
                 currentParentData: currentParentData,
                 updateBodymatter:tcmBodymatter,
                 response: res.data,
-                updatedId:elementWorkId
+                updatedId:elementWorkId,
+                slateManifestUrn: config.slateManifestURN,
+                CurrentSlateStatus: currentSlateData.status
             },
                 containerElement = {
-                    // asideData:tcmParentData.asideData,
-                    // parentUrn:tcmParentData.parentUrn,
-                    // parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
-                    // metaDataField: data.metaDataField ? data.metaDataField : undefined
+                    asideData:tcmParentData.asideData,
+                    parentUrn:tcmParentData.parentUrn,
+                    parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
+                    metaDataField: data.metaDataField ? data.metaDataField : undefined,
+                    sectionType: showhideTypeVal,
+                    CurrentSlateStatus: currentSlateData.status,
+                    showHideObj: showHideObject
                 };
             if (currentSlateData && currentSlateData.status === 'approved') {
-                // await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+                await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
             }
             else {
-                // tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+                tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
             }
         }
         /**-------------------------------------------------------------------------------------------------------------*/
@@ -889,4 +910,36 @@ export const showWrongImagePopup = (value) => (dispatch, getState) => {
         type: WRONG_IMAGE_POPUP,
         payload: value
     })
+}
+
+export const showRemoveImageGlossaryPopup = (value) => (dispatch, getState) => {
+    dispatch({
+        type: SHOW_REMOVE_GLOSSARY_IMAGE,
+        payload: value
+    })
+}
+
+export const saveImageDataFromAlfresco = (message) => dispatch => {
+    let imageData = message?.asset;
+    let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
+    // let figureType = imageData?.content?.mimeType?.split('/')[0]
+    let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
+    let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
+    let uniqID = imageData.id ? imageData.id : "";
+    let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
+    let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
+    let displayTitle = imageData.name
+    let setImageGlossaryData = {
+        path: epsURL,
+        height: height,
+        width: width,
+        schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        imageid: `urn:pearson:alfresco:${uniqID}`,
+        alttext: altText,
+        longdescription: longDesc,
+        title: displayTitle
+    }
+    dispatch({ type: SET_FIGURE_GLOSSARY, payload: setImageGlossaryData })
+    dispatch({ type: ADD_FIGURE_GLOSSARY_POPUP, payload: true })
+    hideTocBlocker();
 }

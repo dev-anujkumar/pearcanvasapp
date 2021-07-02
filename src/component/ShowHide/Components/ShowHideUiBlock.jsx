@@ -22,10 +22,10 @@ const ShowHideUiBlock = (props) => {
 			const indexes = sectionType === showHideConstants.SHOW ? `${index}-0-${i}` : `${index}-2-${i}`;
 			const elemSepratorIndex = sectionType === showHideConstants.SHOW ? `${index}-0-${i+1}` : `${index}-2-${i+1}`;
 			return (
-					<>
+					<React.Fragment key={item?.id}>
 						{ renderElements(item, indexes) }
-						{ showSeprator(elemSepratorIndex, sectionType) }
-					</>
+						{ showSeprator(elemSepratorIndex) }
+					</React.Fragment>
 				)
 		})
 	}
@@ -39,7 +39,8 @@ const ShowHideUiBlock = (props) => {
 	*/
 	function showSeprator(i, isFirst) {
 		const newParentUrn = {
-			contentUrn: element?.contentUrn
+			contentUrn: element?.contentUrn,
+			manifestUrn: element.id
 		}
 		const elementLineage = {
 		 	...element ,
@@ -50,16 +51,12 @@ const ShowHideUiBlock = (props) => {
 		}
 		return <ElementSaprator
 			index = {i}
-			//upperOne = {true}
-			firstOne = {isFirst || false}
 			parentUrn = {newParentUrn}
 			asideData = {elementLineage}
-			//parentIndex = {i}
 			esProps = {addNestedElements(i, sectionType, props)}
 			elementType = {element?.type}
 			permissions = {props.permissions}
 			onClickCapture = {props.onClickCapture}
-			splithandlerfunction = {props.splithandlerfunction}
 			userRole = {props.userRole}
 			pasteElement = {props.pasteElement}
 			source={SHOW_HIDE}
@@ -83,7 +80,9 @@ const ShowHideUiBlock = (props) => {
 			}
 		}
 		const shParentUrn = {
-			contentUrn: element.contentUrn
+			contentUrn: element.contentUrn,
+			elementType: "showhide",
+			manifestUrn: element.id
 		}
 		return <ElementContainer
 			element = {item}
@@ -98,8 +97,8 @@ const ShowHideUiBlock = (props) => {
 			parentElement = {element}
 			onListSelect = {props.onListSelect}
 			userRole = {props.userRole}
-			elementSepratorProps = {props.elementSepratorProps}
-			splithandlerfunction = {props.splithandlerfunction}
+			//elementSepratorProps = {props.elementSepratorProps}
+			//splithandlerfunction = {props.splithandlerfunction}
 			pasteElement = {props.pasteElement}
 			showHideType = {sectionType}
 			handleFocus = {props.handleFocus}
