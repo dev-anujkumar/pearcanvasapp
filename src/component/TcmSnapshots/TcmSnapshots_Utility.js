@@ -462,8 +462,13 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index, upda
     const sectionType = indexOfSectionType(index);
     const innerSH_Index = indexList[indexList.length-1]
     // let showhideElement = getShowHideElement(updateBodymatter, indexList.length, indexList)
-    let showhideElement = { ...containerElement?.asideData };
-    let innerSH_Element = showhideElement?.element?.interactivedata[sectionType][innerSH_Index]
+    let showhideElement = { ...containerElement?.asideData },
+        innerSH_Element = wipData;
+    if (showhideElement && sectionType && showhideElement.element) {
+        innerSH_Element = showhideElement?.element?.interactivedata[sectionType][innerSH_Index]
+    } else if (sectionType && showhideElement?.interactivedata) {
+        innerSH_Element = showhideElement?.interactivedata[sectionType][innerSH_Index]
+    }
     /* Delete the grandparent data form asideData */
     showhideElement?.grandParent && delete showhideElement.grandParent;
     /* Prepare and return container data for showhide inner element update */

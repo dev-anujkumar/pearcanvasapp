@@ -277,7 +277,7 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => { // 
 
 export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
     const indexLength = Array.isArray(indexes) ? indexes.length : 0;
-    const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 2] : "" : ""
+    const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 3] : "" : ""
     const showHideType = findSectionType(showHideIndex)
     if (activeElemType && showHideType) {
         switch (indexes.length) {

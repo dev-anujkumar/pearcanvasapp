@@ -313,6 +313,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
     let tcmFeedback =  elementNodeData;
     let asideParent = store.getState().appStore?.asideData
+    const shParentUrn = store.getState().appStore?.parentUrn
     let innerSH_Index = index &&  typeof (index) !== 'number' && index.split('-');
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
@@ -337,7 +338,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
         if(showHideElement ||  asideParent?.type === 'showhide'){ /** Glossary-Footnotes inside Show-Hide */
             elementIndex = getShowHideIndex(tempIndex)
-            innerSH_Index = elementIndex
+            innerSH_Index = elementIndex;
+            innerSH_Index = innerSH_Index?.split('-')
         }
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
         number = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
@@ -503,7 +505,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         /** For TCM snapshots */
         let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
         tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-        tcmParentData = fetchParentData(tcmBodymatter, index);
+        tcmParentData = asideParent?.type == 'showhide' ? { asideData: asideParent, parentUrn: shParentUrn } : fetchParentData(tcmBodymatter, index);
         tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
     }
     /** ----------------- */
