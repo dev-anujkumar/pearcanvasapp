@@ -61,7 +61,7 @@ class ElementAudioVideo extends Component {
             let smartLinkUrl = "";
             if(figureType === "video" || figureType === "audio"){
                 smartLinkUrl = imageData["institution-urls"] && imageData["institution-urls"][0]?.publicationUrl
-                if(!smartLinkUrl){
+                if (figureType === "audio" && !smartLinkUrl) {
                     smartLinkUrl = imageData?.smartLinkURl
                 }
             }
