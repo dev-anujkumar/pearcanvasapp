@@ -2173,8 +2173,8 @@ const mapDispatchToProps = (dispatch) => {
         handleTCM: (element) => {
             dispatch(handleTCM(element))
         },
-        handleTCMSPALaunch: (elementId) =>{
-            dispatch(handleTCMSPALaunch(elementId))
+        handleTCMSPALaunch: (event, elementId) =>{
+            dispatch(handleTCMSPALaunch(event, elementId))
         }
     }
 }
