@@ -15,7 +15,6 @@
     border-radius:4px;
     position: relative;
     background-color: #FFF;
-    outline: none;
 }
 .opener-element-container .input-box-container{
     display: flex;
