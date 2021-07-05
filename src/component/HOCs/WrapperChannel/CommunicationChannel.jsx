@@ -737,7 +737,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.tempSlateEntityURN = null;
                 config.disablePrev = message.disablePrev;
                 config.disableNext = message.disableNext;
-                config.slateType = message.node.nodeLabel;
+                config.slateType = message?.node?.nodeLabel === "assessment-slate" ? "assessment" : message?.node?.nodeLabel;
                 config.parentContainerUrn = message.node.ParentContainerUrn;
                 config.parentEntityUrn = message.node.ParentEntityUrn;
                 config.page = 0;
