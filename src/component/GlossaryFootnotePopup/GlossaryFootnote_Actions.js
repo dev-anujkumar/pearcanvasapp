@@ -498,6 +498,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             data.metaDataField = "formattedTitle";
         }
     }
+    if(showHideElement ||  asideParent?.type === 'showhide'){
+        let shTypeIndex = innerSH_Index?.length > 3 && elementType == 'figure' ? innerSH_Index[innerSH_Index.length - 3] : innerSH_Index[innerSH_Index.length - 2]
+        let showhideTypeVal = findSectionType(shTypeIndex?.toString())
+        data.sectionType = showhideTypeVal
+    }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
 
     let tcmParentData,tcmMainBodymatter,tcmBodymatter;
