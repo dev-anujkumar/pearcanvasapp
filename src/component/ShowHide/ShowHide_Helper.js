@@ -85,20 +85,31 @@ const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
 */
 export function getShowHideElement(_slateBodyMatter, indexlength, iList) {
 	try {
+        let sh_Element;
 		switch(indexlength) {
 			case 3: /* SH:Element */
-				return _slateBodyMatter[iList[0]];
+				sh_Element =  _slateBodyMatter[iList[0]];
+                break;
 			case 4: /* AS/WE-Head:SH:Element */
-				return _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
+				sh_Element =  _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
+                break;
 			case 5:
-				return _slateBodyMatter[iList[0]].type === ElementConstants.MULTI_COLUMN ? 
+				sh_Element =  _slateBodyMatter[iList[0]].type === ElementConstants.MULTI_COLUMN ? 
 					_slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]] : /* 2C:SH:Element */
 					_slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]]?.contents.bodymatter[iList[2]]; /* WE:Body:SH:Element */
-			case 6: /* 2C:AS/WE-Head:SH:Element */
-				return _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
-			case 7: /* 2C:WE-Body:SH:Element */
-				return _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
-		}
+                break;
+            case 6: /* 2C:AS/WE-Head:SH:Element */
+				sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
+                break;
+            case 7: /* 2C:WE-Body:SH:Element */
+				sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
+                break;
+        }
+        if(sh_Element?.type === ElementConstants.SHOW_HIDE) {
+            return sh_Element;
+        } else {
+            console.error("Something went wrong while accessing Showhide element.")
+        }
     } catch(e) {
             console.error("Something went wrong while accessing showhide object...", e);
     	}
@@ -266,7 +277,7 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => { // 
 
 export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
     const indexLength = Array.isArray(indexes) ? indexes.length : 0;
-    const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 2] : "" : ""
+    const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 3] : "" : ""
     const showHideType = findSectionType(showHideIndex)
     if (activeElemType && showHideType) {
         switch (indexes.length) {

@@ -231,6 +231,9 @@ export const saveDataFromAlfresco = (message) => dispatch => {
     const audioFormat = imageData?.mimetype ?? imageData?.content?.mimeType ?? "";
     if (figureType === 'audio') {
         let nonSmartLinkUrl = imageData["institution-urls"] && imageData["institution-urls"][0]?.publicationUrl
+        if (figureType === "audio" && !nonSmartLinkUrl) {
+            nonSmartLinkUrl = imageData?.smartLinkURl
+        }
         audioData.location = nonSmartLinkUrl
         audioData.format = audioFormat
     } else if (smartLinkAssetType.toLowerCase() === 'audio') {

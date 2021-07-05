@@ -65,7 +65,8 @@ import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
 import {closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
-import {handleTCM, handleTCMSPALaunch} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import {handleTCM} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 
 class ElementContainer extends Component {
@@ -80,8 +81,8 @@ class ElementContainer extends Component {
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPaletteList: false,
             showColorTextList: false,
-            activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
-            activeTextColorIndex: this.props.element.textcolor ? config.textcolors.indexOf(this.props.element.textcolor) : 0,
+            activeColorIndex: this.props.element?.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
+            activeTextColorIndex: this.props.element?.textcolor ? config.textcolors.indexOf(this.props.element.textcolor) : 0,
             isHovered: false,
             hasError: false,
             sectionBreak: null,
@@ -1315,7 +1316,7 @@ class ElementContainer extends Component {
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType}/>;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -2031,12 +2032,16 @@ class ElementContainer extends Component {
     }
 
     handleTCMLaunch = (event, element) => {
-        const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA } = TcmConstants
-        const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA]
-            if (element.type && tcmPopupSupportedElements.includes(element.type)) {
+        const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE } = TcmConstants
+        const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE]
+            if (element?.type && tcmPopupSupportedElements.includes(element.type)) {
                 this.props.handleTCM(element, this.props.index)
             } else {
-                this.props.handleTCMSPALaunch(event, this.props.activeElement.elementId)
+                if (config.isSavingElement) {
+                    return false
+                }
+                event.stopPropagation();
+                loadTrackChanges(element.id)
             }
     }
 
@@ -2173,9 +2178,6 @@ const mapDispatchToProps = (dispatch) => {
         handleTCM: (element) => {
             dispatch(handleTCM(element))
         },
-        handleTCMSPALaunch: (elementId) =>{
-            dispatch(handleTCMSPALaunch(elementId))
-        }
     }
 }
 
