@@ -107,7 +107,7 @@
     border:none;
     margin-top:10px;
 }
-   .cancel-button,.lo-save-button{
+  .cancel-button,.lo-save-button{
     border-radius: 2px;
     float: right;
     margin: 0 0 0 16px;
@@ -171,9 +171,18 @@
 }
 
 .dialog-buttons{
+  /* padding: 17px 8px 28px; */
+  height: 36px;
+  margin-top: 24px;
+}
+
+.dialog-buttons.tcm-canvas-popup{
     /* padding: 17px 8px 28px; */
-    height: 36px;
-    margin-top: 24px;
+    height: 70px;
+    margin: 10px -16px -16px -16px;
+    box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.14);
+    padding: 0px !important;
+    width: 310px;
 }
 .dialog-buttons.single_assessment{
   width:100%;
@@ -206,7 +215,7 @@
     font-family: "Helvetica Neue", sans-serif;
     color: #000;
 }
-.delete-element-text, .audioRemoveClass{
+.delete-element-text, .audioRemoveClass, .remove-glossary-image{
   font-family: "Helvetica Neue", sans-serif;
   color: #000;
   font-size: 16px;
@@ -506,4 +515,97 @@
 }
 #altText_AM::placeholder {
   font-size: 14px;
+}
+.model-popup.tcm-canvas-popup{
+left: unset;
+overflow: unset;
+}
+
+.modal-content.tcm-canvas-popup{
+  width: 310px;
+  transform: none;
+  animation-name: none;
+  animation-duration: unset;
+  top: 0;
+  left: -38%;
+  margin-top: 85px; /* Negative half of height. */
+  margin-left: 500px;
+  max-height: 600px;
+}
+.tcmIcon{
+  padding: 2px !important;
+  background-color: transparent !important;
+}
+.tcmIconContainer,.userNametcmIconContainer{
+  display: flex;
+}
+.tcmContainer{
+  display: flex;
+  flex-direction: column;
+}
+.tcmdStatusContainer{
+  display: flex;
+  width: 54%;
+  justify-content: space-between;
+  font-family: 'Open Sans';
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.67;
+  color: #333333;
+}
+.userName{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 20px;
+  height: 30px;
+  font-family: 'Open Sans';
+  font-size: 12px;
+  font-weight: 600;
+  color: #333333;
+}
+.dialog-window.tcm-canvas-popup{
+  word-break: break-all;
+  padding: 10px 0 10px 0;
+  font-size: 12px !important;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.dialog-window p {
+  margin: 0 0 0 0 !important;
+}
+.tcmIcon > img {
+  width: 24px !important;
+}
+ins{
+  background: rgb(153, 230, 103);
+  color: rgb(121, 121, 121);
+}
+del{
+  background: rgb(253, 118, 127);
+  color: rgb(121, 121, 121);
+}
+.dialog-window.tcm-canvas-popup::-webkit-scrollbar {
+    width: 8px;
+    margin: 4px 5px 605px;
+    opacity: 0.65;
+    border-radius: 3px;
+    background-color: #101010b3;
+    height: 30px
+}
+.tcm{
+  margin: 15px 10px 0px 10px !important;
+}
+.dialog-window.tcm-canvas-popup p.handwritingstyle{
+  font-family: 'Dancing Script', cursive !important;
+  font-size: 1.5em !important;
+}
+.cancel-button.tcm.disable{
+  pointer-events: none !important;
+  color: gray !important;
+}
+.calloutOne ins, .calloutTwo ins, .calloutThree ins, .calloutFour ins{
+  color: #007FA3 !important;
 }

@@ -112,6 +112,7 @@ class ElementPopup extends React.Component {
                             popupField = "formatted-title"
                             createPopupUnit = {this.createPopupUnit}
                             handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
+                            handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
                         />
                         <TinyMceEditor permissions = {this.props.permissions} 
                             openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp} 
@@ -132,6 +133,7 @@ class ElementPopup extends React.Component {
                             popupField = "formatted-subtitle" 
                             createPopupUnit = {this.createPopupUnit}
                             handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
+                            handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
                         />
                     </header>
                     <div className="pearson-component pu"  data-uri="" data-type="pu" data-width="600" data-height="399" ref={this.popupBorderRef}>
@@ -153,6 +155,7 @@ class ElementPopup extends React.Component {
                                     popupField = "postertextobject" 
                                     createPopupUnit = {this.createPopupUnit}
                                     handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
+                                    handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
                                 />
                             </a>
                         }

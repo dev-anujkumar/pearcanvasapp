@@ -4,7 +4,8 @@ import tinyMCE from 'tinymce/tinymce'
 import config from "../../../src/config/config.js"
 jest.mock('./../../../src/constants/utility.js', () => ({
     matchHTMLwithRegex: jest.fn(),
-    removeBlankTags: jest.fn()
+    removeBlankTags: jest.fn(),
+    createLabelNumberTitleModel: jest.fn()
 }))
 
 config["elementStatus"] = {}

@@ -3,7 +3,8 @@ import {
     prepareTcmSnapshots,
     fetchElementWipData,
     checkContainerElementVersion,
-    fetchManifestStatus 
+    fetchManifestStatus, 
+    prepareSnapshots_ShowHide
 } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 //Constants
 import { 
@@ -14,6 +15,9 @@ import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./Eleme
 import config from '../../config/config';
 import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning } from '../../constants/IFrameMessageTypes.js';
 import tinymce from 'tinymce'
+import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper.js';
+const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 
 export const onDeleteSuccess = (params) => {
     const {
@@ -116,11 +120,26 @@ export const deleteFromStore = (params) => {
         newParentData
     } = params
 
+    /* Get the slate bodymatter data */
+    let bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter || [];
+    const iList = index?.toString()?.split("-") || [];
+    /* update the store on /cut/paste of showhide elements */
+    if(asideData?.type === SHOWHIDE && iList?.length >= 3) {
+        /* Get the showhide Element */
+        const sh_Object = getShowHideElement(bodymatter, iList?.length, iList);
+        if(sh_Object?.type === SHOWHIDE) {
+            const cCIndex = iList[iList?.length - 1];
+            /* get the section type of showhide */
+            const sectionType = indexOfSectionType(iList);
+            /* delete the element inside showhide on cut from sh */
+            sh_Object?.interactivedata[sectionType]?.splice(cCIndex, 1);
+        }
+    } else
     if (parentUrn && parentUrn.elementType == "group") {
         const elIndex = index.toString().split('-') 
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
     } else {
-        let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+        
         bodymatter.forEach((element, key) => {
             if (element.id === elmId) {
                 bodymatter.splice(key, 1);
@@ -243,9 +262,10 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-        const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
-        const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
-        const containerElement = {
+        //const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
+        //const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
+        const wipData = showHideObj?.currentElement || fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete");
+        let containerElement = {
             asideData,
             parentUrn,
             poetryData,
@@ -253,13 +273,22 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
             metaDataField: wipData && wipData.type == 'popup' && wipData.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
             sectionType : wipData && wipData.type == 'popup' ? 'postertextobject' : undefined,
             cutCopyParentUrn,
-            showHideObj: showHideCondition ? showHideObj : null
+            showHideObj: showHideObj //showHideCondition ? showHideObj : null
         }
         const deleteData = {
             wipData: wipData && Object.keys(wipData).length > 0 ? wipData : element, /** Inside Multi-Column->Aside/WE */
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
             index
+        }
+        /** 
+        * @description For SHOWHIDE Element - prepare parent element data
+        * Update - 2C/Aside/POP:SH:New 
+        */
+        //const typeOfElement = containerElement?.asideData?.grandParent?.asideData?.type;
+        const typeOfElement = asideData?.type;
+        if(typeOfElement === "showhide") {
+            containerElement = prepareSnapshots_ShowHide(containerElement, deleteData.wipData, index);
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)
     }

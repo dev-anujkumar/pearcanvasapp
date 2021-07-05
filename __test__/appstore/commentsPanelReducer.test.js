@@ -220,7 +220,7 @@ describe('testing slateLock Reducer cases -->', () => {
             }
         })).toEqual(stateObj6);
     })
-    it('Test 8- GET_PROJECT_USER', () => {
+    xit('Test 8- GET_PROJECT_USER', () => {
         let stateObj7 = initialState;
         expect(reducer(initialState, {
             type: GET_PROJECT_USER,

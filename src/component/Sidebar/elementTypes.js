@@ -597,7 +597,7 @@ export default {
                     enum: 'SINGLE_ASSESSMENT_PUF'
                 },	
                 'secondary-single-assessment-cite': {
-                    text: 'QuAd CITE',
+                    text: 'QuAD CITE',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_CITE'
                 },

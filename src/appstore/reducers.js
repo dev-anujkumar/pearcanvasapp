@@ -43,7 +43,11 @@ import {
     STORE_OLD_ASSET_FOR_TCM,
     WIRIS_ALT_TEXT_POPUP,
     LEARNOSITY_PROJECT_INFO,
-    UPDATE_THREE_COLUMN_INFO
+    SET_FIGURE_GLOSSARY,
+    ADD_FIGURE_GLOSSARY_POPUP,
+    WRONG_IMAGE_POPUP,
+    UPDATE_THREE_COLUMN_INFO,
+    SHOW_REMOVE_GLOSSARY_IMAGE
 } from '../constants/Action_Constants';
 
 /**
@@ -77,7 +81,11 @@ const INITIAL_STATE = {
     oldFiguredata : {},
     wirisAltText : {},
     isLearnosityProjectInfo:{},
-    threeColumnData: []
+    figureGlossaryData : {},
+    addfigureGlossarypopup:false,
+    openWrongImagePopup:false,
+    threeColumnData: [],
+    removeGlossaryImage:false
 };
 
 const INITIAL_ACTION = {
@@ -264,6 +272,26 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             ...state,
             isLearnosityProjectInfo : action.payload
         }
+        case SET_FIGURE_GLOSSARY : 
+        return {
+            ...state,
+            figureGlossaryData : action.payload
+        }
+        case ADD_FIGURE_GLOSSARY_POPUP:
+            return{
+                ...state,
+                addfigureGlossarypopup:action.payload
+            }
+        case WRONG_IMAGE_POPUP:
+            return{
+                ...state,
+                openWrongImagePopup:action.payload
+            }
+        case SHOW_REMOVE_GLOSSARY_IMAGE:
+            return {
+                ...state,
+                removeGlossaryImage:action.payload
+            }
 
         case UPDATE_THREE_COLUMN_INFO:
             if (action.key) {

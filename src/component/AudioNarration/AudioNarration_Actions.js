@@ -9,7 +9,7 @@ import {
     SHOW_REMOVE_POPUP,
     SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP, ERROR_POPUP
 } from '../../constants/Action_Constants.js'
-
+import { hideTocBlocker } from '../../js/toggleLoader'
 /**
  * 
  * @param {*} value 
@@ -162,19 +162,19 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
      * Get MP3 location when smarLinkURL is linked with smart link
      */
     let fileName, fileExtension;
-    fileName = audioData.location;
-    fileExtension = fileName.replace(/^.*\./, '');
-    audioData.format= audioData.format? audioData.format: fileExtension ?`audio/${fileExtension}`:"audio/mpeg"
+    fileName = audioData?.location;
+    fileExtension = fileName?.replace(/^.*\./, '');
+    audioData.format= audioData?.format? audioData.format: fileExtension ?`audio/${fileExtension}`:"audio/mpeg"
     try {
         if (fileExtension != 'mp3' && fileExtension != 'ogg' && fileExtension != 'opus' && fileExtension != 'wav') {
           //  document.getElementsByClassName('.audio-block').style.pointerEvents  = "none"
             let redirectionURL = await fetch(fileName);
-            let mp3LocationData = redirectionURL.url;
+            let mp3LocationData = redirectionURL?.url;
             audioData = {
-                "narrativeAudioUrn": audioData.narrativeAudioUrn || "4567",
+                "narrativeAudioUrn": audioData?.narrativeAudioUrn || "4567",
                 "location": mp3LocationData,
                 "title": {
-                    "en": audioData.title.en || mp3LocationData.split('/').reverse()[0].split('.')[0]
+                    "en": audioData?.title?.en || mp3LocationData?.split('/').reverse()[0].split('.')[0]
                 },
                 "format": "audio/mpeg"
             }
@@ -216,4 +216,38 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
             dispatch({type: ERROR_POPUP, payload:{show: true}})
         }
     } 
+}
+
+export const saveDataFromAlfresco = (message) => dispatch => {
+    let imageData = message?.asset;
+    let audioData = {
+        "narrativeAudioUrn": imageData.id ?? "",
+        "title": {
+            "en": imageData?.name
+        }
+    }
+    let figureType = imageData?.content?.mimeType?.split('/')[0]
+    let smartLinkAssetType = imageData?.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
+    const audioFormat = imageData?.mimetype ?? imageData?.content?.mimeType ?? "";
+    if (figureType === 'audio') {
+        let nonSmartLinkUrl = imageData["institution-urls"] && imageData["institution-urls"][0]?.publicationUrl
+        if (figureType === "audio" && !nonSmartLinkUrl) {
+            nonSmartLinkUrl = imageData?.smartLinkURl
+        }
+        audioData.location = nonSmartLinkUrl
+        audioData.format = audioFormat
+    } else if (smartLinkAssetType.toLowerCase() === 'audio') {
+        let assetFormat = "";
+        let smartLinkUrl = imageData?.properties["avs:url"] ? imageData.properties["avs:url"] : "";
+        if (smartLinkUrl && smartLinkUrl?.split('=') && smartLinkUrl?.split('=').length > 1) {
+            assetFormat = 'audio' + "/" + smartLinkUrl?.split('=')[1]
+        }
+        audioData.location = smartLinkUrl
+        audioData.format = audioFormat ?? assetFormat ?? ""
+    }
+    let calledfromGlossaryFootnote = message?.calledFromGlossaryFootnote ? message.calledFromGlossaryFootnote : false;
+    if (audioData?.location?.trim() !== "" && audioData?.narrativeAudioUrn?.trim() !== "") {
+        dispatch(addAudioNarrationForContainer(audioData, calledfromGlossaryFootnote));
+    }
+    hideTocBlocker();
 }

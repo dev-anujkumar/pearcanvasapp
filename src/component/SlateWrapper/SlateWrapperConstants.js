@@ -40,7 +40,8 @@ export const SPLIT_SLATE_WITH_ADDED_AUDIO = "There is an audio file linked with 
 export const NOT_AUDIO_ASSET = "Selected alfresco media type is not an Audio."
 export const LOCK_DURATION = 900000   //900000ms = 15mins
 export const SYNTAX_HIGHLIGHTING = "Turning auto-highlighting on will clear any recent formatting in this content. Are you sure?"
-
+export const REMOVE_LINKED_IMAGE_GLOSSARY = "Do you want to remove the linked Image with the slate?"
+export const NOT_IMAGE_ASSET = "Selected alfresco media type is not an Image."
 export const ERROR_CREATING_GLOSSARY = "You can not apply Glossary over multiple lines of stanza!!!"
 export const ERROR_CREATING_ASSETPOPOVER = "You can not apply Asset PopOver over multiple lines of stanza!!!"
 

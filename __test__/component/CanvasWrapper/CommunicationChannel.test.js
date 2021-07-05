@@ -42,6 +42,9 @@ const initialState = {
     },
     toolbarReducer:{
         pageNumberToggle:false
+    },
+    alfrescoReducer: {
+        editor:{}
     }
 };
 

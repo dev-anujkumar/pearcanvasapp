@@ -124,7 +124,7 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear()
     });
-    it('Test - handleC2MediaClick - List Element-listLiText exists', () => {
+    xit('Test - handleC2MediaClick - List Element-listLiText exists', () => {
         document.querySelector = (selector) => {
             if (selector == '#imageId li') {
                 return { innerText: "Testing" }
@@ -135,7 +135,7 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear()
     });
-    it('Test - handleC2MediaClick - List Element-alfresco mdetata in detail', () => {
+    xit('Test - handleC2MediaClick - List Element-alfresco mdetata in detail', () => {
         config.alfrescoMetaData = {
             alfresco: {
                 'path': 'test',
@@ -178,7 +178,7 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });
-    it('Test - handleC2MediaClick - List Element-no alfresco metadata', () => {
+    xit('Test - handleC2MediaClick - List Element-no alfresco metadata', () => {
         config.alfrescoMetaData = {}
         document.querySelector = (selector) => {
             if (selector == '#imageId li') {
@@ -204,7 +204,7 @@ describe('Testing TinyMceUtility', () => {
         spyFunc.mockClear();
     });
 })
-describe('Testing TinyMceUtility', () => {
+xdescribe('Testing TinyMceUtility', () => {
 
     jest.mock('../../src/js/c2_media_module.js', () => {
         return {
@@ -246,7 +246,7 @@ describe('Testing TinyMceUtility', () => {
         spyFunc.mockClear();
     });
 })
-describe('Testing TinyMceUtility', () => {
+xdescribe('Testing TinyMceUtility', () => {
 
     jest.mock('../../src/js/c2_media_module.js', () => {
         return {

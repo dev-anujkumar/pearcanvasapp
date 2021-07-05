@@ -30,6 +30,10 @@ import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.j
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
+import ElementConstants from '../ElementContainer/ElementConstants';
+import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
+const { SHOW_HIDE } = ElementConstants;
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -327,7 +331,8 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
 
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId, parentElement, elementIndex } = dataObj || {};
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem,
+         asideId, poetryId, parentElement, elementIndex, sectionType } = dataObj || {};
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -339,7 +344,10 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         "type": swappedElementData.type,
         "index": newIndex
     }
-
+    /* If swapping for inner elements of showhide then add section type also, show|hide */
+    if(containerTypeElem === SHOW_HIDE){
+        _requestData.sectionType = sectionType   
+    }
     let parentData = getState().appStore.slateLevelData;
     let currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
@@ -372,7 +380,16 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     return false;
                 }
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
-                if (containerTypeElem && containerTypeElem == 'we') {
+                if(containerTypeElem === SHOW_HIDE) { /* Swap inner elements of ShowHide */
+                    const indexes = elementIndex?.toString().split('-') || [];
+                    /* Get the showhide element object from slate data using indexes */
+                    const shObject = getShowHideElement(newBodymatter, (indexes?.length + 2), indexes);
+                    /* After getting showhide Object, swap the elements */
+                    if(!isEmpty(shObject) && shObject?.contentUrn === currentSlateEntityUrn) {
+                        shObject?.interactivedata[sectionType]?.move(oldIndex, newIndex);
+                    }
+                }
+                else if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
                     const indexs = elementIndex?.split('-') || [];
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
@@ -815,13 +832,13 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             index,
             parentUrn,
             asideData,
-            poetryData
+            poetryData, sectionType, index2ShowHide
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
 
         let slateEntityUrn = config.slateEntityURN;
-        if(parentUrn && 'contentUrn' in parentUrn) {
+        if(parentUrn && 'contentUrn' in parentUrn) { //sectionType && 
             slateEntityUrn = parentUrn.contentUrn;
         } else if(poetryData && 'contentUrn' in poetryData) {
             slateEntityUrn = poetryData.contentUrn;
@@ -877,6 +894,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "destinationSlateUrn": slateEntityUrn
             }]
         };
+        /* if parent Element type showhide then add sectionType where element tobe paste */
+        if(sectionType) {
+            _requestData.content[0].sectionType = sectionType;
+        }
 
         if(selection.operationType.toUpperCase() === "COPY") {
             delete _requestData.content[0].slateVersionUrn;
@@ -953,7 +974,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     parentUrn,
                     asideData,
                     poetryData,
-                    slateEntityUrn
+                    slateEntityUrn, index2ShowHide
                 };
         
                 await onPasteSuccess(pasteSuccessArgs)
@@ -967,7 +988,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         catch(error) {
-            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             console.error("Exceptional Error on pasting the element:::", error);
         }
     }

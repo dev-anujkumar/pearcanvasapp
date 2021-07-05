@@ -16,6 +16,9 @@ import ElementConstants, {
 } from "./ElementConstants";
 
 import config from '../../config/config';
+import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
+
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -38,7 +41,10 @@ export const updateNewVersionElementInStore = (paramObj) => {
         versionedData.pageNumberRef = updatedData.pageNumberRef
     }
     let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
-    if (asideData && asideData.type == 'element-aside') {
+    if (asideData?.type == 'showhide') {
+        getShowhideParent({ asideData, dispatch, parentElementIndex: elementIndex, fetchSlateData })
+    }
+    else if (asideData && asideData.type == 'element-aside') {
         asideData.indexes = indexes;
         if (indexes.length === 2 || indexes.length === 3) {
             dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
@@ -81,6 +87,12 @@ export const updateElementInStore = (paramsObj) => {
         { bodymatter: _slateBodyMatter } = _slateContent,
         elementId = updatedData.id;
 
+    const iList = elementIndex?.toString()?.split("-") || [];
+    /* update the store on update of showhide elements inside container elements */
+    if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
+        const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList);
+        updateShowhideElements(sh_Object, updatedData, iList);
+    } else
     if(parentElement && parentElement.type === "citations"){
         if(updatedData.type === "element-citation"){
             const indexes = elementIndex.split("-")
@@ -401,16 +413,13 @@ export const updateElementInStore = (paramsObj) => {
                     element.contents.bodymatter = newPoetryBodymatter;
                 }
             }
-            else if (element.type === "showhide") {
-                if (showHideType) {
-                    element.interactivedata[showHideType].forEach((showHideElement) => {
-                        if (showHideElement.id == updatedData.id) {
-                            showHideElement.elementdata.text = updatedData.elementdata.text;
-                            showHideElement.html = updatedData.html;
-                        }
-                    })
-                }
-            }
+            //else if (element.type === SHOW_HIDE) { 
+            //    /* When showhide Element is placed on slate not inside other container */
+            //    const indexs = elementIndex?.toString()?.split("-") || [];
+            //    if (indexs?.length == 3) {
+            //        updateShowhideElements(element, updatedData, indexs)
+            //    }
+            //}
 
             return element
         })
@@ -423,6 +432,27 @@ export const updateElementInStore = (paramsObj) => {
             slateLevelData: newslateData
         }
     })
+}
+/**
+*  @description {Function} updateShowhideElements -  To update the store on update of showhide inner elemetns 
+*  @param {Object} element - showhide object data 
+*  @param {Object} updatedData - updated data of inner elements 
+*  @param {Array}  indexs - indexs of element heirarchy */
+function updateShowhideElements(element, updatedData, indexs) {
+    if(element?.type === SHOW_HIDE) {
+        /* Get the section type of showhide; Index of section (indexs?.length - 2) */
+        const section = findSectionType(indexs[indexs?.length - 2]);
+        section && element.interactivedata[section].forEach((showHideElement) => {
+            if (showHideElement.id == updatedData.id) {
+                showHideElement.html = updatedData.html; /* For figure/Text */
+                if(showHideElement?.type === AUTHORED_TEXT) { /* For update paragraph - TEXT */
+                    showHideElement.elementdata.text = updatedData.elementdata.text;
+                } else if(showHideElement?.type === FIGURE) { /* For update - FIGURE */
+                    showHideElement.figuredata = updatedData?.figuredata;
+                }
+            }
+        })
+    }
 }
 
 export const collectDataAndPrepareTCMSnapshot = async (params) => {
@@ -799,4 +829,32 @@ export const updateLOInStore = ({ oldLO_Data, newLO_Data, getState, dispatch, ac
             slateLevelData: newslateData
         }
     })
+}
+
+
+const getShowhideParent = async (shParentData) => {
+    const { asideData, dispatch, parentElementIndex, fetchSlateData } = shParentData;
+    let parentToCascade = {}
+    if (asideData && asideData.type == 'showhide') {
+        if (asideData?.grandParent?.asideData?.type == 'element-aside') {
+            if (asideData?.grandParent?.asideData?.parent?.type == 'groupedcontent') {
+                parentToCascade = asideData?.grandParent?.asideData?.parent
+                parentToCascade.contentUrn = parentToCascade.parentContentUrn
+            }
+            else {
+                parentToCascade = asideData?.grandParent?.asideData
+            }
+        } else {
+            parentToCascade = asideData
+        }
+    }
+    if (parentToCascade) {
+        await cascadeElement(parentToCascade, dispatch, parentElementIndex, fetchSlateData, 'showhide')
+    }
+}
+
+const cascadeElement = async (parentElement, dispatch, parentElementIndex, fetchSlateData, calledFrom) => {
+    parentElement.indexes = parentElementIndex;
+    parentElement.callFrom = calledFrom
+    await dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,"")); 
 }

@@ -28,6 +28,7 @@ import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, ELM_INT,Resou
 import PopUp from '../PopUp';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
+import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -83,28 +84,36 @@ class Interactive extends React.Component {
         return null;
     }
 
-   componentDidUpdate() { 
-       const { assessmentReducer, model } = this.props;
-       const { itemID, interactiveTitle } = this.state;
-       const isElmInteractive = model?.figuredata?.interactiveformat === ELM_INT ? true : false
-       if (!config.savingInProgress && !config.isSavingElement && (isElmInteractive) && assessmentReducer) {
-           const { dataFromElm } = assessmentReducer;
-           if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elementUrn === this.props.model?.id) {
-               if (dataFromElm?.type == ELM_CREATE_IN_PLACE && dataFromElm.elmUrl) {
-                   window.open(dataFromElm.elmUrl);
-                   handlePostMsgOnAddAssess(this.addElmInteractive, dataFromElm.usageType, Resource_Type.INTERACTIVE, 'add','fromCreate' );
-               } else if (dataFromElm?.type == SAVE_ELM_DATA && dataFromElm.pufObj) {
-                   this.addElmInteractive(dataFromElm.pufObj);
-               }
-               this.props.setElmPickerData({});
-           } else if ((itemID && assessmentReducer[itemID])) {
-               const newPropsTitle = assessmentReducer[itemID]?.assessmentTitle;
-               if ((assessmentReducer[itemID].showUpdateStatus === false && (interactiveTitle !== newPropsTitle))) {
-                   this.updateElmOnSaveEvent(this.props);
-               }
-           }
-       }
-   }
+    componentDidUpdate(prevProps) {
+        const { assessmentReducer, model, elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props;
+        const { itemID, interactiveTitle } = this.state;
+        const isElmInteractive = model?.figuredata?.interactiveformat === ELM_INT ? true : false
+        if (!config.savingInProgress && !config.isSavingElement && (isElmInteractive) && assessmentReducer) {
+            const { dataFromElm } = assessmentReducer;
+            if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.INTERACTIVE && dataFromElm.elementUrn === this.props.model?.id) {
+                if (dataFromElm?.type == ELM_CREATE_IN_PLACE && dataFromElm.elmUrl) {
+                    window.open(dataFromElm.elmUrl);
+                    handlePostMsgOnAddAssess(this.addElmInteractive, dataFromElm.usageType, Resource_Type.INTERACTIVE, 'add', 'fromCreate');
+                } else if (dataFromElm?.type == SAVE_ELM_DATA && dataFromElm.pufObj) {
+                    this.addElmInteractive(dataFromElm.pufObj);
+                }
+                this.props.setElmPickerData({});
+            } else if ((itemID && assessmentReducer[itemID])) {
+                const newPropsTitle = assessmentReducer[itemID]?.assessmentTitle;
+                if ((assessmentReducer[itemID].showUpdateStatus === false && (interactiveTitle !== newPropsTitle))) {
+                    this.updateElmOnSaveEvent(this.props);
+                }
+            }
+        }
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
+            this.dataFromAlfresco(alfrescoAssetData)
+            const payloadObj = {
+                asset: {}, 
+                id: ''
+            }
+            this.props.saveSelectedAssetData(payloadObj)
+        }
+    }
 
      /*** @description This function is to show Approved/Unapproved Status on interative */
     showElmVersionStatus = () => {
@@ -270,11 +279,11 @@ class Interactive extends React.Component {
                 <figure className={figureImage} resource="">
                     <header>
                             <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={figureHtmlData.formattedLabel}
-                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
+                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
                             <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className={heading4Label + ' figureNumber'} id={this.props.id} placeholder="Enter Number..." tagName={'h4'} model={figureHtmlData.formattedNumber}
-                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
+                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
                             <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={figureHtmlData.formattedTitle}
-                             handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} />
+                             handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                     </header>
                     <div className={id +' interactive-id'} onClick={()=> this.handleClickElement()}><strong>{path ? path : 'ITEM ID: '} </strong><span>{this.state.itemID?this.state.itemID : itemId}</span></div>
                     {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title elm-int-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong><span>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</span></div>}
@@ -286,12 +295,12 @@ class Interactive extends React.Component {
                     </div>
                     <figcaption>
                         <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-4`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
-                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
+                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
                     </figcaption>
                 </figure>
                 <div>
                     <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-5`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
-                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
+                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
                 </div>
             </div>
         }
@@ -300,11 +309,11 @@ class Interactive extends React.Component {
                 <figure className={figureImage} resource="">
                     <header>
                         <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={figureHtmlData.formattedLabel}
-                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
+                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
                         <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className={heading4Label + ' figureNumber'} id={this.props.id} placeholder="Enter Number..." tagName={'h4'} model={figureHtmlData.formattedNumber}
-                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
+                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
                         <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-2`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={figureHtmlData.formattedTitle}
-                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
+                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
                     </header>
                     <div className={id+" interactive-id"} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'ITEM ID: '} </strong><span>{this.state.itemID ? this.state.itemID : itemId}</span></div>
                     {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title elm-int-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong><span>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</span></div>}
@@ -321,18 +330,18 @@ class Interactive extends React.Component {
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
                                     <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.html.postertext? element.html.postertext:""} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} element={this.props.model} handleAudioPopupLocation = {this.props.handleAudioPopupLocation}/>
+                                    model={element.html.postertext? element.html.postertext:""} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} element={this.props.model} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
                                  </a>
                         }
                     </div>
                     <figcaption>
                         <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-4`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
-                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} />
+                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                     </figcaption>
                 </figure>
                 <div>
                     <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-5`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
-                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} />
+                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                 </div>
             </div>
         }
@@ -515,20 +524,22 @@ class Interactive extends React.Component {
         disableHeader(false);
         this.props.showBlocker(false);
         let imageData = data;
-        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";              //commented lines will be used to update the element data
+        let epsURL = imageData.epsUrl ?imageData.epsUrl : "";              //commented lines will be used to update the element data
         //let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-        let width = imageData['width'] ? imageData['width'] : "";
-        let height = imageData['height'] ? imageData['height'] : "";
-        let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
-        let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+        let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
+        let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
+        let smartLinkPath = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
+        let smartLinkString = (imageData.properties["cm:description"] && imageData.properties["cm:description"].toLowerCase() !== "eps media") ? imageData.properties["cm:description"] : "{}";
         let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
         let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-        let altText = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:jsonString'].value && imageData.body.results[0].properties['s.avs:jsonString'].value[0].imageAltText) ? imageData.body.results[0].properties['s.avs:jsonString'].value[0].imageAltText : "";
-        let longDescription = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:jsonString'].value && imageData.body.results[0].properties['s.avs:jsonString'].value[0].linkLongDesc) ? imageData.body.results[0].properties['s.avs:jsonString'].value[0].linkLongDesc : "";
+        let avsStringData =imageData.properties["avs:jsonString"]&& JSON.parse(imageData.properties["avs:jsonString"]);
+        let altText = avsStringData?.imageAltText ? avsStringData.imageAltText : "";
+        let longDescription = avsStringData?.linkLongDesc ? avsStringData.linkLongDesc : "";
+        //let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
+        //checkFormat = checkFormat && checkFormat[0]
         if (smartLinkType) {
-            let uniqInterString = imageData && imageData.req && imageData.req.url;
             let uniqueIDInteractive;
-            let uniqInter = (uniqInterString) ? uniqInterString.split('s.cmis:objectId = ')[1].replace(/\'/g, '') : "";
+            let uniqInter = imageData.id
             if (uniqInter) {
                 uniqueIDInteractive = "urn:pearson:alfresco:" + uniqInter
             }
@@ -557,10 +568,10 @@ class Interactive extends React.Component {
                 }
                 // let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
                 if (epsURL == "" || epsURL == undefined) {
-                    epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : INTERACTIVE_FPO;
+                    epsURL = avsStringData.imageReferenceURL ? avsStringData.imageReferenceURL : INTERACTIVE_FPO;
                 }
-                let vendorName = imageData['vendorName'];
-                let mobileready = imageData['smartlinkoptimizedmobileval'];
+                let vendorName = avsStringData?.smartLinkThirdPartyVendorVal;
+                let mobileready = avsStringData?.smartLinkOptimizedMobileVal === "yes" ? true : false;
 
                 this.setState({ itemID: uniqueIDInteractive, posterImage: epsURL })
                 let figuredata = {
@@ -576,7 +587,7 @@ class Interactive extends React.Component {
                         "imageid": uniqueIDInteractive,
                         "path": epsURL
                     },
-                    "path": smartLinkPath[0]
+                    "path": smartLinkPath
                 }
                 if (interactivetype === THIRD_PARTY) {
                     figuredata.alttext = altText
@@ -593,12 +604,43 @@ class Interactive extends React.Component {
                         textsemantics: []
                     }
                 }
+                /**let payloadObj = {
+                    asset: {}, 
+                    id: ''
+                }
+                this.props.saveSelectedAssetData(payloadObj) */
                 this.props.updateFigureData(figuredata, this.props.index, this.props.elementId,()=>{
                     this.props.handleFocus("updateFromC2")
                     this.props.handleBlur()
                 })
             }
         }
+    }
+
+    handleSiteOptionsDropdown = (alfrescoPath, id) =>{
+        let that = this
+        let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
+        let SSOToken = config.ssoToken;
+        return axios.get(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'ApiKey': config.CMDS_APIKEY,
+                    'Content-Type': 'application/json',
+                    'PearsonSSOSession': SSOToken
+                }
+            })
+            .then(function (response) {
+               let payloadObj = {launchAlfrescoPopup: true, 
+                alfrescoPath: alfrescoPath, 
+                alfrescoListOption: response.data.list.entries,
+                elementId: id
+            }
+                that.props.alfrescoPopup(payloadObj)
+            })
+            .catch(function (error) {
+                console.log("Error IN SITE API", error)
+            });
     }
 
     /**
@@ -636,83 +678,92 @@ class Interactive extends React.Component {
         }
         var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
-        if (alfrescoPath.alfresco.nodeRef) {         //if alfresco location is available
-            if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
-            data_1 = alfrescoPath.alfresco;
+        //if (alfrescoPath.alfresco.nodeRef) {         //if alfresco location is available
+             //if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
+                
+            //data_1 = alfrescoPath.alfresco;
             /*
                 data according to new project api 
             */
-            data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
-            data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
-            data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
-            data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
+            // data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
+            // data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
+            // data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
+            // data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
 
-            /*
-                data according to old core api and c2media
-            */
-            data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
-            data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
-            data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
-            data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
+            // /*
+            //     data according to old core api and c2media
+            // */
+            // data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
+            // data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
+            // data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
+            // data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
-            this.handleC2ExtendedClick(data_1)
-            }
+            // this.handleC2ExtendedClick(data_1)
+            if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
+                if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                    const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder
+                    let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
+                        citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                        elementId: this.props.elementId }
+                        sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+             }
             else{
                 this.props.accessDenied(true)
             }
         }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-                    data_1 = { ...alfrescoData };
-                    let request = {
-                        eTag: alfrescoPath.etag,
-                        projectId: alfrescoPath.id,
-                        ...alfrescoPath,
-                        additionalMetadata: { ...alfrescoData },
-                        alfresco: { ...alfrescoData }
-                    };
+               this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId)
+                // c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
+                //     data_1 = { ...alfrescoData };
+                //     let request = {
+                //         eTag: alfrescoPath.etag,
+                //         projectId: alfrescoPath.id,
+                //         ...alfrescoPath,
+                //         additionalMetadata: { ...alfrescoData },
+                //         alfresco: { ...alfrescoData }
+                //     };
 
-                    /*
-                        preparing data according to Project api
-                    */
+                //     /*
+                //         preparing data according to Project api
+                //     */
 
-                    request.additionalMetadata['repositoryName'] = data_1['repoName'];
-                    request.additionalMetadata['repositoryFolder'] = data_1['name'];
-                    request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
-                    request.additionalMetadata['visibility'] = data_1['siteVisibility'];
+                //     request.additionalMetadata['repositoryName'] = data_1['repoName'];
+                //     request.additionalMetadata['repositoryFolder'] = data_1['name'];
+                //     request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
+                //     request.additionalMetadata['visibility'] = data_1['siteVisibility'];
 
-                    request.alfresco['repositoryName'] = data_1['repoName'];
-                    request.alfresco['repositoryFolder'] = data_1['name'];
-                    request.alfresco['repositoryUrl'] = data_1['repoInstance'];
-                    request.alfresco['visibility'] = data_1['siteVisibility'];
+                //     request.alfresco['repositoryName'] = data_1['repoName'];
+                //     request.alfresco['repositoryFolder'] = data_1['name'];
+                //     request.alfresco['repositoryUrl'] = data_1['repoInstance'];
+                //     request.alfresco['visibility'] = data_1['siteVisibility'];
 
-                    that.handleC2ExtendedClick(data_1)
-                    /*
-                        API to set alfresco location on dashboard
-                    */
-                    let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
-                    let SSOToken = request.ssoToken;
-                    return axios.patch(url, request.alfresco,
-                        {
-                            headers: {
-                                'Accept': 'application/json',
-                                'ApiKey': config.STRUCTURE_APIKEY,
-                                'Content-Type': 'application/json',
-                                'PearsonSSOSession': SSOToken,
-                                'If-Match': request.eTag
-                            }
-                        })
-                        .then(function (response) {
-                            let tempData = { alfresco: alfrescoData };
-                            that.setState({
-                                projectMetadata: tempData
-                            })
-                        })
-                        .catch(function (error) {
-                            console.log("error", error)
-                        });
-                })
+                //     that.handleC2ExtendedClick(data_1)
+                //     /*
+                //         API to set alfresco location on dashboard
+                //     */
+                //     let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
+                //     let SSOToken = request.ssoToken;
+                //     return axios.patch(url, request.alfresco,
+                //         {
+                //             headers: {
+                //                 'Accept': 'application/json',
+                //                 'ApiKey': config.STRUCTURE_APIKEY,
+                //                 'Content-Type': 'application/json',
+                //                 'PearsonSSOSession': SSOToken,
+                //                 'If-Match': request.eTag
+                //             }
+                //         })
+                //         .then(function (response) {
+                //             let tempData = { alfresco: alfrescoData };
+                //             that.setState({
+                //                 projectMetadata: tempData
+                //             })
+                //         })
+                //         .catch(function (error) {
+                //             console.log("error", error)
+                //         });
+                // })
             }
             else {
                 this.props.accessDenied(true)
@@ -875,12 +926,18 @@ const mapActionToProps = {
     fetchAssessmentMetadata: fetchAssessmentMetadata,
     fetchAssessmentVersions: fetchAssessmentVersions,
     updateAssessmentVersion: updateAssessmentVersion,
-    setElmPickerData: setElmPickerData
+    setElmPickerData: setElmPickerData,
+    alfrescoPopup: alfrescoPopup,
+    saveSelectedAssetData: saveSelectedAssetData
 }
 
 const mapStateToProps = (state) => {
     return {
         assessmentReducer: state.assessmentReducer,
+        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
+        alfrescoElementId : state.alfrescoReducer.elementId,
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
     }
 }
 
