@@ -39,7 +39,7 @@ class RenderTCMIcons extends React.Component {
                 </div>
                 <div className="tcmIconContainer">
                     <span className="btn-element tcmIcon">
-                        {<img src={TcmRefreshIcon} alt="TcmRefreshIcon" onClick={() => this.props.handleTCM(element)} />}
+                        {<img src={TcmRefreshIcon} id={(this.props.spinnerStatus) ? "loading" : ""} alt="TcmRefreshIcon" onClick={() => this.props.handleTCM(element)} />}
                     </span>
                     <span className="btn-element tcmIcon" onClick={(e) => this.handleTCMSPALaunch(e, element.id)}>
                         {<img src={TcmExpandIcon} alt="TcmExpandIcon" />}
@@ -62,6 +62,7 @@ const mapStateToProps = state => {
     return {
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
         elementEditor: state.tcmReducer.elementEditor,
+        spinnerStatus: state.tcmReducer.spinnerStatus
     };
 };
 

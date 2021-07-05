@@ -586,12 +586,12 @@ overflow: unset;
   width: 24px !important;
 }
 #loading {
-  animation: spin 0.7s  linear;
-  animation-duration: 1500ms;
-  -webkit-animation: spin 0.7s linear;
+  animation: rotation 0.4s infinite  linear;
+  -webkit-animation: rotation 0.4s infinite linear;
+  pointer-events: none;
 }
 
-@keyframes spin {
+@keyframes rotation {
   from {
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
