@@ -580,10 +580,12 @@ overflow: unset;
   width: 24px !important;
 }
 ins{
-  background-color: lightgreen;
+  background: rgb(153, 230, 103);
+  color: rgb(121, 121, 121);
 }
 del{
-  background-color: red;
+  background: rgb(253, 118, 127);
+  color: rgb(121, 121, 121);
 }
 .dialog-window.tcm-canvas-popup::-webkit-scrollbar {
     width: 8px;
@@ -603,4 +605,7 @@ del{
 .cancel-button.tcm.disable{
   pointer-events: none !important;
   color: gray !important;
+}
+.calloutOne ins, .calloutTwo ins, .calloutThree ins, .calloutFour ins{
+  color: #007FA3 !important;
 }
