@@ -2,13 +2,17 @@ import config from "../../config/config"
 import axios from 'axios';
 import { loadTrackChanges } from './TCM_Integration_Actions'
 import FetchAllDataMapper from '../TcmSnapshots/FetchAllDataMapper/FetchTcmDataMapper';
-import { LAUNCH_TCM_CANVAS_POPUP } from '../../constants/Action_Constants'
+import { LAUNCH_TCM_CANVAS_POPUP, SPINNER } from '../../constants/Action_Constants'
 import {handleSlateRefresh} from '../CanvasWrapper/SlateRefresh_Actions'
 
 /**
 * This function opens TCM w.r.t. current Element
 */
 export const handleTCM = (element, index) => (dispatch) => {
+    dispatch({
+        type: SPINNER,
+        payload:true
+    })
     const currentProjectUrn = config.projectUrn;
     const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
     let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}`
@@ -31,10 +35,10 @@ export const handleTCM = (element, index) => (dispatch) => {
             if (elemData.elemURN === id) {
                 const elemIndex = [{ index, urn: id }]
                 const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
-                const tcmObject = { isTCMCanvasPopup: true, tcmElemData: tcmData.result[0], elemData: eURN, elementEditor: elemData.latestPendingTransaction?.elementEditor, tcmStatus: elemData.latestAcceptedTransaction ? true : false}
+                const tcmObject = { isTCMCanvasPopup: true, tcmElemData: tcmData.result[0], elemData: eURN, elementEditor: elemData.latestPendingTransaction?.elementEditor, tcmStatus: elemData.latestAcceptedTransaction ? true : false,spinnerStatus: false}
                 dispatch({
                     type: LAUNCH_TCM_CANVAS_POPUP,
-                    payload: tcmObject
+                    payload: tcmObject,
                 })
             }
         })
