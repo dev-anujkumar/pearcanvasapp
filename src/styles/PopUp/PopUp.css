@@ -182,7 +182,7 @@
     margin: 10px -16px -16px -16px;
     box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.14);
     padding: 0px !important;
-    width: 310px;
+    width: 263px;
 }
 .dialog-buttons.single_assessment{
   width:100%;
@@ -522,7 +522,7 @@ overflow: unset;
 }
 
 .modal-content.tcm-canvas-popup{
-  width: 310px;
+  width: 263px;
   transform: none;
   animation-name: none;
   animation-duration: unset;
@@ -531,6 +531,12 @@ overflow: unset;
   margin-top: 85px; /* Negative half of height. */
   margin-left: 500px;
   max-height: 600px;
+}
+
+@media only screen and (max-width: 1300px) {
+  .modal-content.tcm-canvas-popup{
+    left: -42%;
+  }
 }
 .tcmIcon{
   padding: 2px !important;
@@ -578,6 +584,22 @@ overflow: unset;
 }
 .tcmIcon > img {
   width: 24px !important;
+}
+#loading {
+  animation: rotation 0.4s infinite  linear;
+  -webkit-animation: rotation 0.4s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+  }
 }
 ins{
   background: rgb(153, 230, 103);
