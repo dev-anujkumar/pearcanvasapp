@@ -963,7 +963,9 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     const elementId = responseData[0].id
                     handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
                 }
-                
+                if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
+                    dispatch(fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false,""));
+                }
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
@@ -989,7 +991,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
         catch(error) {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            console.error("Exceptional Error on pasting the element:::", error);
+            console.error("Exceptional Error on pasting the element:::", error);   
         }
     }
 }
