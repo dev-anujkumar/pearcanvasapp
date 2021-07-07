@@ -608,6 +608,7 @@ ins{
 del{
   background: rgb(253, 118, 127);
   color: rgb(121, 121, 121);
+  text-decoration: line-through;
 }
 .dialog-window.tcm-canvas-popup::-webkit-scrollbar {
     width: 8px;
@@ -628,15 +629,45 @@ del{
   pointer-events: none !important;
   color: gray !important;
 }
-.calloutOne ins, .calloutTwo ins, .calloutThree ins, .calloutFour ins, .paragraphNumeroUnoFootnote ins 
-.dialog-window.tcm-canvas-popup abbr.Pearson-Component.AssetPopoverTerm
-{
+
+/* BG-4828 related css added */
+.calloutOne ins, .calloutTwo ins, .calloutThree ins, .calloutFour ins {
   text-decoration-line: none !important;
   color: #F56831 !important;
   text-decoration: underline dotted
 } 
 
-.dialog-window.tcm-canvas-popup strong{
+a.paragraphNumeroUnoFootnote ins{
+  text-decoration-line: line !important;
+  color: #F56831 !important;
+}
+
+a.paragraphNumeroUnoFootnote del{
+  text-decoration-line: line !important;
+  background: rgb(253, 118, 127) !important;
+} 
+
+.dialog-window.tcm-canvas-popup abbr.Pearson-Component.AssetPopoverTerm ins{
+  text-decoration-line: none !important;
+  color: #F56831 !important;
+  text-decoration: underline dotted
+}
+
+.dialog-window.tcm-canvas-popup strong ins{
   color: #5a5656 !important;
-  font-weight: bold;
+  font-weight: bold !important;
+}
+
+/* BG-4879 related css added */
+.dialog-window.tcm-canvas-popup ul{
+  list-style-type: disc;
+  color: black;
+}
+
+/* BG-4880 related css added */
+span.answerLineContent ins{
+color: transparent !important;
+}
+span.answerLineContent{
+  border-bottom: 1px solid #bcbcbc !important;
 }
