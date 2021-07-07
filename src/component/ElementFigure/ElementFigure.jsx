@@ -106,7 +106,6 @@ class ElementFigure extends Component {
                 (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
                 (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ? { "width": data.properties["exif:pixelXDimension"] || null } : null,
             );
-
             let setFigureData = {
                 path: epsURL,
                 height: height,
@@ -207,7 +206,9 @@ class ElementFigure extends Component {
                 const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
                 let messageObj = { citeName: locationSiteDataTitle? locationSiteDataTitle : alfrescoSiteName, 
                     citeNodeRef: nodeRefs, 
-                    elementId: this.props.elementId }
+                    elementId: this.props.elementId,
+                    currentAsset
+                 }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
             }
             else {

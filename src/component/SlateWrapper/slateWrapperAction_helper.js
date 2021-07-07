@@ -192,7 +192,12 @@ export const onPasteSuccess = async (params) => {
                 if(indexs.length === 3) { /* Inside 2C:AS; COPY-PASTE elements */
                     const selcetIndex = sourceElementIndex?.toString().split("-") || [];
                     /* @newIndex@ for cut form same column to inner aside/we */
-                    const newIndex = (selcetIndex?.length === 3) && indexs[2] !== selcetIndex[2] ? selcetIndex : indexs;
+                    let newIndex;
+                    if (operationType === 'cut') {
+                        newIndex = (selcetIndex?.length === 3) && indexs[2] !== selcetIndex[2] ? selcetIndex : indexs;
+                    } else {
+                        newIndex = indexs
+                    }
                     if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest" && selcetIndex.length === 5 ) { /* paste inner level elements inside 2C/Aside */
                         item?.groupeddata?.bodymatter[selcetIndex[1]]?.groupdata?.bodymatter[selcetIndex[2]]?.elementdata?.bodymatter[selcetIndex[3]]?.contents.bodymatter?.splice(cutIndex, 0, responseData);
                     } else if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest") { /* paste slate level elements inside 2C/WE/Body */ 
