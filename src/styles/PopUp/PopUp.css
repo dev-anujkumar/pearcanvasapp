@@ -630,7 +630,7 @@ del{
   color: gray !important;
 }
 
-/* BG-4828 related css added */
+/* added css for callout, footnotes, asset popover color in the popup */
 .calloutOne ins, .calloutTwo ins, .calloutThree ins, .calloutFour ins {
   text-decoration-line: none !important;
   color: #F56831 !important;
@@ -658,13 +658,13 @@ a.paragraphNumeroUnoFootnote del{
   font-weight: bold !important;
 }
 
-/* BG-4879 related css added */
+/* added css for list style in the popup */
 .dialog-window.tcm-canvas-popup ul{
   list-style-type: disc;
   color: black;
 }
 
-/* BG-4880 related css added */
+/* added css to show blank instead of blankline */
 span.answerLineContent ins{
 color: transparent !important;
 }
