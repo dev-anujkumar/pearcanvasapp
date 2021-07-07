@@ -20,7 +20,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -1606,9 +1606,9 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
-                        labelText = '2C'
+                        labelText = MULTI_COLUMN_2C.ELEMENT_TAG_NAME
                     }
                     break;
 
@@ -1738,9 +1738,8 @@ class ElementContainer extends Component {
                 {this.renderCopyComponent(this.props, index, inContainer)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
-                    {/* render 3 column labels when labelText is 3C  */}
-                    {labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME && <div> {this.renderMultipleColumnLabels(element)}</div>}
-                    {labelText === "2C" && <div> {this.renderMultipleColumnLabels(element)}</div>}
+                    {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
+                    {(labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME || MULTI_COLUMN_2C.ELEMENT_TAG_NAME) && <div>{this.renderMultipleColumnLabels(element)}</div>}
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e, true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}

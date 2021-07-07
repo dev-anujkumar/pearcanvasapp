@@ -153,3 +153,10 @@ export const MULTI_COLUMN_3C = {
     "ELEMENT_NAME" : "primary-multicolumn-3c",
     "ELEMENT_PROPORTION": "33-33-33"
 }
+
+/** Multi column - 2 column constants */
+export const MULTI_COLUMN_2C = {
+    "ELEMENT_TAG_NAME": "2C",
+    "ELEMENT_NAME" : "primary-multicolumn-3c",
+    "ELEMENT_PROPORTION": "33-33-33"
+}
