@@ -1002,6 +1002,18 @@ class ElementContainer extends Component {
                 manifestUrn: element.id,
                 contentUrn: element.contentUrn,
             }
+            if (this.props.parentUrn?.elementType === "group") {
+                parentUrn = {
+                    ...parentUrn,
+                    multiColumnType: this.props.parentUrn.multiColumnType,
+                    multiColumnDetails: {
+                        columnName: this.props.parentUrn.columnName,
+                        columnId: this.props.parentUrn.manifestUrn,
+                        mcId: this.props.parentUrn.mcId,
+                        type: "groupedcontent"
+                    }
+                }
+            }
             contentUrn = this.state.sectionBreak.contentUrn
             id = this.state.sectionBreak.id
         }

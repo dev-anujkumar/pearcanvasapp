@@ -47,6 +47,12 @@ describe('Test for Sidebar component', () => {
         },
         selectionReducer:{
             selection:""
+        },
+        tcmReducer: {
+            tisTCMCanvasPopupLaunched:false,
+            tcmSnapshotData: {},
+            elementData: {},
+            tcmStatus: false
         }
     });
     let props = {
@@ -140,6 +146,12 @@ describe('Test for Sidebar component', () => {
             },
             selectionReducer:{
                 selection:""
+            },
+            tcmReducer: {
+                tisTCMCanvasPopupLaunched:false,
+                tcmSnapshotData: {},
+                elementData: {},
+                tcmStatus: false
             }
         });
 
@@ -180,6 +192,12 @@ describe('Test for Sidebar component', () => {
             },
             selectionReducer:{
                 selection:""
+            },
+            tcmReducer: {
+                tisTCMCanvasPopupLaunched:false,
+                tcmSnapshotData: {},
+                elementData: {},
+                tcmStatus: false
             }
         });
 
@@ -212,6 +230,12 @@ describe('Test for Sidebar component', () => {
             },
             selectionReducer:{
                 selection:""
+            },
+            tcmReducer: {
+                tisTCMCanvasPopupLaunched:false,
+                tcmSnapshotData: {},
+                elementData: {},
+                tcmStatus: false
             }
 
         });
@@ -246,6 +270,12 @@ describe('Test for Sidebar component', () => {
                     },
                     selectionReducer:{
                         selection:""
+                    },
+                    tcmReducer: {
+                        tisTCMCanvasPopupLaunched:false,
+                        tcmSnapshotData: {},
+                        elementData: {},
+                        tcmStatus: false
                     }
                 });
                 let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props} /></Provider>);

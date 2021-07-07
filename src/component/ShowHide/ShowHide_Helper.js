@@ -49,7 +49,7 @@ export const addNestedElements = (index, sectionType, props) => {
 }
 
 /* On Clicking of icons on Seprator Dropdown; */
-const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
+export const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
 	/*if (this.checkLockStatus()) {
 	    this.togglePopup(true)
 	    return false
