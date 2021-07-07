@@ -606,6 +606,15 @@ del{
   pointer-events: none !important;
   color: gray !important;
 }
-.calloutOne ins, .calloutTwo ins, .calloutThree ins, .calloutFour ins{
-  color: #007FA3 !important;
+.calloutOne ins, .calloutTwo ins, .calloutThree ins, .calloutFour ins, .paragraphNumeroUnoFootnote ins 
+.dialog-window.tcm-canvas-popup abbr.Pearson-Component.AssetPopoverTerm
+{
+  text-decoration-line: none !important;
+  color: #F56831 !important;
+  text-decoration: underline dotted
+} 
+
+.dialog-window.tcm-canvas-popup strong{
+  color: #5a5656 !important;
+  font-weight: bold;
 }
