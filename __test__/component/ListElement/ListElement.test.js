@@ -23,7 +23,17 @@ describe('ListElement', () => {
     showBlocker: jest.fn()
   }
   const mockStore = configureMockStore(middlewares);
-  const store = mockStore({ });
+  let initialState = {
+    alfrescoReducer: {
+      alfrescoAssetData: {},
+      elementId: "urn",
+      alfrescoListOption: [],
+      launchAlfrescoPopup: true,
+      editor: true,
+      Permission: false
+  }
+  }
+  const store = mockStore(initialState);
   const component = mount(<Provider store={store}><ListElement {...props} /></Provider>,{ attachTo: document.body })
   let instance = component.find('ListElement').instance();
   it('renders correctly', () => {

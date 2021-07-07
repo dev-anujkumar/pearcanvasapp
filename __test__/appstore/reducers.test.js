@@ -36,7 +36,11 @@ import {
     SET_TOAST_MESSAGE,
     SHOW_TOAST_MESSAGE,
     WIRIS_ALT_TEXT_POPUP,
-    UPDATE_THREE_COLUMN_INFO
+    UPDATE_THREE_COLUMN_INFO,
+    WRONG_IMAGE_POPUP,
+    SHOW_REMOVE_GLOSSARY_IMAGE,
+    ADD_FIGURE_GLOSSARY_POPUP,
+    SET_FIGURE_GLOSSARY
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -59,7 +63,11 @@ const initialState = {
     pageNumberData: [],
     permissions: [],
     allElemPageData: [],
-    threeColumnData: threeColumnData
+    threeColumnData: threeColumnData,
+    openWrongImagePopup:false,
+    removeGlossaryImage:false,
+    addfigureGlossarypopup:false,
+    figureGlossaryData:{}
 };
 
 const splittedElementIndexValue = "5";
@@ -603,7 +611,65 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
             type: UPDATE_THREE_COLUMN_INFO,
         })).toEqual(output)
     });
-    it('case 39- INITIAL_ACTION DEFAULT CASE', () => {
+    it('case 39- WRONG_IMAGE_POPUP ', () => {
+        let output ={
+            ...initialState,
+            openWrongImagePopup:true
+        }
+        expect(reducer(initialState, {
+            type: WRONG_IMAGE_POPUP,
+            payload:true
+        })).toEqual(output);
+    })
+    it('case 40- SHOW_REMOVE_GLOSSARY_IMAGE ', () => {
+        let output ={
+            ...initialState,
+            removeGlossaryImage:true
+        }
+        expect(reducer(initialState, {
+            type: SHOW_REMOVE_GLOSSARY_IMAGE,
+            payload:true
+        })).toEqual(output);
+    })
+    it('case 41- ADD_FIGURE_GLOSSARY_POPUP ', () => {
+        let output ={
+            ...initialState,
+            addfigureGlossarypopup:true
+        }
+        expect(reducer(initialState, {
+            type: ADD_FIGURE_GLOSSARY_POPUP,
+            payload:true
+        })).toEqual(output);
+    })
+    it('case 42- SET_FIGURE_GLOSSARY ', () => {
+        let output ={
+            ...initialState,
+            figureGlossaryData:{
+                "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imageid": "urn:pearson: alfresco: e2b1710e - a000 - 4625 - b582 - 367261a2cd0e",
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/e2b1710e-a000-4625-b582-367261a2cd0e/2.jpeg",
+                "height": "450",
+                "width": "350",
+                "alttext": "Alt Text for Snow white change alt text update kdvb",
+                "longdescription": "Snow White Description change long desc test",
+                "type": "image"
+            }
+        }
+        expect(reducer(initialState, {
+            type: SET_FIGURE_GLOSSARY,
+            payload:{
+                "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imageid": "urn:pearson: alfresco: e2b1710e - a000 - 4625 - b582 - 367261a2cd0e",
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/e2b1710e-a000-4625-b582-367261a2cd0e/2.jpeg",
+                "height": "450",
+                "width": "350",
+                "alttext": "Alt Text for Snow white change alt text update kdvb",
+                "longdescription": "Snow White Description change long desc test",
+                "type": "image"
+                }
+        })).toEqual(output);
+    })
+    it('case 43- INITIAL_ACTION DEFAULT CASE', () => {
         let output = {
             ...initialState,
         };

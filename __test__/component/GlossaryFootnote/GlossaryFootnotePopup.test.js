@@ -31,7 +31,17 @@ jest.mock('../../../src/component/AudioNarration/AddAudioBook', () => {
     }
 })
 
-const initialState ={}
+const initialState ={
+    glossaryFootnoteReducer: {
+        glossaryFootnoteValue : {
+            popUpStatus: false,
+            type: "Glossary"
+        }
+    },
+    appStore: { 
+        addfigureGlossarypopup: false
+    }
+}
 let store = mockStore(initialState);
 
 describe('Testing GlossaryFootnote component with props', () => {

@@ -174,3 +174,5 @@ export const UPDATE_LOB_PERMISSIONS = 'UPDATE_LOB_PERMISSIONS';
 export const LAUNCH_TCM_CANVAS_POPUP = 'LAUNCH_TCM_CANVAS_POPUP';
 /*---------------- 3Column details Info ------------------------*/
 export const UPDATE_THREE_COLUMN_INFO = 'UPDATE_THREE_COLUMN_INFO';
+/*---------------- spinner Info ------------------------*/
+export const SPINNER = 'SPINNER';
