@@ -49,7 +49,7 @@ export const addNestedElements = (index, sectionType, props) => {
 }
 
 /* On Clicking of icons on Seprator Dropdown; */
-const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
+export const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
 	/*if (this.checkLockStatus()) {
 	    this.togglePopup(true)
 	    return false
@@ -277,7 +277,7 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => { // 
 
 export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
     const indexLength = Array.isArray(indexes) ? indexes.length : 0;
-    const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 2] : "" : ""
+    const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 3] : "" : ""
     const showHideType = findSectionType(showHideIndex)
     if (activeElemType && showHideType) {
         switch (indexes.length) {

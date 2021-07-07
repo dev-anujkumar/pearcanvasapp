@@ -4,14 +4,26 @@ import TcmExpandIcon from '../../images/CanvasTCMPopup/TcmExpandIcon.png'
 import TcmRefreshIcon from '../../images/CanvasTCMPopup/TcmRefreshIcon.png'
 import { connect } from 'react-redux';
 import TCMUtiles from '../../component/TcmSnapshots/TCMpopup_Utilty'
-import {handleTCM, handleTCMSPALaunch, closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import {handleTCM, closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
+import config from '../../config/config'
 
 
 class RenderTCMIcons extends React.Component {
     constructor(props) {
         super(props);
     }
-    
+
+/**
+    * This function Launch TCM SPA w.r.t. current Element
+*/    
+    handleTCMSPALaunch = (e, elementId) =>{
+        if (config.isSavingElement) {
+            return false
+        }
+        e.stopPropagation();
+        loadTrackChanges(elementId)
+    }    
     render() {
         const element = {id: this.props.tcmSnapshotData?.eURN}
         let userName = this.props.elementEditor
@@ -27,9 +39,9 @@ class RenderTCMIcons extends React.Component {
                 </div>
                 <div className="tcmIconContainer">
                     <span className="btn-element tcmIcon">
-                        {<img src={TcmRefreshIcon} alt="TcmRefreshIcon" onClick={() => this.props.handleTCM(element)} />}
+                        {<img src={TcmRefreshIcon} id={(this.props.spinnerStatus) ? "loading" : ""} alt="TcmRefreshIcon" onClick={() => this.props.handleTCM(element)} />}
                     </span>
-                    <span className="btn-element tcmIcon" onClick={(e) => this.props.handleTCMSPALaunch(e)}>
+                    <span className="btn-element tcmIcon" onClick={(e) => this.handleTCMSPALaunch(e, element.id)}>
                         {<img src={TcmExpandIcon} alt="TcmExpandIcon" />}
                     </span>
                     <span className="btn-element tcmIcon" onClick={() => this.props.closeTcmPopup()}>
@@ -50,6 +62,7 @@ const mapStateToProps = state => {
     return {
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
         elementEditor: state.tcmReducer.elementEditor,
+        spinnerStatus: state.tcmReducer.spinnerStatus
     };
 };
 
@@ -57,7 +70,6 @@ export default connect(
     mapStateToProps,
     {
         handleTCM,
-        handleTCMSPALaunch,
         closeTcmPopup
     }
 )(RenderTCMIcons);
