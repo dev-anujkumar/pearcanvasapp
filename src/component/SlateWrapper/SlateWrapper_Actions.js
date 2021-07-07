@@ -824,6 +824,17 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
     });
 }
 
+const fetchContainerData = (entityURN,manifestURN) => {
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`;
+    return axios.get(apiUrl, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+})
+}
+
+
 export const pasteElement = (params) => async (dispatch, getState) => {
     let selection = getState().selectionReducer.selection || {};
 
@@ -964,7 +975,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
                 }
                 if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
-                    dispatch(fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false,""));
+                   let response =  await fetchContainerData(_requestData.content[0].contentUrn,_requestData.content[0].id);
+                   responseData = [response.data[_requestData.content[0].id]]
                 }
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
@@ -978,7 +990,6 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     poetryData,
                     slateEntityUrn, index2ShowHide
                 };
-        
                 await onPasteSuccess(pasteSuccessArgs)
                 if (responseData[0].elementdata?.type === "blockquote") {  
                     setTimeout(() => {
