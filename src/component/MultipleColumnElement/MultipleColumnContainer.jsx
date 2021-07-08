@@ -158,7 +158,7 @@ class MultipleColumnContainer extends PureComponent {
             newIndex: event.newDraggableIndex,
             swappedElementData: swappedElementData,
             currentSlateEntityUrn: parentUrn.contentUrn,
-            containerTypeElem: '3C',
+            containerTypeElem: `${this.props.labelText}`,
             columnIndex: parentUrn.columnIndex,
             containerIndex: this.context.index
         }
