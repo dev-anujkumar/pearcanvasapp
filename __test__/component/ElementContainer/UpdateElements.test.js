@@ -523,5 +523,38 @@ describe('Test for UpdateElements Functions', () => {
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement,"show");
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement,"show")
     })
-  
+    it('Test for ELEMENT-TYPE -----> figure ---->authoredtext', () => {
+        let type = "figure",
+            previousElementData = {
+                figuretype: 'authoredtext',
+                subtitle: '<p></p><p class="paragraphNumeroUno"><br></p><p></p>',
+                html: {
+                    footnotes: []
+                }
+            },
+            node = {},
+            elementType = "figure",
+            primaryOption = "primary-mathml-equation",
+            secondaryOption = "secondary-mathml-equation",
+            activeEditorId = "cypress-7-1",
+            index = 0,
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for handleBlankLineDom method - without replaceText parameter', () => {
+        jest.spyOn(updateFunction, 'handleBlankLineDom');
+        const handleBlankLineDom = updateFunction.handleBlankLineDom('<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>', '');
+        expect(handleBlankLineDom).toBe('<span contenteditable="false" id="blankLine" class="answerLineContent"><br></span>');
+    })
+    it('Test for handleBlankLineDom method - with replaceText parameter', () => {
+        jest.spyOn(updateFunction, 'handleBlankLineDom');
+        const handleBlankLineDom = updateFunction.handleBlankLineDom('<span contenteditable="false" id="blankLine" class="answerLineContent"><br><\/span>', 'replaceText');
+        expect(handleBlankLineDom).toBe('<span contenteditable="false" id="blankLine" class="answerLineContent">replaceText</span>');
+    })
 })
