@@ -707,7 +707,7 @@ const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerEleme
 export const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defaultKeys, containerElement, type,index) => {
     const { wipData, elementId, tag, actionStatus, slateManifestVersioning } = snapshotsData;
     let popupContainerData = config.popupParentElement
-    popupContainerData = await checkContainerPopupVersion(popupContainerData)
+    await checkContainerPopupVersion(popupContainerData)
     const { popupAsideData, popupParentUrn } = popupContainerData
     let popupParent = popupAsideData ? popupAsideData : popupParentUrn ? popupParentUrn :  undefined;
     elementId.popupParentId = popupParent && popupParent.id ? popupParent.id : ""; //we:id
@@ -739,30 +739,6 @@ export const checkContainerPopupVersion = async (containerElement) => {
             let newManifestData = await getLatestVersion(contentUrn);
             if (newManifestData && containerElement.popupAsideData) {
                     containerElement.popupAsideData.id = newManifestData
-            }
-        }
-        /** When Aside/WE inside Multi-Column */
-        if (containerElement?.popupAsideData?.parent?.type === MULTI_COLUMN) {
-            const multiColParent = containerElement?.popupAsideData?.parent
-            const bodymatter = store?.getState()?.appStore?.slateLevelData[config.tempSlateManifestURN]?.contents?.bodymatter
-            const multiColElem = bodymatter.find(item => item.id == multiColParent?.id);
-            let multiColParentStatus = multiColElem?.status ?? undefined;
-            const columnIndex = multiColParent.columnName == 'C3' ? 2 : multiColParent?.columnName == 'C2' ? 1 : 0;
-            const columnValue = multiColElem.groupeddata.bodymatter[columnIndex];
-            let multiColChildStatus = columnValue.status ?? undefined;
-            if (multiColParentStatus === "approved") {
-                let updatedMulColParentUrn = containerElement?.popupAsideData?.parent?.parentContentUrn ?? "";
-                if (updatedMulColParentUrn) {
-                    let newMulColManifestUrn = await getLatestVersion(updatedMulColParentUrn);
-                    containerElement.popupAsideData.parent.id = newMulColManifestUrn;
-                }
-            }
-            if (multiColChildStatus === "approved") {
-                let updatedMulColChildUrn = containerElement?.popupAsideData?.parent?.columnContentUrn ?? "";
-                if (updatedMulColChildUrn) {
-                    let newMulColGroupManifestUrn = await getLatestVersion(updatedMulColChildUrn);
-                    containerElement.popupAsideData.parent.columnId = newMulColGroupManifestUrn;
-                }
             }
         }
     }
