@@ -82,7 +82,6 @@ class MetaDataPopUp extends React.Component {
 	}
 
 	updateElementData = () => {
-		console.log('propssssssssssssssss',this.props)
 		const { index, element, asideData } = this.props;
 		/*-- Form data to send to wip */
 		let figureData = { ...element.figuredata };
