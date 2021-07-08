@@ -50,7 +50,7 @@ class RenderTCMIcons extends React.Component {
                 </div>
             </div>
             <div className="tcmdStatusContainer">
-                <span>{readableDate}, </span>
+                <span>{readableDate}</span>
             </div>
         </div>
         );
