@@ -242,7 +242,7 @@ class Interactive extends React.Component {
                  { targetId: figureData.interactiveid }
             );
         })     
-        this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
+        this.props.updateFigureData(figureData, this.props.index, this.props.elementId, this.props.asideData, () => {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
         })
@@ -457,7 +457,7 @@ class Interactive extends React.Component {
             }, () => {
                 this.props.fetchAssessmentMetadata("interactive", "",{ targetId: pufObj.id });
             })
-            this.props.updateFigureData(figureData, this.props.index, this.props.elementId, () => {
+            this.props.updateFigureData(figureData, this.props.index, this.props.elementId, this.props.asideData, () => {
                 this.props.handleFocus("updateFromC2");
                 this.props.handleBlur();
             })
@@ -609,7 +609,7 @@ class Interactive extends React.Component {
                     id: ''
                 }
                 this.props.saveSelectedAssetData(payloadObj) */
-                this.props.updateFigureData(figuredata, this.props.index, this.props.elementId,()=>{
+                this.props.updateFigureData(figuredata, this.props.index, this.props.elementId, this.props.asideData,()=>{
                     this.props.handleFocus("updateFromC2")
                     this.props.handleBlur()
                 })
@@ -864,7 +864,7 @@ class Interactive extends React.Component {
                 interactiveTitle:citeTdxObj.title
                })
           
-               that.props.updateFigureData(figureData, that.props.index, that.props.elementId,()=>{               
+               that.props.updateFigureData(figureData, that.props.index, that.props.elementId, this.props.asideData, ()=>{               
                    that.props.handleFocus("updateFromC2");
                    setTimeout(()=>{
                        that.props.handleBlur()
