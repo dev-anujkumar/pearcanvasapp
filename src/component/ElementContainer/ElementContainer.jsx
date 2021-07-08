@@ -1586,9 +1586,10 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
                     } else {
+                        labelText = MULTI_COLUMN_2C.ELEMENT_TAG_NAME
                         editor = <MultiColumnContext.Provider value={{
                             activeElement: this.props.activeElement,
                             showBlocker: this.props.showBlocker,
@@ -1606,9 +1607,8 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
-                        labelText = MULTI_COLUMN_2C.ELEMENT_TAG_NAME
                     }
                     break;
 
