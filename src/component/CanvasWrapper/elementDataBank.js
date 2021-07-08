@@ -11,6 +11,11 @@ const elementDataBank = {
         "primaryOption" : "primary-heading",
         // "secondaryOption" : "secondary-heading-{number}"
     },
+    "element-authoredtext-handwriting" : {
+        "elementType" : "element-authoredtext",
+        "primaryOption" : "primary-handwriting",
+        "secondaryOption" : "subtype-handwriting"
+    },
 
     "element-blockfeature" : {
         "pullquote" : {
@@ -351,6 +356,16 @@ const elementDataBank = {
         "text-width-50-50" : {
             "secondaryOption" : "secondary-multicolumn-half-text"
         }
+    },
+    "element-dialogue" : {
+        "elementType" : "element-dialogue",
+        "primaryOption" : "primary-element-dialogue",
+        "secondaryOption" : "secondary-element-dialogue"
+    },
+    "discussion" : {
+        "elementType" : "discussion",
+        "primaryOption" : "primary-element-discussion",
+        "secondaryOption" : "secondary-element-discussion"
     }
 }
 

@@ -10,11 +10,7 @@ import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apo
 import '../../styles/AssetPopover/assetPopoverStyles.css';
 import ApiResults from './ApiResults.jsx';
 import { clearAssetPopoverLink } from './openApoFunction.js';
-// const config = require('../../config/config.js')
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
-//const WRAPPER_URL = config.WRAPPER_URL;
-import config from '../../config/config.js'
-const { REACT_APP_API_URL, API_URL, projectUrn, STRUCTURE_APIKEY, ssoToken, GET_ASSETPOPOVER_ID, APO_API_KEY } = config;
 import searchIcon from './asset_popover_search_icon.svg';
 import { customEvent } from '../../js/utils';
 class AssetPopoverSearch extends React.Component {

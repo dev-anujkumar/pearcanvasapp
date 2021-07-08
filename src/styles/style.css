@@ -262,10 +262,16 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
     padding-left: 120px !important;
 }
 
-.learningobjectivedropdown li:hover {
+.learningobjectivedropdown li:hover, .learningobjectivedropdown2 li:hover {
     background-color: #efefef;
     font-family: 'Open Sans',sans-serif;
     cursor: pointer;
+}
+.learningobjectivedropdown li.disable-buttton, .learningobjectivedropdown2 li.disable-buttton, .option-disabled{
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    color: gray;
 }
 /* .mce-content-body .Wirisformula[data-custom-editor="chemistry"]{
     vertical-align: -1px!important;
@@ -332,4 +338,118 @@ p code, ul code, ol code{
 }
 .Wirisformula, .temp_Wirisformula{
     color: red !important;
+}
+.wrs_editor .wrs_font_inherit{
+    font-family: 'Conv_stix', Arial, Helvetica, sans-serif !important;
+}
+
+.mce-content-body:not([dir=rtl])[data-mce-placeholder]:not(.mce-visualblocks)::before{
+    left: inherit !important;
+}
+
+.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
+    color: #ADADAD !important;
+}
+
+.tox .tox-toolbar, .tox .tox-toolbar__overflow, .tox .tox-toolbar__primary {
+    border: none !important;
+}
+.tox-editor-container>:first-child {
+    border-left: none;
+}
+
+table:not([cellpadding]) td, table:not([cellpadding]) th {
+    padding: 0 !important;
+}
+
+.tox.tox-tinymce--toolbar-bottom .tox-editor-header, .tox.tox-tinymce-inline .tox-editor-header {
+    border: none !important;
+}
+
+
+
+/*  Callout Content Design  */
+
+span[title="calloutOne"]:not(.sup):not(.sub)::after,
+span[title="calloutOne"] sub::after,
+span[title="calloutOne"] sup::after {
+    content: url('./../images/Callout/callout1.svg');
+    height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    padding: 0 2px;
+    position: relative;
+    text-decoration: underline dotted;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+span[title="calloutTwo"]:not(.sup):not(.sub)::after,
+span[title="calloutTwo"] sub::after,
+span[title="calloutTwo"] sup::after {
+    content: url('./../images/Callout/callout2.svg');
+    height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    padding: 0 2px;
+    position: relative;
+    text-decoration: underline dotted;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+
+
+span[title="calloutThree"]:not(.sup):not(.sub)::after,
+span[title="calloutThree"] sub::after,
+span[title="calloutThree"] sup::after {
+    content: url('./../images/Callout/callout3.svg');
+    height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    padding: 0 2px;
+    position: relative;
+    text-decoration: underline dotted;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+
+span[title="calloutFour"]:not(.sup):not(.sub)::after,
+span[title="calloutFour"] sub::after,
+span[title="calloutFour"] sup::after {
+    content: url('./../images/Callout/callout4.svg');
+    height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    padding: 0 2px;
+    position: relative;
+    text-decoration: underline dotted;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+
+.calloutOne{
+    color:#007FA3;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+.calloutTwo{
+    color:#007FA3;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+.calloutThree{
+    color:#007FA3;
+    border-bottom: 1.1px dotted #007FA3;
+}
+
+.calloutFour{
+    color:#007FA3;
+    border-bottom: 1.1px dotted #007FA3;
 }

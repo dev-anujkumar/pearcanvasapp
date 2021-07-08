@@ -10,18 +10,17 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
-import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType } from '../../constants/utility.js';
-import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath } from '../../constants/utility.js';
+import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
-    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM,
+    CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -34,7 +33,8 @@ import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, show
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 // import { OPEN_AM } from '../../js/auth_module';
-import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
 import {
     fetchSlateData
@@ -42,9 +42,11 @@ import {
 import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
+import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
-import { TEXT_SOURCE } from '../../constants/Element_Constants.js';
+import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
+import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 
 let random = guid();
 
@@ -61,7 +63,12 @@ class SlateWrapper extends Component {
             showSplitSlatePopup: false,
             splittedSlateIndex: 0,
             hasError: false,
-            showReleasePopup: false
+            showReleasePopup: false,
+            isWordPastePopup:false,
+            showpocpopup:false,
+            pastedindex:null,
+            powerPasteData: [],
+            updatedindex:''
         }
         this.isDefaultElementInProgress = false;
     }
@@ -557,6 +564,13 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
+    handleCopyPastePopup = (wordPastePopup,index)=>{
+      this.setState({
+        isWordPastePopup: wordPastePopup,
+        pastedindex: index
+      })
+  }
+
     splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex ,poetryData) => {
         if (this.checkLockStatus()) {
             this.togglePopup(true)
@@ -601,7 +615,15 @@ class SlateWrapper extends Component {
                 parentUrn.contentUrn = asideData.contentUrn
                 parentUrn.manifestUrn = asideData.id
                 if (typeof (outerAsideIndex) == "string") {
-                    outerIndex = outerAsideIndex.split("-")[1]
+                    if (asideData?.parent?.type === "groupedcontent") {
+                        /** When WE is inside Mult-column */
+                        outerIndex = outerAsideIndex.split("-")[3];
+                        if (!outerIndex) { /** Add Section-Break after Head */
+                            outerIndex = indexToinsert;
+                        }
+                    }else{
+                        outerIndex = outerAsideIndex.split("-")[1]
+                    }
                     if (outerIndex !== 1) {
                         outerIndex = Number(outerIndex) + 1
                     }
@@ -616,7 +638,7 @@ class SlateWrapper extends Component {
 
                 }
                 else {
-                    let LOUrn = this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn;
+                    let LOUrn = this.props.getMetadataAnchorLORef();
                     this.props.createElement(METADATA_ANCHOR, indexToinsert, parentUrn, asideData, null, LOUrn, null)
                 }
 
@@ -656,6 +678,12 @@ class SlateWrapper extends Component {
                 break;
             case 'elm-interactive-elem':
                 this.props.createElement(MMI_ELM, indexToinsert, parentUrn, asideData, null, null, null);
+                break;
+            case 'element-dialogue':
+                this.props.createElement(ELEMENT_DIALOGUE, indexToinsert, parentUrn, asideData, null, null, null, null);
+                break;
+            case 'element-discussion': 
+                this.props.createElement(ELEMENT_DISCUSSION, indexToinsert, parentUrn, asideData, null, null, null, null);
                 break;
             case 'text-elem':
             default:
@@ -820,6 +848,48 @@ class SlateWrapper extends Component {
 
     }
 
+    onPowerPaste = (powerPasteData, index) => {
+        this.setState({
+            powerPasteData: powerPasteData,
+            updatedindex: index
+        })
+    }
+
+    /**
+     * Calls Powerpaste API when user clicks Proceed button
+     */
+    handlePowerPaste = () => {
+        const { powerPasteData, updatedindex } = this.state
+        powerPasteData.length && this.props.createPowerPasteElements(powerPasteData, updatedindex);
+        this.handleCopyPastePopup(false)
+        this.setState({
+            powerPasteData:[]
+        })
+    }
+
+    /**
+     * Displays power paste popup
+     */
+    showWordPastePopup = () => {
+        if (this.state.isWordPastePopup) {
+            const dialogText = `Press Ctrl/Cmd + V/v in the textbox below to paste your copied content.`
+            return (
+                <PopUp dialogText={dialogText}
+                    active={true}
+                    WordPastePopup={true}
+                    onPowerPaste = {this.onPowerPaste}
+                    handleCopyPastePopup={this.handleCopyPastePopup}
+                    wordPasteClass="word-paste"
+                    index={this.state.pastedindex}
+                    handlePowerPaste = {this.handlePowerPaste}
+                    isWordPastePopup = {this.state.isWordPastePopup}
+                />
+            )
+        }
+    
+        return null 
+    }
+
     /**
      * Renders blank slate with one element picker (Separator)
      * @param {object} _props Slatewrapper props
@@ -840,6 +910,7 @@ class SlateWrapper extends Component {
                     splithandlerfunction={this.splithandlerfunction}
                     pasteElement={this.props.pasteElement}
                     source={TEXT_SOURCE}
+                    handleCopyPastePopup={this.handleCopyPastePopup}
                 />
             </>
         )
@@ -853,16 +924,21 @@ class SlateWrapper extends Component {
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
-                if (_elements.length === 0 && _slateType == "assessment" && config.isDefaultElementInProgress) {
+                /* @-isPdf_Assess-@ - TO check TYPE of current slate  */
+                const isPdf_Assess = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(config.slateType);
+                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '', '', () => {
+                    const typeOfEle = _slateType === SLATE_TYPE_ASSESSMENT ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
+                    this.props.createElement(typeOfEle, "0", '', '', '', '', () => {
                         config.isDefaultElementInProgress = true;
                     });
                 }
                 else if (_elements.length === 0 && _slateType != "assessment") {
                     return this.renderBlankSlate(this.props)
                 }
+                /* @hideSapratorFor@ List of slates where seprator is hidden */
+                const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(_slateType);
                 return _elements.map((element, index) => {
                         return (
                             
@@ -872,7 +948,7 @@ class SlateWrapper extends Component {
                                     placeholder={<div data-id={element.id}><LargeLoader /></div>}
                                 >
                                     {
-                                        index === 0 && _slateType !== 'assessment' && config.isCO === false ?
+                                        index === 0 && !hideSapratorFor && config.isCO === false ?
                                             <ElementSaprator
                                                 userRole={this.props.userRole}
                                                 firstOne={index === 0}
@@ -886,7 +962,8 @@ class SlateWrapper extends Component {
                                                 splithandlerfunction={this.splithandlerfunction}
                                                 pasteElement={this.props.pasteElement}
                                                 source={TEXT_SOURCE}
-                                            />
+                                                handleCopyPastePopup={this.handleCopyPastePopup}
+                                                />
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
                                     <ElementContainer
@@ -917,7 +994,7 @@ class SlateWrapper extends Component {
                                             )
                                         }
                                     </ElementContainer>
-                                    {_slateType !== 'assessment' ?
+                                    {!hideSapratorFor ?
                                         <ElementSaprator
                                             userRole={this.props.userRole}
                                             index={index}
@@ -931,6 +1008,7 @@ class SlateWrapper extends Component {
                                             onClickCapture={this.checkSlateLockStatus}
                                             splithandlerfunction={this.splithandlerfunction}
                                             pasteElement={this.props.pasteElement}
+                                            handleCopyPastePopup={this.handleCopyPastePopup}
                                             source={TEXT_SOURCE}
                                         />
                                         : null
@@ -1014,7 +1092,7 @@ class SlateWrapper extends Component {
     */
 
     showAudioRemoveConfirmationPopup = () => {
-
+        
         let dialogText;
         let audioRemoveClass;
         if (this.props.openRemovePopUp) {
@@ -1039,6 +1117,7 @@ class SlateWrapper extends Component {
                     saveButtonText='OK'
                     saveContent={this.processRemoveConfirmation}
                     togglePopup={this.toggleAudioPopup}
+                    isGlossary ={this.props.isGlossary}
                 />
             )
         }
@@ -1164,6 +1243,7 @@ class SlateWrapper extends Component {
                     altText={true}
                     isInputDisabled={true}
                     splitSlateClass="split-slate"
+                    wirisAltTextClass="wiris-alt-text-popup"
                 />
             )
         }
@@ -1175,6 +1255,81 @@ class SlateWrapper extends Component {
         this.props.wirisAltTextPopup({showPopup : false, altText : ''})
         this.props.showBlocker(false)
         hideBlocker()
+    }
+
+    /**
+     * This method renders LO Warning Popup based on Selection 
+     */
+    showLOWarningPopup = () => {
+        const currentSlateLF = this.props.currentSlateLF;
+        const loWarningDialogTxt = (currentSlateLF === CYPRESS_LF) ? cypressLOWarningtxt : externalLOWarningtxt;
+        if (this.props?.loWarningPopupData?.toggleValue) {
+            this.props.showBlocker(true);
+            showTocBlocker();
+            return (
+                <PopUp dialogText={loWarningDialogTxt}
+                    active={true}
+                    warningHeaderText={`Warning`}
+                    togglePopup={this.toggleWarningPopup}
+                    isInputDisabled={true}
+                    lOPopupClass="lo-warning-txt"
+                    LOPopup={true}
+                    yesButtonHandler={this.unlinkSlateLOs}
+                />
+            )
+        } else {
+            return null
+        }
+    }
+
+    /**
+     * LO Warning Popup
+     * This method is called on click of Cancel Button 
+     */
+    toggleWarningPopup = (toggleValue, event) => {
+        this.props.toggleLOWarningPopup(toggleValue, "");
+        this.props.showBlocker(false);
+        hideBlocker();
+        this.prohibitPropagation(event)
+    }
+
+    /**
+     * LO Warning Popup
+     * This method is called on click of Yes Button 
+     * It unlinks the current slate LOs and then launches new popup
+     */
+    unlinkSlateLOs = (e) => {
+        const slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
+        const { currentSlateLOData } = this.props;
+        const apiKeys_LO = {
+            'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+            'strApiKey': config.STRUCTURE_APIKEY,
+            'mathmlImagePath': config.S3MathImagePath ?? defaultMathImagePath,
+            'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+            'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+            'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+        };
+        let externalLFUrn = '';
+        if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
+            externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
+        }
+        const warningActionIntiator = this.props?.loWarningPopupData?.warningActionIntiator ?? "";
+        const editActionStatus = warningActionIntiator == AddEditLearningObjectiveDropdown ? true : "";
+        sendDataToIframe({
+            'type': OpenLOPopup, 'message': {
+                'text': WarningPopupAction,
+                'data': currentSlateLOData,
+                'currentSlateId': slateManifestURN,
+                'chapterContainerUrn': '',
+                'isLOExist': true,
+                'editAction': editActionStatus,
+                'apiConstants': apiKeys_LO,
+                'warningActionIntiator': warningActionIntiator,
+                'externalLFUrn': externalLFUrn,
+                'currentSlateLF': this.props.currentSlateLF
+            }
+        });
+        this.props.toggleLOWarningPopup(false, "");
     }
 
     /**
@@ -1222,7 +1377,6 @@ class SlateWrapper extends Component {
                         )
                     }
                 </ListButtonDropPortal>
-                {this.props.openAudioGlossaryPopup && <OpenAudioBook closeAudioBookDialog={this.closeAudioBookDialog} isGlossary ={true}/>}
                 {this.showLockPopup()}
                 {this.showCustomPopup()}
                 {this.showSplitSlatePopup()}
@@ -1231,6 +1385,9 @@ class SlateWrapper extends Component {
                 {this.showLockReleasePopup()}
                 {this.showAssessmentConfirmationPopup()}
                 {this.wirisAltTextPopup()}
+                {/* **************** Word Paste Popup ************ */}
+                {this.showWordPastePopup()}
+                {this.showLOWarningPopup()}{/* **************** LO Warning Popup ************ */}
             </React.Fragment>
         );
     }
@@ -1262,7 +1419,6 @@ const mapStateToProps = state => {
         isGlossary: state.audioReducer.isGlossary,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         openWrongAudioPopup: state.audioReducer.openWrongAudioPopup,
-        openAudioGlossaryPopup:state.audioReducer.openAudioGlossaryPopup,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         openAudio: state.audioReducer.openAudio,
         indexSplit : state.audioReducer.indexSplit,
@@ -1278,7 +1434,10 @@ const mapStateToProps = state => {
         showToast: state.appStore.showToast,
         showConfirmationPopup: state.assessmentReducer.showConfirmationPopup,
         userRole: state.appStore.roleId,
-        wirisAltText: state.appStore.wirisAltText
+        wirisAltText: state.appStore.wirisAltText,
+        currentSlateLF: state.metadataReducer.currentSlateLF,
+        loWarningPopupData: state.metadataReducer.loWarningPopupData,
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
     };
 };
 
@@ -1309,6 +1468,9 @@ export default connect(
         getCommentElements,
         pasteElement,
         wirisAltTextPopup,
-        audioGlossaryPopup
+        audioGlossaryPopup,
+        createPowerPasteElements,
+        getMetadataAnchorLORef,
+        toggleLOWarningPopup
     }
 )(SlateWrapper);

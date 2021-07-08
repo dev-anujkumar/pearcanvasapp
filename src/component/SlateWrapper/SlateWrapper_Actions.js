@@ -26,10 +26,11 @@ import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
-
+import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
+
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -112,6 +113,21 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == asideData.id) {
                     item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
+                } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
+                    /* Add element inside 2c->WE->new */
+                    item?.groupeddata?.bodymatter?.map((ele) => {
+                        ele?.groupdata?.bodymatter?.map(i => {
+                            if (i?.id === parentUrn.manifestUrn) {
+                                i?.elementdata?.bodymatter?.splice(outerAsideIndex, 0, createdElementData);
+                            } else if(i?.subtype === "workedexample"){
+                                i?.elementdata?.bodymatter?.map(j => {
+                                    if (j?.id === parentUrn.manifestUrn) {
+                                        j?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                                    }
+                                })
+                            }
+                        })
+                    })
                 }
             })
         } else if (asideData && asideData.type == 'element-aside'  && type !== 'SECTION_BREAK') {
@@ -123,6 +139,21 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         if (ele.id === parentUrn.manifestUrn) {
                             ele.contents.bodymatter.splice(index, 0, createdElementData)
                         }
+                    })
+                /* To update redux store while creating new element inside 2C->Aside->New */
+                } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
+                    item?.groupeddata?.bodymatter?.map((ele) => {
+                        ele?.groupdata?.bodymatter?.map(i => {
+                            if (i?.id === parentUrn.manifestUrn) {
+                                i?.elementdata?.bodymatter?.splice(index, 0, createdElementData);
+                            } else if(i?.subtype === "workedexample"){
+                                i?.elementdata?.bodymatter?.map(j => {
+                                    if (j?.id === parentUrn.manifestUrn) {
+                                        j?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                                    }
+                                })
+                            }
+                        })
                     })
                 }
             })
@@ -156,8 +187,15 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, createdElementData)
                 }
             })
-        }
-        else {
+        /* Adding WE element inside 2C element */
+        } else if(parentUrn?.elementType === "group" && !asideData){
+            newParentData[config.slateManifestURN]?.contents?.bodymatter?.map((item, i) => {
+                let column = item?.groupeddata?.bodymatter[parentUrn?.columnIndex] || [];
+                if (column?.id === parentUrn?.manifestUrn) {
+                    column?.groupdata?.bodymatter?.splice(index, 0, createdElementData)
+                }
+            })
+        } else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
@@ -179,6 +217,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }   
     }).catch(error => {
         // Opener Element mock creation
+
         if (type == "OPENER") {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
@@ -201,8 +240,94 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     })
 }
 
+/**
+ * Calls Powerpaste API and appends elements to the slate
+ * @param {Array} powerPasteData Elements to be pasted
+ * @param {Number} index index of insertion
+ */
+export const createPowerPasteElements = (powerPasteData, index) => async (dispatch, getState) => {
+    let data = []
+    let slateEntityUrn = config.slateEntityURN
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+    const parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    const currentSlateData = newParentData[config.slateManifestURN]
+    localStorage.setItem('newElement', 1);
+    let _requestData = {
+        "content":data
+    };
+    let indexOfInsertion = index
+    powerPasteData.forEach(pastedElement => {
+        const newElement = {
+            "html" : {
+                text: pastedElement.html
+            },
+            ...slateWrapperConstants.elementDataByTag[pastedElement.tagName],
+            index: indexOfInsertion++
+        }
+        data.push(newElement)
+    });
+
+    try {
+        const url = `${config.REACT_APP_API_URL}v1/content/project/${config.projectUrn}/container/${slateEntityUrn}/powerpaste?index=${index}`
+        const response = await axios.post(url, JSON.stringify(_requestData), {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        })
+
+        /** -------------------------- TCM Snapshot Data handling ------------------------------*/
+        let indexOfElement = 0
+        while (indexOfElement < response.data.length) {
+            if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1){
+                const containerElement = {
+                    asideData: null,
+                    parentUrn: null,
+                    poetryData: null
+                };
+                const slateData = {
+                    currentParentData: newParentData,
+                    bodymatter: currentSlateData.contents.bodymatter,
+                    response: response.data[indexOfElement]
+                };
+                if (currentSlateData.status === 'approved') {
+                    await tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
+                }
+                else {
+                    tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
+                }
+
+                config.tcmStatus && prepareDataForTcmCreate("TEXT", response.data[indexOfElement], getState, dispatch);
+            }
+            indexOfElement++
+        }
+
+        if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
+
+        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data); 
+        
+        dispatch({
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: {
+                slateLevelData: newParentData
+            }
+        });
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+    } catch (error) {
+        console.error("Error in Powerpaste", error)
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+    }
+    
+}
+
+
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId} = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId, parentElement, elementIndex } = dataObj || {};
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -249,21 +374,38 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
                 if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
-                    for (let i in newBodymatter) {
-                        if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
-                            newBodymatter[i].elementdata.bodymatter.move(oldIndex, newIndex);
+                    const indexs = elementIndex?.split('-') || [];
+                    if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
+                        let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]];
+                        if (asid.contentUrn == currentSlateEntityUrn) {
+                            asid?.elementdata?.bodymatter?.move(oldIndex, newIndex);
+                        }
+                    } else {
+                        for (let i in newBodymatter) {
+                            if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
+                                newBodymatter[i].elementdata.bodymatter.move(oldIndex, newIndex);
+                            }
                         }
                     }
                 } else if (containerTypeElem && containerTypeElem == 'section') {
-                    newBodymatter.forEach(element => {
-                        if (element.id == asideId) {
-                            element.elementdata.bodymatter.forEach((nestedElem) => {
-                                if (nestedElem.contentUrn == currentSlateEntityUrn) {
-                                    nestedElem.contents.bodymatter.move(oldIndex, newIndex);
-                                }
-                            })
-                        }
-                    });
+                    const indexs = elementIndex?.split('-') || [];
+                    if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:WE:BODY:SECTION-BREAK: Swap Elements */
+                        newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.map(item => {
+                            if (item.contentUrn == currentSlateEntityUrn) {
+                                item?.contents?.bodymatter?.move(oldIndex, newIndex);
+                            }
+                        })
+                    } else {
+                        newBodymatter.forEach(element => {
+                            if (element.id == asideId) {
+                                element.elementdata.bodymatter.forEach((nestedElem) => {
+                                    if (nestedElem.contentUrn == currentSlateEntityUrn) {
+                                        nestedElem.contents.bodymatter.move(oldIndex, newIndex);
+                                    }
+                                })
+                            }
+                        });
+                    }
                 } 
                 /** ----------Swapping elements inside Citations Group Element----------------- */
                 else if (containerTypeElem && containerTypeElem == 'cg') {
@@ -364,13 +506,14 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         }
     ).then(res => {
         // Perform TCM splitSlate
+        /**
         axios({
             method: 'patch',
             url: '/cypress/trackchanges-srvr/splitslatetcm',
             timeout: 1000,
             headers: { "Content-Type": "application/json", "PearsonSSOSession": config.ssoToken },
             data: {
-                "splitSlateDurn": config.projectUrn, "splitSlateEurn": newSlateObj.entityUrn
+                "splitSlateDurn": config.projectUrn, "splitSlateEurn": newSlateObj.entityUrn, "oldSlateUrn": config.slateManifestURN
             }
         })
         .then(response => {
@@ -379,6 +522,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         .catch(error => {
             console.log("TCM split slate API error : ", error)
         })
+        */
         // Update selection store data after split
         let selection = getState().selectionReducer.selection || {};
         if(Object.keys(selection).length > 0 && selection.sourceSlateEntityUrn === config.slateEntityURN && selection.sourceElementIndex >= splitIndex) {
@@ -738,6 +882,15 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             delete _requestData.content[0].contentUrn;
         }
 
+        if(selection.element.type === "discussion") {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "blockdata": selection.element.blockdata
+                }]
+            }
+        }
+
         if(selection.element.type === "figure") {
             _requestData = {
                 "content": [{
@@ -745,6 +898,17 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     "figuredata": selection.element.figuredata
                 }]
             }
+        }
+        
+        const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample",'showhide','popup']
+        if(acceptedTypes.includes(selection.element.type)) {
+            const payloadParams = {
+                ...params,
+                cutIndex,
+                selection
+            }
+            const { setPayloadForContainerCopyPaste } = (await import("./slateWrapperAction_helper.js"))
+            _requestData = setPayloadForContainerCopyPaste(payloadParams)
         }
 
         if('manifestationUrn' in selection.element) {
@@ -757,7 +921,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
 
         try {
-            let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/slate/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
+            let url = `${config.REACT_APP_API_URL}v1/projects/${config.projectUrn}/containers/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
                 url,
                 JSON.stringify(_requestData),
@@ -770,6 +934,12 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             )
             if (createdElemData && createdElemData.status == '200') {
                 let responseData = Object.values(createdElemData.data)
+                const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+                if((responseData[0]?.type === "figure") && figureTypes.includes(responseData[0]?.figuretype) ){
+                    const elementId = responseData[0].id
+                    handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
+                }
+                
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
@@ -783,12 +953,19 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     slateEntityUrn
                 };
         
-                onPasteSuccess(pasteSuccessArgs)
+                await onPasteSuccess(pasteSuccessArgs)
+                if (responseData[0].elementdata?.type === "blockquote") {  
+                    setTimeout(() => {
+                        const node1 = document.querySelector(`[data-id="${responseData[0].id}"]`)
+                        const node2 = node1?.querySelector(`.paragraphNummerEins`)
+                        node2?.focus()
+                    }, 200)
+                }
             }
         }
         catch(error) {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-            console.log("Exceptional Error on pasting the element:::", error);
+            console.error("Exceptional Error on pasting the element:::", error);
         }
     }
 }
@@ -797,4 +974,44 @@ export const wirisAltTextPopup = (data) => (dispatch) => {
         type: WIRIS_ALT_TEXT_POPUP,
         payload: data
     })
+}
+
+/**
+ * Calls the clone API to get the request ID
+ * @param {*} insertionIndex index of insertion
+ * @param {*} manifestUrn container urn
+ */
+export const cloneContainer = (insertionIndex, manifestUrn,parentUrn,asideData) => async (dispatch) => {
+    try {
+        //Clone container
+        const cloneApiUrl = `${config.AUDIO_NARRATION_URL}container/${manifestUrn}/clone`
+        const cloneResponse = await axios.post(
+            cloneApiUrl,
+            null,
+            {
+                headers: {
+                    "ApiKey": config.STRUCTURE_APIKEY,
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }
+        )
+        const requestId = cloneResponse.data.message.split(",")[1].replace(" request id:","")
+
+        //Fetch Status
+        const fetchAndPasteArgs = {
+            insertionIndex,
+            requestId,
+            dispatch,
+            pasteElement,
+            parentUrn,
+            asideData
+        }
+        await (await import("./slateWrapperAction_helper.js")).fetchStatusAndPaste(fetchAndPasteArgs)  
+    }
+    catch(error) {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        console.error("Error in cloning the container:::", error);
+    }
 }

@@ -220,7 +220,7 @@ class ElmTableComponent extends Component {
         }
 
         if (data.contents && Object.keys(data.contents).length) {
-            const containerData = Object.values(data.contents)?.flat();
+            const containerData = Object.values(data.contents)?.flat?.();
             containerData?.length && containerData.forEach((item) => {
                 if (item && ((item.alignments && item.alignments != null) || (item.contents && item.contents != null))) {
                     this.preparedData.push({ "type": item.type, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : "", "label": item.label ? item.label : "" })
@@ -438,6 +438,7 @@ class ElmTableComponent extends Component {
         addPufFunction: this.props.addPufFunction,
         containerUrn: this.props?.currentSlateAncestorData?.ancestor?.containerUrn,
         activeUsageType: this.props.activeUsageType,
+        elementId: this.props.elementId
     };
 
     render() {
@@ -462,8 +463,7 @@ class ElmTableComponent extends Component {
         let showTable = tableValue.length ? true:false
         /** Condition to show loader before Items Table */
         let showItemLoader = showLoader == true && isLoading == true && openSearch == true && openItemTable== true  ? true : false;
-        /** get error when project has no Elm assessments to display create button */
-        const errorNoElmItem = (this.props.activeAssessmentType === PUF) && errFlag;
+        
         {
             if (errFlag == true) {
                 /** ELM Picker Error Div */
@@ -478,17 +478,16 @@ class ElmTableComponent extends Component {
                             activeAssessmentType={assessmentFormat}
                         />
                         {/* when project has no Elm assessments, display new button to add */}
-                        { errorNoElmItem &&
-                            <ElmFooter
-                                elmFooterProps={this.elmFooterProps}
-                                addFlag={addFlag}
-                                hideSearch={hideSearch}
-                                openItemTable={openItemTable}
-                                openedFrom={openedFrom}
-                                currentAssessmentSelected={this.state?.currentAssessmentSelected}
-                                error={errorNoElmItem}
-                            />
-                        }
+                        <ElmFooter
+                            elmFooterProps={this.elmFooterProps}
+                            addFlag={addFlag}
+                            hideSearch={hideSearch}
+                            openItemTable={openItemTable}
+                            openedFrom={openedFrom}
+                            currentAssessmentSelected={this.state?.currentAssessmentSelected}
+                            errorNoElmItem={errFlag}
+                            tableValue={tableValue}
+                        />
                     </div>
                 )
             } else {
@@ -544,6 +543,8 @@ class ElmTableComponent extends Component {
                             openedFrom={openedFrom}
                             currentAssessmentSelected={this.state?.currentAssessmentSelected}
                             activeRadioIndex={this.state?.isActive}
+                            errorNoElmItem={errFlag}
+                            tableValue={tableValue}
                         />
                     </>
                 );

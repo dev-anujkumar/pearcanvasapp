@@ -298,9 +298,24 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 case 5:
                     focusedElement[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]] = res.data
                     break
+                case 6:
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]]= res.data
+                        break
+                case 7:
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]] = res.data
+                    break
             }
         } else if (appStore.parentUrn.elementType === "group") {
             focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
+        } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
+            switch(indexes.length) {
+                case 4:
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res?.data;
+                    break;
+                case 5:
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res?.data;
+                    break;
+            }
         } else {
             indexes.forEach(index => {
                 if(focusedElement[index]){
@@ -370,6 +385,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
+        if (activeElementObject.tag === "BQ") {
+            const node1 = document.querySelector(`[data-id="${activeElementObject.elementId}"]`)
+            const node2 = node1?.querySelector(`.paragraphNummerEins`)
+            node2?.focus()
+        }
     })
     
     .catch(err =>{
@@ -446,7 +466,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
     let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
     let convertSlate = convertAppStore[config.slateManifestURN];
     let convertBodymatter = convertSlate.contents.bodymatter;
-    let convertParentData = fetchParentData(convertBodymatter,indexes, appStore.showHideObj);
+    let convertParentData = fetchParentData(convertBodymatter,indexes, appStore.showHideObj, response);
     let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
     /** latest version for WE/CE/PE/AS/2C*/
     convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
@@ -523,11 +543,28 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                 case 5:
                     oldElementData = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideObj.showHideType][indexes[4]]
                     break;
+                case 6:
+                    oldElementData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideObj.showHideType][indexes[5]]
+                    break;
+                case 7:
+                    oldElementData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideObj.showHideType][indexes[6]]
+                    break;
             }
             dispatch(convertElement(oldElementData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+        } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
+            let elementOldData2C;
+            switch(indexes.length) {
+                case 4:
+                    elementOldData2C = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
+                    break;
+                case 5:
+                    elementOldData2C = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                    break;
+            }
+            dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else {
             indexes.forEach(index => {
                 if(bodymatter[index]){

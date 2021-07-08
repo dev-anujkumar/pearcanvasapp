@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -49,12 +49,18 @@ import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-import {handleElmPortalEvents} from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import {handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata} from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
+import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
+import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
+import ElementDialogue from '../ElementDialogue';
+import ElementDiscussion from '../ElementDiscussion';
+import PdfSlate from '../PdfSlate/PdfSlate.jsx';
+import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -72,7 +78,12 @@ class ElementContainer extends Component {
             activeTextColorIndex: this.props.element.textcolor ? config.textcolors.indexOf(this.props.element.textcolor) : 0,
             isHovered: false,
             hasError: false,
-            sectionBreak: null
+            sectionBreak: null,
+            audioPopupStatus:false,
+            position:{},
+            editInteractiveId:"",
+            isfigurePopup:false,
+            figureUrl:""
         };
 
 
@@ -93,7 +104,6 @@ class ElementContainer extends Component {
             if (element.popupdata.hasOwnProperty("postertextobject")) {
                 !elementStatus[element.popupdata["postertextobject"][0].id] && this.props.getElementStatus(element.popupdata["postertextobject"][0].id, this.props.index)
             }
-            
         }
         else if (element && (element.type === "poetry" || element.type === "citations")) {
             if (element.contents && element.contents.hasOwnProperty("formatted-title")) {
@@ -124,6 +134,13 @@ class ElementContainer extends Component {
                 targetItemid: assessmentItemID
             }
             this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
+        }
+        const elmInteractiveElem = checkInteractive(element)
+        if (element && elmInteractiveElem === true) {
+            const interactiveData = {
+                targetId: element?.figuredata?.interactiveid
+            }
+            this.props.fetchAssessmentMetadata('interactive', 'fromElementContainer', interactiveData);
         }
         document.addEventListener('click',()=>{
             this.setState({showCopyPopup : false})
@@ -168,6 +185,7 @@ class ElementContainer extends Component {
             config.releaseCallCount += 1
         }
         handleElmPortalEvents('remove');/** Remove Elm-Assessment Update eventListener */
+        handlePostMsgOnAddAssess("", "", "", "remove","")
     }
 
     componentWillReceiveProps(newProps) {
@@ -278,6 +296,13 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-custom-editor');
+        tinyMCE.$(tempDiv).find('p').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h1').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h2').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h3').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h4').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h5').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('h6').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('ol').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
@@ -309,23 +334,25 @@ class ElementContainer extends Component {
     figureDifference = (index, previousElementData) => {
        
         let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            captionDOM = document.getElementById(`cypress-${index}-2`),
-            creditsDOM = document.getElementById(`cypress-${index}-3`)
+            numberDOM = document.getElementById(`cypress-${index}-1`),
+            subtitleDOM = document.getElementById(`cypress-${index}-2`),
+            captionDOM = document.getElementById(`cypress-${index}-3`),
+            creditsDOM = document.getElementById(`cypress-${index}-4`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
   
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
 
         let defaultImageUrl = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
@@ -335,7 +362,6 @@ class ElementContainer extends Component {
         let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
 
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             (this.props.oldImage ? this.props.oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
@@ -346,13 +372,15 @@ class ElementContainer extends Component {
 
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            preformattedText = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML.trim() : '<span class="codeNoHighlightLine"><br /></span>',
-            captionDOM = document.getElementById(`cypress-${index}-3`),
-            creditsDOM = document.getElementById(`cypress-${index}-4`);
+            numberDOM = document.getElementById(`cypress-${index}-1`),
+            subtitleDOM = document.getElementById(`cypress-${index}-2`),
+            preformattedText = document.getElementById(`cypress-${index}-3`) ? document.getElementById(`cypress-${index}-3`).innerHTML.trim() : '<span class="codeNoHighlightLine"><br /></span>',
+            captionDOM = document.getElementById(`cypress-${index}-4`),
+            creditsDOM = document.getElementById(`cypress-${index}-5`);
 
         preformattedText = `<p>${preformattedText}</p>`
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
@@ -369,12 +397,12 @@ class ElementContainer extends Component {
         }
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
         preformattedText = this.removeClassesFromHtml(preformattedText)
 
@@ -382,7 +410,6 @@ class ElementContainer extends Component {
             previousElementData.html.preformattedtext = '<p><span class="codeNoHighlightLine"></span></p>'
         }
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             preformattedText !== this.removeClassesFromHtml(previousElementData.html.preformattedtext) ||
@@ -400,32 +427,33 @@ class ElementContainer extends Component {
     figureDifferenceInteractive = (index, previousElementData) => {
         let newInteractiveid = previousElementData.figuredata.interactiveid || ""
         let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            captionsDOM = document.getElementById(`cypress-${index}-3`),
-            creditsDOM = document.getElementById(`cypress-${index}-4`)
+            numberDOM = document.getElementById(`cypress-${index}-1`),
+            subtitleDOM = document.getElementById(`cypress-${index}-2`),
+            captionsDOM = document.getElementById(`cypress-${index}-4`),
+            creditsDOM = document.getElementById(`cypress-${index}-5`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link") {
-            let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
+            let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
             posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
             
             let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
@@ -434,7 +462,6 @@ class ElementContainer extends Component {
         }
         else {
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.props.oldImage !== newInteractiveid
@@ -443,12 +470,14 @@ class ElementContainer extends Component {
     }
     figureDifferenceAT = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            text = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML : "<p></p>",
-            captionDOM = document.getElementById(`cypress-${index}-3`),
-            creditsDOM = document.getElementById(`cypress-${index}-4`)
+            numberDOM = document.getElementById(`cypress-${index}-1`),
+            subtitleDOM = document.getElementById(`cypress-${index}-2`),
+            text = document.getElementById(`cypress-${index}-3`) ? document.getElementById(`cypress-${index}-3`).innerHTML : "<p></p>",
+            captionDOM = document.getElementById(`cypress-${index}-4`),
+            creditsDOM = document.getElementById(`cypress-${index}-5`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
@@ -456,25 +485,23 @@ class ElementContainer extends Component {
 
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         text = matchHTMLwithRegex(text) ? text : `<p>${text}</p>`
         oldtext = matchHTMLwithRegex(oldtext) ? oldtext : `<p>${oldtext}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
         text = this.removeClassesFromHtml(text)
         oldtext = this.removeClassesFromHtml(oldtext)
        
         let oldTitle =  this.removeClassesFromHtml(previousElementData.html.title),
-        oldSubtitle =  this.removeClassesFromHtml(previousElementData.html.subtitle),
         oldCaption =  this.removeClassesFromHtml(previousElementData.html.captions),
         oldCredit =  this.removeClassesFromHtml(previousElementData.html.credits)
 
-        return (titleHTML !==oldTitle ||
-            subtitleHTML !== oldSubtitle ||
+        return (titleHTML !== oldTitle ||
             captionHTML !== oldCaption ||
             creditsHTML !== oldCredit ||
             // formattedText!==formattedOldText
@@ -485,28 +512,29 @@ class ElementContainer extends Component {
     figureDifferenceAudioVideo = (index, previousElementData) => {
 
         let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            captionDOM = document.getElementById(`cypress-${index}-2`),
-            creditsDOM = document.getElementById(`cypress-${index}-3`)
+            numberDOM = document.getElementById(`cypress-${index}-1`),
+            subtitleDOM = document.getElementById(`cypress-${index}-2`),
+            captionDOM = document.getElementById(`cypress-${index}-3`),
+            creditsDOM = document.getElementById(`cypress-${index}-4`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
         let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "")
        // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.props.oldImage !== assetId
@@ -978,12 +1006,11 @@ class ElementContainer extends Component {
     }
 
     toolbarHandling = (action = "") => {
-        if (document.querySelector('div#tinymceToolbar .tox-toolbar')) {
-            if (action === "add") {
-                document.querySelector('div#tinymceToolbar .tox-toolbar').classList.add("disable");
-            } else if (action === "remove") {
-                document.querySelector('div#tinymceToolbar .tox-toolbar').classList.remove("disable");
-            }
+        let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar')
+        if (action === "add") {
+            toolbar?.classList?.add("disable");
+        } else if (action === "remove") {
+            toolbar?.classList?.remove("disable");
         }
     }
 
@@ -1090,6 +1117,12 @@ class ElementContainer extends Component {
         return tcmStatus
     }
 
+    handleAudioPopupLocation =(status,position)=>{
+        this.setState({
+            audioPopupStatus:status,
+            position:position
+        })
+    }
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element
     * @param {*} tcmData tcm data for elements on the slate
@@ -1195,10 +1228,10 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
-                    editor = <ElementAuthoring tagName="blockquote" permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                    editor = <ElementAuthoring tagName="blockquote" permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
                     break;
                 case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
                     editor = <ElementLearningObjectiveItem permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} />;
@@ -1211,12 +1244,12 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  parentEntityUrn={this.props.parentUrn}  />;
+                            editor = <ElementFigure accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  parentEntityUrn={this.props.parentUrn} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            editor = <ElementAudioVideo accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -1224,14 +1257,14 @@ class ElementContainer extends Component {
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation = {this.handleAudioPopupLocation} editInteractiveId = {this.state.editInteractiveId} />;
                             labelText = LABELS[element.figuredata.interactiveformat];
                             isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
                             break;
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation = {this.handleAudioPopupLocation} />;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -1264,6 +1297,8 @@ class ElementContainer extends Component {
                         splithandlerfunction={splithandlerfunction}
                         pasteElement={this.props.pasteElement}
                         userRole={this.props.userRole}
+                        handleAudioPopupLocation = {this.handleAudioPopupLocation}
+                        parentElement={this.props.parentElement}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1290,6 +1325,7 @@ class ElementContainer extends Component {
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         activeElement={this.props.activeElement}
+                        handleAudioPopupLocation = {this.handleAudioPopupLocation}
                     />;
                     labelText = 'Pop'
                     break;
@@ -1387,7 +1423,8 @@ class ElementContainer extends Component {
                     glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                     elementSepratorProps={elementSepratorProps}
                     pasteElement={this.props.pasteElement}
-                    userRole={this.props.userRole} />
+                    userRole={this.props.userRole}
+                   />
                     labelText = 'PE'
                     break;
                 case elementTypeConstant.POETRY_STANZA:
@@ -1413,7 +1450,9 @@ class ElementContainer extends Component {
                     slateLockInfo={slateLockInfo} 
                     onListSelect={this.props.onListSelect} 
                     glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
-                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}/>
+                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                    handleAudioPopupLocation = {this.handleAudioPopupLocation}
+                    />
                     labelText = 'ST'
                     break;
                 
@@ -1428,7 +1467,7 @@ class ElementContainer extends Component {
                         handleCommentspanel : handleCommentspanel,
                         isBlockerActive : this.props.isBlockerActive,
                         onClickCapture : this.props.onClickCapture,
-                        elementSeparatorProps : elementSepratorProps,
+                        elementSepratorProps : elementSepratorProps,
                         setActiveElement : this.props.setActiveElement,
                         onListSelect : this.props.onListSelect,
                         handleFocus: this.handleFocus,
@@ -1439,6 +1478,79 @@ class ElementContainer extends Component {
                     </MultiColumnContext.Provider>;
                     labelText = '2C'
                     break;
+
+                    case elementTypeConstant.ELEMENT_DIALOGUE:
+                        editor = <ElementDialogue
+                            permissions={permissions}
+                            btnClassName={this.state.btnClassName}
+                            borderToggle={this.state.borderToggle}
+                            elemBorderToggle={this.props.elemBorderToggle}
+                            elementSepratorProps={elementSepratorProps}
+                            index={index}
+                            element={element}
+                            elementId={element.id}
+                            slateLockInfo={slateLockInfo}
+                            // splithandlerfunction={splithandlerfunction}
+                            userRole={this.props.userRole}
+                            activeElement={this.props.activeElement}
+                            onClickCapture={this.props.onClickCapture}
+                            showBlocker={this.props.showBlocker}
+                            setActiveElement={this.props.setActiveElement}
+                            parentElement={this.props.parentElement}
+                            showDeleteElemPopup={this.showDeleteElemPopup}
+                            handleBlur={this.handleBlur}
+                            handleFocus={this.handleFocus}
+                            deleteElement={this.deleteElement}
+                            glossaryFootnoteValue={this.props.glossaryFootnoteValue} 
+                            glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                            openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
+                            handleAudioPopupLocation = {this.handleAudioPopupLocation}
+                        />;
+                        labelText = 'PS'
+                        break;
+                    case elementTypeConstant.ELEMENT_DISCUSSION:
+                        editor = <ElementDiscussion
+                            permissions={permissions}
+                            btnClassName={this.state.btnClassName}
+                            borderToggle={this.state.borderToggle}
+                            elemBorderToggle={this.props.elemBorderToggle}
+                            elementSepratorProps={elementSepratorProps}
+                            index={index}
+                            element={element}
+                            elementId={element.id}
+                            slateLockInfo={slateLockInfo}
+                            // splithandlerfunction={splithandlerfunction}
+                            userRole={this.props.userRole}
+                            activeElement={this.props.activeElement}
+                            onClickCapture={this.props.onClickCapture}
+                            showBlocker={this.props.showBlocker}
+                            setActiveElement={this.props.setActiveElement}
+                            parentElement={this.props.parentElement}
+                            showDeleteElemPopup={this.showDeleteElemPopup}
+                            handleBlur={this.handleBlur}
+                            handleFocus={this.handleFocus}
+                            deleteElement={this.deleteElement}
+                        />
+                        labelText = 'DI'
+                        break;
+                    
+                    case elementTypeConstant.PDF_SLATE:
+                        editor = <PdfSlate
+                            permissions={permissions}
+                            index={index}
+                            element={element}
+                            slateLockInfo={slateLockInfo}
+                            userRole={this.props.userRole}
+                            activeElement={this.props.activeElement}
+                            showBlocker={this.props.showBlocker}
+                            parentElement={this.props.parentElement}
+                            handleFocus={this.handleFocus}
+                            handleBlur={this.handleBlur}
+                            model={this.props.model}
+                        />;
+                        labelText = 'PDF'
+                        break;
+
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
@@ -1448,7 +1560,8 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element)
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element);
+        let showAlfrescoExpandButton = checkFigureMetadata(element)
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')||this.props.permissions.includes('elements_add_remove')) ) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1478,18 +1591,20 @@ class ElementContainer extends Component {
             }
         }
 
-        let noTCM = ['TE', 'Qu'];
+        let noTCM = ['TE', 'Qu', 'PS','MA', 'DE'];
         if(noTCM.indexOf(labelText) >= 0) {
             tcm = false;
         }
 
+        /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
+        const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.renderCopyComponent(this.props, index, inContainer)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu)}} onClick={(event) => this.labelClickHandler(event)} />
-                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
+                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e,true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
                     {this.renderColorTextButton(element, permissions)}
@@ -1497,6 +1612,7 @@ class ElementContainer extends Component {
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()=="2c"? "multi-column":labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick = {(e)=>this.handleFocus("","",e,labelText)}>
                     {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
+                {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
@@ -1504,6 +1620,7 @@ class ElementContainer extends Component {
                         handleCommentspanel(event,element.id, this.props.index)
                         }} type="comment-flag" />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                     {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCM(event)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCM(event)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
@@ -1518,6 +1635,17 @@ class ElementContainer extends Component {
                     deleteElement={this.deleteElement}
                     isAddComment ={true}
                 />}
+                { this.state.isfigurePopup && 
+                    <MetaDataPopUp  
+                        figureUrl={this.state.figureUrl} 
+                        togglePopup={this.handleFigurePopup}
+                        imageId={this.state.imageId}
+                        updateFigureData={this.updateFigureData}
+                        handleFocus={this.handleFocus} 
+                        handleBlur={this.handleBlur}
+                        element={this.props.element}
+                        index={this.props.index}
+                    />}
                 {this.props.children &&
                     <PageNumberContext.Consumer>
                         {
@@ -1547,6 +1675,7 @@ class ElementContainer extends Component {
                     toggleCopyMenu={this.toggleCopyMenu}
                     copyClickedX={this.copyClickedX} 
                     copyClickedY={this.copyClickedY} 
+                    permissions={_props.permissions}
                 />
             )
         }
@@ -1613,6 +1742,13 @@ class ElementContainer extends Component {
             });
             detailsToSet['elmFeedback'] = elmFeedback || [];
         }
+        const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+        if((element?.type === "figure") && figureTypes.includes(element?.figuretype)){
+            getAlfrescositeResponse(id, (response) => {
+                detailsToSet['alfrescoSiteData'] = response
+            })
+        }
+
         console.log("Element Details action to be dispatched from here", detailsToSet)
 
         /** Dispatch details to the store */
@@ -1684,26 +1820,63 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
+    handleFigurePopup = (togglePopup) =>{ 
+        let imageId = this.props?.element?.figuredata?.imageid;
+        imageId = imageId.replace('urn:pearson:alfresco:','');
+
+        this.props.showBlocker(togglePopup);
+        this.setState({
+            isfigurePopup:togglePopup,
+            imageId
+          })
+        if(togglePopup){
+            showTocBlocker();
+        }else{
+            hideBlocker();
+        }
+    }
+
+    /**
+     * @description - This function is used to open alfresco metadata in new window.
+     */
+
+    handleAlfrescoMetadataWindow = () =>{
+        let imageId = this.props?.element?.figuredata?.imageid;
+        imageId = imageId.replace('urn:pearson:alfresco:','');
+        const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
+        window.open(Url);
+    }
+
     /**
      * @description - This function is to launch Elm Portal from Cypress.
      * @param event the click event triggered
      */
     handleEditButton = (event) => {
         event.stopPropagation();
-        let { element } = this.props;
-        let fullAssessment = checkFullElmAssessment(element);
-        let embeddedAssessment = checkEmbeddedElmAssessment(element);
-        let dataToSend = {
-            assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
-            projDURN: config.projectUrn,
-            containerURN: config.slateManifestURN,
-            assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : ""
+        const { element } = this.props;
+        const figureImageTypes = ["image", "mathImage", "table"]
+        if(element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)){
+            this.handleFigurePopup(true);
         }
-        handleElmPortalEvents();/** Add Elm-Assessment Update eventListener */
-        this.props.openElmAssessmentPortal(dataToSend);
-        embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
+        else{
+            let fullAssessment = checkFullElmAssessment(element);
+            let embeddedAssessment = checkEmbeddedElmAssessment(element);
+            const isInteractive = checkInteractive(element);
+            let dataToSend = {
+                assessmentWorkUrn: fullAssessment ? element.elementdata.assessmentid : embeddedAssessment ? element.figuredata.elementdata.assessmentid : "",
+                projDURN: config.projectUrn,
+                containerURN: config.slateManifestURN,
+                assessmentItemWorkUrn: embeddedAssessment ? element.figuredata.elementdata.assessmentitemid : "",
+                interactiveId: isInteractive ? element.figuredata.interactiveid : "",
+                elementId: this.props?.element?.id
+            }
+            handleElmPortalEvents('add','fromUpdate');/** Add Elm-Assessment Update eventListener */
+            this.props.openElmAssessmentPortal(dataToSend);
+            embeddedAssessment && this.props.editElmAssessmentId(element.figuredata.elementdata.assessmentid, element.figuredata.elementdata.assessmentitemid);
+            isInteractive && this.setState({ editInteractiveId: element.figuredata.interactiveid });
+        }
+        
     }
-   
     render = () => {
         const { element } = this.props;
         try {
@@ -1846,7 +2019,8 @@ const mapStateToProps = (state) => {
         commentSearchScrollTop: state.commentSearchReducer.scrollTop,
         currentSlateAncestorData : state.appStore.currentSlateAncestorData,
         elementSelection: state.selectionReducer.selection,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        assessmentReducer: state.assessmentReducer
     }
 }
 

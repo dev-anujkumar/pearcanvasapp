@@ -4,6 +4,7 @@ export default {
     BLOCKFEATURE: "element-blockfeature",
     ELEMENT_LIST: "element-list",
     HEADING: "heading",
+    HAND_WRITING: 'handwriting',
     PARAGRAPH: "paragraph",
     LEARNING_OBJECTIVE: "element-learningobjectives",
     FORMATTED_TITLE:'formatted-title',
@@ -23,6 +24,10 @@ export default {
     POP_UP:'POP_UP',
     POPUP_ELEMENT:'popup',
     SHOWHIDE: "showhide",
+    SHOW_HIDE: "SHOW_HIDE",
+    SMART_LINK: "SMART_LINK",
+    CONTAINER: "CONTAINER",
+    WE_TYPE: 'WORKED_EXAMPLE',
     /****************Citation elment************************/
     CITATION_GROUP: "citations",
     CITATION_ELEMENT: "element-citation",
@@ -54,6 +59,12 @@ export default {
         "pop-up-web-link": "Legacy Web Link",
         "table": "Table"
     },
+    /* Figure */
+    IMAGE: "IMAGE",
+    VIDEO: "VIDEO",
+    BLOCK_CODE_EDITOR: "BLOCK_CODE_EDITOR",
+    MMI_ELM: "MMI_ELM",
+    TEXT: "TEXT",
     /*****************Element Type Arrays*******************/
     elementType: ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'],
     containerType : ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY', 'groupedcontent'],

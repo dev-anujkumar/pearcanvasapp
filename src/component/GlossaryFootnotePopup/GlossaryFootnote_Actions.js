@@ -1,7 +1,8 @@
 import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
-import { sendDataToIframe, createTitleSubtitleModel, matchHTMLwithRegex } from '../../constants/utility.js';
+import { sendDataToIframe, createTitleSubtitleModel, matchHTMLwithRegex, createLabelNumberTitleModel } from '../../constants/utility.js';
+import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { tcmSnapshotsForUpdate, fetchParentData, fetchElementWipData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 const {
@@ -44,9 +45,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         }
         else if(tempIndex.length == 3 && elementType == 'figure'){
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
-        }else if (elementType === "figure") {
+        }
+        else if (tempIndex.length == 5 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
+            glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]];
+            
+        }
+        else if (tempIndex.length == 6 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
+            glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]]?.contents?.bodymatter[tempIndex[4]];
+        }
+        else if (elementType === "figure") {
             let tempUpdatedIndex = index.split('-');
-
             let updatedIndex = tempUpdatedIndex[0];
             glossaryFootElem = newBodymatter[updatedIndex]
         }
@@ -83,6 +91,30 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         break;
                 }
             }
+        } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // 2C->PS or 2C->As->PS or 2C->WE->PS
+            let elementInside2C = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
+            if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "sidebar") {
+                glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+            } else if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "workedexample") {
+                glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+                if (glossaryFootElem.type === 'manifest') {
+                    glossaryFootElem = glossaryFootElem.contents.bodymatter[tempIndex[4]];
+                }
+            } else {
+                glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
+            }
+
+
+
+        } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "workedexample") { //Playscript inside we element
+            glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
+            if (glossaryFootElem.type === 'manifest') {
+                glossaryFootElem = glossaryFootElem.contents.bodymatter[tempIndex[2]];
+            }
+        } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "sidebar") { //Playscript inside aside element
+            glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
+        } else if (elementType === "element-dialogue") {
+            glossaryFootElem = newBodymatter[tempIndex[0]];
         }
         else {
             if (typeof (index) == 'number') {
@@ -100,8 +132,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 } else if (indexesLen == 3) {
                     if(elementType==='stanza'){
                         condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
-                    }
-                    else if (newBodymatter[indexes[0]].type === "groupedcontent") { //All elements inside multi-column except figure
+                    } else if (newBodymatter[indexes[0]].type === "groupedcontent") { //All elements inside multi-column except figure
                         condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                     } else {
                         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
@@ -110,10 +141,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         glossaryFootElem = condition
                     }
                 }
+           
+                else if (indexesLen == 4) {  // to support glossary in text elements inside WE/AS of 2C
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
+                    
+                } else if (indexesLen == 5) { // to support glossary in section break inside WE of 2C
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
+                }
 
             }
         }
-
         switch (semanticType) {
             case 'FOOTNOTE':
                 footnoteContentText = glossaryFootElem && glossaryFootElem.html['footnotes'] && glossaryFootElem.html['footnotes'][glossaryfootnoteid]
@@ -208,47 +245,61 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
-        let label, title, captions, credits, elementIndex, text, postertext;
+        let label, number, title, captions, credits, elementIndex, text, postertext;
         let preformattedtext = null;
         let tableAsHTML = null;
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
         let hasCtaText = ["secondary-interactive-smartlink-pdf", "secondary-interactive-smartlink-web", "secondary-interactive-smartlink-pop-up-web-link"];
+       
         if(tempIndex.length == 4){//Figure inside a WE
             elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]
         }else if(tempIndex.length == 3){ //section 2 in WE figure
             elementIndex = tempIndex[0]+'-'+tempIndex[1]
-        }else{
+        }else if (tempIndex.length == 5) {
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]+'-'+tempIndex[3]
+        }
+        else if (tempIndex.length == 6) {
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]+'-'+tempIndex[3]+'-'+tempIndex[4]
+        }
+        else {
             elementIndex = tempIndex[0]
         }
 
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
-        title = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
+        number = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
+        title = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
+
 
         if(elementSubType == 'image' || elementSubType === 'tableasmarkup' || elementSubType === "audio" || elementSubType === "video" || elementSubType === 'table' || elementSubType === "mathImage"){
-            captions = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
-            credits = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+            captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+            credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
             if (elementSubType === 'tableasmarkup') {
                 if(document.getElementById(elementIndex + '-tableData')) {
                     tableAsHTML = document.getElementById(elementIndex + '-tableData').innerHTML;
                 }
             }
         }else if (elementSubType === 'interactive' || elementSubType === "codelisting" || elementSubType === "authoredtext"){
-            captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
-            credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
-            let index2Data = document.getElementById('cypress-' + elementIndex + '-2') ;//cypress-1-2
-            let hasData = index2Data && index2Data.innerHTML ? index2Data.innerHTML : "";
+            captions = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
+            credits = document.getElementById('cypress-' + elementIndex + '-5').innerHTML //cypress-1-5
+            let index3Data = document.getElementById('cypress-' + elementIndex + '-3') ;//cypress-1-2
+            let hasData = index3Data && index3Data.innerHTML ? index3Data.innerHTML : "";
             if(elementSubType === 'codelisting') {
-                preformattedtext = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
+                preformattedtext = document.getElementById('cypress-' + elementIndex + '-3').innerHTML;
             } else if (elementSubType === 'authoredtext') {
-                text = document.getElementById('cypress-' + elementIndex + '-2').innerHTML ;
+                text = document.getElementById('cypress-' + elementIndex + '-3').innerHTML ;
             }else if(elementSubType === 'interactive' && hasCtaText.indexOf(currentElement.secondaryOption) !==-1){
                 postertext = hasData; //BG-2628 Fixes
             }
         }
+        
+        label = replaceUnwantedtags(label, false);
+        number = replaceUnwantedtags(number, false);
+        title = replaceUnwantedtags(title, true);
+
+        title = createLabelNumberTitleModel(label, number, title);
 
         figureDataObj = {
-            "title": matchHTMLwithRegex(label) ? label : `<p>${label}</p>`,
-            "subtitle": matchHTMLwithRegex(title) ? title : `<p>${title}</p>`,
+            "title": title,
             "text": text ? text : "",
             "postertext": (hasCtaText.indexOf(currentElement.secondaryOption) !== -1) ? postertext  ? postertext.match(/<p>/g) ? postertext : `<p>${postertext}</p>` : "<p></p>" : "",
             "tableasHTML": tableAsHTML ? tableAsHTML : '',
@@ -413,13 +464,19 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
-        if (tempIndex.length == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
+        if (tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data
-        } else if (tempIndex.length == 4 && typeWithPopup !== "popup") {//Figure inside a WE
+        } else if (tempIndex.length == 4 && elementType == 'figure' && typeWithPopup !== "popup") {//Figure inside a WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data
         } else if (tempIndex.length == 3 && elementType =='figure') {//section 2 figure in WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data
-        } else if (elementType === "figure") {
+        } else if (tempIndex.length === 5 && elementType == 'figure') {
+            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = res.data;
+        }
+        else if (tempIndex.length === 6 && elementType == 'figure') {
+            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = res.data;
+        }
+        else if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
         }
@@ -502,6 +559,108 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         break;
                 }
             }
+        } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // 2C->PS or 2C->As->PS or 2C->WE->PS
+            if (res.data.html.hasOwnProperty('text')) {
+                delete res.data.html.text;
+            }
+            let elementInside2C = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
+            if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "sidebar") {
+                res.data = {
+                    ...res.data,
+                    html: {
+                        ...res.data.html,
+                        actTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].html.actTitle,
+                        credits: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].html.credits,
+                        dialogueContent: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].html.dialogueContent,
+                        sceneTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].html.sceneTitle
+                    }
+                }
+                newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = res.data;
+            } else if (elementInside2C.type === "element-aside" && elementInside2C.subtype === "workedexample") {
+                let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+                if (glossaryFootnoteElementOfWe.type === 'manifest') {
+                    glossaryFootnoteElementOfWe = glossaryFootnoteElementOfWe.contents.bodymatter[tempIndex[4]];
+                }
+                glossaryFootnoteElementOfWe = {
+                    ...glossaryFootnoteElementOfWe,
+                    html: {
+                        ...glossaryFootnoteElementOfWe.html,
+                        glossaryentries: res.data.html.glossaryentries,
+                        footnotes: res.data.html.footnotes
+                    }
+                }
+                if (newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].type === 'manifest') {
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = glossaryFootnoteElementOfWe;
+                } else {
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = glossaryFootnoteElementOfWe;
+                }
+            } else {
+                res.data = {
+                    ...res.data,
+                    html: {
+                        ...res.data.html,
+                        actTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.actTitle,
+                        credits: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.credits,
+                        dialogueContent: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.dialogueContent,
+                        sceneTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].html.sceneTitle
+                    }
+                }
+                newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
+            }
+        } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "workedexample") { //Playscript inside we element
+            let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
+            if (glossaryFootnoteElementOfWe.type === 'manifest') {
+                glossaryFootnoteElementOfWe = glossaryFootnoteElementOfWe.contents.bodymatter[tempIndex[2]];
+            }
+            glossaryFootnoteElementOfWe = {
+                ...glossaryFootnoteElementOfWe,
+                html: {
+                    ...glossaryFootnoteElementOfWe.html,
+                    glossaryentries: res.data.html.glossaryentries,
+                    footnotes: res.data.html.footnotes
+                }
+            }
+            if (newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].type === 'manifest') {
+                newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = glossaryFootnoteElementOfWe;
+            } else {
+                newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = glossaryFootnoteElementOfWe;
+            }
+        } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "sidebar") { //Playscript inside aside element
+            res.data = {
+                ...res.data,
+                html: {
+                    ...res.data.html,
+                    actTitle: newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].html.actTitle,
+                    credits: newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].html.credits,
+                    dialogueContent: newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].html.dialogueContent,
+                    sceneTitle: newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].html.sceneTitle
+                }
+            }
+            if (res.data.html.hasOwnProperty('text')) {
+                delete res.data.html.text;
+            }
+            newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data;
+        } else if (elementType === "element-dialogue") {
+            res.data = {
+                ...res.data,
+                html: {
+                    ...res.data.html,
+                    actTitle: newBodymatter[tempIndex[0]].html.actTitle,
+                    credits: newBodymatter[tempIndex[0]].html.credits,
+                    dialogueContent: newBodymatter[tempIndex[0]].html.dialogueContent,
+                    sceneTitle: newBodymatter[tempIndex[0]].html.sceneTitle
+                }
+            }
+            if (res.data.html.hasOwnProperty('text')) {
+                delete res.data.html.text;
+            }
+            if (newBodymatter[tempIndex[0]].hasOwnProperty('status')) {
+                res.data = {
+                    ...res.data,
+                    status: newBodymatter[tempIndex[0]].status
+                }
+            }
+            newBodymatter[tempIndex[0]] = res.data;
         }
         else {
             if (typeof (index) == 'number') {
@@ -517,7 +676,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
                     }
                 } else if (indexesLen == 3) {
-                    if(elementType==='stanza'){
+                   if(elementType==='stanza'){
                         condition = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]
                     }
                     else if(newBodymatter[indexes[0]].type ==='groupedcontent'){
@@ -538,6 +697,15 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         }
 
                     }
+                }
+                else if (indexesLen == 4) {
+                    // aside inside multi column
+                    newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                   
+                }
+                else if (indexesLen == 5) {
+                    // element inside popup inside multi column
+                    newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data
                 }
             }
         }

@@ -26,7 +26,7 @@ describe('Testing config----->', () => {
           expect(testedModule.userEmail).toBe('c5test01@mctest.local')
           expect(testedModule.assignee).toBe('c5test01')
           expect(testedModule.WRAPPER_URL).toBe('https://localhost:4000')
-          expect(testedModule.TCM_DASHBOARD_UI_URL).toBe("https://dev-structuredauthoring.pearson.com/cypress/trackchanges/index.html")
+          expect(testedModule.TCM_DASHBOARD_UI_URL).toBe("http://localhost:7000/")
           expect(testedModule.LOCK_API_BASE_URL).toBe('https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr')
 
         });

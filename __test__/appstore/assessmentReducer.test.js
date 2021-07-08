@@ -179,14 +179,14 @@ const intitalState7 = {
 describe('Test AssessmentReducer', () => {
 
     it('Test Initial State', () => {
-        expect(reducer(undefined)).toEqual(INITIAL_STATE);
+        expect(reducer(INITIAL_STATE)).toEqual(INITIAL_STATE);
     });
     it('GET_USAGE_TYPE', () => {
         expect(reducer(INITIAL_STATE, {
             type: GET_USAGE_TYPE,
             payload: expectedState3
         })).toEqual({
-            usageTypeListData: expectedState3,
+            usageTypeListData: {},
             currentEditAssessment: {},
             itemUpdateEvent: false
         })

@@ -9,7 +9,7 @@ import {
     OPEN_GLOSSARY_FOOTNOTE,
     GET_TCM_RESOURCES, 
 } from "../../constants/Action_Constants";
-import { 
+import ElementConstants, { 
     elementTypeTCM,
     allowedFigureTypesForTCM,
     allowedParentType
@@ -30,7 +30,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
         slateManifestURN
     } = paramObj
 
-    const parentVersionUrn = versionedData.newParentVersion ? versionedData.newParentVersion : parentElement.id,
+    const parentVersionUrn = versionedData.newParentVersion ? versionedData.newParentVersion : parentElement?.id,
         CONTAINER_VERSIONING = "containerVersioning",
         PARENTELEMENT_TYPES = ["poetry", "showhide", "citations", "groupedcontent"]
 
@@ -101,15 +101,130 @@ export const updateElementInStore = (paramsObj) => {
             ...updatedData,
             elementdata: {
                 ...element.elementdata,
+                startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
                 text: updatedData.elementdata ? updatedData.elementdata.text : null
             },
             tcm: _slateObject.tcm ? true : false
         }
+    } 
+    else if (updatedData?.loData?.length) {
+        updatedData.loData.forEach((updatedLO) => {
+            if (updatedLO.elementVersionType === ElementConstants.METADATA_ANCHOR) {
+                for (let i = 0; i < updatedLO.metaDataAnchorID.length; i++) {
+                    _slateBodyMatter = updateLOInCanvasStore({ updatedLO, _slateBodyMatter, activeIndex: i });
+                }
+            }
+        })
+    } else if(asideData?.parent?.type === "groupedcontent") {
+        /** updation of aside and WE elements inside multicolumn */
+        /* 2C:AS/WE:PS */
+        const indexes = elementIndex?.split("-");
+        /* 2C:AS/WE-HEAD:PS */
+        if(indexes?.length == 4 && parentUrn?.elementType === "element-aside") {
+           if(parentElement?.type === "popup") {
+                const element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata;
+                if(updatedData.sectionType === "postertextobject"){
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata.postertextobject[0] = {
+                        ...element.postertextobject[0],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element.postertextobject[0].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                } else {
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata["formatted-title"] = {
+                        ...element["formatted-title"],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element["formatted-title"].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                }
+            }else if (parentElement?.type == "showhide" && showHideType) {
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType].map((showHideData) => {
+                    if (showHideData.id == updatedData.id) {
+                        showHideData.elementdata.text = updatedData.elementdata.text;
+                        showHideData.html = updatedData.html;
+                    }
+                })
+            }
+            else {
+                /** updation of text and figure elements inside aside/WE of multicolumn */
+                const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
+                ...element,
+                ...updatedData,
+                elementdata: {
+                    ...element.elementdata,
+                    startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                    numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                    text: updatedData.elementdata ? updatedData.elementdata.text : null
+                },
+                tcm: _slateObject.tcm ? true : false
+                }
+            }
+        } else if(indexes?.length == 5 && parentUrn?.elementType === "manifest") {
+            /* 2C:WE-BODY/Section Break:PS */
+            if(parentElement?.type === "popup") {  /* 2C:WE-BODY/Section Break:Popup*/
+                const element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata;
+                if(updatedData.sectionType === "postertextobject"){ /* 2C:WE-BODY/Section Break:Popup: posterobjectdata*/
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata.postertextobject[0] = {
+                        ...element.postertextobject[0],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element.postertextobject[0].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                } else { /* 2C:WE-BODY/Section Break:Popup: formatted-title */
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata["formatted-title"] = {
+                        ...element["formatted-title"],
+                        html: updatedData?.html,
+                        elementdata: {
+                            ...element["formatted-title"].elementdata,
+                            text: updatedData?.elementdata?.text
+                        },
+                    }
+                }
+            } else if (parentElement?.type == "showhide" && showHideType) {
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType].map((showHideData) => {
+                    if (showHideData.id == updatedData.id) {
+                        showHideData.elementdata.text = updatedData.elementdata.text;
+                        showHideData.html = updatedData.html;
+                    }
+                })
+            }else {
+                const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
+                    ...element,
+                    ...updatedData,
+                    elementdata: {
+                        ...element.elementdata,
+                        startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                        numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                        text: updatedData.elementdata ? updatedData.elementdata.text : null
+                    },
+                    tcm: _slateObject.tcm ? true : false
+                }
+            }  
+        }
     } else {
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
-
-                if (element.type !== "openerelement") {
+                /**updation of non container elements */
+                if (element.type === "element-dialogue" || element.type === "element-discussion") {
+                    /** updation of playscript element having dialogue and discussion element */
+                    /**PS,SD,DE */
+                    element = {
+                        ...element,
+                        ...updatedData,
+                    }
+                } 
+                else if (element.type !== "openerelement") {
+                    /** updation of simple text elements and figure elements */
                     element = {
                         ...element,
                         ...updatedData,
@@ -139,7 +254,9 @@ export const updateElementInStore = (paramsObj) => {
                                 ...nestedEle,
                                 ...updatedData,
                                 elementdata: {
-                                    ...nestedEle.elementdata,
+                                    ...nestedEle.elementdata, 
+                                    startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                                    numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
                                     text: updatedData.elementdata ? updatedData.elementdata.text : null
                                 },
                                 tcm: _slateObject.tcm ? true : false,
@@ -300,7 +417,6 @@ export const updateElementInStore = (paramsObj) => {
     }
     _slateContent.bodymatter = _slateBodyMatter
     _slateObject.contents = _slateContent
-
     return dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
         payload: {
@@ -414,7 +530,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
     }
 
     /** Check applied so that element does not gets copied to next slate while navigating */
-    if (config.slateManifestURN === updatedData.slateVersionUrn) {  
+    if (config.slateManifestURN === updatedData.slateVersionUrn) {
         const argObj = {
             ...commonArgs,
             showHideType,
@@ -458,16 +574,9 @@ export const updateStore = (paramObj) => {
     const commonArgs = {
         updatedData, responseData, getState, dispatch
     }
-    if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
-        for(let i = 0; i < updatedData.metaDataAnchorID.length; i++){
-            if(updatedData.metaDataAnchorID[i] !==  responseData.metaDataAnchorID[i]){
-                if (currentSlateData.status === 'wip') {
-                    updateLOInStore(commonArgs);
-                } else if (currentSlateData.status === 'approved') {
-                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-                }
-                break;
-            }
+    if ((updatedData?.loData) || updatedData.elementVersionType === "element-generateLOlist") {
+        if (updatedData?.loData?.length && responseData?.loData?.length) {
+            updateMetadataAnchorLOsinStore({...commonArgs,currentSlateData})
         }
     } else if (responseData.id !== updatedData.id) {
         if (currentSlateData.status === 'wip') {
@@ -567,22 +676,6 @@ export const updateStoreInCanvas = (params) => {
     }
 }
 
-export const updateLOInStore = ({ updatedData, versionedData, getState, dispatch }) => {
-    const parentData = getState().appStore.slateLevelData;
-    let newslateData = JSON.parse(JSON.stringify(parentData));
-    if (versionedData) {
-        for (let i = 0; i < updatedData.loIndex.length; i++) {
-            newslateData[config.slateManifestURN].contents.bodymatter[i].id = versionedData.metaDataAnchorID[i];
-        }
-    }
-    return dispatch({
-        type: AUTHORING_ELEMENT_UPDATE,
-        payload: {
-            slateLevelData: newslateData
-        }
-    })
-}
-
 export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, versionedData, updatedData }) => {
     if (updatedData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(updatedData.figuretype)) {
         return false
@@ -618,6 +711,90 @@ export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, ver
         type: GET_TCM_RESOURCES,
         payload: {
             data: tcmData
+        }
+    })
+}
+
+/**
+ * This function updated the LO in Metadata Anchor elements on slate
+ * @returns updated Slate Bodymatter
+ */
+export const updateLOInCanvasStore = ({ updatedLO, _slateBodyMatter, activeIndex }) => {
+    const indexes = updatedLO.loIndex[activeIndex].toString().split("-");
+    let bodyMatterContent = [..._slateBodyMatter];
+    switch (indexes.length) {
+        case 1: /** Metadata Anchor on Slate */
+            bodyMatterContent[indexes[0]] = {
+                ...bodyMatterContent[indexes[0]],
+                elementdata: updatedLO.elementdata
+            }
+            break;
+        case 2: /** Metadata Anchor in Aside | WE:HEAD */
+            let element = bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]]
+            bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]] = {
+                ...element,
+                elementdata: updatedLO.elementdata
+            }
+            break;
+        case 3: /** Metadata Anchor in WE:BODY */
+            let weElement = bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+            bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = {
+                ...weElement,
+                elementdata: updatedLO.elementdata
+            }
+            break;
+        default:
+            break;
+    }
+    return bodyMatterContent;
+}
+
+export const updateMetadataAnchorLOsinStore = ({ updatedData, responseData, getState, dispatch, currentSlateData }) => {
+    updatedData.loData.forEach((loUpdate) => {
+        let responseLOData = responseData.loData.find(loItem => loItem.elementdata.loref === loUpdate.elementdata.loref)
+        const updatedArgs = {
+            oldLO_Data: loUpdate,
+            newLO_Data: responseLOData,
+            getState, dispatch
+        }
+        for (let i = 0; i < loUpdate.metaDataAnchorID.length; i++) {
+            if (loUpdate.metaDataAnchorID[i] !== responseLOData.metaDataAnchorID[i]) {
+                if (currentSlateData.status === 'wip') {
+                    updateLOInStore({ ...updatedArgs, activeIndex: i });
+                } else if (currentSlateData.status === 'approved') {
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                }
+                break;
+            }
+        }
+    })
+}
+
+export const updateLOInStore = ({ oldLO_Data, newLO_Data, getState, dispatch, activeIndex }) => {
+    const parentData = getState().appStore.slateLevelData;
+    let newslateData = JSON.parse(JSON.stringify(parentData));
+    let bodyMatterContent = newslateData[config.slateManifestURN].contents.bodymatter;
+    if (newLO_Data) {
+        const indexes = oldLO_Data?.loIndex[activeIndex]?.toString().split("-");
+        switch (indexes.length) {
+            case 1: /** Metadata Anchor on Slate */
+                bodyMatterContent[indexes[0]].id = newLO_Data.metaDataAnchorID[activeIndex]
+                break;
+            case 2: /** Metadata Anchor in Aside | WE:HEAD */
+                bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]].id = newLO_Data.metaDataAnchorID[activeIndex]
+                break;
+            case 3: /** Metadata Anchor in WE:BODY */
+                bodyMatterContent[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id = newLO_Data.metaDataAnchorID[activeIndex]
+                break;
+            default:
+                break;
+        }
+    }
+    newslateData[config.slateManifestURN].contents.bodymatter =  bodyMatterContent;
+    return dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: newslateData
         }
     })
 }

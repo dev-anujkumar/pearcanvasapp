@@ -45,6 +45,9 @@ describe('Test for Sidebar component', () => {
             "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
             
         },
+        selectionReducer:{
+            selection:""
+        }
     });
     let props = {
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
@@ -135,6 +138,9 @@ describe('Test for Sidebar component', () => {
                 "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
                 
             },
+            selectionReducer:{
+                selection:""
+            }
         });
 
         let sidebar = mount(<Provider store={sidebarWithData}>
@@ -172,6 +178,9 @@ describe('Test for Sidebar component', () => {
                 "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
                 
             },
+            selectionReducer:{
+                selection:""
+            }
         });
 
         let sidebar = mount(<Provider store={sidebarWithData}>
@@ -201,6 +210,9 @@ describe('Test for Sidebar component', () => {
                 "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
 
             },
+            selectionReducer:{
+                selection:""
+            }
 
         });
         let sidebar = mount(<Provider store={sidebarWithData}>
@@ -232,6 +244,9 @@ describe('Test for Sidebar component', () => {
                         "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
                         
                     },
+                    selectionReducer:{
+                        selection:""
+                    }
                 });
                 let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props} /></Provider>);
                 const sidebarInstance = sidebar.find('Sidebar').instance();

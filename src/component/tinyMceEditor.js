@@ -3,25 +3,25 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //IMPORT TINYMCE 
 import tinymce from 'tinymce/tinymce';
-import 'tinymce/themes/silver';
+import 'tinymce/themes/silver/theme.min.js';
 import "tinymce/skins/ui/oxide/skin.min.css";
 import "tinymce/skins/ui/oxide/content.min.css";
 import "tinymce/skins/content/default/content.css";
-import "tinymce/plugins/lists";
-import "tinymce/plugins/advlist";
-import "tinymce/plugins/paste";
+import "tinymce/plugins/lists/plugin.min.js";
+import "tinymce/plugins/advlist/plugin.min.js";
+import "tinymce/plugins/paste/plugin.min.js";
+// import "tinymce/icons/default/icons.min.js";
 // IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
-import { audioGlossaryPopup} from './AudioNarration/AudioNarration_Actions';
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
@@ -30,16 +30,20 @@ import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../compone
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
+import { getParentPosition} from './CutCopyDialog/copyUtil';
+
 import { handleC2MediaClick }  from '../js/TinyMceUtility.js';
+import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
+
 
 export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
         context = this;
-        this.state = { popup: false }
+        this.state = { popup: false,alignment:'' }
         this.placeHolderClass = ''
         this.indentRun = false;
         this.outdentRun = false;
@@ -55,6 +59,7 @@ export class TinyMceEditor extends Component {
         this.notFormatting = true;
         this.gRange = null;
         this.wirisClick = 0;
+        this.activeGlossaryFootnoteId="";
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -84,6 +89,8 @@ export class TinyMceEditor extends Component {
                     this.addChemistryFormulaButton(editor);
                     this.addMathmlFormulaButton(editor);
                 }
+                this.setAlignmentIcon(editor);
+                this.addAlignmentIcon(editor);
                 this.setCrossLinkingIcon(editor);
                 this.addCrossLinkingIcon(editor);
                 this.setAssetPopoverIcon(editor);
@@ -116,7 +123,9 @@ export class TinyMceEditor extends Component {
                     * This code is written to remove lagging in typing and move cursor at end on focus
                     */
                 });
-                tinymce.$('.blockquote-editor').attr('contenteditable', false)
+                tinymce.$('.blockquote-editor').attr('contenteditable', false);
+                this.setCalloutIcon(editor);
+                this.addCalloutIcon(editor);
             },
 
             init_instance_callback: (editor) => {
@@ -140,6 +149,7 @@ export class TinyMceEditor extends Component {
                     /*
                         if content is caused by wiris then call blur
                     */
+                   const eventTarget = e.target.targetElm
                     if (e.originalEvent && e.originalEvent.command === "mceInsertContent") {
                         let specialCharSpan = document.getElementById('specialChar');
                         if (specialCharSpan) {
@@ -180,7 +190,7 @@ export class TinyMceEditor extends Component {
                             } else {
                                 let showHideType = this.props.showHideType || null
                                 showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-                                this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType)
+                                this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType, eventTarget)
                             
                             }
                         }
@@ -511,6 +521,14 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                     }
+
+                    if(tinymce.activeEditor.selection.getNode().className.includes('callout')){
+                        let textSelected = window.getSelection().toString();
+                        if (textSelected.length) {
+                            editor.insertContent(textSelected);
+                        }
+                    }
+                    
                     /**
                      * In case remove all formatting is being appied on list element
                      */
@@ -719,6 +737,7 @@ export class TinyMceEditor extends Component {
         if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.parentElement.childNodes &&
             e.target.parentElement.childNodes[0].nodeName == 'A' && e.target.dataset.uri) {
             let uri = e.target.dataset.uri;
+            this.activeGlossaryFootnoteId = uri;
             this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
@@ -758,11 +777,27 @@ export class TinyMceEditor extends Component {
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
             if (isAudioExists) {
-                let audioPopupPosition = {
-                    left: `${(e.clientX - 317)}px`,
-                    top: `${(e.clientY - 40) }px`
+                if (e.currentTarget.classList.contains('mce-edit-focus')) {
+                    const parentPosition = getParentPosition(e.currentTarget);
+                    const slateWrapperNode = document.getElementById('slateWrapper')
+                    const scrollTop = slateWrapperNode && slateWrapperNode.scrollTop || 0;
+
+                    const xOffSet = 0;
+                    const yOffSet = 10
+                    let copyClickedX = e.clientX - parentPosition.x + xOffSet;
+                    const copyClickedY = e.clientY - parentPosition.y + scrollTop + yOffSet;
+                    if(copyClickedX > 350){
+                        copyClickedX = 380
+                    }
+                    let audioPopupPosition = {
+                        left: `${(copyClickedX)}px`,
+                        top: `${(copyClickedY)}px`
+                    }
+                    if(parentPosition.x +325 >800){
+                        audioPopupPosition.left = '0'
+                    }
+                    this.props.handleAudioPopupLocation(true, audioPopupPosition);
                 }
-                this.props.audioGlossaryPopup(true, audioPopupPosition);
             }
         }
         /**
@@ -958,6 +993,14 @@ export class TinyMceEditor extends Component {
                         spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'poetryLine');
                     }
                 }
+                else if (activeElement.nodeName == "DIV" && this.props.element.type === 'element-dialogue' && this.props.placeholder === "Enter Dialogue...") {
+                    let key = e.keyCode || e.which;
+                    if (key != undefined && key === 13) {
+                        spanHandlers.addAndSplitSpan(editor, this.props.elementId, 'div', 'dialogueLine');
+                    } else if (key != undefined && (key === 8 || key === 46)) {
+                        spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, key, 'dialogueLine');
+                    }
+                }
                 let elem = editor.selection.getNode();
                 let olList = elem.closest(`ol`);
                 let ulList = elem.closest(`ul`);
@@ -1112,7 +1155,7 @@ export class TinyMceEditor extends Component {
                 isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
                 isContainsBlankLine = activeElement.innerHTML.match(/<span/) ? activeElement.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
             }
-            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza") {
+            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza" && this.props.element.type !== "element-dialogue") {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
                 if ('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
                     activeEditor.blur();
@@ -1125,7 +1168,7 @@ export class TinyMceEditor extends Component {
                 } else {
                     textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 }
-                textPicker.click();
+                textPicker?.click();
             } else if (key === 13 && this.props.element.type === 'showhide' && this.props.showHideType != 'revel' && this.props.currentElement.type !== 'element-list') {
                 this.props.createShowHideElement(this.props.showHideType, this.props.index, this.props.id);
             }
@@ -1166,6 +1209,21 @@ export class TinyMceEditor extends Component {
                     currentElement = editor.selection.getNode().closest(`.AssetPopoverTerm`);
                 }
                 if (currentElement && currentElement.title.toLowerCase() === 'slate link') {
+                    let offset = this.getOffSet(currentElement);
+                    let textLength = currentElement.textContent.length;
+                    if (textLength === offset || textLength === offset + 1) {
+                        if (!currentElement.nextSibling) {
+                            let parentNode = currentElement.parentNode;
+                            let innerHtml = parentNode.innerHTML + '&#65279';
+                            parentNode.innerHTML = innerHtml;
+                            let childNodes = parentNode.childNodes;
+                            editor.selection.setCursorLocation(parentNode.childNodes[childNodes.length - 1], 0);
+                        }
+                    }
+                }
+                let selectedClassName = tinymce.activeEditor.selection.getNode().className;
+                if(selectedClassName.toLowerCase() ==='calloutone' || selectedClassName.toLowerCase() ==='callouttwo' || selectedClassName.toLowerCase() ==='calloutthree' || selectedClassName.toLowerCase() ==='calloutfour'){
+                    let currentElement = tinymce.activeEditor.selection.getNode();
                     let offset = this.getOffSet(currentElement);
                     let textLength = currentElement.textContent.length;
                     if (textLength === offset || textLength === offset + 1) {
@@ -1403,6 +1461,158 @@ export class TinyMceEditor extends Component {
             crossLinkIcon
         );
     }
+ 
+    /**
+     * Adds Callout icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+    setCalloutIcon = (editor) => {
+        editor.ui.registry.addIcon(
+            "calloutIcon",
+            calloutMenuIcon
+        );
+    }
+
+
+     /**
+     * Adding button for Callout
+     * @param {*} editor  editor instance
+     */
+      addCalloutIcon = editor => {
+        const calloutsCount = 4;  // Count for dynamically creating callouts.
+        const items = [];
+        if ('element' in this.props && 'type' in this.props.element) {
+           for(let i=1;i<=calloutsCount;i++){
+            items.push({
+                type: 'togglemenuitem',
+                text: `Callout option ${i}`,
+                tooltip: `Callout option ${i}`,
+                onAction: () => {
+                    let selectedText = window.getSelection().toString();
+                    if (!hasReviewerRole() && selectedText.length) {
+                        this.setCalloutToSelection(editor,i-1,selectedText)
+                    }
+                },
+                onSetup: function (api) {
+                    let callouts=['One','Two','Three','Four']
+                    let activeCallout = tinymce.activeEditor.selection.getNode().className;
+                    if(activeCallout===`callout${callouts[i-1]}`){
+                        api.setActive(true);
+                    }
+                    else{
+                        api.setActive(false);
+                    }
+                }
+            })
+        }
+     }    
+        editor.ui.registry.addMenuButton("calloutIcon", {
+            text: "",
+            icon: "callouticon",
+            tooltip: "Callout",
+            fetch: cb => cb(items)
+        });
+    }
+
+     /**
+     * Setting callout to selected word/phrase.
+     * @param {*} editor  editor instance
+     * @param {*} selectedCalloutIndex callout option selected
+     * @param {*} selected selected word/pharse
+     */
+    setCalloutToSelection(editor,selectedCalloutIndex,selected){
+        if(selected.trim().length>0){
+            let callouts=['One','Two','Three','Four']
+            let selectedText = selected;
+            const selectedCallout = `callout${callouts[selectedCalloutIndex]}`;
+            let newCallOutID = ''
+            let isSelected = tinymce.activeEditor.selection.getNode().className.includes('callout');
+            if(!isSelected){
+                newCallOutID= `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}`
+            }
+            else{
+                let selection = window.getSelection().anchorNode.parentNode;
+                newCallOutID = selection?.dataset?.calloutid ?? `callout:${Math.floor(1000 + Math.random() * 9000)}:${Math.floor(1000 + Math.random() * 9000)}` ;
+            }
+            let insertionText = `<span title="${selectedCallout}" class="${selectedCallout}" data-calloutid="${newCallOutID}">${selectedText}</span>`
+            editor.insertContent(insertionText);
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+            setTimeout(() => {
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+            }, 1000);
+            this.saveContent();
+        }
+    }
+
+    /**
+     * Adds Alignment icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+
+    setAlignmentIcon = editor => {
+        editor.ui.registry.addIcon(
+            "Alignment",
+             alignment
+        );
+    }
+
+    /**
+     * Adding button for Alignment
+     * @param {*} editor  editor instance
+     */
+
+    addAlignmentIcon = editor => {
+        editor.ui.registry.addMenuButton("Alignment", {
+            icon:'align-left',
+            tooltip: "Text Alignment",
+            fetch: function (callback) {
+                var items = [{
+                        text:'Left Align',
+                        type: 'togglemenuitem',
+                        icon: "action-next",
+                        onAction: function () {
+                            if(!tinymce.activeEditor.queryCommandState('JustifyLeft')){
+                            tinymce.activeEditor.execCommand('JustifyLeft');
+                            }
+                        },
+                        onSetup: function(api) {
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyLeft') || (!tinymce.activeEditor.queryCommandState('JustifyLeft') && !tinymce.activeEditor.queryCommandState('JustifyRight') && !tinymce.activeEditor.queryCommandState('JustifyCenter')))
+                            return function() {};
+                        }
+                    },
+                    {
+                        text:'Center Align',
+                        type: 'togglemenuitem',
+                        icon: "align-center",
+                        onAction: function () {
+                            if(!tinymce.activeEditor.queryCommandState('JustifyCenter')){
+                                tinymce.activeEditor.execCommand('JustifyCenter');
+                            }
+                        },
+                        onSetup: function(api) {
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyCenter'));
+                            return function() {};
+                        }
+                    },
+                    {
+                        text:'Right Align',
+                        type: 'togglemenuitem',
+                        icon: "align-right",
+                        onAction: function () {
+                            if(!tinymce.activeEditor.queryCommandState('JustifyRight')){
+                                tinymce.activeEditor.execCommand('JustifyRight');
+                            }
+                        },
+                        onSetup: function(api) {
+                            api.setActive(tinymce.activeEditor.queryCommandState('JustifyRight'));
+                            return function() {};
+                        }
+                    }
+                ];
+                callback(items);
+            }
+        });
+    }
 
     /**
      * Adds Insert button to the toolbar for adding Media like Images.
@@ -1469,6 +1679,9 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addIcon("undo", undo);
         editor.ui.registry.addIcon("redo", redo);
         editor.ui.registry.addIcon("bold", bold);
+        editor.ui.registry.addIcon("align-left", alignleft);
+        editor.ui.registry.addIcon("align-right", alignright);
+        editor.ui.registry.addIcon("align-center", aligncenter);
         editor.ui.registry.addIcon("italic", italic);
         editor.ui.registry.addIcon("underline", underline);
         editor.ui.registry.addIcon("strike-through", strikethrough);
@@ -1738,6 +1951,8 @@ export class TinyMceEditor extends Component {
             case "element-authoredtext":
                 if (element.elementdata.headers)
                     return `Heading ${element.elementdata.headers[0].level}`
+                else if(element?.elementdata?.designtype === 'handwritingstyle')
+                    return 'Handwriting'
                 else
                     return "Paragraph"
             case "element-blockfeature":
@@ -2202,6 +2417,10 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance 
      */
     addGlossary = (editor) => {
+        let elementId = this.props.elementId;
+        if (this.props.element.type === "element-dialogue") {
+            elementId = this.props.element.id;
+        }
         let sText = editor.selection.getContent();
         let parser = new DOMParser();
         let htmlDoc = parser.parseFromString(sText, 'text/html');
@@ -2225,7 +2444,7 @@ export class TinyMceEditor extends Component {
         }
         config.isCreateGlossary = true
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
+        getGlossaryFootnoteId(elementId, "GLOSSARY", res => {
             let insertionText = ""
             if (res.data && res.data.id) {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
@@ -2271,7 +2490,6 @@ export class TinyMceEditor extends Component {
         let selectedTag = selection.nodeName;
         let selectedTagClass = selection.classList;
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
         let parentNode = true;
         do {
             if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
@@ -2312,6 +2530,7 @@ export class TinyMceEditor extends Component {
         } else {
             selection.parentNode.removeChild(selection);
         }
+
         sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
     }
 
@@ -2591,7 +2810,7 @@ export class TinyMceEditor extends Component {
                 let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
                 defModel = removeBOM(defModel)
                 //defModel=defModel.replace(/(?:.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
-                defModel = removeMathmlImageCache(defModel)
+                defModel = removeImageCache(defModel)
                 return defModel;
         }
     }
@@ -2669,7 +2888,7 @@ export class TinyMceEditor extends Component {
     componentDidUpdate(prevProps) {
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
-            this.lastContent = document.getElementById('cypress-' + this.props.index).innerHTML;
+            this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
         }
         if (this.elementConverted || prevProps.element.subtype !== this.props.element.subtype) {
             let elementTypeNode = document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label');
@@ -2723,13 +2942,13 @@ export class TinyMceEditor extends Component {
         let toolbar = [];
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        }
-        else if (this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
+        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Enter Number...") {
+            toolbar = config.figureNumberToolbar;
+        } else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
-            toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-
+                toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
         } else if (this.props.placeholder === "Enter block code...") {
             let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
             if (syntaxEnabled && syntaxEnabled.checked) {
@@ -2744,8 +2963,32 @@ export class TinyMceEditor extends Component {
             toolbar = config.revelToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
-        } else {
+        }
+        else {
             toolbar = config.elementToolbar;
+        }
+        if (this.props.element.type === "element-dialogue") {
+            switch(this.props.placeholder){
+                case "Enter Act Title...": 
+                case "Enter Scene Title...": 
+                case "Enter Credit...": { 
+                    toolbar = [...config.playScriptToolbar, 'glossary'];
+                    break;
+                }
+                case "Enter Dialogue...": {
+                    toolbar = [...config.playScriptToolbar, 'mathml', 'chemml', 'inlinecode'];
+                    break;
+                }
+                case "Enter Stage Directions...": {
+                    toolbar = [...config.playScriptToolbar, 'italic', 'mathml', 'chemml', 'inlinecode'];
+                    break;
+                }
+                case "Enter Character Name...": {
+                        toolbar = [...config.playScriptToolbar, 'bold', 'mathml', 'chemml', 'inlinecode'];
+                    break;
+                }
+                default: break;
+            }
         }
         return toolbar;
     }
@@ -2972,6 +3215,38 @@ export class TinyMceEditor extends Component {
                     termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
                     document.getElementById(currentTarget.id).innerHTML = termText
                 }
+                //---------------------------------------------------------------------------------//
+                // if editor contains footnode in the text anywhere then check the condition and if 
+                // footnode lies in the end then remove the superscript mode from the end of text.
+                if (tinymce.activeEditor?.selection?.getContent() === "") { // if user is not selecting any text on the editor
+                    let activeNode = tinymce.activeEditor.selection.getNode()
+                    if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
+                        this.removeSupFormat(clickedX, clickedY);
+                    }
+                    else if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1) {
+                        let cursorNode = document.elementFromPoint(clickedX, clickedY);
+                        let selectNode = '';
+                        // const parentNodeName = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN', 'DIV', 'HEADER']
+                        if (cursorNode?.nodeName === 'A') {
+                            selectNode = cursorNode
+                            tinymce.activeEditor.selection.select(selectNode);
+                            this.removeSupFormat(clickedX, clickedY);
+                        } else if (cursorNode?.nodeName === 'SUP' && cursorNode?.childNodes?.length && cursorNode?.childNodes[0]?.nodeName === 'A') {
+                            selectNode = cursorNode.childNodes[0]
+                            tinymce.activeEditor.selection.select(selectNode);
+                            this.removeSupFormat(clickedX, clickedY);
+                        } 
+                        /**else if (parentNodeName.indexOf(cursorNode?.nodeName?.toUpperCase()) > -1 && this.activeGlossaryFootnoteId) {
+                            let footnoteAnchorNode = cursorNode.querySelector(`a[data-uri="${this.activeGlossaryFootnoteId}"]`)
+                            if (footnoteAnchorNode) {
+                              tinymce.activeEditor.selection.select(footnoteAnchorNode);
+                              this.removeSupFormat(clickedX, clickedY);
+                            }
+                        }*/
+                    }
+                }
+
+                //---------------------------------------------------------------------------------//
                 if (clickedX !== 0 && clickedY !== 0) {     //User generated click event
                     tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
                 }
@@ -2995,7 +3270,7 @@ export class TinyMceEditor extends Component {
                     this.removeAttributionBr();
                 }
             });
-            this.setToolbarByElementType();
+            this.setToolbarByElementType(); 
         }
         /**
          * case - continuing with toggling glossary & footnote popup
@@ -3036,6 +3311,41 @@ export class TinyMceEditor extends Component {
                 else {
                     removeListHighliting();
                 }
+
+                //---------------------------------------------------------------------------------//
+                // if editor contains footnode in the text anywhere then check the condition and if 
+                // footnode lies in the end then remove the superscript mode from the end of text.
+
+                if (tinymce.activeEditor?.selection?.getContent() === "") { // if user is not selecting any text on the editor
+                    let activeNode = tinymce.activeEditor.selection.getNode()
+                    if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
+                        this.removeSupFormat(clickedX, clickedY);
+                    }
+                    else if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1) {
+                        let cursorNode = document.elementFromPoint(clickedX, clickedY);
+                        let selectNode = '';
+                        const parentNodeName = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN', 'DIV', 'HEADER']
+                        if (cursorNode?.nodeName === 'A') {
+                            selectNode = cursorNode
+                            tinymce.activeEditor.selection.select(selectNode);
+                            this.removeSupFormat(clickedX, clickedY);
+                        } else if (cursorNode?.nodeName === 'SUP' && cursorNode?.childNodes?.length && cursorNode?.childNodes[0]?.nodeName === 'A') {
+                            selectNode = cursorNode.childNodes[0]
+                            tinymce.activeEditor.selection.select(selectNode);
+                            this.removeSupFormat(clickedX, clickedY);
+                        } else if (parentNodeName.indexOf(cursorNode?.nodeName?.toUpperCase()) > -1 && this.activeGlossaryFootnoteId) {
+                            let footnoteAnchorNode = cursorNode.querySelector(`a[data-uri="${this.activeGlossaryFootnoteId}"]`)
+                            if (footnoteAnchorNode) {
+                                tinymce.activeEditor?.selection?.select(footnoteAnchorNode);
+                                this.removeSupFormat(clickedX, clickedY);
+                            }
+                        }
+                    }
+                }
+
+                //---------------------------------------------------------------------------------//
+
+
                 if (this.props.element && this.props.element.type === "element-blockfeature") {
                     this.removeBogusTagsFromDom();
                     this.removeAttributionBr();
@@ -3058,12 +3368,67 @@ export class TinyMceEditor extends Component {
         }
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
+
+    /**
+     * removeSupFormat | gets triggered when any editor element contains footnode
+     * @param {*} clickedX  x cords of mouse clicking
+     * @param {*} clickedY  y cords of mouse clicking
+     */
+    removeSupFormat = (clickedX1, clickedY1) => {
+        let selectedElement;
+        // We are checking event in below condition because on handle click event when tiny mce editor 
+        // init then it selects div element of editor, so we need to find its child anchor or sup element.
+        selectedElement = tinymce.activeEditor.selection.getNode();
+        // Below if condition works only when editor has no text and contains only footnote star
+        if (selectedElement?.tagName?.toLowerCase() === "p") {
+            selectedElement = selectedElement.firstChild;
+        }
+        let parentNode = selectedElement.parentNode;
+        let endPosition = true;
+        if (selectedElement?.tagName?.toLowerCase() === 'a') {
+            let bomPosition = selectedElement.innerHTML.lastIndexOf("﻿");
+            if (bomPosition === 0) {
+                endPosition = false;
+            }
+            selectedElement = selectedElement?.parentNode;
+            parentNode = selectedElement?.parentNode;
+        } else {
+            let childNodes = selectedElement.childNodes;
+            if (childNodes.length && childNodes[0].nodeType === Node.TEXT_NODE) {
+                endPosition = false;
+            }
+        }
+        parentNode.innerHTML = removeBOM(parentNode.innerHTML);
+        let existingInnerHTML = '<sup>' + removeBOM(selectedElement.innerHTML) + '</sup>';
+        let innerHtml = existingInnerHTML + "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#8203;&#65279;</span>";
+        if (!endPosition) {
+            innerHtml = "<span id='_mce_caret' data-mce-bogus='1' data-mce-type='format-caret'>&#8203;&#65279;</span>" + existingInnerHTML;
+        }
+        let parentInnerHtml = removeBOM(parentNode.innerHTML);
+        let newParentInnerHtml = parentInnerHtml?.replace(existingInnerHTML, innerHtml);
+        parentNode.innerHTML = newParentInnerHtml;
+        if (clickedX1 !== 0 && clickedY1 !== 0) {     //User generated click event
+            let pointerElement = document.getElementById('_mce_caret');
+            if (pointerElement?.nodeName == 'SPAN' && pointerElement.hasAttribute('id')) {
+                let selectedNode = tinymce.activeEditor?.selection?.select(tinymce.activeEditor?.dom?.select('span#_mce_caret')[0]);
+                tinymce.activeEditor?.selection?.setCursorLocation(selectedNode)
+                tinymce.activeEditor?.selection?.placeCaretAt(Math.round(clickedX1), Math.round(clickedY1)) //Placing exact cursor position on clicking.
+                if (endPosition) {
+                    tinymce.activeEditor?.selection?.setCursorLocation(pointerElement, 1);
+                } else {
+                    tinymce.activeEditor?.selection?.setCursorLocation(pointerElement, 0);
+                }
+                this.activeGlossaryFootnoteId = ""
+            }
+        }
+    }
     
     /**
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
+        const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote && this.isctrlPlusV) {
@@ -3191,7 +3556,7 @@ export class TinyMceEditor extends Component {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
                 setTimeout(() => {
-                    this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType)
+                    this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType, eventTarget)
                 }, 0)
             }
         }
@@ -3381,5 +3746,5 @@ TinyMceEditor.defaultProps = {
 
 export default connect(
     null,
-    { conversionElement, wirisAltTextPopup, audioGlossaryPopup }
+    { conversionElement, wirisAltTextPopup }
 )(TinyMceEditor);

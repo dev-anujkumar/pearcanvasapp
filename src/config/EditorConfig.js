@@ -1,5 +1,5 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss';
-import 'tinymce/plugins/charmap';
+import 'tinymce/plugins/charmap/plugin.min.js';
 import { handleC2MediaClick } from '../js/TinyMceUtility.js';
 import ElementConstants from '../component/ElementContainer/ElementConstants.js';
 export const EditorConfig = {
@@ -25,7 +25,7 @@ export const EditorConfig = {
             { selector: 'span', remove: 'empty', split: false }
           ]
     },
-    toolbar: 'undo redo | insertMedia | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code | customListButton customUoListButton indent outdent | slateTag ',
+    toolbar: 'undo redo | insertMedia | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code | customListButton customUoListButton indent outdent | slateTag ',
     contentStyle: CONTENT_STYLE,
     plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image",
 }
@@ -82,6 +82,10 @@ const FormatSelectorType = [
     {
         text: 'Learning Objective Item',
         value: "LO",
+    },
+    {
+        text: 'Handwriting',
+        value: 'HS'
     }
 ]
 
@@ -144,6 +148,11 @@ export const elementTypeOptions = Object.freeze({
         primaryOption : 'primary-learning-objective',
         secondaryOption : 'secondary-learning-objective',
         label : 'LO',
+    },
+    'HS' : {
+        primaryOption : 'primary-handwriting',
+        secondaryOption : 'subtype-handwriting',
+        label : 'HS',
     },
 })
 

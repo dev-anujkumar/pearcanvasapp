@@ -21,6 +21,7 @@ export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/le
 /*---------------Element Interactive ----------------------*/ 
 export const INTERACTIVE_FPO = "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
 export const INTERACTIVE_SCHEMA = "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
+export const AUTHORED_TEXT_SCHEMA = "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext"
 /*---------------Element Single Assessment ----------------------*/ 
 export const ESA_DIALOG_TEXT='PLEASE ENTER A PRODUCT UUID'
 export const ESA_POPUP_PLACEHOLDER='UUID'
@@ -76,6 +77,7 @@ export const LIST_TYPE_MAPPINGS = {
 
 
 /****************SlateTagDropdown************************ */ 
+export const SLATE_ASSESSMENT = 'assessment';
 export const ASSESSMENT_ITEM = 'assessmentItem';
 export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';
 
@@ -111,12 +113,13 @@ export const ASIDE_SOURCE = 'ASIDE';
 export const POETRY_SOURCE = 'POETRY';
 export const MULTICOLUMN_SOURCE = 'MULTICOLUMN';
 export const TEXT_SOURCE = 'TEXT';
+export const SHOW_HIDE = "SHOWHIDE";
 export const SOURCE_MAP = {
     [CITATION_SOURCE]: { 'support': ['ELEMENT_CITATION'], 'notSupport': [] },
-    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION'] },
+    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN'] },
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
-    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION'] },
-    [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] }
+    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','SHOW_HIDE','POP_UP'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
+    [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] },
 };
 
 export const getPasteValidated = (sourceType, selectionType) => {
@@ -135,3 +138,9 @@ export const getPasteValidated = (sourceType, selectionType) => {
         return validation;
     }
 }
+
+/** Metadata Anchor Element constants */
+export const cypressLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to cypress framework.`
+export const externalLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to external framework.`
+export const CYPRESS_LF = "cypressLF";
+export const EXTERNAL_LF =  "externalLF";

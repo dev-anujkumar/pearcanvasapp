@@ -85,7 +85,7 @@
 .dropdown-content {
     display: none;
     position: absolute;
-    z-index: 2;
+    z-index: 3;
 }
 
 .dropdown-content ul{

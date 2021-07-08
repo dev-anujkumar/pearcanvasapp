@@ -1,11 +1,14 @@
 import React from 'react';
 import tinymce from 'tinymce/tinymce';
-import "tinymce/plugins/paste";
+import { connect } from 'react-redux';
+import "tinymce/plugins/paste/plugin.min.js";
 import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 import {
   tinymceFormulaIcon,tinymceFormulaChemistryIcon,bold,italic,underline,strikethrough,removeformat,subscript,superscript,charmap,code
 } from '../images/TinyMce/TinyMce.jsx';
 import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
+import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
+import { getWirisAltText } from '../js/utils';
 import { setFormattingToolbar } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 export class ReactEditor extends React.Component {
   constructor(props) {
@@ -14,6 +17,7 @@ export class ReactEditor extends React.Component {
     this.chemistryMlMenuButton = null;
     this.mathMlMenuButton = null;
     this.termtext = null;
+    this.wirisClick = 0;
     this.editorConfig = {
       toolbar: GlossaryFootnoteEditorConfig.toolbar,
       formats: GlossaryFootnoteEditorConfig.formats,
@@ -33,6 +37,7 @@ export class ReactEditor extends React.Component {
           this.addChemistryFormulaButton(editor);
           this.addMathmlFormulaButton(editor);
         }
+        this.editorClick(editor);
         this.onEditorBlur(editor);
         this.setDefaultIcons(editor)
         editor.on('keyup', (e) => { this.editorOnKeyup(e, editor) });
@@ -70,6 +75,30 @@ export class ReactEditor extends React.Component {
       },
     }
     this.editorRef = React.createRef();
+  }
+
+  /**
+     * This method is called when user clicks on editor.
+     * @param {*} editor  editor instance
+     */
+   editorClick = (editor) => {
+    editor.on('click', (e) => {
+
+        if (e && e.target && e.target.classList.contains('Wirisformula')) {
+            this.wirisClick++;
+            if (!this.wirisClickTimeout) {
+                this.wirisClickTimeout = setTimeout(() => {
+                    if (this.wirisClick === 1) {
+                        const ALT_TEXT = getWirisAltText(e);
+                        this.props.wirisAltTextPopup({showPopup : true, altText : ALT_TEXT});
+                    }
+                    clearTimeout(this.wirisClickTimeout);
+                    this.wirisClickTimeout = null;
+                    this.wirisClick = 0;
+                }, 500);
+            }
+        }
+    });
   }
 
   /**
@@ -430,5 +459,8 @@ export class ReactEditor extends React.Component {
   }
 }
 
-export default ReactEditor;
+export default connect(
+  null,
+  { wirisAltTextPopup }
+)(ReactEditor);
 

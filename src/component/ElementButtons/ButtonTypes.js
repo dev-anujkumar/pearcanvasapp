@@ -6,6 +6,9 @@ export default {
     DELETE_ELEMENT : "delete-element",
     TCM : "tcm",
     EXPAND : "expand",
+    STAGE_DIRECTION: 'stage-direction',
+    DIALOGUE_ELEMENT: 'dialogue-element',
+    CLOSE_DISCUSSION_DIALOG: 'close-discussion-dialog',
     SPLIT_SLATE : "split",
     COLOR_PALETTE : "color-palette",
     COLOR_TEXT : "color-text",
@@ -35,5 +38,7 @@ export default {
     ELM_INTERACTIVE_ICON:"elmInteractiveIcon",
     EDIT_BUTTON:"edit-button",
     APPROVE_TICK_ICON:"approve-icon",
-    PASTE:"paste"
+    PASTE:"paste",
+    POWERPASTE:"powerpaste",
+    ALFRESCO_METADATA:'alfresco-metadata'
 }

@@ -19,6 +19,7 @@
   max-height: 390px;
 }
 .cite-wrapper .main-div{
+  overflow-y: auto;
   margin: 0 5px 0 20px;
   min-height: 335px;
   max-height: 335px;
@@ -30,6 +31,8 @@
   background-color: #d3d3d369;
 }
 .cite-wrapper .header-block {
+  display: flex;
+  justify-content: space-between;
   background-color: inherit;
 }
 .cite-wrapper .header-close-button{
@@ -137,6 +140,11 @@
   bottom: 0;
   width: 100%;
 }
+
+.assessemnt-title-container {
+  display: flex;
+}
+
 .assessment-titles{
   max-width: 350px;
   height: 20px;
@@ -208,6 +216,9 @@
   letter-spacing: normal;
   color: #666666;
 }
+.cite-wrapper.main-div th.assessment-row-class, .cite-tdx-wrapper.main-div th.assessment-row-class{
+  padding: 10px 0 !important;
+}
 .assessment-row-class.title {
   width:35%
 }
@@ -226,6 +237,12 @@
 .assesmentfooter-inner{
   float: right; 
   padding: 10px 28px 0 0;
+}
+.cite-tdx-wrapper.main-div table.assessment-table-class tr td,
+.cite-wrapper.main-div table.assessment-table-class tr td {
+  border: none !important;
+  border-bottom: 1px solid #ccc !important;
+  padding: 10px 0 10px 0!important;
 }
 
 .assessment-table-class tr td{
@@ -254,6 +271,12 @@
   fill: #b20070;
   fill-opacity: 1;
 }
+
+.cls-1 {
+  fill: #fff;
+  opacity: 1;
+}
+
 .assessment-table-class tbody tr{
   font-size:13px;
 }

@@ -14,6 +14,7 @@ export default {
     FIGURE_AUDIO : "audio",
     FIGURE_VIDEO : "video",
     FIGURE_ASSESSMENT : "assessment",
+    FIGURE_ELEMENT_DISCUSSION : "element-discussion",
  
 /****************Figure Interactive Element************************ */
     INTERACTIVE : "interactive",
@@ -22,11 +23,16 @@ export default {
     INTERACTIVE_EXTERNAL_LINK : "external-link",
     INTERACTIVE_SHOW_HIDE : "showhide",
     INTERACTIVE_NARRATIVE_LINK : "narrative-link",
+    SMARTLINK_ALFRESCO_TYPES : ["website", "pdf", "3rd party interactive", "metrodigi interactive", "table", "mdpopup"],
+    INTERACTIVE_TYPES: {
+        VIDEO_MCQ: 'video-mcq',
+        GUIDED_EXAMPLE: 'guided-example'
+    },
 /****************Container Element************************ */  
     ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside",
     SHOW_HIDE: "showhide",
-
+    ELEMENT_SECTION_BREAK: 'manifest',
 /****************Metadata Anchor************************ */  
     METADATA_ANCHOR : "element-learningobjectivemapping",
     LEARNING_OBJECTIVE_ITEM:"element-learningobjectives",
@@ -50,7 +56,16 @@ export default {
     POETRY_STANZA: "stanza",
 
 /****************Multi Column element************************ */
-    MULTI_COLUMN: "groupedcontent"
+    MULTI_COLUMN: "groupedcontent",
+
+/****************Element Dialogue************************ */  
+    ELEMENT_DIALOGUE: "element-dialogue",
+    DIALOGUE_SD: "stagedirection",
+    DIALOGUE_DE: "lines",
+    ELEMENT_DISCUSSION: 'discussion',
+
+/**************** PDF Slate Element ************************ */  
+    PDF_SLATE : "element-pdf"
 }
 
 export const LABELS = {
@@ -68,7 +83,11 @@ export const LABELS = {
     "workedexample": "WE",
     "poetry": "PE",
     "mmi":"Quad",
-    "mmi-elm":"ELM"
+    "mmi-elm":"ELM",
+    "element-dialogue": "PS",
+    "stagedirection": "SD",
+    "lines": "DE",
+    "element-pdf": "PDF"
 }
 
 export const elementTypeTCM = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza',  'popup', 'figure','showhide'];

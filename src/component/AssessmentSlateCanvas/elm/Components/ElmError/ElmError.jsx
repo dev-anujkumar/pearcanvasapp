@@ -9,11 +9,15 @@ const ElmError = (props) => {
 
     const getErrorMessage = () => {
         let errorMessage = '';
+        let classSetFooter = "";
         if (props && (props.activeAssessmentType == ELM_INT) && props.errFlag) {
-            errorMessage = ERROR_MESSAGE_ELM_INTERACTIVES
+            errorMessage = ERROR_MESSAGE_ELM_INTERACTIVES;
+            classSetFooter = "no-mmi-elm-data-error-div";
         } else if (props && (props.activeAssessmentType == PUF) && props.errFlag) {
-            errorMessage = ERROR_MESSAGE_ELM_RESOURCE
+            errorMessage = ERROR_MESSAGE_ELM_RESOURCE;
+            classSetFooter = "no-elm-data-error-div";
         } else if (props && (props.activeAssessmentType == LEARNOSITY) && (props.errFlag || (props.filterResults == 'No Results'))) {
+            classSetFooter = "no-elm-data-error-div";
             errorMessage = ERROR_MESSAGE_LEARNOSITY
         } else if (props && (props.itemApiStatus != "200")) {
             errorMessage = ERROR_MESSAGE_ELM_ITEMS
@@ -21,13 +25,13 @@ const ElmError = (props) => {
             errorMessage = ERROR_MESSAGE_ELM_DEFAULT
         }
 
-        return errorMessage;
+        return { errorMessage, classSetFooter };
     }
 
     return (
-        <div className={`main-div elm-error-div ${(props?.activeAssessmentType == PUF) && props?.errFlag ? "no-elm-data-error-div" : ""}`}>
+        <div className={`main-div elm-error-div ${getErrorMessage()?.classSetFooter}`}>
             <p className="elm-error-line">
-                {props.errorStatus && <i>{getErrorMessage()}</i>}
+                {props.errorStatus && <i>{getErrorMessage()?.errorMessage}</i>}
             </p>
         </div>
     );

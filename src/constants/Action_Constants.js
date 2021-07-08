@@ -65,7 +65,9 @@ export const SHOW_MODULE_NAME = 'SHOW_MODULE_NAME'
 export const CURRENT_SLATE_LO_DATA_MATH = 'CURRENT_SLATE_LO_DATA_MATH'
 export const SHOW_SLATE_LOCK_POPUP = 'SHOW_SLATE_LOCK_POPUP'
 export const RE_RENDER_META_LO = 'RE_RENDER_META_LO'
-
+export const PROJECT_LEARNING_FRAMEWORKS = 'PROJECT_LEARNING_FRAMEWORKS'
+export const CURRENT_SLATE_LF = 'CURRENT_SLATE_LF'
+export const TOGGLE_LO_WARNING_POPUP = 'TOGGLE_LO_WARNING_POPUP';
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
 export const APO_BUTTON = 'APO_BUTTON'
@@ -137,6 +139,8 @@ export const SET_ITEM_UPDATE_EVENT = 'SET_ITEM_UPDATE_EVENT'
 export const ELM_ITEM_EVENT_DATA = 'ELM_ITEM_EVENT_DATA'
 export const ELM_NEW_ITEM_DATA = "ELM_NEW_ITEM_DATA"
 export const SET_USAGE_TYPE = "SET_USAGE_TYPE"
+export const SET_INTERACTIVE_METADATA = "SET_INTERACTIVE_METADATA"
+export const SET_ELM_PICKER_MSG = "SET_ELM_PICKER_MSG"
 /* --------------- Selection Constants ------------------------*/
 export const SET_SELECTION = 'SET_SELECTION'
 
@@ -145,3 +149,11 @@ export const WIRIS_ALT_TEXT_POPUP = 'WIRIS_ALT_TEXT_POPUP';
 
 /* --------------- TCM Versioning ------------------------*/
 export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
+
+/* --------------- Learnosity Project ------------------------*/
+export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO";
+
+/*---------------- Cypress Project Info ------------------------*/
+export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
+export const UPDATE_DISCUSSION_ITEMS = 'UPDATE_DISCUSSION_ITEMS';
+export const UPDATE_USAGE_TYPE = 'UPDATE_USAGE_TYPE';

@@ -1,0 +1,12 @@
+.stageDirectionItalicFont {
+    font-style: italic!important;
+}
+
+#startLineSetting {
+    margin: 10px;
+    color: #ddd
+}
+
+.play-script .cypress-editable.place-holder::before{
+    margin-top : 0px !important;
+}

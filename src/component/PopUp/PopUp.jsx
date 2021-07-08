@@ -7,6 +7,7 @@ import '../../styles/PopUp/PopUp.css';
 import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
+import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -14,6 +15,9 @@ import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader'
 class PopUp extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            wordPasteProceed: false
+        }
         this.modelRef = React.createRef();
     }
 
@@ -41,6 +45,16 @@ class PopUp extends React.Component {
             this.props.hideCanvasBlocker(false)
         }
     }
+    /**
+     * Enables proceed button
+     * @param {*} toggleState true or false
+     */
+    toggleWordPasteProceed = (toggleState) => {
+        this.setState({
+            wordPasteProceed: toggleState
+        })
+    }
+    
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
     * @param {event} 
@@ -86,6 +100,22 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if (props.WordPastePopup) {
+            return (
+                <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
+                    <span className={`powerpaste-save-button ${this.state.wordPasteProceed ? '' : "disabled"}`} onClick={props.handlePowerPaste}>Proceed</span>
+                    <span className="powerpaste-cancel-button"  onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
+                </div>
+            )
+        }
+        if (props.LOPopup) {
+            return (
+                <div className={`dialog-buttons`}>
+                    <span className={`lo-save-button`} onClick={(e) => props.yesButtonHandler(e)}>{props.yesButton}</span>
+                    <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -101,7 +131,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -114,7 +144,15 @@ class PopUp extends React.Component {
                 <input id="inputUUID" autoFocus className={`dialog-input-textarea ${props.assessmentAndInteractive}`} type="text"
                     placeholder={"UUID"} />
             )
-        }
+        } else if (props.WordPastePopup) {
+            return (
+                <PowerPasteElement 
+                index={props.index} 
+                onPowerPaste={props.onPowerPaste}
+                toggleWordPasteProceed={this.toggleWordPasteProceed}
+              />
+            )
+        } 
         else {
             return (
                 <textarea autoFocus className={`dialog-input-textarea ${props.assessmentClass}`} type="text" onChange={(event) => props.handleChange(event.target.value)} onClick={(event) => this.handleClickTextArea(event)}
@@ -128,7 +166,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup) {
             return null
         }
         else {
@@ -201,6 +239,20 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if (props.WordPastePopup) {
+            return (
+                <>
+                    <h2 className='wordPastePopuptxt'>Paste from Word</h2>
+                    <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>            
+                </>
+            )
+        }else if (props.LOPopup) {
+            return (
+                <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br/>{'Do you wish to continue?'}</div>                </>
+            )
+        }
         else {
             return (
                 <div className={`dialog-window  ${props.isAddComment ? 'add-comment' : ""} ${props.assessmentClass}`} >{props.dialogText}</div>
@@ -209,16 +261,16 @@ class PopUp extends React.Component {
     }
 
     render() {
-        const { active, assessmentClass } = this.props;
+        const { active, assessmentClass, isGlossary } = this.props;
         return (
             <div className="model">
                 {
                     active ?
-                        <div tabIndex="0" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
-                            <div className={`modal-content ${assessmentClass}`}>
+                        <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass?? assessmentClass}`} ref={this.modelRef}>
+                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : `modal-content ${assessmentClass}`} id = {isGlossary ? 'popup': ''}>
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
-                                <div className={`dialog-input ${assessmentClass}`}>
+                                <div className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
                                 <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>

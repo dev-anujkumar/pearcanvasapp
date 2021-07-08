@@ -4,8 +4,8 @@
 import React from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 import { getFolderLabel } from '../../UtilityFunctions/ElmLearnosityUtility.js';
-import { elmInteractiveIcon, singleAssessmentItemIcon, elmAssessmentItem } from '../../../../../images/ElementButtons/ElementButtons.jsx';
-import { ELM_INT } from '../../../AssessmentSlateConstants.js';
+import { elmInteractiveIcon, singleAssessmentItemIcon, elmAssessmentItem, learnosityIcon } from '../../../../../images/ElementButtons/ElementButtons.jsx';
+import { ELM_INT, LEARNOSITY } from '../../../AssessmentSlateConstants.js';
 
 const ElmTableBody = (props) => {
 
@@ -21,7 +21,7 @@ const ElmTableBody = (props) => {
                 elmIcon = elmInteractiveIcon;
                 break;
             case "assessmentItem":
-                elmIcon = singleAssessmentItemIcon;
+                elementType === LEARNOSITY ? elmIcon = learnosityIcon : elmIcon = singleAssessmentItemIcon;
                 break;
             case "assessment":
             default:

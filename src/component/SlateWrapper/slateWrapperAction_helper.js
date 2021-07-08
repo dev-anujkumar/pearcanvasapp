@@ -23,16 +23,18 @@ export const onPasteSuccess = async (params) => {
         asideData,
         poetryData,
         slateEntityUrn
-    } = params    
+    } = params  
 
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
     replaceWirisClassAndAttr(activeEditorId)
     // Store Update on Paste Element
     let operationType = '';
+    let sourceElementIndex = "";
     let elmSelection = {};
     if (Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
         elmSelection = getState().selectionReducer.selection;
         operationType = elmSelection.operationType;
+        sourceElementIndex = elmSelection?.sourceElementIndex;
     }
 
     /** Create Snapshot for cut action on different slate */
@@ -68,9 +70,10 @@ export const onPasteSuccess = async (params) => {
                 cutCopyParentUrn: {
                     ...deleteElm.cutCopyParentUrn,
                     manifestUrn: deleteElm.cutCopyParentUrn.sourceSlateManifestUrn
-                }
+                },
+                element: responseData
             }
-            await prepareTCMSnapshotsForDelete(tcmDeleteArgs);
+            await prepareTCMSnapshotsForDelete(tcmDeleteArgs, operationType);
         }
 
         let deleteParams = {
@@ -138,7 +141,6 @@ export const onPasteSuccess = async (params) => {
             index,
             elmFeedback: feedback
         }
-
         await handleTCMSnapshotsForCreation(snapArgs, operationType)
     }
     /**---------------------------------------------------------------------------------------------------*/
@@ -159,6 +161,25 @@ export const onPasteSuccess = async (params) => {
                         ele.contents.bodymatter.splice(cutIndex, 0, responseData)
                     }
                 })
+            } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id) {
+                /* 2C:ASIDE/WE:Elements; Update the store */
+                const indexs = asideData?.index?.split("-") || [];
+                if(indexs.length === 3) { /* Inside 2C:AS; COPY-PASTE elements */
+                    const selcetIndex = sourceElementIndex?.toString().split("-") || [];
+                    /* @newIndex@ for cut form same column to inner aside/we */
+                    const newIndex = (selcetIndex?.length === 3) && indexs[2] !== selcetIndex[2] ? selcetIndex : indexs;
+                    if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest" && selcetIndex.length === 5 ) { /* paste inner level elements inside 2C/Aside */
+                        item?.groupeddata?.bodymatter[selcetIndex[1]]?.groupdata?.bodymatter[selcetIndex[2]]?.elementdata?.bodymatter[selcetIndex[3]]?.contents.bodymatter?.splice(cutIndex, 0, responseData);
+                    } else if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest") { /* paste slate level elements inside 2C/WE/Body */ 
+                        item?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]?.elementdata?.bodymatter?.map(item_L2 => {
+                            if(item_L2.id === parentUrn?.manifestUrn) {
+                                item_L2?.contents?.bodymatter?.splice(cutIndex, 0, responseData);
+                            }
+                        })
+                    } else { /* paste slate level elements inside 2C/WE/Head */
+                        item?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]?.elementdata?.bodymatter?.splice(cutIndex, 0, responseData)
+                    }
+                }
             }
         })
     } else if(asideData && asideData.type == 'citations'){
@@ -254,8 +275,12 @@ export const handleTCMSnapshotsForCreation = async (params, operationType = null
     const containerElement = {
         asideData: asideData,
         parentUrn: parentUrn,
-        poetryData: poetryData
+        poetryData: poetryData,
     };
+    if(responseData.type==="popup" && responseData.popupdata['formatted-title']){
+        containerElement.parentElement = responseData;
+        containerElement.metaDataField = "formattedTitle";
+    }
     const slateData = {
         currentParentData: newParentData,
         bodymatter: currentSlateData.contents.bodymatter,
@@ -320,7 +345,7 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             break;
         case slateWrapperConstants.POP_UP:
             elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
-            elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
+            createdElementData.popupdata.bodymatter.length>0 && elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
             break;
         case slateWrapperConstants.SHOW_HIDE:
             elmUrn = getShowhideChildUrns(createdElementData)
@@ -346,4 +371,109 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             data: tcmData
         }
     })
+}
+
+export const setPayloadForContainerCopyPaste = (params) => {
+    const {
+        cutIndex,
+        selection,
+        manifestUrn,
+        containerEntityUrn
+    } = params
+
+    const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample","showhide","popup","discussion"]
+    if (acceptedTypes.includes(selection.element.type)) {
+        if (selection.operationType === "cut") {
+            return {
+                "content": [{
+                    "type": selection.element.type,
+                    "index": cutIndex,
+                    "id": selection.element.id,
+                    "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
+                    "contentUrn": selection.element.contentUrn
+                }]
+            }
+        }
+        return {
+            "content": [{
+                "type": selection.element.type,
+                "index": cutIndex,
+                "id": manifestUrn,
+                // "elementParentEntityUrn": selection.sourceEntityUrn,// selection.sourceSlateEntityUrn,
+                "contentUrn": containerEntityUrn
+            }]
+        }
+    }
+}
+
+/**
+ * Checks the clone container status and take actions accordingly
+ * @param {*} params contains clone request Id, index of insertion, dispatch and paste method
+ */
+export const fetchStatusAndPaste = async (params) => {
+    const {
+        insertionIndex,
+        requestId,
+        dispatch,
+        pasteElement,
+        parentUrn,
+        asideData
+    } = params
+
+    let isCloneSucceed = false,
+        newContainerData = null,
+        statusAPICallInProgress = false;
+
+    let statusCheckInterval = setInterval(async () => {
+        if (statusAPICallInProgress) return false
+        if (isCloneSucceed) {
+            clearInterval(statusCheckInterval)
+            return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch,parentUrn,asideData)
+        }
+        try {
+            const getStatusApiUrl = `${config.AUDIO_NARRATION_URL}container/request/${requestId}`
+            statusAPICallInProgress = true
+            const statusResponse = await axios.get(
+                getStatusApiUrl,
+                {
+                    headers: {
+                        "ApiKey": config.STRUCTURE_APIKEY,
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "PearsonSSOSession": config.ssoToken
+                    }
+                }
+            )
+            statusAPICallInProgress = false
+            const statusResponseData = statusResponse.data
+            if (statusResponseData.auditResponse?.status === "SUCCESS") {
+                isCloneSucceed = true
+                newContainerData = statusResponseData.baseContainer
+                clearInterval(statusCheckInterval)
+                return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch,parentUrn,asideData)
+            }
+        }
+        catch (error) {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+            console.error("Error in getting the clone status of container:::", error);
+        }
+    }, slateWrapperConstants.CLONE_STATUS_INTERVAL);
+}
+
+/**
+ * Dispatches paste element action
+ * @param {*} newContainerData clone container details
+ * @param {*} insertionIndex index of insertion
+ * @param {*} pasteElement paste action
+ * @param {*} dispatch dispatch action method
+ */
+export const prepareAndPasteElement = (newContainerData, insertionIndex, pasteElement, dispatch,parentUrn,asideData) => {
+    const pasteArgs = {
+        index: insertionIndex,
+        manifestUrn: newContainerData?.id,
+        containerEntityUrn: newContainerData?.entityUrn,
+        parentUrn: parentUrn,
+        asideData:asideData
+    }
+    return dispatch(pasteElement(pasteArgs))
 }

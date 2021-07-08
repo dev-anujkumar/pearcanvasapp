@@ -111,7 +111,7 @@
     right:40px;
   }
  
-  .learningobjectivedropdown {
+  .learningobjectivedropdown,.learningobjectivedropdown2 {
     color: black;
     position: absolute;
     width: 270px;
@@ -124,7 +124,11 @@
     background-color: #ffffff;
 }
 
-.learningobjectivedropdown li {    
+.learningobjectivedropdown2{
+  display: none;
+}
+
+.learningobjectivedropdown li ,.learningobjectivedropdown2 li{    
   padding: 0 0 0 10px;
   cursor: pointer;
   margin:0;
@@ -133,7 +137,7 @@
   line-height: 2.5;
   letter-spacing: normal;
 }
-.learningobjectivedropdown li.disabled {
+.learningobjectivedropdown li.disabled, .learningobjectivedropdown2 li.disabled {
   pointer-events: none;
   opacity: 0.6;
   cursor: not-allowed;
@@ -143,7 +147,7 @@
   cursor: pointer;
   padding: 0 10px 0 0;
 }
-.learningobjectivedropdown ul {
+.learningobjectivedropdown ul ,.learningobjectivedropdown2 ul{
   padding:0;
 }
 .slate-tag-icon, .audio{
@@ -448,7 +452,7 @@ margin-left:6px;
   height:24px;
   position: relative;
 }
-@media only screen and (max-width: 1500px) {  
+@media only screen and (max-width: 3000px) {  
   .audiodropdown, .learningobjectivedropdown{
     right:0;
   }
@@ -547,6 +551,7 @@ margin-left:6px;
 .glossary-audiodropdown{
   left:0;
   top:0;
+  width: 325px; 
   color: black;
   position: absolute;
   background-color: white;
@@ -558,3 +563,17 @@ margin-left:6px;
   cursor: default;
   padding: 10px !important;
 }
+
+.glossary-audiodropdown audio{
+  width:100% !important
+}
+
+.learningobjectivedropdown2{
+  left: 10px
+}
+
+@media only screen and (max-width: 1400px) {
+    .learningobjectivedropdown2 {
+      left: -515px;
+    }
+  }

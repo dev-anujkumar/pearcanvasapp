@@ -16,6 +16,8 @@ import { showBlocker,hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
+import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
+import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 
 
 class Sidebar extends Component {
@@ -160,16 +162,17 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'primary') {
                     active = 'active';
                 }
-                primaryOptions = <div
-                    className={`element-dropdown ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""}`}>
+                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+                primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
+                    className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable": ""}`}>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ? null : dropdownArrow}
                     </div>
-                    <ul className={`element-dropdown-content primary-options ${active}`}>
+                   <ul className={`element-dropdown-content primary-options ${active}`}>
                         {primaryOptions}
                     </ul>
-                </div>;
+                </div> : null;
             }
     
             return primaryOptions;
@@ -223,12 +226,19 @@ class Sidebar extends Component {
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
             let secondaryOptionList = Object.keys(secondaryOptionObject);
+            let isLearnosityProject = this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? true : false;
+            let showLearnosityDropdown = false;
             if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-default"){
                secondaryOptionList.splice(0,1)
             }
             if(secondaryOptionList.length > 1) {
                 secondaryOptions = secondaryOptionList.map(item => {
-                    return <li key={item} data-value={item} onClick={this.handleSecondaryOptionChange}>
+                    let addClass = '';
+                    if(item === SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY){
+                        addClass = 'learnosity-disabled';
+                        showLearnosityDropdown = true;
+                    }
+                    return <li key={item} data-value={item} className={`${addClass}`} onClick={this.handleSecondaryOptionChange}>
                         {secondaryOptionObject[item].text}
                     </li>;
                 });
@@ -242,16 +252,19 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'secondary') {
                     active = 'active';
                 }
+                if(isLearnosityProject && showLearnosityDropdown){
+                    active = ''
+                }
                 let disabled= '';
                 if(this.state.usageType === ""){
                     disabled="disabled";
                 }
-
+                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 secondaryOptions = <div
-                    className={`element-dropdown ${display} ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""} `}>
+                    className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
                     <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
-                        {dropdownArrow}
+                        {(isLearnosityProject && showLearnosityDropdown) ? "" : <span> {dropdownArrow} </span>}
                     </div>
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
@@ -269,7 +282,43 @@ class Sidebar extends Component {
             attrInput: event.target.value
         })
     }
-    
+
+    handleDialogueBlur = () => {
+        // dialouge blur and again display element so taht api is called
+        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-Act-Title`)
+        if (activeBCEElementNode) {
+            activeBCEElementNode.focus()
+            activeBCEElementNode.blur()
+        }
+        
+    }
+
+    handleDialogueToggle = () => {
+
+        this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
+        this.setState({bceToggleValue: !this.state.bceToggleValue});
+        this.handleDialogueBlur();
+    }
+
+    handleDialogueNumber = (e) => {
+        const regex = /^[0-9]*(?:\.\d{1,2})?$/
+        if (regex.test(e.target.value)) {
+            this.props.setBCEMetadata('startNumber', e.target.value);  
+            this.setState({ bceNumberStartFrom: e.target.value });
+            // this.handleDialogueBlur();
+        }
+    }
+
+
+    callUpdateApi = (newPSData) => {
+        /* @@createPSDataForUpdateAPI - Prepare the data to send to server */
+        const { index, parentUrn, asideData, parentElement } = this.props;
+        const dataToSend = createPSDataForUpdateAPI(this.props, newPSData)
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        config.isSavingElement = true
+        this.props.updateElement(dataToSend, index, parentUrn, asideData, null, parentElement, null);
+    }
+
     attributions = () => {
         let attributions = '';
         let attributionsObject = {};
@@ -338,6 +387,22 @@ class Sidebar extends Component {
                     return attributions;
             }
 
+            if (this.state.activePrimaryOption && this.state.activePrimaryOption === "primary-element-dialogue" && this.props.activeElement.elementId) {
+                attributions = <div>
+                    <div className="panel_show_module">
+                        <div className="toggle-value-bce">Use Line Numbers</div>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleDialogueToggle} />
+                            <span className="slider round"></span></label>
+                    </div>
+                    <div className="alt-Text-LineNumber" >
+                        <div className="toggle-value-bce">Start numbering from</div>
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleDialogueNumber} value={this.state.bceNumberStartFrom}
+                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleDialogueBlur} />
+                    </div>
+                </div>
+                return attributions;
+            }
+
             attributions = <div className="attributions">
                 {attributions}
             </div>;
@@ -353,6 +418,10 @@ class Sidebar extends Component {
             activeBCEElementNode.blur()
         }
     }
+
+   
+
+
 
     handleBQAttributionBlur = () => {
         let activeBQNode = document.querySelector(`#cypress-${this.props.activeElement.index} p`)
@@ -567,7 +636,7 @@ class Sidebar extends Component {
 
     render = () => {
         return (
-            this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && <div className="canvas-sidebar">
+            this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
                 <div className="canvas-sidebar-heading">Settings</div>
                 {this.primaryOption()}
                 {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
@@ -596,7 +665,9 @@ const mapStateToProps = state => {
         showModule:state.metadataReducer.showModule,
         permissions : state.appStore.permissions,
         showHideObj:state.appStore.showHideObj,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        cutCopySelection: state.selectionReducer.selection,
+        isLearnosityProject: state.appStore.isLearnosityProjectInfo
     };
 };
 

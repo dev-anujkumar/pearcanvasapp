@@ -46,6 +46,7 @@ let config = {
     C4_API_URL: "./api",
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
+    ALFRESCO_CITE_API: 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000',
     PATTERNS: {
         PATTERN_ADD_ASSET: 'https://component-lib-stg.pearson.com/c2/9f01f722-2a2e-4766-b55a-56043cb289cb/PatternAddAnAsset.js',
         PATTERN_BROKER: 'https://component-lib-stg.pearson.com/c2/834288f8-7e30-45cf-b41f-a1f422222aa8/PatternBroker.js',
@@ -63,7 +64,11 @@ let config = {
         CITE_NODE_REF: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
         CITE_REPO_INSTANCC:"https://staging.api.pearson.com/content/cmis/uswip-aws",
         CITE_REPO_NAME:"AWS US"
-    }
+    },
+    VCS_API_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/vcs-api/v1/content/',
+    LEARNOSITY_CONTENT_BRIDGE_API: 'https://contentapis-staging.pearsoncms.net/learnositycontentbridge-api/lcb/v1/bank2projapi/',
+    ALFRESCO_EDIT_ENDPOINT: "https://usppewip.cms.pearson.com/share/page/document-details?nodeRef=workspace://SpacesStore/",
+    ALFRESCO_EDIT_METADATA:"https://staging.api.pearson.com/content/cmis/uswip-aws/"
 };
 
 if (process.env.NODE_ENV === "development") {

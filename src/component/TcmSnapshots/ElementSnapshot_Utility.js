@@ -9,6 +9,7 @@ import { getCurrentlyLinkedImage } from '../AssetPopover/AssetPopover_Actions.js
 /*************************Import Constants*************************/
 import TcmConstants from './TcmConstants.js';
 const {
+    HAND_WRITING,
     AUTHORED_TEXT,
     BLOCKFEATURE,
     ELEMENT_LIST,
@@ -74,6 +75,7 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
             glossarySnap = []
             assetPopoverSnap = []
             footnoteWipList = { 
+                title: element.title ? element.title.footnotes : [],
                 subtitle: element.subtitle ? element.subtitle.footnotes : [], 
                 caption: element.captions ? element.captions.footnotes : [], 
                 credit: element.credits ? element.credits.footnotes : []
@@ -107,6 +109,7 @@ export const setSemanticsSnapshots = async (element,actionStatus,index) => {
 */
 const prepareFigureFootnoteSnapshotContent = (actionStatus, footnoteWipList, footnoteHtmlList) => {
     return [
+            ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.title, footnoteHtmlList),
             ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.subtitle, footnoteHtmlList),
             ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.caption, footnoteHtmlList),
             ...prepareFootnoteSnapshotContent(actionStatus, footnoteWipList.credit, footnoteHtmlList),
@@ -260,11 +263,11 @@ export const prepareAssetPopoverSnapshotContent = async (assetsList, indexes, ac
 export const fetchElementsTag = (element,metadataField) => {
     const interactiveArray = ["3rd-party","pdf","web-link","pop-up-web-link","table"];
     let labelText, eleTag, eleType, eleSubType;
-    eleType = element && element.type ? element.type :  element.elementType;
+    eleType = element && element.type ? element.type :  element?.elementType;
     eleType = metadataField ? setMetadataType[element.type][metadataField] : eleType;
     switch (eleType) {
         case AUTHORED_TEXT:
-            eleSubType = (element.elementdata && element.elementdata.headers) ? HEADING + element.elementdata.headers[0].level : PARAGRAPH;
+            eleSubType = (element.elementdata && element.elementdata.headers) ? HEADING + element.elementdata.headers[0].level : element?.elementdata?.designtype === 'handwritingstyle' ? HAND_WRITING : PARAGRAPH;
             break;
         case ELEMENT_ASIDE:
             eleSubType = element.subtype === WORKED_EXAMPLE ? WORKED_EXAMPLE : ASIDE;
@@ -437,6 +440,10 @@ const setElementTag = {
                 parentTag: "H6",
                 childTag: ""
             },
+            'handwriting': {
+                parentTag: "HS",
+                childTag: ""
+            },
         }
     },
     "figure": {
@@ -547,7 +554,12 @@ export const generateWipDataForFigure = (bodymatter, index) => {
                 wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]
             }
             else if (bodymatter[eleIndex[0]].type === MULTI_COLUMN) { /** Multi-column */
-                wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
+                const elementInColumn = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]];
+                if(elementInColumn?.type === ELEMENT_ASIDE) { /* snapshots of figure on cut operation inside 2c:aside/we:Figure*/
+                    wipData = elementInColumn?.elementdata?.bodymatter[eleIndex[3]] || {};
+                } else {
+                    wipData = elementInColumn;
+                }
             }
             break;
     }
@@ -604,4 +616,27 @@ export const getInteractiveSubtypeData = (figuredata, html) => {
             }
     }
     return interactiveDataToReturn
+}
+
+
+export const removeCalloutTitle = (elementHTML) =>{
+    let hiddenDiv = document.createElement('div');
+    hiddenDiv.innerHTML = elementHTML;
+    hiddenDiv.style.visibility = 'hidden';
+    document.body.appendChild(hiddenDiv);
+    if (hiddenDiv) {
+        const callout1List = hiddenDiv.querySelectorAll(`span.calloutOne`) ?? []
+        const callout2List = hiddenDiv.querySelectorAll(`span.calloutTwo`) ?? []
+        const callout3List = hiddenDiv.querySelectorAll(`span.calloutThree`) ?? []
+        const callout4List = hiddenDiv.querySelectorAll(`span.calloutFour`) ?? []
+        const calloutList = [callout1List, callout2List, callout3List, callout4List];
+        calloutList && calloutList.length && calloutList.map((calloutTypeList) => {
+            for (let index = 0; index < calloutTypeList.length; index++) {
+                calloutTypeList[index].removeAttribute('title');
+            }
+        })
+    }
+      let updatedData = hiddenDiv.innerHTML;
+      document.body.removeChild(hiddenDiv);
+      return updatedData
 }

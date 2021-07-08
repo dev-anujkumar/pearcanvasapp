@@ -14,6 +14,11 @@ jest.mock('../../../src/component/tinyMceEditor.js',()=>{
         return (<div>null</div>)
     }
 })
+global.fetch = jest.fn().mockImplementation(() => {
+    return new Promise((resolve, reject) => {
+      resolve({json:jest.fn(),id:'urn:pearson134'});
+   });
+ });
 describe('Testing Figure element component', () => {
     const initialState = {
         permissions:[

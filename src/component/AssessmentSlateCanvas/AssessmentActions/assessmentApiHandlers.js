@@ -8,7 +8,8 @@ import {
     GET_USAGE_TYPE,
     UPDATE_ELM_ITEM_ID,
     SET_ASSESSMENT_METADATA,
-    SET_USAGE_TYPE
+    SET_USAGE_TYPE,
+    SET_INTERACTIVE_METADATA
 } from "../../../constants/Action_Constants";
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent } from './assessmentActions.js';
@@ -162,6 +163,47 @@ const AssessmentAPIHandlers = {
             await dispatch(fetchAssessmentMetadata('assessmentItem', 'fromGetItem', dataForUpdate, assessmentItemData))
         }
     },
+     /** @description This function handles interactive-metadata API response for Assessment */
+    interactiveMetadataHandler: async (responseData, calledFrom, assessmentData, dispatch) => {
+        const assessmentStatus = AssessmentAPIHandlers.setAssessmentStatus(responseData.status);
+        const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : "";
+        let dataForUpdate = AssessmentAPIHandlers.prepareUnapprovedData(responseData, assessmentTitle, assessmentStatus, assessmentData);
+        if (calledFrom == 'fromNextVersion') {  /** Save on Update */
+            dataForUpdate = AssessmentAPIHandlers.prepareApprovedData(assessmentData, responseData, assessmentTitle);
+            AssessmentAPIHandlers.dispatchInteractiveMetadata(assessmentData.activeWorkUrn, dataForUpdate, dispatch);
+        }
+        else if (calledFrom == 'fromUpdate') {  /** Save on Update */
+            AssessmentAPIHandlers.interactiveMetadataUpdateHandler(responseData, assessmentData, dispatch)
+        }
+        else if (assessmentStatus == 'wip') {   /* UNAPPROVED */
+            AssessmentAPIHandlers.dispatchInteractiveMetadata(responseData.versionUrn, dataForUpdate, dispatch);
+        }
+        else if (assessmentStatus == 'final') { /* APPROVED | UPDATE */
+            await dispatch(fetchAssessmentVersions(responseData.entityUrn, 'interactive', responseData.dateCreated, dataForUpdate, {}))
+        }
+    },
+    /** @description This function handles interactive-versions API response for interactive */
+    interactiveVersionHandler: (responseData, args, dispatch) => {
+        const {
+            newVersions, assessmentData
+        } = args;
+        const latestIndex = AssessmentAPIHandlers.getLatestIndex(responseData, 'createdDate');
+        const latestWorkURN = responseData[latestIndex].versionUrn; /* Latest WorkURN */
+        switch (newVersions.length) {
+            case 0:  /* Show APPROVED Status */
+                AssessmentAPIHandlers.dispatchInteractiveMetadata(assessmentData.activeWorkUrn, assessmentData, dispatch);
+                break;
+            case 1:  /* APPROVED | UPDATE */
+                const updatedAssessmentData = { ...assessmentData, targetId: newVersions[0].versionUrn }
+                dispatch(fetchAssessmentMetadata('interactive', 'fromNextVersion', updatedAssessmentData, {}))
+                break;
+            default: /* Show UPDATE Button */
+                const prevLatestWorkUrn = responseData[AssessmentAPIHandlers.getSecondLatestIndex(responseData, latestIndex)].versionUrn;
+                const updatedData = AssessmentAPIHandlers.prepareDataBeforeUpdate(assessmentData, assessmentData.activeWorkUrn, latestWorkURN, prevLatestWorkUrn);
+                AssessmentAPIHandlers.dispatchInteractiveMetadata(assessmentData.activeWorkUrn, updatedData, dispatch);
+                break;
+        }
+    },
     /** @description This function handles assessment-versions API response for Assessment */
     assessmentVersionHandler: (responseData, args, dispatch) => {
         const {
@@ -203,11 +245,12 @@ const AssessmentAPIHandlers = {
         }
         const { itemUpdateEvent, latestItemAssessment } = store.getState().assessmentReducer
         if (itemUpdateEvent) {
-            dispatch(setItemUpdateEvent(false));
             const updatedItem = {
-                ...latestItemAssessment.updatedItem
+                ...latestItemAssessment.updatedItem,
+                shouldUpdateOnSaveEvent: true
             }
-            AssessmentAPIHandlers.dispatchUpdatedItemId(dataToSend.currentWorkUrn, updatedItem, dispatch)
+            AssessmentAPIHandlers.dispatchUpdatedItemId(dataToSend.currentWorkUrn, updatedItem, dispatch);
+            dispatch(setItemUpdateEvent(false));
         } else if (latestWorkURN == assessmentItemData.itemId) {
             AssessmentAPIHandlers.dispatchUpdatedItemId(dataToSend.currentWorkUrn, dataToSend.updatedItem, dispatch)
         }
@@ -254,6 +297,41 @@ const AssessmentAPIHandlers = {
         await dispatch(fetchAssessmentMetadata('assessment', 'fromUpdate', updatedData, assessmentItemData));
 
     },
+    /** @description This function handles assessment-verions API response for Assessment after Update Button Click */
+    interactiveVersionUpdateHandler: async (responseData, args, dispatch) => {
+        const {
+            newVersions, assessmentData
+        } = args;
+        const latestIndex = AssessmentAPIHandlers.getLatestIndex(responseData, 'createdDate');
+        const latestVersion = {
+            id: responseData[latestIndex].versionUrn /* Latest WorkURN */
+        }
+        let secondLatestVersion = {
+            id: ""
+        }
+        if (newVersions.length > 1) {
+            const prevLatestWorkUrn = responseData[AssessmentAPIHandlers.getSecondLatestIndex(responseData, latestIndex)].versionUrn;
+            secondLatestVersion = {
+                id: prevLatestWorkUrn
+            }
+        }
+        const updatedData = AssessmentAPIHandlers.prepareDataOnUpdate(assessmentData, assessmentData.activeWorkUrn, latestVersion, secondLatestVersion);
+        await dispatch(fetchAssessmentMetadata('interactive', 'fromUpdate', updatedData));
+    },
+    /** @description This function handles interactive-metadata API response for Assessment after Update Button Click */
+    interactiveMetadataUpdateHandler: (responseData, assessmentData, dispatch) => {
+        const latestVersion = {
+            id: responseData.versionUrn,
+            title: responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : 'Elm assessment',
+            latestCleanVersion: AssessmentAPIHandlers.checkElmVersionIsClean(responseData),
+            status: AssessmentAPIHandlers.setAssessmentStatus(responseData.status)
+        }
+        const dataToDispatch = {
+            ...assessmentData,
+            latestVersion: latestVersion
+        }
+        AssessmentAPIHandlers.dispatchInteractiveMetadata(assessmentData.activeWorkUrn, dataToDispatch, dispatch);
+    },
     /** @description This function handles assessment-metadata API response for Assessment after Update Button Click */
     assessmentMetadataUpdateHandler: (responseData, assessmentData, assessmentItemData, dispatch) => {
         const latestVersion = {
@@ -279,6 +357,17 @@ const AssessmentAPIHandlers = {
         hideBlocker();
         dispatch({
             type: SET_ASSESSMENT_METADATA,
+            payload: {
+                currentWorkUrn: currentWorkUrn,
+                dataForUpdate: dataForUpdate
+            }
+        })
+    },
+    /** @description This function dispatches latest metadata for interactive to store */
+    dispatchInteractiveMetadata: (currentWorkUrn, dataForUpdate, dispatch) => {
+        hideBlocker();
+        dispatch({
+            type: SET_INTERACTIVE_METADATA,
             payload: {
                 currentWorkUrn: currentWorkUrn,
                 dataForUpdate: dataForUpdate

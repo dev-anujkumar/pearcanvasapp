@@ -13,6 +13,7 @@ import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
 import { getPasteValidated } from '../../constants/Element_Constants.js';
+import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
 
 const { TEXT, 
     IMAGE, 
@@ -40,7 +41,10 @@ const { TEXT,
     SINGLE_COLUMN,
     BLOCK_TEXT_BUTTON,
     TABLE_EDITOR,
-    TOC_PARENT_TYPES
+    TOC_PARENT_TYPES,
+    SHOW_HIDE,
+    POPUP,
+    ELEMENT_DISCUSSION
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
@@ -131,10 +135,10 @@ export function ElementSaprator(props) {
         let sourceComp = 'source' in props ? props.source : '';
         let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
         let pasteValidation = getPasteValidated(sourceComp, inputType);
-        if (!config.isPopupSlate && allowedRoles.includes(props.userRole) && pasteValidation) {
+        if (!config.isPopupSlate && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
-                    <Tooltip direction='left' tooltipText='Paste element'>
+                    <Tooltip direction='paste' tooltipText='Paste element'>
                         <Button type="paste" onClick={() => pasteElement(separatorProps, togglePaste, type)} />
                     </Tooltip>
                 </div>
@@ -143,6 +147,23 @@ export function ElementSaprator(props) {
         return null  
     }
 
+    const renderWordPasteButton = (parentElementType, { firstOne, index, userRole, onClickCapture }) => {
+        const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN]
+        const allowedRoles = ["admin", "manager", "edit", "default_user"];
+        if(inContainer.includes(parentElementType) || config.isPopupSlate || !allowedRoles.includes(userRole)) {
+            return null;
+        }
+
+        const insertionIndex = firstOne ? index : index + 1
+        return (
+            <div className={`elemDiv-expand paste-button-wrapper}`} onClickCapture={onClickCapture} >
+                <Tooltip direction='poc' tooltipText='Paste from Word'>
+                    <Button type="powerpaste" onClick={() => props.handleCopyPastePopup(true, insertionIndex)} />
+                </Tooltip>
+            </div>
+        )
+    }
+    
     let pasteRender = false;
     let operationType = '';
     if(props.elementSelection && Object.keys(props.elementSelection).length > 0) {
@@ -159,10 +180,11 @@ export function ElementSaprator(props) {
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
+            {renderWordPasteButton(elementType, props)}
             {pasteRender ? renderPasteButton(props, operationType) : ''}
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
-                    <Tooltip direction='left' tooltipText='Element Picker'>
+                    <Tooltip direction='picker' tooltipText='Element Picker' showClass={showClass}>
                         {permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button onClick={(event) => toggleElementList(event)} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
@@ -185,13 +207,6 @@ ElementSaprator.propTypes = {
 }
 
 /**
- * @description: OnClick handler for add Element button
- */
-export function addMediaClickHandler() {
-    console.log('add media button clicked')
-}
-
-/**
  * @description: Rendering the element picker dropdown based on type of Container Element
  */
 
@@ -204,7 +219,10 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
             return buttonType === STANZA_ELEMENT;
         }
         else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
-            let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT ];                  
+            let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT, CONTAINER_BUTTON, WORKED_EXP ];                  
+            if(config.isPopupSlate){
+                MultiColumnPicker.length = MultiColumnPicker.length -2;
+            }
             return MultiColumnPicker.includes(buttonType);
         } 
         else {
@@ -336,6 +354,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 function typeOfContainerElements(elem, props) {
     const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction } = props
     let newData = containerTypeArray[elem.buttonType];
+    /* Do not show Citation Group option if inside Multicolumn  */
+    newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
     if(newData){
         let data = Object.entries(newData).map(function (num) {
             return {
@@ -361,13 +381,20 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
     const index = separatorProps.index;
     const firstOne = separatorProps.firstOne || false;
     const insertionIndex = firstOne ? index : index + 1
+    const selectedElement = separatorProps.elementSelection.element
+    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,SHOW_HIDE,POPUP]
+    if ((acceptedTypes.includes(selectedElement.type)) && type === 'copy'){
+        const parentUrn = separatorProps.parentUrn ?? null
+        const asideData = separatorProps.asideData ?? null
+        return separatorProps.cloneContainer(insertionIndex, selectedElement.id,parentUrn,asideData)
+    }
     const pasteFnArgs = {
         index: insertionIndex,
         parentUrn: 'parentUrn' in separatorProps ? separatorProps.parentUrn : null,
         asideData: 'asideData' in separatorProps ? separatorProps.asideData : null,
         poetryData: 'poetryData' in separatorProps ? separatorProps.poetryData : null
     }
-    separatorProps.pasteElement(pasteFnArgs)
+    separatorProps?.pasteElement(pasteFnArgs)
 }
 
 const mapStateToProps = (state) => ({
@@ -375,4 +402,4 @@ const mapStateToProps = (state) => ({
     elementSelection: state.selectionReducer.selection
 })
 
-export default connect(mapStateToProps, {})(ElementSaprator)
+export default connect(mapStateToProps, { cloneContainer })(ElementSaprator)

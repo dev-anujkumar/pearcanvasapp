@@ -42,6 +42,12 @@ export default {
             figuredata: {
                 interactivetype: "table"
             }
+        },
+        'list1': {
+            type: "element-list",
+            elementdata: {
+                "subtype": "disc"
+            }
         }
     },
     slate1: {
@@ -1373,5 +1379,40 @@ export default {
             "contentUrn":"urn:pearson:entity:876a2304-0d84-47e0-9428-f5d4cc988f84",
             "status":"wip"
         },
+        "list": {
+            "id":"urn:pearson:work:97a5e089-370e-4b13-8704-30c45f748cb1",
+           "type":"element-list","subtype":"decimal",
+           "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+           "elementdata":{
+             "startNumber":"1","schema":"http://schemas.pearson.com/wip-authoring/list/1#/definitions/list",
+             "type":"list",
+             "listtype":"ordered",
+             "designtype":"list",
+             "subtype":"decimal",
+             "listitems":[{
+                 "type":"paragraph",
+                 "authoredtext":{
+                      "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                     "text":"gdh",
+                      "includechapteropenerimage":false
+                    },
+                    "includechapteropenerimage":false
+                  },
+                   {
+                     "type":"paragraph",
+                     "authoredtext":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                     "text":"fhgfhgf","includechapteropenerimage":false
+                    },
+                   "includechapteropenerimage":false
+                }],
+                "includechapteropenerimage":false
+            },
+            "html":{
+                "text":"<ol class=\"decimal\" treelevel=\"1\" style=\"counter-increment: section 0;\"><li class=\"listItemNumeroUnoNumber\">gdh</li><li class=\"listItemNumeroUnoNumber\">fhgfhgf</li></ol>",
+                "footnotes":{},
+                "glossaryentries":{}
+            },
+            "versionUrn":"urn:pearson:work:97a5e089-370e-4b13-8704-30c45f748cb1","contentUrn":"urn:pearson:entity:04e5960e-4162-4b29-9ded-a9c19f6ce85a"
+        }
     }
 }

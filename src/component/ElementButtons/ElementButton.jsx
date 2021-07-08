@@ -6,6 +6,8 @@ import '../../styles/ElementButtons/ElementButton.css'
 import buttonTypes from './ButtonTypes.js'
 
 import { 
+    stageDirectionIcon,
+    dialougeElementIcon,
     workedExampleIcon,
     sectionBreakElement, 
     assessmentIcon, 
@@ -40,7 +42,9 @@ import colorPalette from '../../images/ElementButtons/colorPalette.png'
 import colorText from '../../images/ElementButtons/colorText.svg'
 import closeContainer from '../../images/ElementButtons/container_close.png';
 import pasteIcon from '../../images/ElementButtons/contentPaste.png'
+import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
 import ButtonTypes from './ButtonTypes.js';
+import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
 
 class ElementButton extends Component {
    
@@ -208,6 +212,24 @@ class ElementButton extends Component {
                 break;
             case ButtonTypes.PASTE:
                 buttonJSX = <span className="btn-element paste-icon" onClick={clickHandlerFn}><img src={pasteIcon} /></span>
+                break;
+            case ButtonTypes.POWERPASTE:
+                buttonJSX = <span className="btn-element power-paste-icon" onClick={clickHandlerFn}><img src={powerPasteIcon} /></span>
+                break;
+            case ButtonTypes.ALFRESCO_METADATA:
+                buttonJSX = <span className= {`btn-element alfresco-metadata-icon ${btnClassName}`} onClick={clickHandlerFn} title="Expand in Alfresco" ><img src={alfrescoMetadata} /></span>
+                break;
+            case ButtonTypes.STAGE_DIRECTION:
+                    buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
+                        {stageDirectionIcon}
+                    </span>
+                    break;
+            case ButtonTypes.DIALOGUE_ELEMENT:
+                    buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
+                        {dialougeElementIcon}
+                    </span>
+                    break;
+
                 break;
         }
         return buttonJSX

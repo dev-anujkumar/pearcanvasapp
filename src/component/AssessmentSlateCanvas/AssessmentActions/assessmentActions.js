@@ -9,7 +9,8 @@ import {
     RESET_ASSESSMENT_STORE,
     ELM_ASSESSMENT_EDIT_ID,
     ASSESSMENT_CONFIRMATION_POPUP,
-    ELM_NEW_ITEM_DATA
+    ELM_NEW_ITEM_DATA,
+    SET_ELM_PICKER_MSG
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
@@ -27,7 +28,10 @@ const {
     assessmentEntityUrnHandler,
     assessmentItemVersionHandler,
     assessmentItemMetadataHandler,
-    assessmentVersionUpdateHandler
+    assessmentVersionUpdateHandler,
+    interactiveMetadataHandler,
+    interactiveVersionHandler,
+    interactiveVersionUpdateHandler
 } = assessmentApiHandlers;
 
 /**
@@ -51,34 +55,38 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
  * This action creator is used to fetch the assessment metadata including status
  */
 export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assessmentItemData) => (dispatch) => {
-    const workUrn = (type == 'assessment' || type == 'assessmentArray') ? assessmentData.targetId : assessmentItemData.targetItemid;
-    const url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
-    return axios.get(url, {
-        headers: {
-            "Content-Type": "application/json",
-            "ApiKey": config.STRUCTURE_APIKEY,
-            "PearsonSSOSession": config.ssoToken
-        }
-    }).then(async (res) => {
-        if (res && res.data && res.data.status) {
-            switch (type) {
-                case 'assessment':
-                    await assessmentMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
-                    break;
-                case 'assessmentItem':
-                    assessmentItemMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
-                    break;
-                case 'assessmentArray':
-                    return assessmentEntityUrnHandler(res.data);
-                default:
-                    assessmentErrorHandler(type,':Invalid Type of Assessment for Metadata');
-                    break;
+    const workUrn = (type == 'assessment' || type == 'assessmentArray' || type == 'interactive') ? assessmentData.targetId : assessmentItemData.targetItemid;
+    if(workUrn){
+        const url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
+        return axios.get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                "ApiKey": config.STRUCTURE_APIKEY,
+                "PearsonSSOSession": config.ssoToken
             }
-        }
-    }).catch((error) => {
-        const errorMsg = type == 'assessmentArray' ? assessmentData.errorMessage : `${type}: Assessment-Metadata API Error:`
-        assessmentErrorHandler(`${errorMsg}:${error}`);
-    })
+        }).then(async (res) => {
+            if (res && res.data && res.data.status) {
+                switch (type) {
+                    case 'assessment':
+                        await assessmentMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
+                        break;
+                    case 'assessmentItem':
+                        assessmentItemMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
+                        break;
+                    case 'assessmentArray':
+                        return assessmentEntityUrnHandler(res.data);
+                    case 'interactive': 
+                        return interactiveMetadataHandler(res.data, calledFrom, assessmentData, dispatch);
+                    default:
+                        assessmentErrorHandler(type,':Invalid Type of Assessment for Metadata');
+                        break;
+                }
+            }
+        }).catch((error) => {
+            const errorMsg = type == 'assessmentArray' ? assessmentData.errorMessage : `${type}: Assessment-Metadata API Error:`
+            assessmentErrorHandler(`${errorMsg}:${error}`);
+        })
+    }
 }
 /**
  * This action creator is used to fetch all the versions of the assessment/assessment-item
@@ -106,6 +114,12 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
                 case 'assessmentUpdate':
                     await assessmentVersionUpdateHandler(res.data, args,dispatch);
                     break;
+                case 'interactive':
+                    interactiveVersionHandler(res.data, args, dispatch);
+                    break;
+                case 'interactiveUpdate':
+                    interactiveVersionUpdateHandler(res.data, args, dispatch);
+                    break;
                 default:
                     assessmentErrorHandler(type,':Invalid Type of Assessment for List of Versions');
                     break;
@@ -119,11 +133,15 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
  * This action creator is used to launch Elm Assessment Portal from Cypress
  */
 export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
-    let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn } = assessmentData
+    let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn, interactiveId, elementId } = assessmentData
     let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     if (assessmentItemWorkUrn.trim() != "") {
         url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
+    } else if(interactiveId){
+        url = `${config.ELM_PORTAL_URL}/launch/editor/interactive/${interactiveId}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     }
+    /* Append Element id in url to identify post messages for which element, if exist */
+    url = elementId ? `${url}&elementUrn=${elementId}` : url;
     try {
         let elmWindow = window.open(url);
         if (elmWindow.closed) {
@@ -150,7 +168,7 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
  * @param updatedWorkUrn latest workURN of the assessment
  */
 export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
-    let url = `${config.SLATE_REFRESH_URL}${config.projectUrn}/updateAllAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
+    let url = `${config.VCS_API_ENDPOINT}${config.projectUrn}/updateAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
     dispatch(saveAutoUpdateData("",""));
     return axios.post(url, {}, {
         headers: {
@@ -250,5 +268,12 @@ export const setNewItemFromElm = (value) =>{
  return {
         type: ELM_NEW_ITEM_DATA,
         payload: value
+    }
+}
+
+export const setElmPickerData = (message) => {
+    return {
+        type: SET_ELM_PICKER_MSG,
+        payload: message
     }
 }

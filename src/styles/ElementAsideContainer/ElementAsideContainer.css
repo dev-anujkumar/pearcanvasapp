@@ -59,6 +59,9 @@
 .aside-container .dropdown {
     margin-left: -23px;
 }
+.multi-column .aside-container .dropdown {
+    margin-left: 0px;
+}
 .section-break,.work-section-break{
     border : 0.5px solid black;
     margin: 20px -8px 7px -8px;

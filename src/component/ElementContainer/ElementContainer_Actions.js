@@ -12,18 +12,18 @@ import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContaine
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 
 export const addComment = (commentString, elementId) => (dispatch) => {
-    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
+    let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
-        commentCreator: config.userName || config.userId,
-        assignee: config.assignee || config.userId
+        commentCreator: config.fullName,
+        assignee: config.fullName
     };
 
     let Comment = {
         commentType: "comment",
         commentDateTime: new Date().toISOString(),
-        commentAssignee: config.userName || config.userId,
-        commentCreator: config.userName || config.userId,
+        commentAssignee: config.fullName,
+        commentCreator: config.fullName,
         commentString: commentString,
         commentStatus: "OPEN",
         commentOnEntity: elementId,
@@ -110,7 +110,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             poetryData,
             cutCopyParentUrn,
             fetchSlateData,
-            showHideObj
+            showHideObj,
+            element
         }
         onDeleteSuccess(deleteArgs)
     } 
@@ -141,6 +142,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
     }
     const { showHideObj } = getState().appStore
     updatedData.projectUrn = config.projectUrn;
+    if (updatedData.loData) {
+        updatedData.slateVersionUrn = config.slateManifestURN;
+    }
     updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
     /** updateBodymatter | Used for TCM Snapshots */
     let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
@@ -203,6 +207,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         config.popupCreationCallInProgress = false
         config.isSavingElement = false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.error("updateElement Api fail", error);
     }
 }
@@ -263,6 +268,16 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
                     }
     
                 }
+            }
+        } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === "groupedcontent") { /* 2C:AS:Fig */
+            if (indexesLen == 4) {
+                condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];  
+            } else if (indexesLen == 5) {
+                condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+            }
+            if (condition.versionUrn === elementId) {
+                dataToSend = condition?.figuredata
+                condition.figuredata = figureData
             }
         }
     }
@@ -402,7 +417,19 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             if (condition.versionUrn == elementId) {
                     newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
             }
-        }else{
+        } else if (newIndex.length == 6) {
+            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]];
+            //condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
+            if (condition.versionUrn == elementId) {
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
+            }
+        } else if (newIndex.length == 7) {
+            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
+            if (condition.versionUrn == elementId) {
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
+            }
+        }
+        else{
             condition =  newBodymatter[newIndex[0]]
             if(condition.versionUrn == elementId){
                 newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
@@ -426,6 +453,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             cb("create",index);
         }
     }).catch(error => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         showError(error, dispatch, "error while creating element")
     })
 }
@@ -453,7 +481,6 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         }
     ).then(async (response)=>{
         let newIndex = eleIndex.split("-")
-        // let newShowhideIndex = parseInt(newIndex[newIndex.length-1])+1
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -494,6 +521,16 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
             condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
             if (condition.versionUrn == parentId) {
                     newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]].interactivedata[type].splice(index, 1)
+            }
+        }else if (newIndex.length == 6) {
+            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]];
+            if (condition.versionUrn == parentId) {
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].interactivedata[type].splice(index, 1)
+            }
+        } else if (newIndex.length == 7) {
+            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
+            if (condition.versionUrn == parentId) {
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]].interactivedata[type].splice(index, 1)
             }
         }else{
             condition =  newBodymatter[newIndex[0]]

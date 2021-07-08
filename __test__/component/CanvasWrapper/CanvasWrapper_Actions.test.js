@@ -1251,4 +1251,112 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         let result = canvasActions.setSlateLength(25)
         expect(result).toEqual(expectedResult);
     })
+    describe('Test-9- fetchLearnosityContent', () => {
+        it('Test-9.1-fetchLearnosityContent', () => {
+            let dispatch = jest.fn();
+            let responseData = { data: slateTestData.learnosityData }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchLearnosityContent')
+            axios.get = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.fetchLearnosityContent()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(dispatch).not.toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-9.2-fetchLearnosityContent - Catch Block', () => {
+            let dispatch = jest.fn();
+            const spyFunction = jest.spyOn(canvasActions, 'fetchLearnosityContent')
+            axios.get = jest.fn(() => Promise.reject({}))
+            canvasActions.fetchLearnosityContent()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(dispatch).not.toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+    });
+    describe('Test-10- fetchProjectLFs', () => {
+        config.book_title = 'Dev_LF_Ext_01'
+        it('Test-10.1-fetchProjectLFs', () => {
+            let expectedPayload = {
+                cypressLF: {
+                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
+                    "label": {
+                        "en": "ev_LF_Ext_0"
+                    },
+                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
+                },
+                externalLF: [{
+                    "urn": "urn:pearson:goalframework:73e75aaa-1d1d-4414-a042-9a45213a98ef",
+                    "label": {
+                        "en": "The Sociology Project 2.5"
+                    },
+                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/ukschools"
+                }]
+            }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
+                expect(obj.payload.apiStatus).toEqual(expectedPayload);
+            }
+            let responseData = { data: slateTestData.learningFrameworksApiResponse, status: 200 }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchProjectLFs')
+            axios.get = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.fetchProjectLFs()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-10.2-fetchProjectLFs Only External LF', () => {
+            let expectedPayload = {
+                cypressLF: {},
+                externalLF: [{
+                    "urn": "urn:pearson:goalframework:73e75aaa-1d1d-4414-a042-9a45213a98ef",
+                    "label": {
+                        "en": "The Sociology Project 2.5"
+                    },
+                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/ukschools"
+                }]
+            }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
+                expect(obj.payload.apiStatus).toEqual(expectedPayload);
+            }
+            let responseData = { data: slateTestData.learningFrameworksApiResponse_ExtLF, status: 200 }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchProjectLFs')
+            axios.get = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.fetchProjectLFs()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-10.3-fetchProjectLFs Only Cypress LF', () => {
+            let expectedPayload = {
+                cypressLF: {
+                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
+                    "label": {
+                        "en": "ev_LF_Ext_0"
+                    },
+                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
+                },
+                externalLF: []
+            }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
+                expect(obj.payload.apiStatus).toEqual(expectedPayload);
+            }
+            let responseData = { data: slateTestData.learningFrameworksApiResponse_CyLF, status: 200 }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchProjectLFs')
+            axios.get = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.fetchProjectLFs()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-10.4-fetchProjectLFs - Catch Block', () => {
+            let expectedPayload = {}
+            let dispatch = (obj) => {
+                expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
+                expect(obj.payload.apiStatus).toEqual(expectedPayload);
+            }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchProjectLFs')
+            axios.get = jest.fn(() => Promise.reject({}))
+            canvasActions.fetchProjectLFs()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+    });
 });

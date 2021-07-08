@@ -24,8 +24,12 @@ export const FIGURE_MML = "MATH_ML_CHEM_EDITOR";
 export const MULTI_COLUMN_GROUP = "GROUPED_CONTENT";
 export const MULTI_COLUMN = "MULTI_COLUMN";
 export const MMI_ELM = "MMI_ELM";
-export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have access to the Linked Alfresco site. please contact the Manager for this project"
+export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have access to the Linked Alfresco site. please contact the Manager for this project";
+export const ELEMENT_DIALOGUE = "ELEMENT_DIALOGUE";
+export const ELEMENT_DISCUSSION = 'DISCUSSION';
 
+/* PDF Slate */
+export const ELEMENT_PDF = "ELEMENT_PDF";
 /*-----------------Pop Dialog text-------------------------- */
 export const ALREADY_USED_SLATE = "The following slate is already in use by another member."
 export const ALREADY_USED_SLATE_TOC = "The slate is locked by another user and thus the slate cannot be deleted."
@@ -52,6 +56,7 @@ export const TYPE_WITH_PENDING_TRACK = 'withPendingTrack'
 export const TYPE_UNLINK = 'unlink'
 export const elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE"];
 
+export const CLONE_STATUS_INTERVAL = 2000
 export const checkTCM = element => {
     switch(element.type) {
         case 'openerelement': return OPENER;
@@ -67,6 +72,63 @@ export const checkTCM = element => {
 
         case 'showhide': return SHOW_HIDE;
 
+        case "element-aside": return CONTAINER;
+
+        case "poetry": return POETRY;
+        case "citations": return CITATION;
+        case "groupedcontent": return MULTI_COLUMN;
+        case "group": return MULTI_COLUMN_GROUP;
+        case "workedexample" : return WORKED_EXAMPLE;
+        case "popup" : return POP_UP;
+        case "discussion" : return ELEMENT_DISCUSSION;
         default: return TEXT;
+    }
+}
+
+export const elementDataByTag = {
+    'P': {
+        "inputType": "AUTHORED_TEXT",
+        "inputSubType": "NA",
+        "type": "TEXT"
+    },
+    'UL': {
+        "inputType": "LIST",
+        "inputSubType": "DISC",
+        "type": "ELEMENT_LIST"
+    },
+    'OL': {
+        "inputType": "LIST",
+        "inputSubType": "DECIMAL",
+        "type": "ELEMENT_LIST"
+    },
+    'H1': {
+        "inputType": "HEADERS",
+        "inputSubType": "H1",
+        "type": "TEXT"
+    },
+    'H2': {
+        "inputType": "HEADERS",
+        "inputSubType": "H2",
+        "type": "TEXT"
+    },
+    'H3': {
+        "inputType": "HEADERS",
+        "inputSubType": "H3",
+        "type": "TEXT"
+    },
+    'H4': {
+        "inputType": "HEADERS",
+        "inputSubType": "H4",
+        "type": "TEXT"
+    },
+    'H5': {
+        "inputType": "HEADERS",
+        "inputSubType": "H5",
+        "type": "TEXT"
+    },
+    'H6': {
+        "inputType": "HEADERS",
+        "inputSubType": "H6",
+        "type": "TEXT"
     }
 }

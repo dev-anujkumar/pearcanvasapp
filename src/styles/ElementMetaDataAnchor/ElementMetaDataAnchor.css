@@ -91,3 +91,26 @@ div.learningObjectiveContainer .Container {
     font-size: 14px;
     font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
 }
+
+.lo-navigation-icon {
+    float: right;
+    margin: 8px 8px 8px 10px;
+  }
+
+.lo-navigation-icon svg#right-dropdown-arrow, .lo-navigation-icon svg#right-dropdown-arrow:hover{
+    background-color: transparent !important;
+}
+
+.tick-icon{
+    position:absolute;
+    margin: 8px 8px 8px 8px;
+}
+
+.dropdown-option{
+    margin-left: 30px;
+}
+
+.tick-icon svg#tick-icon, .tick-icon svg#tick-icon:hover{
+    background-color: transparent !important;
+}
+
