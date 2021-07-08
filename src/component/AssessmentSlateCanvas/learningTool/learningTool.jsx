@@ -10,7 +10,7 @@ import LearningToolHeader from './Components/LearningToolHeader.jsx'
 import LearningToolBody from './Components/LearningToolBody.jsx'
 /** ----- Import - Dependencies ----- */
 import './../../../styles/AssessmentSlateCanvas/LearningTool/LearningTool.css';
-import { LT_LA_HEADER, LT_LA_SEARCH_TEXT, BUTTON_TEXT_LINK, BUTTON_TEXT_CANCEL, learningToolTableHeaders, learningToolPages, capitalizeString } from './learningToolUtility.js';
+import { LT_LA_HEADER, LT_LA_SEARCH_TEXT, BUTTON_TEXT_LINK, BUTTON_TEXT_CANCEL, learningToolTableHeaders, learningToolPages } from './learningToolUtility.js';
 /** ----- Import - Action Creators ----- */
 import { removeSelectedData, toolTypeFilterSelectedAction, closeLtAction, selectedFigureAction, learningToolDisFilterAction, learningToolSearchAction, paginationFunctionAction } from './learningToolActions.js';
 
