@@ -9,9 +9,14 @@ import Match from '../../../src/js/difftool/Match'
 
   it('Checking endInOld function', () => {
     const MatchClass = new Match(1,2, 3);
-    const spy = jest.spyOn(MatchClass, 'endInOld').and.returnValue(
-      2
-    );
-    expect(MatchClass.endInOld).toBe(2);
+    const spy = jest.spyOn(MatchClass, 'endInOld', 'get')
+    expect(MatchClass.endInOld).toBe(4);
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('Checking endInNew function', () => {
+    const MatchClass = new Match(1,2, 3);
+    const spy = jest.spyOn(MatchClass, 'endInNew', 'get')
+    expect(MatchClass.endInNew).toBe(5);
     expect(spy).toHaveBeenCalled();
   });
