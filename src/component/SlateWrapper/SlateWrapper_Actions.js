@@ -897,6 +897,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         /* if parent Element type showhide then add sectionType where element tobe paste */
         if(sectionType) {
             _requestData.content[0].sectionType = sectionType;
+            _requestData.content[0].index = index;
         }
 
         if(selection.operationType.toUpperCase() === "COPY") {
