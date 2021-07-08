@@ -18,16 +18,6 @@ jest.mock('../../../src/config/config.js', () => {
         },}
     }
 });
-jest.mock('../../../src/js/c2_media_module.js',()=>{
-    return {
-        c2MediaModule:{
-
-                onLaunchAddAnAsset:()=>{},
-                productLinkOnsaveCallBack: ()=>{},
-                AddanAssetCallBack: ()=>{}
-        }
-    }
-})
 jest.mock('../../../src/js/toggleLoader', () => ({
     hideTocBlocker: jest.fn(),
     disableHeader: jest.fn(),
