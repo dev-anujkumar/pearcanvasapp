@@ -78,7 +78,7 @@ function AlfrescoPopup(props) {
         let locationSiteDataNodeRef = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData?.guid
         locationSiteDataNodeRef = locationSiteDataNodeRef ? locationSiteDataNodeRef : alfrescoData.guid;
         const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
-        let messageObj = { citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef, elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote }
+        let messageObj = { citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef, elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,  calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote}
         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
         let request = {
             eTag: props.alfrescoPath.etag,
@@ -173,7 +173,8 @@ const mapStateToProps = (state) => {
         alfrescoElementId : state.alfrescoReducer.elementId,
         isInlineEditorOpen: state.alfrescoReducer.isInlineEditorOpen,
         locationData: state.alfrescoReducer.locationData,
-        calledFromGlossaryFootnote: state.alfrescoReducer.calledFromGlossaryFootnote
+        calledFromGlossaryFootnote: state.alfrescoReducer.calledFromGlossaryFootnote,
+        calledFromImageGlossaryFootnote: state.alfrescoReducer.calledFromImageGlossaryFootnote
     }
 }
 export default connect(

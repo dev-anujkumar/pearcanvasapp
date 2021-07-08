@@ -939,7 +939,7 @@ export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePop
         index: 0,
         action: action,
         feedback: elmFeedback,
-        status:  (action == 'delete') ? "pending" : (config.tcmStatus && config.tcmStatus == true && status === "") ? "pending" : "accepted",
+        status:  (action == 'delete') ? "pending" : (config.tcmStatus && config.tcmStatus == true && (status === "" || status === "pending")) ? "pending" : "accepted",
         slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
     actionStatus.status = tcmKeys.status;

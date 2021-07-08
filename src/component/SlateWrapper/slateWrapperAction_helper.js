@@ -10,9 +10,8 @@ import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshot
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
-import { getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import ElementConstants from '../ElementContainer/ElementConstants.js';
-const { SHOW_HIDE } = ElementConstants;
+const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
     const {
@@ -361,7 +360,8 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
     switch (type) {
         case slateWrapperConstants.WORKED_EXAMPLE:
         case slateWrapperConstants.CONTAINER:
-            createdElementData.elementdata.bodymatter.map((item) => {
+            showTcmIconInAside(createdElementData, elmUrn)
+            /*createdElementData.elementdata.bodymatter.map((item) => {
                 if (item.type == "manifest") {
                     item.contents.bodymatter.map((ele) => {
                         elmUrn.push(ele.id)
@@ -371,7 +371,7 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
                     elmUrn.push(item.id)
                 }
 
-            })
+            })*/
             break;
         case slateWrapperConstants.SECTION_BREAK:
         case slateWrapperConstants.CITATION:
@@ -396,29 +396,24 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             elmUrn.push(createdElementData.id)
             break;
         case slateWrapperConstants.MULTI_COLUMN:
-            /** First Column */
-            createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
-                elmUrn.push(item.id)
-            })
-            /** Second Column */
-            createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
-                elmUrn.push(item.id)
-            })
-            break;
         case slateWrapperConstants.MULTI_COLUMN_3C:
-            /** First Column */
+            /** Column */
+            showTcmIconInMultiCol(createdElementData, elmUrn);
+            break;
+         /** case slateWrapperConstants.MULTI_COLUMN_3C:
+            First Column 
             createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
                 elmUrn.push(item.id)
             })
-            /** Second Column */
+            /** Second Column 
             createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
                 elmUrn.push(item.id)
             })
-            /** Third Column */
+            /** Third Column 
             createdElementData.groupeddata.bodymatter[2].groupdata.bodymatter.map(item => {
                 elmUrn.push(item.id)
-            })
-            break;
+            }) 
+            break; */
         case slateWrapperConstants.POP_UP:
             elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
             createdElementData.popupdata.bodymatter.length>0 && elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
@@ -448,7 +443,57 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         }
     })
 }
-
+/**
+* @function showTcmIconInAside
+* @description Show tcm icon in right side of element inside Asdie containers; Ex. - Aside:P
+*/
+function showTcmIconInAside(element, elmUrn) {
+    if(element?.type === ELEMENT_ASIDE) {
+        element?.elementdata?.bodymatter?.map((item) => {
+            if(item?.type === SHOW_HIDE) {
+               showTcmIconInSH(item, elmUrn);
+            } else
+            if (item?.type === "manifest") {
+                item?.contents?.bodymatter?.map((ele) => {
+                    if(ele?.type === SHOW_HIDE) { /* Ex. -  WE:Body/SectionBreak:SH:P*/
+                        showTcmIconInSH(ele, elmUrn);
+                    } 
+                    else { elmUrn.push(ele.id) } /* Ex. -  WE:Body/SectionBreak:P*/
+                })
+            } else {
+                elmUrn.push(item.id) /* Ex. -  Aside/(WE:Head):P*/
+            }
+        })
+    }
+}
+/**
+* @function showTcmIconInMultiCol
+* @description Show tcm icon in right side of element inside containers; Ex. -  2C:P || 2C:Aside:P
+*/
+function showTcmIconInMultiCol(element, elmUrn) {
+    if(element?.type === MULTI_COLUMN) {
+        element?.groupeddata?.bodymatter?.map(grpItem => {
+            grpItem?.groupdata?.bodymatter?.map(item => {
+                if(item?.type === ELEMENT_ASIDE) { /* Show Icon in 2C:Aside:Element */
+                    showTcmIconInAside(item, elmUrn);
+                } else {
+                    elmUrn.push(item.id); /* Show Icon in 2C:Element */
+                }
+            })
+        })
+    }
+}
+/**
+* @function showTcmIconInSH
+* @description Show tcm icon in right side of element inside Shohide; Ex. -  SH:P 
+*/
+function showTcmIconInSH(element, elmUrn) {
+    ["show","hide"].forEach(sectionType => {
+        element?.interactivedata?.[sectionType]?.map(item => {
+            elmUrn.push(item?.id);
+        })
+    })
+}
 export const setPayloadForContainerCopyPaste = (params) => {
     const {
         cutIndex,

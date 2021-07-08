@@ -460,6 +460,15 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
     let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
     /** latest version for WE/CE/PE/AS/2C*/
     convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
+    /** 
+    * @description For SHOWHIDE Element - create showHideObj/AsideData/parentUrn to prepare 
+    * snapshots of showhide element
+    * @param {String} typeOfElement
+    */
+    const typeOfElement = convertParentData?.asideData?.grandParent?.asideData?.type;
+    if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
+        convertParentData = prepareSnapshots_ShowHide(convertParentData, response, indexes);
+    }
     if (oldElementData.id !== response.id) {
         oldElementData.id = response.id
         oldElementData.versionUrn = response.id
@@ -468,14 +477,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         actionStatusVersioning.status ="accepted"
         prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "",indexes);
     }
-    /** 
-    * @description For SHOWHIDE Element - prepare parent element data
-    * Update - 2C/Aside/POP:SH:New 
-    */
-    const typeOfElement = convertParentData?.asideData?.grandParent?.asideData?.type;
-    if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
-        convertParentData = prepareSnapshots_ShowHide(convertParentData, response, indexes);
-    }
+   
     prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes);
 }
 
