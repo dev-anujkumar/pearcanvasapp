@@ -26,7 +26,7 @@ class RenderTCMIcons extends React.Component {
     }    
     render() {
         const element = {id: this.props.tcmSnapshotData?.eURN}
-        let userName = this.props.elementEditor
+        let userName = this.props.elementEditor ? this.props.elementEditor : this.props.tcmSnapshotData?.trackChangeApprover
         let date = this.props.tcmSnapshotData?.originalLastUpdatedTimestamp
         let readableDate = this.props.tcmSnapshotData?.lastUpdatedTimestamp
         let readableTime = TCMUtiles.formatTime(date)
@@ -51,7 +51,6 @@ class RenderTCMIcons extends React.Component {
             </div>
             <div className="tcmdStatusContainer">
                 <span>{readableDate}, </span>
-                <span>{'Added'}</span>
             </div>
         </div>
         );
