@@ -383,7 +383,8 @@ class ElementAudioVideo extends Component {
                     const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
                     let messageObj = { citeName: locationSiteDataTitle? locationSiteDataTitle : alfrescoSiteName, 
                         citeNodeRef: nodeRefs, 
-                        elementId: this.props.elementId }
+                        elementId: this.props.elementId,
+                        currentAsset }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                     // data_1 = alfrescoPath.alfresco;
                     // data_1.currentAsset = currentAsset;

@@ -824,6 +824,17 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
     });
 }
 
+const fetchContainerData = (entityURN,manifestURN) => {
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`;
+    return axios.get(apiUrl, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+})
+}
+
+
 export const pasteElement = (params) => async (dispatch, getState) => {
     let selection = getState().selectionReducer.selection || {};
 
@@ -897,6 +908,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         /* if parent Element type showhide then add sectionType where element tobe paste */
         if(sectionType) {
             _requestData.content[0].sectionType = sectionType;
+            _requestData.content[0].index = index;
         }
 
         if(selection.operationType.toUpperCase() === "COPY") {
@@ -959,11 +971,17 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             if (createdElemData && createdElemData.status == '200') {
                 let responseData = Object.values(createdElemData.data)
                 const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+
+                // Condition to check whether any conatiner element got copy and paste. Fetch new conatiner data for the same.
+                if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
+                    let response =  await fetchContainerData(_requestData.content[0].contentUrn,_requestData.content[0].id);
+                    responseData = [response.data[_requestData.content[0].id]]
+                 }
+
                 if((responseData[0]?.type === "figure") && figureTypes.includes(responseData[0]?.figuretype) ){
                     const elementId = responseData[0].id
                     handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
                 }
-                
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
@@ -976,7 +994,6 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     poetryData,
                     slateEntityUrn, index2ShowHide
                 };
-        
                 await onPasteSuccess(pasteSuccessArgs)
                 if (responseData[0].elementdata?.type === "blockquote") {  
                     setTimeout(() => {
@@ -989,7 +1006,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
         catch(error) {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            console.error("Exceptional Error on pasting the element:::", error);
+            console.error("Exceptional Error on pasting the element:::", error);   
         }
     }
 }

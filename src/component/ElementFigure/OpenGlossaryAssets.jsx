@@ -138,11 +138,11 @@ class OpenGlossaryAssets extends Component {
                     <div className="audio-image-tab">
                         {
                             audioGlossaryData && Object.keys(audioGlossaryData).length > 0 &&
-                            <div onClick={() => this.handleTab('audio')} className={`tabs ${tabValue === 'audio' ? "active-tabs" : ""}`}>Audio</div>
+                            <div id = 'audio-tab' onClick={() => this.handleTab('audio')} className={`tabs ${tabValue === 'audio' ? "active-tabs" : ""}`}>Audio</div>
                         }
                         {
                             figureGlossaryData && Object.keys(figureGlossaryData).length > 0 &&
-                            <div onClick={() => this.handleTab('image')} className={`tabs ${tabValue === 'image' ? "active-tabs" : ""}`}>Image</div>
+                            <div id = 'image-tabs' onClick={() => this.handleTab('image')} className={`tabs ${tabValue === 'image' ? "active-tabs" : ""}`}>Image</div>
                         }
                     </div>
                     <div className="close-icon-image">
@@ -154,7 +154,7 @@ class OpenGlossaryAssets extends Component {
                 {
                     audioGlossaryData && Object.keys(audioGlossaryData).length > 0 &&
                     <div className={tabValue === 'audio' ? "show-content" : "content"}>
-                        <h2 className="audio-text">Audio Book</h2>
+                        {/* <h2 className="audio-text">Audio Book</h2> */}
                         <figure>
                             <figcaption className="audio-media-title">{audioMediaTitle}</figcaption>
                             <audio
@@ -173,7 +173,7 @@ class OpenGlossaryAssets extends Component {
                                 <button className="remove-text" onClick={() => this.openAudioConfirmationBox(true)} className="audioRemoveButton audioRemoveRound">Remove</button>
                             }
                             {
-                                <button className="remove-text" onClick={() => this.handleReplaceAudioButton()} className="audioReplaceeButton audioRemoveRound">Replace</button>
+                                <button className="remove-text"  onClick={() => this.handleReplaceAudioButton()} className="audioReplaceeButton audioRemoveRound">Replace</button>
                             }
                         </div>
 
@@ -183,7 +183,7 @@ class OpenGlossaryAssets extends Component {
                 {
                     figureGlossaryData && Object.keys(figureGlossaryData).length > 0 &&
                     <div className={tabValue === 'image' ? "show-content" : "content"}>
-                        <h2 className="image-glossary-text" >Image</h2>
+                        {/* <h2 className="image-glossary-text" >Image</h2> */}
                         <figure>
                             <figcaption className="image-media-title">{imageMediaTitle}</figcaption>
                             <img src={imageMediaSrc}
@@ -196,7 +196,7 @@ class OpenGlossaryAssets extends Component {
                                 draggable = "false" />
                         </figure>
 
-                        {replaceImageToggle && <AddImageGlossary  closeFigurePopup={this.closeFigurePopup} />}
+                        {replaceImageToggle && <AddImageGlossary isImageGlossary={true}  closeFigurePopup={this.closeFigurePopup} />}
 
                         <div className="remove-button">
 
