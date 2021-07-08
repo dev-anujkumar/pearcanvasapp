@@ -202,7 +202,7 @@ describe('External LO - Test Rendering of metadaanchor on slate', () => {
         expect(spyFunction).toHaveBeenCalled();
         spyFunction.mockClear();
     })
-    it('handleclick-warning Popup', () => {
+    xit('handleclick-warning Popup', () => {
         slateTagInstance.setState({
             showLoOptions: true
         })
