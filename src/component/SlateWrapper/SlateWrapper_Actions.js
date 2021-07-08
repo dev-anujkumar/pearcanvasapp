@@ -970,13 +970,16 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             if (createdElemData && createdElemData.status == '200') {
                 let responseData = Object.values(createdElemData.data)
                 const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+
+                // Condition to check whether any conatiner element got copy and paste. Fetch new conatiner data for the same.
+                if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
+                    let response =  await fetchContainerData(_requestData.content[0].contentUrn,_requestData.content[0].id);
+                    responseData = [response.data[_requestData.content[0].id]]
+                 }
+
                 if((responseData[0]?.type === "figure") && figureTypes.includes(responseData[0]?.figuretype) ){
                     const elementId = responseData[0].id
                     handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
-                }
-                if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
-                   let response =  await fetchContainerData(_requestData.content[0].contentUrn,_requestData.content[0].id);
-                   responseData = [response.data[_requestData.content[0].id]]
                 }
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
