@@ -228,7 +228,7 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
     const indexes = index?.toString().split('-') || [];
     /* update figure elements in ShowHide */
     /* asideDataFromAfrescoMetadata is used for editing figure metadata popup field(alttext, longDescription) inside ShowHide element */
-    if((asideData?.type === SHOW_HIDE || asideDataFromAfrescoMetadata.type === SHOW_HIDE ) && indexes?.length >= 3) {
+    if((asideData?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.type === SHOW_HIDE ) && indexes?.length >= 3) {
         /* Get the showhide element object from slate data using indexes */
         const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
         const section = indexOfSectionType(indexes); /* Get the section type */
