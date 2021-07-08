@@ -267,7 +267,7 @@ function CommunicationChannel(WrappedComponent) {
                      if (message.calledFrom === "NarrativeAudio" || message.calledFromGlossaryFootnote) {
                         this.handleAudioData(message)
                     }
-                    if(message.calledFrom === "GlossaryImage") {
+                    if(message.calledFrom === "GlossaryImage" || message.calledFromImageGlossaryFootnote ) {
                         this.handleImageData(message)
                     }
                     this.props.saveSelectedAssetData(message)
