@@ -105,7 +105,7 @@ class GlossaryFootnotePopup extends Component {
                 {
                     glossaryFootnote === GLOSSARY &&<div className = {'image-wrapper'+ accessToolbar} id='glossary-figure-image'><FigureTinyMceGlossary handleFigureToggle={this.handleFigureToggle} /></div>
                 }
-                {this.state.figureToggle && <AddImageGlossary  closeFigurePopup={this.closeFigurePopup} elementId={glossaryFootnoteValue.elementWorkId} />}
+                {this.state.figureToggle && <AddImageGlossary isImageGlossary={true} closeFigurePopup={this.closeFigurePopup} elementId={glossaryFootnoteValue.elementWorkId} />}
                 </div>
                 <div className="glossary-body">
                     <div id="glossary-toolbar"></div>
