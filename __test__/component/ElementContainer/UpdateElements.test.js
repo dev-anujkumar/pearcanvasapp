@@ -557,4 +557,54 @@ describe('Test for UpdateElements Functions', () => {
         const handleBlankLineDom = updateFunction.handleBlankLineDom('<span contenteditable="false" id="blankLine" class="answerLineContent"><br><\/span>', 'replaceText');
         expect(handleBlankLineDom).toBe('<span contenteditable="false" id="blankLine" class="answerLineContent">replaceText</span>');
     })
+    it('Test for getMetaDataFieldForPopup method - !hasFormattedSubtitle block', () => {
+        jest.spyOn(updateFunction, 'getMetaDataFieldForPopup');
+        const getMetaDataFieldForPopup = updateFunction.getMetaDataFieldForPopup({popupdata: {'formatted-title': ''}}, null);
+        expect(getMetaDataFieldForPopup).toBe('formattedTitleOnly');
+    })
+    it('Test for getMetaDataFieldForPopup method - !hasFormattedTitle block', () => {
+        jest.spyOn(updateFunction, 'getMetaDataFieldForPopup');
+        const getMetaDataFieldForPopup = updateFunction.getMetaDataFieldForPopup({popupdata: {'formatted-subtitle': ''}}, null);
+        expect(getMetaDataFieldForPopup).toBe('formattedSubtitle');
+    })
+    it('Test for getMetaDataFieldForPopup method - !hasFormattedTitle && !hasFormattedSubtitle', () => {
+        jest.spyOn(updateFunction, 'getMetaDataFieldForPopup');
+        const getMetaDataFieldForPopup = updateFunction.getMetaDataFieldForPopup({popupdata: {}}, null);
+        expect(getMetaDataFieldForPopup).toBe('formattedTitle');
+    })
+    it('Test for ELEMENT-TYPE----->figure---->codelisting', () => {
+        const preformattedText = document.createElement('div');
+        preformattedText.id = 'cypress-0-3';
+        preformattedText.innerHTML = '';
+        document.body.appendChild(preformattedText);
+        let type = "figure",
+            previousElementData = {
+                figuretype: 'codelisting',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+                html: {
+                    footnotes: []
+                },
+                figuredata: { programlanguage: '' }
+            },
+            node = {},
+            elementType = "figure",
+            primaryOption = "primary-blockcode-equation",
+            secondaryOption = "secondary-blockcode-language-default",
+            activeEditorId = "cypress-0-1",
+            index = 0,
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+            switch (selector) {
+                case '.div.element-container.active[data-id="urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y"] div.blockCodeFigure':
+                    return null;
+            }
+        });
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
 })
