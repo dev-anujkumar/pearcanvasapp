@@ -154,7 +154,7 @@ class OpenGlossaryAssets extends Component {
                 {
                     audioGlossaryData && Object.keys(audioGlossaryData).length > 0 &&
                     <div className={tabValue === 'audio' ? "show-content" : "content"}>
-                        <h2 className="audio-text">Audio Book</h2>
+                        {/* <h2 className="audio-text">Audio Book</h2> */}
                         <figure>
                             <figcaption className="audio-media-title">{audioMediaTitle}</figcaption>
                             <audio
@@ -183,7 +183,7 @@ class OpenGlossaryAssets extends Component {
                 {
                     figureGlossaryData && Object.keys(figureGlossaryData).length > 0 &&
                     <div className={tabValue === 'image' ? "show-content" : "content"}>
-                        <h2 className="image-glossary-text" >Image</h2>
+                        {/* <h2 className="image-glossary-text" >Image</h2> */}
                         <figure>
                             <figcaption className="image-media-title">{imageMediaTitle}</figcaption>
                             <img src={imageMediaSrc}
@@ -196,7 +196,7 @@ class OpenGlossaryAssets extends Component {
                                 draggable = "false" />
                         </figure>
 
-                        {replaceImageToggle && <AddImageGlossary  closeFigurePopup={this.closeFigurePopup} />}
+                        {replaceImageToggle && <AddImageGlossary isImageGlossary={true}  closeFigurePopup={this.closeFigurePopup} />}
 
                         <div className="remove-button">
 

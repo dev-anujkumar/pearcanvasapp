@@ -36,6 +36,26 @@ const TCMUtils = {
     return HtmlDiff.execute(latestAcepted, latestPending);
   },
 
+  replaceParentTag(originalHTML, replaceWithHTML) {
+
+    let acceptedTx = originalHTML;
+    const pendingTx = replaceWithHTML;
+
+    // Replace start tag
+    let acceptedTxSplit = acceptedTx.split('>');
+    const startTagInPendingTx = pendingTx.split('>')[0];
+    acceptedTxSplit[0] = startTagInPendingTx;
+    acceptedTx = acceptedTxSplit.join('>');
+
+    // Replace close tag
+    acceptedTxSplit = acceptedTx.split('</');
+    const endTagInPendingTx = pendingTx.split('</');
+    acceptedTxSplit[acceptedTxSplit.length - 1] = endTagInPendingTx[endTagInPendingTx.length - 1];
+    acceptedTx = acceptedTxSplit.join('</');
+
+    return acceptedTx;
+  },
+
   formatDateTime(timestamp, formatter = 'D.M.YY hh:mm A') {
     const intTime = parseInt(timestamp, 10);
     return moment(intTime).format(formatter);

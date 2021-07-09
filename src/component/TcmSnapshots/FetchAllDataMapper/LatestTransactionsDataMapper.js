@@ -45,6 +45,12 @@ const LatestTransactionsDataMapper = {
         JSON.parse(acceptedElementSnapshot).contentSnapshot,
         JSON.parse(pendingElementSnapshot).contentSnapshot,
       );
+      if (result.prevElementType != "OL" && result.prevElementType != "UL") {
+        result.contentDifference = TCMUtils.getDiffContent(
+          TCMUtils.replaceParentTag(JSON.parse(acceptedElementSnapshot).contentSnapshot, JSON.parse(pendingElementSnapshot).contentSnapshot),
+          JSON.parse(pendingElementSnapshot).contentSnapshot,
+        );
+      }
     result.elementChangeType = elementChangeType;
     result.feedback = feedBackData;
     result.trackChangeApprover = autthorName;

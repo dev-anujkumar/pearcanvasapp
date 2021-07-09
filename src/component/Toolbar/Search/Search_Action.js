@@ -3,6 +3,8 @@ import config from './../../../config/config';
 import { fetchSlateData } from './../../CanvasWrapper/CanvasWrapper_Actions';
 
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../../constants/Search_Constants.js';
+import SLATE_CONSTANTS from '../../ElementSaprator/ElementSepratorConstants';
+import { UPDATE_THREE_COLUMN_INFO } from '../../../constants/Action_Constants';
 
 export const searchEvent = {
     index: 0,
@@ -22,6 +24,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
         let parent = '';
         let elementIndex = 0;
         let bodymatter = {};
+        let multiColumnIndex = null;
         let slateData = getState().appStore.slateLevelData[config.slateManifestURN] ? getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter || {} : {};
 
         if(/^(urn\:pearson\:(work|manifest)\:\w{8}(\-\w{4}){3}\-\w{12})$/gi.test(searchTerm) ) {
@@ -35,6 +38,14 @@ export const getContainerData = (searchTerm, deeplink = false) => {
                 let totalCount = 0;
                 bodymatter.forEach((item, index) => {
                     if((JSON.stringify(item)).indexOf(searchTerm) >= 0) {
+                        // BG-4794 | Checking for 3 column to get column index
+                        if (item?.type === SLATE_CONSTANTS.MULTI_COLUMN && item?.groupeddata?.bodymatter.length === 3) {
+                            item.groupeddata.bodymatter.forEach((column, columnIndex) => {
+                                if (JSON.stringify(column).includes(searchTerm)) {
+                                    multiColumnIndex = columnIndex;
+                                }
+                            });
+                        }
                         elementIndex = index + 1;
                         parent = item.id;
                         if(searchTerm === item.id) {
@@ -59,6 +70,14 @@ export const getContainerData = (searchTerm, deeplink = false) => {
             searchEvent.totalCount = 0;
         }
 
+        if (multiColumnIndex && parent) {
+            const multiColumnPayload = {
+                containerId: parent,
+                columnIndex: `C${multiColumnIndex + 1}`
+            }
+            // BG-4794 | dispatch action to select column by column index
+            dispatch({ type: UPDATE_THREE_COLUMN_INFO, key: parent, payload: multiColumnPayload });
+        }
         dispatch({ type: SET_SEARCH_URN, payload, parent, deeplink, scroll: false, scrollTop: 0 });
     }
 }
