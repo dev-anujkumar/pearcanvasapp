@@ -19,6 +19,7 @@ export default function ElementContainerType(props) {
             case 'interactive-elem-button': elementPickerPosition = 5; break;
             case 'container-elem-button': elementPickerPosition = 8; break;
             case "block-text-button" : elementPickerPosition = 4; break;
+            case "multi-column-group": elementPickerPosition = 10; break;
         }
 
         let onePickerHeight = 34;   // default pixel size of one picker element
@@ -34,7 +35,17 @@ export default function ElementContainerType(props) {
     }
 
     const renderMenu = (propsData) => {
-        let {elementType,text} = props
+        let {elementType, text, showPlayscript, showDiscussion} = props;
+        if (!showDiscussion) {
+            propsData = propsData.filter( (obj) => {
+                return obj.text !== 'Add Discussion';
+            });
+        }
+        if (!showPlayscript) {
+            propsData = propsData.filter( (obj) => {
+                return obj.text !== 'Playscript';
+            });
+        }
         return propsData && propsData.map((item, index) => {
             if (((elementType === "element-aside" || elementType === "group") && text === "block-text-button" && item.text === "Block Poetry") ||
             (text === "interactive-elem-button" && (elementType === "group" && (item.text === "Add Show Hide" || item.text === "Add Pop Up")))

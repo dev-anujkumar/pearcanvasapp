@@ -13,6 +13,7 @@ const {
     AUTHORED_TEXT,
     BLOCKFEATURE,
     ELEMENT_LIST,
+    ELEMENT_ASSESSMENT,
     HEADING,
     PARAGRAPH,
     SLATE,
@@ -264,6 +265,7 @@ export const fetchElementsTag = (element,metadataField) => {
     const interactiveArray = ["3rd-party","pdf","web-link","pop-up-web-link","table"];
     let labelText, eleTag, eleType, eleSubType;
     eleType = element && element.type ? element.type :  element?.elementType;
+    eleType = eleType === 'groupedcontent' ? element.groupeddata ? `groupedcontent-${element?.groupeddata?.bodymatter?.length}` : `groupedcontent-${element.element?.groupeddata?.bodymatter?.length}` : eleType;
     eleType = metadataField ? setMetadataType[element.type][metadataField] : eleType;
     switch (eleType) {
         case AUTHORED_TEXT:
@@ -277,6 +279,9 @@ export const fetchElementsTag = (element,metadataField) => {
             break;
         case BLOCKFEATURE:
             eleSubType = element.elementdata.type
+            break;
+        case ELEMENT_ASSESSMENT: 
+            eleSubType = element.type
             break;
         case FIGURE:
             eleSubType = element.figuretype
@@ -298,7 +303,6 @@ export const fetchElementsTag = (element,metadataField) => {
         eleTag = eleSubType && eleSubType.trim() !== "" && setElementTag[eleType] ? setElementTag[eleType].subtype[eleSubType] : setElementTag[eleType]
     }
     labelText = eleTag ? `${eleTag.parentTag}${eleTag.childTag ? '+' + eleTag.childTag : ""}`:"P"
-
     return labelText;
 }
 
@@ -308,7 +312,7 @@ export const fetchElementsTag = (element,metadataField) => {
  * @param {Object} obj - object to be checked
  * @returns {Boolean}
 */
-const isEmpty = (obj) => {
+export const isEmpty = (obj) => {
     if ((Object.keys(obj).length === 0 && obj.constructor === Object)) {
         return true;
     }
@@ -332,6 +336,13 @@ const setElementTag = {
             'blockquote': {
                 parentTag: "BQ",
                 childTag: 'blockquote',
+            }
+        }
+    },
+    "element-assessment": {
+        subtype: {
+            'element-assessment' : {
+                parentTag: 'As'
             }
         }
     },
@@ -383,8 +394,11 @@ const setElementTag = {
     "stanza": {
         parentTag: "ST"
     },
-    "groupedcontent": {
+    "groupedcontent-2": {
         parentTag: "2C"
+    },
+    "groupedcontent-3": {
+        parentTag: "3C"
     },
     "manifest": {
         parentTag: "WE"
@@ -448,6 +462,9 @@ const setElementTag = {
     },
     "figure": {
         subtype: {
+            'assessment': {
+                parentTag: 'Qu'
+            },
             'image': {
                 parentTag: "Fg"
             },
@@ -551,12 +568,22 @@ export const generateWipDataForFigure = (bodymatter, index) => {
             break;
         case 4:
             if (bodymatter[eleIndex[0]].type === ELEMENT_ASIDE) { /** WE */
-                wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]
+                wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]]?.contents?.bodymatter[eleIndex[2]]
             }
             else if (bodymatter[eleIndex[0]].type === MULTI_COLUMN) { /** Multi-column */
                 const elementInColumn = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]];
                 if(elementInColumn?.type === ELEMENT_ASIDE) { /* snapshots of figure on cut operation inside 2c:aside/we:Figure*/
                     wipData = elementInColumn?.elementdata?.bodymatter[eleIndex[3]] || {};
+                } else {
+                    wipData = elementInColumn;
+                }
+            }
+            break;
+        case 5:
+            if (bodymatter[eleIndex[0]].type === MULTI_COLUMN) { /** Multi-column */
+                const elementInColumn = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]];
+                if (elementInColumn?.type === ELEMENT_ASIDE) { /* snapshots of figure on cut operation inside 2c:aside/we:Figure*/
+                     wipData = elementInColumn?.elementdata?.bodymatter[eleIndex[3]]?.contents?.bodymatter[eleIndex[4]] || {};
                 } else {
                     wipData = elementInColumn;
                 }

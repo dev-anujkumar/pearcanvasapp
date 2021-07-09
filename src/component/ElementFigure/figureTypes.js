@@ -20,6 +20,16 @@ export default {
             figCaptionClass: 'figcaptionImage50Text',
             figCreditClass: 'paragraphImage50TextCredit'
         },
+        'three-quarters-text': {
+            divClass: 'divImage75Text',
+            figureClass: 'figureImage75Text',
+            figLabelClass: 'heading4Image75TextNumberLabel',
+            figTitleClass: 'heading4Image75TextTitle',
+            dataType: 'image',
+            imageDimension: 'image75Text',
+            figCaptionClass: 'figcaptionImage75Text',
+            figCreditClass: 'paragraphImage75TextCredit',
+        },
         'text-width': {
             divClass: 'divImageTextWidth',
             figureClass: 'figureImageTextWidth',

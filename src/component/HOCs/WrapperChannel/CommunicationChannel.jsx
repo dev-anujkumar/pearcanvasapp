@@ -18,6 +18,7 @@ import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem,
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
 import { getProjectDetails } from '../../CanvasWrapper/CanvasWrapper_Actions.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { showWrongAudioPopup } from '../../AudioNarration/AudioNarration_Actions';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -185,6 +186,10 @@ function CommunicationChannel(WrappedComponent) {
                     this.setState({
                         showBlocker: false
                     });
+                    if(message.hasOwnProperty('slateTagEnabled')){
+                        let messageData = {assessmentResponseMsg:message.slateTagEnabled}
+                        this.props.isLOExist(messageData);
+                    }
                     break;
                 case 'slatePreview':
                 case 'projectPreview':
@@ -254,8 +259,27 @@ function CommunicationChannel(WrappedComponent) {
                 case 'unlinkLOFailForWarningPopup':
                     this.handleUnlinkedLOData(message)
                     break;
+                case 'selectedAlfrescoAssetData' :
+                    console.log('ASSET DATA FROM ALFRESCO', message.asset)
+                    if(message.isEditor){
+                        this.handleEditorSave(message)
+                    }
+                     if (message.calledFrom === "NarrativeAudio" || message.calledFromGlossaryFootnote) {
+                        this.handleAudioData(message)
+                    }
+                    if(message.calledFrom === "GlossaryImage" || message.calledFromImageGlossaryFootnote ) {
+                        this.handleImageData(message)
+                    }
+                    this.props.saveSelectedAssetData(message)
+                    break;
+                case 'saveAlfrescoDataToConfig' : 
+                config.alfrescoMetaData = message
+                break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
+                    break;
+                case 'openInlineAlsfrescoPopup' :
+                    this.props.alfrescoPopup(message);
                     break;
             }
         }
@@ -371,6 +395,54 @@ function CommunicationChannel(WrappedComponent) {
             }, 500);
         }
 
+        handleEditorSave = (message) =>{
+            let params = {
+                element: message.id,
+                editor: this.props.alfrescoEditor,
+                asset: message.asset,
+                launchAlfrescoPopup: false,
+                isInlineEditor: message.isEditor,
+                imageArgs: this.props.imageArgs                
+            }
+            this.props.saveInlineImageData(params);
+            hideBlocker();
+        }
+
+        handleAudioData = (message) => {
+            let imageData = message.asset;
+            let figureType = imageData?.content?.mimeType?.split('/')[0]
+            let smartLinkAssetType = imageData?.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
+            if (figureType == "audio" || smartLinkAssetType?.toLowerCase() == "audio") {
+                this.props.saveDataFromAlfresco(message);
+                let payloadObj = {
+                    asset: {},
+                    id: ''
+                }
+                this.props.saveSelectedAssetData(payloadObj);
+                hideBlocker();
+            } else {
+                this.props.showWrongAudioPopup(true);
+            }
+        }
+
+        /**
+         * handle Glossary Image Data
+         */
+        handleImageData = (message) => {
+            let imageData = message.asset;
+            let figureType = imageData?.content?.mimeType?.split('/')[0]
+            if (figureType == "image") {
+                this.props.saveImageDataFromAlfresco(message);
+                let payloadObj = {
+                    asset: {},
+                    id: ''
+                }
+                this.props.saveSelectedAssetData(payloadObj);
+                hideBlocker();
+            } else {
+                this.props.showWrongImagePopup(true);
+            }
+        }
         /**
          * Releases slate lock and logs user out.
          */
@@ -665,7 +737,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.tempSlateEntityURN = null;
                 config.disablePrev = message.disablePrev;
                 config.disableNext = message.disableNext;
-                config.slateType = message.node.nodeLabel;
+                config.slateType = message?.node?.nodeLabel === "assessment-slate" ? "assessment" : message?.node?.nodeLabel;
                 config.parentContainerUrn = message.node.ParentContainerUrn;
                 config.parentEntityUrn = message.node.ParentEntityUrn;
                 config.page = 0;

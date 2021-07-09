@@ -9,10 +9,12 @@ import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
 import { getTitleSubtitleModel } from '../../constants/utility';
 /*************************Import Constants*************************/
-import TcmConstants from './TcmConstants.js';
+import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
+import { indexOfSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
+
 
 let operType = "";
 const {
@@ -44,6 +46,7 @@ const {
     bqAttrHtmlFalse,
     bqHiddenText,
     FIGURE,
+    ELEMENT_ASSESSMENT,
     allowedFigureTypesForTCM,
     SHOWHIDE,
     SHOW_HIDE,
@@ -64,6 +67,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
     const parentData = store?.getState()?.appStore?.asideData?.parent || {};
+    const selectionMultiColumnType = store?.getState()?.selectionReducer?.selection?.multiColumnType || "";
     const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT, POPUP_ELEMENT,SHOWHIDE];
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
@@ -79,16 +83,21 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     /* Add WE/Aside inside 2C */
     const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
+    let multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
     if(wipData?.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
-        tag.grandParent = "2C:" + parentUrn?.columnName;
+        tag.grandParent = multiColumnType + ":" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
     } else if((figureElementList.includes(type) || actionStatus?.action === "update" ||  actionStatus?.action === "create" ||
         actionStatus?.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
-            tag.grandParent = "2C:" + columnName;
+            if (!multiColumnType) {
+                let multiColumnObj = store?.getState()?.appStore?.slateLevelData[config.slateManifestURN].contents?.bodymatter.find(x => x.id === id);
+                multiColumnType = `${multiColumnObj?.groupeddata?.bodymatter.length}C`
+            }
+            tag.grandParent = multiColumnType + ":" + columnName;
             elementId.grandParentId = `${id}+${columnId}`;
     } else if(wipData?.type === FIGURE && asideData?.figureIn2cAside?.isExist && actionStatus?.action === "update") {
         /* figure element conversion inside; 2C:ASIDE:FIGURE */ 
@@ -96,10 +105,16 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
         tag.grandParent = "2C:" + figParent.columnName;
         elementId.grandParentId = `${figParent.id}+${figParent.columnId}`;
-    } else if(actionStatus?.action === "delete" && parentData?.type === MULTI_COLUMN ) {
+    } else if(actionStatus?.action === "delete" && (parentData?.type === MULTI_COLUMN || parentUrn?.multiColumnDetails?.type === MULTI_COLUMN) ) {
         /* snapshots for Delete the section break inside 2c/we */
-        const { id: sc_id, columnName: sb_cName, columnId: sb_cId } = parentData || {};
-        tag.grandParent = "2C:" + sb_cName;
+        let { id: sc_id, columnName: sb_cName, columnId: sb_cId } = parentData || {};
+        if (Object.keys(parentData).length === 0) {
+            multiColumnType = parentUrn?.multiColumnType;
+            sc_id = parentUrn?.multiColumnDetails?.mcId;
+            sb_cName = parentUrn?.multiColumnDetails?.columnName;
+            sb_cId = parentUrn?.multiColumnDetails?.columnId;
+        }
+        tag.grandParent = multiColumnType + ":" + sb_cName;
         elementId.grandParentId = `${sc_id}+${sb_cId}`;
     }
     
@@ -164,7 +179,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     }
     /* action on element in WE/PE/CG/2C */
     else if (poetryData || asideData || parentUrn || showHideObj) {
-        tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
+        tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType)
     }
     /* action on PE and CG */
     else if (wipData.type === CITATION_GROUP || wipData.type === POETRY_ELEMENT) {
@@ -236,7 +251,8 @@ const tcmSnapshotsPopup =(wipData,index,containerElement,actionStatus,item,opera
         parentUrn: {
             contentUrn: wipData.contentUrn,
             elementType: wipData.type,
-            manifestUrn: wipData.id
+            manifestUrn: wipData.id,
+            multiColumnType: parentUrn?.multiColumnType /* 2C||3C */
         },
         metaDataField: item.popupdata['formatted-title'] ? 'formattedTitle' : undefined,
         parentElement: item
@@ -262,12 +278,13 @@ const tcmSnapshotsPopup =(wipData,index,containerElement,actionStatus,item,opera
 }
 /* Form @parent@ data for cut/copy operation of aside/we:popup/showhide in multicolumn */
 function parentData4CutCopyASWE_2C(asideData, parentUrn) {
-    const { mcId, manifestUrn, columnName } = parentUrn || {};
+    const { mcId, manifestUrn, columnName, multiColumnType } = parentUrn || {};
     return { 
         id: mcId || asideData?.id,
         type: "groupedcontent",
         columnId: manifestUrn,
-        columnName: columnName
+        columnName: columnName,
+        multiColumnType /* 2C||3C */
     }
 }
 
@@ -285,7 +302,8 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, o
         parentUrn: {
             contentUrn: wipData.contentUrn,
             elementType: wipData.type,
-            manifestUrn: wipData.id
+            manifestUrn: wipData.id,
+            multiColumnType: parentUrn?.multiColumnType /* 2C||3C */
         }
     }
     let newContainerElement = {}
@@ -322,7 +340,8 @@ const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,item, co
                 type: "groupedcontent",
                 columnId: wipData?.groupeddata?.bodymatter[columnIndex]?.id,
                 columnName: (columnIndex == 0) ? "C1" : "C2",
-                source:"fromCutCopy"
+                source:"fromCutCopy",
+                multiColumnType: wipData?.groupeddata.bodymatter?.length === 2 ? "2C" : "3C" /* 2C||3C */
             }
         },
         parentUrn: {
@@ -361,8 +380,10 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
                 showHideType: showhidetag
             }
             elementId.childId = item.id;
-            tag.childTag = fetchElementsTag(item);
-            let isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
+            /* if section is RevealAnswer than tag will be "CTA"; ELSE element tag (P/Fig)*/
+            tag.childTag = (SHType === 'postertextobject') ? "CTA" : fetchElementsTag(item);
+            /** @param {String} isHead - If SH is inside the WE/AS */
+            const isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
             elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
         })
@@ -399,12 +420,12 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
  * @param {Object} containerElement - Element Parent Data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate) => {
+export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     let parentElement = asideData ? asideData : poetryData ? poetryData : parentUrn;
-    parentElement = showHideObj ? showHideObj : parentElement
+    parentElement = showHideObj ? showHideObj : parentElement;
     /* 2C:AS/WE:FIGURE */
     const { isExist, asideData: asideFigObj } = asideData?.figureIn2cAside || {};
     parentElement =  isExist ? asideFigObj : parentElement;
@@ -414,7 +435,9 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     elementId.childId = wipData.id;
     elementId.columnId = parentUrn && parentUrn.elementType === MULTI_COLUMN_GROUP && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     tag.parentTag = showHideObj ? fetchElementsTag(parentElement.element) : fetchElementsTag(parentElement);
-    tag.childTag = fetchElementsTag(wipData);
+    /* On update of reveal answers inside showhide element; "-childTag-" will be CTA not P */
+    tag.childTag = (showHideObj?.element?.type === SHOWHIDE && showHideObj?.showHideType === "postertextobject") ?
+                    "CTA" : fetchElementsTag(wipData);
     let isHead;
     if(isExist) {
         /* if Figure converion inside 2C:ASIDE; UPDATA Action */
@@ -426,12 +449,53 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
             isHead = sectionOfWE?.id ? "HEAD" : "BODY";
         }
     } else{
-        isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
+        isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn?.manifestUrn == asideData?.id ? "HEAD" : "BODY" : "";
     }
     elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn });
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
 }
-
+/**
+* @function prepareSnapshots_ShowHide
+* @description This function will prepare the data of containerElement to get snapshots 
+*  of parent elements - 2C/Aside/POP:SH:New 
+*/
+export function prepareSnapshots_ShowHide(containerElement, wipData, index, updateBodymatter) {
+    const { asideData, parentUrn } =  containerElement?.asideData?.grandParent || {};
+    
+    let indexList = []
+    if(Array.isArray(index)) {
+        indexList = index;
+    } else if(typeof index === "string") {
+        indexList = index ? index?.toString().split("-") : [];
+    }
+    /* Get the sectionType using index of element */
+    const sectionType = indexOfSectionType(index);
+    const innerSH_Index = indexList[indexList.length-1]
+    // let showhideElement = getShowHideElement(updateBodymatter, indexList.length, indexList)
+    let showhideElement = { ...containerElement?.asideData },
+        innerSH_Element = wipData;
+    if (showhideElement && sectionType && showhideElement.element) {
+        innerSH_Element = showhideElement?.element?.interactivedata[sectionType][innerSH_Index]
+    } else if (sectionType && showhideElement?.interactivedata) {
+        innerSH_Element = showhideElement?.interactivedata[sectionType][innerSH_Index]
+    }
+    /* Delete the grandparent data form asideData */
+    showhideElement?.grandParent && delete showhideElement.grandParent;
+    /* Prepare and return container data for showhide inner element update */
+    return {
+        ...containerElement,
+        asideData: asideData,
+        parentUrn: parentUrn,
+        parentElement: asideData,
+        showHideObj: {
+            currentElement: innerSH_Element,
+            element: showhideElement,
+            index: index,
+            showHideType: sectionType
+        },
+        sectionType: sectionType
+    };  
+}
 /**
  * @function tcmSnapshotsMultiColumn
  * @description This is the function to prepare the data for TCM Snapshots for Action = Create & Elements = Mutli-column
@@ -653,9 +717,9 @@ export const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defa
     tag.popupParentTag = `${tag.popupParentTag}${headWE ? ":"+headWE : ""}`
     elementId.popupParentId = `${elementId.popupParentId}${headWE == "BODY" ? "+"+bodyWE : ""}`
     /* If popup inside the 2C-WE/Aside; Get the Data of 2C */
-    const { id, type: gPType, columnName, columnId } = popupAsideData?.parent || {};
+    const { id, type: gPType, columnName, columnId, multiColumnType } = popupAsideData?.parent || {};
     if (gPType === "groupedcontent") {
-        tag.grandParent = "2C:" + columnName;
+        tag.grandParent = multiColumnType + ':' + columnName;
         elementId.grandParentId = `${id}+${columnId}`;
     }
     let popupData = {
@@ -751,18 +815,18 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
 export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}) => {
-    const { asideData } = containerElement
+    const { asideData, parentUrn } = containerElement
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
-    if(tag.parentTag === "2C" && eleIndex > -1){
-        elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : ':C2'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
+    if((tag.parentTag === "2C" || tag.parentTag === "3C") && eleIndex > -1){
+        elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : (eleIndex == 1) ? ':C2' : ':C3'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
     
     if (parentElement?.element?.type === SHOWHIDE) {    //showhide
-        let showHideSection = getShowHideTag(parentElement.showHideType)
-        elementTag = `${tag.parentTag}:${showHideSection}`; //${tag.childTag ? ":" + tag.childTag : ""}
+        let showHideSection = getShowHideTag(parentElement.showHideType);
+        elementTag = `${tag.parentTag}:${showHideSection}:${tag.childTag}`; //${tag.childTag ? ":" + tag.childTag : ""}
         if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
             elementTag = `AS:${elementTag}`
             elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
@@ -778,6 +842,11 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
+        else if (asideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:SH */
+            const {columnName, manifestUrn, mcId} = parentUrn || {};
+            elementTag = `2C:${columnName}:${elementTag}`;
+            elementId = `${mcId}+${manifestUrn}+${elementId}`;
         }
     }
     else if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
@@ -846,7 +915,7 @@ export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePop
         index: 0,
         action: action,
         feedback: elmFeedback,
-        status:  (action == 'delete') ? "pending" : (config.tcmStatus && config.tcmStatus == true && status === "") ? "pending" : "accepted",
+        status:  (action == 'delete') ? "pending" : (config.tcmStatus && config.tcmStatus == true && (status === "" || status === "pending")) ? "pending" : "accepted",
         slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
     actionStatus.status = tcmKeys.status;
@@ -878,6 +947,41 @@ export const setSlateType = (wipData, containerElement, type) => {
             break;
     }
     return isContainer
+}
+const getAssessmentType = (key, isStandAlone) => {
+    const assessmentType =  ASSESSMENT_TYPE.find(item => item.type === key);
+    if(assessmentType) {
+        return isStandAlone? assessmentType.standAloneLabel : assessmentType.label
+    }
+    return key;
+}
+
+const getAssessmentStatus = (assessmentId) => {
+    if(assessmentId) {
+        const assessmentData = store?.getState()?.assessmentReducer?.[assessmentId];
+        const assessmentStatus = assessmentData?.assessmentStatus;
+        if(assessmentStatus) {
+            return (assessmentStatus === 'final' ?  "Approved" : "Unapproved");
+        }
+    }
+}
+
+const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
+    const elementData =element?.elementdata;
+    let elementSnapshot = {};
+    elementSnapshot = {
+            assessmentTitle: `<p>${elementData?.assessmenttitle || ''}</p>`,
+            assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
+            assessmentId: `<p>${elementData?.assessmentid|| ''}</p>`,
+            assessmentItemId: `<p>${elementData?.assessmentitemid|| ''}</p>`,
+            assessmentUsageType: `<p>${elementData?.usagetype|| ''}</p>`,
+            assessmentStatus: `<p>${getAssessmentStatus(elementData?.assessmentId) || ''}</p>`,
+            assessmentType: `<p>${getAssessmentType(elementData?.assessmentformat, true) || ''}<p>`,
+            glossorySnapshot: '[]',
+            footnoteSnapshot: '[]',
+            assetPopOverSnapshot: '[]'
+        }
+    return elementSnapshot;
 }
 
 /**
@@ -912,11 +1016,19 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
 export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails, CurrentSlateStatus) => {
     let elementSnapshot = {};
     let semanticSnapshots = (element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
-    elementSnapshot = {
-        contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
-        glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
-        footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
-        assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
+    if(element.type !== ELEMENT_ASSESSMENT) {
+        elementSnapshot = {
+            contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
+            glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
+            footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
+            assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
+        }
+    }
+    else {
+        elementSnapshot = {
+            ...prepareStandAloneSlateSnapshot(element, elementDetails),
+           
+        }
     }
     return elementSnapshot;
 }
@@ -930,6 +1042,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
     formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
     formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
     formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
+    
     let snapshotData = {
         title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
         figurenumber: handleBlankLineDom(formattedNumber, 'BlankLine') || "",
@@ -958,6 +1071,22 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
                 ...getInteractiveSubtypeData(element.figuredata, element.html)
             }
             break;
+        case 'assessment': {
+        const elementData = element?.figuredata?.elementdata; 
+        if(elementData){
+                snapshotData = {
+                    assessmentTitle: `<p>${elementData?.assessmenttitle|| ''}</p>`,
+                    assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
+                    assessmentId: `<p>${elementData?.assessmentid || ''}</p>`,
+                    assessmentItemId: `<p>${elementData?.assessmentitemid || ''}</p>`,
+                    assessmentUsageType: `<p>${elementData?.usagetype || ''}</p>`,
+                    // status only sent in case of elm and learnosity
+                    assessmentStatus: `<p>${getAssessmentStatus(elementData.assessmentid) || ''}</p>`,
+                    assessmentType: `<p>${getAssessmentType(elementData?.assessmentformat, false) || ''}<p>`
+                }  
+            }
+            break;   
+        }
         case "image":
         case "table":
         case "mathImage":
@@ -988,7 +1117,7 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus && actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
         snapshotData = '<p></p>'          
-    } 
+    }  
     /**else if(element.type === ELEMENT_LIST && element.html && element.html.text){
         snapshotData = element.html.text.replace(/<br>/g,"")
     }*/
@@ -1036,14 +1165,20 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
     }
     const { metaDataField, sectionType, parentElement, showHideObj } = containerElement;
+    /* Get the element type */
+    const typeOfElement = containerElement?.asideData?.type;
     let wipData = {};
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
         wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
-    }
-    else if (showHideObj?.currentElement) { //showhide
-        wipData = showHideObj.currentElement
-    } 
-    else {
+    } else
+    /** 
+    * @description For SHOWHIDE Element - prepare parent element data
+    * Update - 2C/Aside/POP:SH:New 
+    */
+    if(typeOfElement === SHOWHIDE) {
+        containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex, currentSlateData);
+        wipData = containerElement?.showHideObj?.currentElement;
+    } else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
     }
     
@@ -1081,7 +1216,13 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                 }
             }
             else {
-                oldData.elementdata = wipData.elementdata;
+                if(oldData.type === ELEMENT_ASSESSMENT) {
+                    oldData.elementdata = elementUpdateData?.figureData
+                    dispatch(storeOldAssetForTCM({}))
+                } else {
+                    oldData.elementdata = wipData.elementdata;
+                }
+                
             }
         }
         oldData.html = wipData.html;
@@ -1185,7 +1326,7 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
             parentData.parentStatus = asideData?.element?.status ?? undefined;
             parentData.popupStatus = popupElem && popupElem.status ? popupElem.status : undefined; /** Check Popup Status */
             parentData.showHideStatus = showHideElem && showHideElem.status ? showHideElem.status : undefined;
-            if (asideData?.element?.id !== parentUrn.manifestUrn) {
+            if (asideData?.element?.id !== parentUrn?.manifestUrn) {
                 asideData?.element?.elementdata?.bodymatter.map((ele) => {
                     parentData.childStatus = parentUrn && ele.id === parentUrn.manifestUrn ? ele.status : undefined;
                 })
@@ -1320,7 +1461,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
             case SHOWHIDE:
                 if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]];
-                } else if (eleIndex.length == 3 && bodymatter[eleIndex[0]].type !== MULTI_COLUMN) {   /** Inside WE-BODY */
+                } else if (eleIndex.length == 3 && !([MULTI_COLUMN, SHOWHIDE].includes(bodymatter[eleIndex[0]].type))) {   /** Inside WE-BODY */
                     wipData = bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]];
                 } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === MULTI_COLUMN){      /** Inside Multi-Column */
                     wipData = bodymatter[eleIndex[0]].groupeddata.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]

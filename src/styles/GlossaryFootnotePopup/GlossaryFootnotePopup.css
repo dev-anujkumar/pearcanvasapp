@@ -161,7 +161,19 @@
 
 .audio-wrapper{
     cursor: pointer;
-    margin: 0 15px;
+    margin: 0 0 0 16px;
+    border: 1px solid #ccc;
+    align-items: center;
+    display: flex;
+    font-weight: 400;
+    height: 34px;
+    justify-content: center;
+    width: 16%; 
+}
+
+.image-wrapper{
+    cursor: pointer;
+    margin: 0;
     border: 1px solid #ccc;
     align-items: center;
     display: flex;
@@ -175,4 +187,9 @@
     pointer-events: none;
     opacity: 0.4;
     cursor: not-allowed !important;
+}
+
+.glossary-toolbar{
+    display: flex;
+    justify-content: flex-start;
 }

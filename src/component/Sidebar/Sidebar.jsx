@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
- import { conversionElement, setBCEMetadata } from './Sidebar_Action';
+import { conversionElement, setBCEMetadata } from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
@@ -12,18 +12,18 @@ import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
-import { showBlocker,hideBlocker } from '../../js/toggleLoader';
+import { showBlocker, hideBlocker } from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
-import { disabledPrimaryOption } from '../../constants/Element_Constants.js';
+import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
-
+import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
 
 class Sidebar extends Component {
     constructor(props) {
         super(props);
-        
+
         let elementType = this.props.activeElement.type || 'element-authoredtext';
         let elementTypeList = elementList[elementType];
         let primaryFirstOption = Object.keys(elementTypeList)[0];
@@ -31,8 +31,8 @@ class Sidebar extends Component {
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
         let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
-        let syntaxhighlighting =  this.props.activeElement.syntaxhighlighting;
-        let podwidth = this.props.activeElement.podwidth || POD_DEFAULT_VALUE;        
+        let syntaxhighlighting = this.props.activeElement.syntaxhighlighting;
+        let podwidth = this.props.activeElement.podwidth || POD_DEFAULT_VALUE;
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
@@ -43,23 +43,23 @@ class Sidebar extends Component {
             attrInput: "",
             bceToggleValue: numbered,
             syntaxHighlightingToggleValue: syntaxhighlighting,
-            showSyntaxHighlightingPopup : false,
-            bceNumberStartFrom : startNumber,
-            podOption : false,
-            podValue : podwidth,
-            usageType:this.props.activeElement.usageType
+            showSyntaxHighlightingPopup: false,
+            bceNumberStartFrom: startNumber,
+            podOption: false,
+            podValue: podwidth,
+            usageType: this.props.activeElement.usageType
         };
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
-        if(Object.keys(nextProps.activeElement).length > 0) {
+        if (Object.keys(nextProps.activeElement).length > 0) {
             let elementDropdown = prevState.elementDropdown;
             //let numberStartFrom = prevState.bceNumberStartFrom;
             //let bceToggle = prevState.bceToggleValue;
             //let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
             let podValue = prevState.podValue;
             let podOption = prevState.podOption
-            if(nextProps.activeElement.elementId !== prevState.activeElementId) {
+            if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 //numberStartFrom = nextProps.activeElement.startNumber;
                 //bceToggle = nextProps.activeElement.numbered;
@@ -67,7 +67,7 @@ class Sidebar extends Component {
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false
             }
-            
+
             return {
                 elementDropdown: elementDropdown,
                 activeElementId: nextProps.activeElement.elementId,
@@ -75,12 +75,12 @@ class Sidebar extends Component {
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
                 activeLabelText: nextProps.activeElement.tag,
-                bceNumberStartFrom : nextProps.activeElement.startNumber,
-                bceToggleValue : nextProps.activeElement.numbered,
-                syntaxHighlightingToggleValue : nextProps.activeElement.syntaxhighlighting,
-                podValue : podValue,
-                podOption : podOption,
-                usageType:nextProps.activeElement.usageType
+                bceNumberStartFrom: nextProps.activeElement.startNumber,
+                bceToggleValue: nextProps.activeElement.numbered,
+                syntaxHighlightingToggleValue: nextProps.activeElement.syntaxhighlighting,
+                podValue: podValue,
+                podOption: podOption,
+                usageType: nextProps.activeElement.usageType
             };
         }
 
@@ -102,7 +102,7 @@ class Sidebar extends Component {
             podOption: false
         });
 
-        if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
+        if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
             this.props.conversionElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
@@ -115,18 +115,18 @@ class Sidebar extends Component {
     }
 
     toggleElementDropdown = e => {
-        if(hasReviewerRole()){
+        if (hasReviewerRole()) {
             return true
         }
         const { activePrimaryOption } = this.state
-        if(e.target.dataset && e.target.dataset.element !== "secondary"){
-            if( disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ){
+        if (e.target.dataset && e.target.dataset.element !== "secondary") {
+            if (disabledPrimaryOption.indexOf(activePrimaryOption) > -1) {
                 e.stopPropagation()
                 return false
             }
         }
         let elementDropdown = e.target.getAttribute('data-element');
-        if(this.state.elementDropdown === elementDropdown) {
+        if (this.state.elementDropdown === elementDropdown) {
             elementDropdown = '';
         }
         this.setState({
@@ -138,63 +138,63 @@ class Sidebar extends Component {
     primaryOption = () => {
         const { activePrimaryOption } = this.state
         let primaryOptions = '';
-        if(this.state.activeElementType){
-            let className=""
+        if (this.state.activeElementType) {
+            let className = ""
             let primaryOptionObject = elementList[this.state.activeElementType];
             let primaryOptionList = Object.keys(primaryOptionObject);
-            if(primaryOptionList.length > 0) {
-                if(this.state.activeElementType === 'element-assessment'){
+            if (primaryOptionList.length > 0) {
+                if (this.state.activeElementType === 'element-assessment') {
                     delete primaryOptionList[1];
                 }
-                let disabledPrimaryOptions=["primary-mathml-equation", "primary-blockcode-equation", "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup"];
-                 if( disabledPrimaryOptions.indexOf(activePrimaryOption) > -1 ){
-                    className="disabled"
-                 }
+                let disabledPrimaryOptions = ["primary-mathml-equation", "primary-blockcode-equation", "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup"];
+                if (disabledPrimaryOptions.indexOf(activePrimaryOption) > -1) {
+                    className = "disabled"
+                }
                 primaryOptions = primaryOptionList.map(item => {
-                    if(item !== 'enumType' && item !== 'primary-mathml-equation' && item !== 'primary-blockcode-equation' && item !== 'primary-editor-table-equation') {
+                    if (item !== 'enumType' && item !== 'primary-mathml-equation' && item !== 'primary-blockcode-equation' && item !== 'primary-editor-table-equation') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
                             {primaryOptionObject[item].text}
                         </li>;
                     }
                 });
-    
+
                 let active = '';
-                if(this.state.elementDropdown === 'primary') {
+                if (this.state.elementDropdown === 'primary') {
                     active = 'active';
                 }
-                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+                const sidebarDisableCondition = ((this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
-                    className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable": ""}`}>
+                    className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ? null : dropdownArrow}
                     </div>
-                   <ul className={`element-dropdown-content primary-options ${active}`}>
+                    <ul className={`element-dropdown-content primary-options ${active}`}>
                         {primaryOptions}
                     </ul>
                 </div> : null;
             }
-    
+
             return primaryOptions;
-        } 
-        else if( this.props.activeElement.elementWipType == "element-learningobjectivemapping"){
-           primaryOptions = <div className="learning-obejective-text"><b>Metadata Anchor</b>
-            <div className="element-dropdown">
-                <div className="element-dropdown-title" data-element="primary">Learning Objective<svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg></div>
+        }
+        else if (this.props.activeElement.elementWipType == "element-learningobjectivemapping") {
+            primaryOptions = <div className="learning-obejective-text"><b>Metadata Anchor</b>
+                <div className="element-dropdown">
+                    <div className="element-dropdown-title" data-element="primary">Learning Objective<svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg></div>
                 </div>
             </div>
-          
-           return primaryOptions;
-        }
-        else if(this.props.activeElement.elementWipType == "element-generateLOlist"){
-            primaryOptions = <div className="panel_show_module">
-                    <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
-                        <p>Show Module Name</p>
-                        <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} checked={this.props.showModule? true : false} /><span className="slider round"></span></label>
-                        </div>;
+
             return primaryOptions;
         }
-        
+        else if (this.props.activeElement.elementWipType == "element-generateLOlist") {
+            primaryOptions = <div className="panel_show_module">
+                <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
+                <p>Show Module Name</p>
+                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} checked={this.props.showModule ? true : false} /><span className="slider round"></span></label>
+            </div>;
+            return primaryOptions;
+        }
+
     }
 
     handleSecondaryOptionChange = e => {
@@ -208,7 +208,7 @@ class Sidebar extends Component {
             podOption: false
         });
 
-        if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
+        if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
             this.props.conversionElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
@@ -222,19 +222,24 @@ class Sidebar extends Component {
 
     secondaryOption = () => {
         let secondaryOptions = '';
+        let enableColumn3SecondaryOption = false;
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
             let secondaryOptionList = Object.keys(secondaryOptionObject);
             let isLearnosityProject = this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? true : false;
             let showLearnosityDropdown = false;
-            if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-default"){
-               secondaryOptionList.splice(0,1)
+            if (this.state.activePrimaryOption === "primary-blockcode-equation" && this.state.activeSecondaryOption !== "secondary-blockcode-language-default") {
+                secondaryOptionList.splice(0, 1)
             }
-            if(secondaryOptionList.length > 1) {
+            // checking active element and primary option to allow column 3 secondary option
+            if (this.state.activeElementType === "groupedcontent" && this.state.activePrimaryOption === MULTI_COLUMN_3C.ELEMENT_NAME) {
+                enableColumn3SecondaryOption = true;
+            }
+            if(secondaryOptionList.length > 1 || enableColumn3SecondaryOption) {
                 secondaryOptions = secondaryOptionList.map(item => {
                     let addClass = '';
-                    if(item === SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY){
+                    if (item === SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY) {
                         addClass = 'learnosity-disabled';
                         showLearnosityDropdown = true;
                     }
@@ -242,39 +247,39 @@ class Sidebar extends Component {
                         {secondaryOptionObject[item].text}
                     </li>;
                 });
-    
+
                 let display = '';
-                if(secondaryOptionList.length <= 1) {
+                if (secondaryOptionList.length <= 1) {
                     display = 'hidden';
                 }
-    
+
                 let active = '';
-                if(this.state.elementDropdown === 'secondary') {
+                if (this.state.elementDropdown === 'secondary') {
                     active = 'active';
                 }
-                if(isLearnosityProject && showLearnosityDropdown){
+                if (isLearnosityProject && showLearnosityDropdown) {
                     active = ''
                 }
-                let disabled= '';
-                if(this.state.usageType === ""){
-                    disabled="disabled";
+                let disabled = '';
+                if (this.state.usageType === "") {
+                    disabled = "disabled";
                 }
                 const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
-                    <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={this.toggleElementDropdown}>
+                    <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
-                        {(isLearnosityProject && showLearnosityDropdown) ? "" : <span> {dropdownArrow} </span>}
+                        {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
                     </div>
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
                     </ul>
                 </div>;
             }
-    
+
             return secondaryOptions;
         }
-        
+
     }
 
     handleAttrChange = (event) => {
@@ -290,20 +295,20 @@ class Sidebar extends Component {
             activeBCEElementNode.focus()
             activeBCEElementNode.blur()
         }
-        
+
     }
 
     handleDialogueToggle = () => {
 
         this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
-        this.setState({bceToggleValue: !this.state.bceToggleValue});
+        this.setState({ bceToggleValue: !this.state.bceToggleValue });
         this.handleDialogueBlur();
     }
 
     handleDialogueNumber = (e) => {
         const regex = /^[0-9]*(?:\.\d{1,2})?$/
         if (regex.test(e.target.value)) {
-            this.props.setBCEMetadata('startNumber', e.target.value);  
+            this.props.setBCEMetadata('startNumber', e.target.value);
             this.setState({ bceNumberStartFrom: e.target.value });
             // this.handleDialogueBlur();
         }
@@ -323,40 +328,40 @@ class Sidebar extends Component {
         let attributions = '';
         let attributionsObject = {};
         let attributionsList = [];
-        if(this.state.activeElementType){
+        if (this.state.activeElementType) {
             let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
             let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
-            if((primaryOptionList.text && primaryOptionList.text==="Quad Interactive" )&& (this.props.activeElement.altText && this.props.activeElement.altText!="")){
-                primaryOptionList['attributes']={
-                    "alt_text":{
+            if ((primaryOptionList.text && primaryOptionList.text === "Quad Interactive") && (this.props.activeElement.altText && this.props.activeElement.altText != "")) {
+                primaryOptionList['attributes'] = {
+                    "alt_text": {
                         "isEditable": false,
                         "text": "Alt Text"
                     }
                 }
             }
-            else if(primaryOptionList.text && (primaryOptionList.text==="Quad Interactive" || primaryOptionList.text==="Elm Interactive" ) ){
-                primaryOptionList['attributes']={}
+            else if (primaryOptionList.text && (primaryOptionList.text === "Quad Interactive" || primaryOptionList.text === "Elm Interactive")) {
+                primaryOptionList['attributes'] = {}
             }
 
-            if(primaryOptionList.attributes) {
+            if (primaryOptionList.attributes) {
                 attributionsObject = primaryOptionList.attributes;
                 attributionsList = Object.keys(attributionsObject);
-            } else if(secondaryOptionList.attributes) {
+            } else if (secondaryOptionList.attributes) {
                 attributionsObject = secondaryOptionList.attributes;
                 attributionsList = Object.keys(attributionsObject);
             }
-    
-            if(attributionsList.length > 0) {
+
+            if (attributionsList.length > 0) {
                 //let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 //let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
                 let attrValue = ""
                 attributions = attributionsList.map(item => {
-                    let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable) 
-                    if(item==="alt_text"){
-                        attrValue=this.props.activeElement.altText?this.props.activeElement.altText:""
+                    let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable)
+                    if (item === "alt_text") {
+                        attrValue = this.props.activeElement.altText ? this.props.activeElement.altText : ""
                     }
-                    else if(item==="long_description"){
-                        attrValue=this.props.activeElement.longDesc?this.props.activeElement.longDesc:""
+                    else if (item === "long_description") {
+                        attrValue = this.props.activeElement.longDesc ? this.props.activeElement.longDesc : ""
                     }
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>
@@ -364,10 +369,10 @@ class Sidebar extends Component {
                     </div>
                 });
             }
-            if(this.state.activePrimaryOption === "primary-blockcode-equation" && this.props.activeElement.elementId){
+            if (this.state.activePrimaryOption === "primary-blockcode-equation" && this.props.activeElement.elementId) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement ? activeElement.querySelector(".blockCodeFigure") : null
-                if( attrNode ){
+                if (attrNode) {
                     attrNode.setAttribute("numbered", ((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true))
                     attrNode.setAttribute("startNumber", (this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'))
                     attrNode.setAttribute("syntaxhighlighting", ((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true))
@@ -375,16 +380,16 @@ class Sidebar extends Component {
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={ !hasReviewerRole() && !config.savingInProgress && this.handleBceToggle}/>
-                        <span className="slider round"></span></label>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleBceToggle} />
+                            <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
                         <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleBceNumber} value={this.state.bceNumberStartFrom}
-                        disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleBceBlur}/>
+                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleBceBlur} />
                     </div>
                 </div>
-                    return attributions;
+                return attributions;
             }
 
             if (this.state.activePrimaryOption && this.state.activePrimaryOption === "primary-element-dialogue" && this.props.activeElement.elementId) {
@@ -406,9 +411,9 @@ class Sidebar extends Component {
             attributions = <div className="attributions">
                 {attributions}
             </div>;
-    
+
             return attributions;
-        }  
+        }
     }
 
     handleBceBlur = () => {
@@ -419,7 +424,7 @@ class Sidebar extends Component {
         }
     }
 
-   
+
 
 
 
@@ -428,17 +433,17 @@ class Sidebar extends Component {
         if (activeBQNode) {
             activeBQNode.focus()
             activeBQNode.blur()
-        }  
+        }
     }
 
     /**
     * handleBceToggle function responsible for handling toggle value for BCE element
     */
     handleBceToggle = () => {
-        this.props.setBCEMetadata('numbered',!this.state.bceToggleValue);
+        this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
         this.setState({
-            bceToggleValue : !this.state.bceToggleValue
-        }, () => this.handleBceBlur() )
+            bceToggleValue: !this.state.bceToggleValue
+        }, () => this.handleBceBlur())
     }
 
     handleSyntaxHighligtingRemove = () => {
@@ -462,7 +467,7 @@ class Sidebar extends Component {
                 emTags[0].outerHTML = innerHTML;
             }
         })
-        this.props.setBCEMetadata('syntaxhighlighting',!this.state.syntaxHighlightingToggleValue);
+        this.props.setBCEMetadata('syntaxhighlighting', !this.state.syntaxHighlightingToggleValue);
         this.setState({
             syntaxHighlightingToggleValue: !this.state.syntaxHighlightingToggleValue
         }, () => {
@@ -473,7 +478,7 @@ class Sidebar extends Component {
     }
 
     handleSyntaxHighlightingPopup = (value) => {
-        if(value){
+        if (value) {
             showBlocker();
         }
         else {
@@ -491,7 +496,7 @@ class Sidebar extends Component {
             this.handleSyntaxHighlightingPopup(true);
         }
         else {
-            this.props.setBCEMetadata('syntaxhighlighting',currentToggleValue);
+            this.props.setBCEMetadata('syntaxhighlighting', currentToggleValue);
             this.setState({
                 syntaxHighlightingToggleValue: currentToggleValue
             }, () => this.handleBceBlur())
@@ -503,56 +508,57 @@ class Sidebar extends Component {
     */
     handleBceNumber = (e) => {
         const regex = /^[0-9]*(?:\.\d{1,2})?$/
-        if(regex.test(e.target.value)){      
-            this.props.setBCEMetadata('startNumber',e.target.value);                        // applying regex that will validate the value coming is only number
+        if (regex.test(e.target.value)) {
+            this.props.setBCEMetadata('startNumber', e.target.value);                        // applying regex that will validate the value coming is only number
             this.setState({ bceNumberStartFrom: e.target.value })
         }
     }
 
-    
+
     showModuleName = (e) => {
         const slateType = getSlateType(this.props.slateLevelData[config.slateManifestURN])
-       if(this.props.activeElement.elementId){
-        this.props.setCurrentModule(e.currentTarget.checked);
-        let els = document.getElementsByClassName('moduleContainer');
-        let i = 0;
-        let groupby ="";
-        if (e.currentTarget.checked == false) {
-            while (i < els.length) {
-                let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
-                if (children.length > 0) {
-                    els[i].classList.remove('showmodule');
+        if (this.props.activeElement.elementId) {
+            this.props.setCurrentModule(e.currentTarget.checked);
+            let els = document.getElementsByClassName('moduleContainer');
+            let i = 0;
+            let groupby = "";
+            if (e.currentTarget.checked == false) {
+                while (i < els.length) {
+                    let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
+                    if (children.length > 0) {
+                        els[i].classList.remove('showmodule');
+                    }
+                    i++;
                 }
-                i++;
             }
-        }
-        else {
-            groupby="module";
-            while (i < els.length) {
-                let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
-                if (children.length > 0) {
-                    els[i].classList.add('showmodule');
+            else {
+                groupby = "module";
+                while (i < els.length) {
+                    let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
+                    if (children.length > 0) {
+                        els[i].classList.add('showmodule');
+                    }
+                    i++;
                 }
-                i++;
             }
-        }
-        let data = {
-            "elementdata": {
-                level: slateType === "partintro" ? "part" : "chapter",
-                groupby: groupby
-            },
-            "metaDataAnchorID": [this.props.activeElement.elementId],
-            "elementVersionType": "element-generateLOlist",
-            "loIndex" : this.props.activeElement.index,
-            "slateVersionUrn": config.slateManifestURN,
-            "elementParentEntityUrn":config.slateEntityURN
-        }
-        if (config.elementStatus[this.props.activeElement.elementId] === "approved") {
-            config.savingInProgress = true
-        }
-        this.props.updateElement(data)
+            let data = {
+                "elementdata": {
+                    level: slateType === "partintro" ? "part" : "chapter",
+                    groupby: groupby
+                },
+                "metaDataAnchorID": [this.props.activeElement.elementId],
+                "elementVersionType": "element-generateLOlist",
+                "loIndex": this.props.activeElement.index,
+                "slateVersionUrn": config.slateManifestURN,
+                "elementParentEntityUrn": config.slateEntityURN
+            }
+            if (config.elementStatus[this.props.activeElement.elementId] === "approved") {
+                config.savingInProgress = true
+            }
+            this.props.updateElement(data)
 
-    }}
+        }
+    }
 
     renderSyntaxHighlighting = (tag) => {
         if (tag === 'BCE') {
@@ -583,9 +589,9 @@ class Sidebar extends Component {
         let selValue = e.target.getAttribute('data-value');
         this.setState({
             podOption: !this.state.podOption,
-            podValue : selValue ? selValue : this.state.podValue,
+            podValue: selValue ? selValue : this.state.podValue,
             elementDropdown: ''
-        }, () => this.handleBceBlur())    
+        }, () => this.handleBceBlur())
     }
 
     /**
@@ -602,7 +608,7 @@ class Sidebar extends Component {
             }
             let printValue = this.state.podValue
 
-            printValue = ( printValue && printValue.match(/print/g)) ? printValue.slice(5) : this.state.podValue
+            printValue = (printValue && printValue.match(/print/g)) ? printValue.slice(5) : this.state.podValue
             printValue = printValue ? (printValue.match(/%/g) ? printValue : printValue + '%') : '100%'
 
             let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
@@ -632,20 +638,34 @@ class Sidebar extends Component {
             )
         }
         return null
-    }
+    }  
 
     render = () => {
         return (
-            this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
-                <div className="canvas-sidebar-heading">Settings</div>
-                {this.primaryOption()}
-                {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
-                {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
-                {this.secondaryOption()}
-                {this.attributions()}
-                {this.podOption()}
-                {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value)=>{this.handleSyntaxHighlightingPopup(value)}} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true}/>}
-            </div>
+            <>
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
+                    <div className="canvas-sidebar-heading">Settings</div>
+                    {this.primaryOption()}
+                    {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
+                    {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
+                    {this.secondaryOption()}
+                    {this.attributions()}
+                    {this.podOption()}
+                    {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
+                </div>
+                }
+                {this.props.isTCMCanvasPopupLaunched &&
+                    <PopUp
+                        isTCMCanvasPopup={this.props.isTCMCanvasPopupLaunched}
+                        assessmentClass={'tcm-canvas-popup'}
+                        closeTcmPopup={this.closeTcmPopup}
+                        tcmButtonHandler={this.props.tcmButtonHandler}
+                        tcmSnapshotData={this.props.tcmSnapshotData}
+                        dialogText={this.props.tcmSnapshotData.contentDifference}
+                        elementData={this.props.elementData}
+                        tcmStatus = {this.props.tcmStatus}
+                    />}
+            </>
         );
     }
 }
@@ -656,27 +676,32 @@ Sidebar.defaultProps = {
 
 Sidebar.propTypes = {
     /** Active Element Type */
-    elementType : PropTypes.string,
+    elementType: PropTypes.string,
 }
 
 const mapStateToProps = state => {
     return {
         activeElement: state.appStore.activeElement,
-        showModule:state.metadataReducer.showModule,
-        permissions : state.appStore.permissions,
-        showHideObj:state.appStore.showHideObj,
+        showModule: state.metadataReducer.showModule,
+        permissions: state.appStore.permissions,
+        showHideObj: state.appStore.showHideObj,
         slateLevelData: state.appStore.slateLevelData,
         cutCopySelection: state.selectionReducer.selection,
-        isLearnosityProject: state.appStore.isLearnosityProjectInfo
+        isLearnosityProject: state.appStore.isLearnosityProjectInfo,
+        isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
+        tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
+        elementData: state.tcmReducer.elementData,
+        tcmStatus: state.tcmReducer.tcmStatus
     };
 };
 
 export default connect(
-    mapStateToProps, 
+    mapStateToProps,
     {
         updateElement,
         setCurrentModule,
         conversionElement,
-        setBCEMetadata
+        setBCEMetadata,
+        tcmButtonHandler
     }
 )(Sidebar);

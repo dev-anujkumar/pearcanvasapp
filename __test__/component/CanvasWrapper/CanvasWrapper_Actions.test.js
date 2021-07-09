@@ -244,6 +244,14 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear()
         })
+        it('Test-1.17-fetchElementTag - MultiColumn 3 column Element', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[11];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 11);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('3C');
+            spyFunction.mockClear()
+        });
     });
     describe('Test-2- fetchAuthUser', () => {
         it('Test-2.1-fetchAuthUser', () => {
@@ -266,7 +274,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             spyFunction.mockClear();
         });
     });
-    describe('Test-3- setActiveElement', () => {
+    xdescribe('Test-3- setActiveElement', () => {
         config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
         it('Test-3.1-setActiveElement - Citations', () => {
             let dispatch = (obj) => {

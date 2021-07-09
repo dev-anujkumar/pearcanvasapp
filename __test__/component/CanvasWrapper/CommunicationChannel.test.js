@@ -42,6 +42,9 @@ const initialState = {
     },
     toolbarReducer:{
         pageNumberToggle:false
+    },
+    alfrescoReducer: {
+        editor:{}
     }
 };
 
@@ -165,10 +168,6 @@ jest.mock('../../../src/config/config.js', () => ({
 }))
 jest.mock('../../../src/component/CanvasWrapper/TCM_Integration_Actions', () => {
     return { loadTrackChanges: jest.fn() }
-})
-jest.mock('../../../src/js/c2_media_module.js', () => {
-    return function () {
-    }
 })
 describe('Testing communication channel', () => {
     let store = mockStore(initialState);

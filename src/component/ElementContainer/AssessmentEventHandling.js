@@ -19,7 +19,7 @@ export const handleElmPortalEvents = (action,eventType) => {
         let elmAssessmentUpdate = async (event) => {
             try {
                 const { data } = event;
-                console.log('%c Interactive edit-in-place messages>>>BEFORE>>>','background: #222; color: white',data)
+                // console.log('%c Interactive edit-in-place messages>>>BEFORE>>>','background: #222; color: white',data)
                 if (eventType == 'fromUpdate') {
                     if (action == 'add' && data && data.source == 'elm') {
                         //console.log('Event From ELM Portal>>>', data)
@@ -35,7 +35,7 @@ export const handleElmPortalEvents = (action,eventType) => {
                             handleRefreshSlate(store.dispatch);
                         }
                     } else {
-                        console.log('%c Interactive edit-in-place messages>>>','background: #222; color: #bada55',data)
+                        // console.log('%c Interactive edit-in-place messages>>>','background: #222; color: #bada55',data)
                         /* To edit interactive using edit button */
                         const intObj = getInteractivePostMsg(data)
                         window.removeEventListener('message', elmAssessmentUpdate, false);
@@ -102,7 +102,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action
         const getMsgafterAddAssessment = async (event) => {
             try {
                 const { data = {} } = event;
-                console.log('%c create-in-place messages>>>BEFORE>>>','background: #222; color: red',data)
+                // console.log('%c create-in-place messages>>>BEFORE>>>','background: #222; color: red',data)
                 /* Get Assessment data from Post message */
                 if(eventType == 'fromCreate'){
                     /* Get the item data from store */
@@ -120,7 +120,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action
                             }
                         }
                     } else if(type === 'interactive'){
-                        console.log('%c create-in-place messages>>>BEFORE>>>','background: #222; color: pink',data)
+                        // console.log('%c create-in-place messages>>>BEFORE>>>','background: #222; color: pink',data)
                         /* Get Interactive data from Post message */
                         const intObj = getInteractivePostMsg(data);
                         if(intObj?.id && intObj.title && intObj.interactiveType){

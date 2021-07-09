@@ -30,6 +30,10 @@ import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.j
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
+import ElementConstants from '../ElementContainer/ElementConstants';
+import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
+const { SHOW_HIDE } = ElementConstants;
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -327,7 +331,8 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
 
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId, parentElement, elementIndex } = dataObj || {};
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem,
+         asideId, poetryId, parentElement, elementIndex, sectionType } = dataObj || {};
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -339,7 +344,10 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         "type": swappedElementData.type,
         "index": newIndex
     }
-
+    /* If swapping for inner elements of showhide then add section type also, show|hide */
+    if(containerTypeElem === SHOW_HIDE){
+        _requestData.sectionType = sectionType   
+    }
     let parentData = getState().appStore.slateLevelData;
     let currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
@@ -372,7 +380,16 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     return false;
                 }
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
-                if (containerTypeElem && containerTypeElem == 'we') {
+                if(containerTypeElem === SHOW_HIDE) { /* Swap inner elements of ShowHide */
+                    const indexes = elementIndex?.toString().split('-') || [];
+                    /* Get the showhide element object from slate data using indexes */
+                    const shObject = getShowHideElement(newBodymatter, (indexes?.length + 2), indexes);
+                    /* After getting showhide Object, swap the elements */
+                    if(!isEmpty(shObject) && shObject?.contentUrn === currentSlateEntityUrn) {
+                        shObject?.interactivedata[sectionType]?.move(oldIndex, newIndex);
+                    }
+                }
+                else if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
                     const indexs = elementIndex?.split('-') || [];
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
@@ -429,6 +446,9 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                             element.contents.bodymatter.move(oldIndex, newIndex);
                         }
                     }); */
+                }
+                else if (containerTypeElem && containerTypeElem == '3C') {
+                    newBodymatter[dataObj.containerIndex].groupeddata.bodymatter[dataObj.columnIndex].groupdata.bodymatter.move(oldIndex, newIndex);
                 }
                 else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
@@ -804,6 +824,17 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
     });
 }
 
+const fetchContainerData = (entityURN,manifestURN) => {
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`;
+    return axios.get(apiUrl, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+})
+}
+
+
 export const pasteElement = (params) => async (dispatch, getState) => {
     let selection = getState().selectionReducer.selection || {};
 
@@ -812,13 +843,13 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             index,
             parentUrn,
             asideData,
-            poetryData
+            poetryData, sectionType, index2ShowHide
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
 
         let slateEntityUrn = config.slateEntityURN;
-        if(parentUrn && 'contentUrn' in parentUrn) {
+        if(parentUrn && 'contentUrn' in parentUrn) { //sectionType && 
             slateEntityUrn = parentUrn.contentUrn;
         } else if(poetryData && 'contentUrn' in poetryData) {
             slateEntityUrn = poetryData.contentUrn;
@@ -874,6 +905,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "destinationSlateUrn": slateEntityUrn
             }]
         };
+        /* if parent Element type showhide then add sectionType where element tobe paste */
+        if(sectionType) {
+            _requestData.content[0].sectionType = sectionType;
+            _requestData.content[0].index = index;
+        }
 
         if(selection.operationType.toUpperCase() === "COPY") {
             delete _requestData.content[0].slateVersionUrn;
@@ -935,11 +971,17 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             if (createdElemData && createdElemData.status == '200') {
                 let responseData = Object.values(createdElemData.data)
                 const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+
+                // Condition to check whether any conatiner element got copy and paste. Fetch new conatiner data for the same.
+                if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
+                    let response =  await fetchContainerData(_requestData.content[0].contentUrn,_requestData.content[0].id);
+                    responseData = [response.data[_requestData.content[0].id]]
+                 }
+
                 if((responseData[0]?.type === "figure") && figureTypes.includes(responseData[0]?.figuretype) ){
                     const elementId = responseData[0].id
                     handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
                 }
-                
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
@@ -950,9 +992,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     parentUrn,
                     asideData,
                     poetryData,
-                    slateEntityUrn
+                    slateEntityUrn, index2ShowHide
                 };
-        
                 await onPasteSuccess(pasteSuccessArgs)
                 if (responseData[0].elementdata?.type === "blockquote") {  
                     setTimeout(() => {
@@ -964,8 +1005,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         catch(error) {
-            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-            console.error("Exceptional Error on pasting the element:::", error);
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+            console.error("Exceptional Error on pasting the element:::", error);   
         }
     }
 }

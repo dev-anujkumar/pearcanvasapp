@@ -293,7 +293,14 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         ...tinymce.activeEditor
     }
     const mockStore = configureMockStore(middlewares);
-    const store = mockStore({ });
+    const store = mockStore({    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    } });
     const component = mount(<Provider store={store}> < TinyMceEditor {...props} /> </Provider>, { attachTo: document.body })
     let instance = component.find('TinyMceEditor').instance();
     let tinymceDiv = document.createElement('div');
@@ -928,7 +935,8 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     },
                     dispatchEvent: () => { }
                 },
-                selection: editor.selection,
+                insertContent: () => { },
+                selection: {...editor.selection, getNode : ()=>{ return {className:'callout' }}},
                 dom: domObj,
                 setContent: () => { },
             }
@@ -2894,7 +2902,8 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 tagName: "SPAN",
                 elementId: "work:urn",
                 element: { type: "element-list", elementdata : {listtype : 'ordered'} },
-                currentElement: { type: "element-list", elementdata : {listtype : 'ordered'} }
+                currentElement: { type: "element-list", elementdata : {listtype : 'ordered'} },
+                saveInlineImageData: jest.fn()
             }
             let imgData = `<img src=https://cite-media-stg.pearson.com/legacy_paths/28154019-35d4-4b5b-9da6-fdc6335e1595/1addNew.png data-id="imageAssetContent:28154019-35d4-4b5b-9da6-fdc6335e1595" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:28154019-35d4-4b5b-9da6-fdc6335e1595" alt="Alfresco script Scale image update for UDB release" longdescription="Alfresco scale image long desc for UDb chanages."/>`;
             let event = {
@@ -4375,7 +4384,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(spyeditorOnClick).toHaveBeenCalled()
             expect(setDisabled).toHaveBeenCalled()
         });
-        it('Test-30.2.2-Method--28--editorOnClick--nodeName:DFN & alreadyExist:TRUE', () => {
+        xit('Test-30.2.2-Method--28--editorOnClick--nodeName:DFN & alreadyExist:TRUE', () => {
             instance.props.handleAudioPopupLocation = jest.fn();
             document.querySelector = () => { return false; }
             let event = {
@@ -6603,7 +6612,14 @@ describe('------------------------------Test2 TINY_MCE_EDITOR-------------------
         ...tinymce.activeEditor
     }
     const mockStore = configureMockStore(middlewares);
-    const store = mockStore({ });
+    const store = mockStore({    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    } });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -7196,7 +7212,14 @@ describe('------------------------------Test3 TINY_MCE_EDITOR blockquote if-----
         ...tinymce.activeEditor
     }
     const mockStore = configureMockStore(middlewares);
-    const store = mockStore({ });
+    const store = mockStore({     alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    } });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -7280,7 +7303,14 @@ describe('------------------------------Test3 TINY_MCE_EDITOR blockquote else---
         ...tinymce.activeEditor
     }
     const mockStore = configureMockStore(middlewares);
-    const store = mockStore({ });
+    const store = mockStore({     alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    } });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -7361,7 +7391,14 @@ describe('------------------------------Test4 TINY_MCE_EDITOR-------------------
         ...tinymce.activeEditor
     }
     const mockStore = configureMockStore(middlewares);
-    const store = mockStore({ });
+    const store = mockStore({     alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    } });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -7442,7 +7479,14 @@ describe('------------------------------Test4 TINY_MCE_EDITOR-------------------
         ...tinymce.activeEditor
     }
     const mockStore = configureMockStore(middlewares);
-    const store = mockStore({ });
+    const store = mockStore({     alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    } });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],

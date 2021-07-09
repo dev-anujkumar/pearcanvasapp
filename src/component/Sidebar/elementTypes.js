@@ -166,6 +166,11 @@ export default {
                     text: '50% Text Width',
                     labelText: 'Fg',
                     enum: 'IMAGE_50_TEXT'
+                },
+                'secondary-image-figure-three-quarter': {
+                    text: '75% Text Width',
+                    labelText: 'Fg',
+                    enum: 'IMAGE_75_TEXT'
                 },               
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
@@ -585,9 +590,14 @@ export default {
             text: 'Single Assessment',
             toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon'],
             enum: 'SINGLE_ASSESSMENT',		
-            subtype: {		
+            subtype: {	
+                'secondary-single-assessment-puf': {
+                    text: 'Elm',
+                    labelText: 'Qu',
+                    enum: 'SINGLE_ASSESSMENT_PUF'
+                },	
                 'secondary-single-assessment-cite': {
-                    text: 'CITE',
+                    text: 'QuAD CITE',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_CITE'
                 },
@@ -596,11 +606,7 @@ export default {
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_TDX'
                 },
-                'secondary-single-assessment-puf': {
-                    text: 'Elm',
-                    labelText: 'Qu',
-                    enum: 'SINGLE_ASSESSMENT_PUF'
-                },
+                
                 'secondary-single-assessment-learnosity': {
                     text: 'Learnosity',
                     labelText: 'Qu',
@@ -612,8 +618,13 @@ export default {
             text: 'Assessment Slate',
             enum: '',		
             subtype: {		
+                'secondary-assessment-puf' : {
+                    text: 'ELM',		
+                    labelText: 'As',
+                    enum: 'ELEMENT_ASSESSMENT'	
+                },
                 'secondary-assessment-cite': {		
-                    text: 'CITE',		
+                    text: 'QuAd CITE',		
                     labelText: 'As',
                     enum: 'ELEMENT_ASSESSMENT'
                 },		
@@ -622,11 +633,7 @@ export default {
                     labelText: 'As',
                     enum: 'ELEMENT_ASSESSMENT'		
                 },
-                'secondary-assessment-puf' : {
-                    text: 'ELM',		
-                    labelText: 'As',
-                    enum: 'ELEMENT_ASSESSMENT'	
-                },
+                
                 'secondary-assessment-learnosity' : {
                     text: 'LEARNOSITY',		
                     labelText: 'As',
@@ -859,6 +866,18 @@ export default {
                     text: 'Text width 50/50%',
                     labelText: '2C',
                     enum: 'TEXT_WIDTH_50_50'
+                }
+            }		
+        },
+        'primary-multicolumn-3c': {		
+            text: '3 Column',
+            toolbar: [],
+            enum: 'MULTI_COLUMN',		
+            subtype: {		
+                'secondary-multicolumn-3c-wider': {
+                    text: 'Wider than text width 33/33/33%',
+                    labelText: '3C',
+                    enum: 'WIDER_33_33_33'
                 }
             }		
         },
