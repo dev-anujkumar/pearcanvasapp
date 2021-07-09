@@ -102,21 +102,6 @@ jest.mock('../../src/js/utils.js', () => ({
     removeBOM: jest.fn()
 })
 )
-jest.mock('../../src/js/c2_media_module.js', () => {
-    return {
-        c2MediaModule: {
-            productLinkOnsaveCallBack: (data, cb) => {
-                cb(data, mockEditor, mockImageArgs);
-            },
-            AddanAssetCallBack: (data, cb) => {
-                cb(data, mockEditor, mockImageArgs);
-            },
-            onLaunchAddAnAsset: (cb) => {
-                cb()
-            }
-        }
-    }
-});
 describe('Testing TinyMceUtility', () => {
     it('Test - handleC2MediaClick - List Element', () => {
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
@@ -206,21 +191,6 @@ describe('Testing TinyMceUtility', () => {
 })
 xdescribe('Testing TinyMceUtility', () => {
 
-    jest.mock('../../src/js/c2_media_module.js', () => {
-        return {
-            c2MediaModule: {
-                productLinkOnsaveCallBack: (data, cb) => {
-                    cb(data, mockEditor, mockImageArgs);
-                },
-                AddanAssetCallBack: (data, cb) => {
-                    cb(mockImgData, mockEditor, mockImageArgs);
-                },
-                onLaunchAddAnAsset: (cb) => {
-                    cb()
-                }
-            }
-        }
-    });
     config.alfrescoMetaData = {
         alfresco: {
             'path': 'test',
@@ -247,22 +217,6 @@ xdescribe('Testing TinyMceUtility', () => {
     });
 })
 xdescribe('Testing TinyMceUtility', () => {
-
-    jest.mock('../../src/js/c2_media_module.js', () => {
-        return {
-            c2MediaModule: {
-                productLinkOnsaveCallBack: (data, cb) => {
-                    cb(data, mockEditor, mockImageArgs);
-                },
-                AddanAssetCallBack: (data, cb) => {
-                    cb(mockImgData, mockEditor, mockImageArgs);
-                },
-                onLaunchAddAnAsset: (cb) => {
-                    cb()
-                }
-            }
-        }
-    });
     config.alfrescoMetaData = {
         alfresco: {
             'path': 'test',
