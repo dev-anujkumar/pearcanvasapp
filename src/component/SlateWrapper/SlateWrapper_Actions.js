@@ -909,6 +909,14 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         if(sectionType) {
             _requestData.content[0].sectionType = sectionType;
             _requestData.content[0].index = index;
+            if(selection?.operationType === "cut") {
+                const isSameSection = asideData?.interactivedata?.[sectionType]?.find(item => {
+                    return (item?.id === selection?.element?.id);
+                })
+                if(isSameSection) {
+                    _requestData.content[0].index = cutIndex;
+                }
+            }
         }
 
         if(selection.operationType.toUpperCase() === "COPY") {
