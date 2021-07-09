@@ -553,7 +553,6 @@ overflow: unset;
   display: flex;
   width: 54%;
   justify-content: space-between;
-  font-family: 'Open Sans';
   font-size: 12px;
   font-style: italic;
   line-height: 1.67;
@@ -566,7 +565,6 @@ overflow: unset;
   justify-content: space-between;
   padding-right: 20px;
   height: 30px;
-  font-family: 'Open Sans';
   font-size: 12px;
   font-weight: 600;
   color: #333333;
@@ -632,9 +630,8 @@ del{
 
 /* added css for callout, footnotes, asset popover color in the popup */
 .calloutOne ins, .calloutTwo ins, .calloutThree ins, .calloutFour ins {
-  text-decoration-line: none !important;
-  color: #F56831 !important;
-  text-decoration: underline dotted
+  color: #a38e86 !important;
+  text-decoration: underline dotted !important
 } 
 
 a.paragraphNumeroUnoFootnote ins{
@@ -648,9 +645,8 @@ a.paragraphNumeroUnoFootnote del{
 } 
 
 .dialog-window.tcm-canvas-popup abbr.Pearson-Component.AssetPopoverTerm ins{
-  text-decoration-line: none !important;
   color: #F56831 !important;
-  text-decoration: underline dotted
+  text-decoration: underline dotted !important
 }
 
 .dialog-window.tcm-canvas-popup strong ins{
