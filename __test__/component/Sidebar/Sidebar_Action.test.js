@@ -1434,55 +1434,100 @@ describe('1 Test convertElement ', () => {
         spyconversionElement.mockClear()
         
     });
-    //it('1.6 Test convertElement - oldElementInfo.primaryOption === "primary-list" ', () => {
-    //    const oldElementData6 = {
-    //        "id":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-    //        "type":"element-authoredtext",
-    //        "subtype":"secondary-paragraph",
-    //        "elementdata":{
-    //            "type":"list",
-    //            startNumber:"2"
-    //        },
-    //        "versionUrn":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-    //        "contentUrn":"urn:pearson:entity:add7ac55-e30f-486f-b5da-2af5955e7a55"
-    //    }
-    //    const newElementData6 = {
-    //        "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-    //        "elementType":"element-authoredtext",
-    //        "primaryOption":"primary-paragraph",
-    //        "secondaryOption":"secondary-list-2",
-    //        "labelText":"P",
-    //        "toolbar":[
-    //            "insertMedia"
-    //        ]
-    //    }
-    //    const oldElementInfo6 = {
-    //        "elementType":"element-authoredtext",
-    //        "primaryOption":"primary-list",
-    //        "secondaryOption":"secondary-list-2",
-    //        "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-    //        "index":0,
-    //        "elementWipType":"element-blockfeature",
-    //        "toolbar":[
-    //            "insertMedia",
-    //            "bold",
-    //            "underline",
-    //            "strikethrough",
-    //            "orderedlist",
-    //            "unorderedlist",
-    //            "glossary",
-    //            "slatetag",
-    //            "alignment"
-    //        ],
-    //        "tag":"BQ"
-    //    }
-    //    let store = mockStore(() => initialState);
-    //    const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
-    //    store.dispatch(sidebarAction.convertElement(oldElementData6, newElementData6, oldElementInfo6, store, ["0"], "",""));
-    //    expect(spyconversionElement).toHaveBeenCalled()
-    //    spyconversionElement.mockClear()
+    it('1.6 Test convertElement - oldElementInfo.primaryOption === "primary-list" ', () => {
+        const oldElementData6 = {
+            "id":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+            "type":"element-authoredtext",
+            "subtype":"secondary-paragraph",
+            "elementdata":{
+                "type":"list",
+                startNumber:"2"
+            },
+            "versionUrn":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+            "contentUrn":"urn:pearson:entity:add7ac55-e30f-486f-b5da-2af5955e7a55"
+        }
+        const newElementData6 = {
+            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+            "elementType":"element-authoredtext",
+            "primaryOption":"primary-paragraph",
+            "secondaryOption":"secondary-paragraph",
+            "labelText":"P",
+            "toolbar":[
+                "insertMedia"
+            ]
+        }
+        const oldElementInfo6 = {
+            "elementType":"element-authoredtext",
+            "primaryOption":"primary-list",
+            "secondaryOption":"secondary-list-2",
+            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+            "index":0,
+            "elementWipType":"element-blockfeature",
+            "toolbar":[
+                "insertMedia",
+                "bold",
+                "underline",
+                "strikethrough",
+                "orderedlist",
+                "unorderedlist",
+                "glossary",
+                "slatetag",
+                "alignment"
+            ],
+            "tag":"BQ"
+        }
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData6, newElementData6, oldElementInfo6, store, ["0"], "",""));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
         
-    //});
+    });
+    it('1.7 Test convertElement - inputPrimaryOptionEnum === outputPrimaryOptionEnum ', () => {
+        const oldElementData = {
+            "id":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+            "type":"element-authoredtext",
+            "subtype":"quote",
+            "versionUrn":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+            "contentUrn":"urn:pearson:entity:add7ac55-e30f-486f-b5da-2af5955e7a55"
+        }
+        const newElementData = {
+            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+            "elementType":"element-authoredtext",
+            "primaryOption":"primary-list",
+            "secondaryOption":"secondary-list-2",
+            "labelText":"P",
+            "toolbar":[
+                "insertMedia"
+            ]
+        }
+        const oldElementInfo = {
+            "elementType":"element-authoredtext",
+            "primaryOption":"primary-list",
+            "secondaryOption":"secondary-list-2",
+            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+            "index":0,
+            "elementWipType":"element-blockfeature",
+            "toolbar":[
+                "insertMedia",
+                "bold",
+                "underline",
+                "strikethrough",
+                "orderedlist",
+                "unorderedlist",
+                "glossary",
+                "slatetag",
+                "alignment"
+            ],
+            "tag":"BQ"
+        }
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"],{ toolbar: ['insertMedia']},"")); 
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+        
+    });
 });
 
 
