@@ -14,7 +14,6 @@ import { hasReviewerRole, getLabelNumberTitleHTML } from '../../constants/utilit
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData, assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
-import {resetElmStore} from '../AssessmentSlateCanvas/elm/Actions/ElmActions.js';
 import { connect } from 'react-redux';
 import { sendDataToIframe } from './../../constants/utility.js';
 import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA } from '../../constants/Element_Constants.js';
@@ -833,7 +832,6 @@ const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
     setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
     assessmentSorting:assessmentSorting,
-    resetElmStore:resetElmStore,
     setNewItemFromElm: setNewItemFromElm,
     fetchAssessmentMetadata: fetchAssessmentMetadata,
     fetchAssessmentVersions: fetchAssessmentVersions,
