@@ -38,13 +38,13 @@ class RenderTCMIcons extends React.Component {
                     <span>{readableTime}</span>
                 </div>
                 <div className="tcmIconContainer">
-                    <span className="btn-element tcmIcon">
+                    <span className="btn-element tcmIcon refresh">
                         {<img src={TcmRefreshIcon} id={(this.props.spinnerStatus) ? "loading" : ""} alt="TcmRefreshIcon" onClick={() => this.props.handleTCM(element)} />}
                     </span>
-                    <span className="btn-element tcmIcon" onClick={(e) => this.handleTCMSPALaunch(e, element.id)}>
+                    <span className="btn-element tcmIcon expand" onClick={(e) => this.handleTCMSPALaunch(e, element.id)}>
                         {<img src={TcmExpandIcon} alt="TcmExpandIcon" />}
                     </span>
-                    <span className="btn-element tcmIcon" onClick={() => this.props.closeTcmPopup()}>
+                    <span className="btn-element tcmIcon close" onClick={() => this.props.closeTcmPopup()}>
                         {<img src={TcmCloseIcon} alt="TcmCloseIcon" />}
                     </span>
                 </div>
