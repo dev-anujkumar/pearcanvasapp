@@ -476,7 +476,7 @@ export const updateNestedList = (element) => {
         treelevel = treelevel + 1;
     }
     if (allOlElement[i] && allOlElement[i].getCss("counter-increment") == 'none') {
-        for (let i = 0; i < liClasses.length; i++) {
+        for (var i = 0; i < liClasses.length; i++) {
             if (liClasses[i] && liClasses[i].indexOf('reset') && liClasses[i].indexOf('reset') !== -1) {
                 lis[i].classList.add("reset");
             }
