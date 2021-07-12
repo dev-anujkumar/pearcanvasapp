@@ -317,7 +317,7 @@ dfn[image-id] sup::after {
     left: 0;
     bottom: 1px;
     margin: 0 auto;
-    padding: 0 2px;
+    padding: 0;
     position: relative;
     background: transparent;
 }
