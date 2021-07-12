@@ -599,7 +599,7 @@ overflow: unset;
     -webkit-transform: rotate(180deg);
   }
 }
-ins{
+ins.diffins{
   background: rgb(153, 230, 103);
   color: rgb(121, 121, 121);
 }
@@ -666,4 +666,7 @@ color: transparent !important;
 }
 span.answerLineContent{
   border-bottom: 1px solid #bcbcbc !important;
+}
+ins.mod{
+  background: rgb(251, 188, 72) !important;
 }
