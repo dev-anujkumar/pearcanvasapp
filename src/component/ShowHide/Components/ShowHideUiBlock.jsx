@@ -2,7 +2,7 @@ import React from 'react';
 import { SHOW_HIDE } from '../../../constants/Element_Constants.js';
 import ElementContainer from '../../ElementContainer/ElementContainer.jsx';
 import { ElementSaprator } from '../../ElementSaprator/ElementSaprator.jsx';
-import { showHideConstants } from '../ShowHide_Helper';
+import { addElementInShowHide, showHideConstants } from '../ShowHide_Helper';
 import SortElement from './SortElement.jsx';
 
 const ShowHideUiBlock = (props) => {
@@ -61,6 +61,11 @@ const ShowHideUiBlock = (props) => {
 			pasteElement = {props.pasteElement}
 			source={SHOW_HIDE}
 			elementSelection = {props?.elementSelection}
+			splithandlerfunction = {addElementInShowHide}
+			sectionType = {sectionType}
+			createShowHideElement = {props?.createShowHideElement}
+			element = {props?.element}
+			showPlayscript = {true}
 		/>
 	}
 

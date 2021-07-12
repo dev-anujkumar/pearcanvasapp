@@ -1,5 +1,5 @@
 import config from '../../config/config.js';
-import { VIDEO, IMAGE, TEXT, TABLE_EDITOR, BLOCKCODE, INTERACTIVE  } from '../SlateWrapper/SlateWrapperConstants.js';
+import { VIDEO, IMAGE, TEXT, TABLE_EDITOR, BLOCKCODE, ELEMENT_DIALOGUE, FIGURE_MML } from '../SlateWrapper/SlateWrapperConstants.js';
 import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const showHideConstants = {
@@ -46,12 +46,12 @@ export const addNestedElements = (index, sectionType, props) => {
 			tooltipDirection: 'left'
 		},{
             buttonType: 'block-text-button',
-            buttonHandler: () => addElementInShowHide(index, sectionType, BLOCKCODE, props),
+            //buttonHandler: () => addElementInShowHide(index, sectionType, BLOCKCODE, props),
             tooltipText: 'Block Text',
             tooltipDirection: 'left'
         },{
             buttonType: 'interactive-elem-button',
-            buttonHandler: () => addElementInShowHide(index, sectionType, INTERACTIVE, props),
+            //buttonHandler: () => addElementInShowHide(index, sectionType, INTERACTIVE, props),
             tooltipText: 'Interactive',
             tooltipDirection: 'left'
         },{
@@ -65,10 +65,6 @@ export const addNestedElements = (index, sectionType, props) => {
 
 /* On Clicking of icons on Seprator Dropdown; */
 export const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
-	/*if (this.checkLockStatus()) {
-	    this.togglePopup(true)
-	    return false
-	}*/
 	if (config.savingInProgress) {
 		return false
 	}
@@ -81,6 +77,7 @@ export const addElementInShowHide = (index, sectionType, type2BAdded, props) => 
             parentUrn
         }
     }
+    type2BAdded = getElementType(type2BAdded);
 	/**
 	* @function createShowHideElement
 	* @description - This function is to create elements inside showhide
@@ -335,4 +332,12 @@ export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeE
         }
     }
     return bodymatter
+}
+/**/
+function getElementType(type2BAdded) {
+    switch(type2BAdded){
+        case "figure-mml-elem": return FIGURE_MML;
+        case "blockcode-elem": return BLOCKCODE;
+        case "element-dialogue": return ELEMENT_DIALOGUE;
+    }
 }

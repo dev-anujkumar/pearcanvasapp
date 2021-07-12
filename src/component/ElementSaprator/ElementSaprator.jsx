@@ -356,19 +356,22 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 }
   
 function typeOfContainerElements(elem, props) {
-    const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction } = props
+    const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction, sectionType } = props
     let newData = containerTypeArray[elem.buttonType];
     /* Do not show Citation Group option if inside Multicolumn  */
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
     if(newData){
-        let data = Object.entries(newData).map(function (num) {
+        return Object.entries(newData).map(function (num) {
+            /* If Showhide Element, different set of params required to create elements inside SH */
+            const splitHandlerList = asideData?.type === "showhide" ? [index, sectionType, num[1], props]
+                : [num[1], index, firstOne, parentUrn, asideData, parentIndex];
             return {
                 buttonType: num[1],
                 text: num[0],
-                buttonHandler: () => splithandlerfunction(num[1], index, firstOne, parentUrn, asideData, parentIndex),
+                buttonHandler: () => splithandlerfunction(...splitHandlerList),
             }
         })
-        return data;
+        //return data;
     }
     else{
         return;
