@@ -35,7 +35,8 @@ export const handleTCM = (element, index) => (dispatch) => {
             if (elemData.elemURN === id) {
                 const elemIndex = [{ index, urn: id }]
                 const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
-                const tcmObject = { isTCMCanvasPopup: true, tcmElemData: tcmData.result[0], elemData: eURN, elementEditor: elemData.latestPendingTransaction?.elementEditor, tcmStatus: elemData.latestAcceptedTransaction ? true : false,spinnerStatus: false}
+                const elemEditorName = elemData.latestPendingTransaction?.elementEditor ? elemData.latestPendingTransaction.elementEditor : elemData.latestAcceptedTransaction?.elementEditor
+                const tcmObject = { isTCMCanvasPopup: true, tcmElemData: tcmData.result[0], elemData: eURN, elementEditor: elemEditorName, tcmStatus: elemData.latestAcceptedTransaction ? true : false,spinnerStatus: false}
                 dispatch({
                     type: LAUNCH_TCM_CANVAS_POPUP,
                     payload: tcmObject,
