@@ -1,5 +1,5 @@
 import config from '../../config/config.js';
-import { VIDEO, IMAGE, TEXT } from '../SlateWrapper/SlateWrapperConstants.js';
+import { VIDEO, IMAGE, TEXT, TABLE_EDITOR, BLOCKCODE, INTERACTIVE  } from '../SlateWrapper/SlateWrapperConstants.js';
 import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const showHideConstants = {
@@ -44,7 +44,22 @@ export const addNestedElements = (index, sectionType, props) => {
 			buttonHandler: () => addElementInShowHide(index, sectionType, VIDEO, props),
 			tooltipText: 'Audio/Video',
 			tooltipDirection: 'left'
-		}
+		},{
+            buttonType: 'block-text-button',
+            buttonHandler: () => addElementInShowHide(index, sectionType, BLOCKCODE, props),
+            tooltipText: 'Block Text',
+            tooltipDirection: 'left'
+        },{
+            buttonType: 'interactive-elem-button',
+            buttonHandler: () => addElementInShowHide(index, sectionType, INTERACTIVE, props),
+            tooltipText: 'Interactive',
+            tooltipDirection: 'left'
+        },{
+            buttonType: 'table-editor-elem-button',
+            buttonHandler: () => addElementInShowHide(index, sectionType, TABLE_EDITOR, props),
+            tooltipText: 'Table',
+            tooltipDirection: 'left'
+        },
 	]
 }
 
