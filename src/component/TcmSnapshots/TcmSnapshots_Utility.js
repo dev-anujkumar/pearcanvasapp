@@ -639,7 +639,7 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
         }
     }
-    else if (defaultKeys.action === 'create' && type == POPUP_ELEMENT && operationType==='copy') {     /** Create Popup */
+    else if ((defaultKeys.action === 'create' && type == POPUP_ELEMENT && operationType==='copy') || (operationType === 'cut' && defaultKeys.action === 'update')) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
         if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
@@ -651,12 +651,6 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
          tcmSnapshotsDeletePopup(snapshotsData, defaultKeys,index,containerElement,type);
         if(defaultKeys.action === 'delete' && type == POPUP_ELEMENT && (metaDataField && formattedTitleField.includes(metaDataField))){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'delete');
-        }
-    }
-    else if(operationType==='cut' && defaultKeys.action === 'update'){
-        tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
-        if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
-            tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
         }
     }
     else if ((type && formattedTitleField.includes(type)) || (metaDataField && formattedTitleField.includes(metaDataField))) { /** Formatted-title */
