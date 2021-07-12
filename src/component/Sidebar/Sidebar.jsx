@@ -215,11 +215,8 @@ class Sidebar extends Component {
         )
     }
     setUpdatedAssessmentType=(value)=>{
-        disableHeader(false);
         showBlocker(false);
-        // showTocBlocker();
-        hideTocBlocker()
-        // hideToc();
+        this.props.showCanvasBlocker(true);
         this.setState({
             updateAssessmentTypePopup: false,
             updateAssessmentType: value,
@@ -229,11 +226,9 @@ class Sidebar extends Component {
     }
 
     handleUpdateAssessmentTypePopup = (value) => {
-        // hideTocBlocker(false);
-        // disableHeader(false);
-        // showBlocker();
-        hideBlocker(true);
-        this.setState({
+        showBlocker(true);
+        this.props.showCanvasBlocker(false);
+            this.setState({
             updateAssessmentTypePopup: false,
             updateAssessmentType: value,
             secondaryValue: "",
