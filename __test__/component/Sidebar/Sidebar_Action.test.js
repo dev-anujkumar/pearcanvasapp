@@ -1373,7 +1373,7 @@ describe('1 Test convertElement ', () => {
         spyconversionElement.mockClear()
         
     });
-it('1.3 Test convertElement - Remove subtype key on conversion from BQ to P/H/LO ', () => {
+    it('1.5 Test convertElement - outputSubTypeEnum !== "DISC" ', () => {
         const oldElementData = {
             "id":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
             "type":"element-authoredtext",
@@ -1381,11 +1381,12 @@ it('1.3 Test convertElement - Remove subtype key on conversion from BQ to P/H/LO
             "schema":"http://schemas.pearson.com/wip-authoring/element/1",
             "elementdata":{
                 "schema":"http://schemas.pearson.com/wip-authoring/blockfeature/1#/definitions/blockfeature",
-                "type":"blockquote",
+                "type":"list",
                 "authoredtext":{
                     "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
                     "text":""
-                }
+                },
+                startNumber:"2"
             },
             "html":{
                 "text":"<blockquote class=\"blockquoteMarginalia\"><p class=\"paragraphNummerEins\"><br></p><p class=\"blockquoteTextCredit\" contenteditable=\"true\" data-placeholder=\"Attribution Text\"></p></blockquote>",
@@ -1400,7 +1401,7 @@ it('1.3 Test convertElement - Remove subtype key on conversion from BQ to P/H/LO
             "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
             "elementType":"element-authoredtext",
             "primaryOption":"primary-list",
-            "secondaryOption":"secondary-paragraph",
+            "secondaryOption":"secondary-list-2",
             "labelText":"P",
             "toolbar":[
                 "insertMedia"
@@ -1409,7 +1410,7 @@ it('1.3 Test convertElement - Remove subtype key on conversion from BQ to P/H/LO
         const oldElementInfo = {
             "elementType":"element-authoredtext",
             "primaryOption":"primary-list",
-            "secondaryOption":"secondary-marginalia",
+            "secondaryOption":"secondary-list-2",
             "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
             "index":0,
             "elementWipType":"element-blockfeature",
@@ -1433,6 +1434,55 @@ it('1.3 Test convertElement - Remove subtype key on conversion from BQ to P/H/LO
         spyconversionElement.mockClear()
         
     });
+    //it('1.6 Test convertElement - oldElementInfo.primaryOption === "primary-list" ', () => {
+    //    const oldElementData6 = {
+    //        "id":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+    //        "type":"element-authoredtext",
+    //        "subtype":"secondary-paragraph",
+    //        "elementdata":{
+    //            "type":"list",
+    //            startNumber:"2"
+    //        },
+    //        "versionUrn":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+    //        "contentUrn":"urn:pearson:entity:add7ac55-e30f-486f-b5da-2af5955e7a55"
+    //    }
+    //    const newElementData6 = {
+    //        "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+    //        "elementType":"element-authoredtext",
+    //        "primaryOption":"primary-paragraph",
+    //        "secondaryOption":"secondary-list-2",
+    //        "labelText":"P",
+    //        "toolbar":[
+    //            "insertMedia"
+    //        ]
+    //    }
+    //    const oldElementInfo6 = {
+    //        "elementType":"element-authoredtext",
+    //        "primaryOption":"primary-list",
+    //        "secondaryOption":"secondary-list-2",
+    //        "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
+    //        "index":0,
+    //        "elementWipType":"element-blockfeature",
+    //        "toolbar":[
+    //            "insertMedia",
+    //            "bold",
+    //            "underline",
+    //            "strikethrough",
+    //            "orderedlist",
+    //            "unorderedlist",
+    //            "glossary",
+    //            "slatetag",
+    //            "alignment"
+    //        ],
+    //        "tag":"BQ"
+    //    }
+    //    let store = mockStore(() => initialState);
+    //    const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+    //    store.dispatch(sidebarAction.convertElement(oldElementData6, newElementData6, oldElementInfo6, store, ["0"], "",""));
+    //    expect(spyconversionElement).toHaveBeenCalled()
+    //    spyconversionElement.mockClear()
+        
+    //});
 });
 
 
