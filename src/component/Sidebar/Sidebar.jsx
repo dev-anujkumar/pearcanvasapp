@@ -233,7 +233,6 @@ class Sidebar extends Component {
             updateAssessmentType: value,
             secondaryValue: "",
             secondaryLabel: ""
-
         })
     }
 
