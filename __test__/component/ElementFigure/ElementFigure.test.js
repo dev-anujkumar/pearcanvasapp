@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import ElementFigure from '../../../src/component/ElementFigure/ElementFigure';
-import { figureImage50TextElementDefault,figureImage50TextElementWithData, mathmlEditorDefault, mathmlEditorWithData,blockCodeEditorDefault,blockCodeEditorWithData } from '../../../fixtures/ElementFigureTestingData.js'
+import { figureImage50TextElementDefault,figureImage50TextElementWithData, mathmlEditorDefault, mathmlEditorWithData,mathImage50TextElementDefault, blockCodeEditorDefault,blockCodeEditorWithData, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData } from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
