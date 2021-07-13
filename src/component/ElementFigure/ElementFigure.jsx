@@ -5,7 +5,6 @@ import TinyMceEditor from "../tinyMceEditor"
 
 // IMPORT - Assets //
 import './../../styles/ElementFigure/ElementFigure.css';
-import { c2MediaModule } from './../../js/c2_media_module';
 import {
     DEFAULT_IMAGE_DATA_SOURCE,
     DEFAULT_IMAGE_SOURCE
@@ -119,7 +118,7 @@ class ElementFigure extends Component {
             
             Object.assign(setFigureData, (Object.keys(scaleMarkerData).length > 0) ? { scaleimage: scaleMarkerData } : null);
 
-            this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, () => {
+            this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId,this.props.asideData, () => {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur()
             })
@@ -152,22 +151,6 @@ class ElementFigure extends Component {
             this.props.saveSelectedAssetData(payloadObj)
             //this.updateAlfrescoSiteUrl(alfrescoData)
         }
-    }
-    /**
-     * @description Open C2 module with predefined Alfresco location
-     * @param {*} locationData alfresco locationData
-     */
-    handleC2ExtendedClick = (locationData) => {
-        let alfrescoLocationData = this.state.alfrescoSiteData
-        alfrescoLocationData.currentAsset = locationData.currentAsset;
-        let data_1 = alfrescoLocationData?.nodeRef ? alfrescoLocationData : locationData;
-        let that = this;
-        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                that.dataFromAlfresco(data);
-            })
-        })
-
     }
     /**
      * @description function will be called on image src add and fetch resources from Alfresco

@@ -61,21 +61,6 @@ const event = {
 	preventDefault: jest.fn()
 }
 jest.mock('axios');
-jest.mock('../../../src/js/c2_media_module.js', () => {
-    return {
-        c2MediaModule: {
-            productLinkOnsaveCallBack: (data, cb) => {
-                cb({desc:"eps media"});
-            },
-            AddanAssetCallBack: (data, cb) => {
-                cb({desc:"eps media"});
-            },
-            onLaunchAddAnAsset: (cb) => {
-                cb()
-            }
-        }
-    }
-});
 jest.mock('../../../src/component/tinyMceEditor', () => {
     return function () {
         return (<div>null</div>)

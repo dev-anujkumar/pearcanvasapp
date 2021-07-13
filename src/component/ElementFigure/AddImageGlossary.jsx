@@ -48,7 +48,8 @@ class AddImageGlossary extends Component {
                         citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName,
                         citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef,
                         elementId: this.props.elementId,
-                        calledFrom: 'GlossaryImage'
+                        calledFrom: 'GlossaryImage',
+                        calledFromImageGlossaryFootnote: this.props.isImageGlossary
                     }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                 }
@@ -60,7 +61,7 @@ class AddImageGlossary extends Component {
         }
         else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId)
+                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.props.isImageGlossary)
             } else {
                 this.props.accessDenied(true)
             }
@@ -68,7 +69,7 @@ class AddImageGlossary extends Component {
 
     }
 
-    handleSiteOptionsDropdown = (alfrescoPath, id) =>{
+    handleSiteOptionsDropdown = (alfrescoPath, id, isImageGlossary) =>{
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
@@ -87,6 +88,7 @@ class AddImageGlossary extends Component {
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
                 id,
+                isImageGlossary
             }
                 that.props.alfrescoPopup(payloadObj)
             })
@@ -95,9 +97,6 @@ class AddImageGlossary extends Component {
             });
     }
 
-    shouldComponentUpdate() {
-        return false;
-    }
 
     openConfirmationBox = (e) => {
         let that = this

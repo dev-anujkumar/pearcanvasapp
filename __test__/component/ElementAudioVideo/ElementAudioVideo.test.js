@@ -4,6 +4,11 @@ import { mount } from 'enzyme';
 import ElementAudioVideo from '../../../src/component/ElementAudioVideo/ElementAudioVideo';
 import config from '../../../src/config/config';
 import { audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault } from '../../../fixtures/ElementAudioVideoTestingData.js'
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
         return (<div>null</div>)
@@ -14,9 +19,20 @@ global.fetch = jest.fn().mockImplementation(() => {
       resolve({json:jest.fn(),id:'urn:pearson134'});
    });
  });
-xdescribe('Testing Element Audio-Video component', () => {
+describe('Testing Element Audio-Video component', () => {
+    let initialState = {
+        alfrescoReducer: {
+            alfrescoAssetData: {},
+            elementId: "urn",
+            alfrescoListOption: [],
+            launchAlfrescoPopup: true,
+            editor: true,
+            Permission: false
+        }
+    }
+    const store = mockStore(initialState);
 
-    it('renders without crashing', () => {
+    xit('renders without crashing', () => {
         let props = {
             model:{},
             index:"" ,
@@ -35,7 +51,7 @@ xdescribe('Testing Element Audio-Video component', () => {
             handleFocus: jest.fn(),
             accessDenied: jest.fn(),
         }
-        const component = mount(<ElementAudioVideo {...props} />)
+        const component = mount(<Provider store={store}><ElementAudioVideo {...props} /></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance(); 
         expect(instance).toBeDefined();
@@ -59,7 +75,7 @@ xdescribe('Testing Element Audio-Video component', () => {
             handleFocus: jest.fn(),
             accessDenied: jest.fn(),
         };
-        let component = mount(<ElementAudioVideo {...props} />);
+        let component = mount(<Provider store={store}><ElementAudioVideo {...props} /></Provider>);
         it('renders properly with default audio SL-type element', () => {        
             expect(component.find('.divAudio .figureAudio .pearson-component.audio')).toHaveLength(1)
            
@@ -97,7 +113,7 @@ xdescribe('Testing Element Audio-Video component', () => {
             handleFocus: jest.fn(),
             accessDenied: jest.fn(),
         };
-        let component = mount(<ElementAudioVideo {...props} />);
+        let component = mount(<Provider store={store}><ElementAudioVideo {...props} /></Provider>);
         it('renders properly with default video SL-type element', () => {
             expect(component.find('.divVideo .figureVideo .pearson-component.video')).toHaveLength(1)
         })
@@ -172,7 +188,7 @@ xdescribe('Testing Element Audio-Video component', () => {
             userCount: 0,
             'x-prsn-user-id': " ",
         }
-        const elementAudioVideo = mount(<ElementAudioVideo {...props}/>);
+        const elementAudioVideo = mount(<Provider store={store}><ElementAudioVideo {...props} /></Provider>);
         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
         it('handleC2MediaClick-default case', () => {
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick') 
@@ -197,7 +213,7 @@ xdescribe('Testing Element Audio-Video component', () => {
                 ]
             };
 
-            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            const elementAudioVideo = mount(<Provider store={store}><ElementAudioVideo {...props} /></Provider>)
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick') 
             let event={
@@ -227,7 +243,7 @@ xdescribe('Testing Element Audio-Video component', () => {
                 accessDenied: jest.fn(),
             };
 
-            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            const elementAudioVideo = mount(<Provider store={store}><ElementAudioVideo {...props} /></Provider>)
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick') 
             let event={
@@ -261,7 +277,7 @@ xdescribe('Testing Element Audio-Video component', () => {
                 accessDenied: jest.fn(),
             };
             config.alfrescoMetaData = {}
-            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            const elementAudioVideo = mount(<Provider store={store}><ElementAudioVideo {...props} /></Provider>)
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick') 
             let event={
@@ -289,7 +305,7 @@ xdescribe('Testing Element Audio-Video component', () => {
                 accessDenied: jest.fn(),
             };
             config.alfrescoMetaData = {}
-            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            const elementAudioVideo = mount(<Provider store={store}><ElementAudioVideo {...props} /></Provider>)
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick') 
             let event={
@@ -306,7 +322,7 @@ xdescribe('Testing Element Audio-Video component', () => {
             spyhandleC2MediaClick.mockClear()
         })
     })
-    describe('Testing dataFromAlfresco function', () => {
+    xdescribe('Testing dataFromAlfresco function', () => {
         let alfrescoPath={
             alfresco:{
                 nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
@@ -366,7 +382,7 @@ xdescribe('Testing Element Audio-Video component', () => {
             sampleLongDescriptionDiv.innerHTML = "long_Description"
             document.body.appendChild(sampleLongDescriptionDiv)
 
-            const elementAudioVideo = mount(<ElementAudioVideo {...props} />)
+            const elementAudioVideo = mount(<Provider store={store}><ElementAudioVideo {...props} /></Provider>)
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
             const spydataFromAlfresco = jest.spyOn(elementAudioVideoInstance, 'dataFromAlfresco')    
             const defaultPath="https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
