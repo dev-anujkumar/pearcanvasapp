@@ -110,15 +110,15 @@ class OpenerElement extends Component {
         disableHeader(false)
         hideTocBlocker()
     }
-    handleC2ExtendedClick = (data_0) => {
-        let data_1 = data_0;
-        let that = this;
-        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                that.dataFromAlfresco(data);
-            })
-        })
-    }
+    // handleC2ExtendedClick = (data_0) => {
+    //     let data_1 = data_0;
+    //     let that = this;
+    //     !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+    //         c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+    //             that.dataFromAlfresco(data);
+    //         })
+    //     })
+    // }
 
     handleSiteOptionsDropdown = (alfrescoPath, id) =>{
         let that = this

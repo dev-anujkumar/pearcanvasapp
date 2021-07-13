@@ -401,8 +401,13 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
     let elementDetails;
     const { wipData, elementId, tag, actionStatus,popupInContainer,slateManifestVersioning } = snapshotsData;
     const { asideData, parentUrn } = containerElement
-    tag.parentTag = asideData && fetchElementsTag(asideData) && asideData?.type !== MULTI_COLUMN ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
-    elementId.parentId = asideData && asideData.id && asideData?.type !== MULTI_COLUMN ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+    tag.parentTag = asideData && fetchElementsTag(asideData) && asideData?.type !== MULTI_COLUMN ? fetchElementsTag(asideData) : fetchElementsTag(wipData);
+    // after slate Versioning delete SB from multicolumn case 
+    if (parentUrn?.multiColumnDetails?.type === 'groupedcontent' && parentUrn?.multiColumnDetails?.columnId) {
+        elementId.parentId = parentUrn?.multiColumnDetails?.columnId;
+    } else {
+        elementId.parentId = asideData && asideData.id && asideData?.type !== MULTI_COLUMN ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+    }
     wipData.contents.bodymatter.map((item) => {
         if (elementType.indexOf(item.type) !== -1) {
             elementId.childId = item.id;

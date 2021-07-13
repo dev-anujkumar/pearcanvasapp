@@ -869,6 +869,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             'figuretype' in selection.element && elmSubtype.indexOf(selection.element.type) >= 0) {
             if(!('html' in selection.element)) {
                 elmHtml = { "title": selection.element.title.text || "" }
+            } else if (!('title' in selection.element.html)) {
+                elmHtml = { 
+                    ...elmHtml,
+                    "title": "" 
+                }
             }
         }
         
