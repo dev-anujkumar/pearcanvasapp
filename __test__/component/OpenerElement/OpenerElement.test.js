@@ -40,6 +40,14 @@ const store = mockStore({
             "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
         ]
     },
+    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    }
 
 });
 
@@ -169,7 +177,7 @@ xdescribe('Testing Opener component with props', () => {
             userCount: 0,
             'x-prsn-user-id': " ",
         }
-        const openerComponent = mount(<OpenerElement {...props} />)
+        const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
         let openerElementInstance =   openerComponent.find('OpenerElement').instance()
         it('HandleC2MediaClick-default case', () => {
             const event = {
@@ -208,7 +216,7 @@ xdescribe('Testing Opener component with props', () => {
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
                 ]
             }
-            const openerComponent = mount(<OpenerElement {...props} />)
+            const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
             let openerElementInstance =   openerComponent.find('OpenerElement').instance()
             config.alfrescoMetaData = alfrescoPath;
             openerElementInstance.setState({
@@ -243,7 +251,7 @@ xdescribe('Testing Opener component with props', () => {
                 accessDenied: jest.fn(),
                 permissions: []
             }
-            const openerComponent = mount(<OpenerElement {...props} />)
+            const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
             let openerElementInstance =   openerComponent.find('OpenerElement').instance()
             config.alfrescoMetaData = alfrescoPath
             const spyhandleC2MediaClick = jest.spyOn(openerElementInstance, 'handleC2MediaClick') 
@@ -272,7 +280,7 @@ xdescribe('Testing Opener component with props', () => {
                 permissions: ["alfresco_crud_access"]
             }
 
-            const openerComponent = mount(<OpenerElement {...props} />)
+            const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
             let openerElementInstance =   openerComponent.find('OpenerElement').instance()
             openerElementInstance.setState({
                 projectMetadata: {}
@@ -306,7 +314,7 @@ xdescribe('Testing Opener component with props', () => {
                 permissions: []
             }
 
-            const openerComponent = mount(<OpenerElement {...props} />)
+            const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
             let openerElementInstance =   openerComponent.find('OpenerElement').instance()
             openerElementInstance.setState({
                 projectMetadata: {}
@@ -467,7 +475,7 @@ xdescribe('Testing Opener component with props', () => {
             "repoInstance": "https://staging.api.pearson.com/content/cmis/uswip-aws",
             "repoName": "AWS US"
         }
-        const openerComponent = mount(<OpenerElement {...props} />)
+        const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
         let openerElementInstance =   openerComponent.find('OpenerElement').instance()
         it('handleC2GlobalCO-default case', () => {
             const event = {
@@ -507,7 +515,7 @@ xdescribe('Testing Opener component with props', () => {
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
                 ]
             }
-            const openerComponent = mount(<OpenerElement {...props} />)
+            const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
             let openerElementInstance =   openerComponent.find('OpenerElement').instance()
             openerElementInstance.forceUpdate();
             openerComponent.update();
@@ -541,7 +549,7 @@ xdescribe('Testing Opener component with props', () => {
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
                 ]
             }
-            const openerComponent = mount(<OpenerElement {...props} />)
+            const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
             let openerElementInstance =   openerComponent.find('OpenerElement').instance()
             config.GLOBAL_CO = globalAlfrescoPath
             const spyhandleC2GlobalCO = jest.spyOn(openerElementInstance, 'handleC2GlobalCO') 
