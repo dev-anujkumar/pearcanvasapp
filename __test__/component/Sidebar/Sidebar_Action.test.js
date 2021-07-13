@@ -1529,6 +1529,23 @@ describe('1 Test convertElement ', () => {
         
     });
 });
+describe('1 Test handleElementConversion  ', () => {
+ 
+    it('1.1 Test handleElementConversion  - Object.keys(store).length < 0; Else Case ', () => {
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+        store.dispatch(sidebarAction.handleElementConversion({}, {}, "", "","")); 
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+    });
+    it('1.1 Test handleElementConversion  - Object.keys(store).length < 0; Else Case ', () => {
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+        store.dispatch(sidebarAction.handleElementConversion({}, {}, "", "","")); 
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+    });
+});
 
 
 //console.log("oldElementData = ",JSON.stringify(oldElementData));
