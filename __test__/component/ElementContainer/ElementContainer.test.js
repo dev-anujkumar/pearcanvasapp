@@ -31,11 +31,6 @@ jest.mock('./../../../src/component/SlateWrapper/PageNumberElement', () => {
 jest.mock('./../../../src/component/ElementSaprator', () => {
     return (<div>null</div>)
 })
-jest.mock('./../../../src/js/c2_media_module', () => {
-    return function (){
-        return (<div>null</div>)
-    }
-})
 jest.mock('./../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),

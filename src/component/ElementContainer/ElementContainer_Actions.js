@@ -216,7 +216,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
     }
 }
 
-export const updateFigureData = (figureData, elementIndex, elementId, cb) => (dispatch, getState) => {
+export const updateFigureData = (figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
         //element,
         index = elementIndex;
@@ -227,7 +227,8 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
     const { asideData } = getState()?.appStore || {};
     const indexes = index?.toString().split('-') || [];
     /* update figure elements in ShowHide */
-    if(asideData?.type === SHOW_HIDE && indexes?.length >= 3) {
+    /* asideDataFromAfrescoMetadata is used for editing figure metadata popup field(alttext, longDescription) inside ShowHide element */
+    if((asideData?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.type === SHOW_HIDE ) && indexes?.length >= 3) {
         /* Get the showhide element object from slate data using indexes */
         const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
         const section = indexOfSectionType(indexes); /* Get the section type */
