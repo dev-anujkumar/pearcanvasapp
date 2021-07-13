@@ -339,5 +339,6 @@ function getElementType(type2BAdded) {
         case "figure-mml-elem": return FIGURE_MML;
         case "blockcode-elem": return BLOCKCODE;
         case "element-dialogue": return ELEMENT_DIALOGUE;
+        default: return type2BAdded;
     }
 }
