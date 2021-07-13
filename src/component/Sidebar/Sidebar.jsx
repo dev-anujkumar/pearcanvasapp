@@ -45,7 +45,6 @@ class Sidebar extends Component {
             syntaxHighlightingToggleValue: syntaxhighlighting,
             showSyntaxHighlightingPopup: false,
             updateAssessmentTypePopup: false,
-            updateAssessmentType:true,
             secondaryValue:'',
             secondaryLabel:'',
             bceNumberStartFrom: startNumber,
@@ -201,8 +200,8 @@ class Sidebar extends Component {
     }
 
     showUpdateAssessmentTypePopup=()=>{
+        this.props.showCanvasBlocker(true);
         showBlocker(true);
-        showTocBlocker();
         return(
             <PopUp
                 togglePopup={this.handleUpdateAssessmentTypePopup}
@@ -216,21 +215,21 @@ class Sidebar extends Component {
     }
     setUpdatedAssessmentType=(value)=>{
         showBlocker(false);
-        this.props.showCanvasBlocker(true);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
         this.setState({
             updateAssessmentTypePopup: false,
-            updateAssessmentType: value,
         })
         this.setSecondary(this.state.secondaryValue,this.state.secondaryLabel);
 
     }
 
     handleUpdateAssessmentTypePopup = (value) => {
-        showBlocker(true);
+        showBlocker(false);
         this.props.showCanvasBlocker(false);
+        hideBlocker();
             this.setState({
             updateAssessmentTypePopup: false,
-            updateAssessmentType: value,
             secondaryValue: "",
             secondaryLabel: ""
         })
@@ -242,21 +241,26 @@ class Sidebar extends Component {
         let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
         if (value === this.state.activeSecondaryOption) {
             this.setState({
-                elementDropdown: '',
-                // podOption:false
+                elementDropdown: ''
             })
             return null;
         }
         this.setState({
-            updateAssessmentTypePopup: true,
-            secondaryValue: value,
-            secondaryLabel: labelText
+            elementDropdown:'',
+            activeSecondaryOption:value,
+            activeLabelText:labelText,
+            podOption:false
         })
-        if (this.state.updateAssessmentType) {
-            return null;
+
+        if (this.props.activeElement.primaryOption === 'primary-single-assessment') {
+            this.setState({
+                updateAssessmentTypePopup: true,
+                secondaryValue: value,
+                secondaryLabel: labelText,
+            });
         }
         else {
-            this.setSecondary(this.state.secondaryValue, this.state.secondaryLabel)
+            this.setSecondary(value, labelText)
         }
     }
 
@@ -724,7 +728,7 @@ class Sidebar extends Component {
                         elementData={this.props.elementData}
                         tcmStatus = {this.props.tcmStatus}
                     />}
-                {this.state.updateAssessmentTypePopup && this.showUpdateAssessmentTypePopup()}
+                {this.state.updateAssessmentTypePopup && this.props.activeElement.primaryOption === 'primary-single-assessment'  && this.showUpdateAssessmentTypePopup()}
             </>
         );
     }
