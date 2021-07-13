@@ -158,7 +158,7 @@ class MultipleColumnContainer extends PureComponent {
             newIndex: event.newDraggableIndex,
             swappedElementData: swappedElementData,
             currentSlateEntityUrn: parentUrn.contentUrn,
-            containerTypeElem: `${this.props.labelText}`,
+            containerTypeElem: "3C",
             columnIndex: parentUrn.columnIndex,
             containerIndex: this.context.index
         }
@@ -182,7 +182,7 @@ class MultipleColumnContainer extends PureComponent {
                 contentUrn: group.contentUrn,
                 elementType: _containerType,
                 mcId: this.context?.element?.id, /* Will be used in tcm snapshot -2c->we */
-                multiColumnType: `${this.props.labelText}` /* Will be used in tcm snapshot -2c->we */
+                multiColumnType: "3C" /* Will be used in tcm snapshot -2c->we */
             }
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
