@@ -103,11 +103,11 @@ jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: ()=>{ return false}
 }))
-jest.mock('../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx', () => {
-    return function () {
-        return (<div className="elm-wrapper">null</div>)
-    }
-})
+// jest.mock('../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx', () => {
+//     return function () {
+//         return (<div className="elm-wrapper">null</div>)
+//     }
+// })
 jest.mock('../../../src/component/AssessmentSlateCanvas/ElmUpdateButton.jsx', () => {
     return function () {
         return (<div>null</div>)
