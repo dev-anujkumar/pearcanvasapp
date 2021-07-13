@@ -60,7 +60,7 @@ class MultipleColumnContainer extends PureComponent {
      */
      renderElement = (_elements, parentUrn, parentIndex) => {
         let columnIndex;
-        for (let element of this.props.threeColumnData) {
+        for (let element of this.props.multipleColumnData) {
             if (element.containerId === parentUrn.mcId) {
                 columnIndex = element.columnIndex;
             }
@@ -268,7 +268,7 @@ class MultipleColumnContainer extends PureComponent {
 
 const mapStateToProps = state => {
     return {
-        threeColumnData: state.appStore.threeColumnData
+        multipleColumnData: state.appStore.multipleColumnData
     }
 };
 

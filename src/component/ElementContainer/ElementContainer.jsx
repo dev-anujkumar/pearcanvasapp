@@ -14,7 +14,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateThreeColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
@@ -1797,7 +1797,7 @@ class ElementContainer extends Component {
     // function to render multiple columns for 3 column container based on bodymatter
     renderMultipleColumnLabels = (element) => {
         let activeColumnLabel = "C1"
-        for (let propsElementObject of this.props.threeColumnData) {
+        for (let propsElementObject of this.props.multipleColumnData) {
             if (propsElementObject.containerId === element.id) {
                 activeColumnLabel = propsElementObject.columnIndex;
             }
@@ -1814,11 +1814,11 @@ class ElementContainer extends Component {
 
     updateColumnValues = (index, element) => {
         let objKey = element.id;
-        let threeColumnObjData = {
+        let multipleColumnObjData = {
             containerId: objKey,
             columnIndex: `C${index + 1}`
         }
-        this.props.updateThreeColumnData(threeColumnObjData, objKey);
+        this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
     }
 
     /**
@@ -2181,8 +2181,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteElementAction: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
             dispatch(deleteElementAction(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
         },
-        updateThreeColumnData: (threeColumnObjData, objKey) => {
-            dispatch(updateThreeColumnData(threeColumnObjData, objKey))
+        updateMultipleColumnData: (multipleColumnObjData, objKey) => {
+            dispatch(updateMultipleColumnData(multipleColumnObjData, objKey))
         },
         storeOldAssetForTCM: (data) => {
             dispatch(storeOldAssetForTCM(data))
@@ -2217,7 +2217,7 @@ const mapStateToProps = (state) => {
         slateLevelData: state.appStore.slateLevelData,
         assessmentReducer: state.assessmentReducer,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
-        threeColumnData: state.appStore.threeColumnData
+        multipleColumnData: state.appStore.multipleColumnData
     }
 }
 

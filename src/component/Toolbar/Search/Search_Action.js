@@ -4,7 +4,7 @@ import { fetchSlateData } from './../../CanvasWrapper/CanvasWrapper_Actions';
 
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../../constants/Search_Constants.js';
 import SLATE_CONSTANTS from '../../ElementSaprator/ElementSepratorConstants';
-import { UPDATE_THREE_COLUMN_INFO } from '../../../constants/Action_Constants';
+import { UPDATE_MULTIPLE_COLUMN_INFO } from '../../../constants/Action_Constants';
 
 export const searchEvent = {
     index: 0,
@@ -76,7 +76,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
                 columnIndex: `C${multiColumnIndex + 1}`
             }
             // BG-4794 | dispatch action to select column by column index
-            dispatch({ type: UPDATE_THREE_COLUMN_INFO, key: parent, payload: multiColumnPayload });
+            dispatch({ type: UPDATE_MULTIPLE_COLUMN_INFO, key: parent, payload: multiColumnPayload });
         }
         dispatch({ type: SET_SEARCH_URN, payload, parent, deeplink, scroll: false, scrollTop: 0 });
     }
