@@ -42,7 +42,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
                         if (item?.type === SLATE_CONSTANTS.MULTI_COLUMN && item?.groupeddata?.bodymatter.length === 3) {
                             item.groupeddata.bodymatter.forEach((column, columnIndex) => {
                                 if (JSON.stringify(column).includes(searchTerm)) {
-                                    multiColumnIndex = columnIndex;
+                                    multiColumnIndex = columnIndex + 1;
                                 }
                             });
                         }
@@ -73,7 +73,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
         if (multiColumnIndex && parent) {
             const multiColumnPayload = {
                 containerId: parent,
-                columnIndex: `C${multiColumnIndex + 1}`
+                columnIndex: `C${multiColumnIndex}`
             }
             // BG-4794 | dispatch action to select column by column index
             dispatch({ type: UPDATE_THREE_COLUMN_INFO, key: parent, payload: multiColumnPayload });

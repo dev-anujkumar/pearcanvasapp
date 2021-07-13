@@ -824,8 +824,11 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
     });
 }
 
-const fetchContainerData = (entityURN,manifestURN) => {
+const fetchContainerData = (entityURN, manifestURN, isPopup) => {
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`;
+    if (isPopup) {
+        apiUrl = `${apiUrl}?metadata=true`
+    }
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
@@ -909,6 +912,14 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         if(sectionType) {
             _requestData.content[0].sectionType = sectionType;
             _requestData.content[0].index = index;
+            if(selection?.operationType === "cut") {
+                const isSameSection = asideData?.interactivedata?.[sectionType]?.find(item => {
+                    return (item?.id === selection?.element?.id);
+                })
+                if(isSameSection) {
+                    _requestData.content[0].index = cutIndex;
+                }
+            }
         }
 
         if(selection.operationType.toUpperCase() === "COPY") {
@@ -974,7 +985,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
 
                 // Condition to check whether any conatiner element got copy and paste. Fetch new conatiner data for the same.
                 if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
-                    let response =  await fetchContainerData(_requestData.content[0].contentUrn,_requestData.content[0].id);
+                    let isPopup;
+                    if (_requestData?.content[0]?.type === 'popup') {
+                        isPopup = true
+                    }
+                    let response =  await fetchContainerData(_requestData.content[0].contentUrn,_requestData.content[0].id,isPopup);
                     responseData = [response.data[_requestData.content[0].id]]
                  }
 
