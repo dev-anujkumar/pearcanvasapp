@@ -625,6 +625,52 @@ export default {
 		fromToolbar: {},
 		showHideObj: undefined
 	},
+	testcase6: {
+		initState: {
+			appStore: {
+				activeElement: { id: "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d90" },
+			}
+		},
+		store: {},
+		attribute: "type",
+		value: 'Showhide'
+	},
+	testcase7: {
+		oldElementData: {
+			"id":"urn:pearson:work:fd5d9748-6928-43ed-85b7-48c1a4a42bb4",
+			"type":"figure",
+			"figuretype":"assessment",
+			"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+			"title":{
+				"text":"text"
+			},
+			"figuredata":{
+				id:"urn:pearson:work:fd5d9748-6928-43ed-85b7-48c1a4a4dsd",
+				"type":"element-assessment",
+				"elementdata":{
+					posterimage:"posterimage"
+				}
+			},
+			"html":{
+				"title":"<p></p>"
+			},
+			"versionUrn":"urn:pearson:work:fd5d9748-6928-43ed-85b7-48c1a4a42bb4",
+			"contentUrn":"urn:pearson:entity:293e9be5-9eb2-481b-b1fa-1e20d4284555",
+			"status":"wip",
+			"index":"0",
+			"inputType":"SINGLE_ASSESSMENT",
+			"inputSubType":"SINGLE_ASSESSMENT_CITE",
+			"slateVersionUrn":"urn:pearson:manifest:4b84d144-cf62-46b6-852f-90021aad81f7",
+			"elementParentEntityUrn":"urn:pearson:entity:262c355e-15f1-441c-9e89-f21eff3f5699",
+			"projectUrn":"urn:pearson:distributable:5966ada2-0e9e-4113-b2dc-9a88fe1706dd",
+			"elementdata":{
+				"text":null
+			},
+			"tcm":false
+		},
+        newElementData: {"elementId":"urn:pearson:work:fd5d9748-6928-43ed-85b7-48c1a4a42bb4","elementType":"element-assessment","primaryOption":"primary-single-assessment","secondaryOption":"secondary-single-assessment-puf","labelText":"Qu","toolbar":["insertMedia","bold","italic","underline","strikethrough","clearformatting","increaseindent","decreaseindent","footnote","glossary","orderedlist","unorderedlist","mathml","chemml","inlinecode","superscript","subscript","specialcharactor","undo","redo","crossLinkingIcon","assetpopover","slatetag","alignment","calloutIcon"]},
+        oldElementInfo: {"elementType":"element-assessment","primaryOption":"primary-single-assessment","secondaryOption":"secondary-single-assessment-cite","usageType":"Diagnostic","elementId":"urn:pearson:work:fd5d9748-6928-43ed-85b7-48c1a4a42bb4","index":0,"elementWipType":"figure","toolbar":["insertMedia","bold","italic","underline","strikethrough","clearformatting","increaseindent","decreaseindent","footnote","glossary","orderedlist","unorderedlist","mathml","chemml","inlinecode","superscript","subscript","specialcharactor","undo","redo","crossLinkingIcon","assetpopover","slatetag","alignment","calloutIcon"],"tag":"Qu"}
+	}
 }
 
 
