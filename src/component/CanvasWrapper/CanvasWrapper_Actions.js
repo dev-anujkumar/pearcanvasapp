@@ -335,7 +335,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     })
                 }
             }).catch(error => {
-                console.log("API Failed!!")
+                console.log("Get LOB permissions API Failed!!")
             })
 
             // call api to get usage types
@@ -391,7 +391,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             }) 
         }
     }).catch(error => {
-        console.log("cannnow proceed")
+        console.log("API Failed!!!")
     })  
 }
 
