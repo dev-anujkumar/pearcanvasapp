@@ -28,11 +28,11 @@ jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn()
 }))
-jest.mock('../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx', () => {
-    return function () {
-        return (<div className="elm-wrapper">null</div>)
-    }
-})
+// jest.mock('../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx', () => {
+//     return function () {
+//         return (<div className="elm-wrapper">null</div>)
+//     }
+// })
 jest.mock('../../../src/component/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx', () => {
     return function () {
         return (<div className="cite-wrapper">null</div>)

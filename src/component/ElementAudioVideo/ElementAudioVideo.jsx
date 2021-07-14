@@ -221,7 +221,7 @@ class ElementAudioVideo extends Component {
             if (figureData && ((figureData.clipinfo && figureData.clipinfo.clipid === "") || (figureData.clipinfo === null))) {
                 delete figureData.clipinfo
             }
-            this.props.updateFigureData(figureData, this.props.index,this.props.elementId, ()=>{
+            this.props.updateFigureData(figureData, this.props.index,this.props.elementId, this.props.asideData, ()=>{
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur(true)
             })
