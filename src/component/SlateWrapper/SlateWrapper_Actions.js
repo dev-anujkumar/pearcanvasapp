@@ -1012,7 +1012,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     parentUrn,
                     asideData,
                     poetryData,
-                    slateEntityUrn, index2ShowHide
+                    slateEntityUrn, index2ShowHide, pasteSHIndex: _requestData?.content[0]?.index
                 };
                 await onPasteSuccess(pasteSuccessArgs)
                 if (responseData[0].elementdata?.type === "blockquote") {  

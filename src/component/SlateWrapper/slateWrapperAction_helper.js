@@ -24,7 +24,7 @@ export const onPasteSuccess = async (params) => {
         parentUrn,
         asideData,
         poetryData,
-        slateEntityUrn, index2ShowHide
+        slateEntityUrn, index2ShowHide, pasteSHIndex
     } = params
     
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -158,14 +158,14 @@ export const onPasteSuccess = async (params) => {
         try {
             currentSlateData?.contents?.bodymatter?.map(item => {
                 if(item?.id === manifestUrn) {
-                    pasteInShowhide(item, responseData, index);
+                    pasteInShowhide(item, responseData, pasteSHIndex);
                 } else if(item?.type === 'element-aside') {
-                    pasteShowhideInAside(item, manifestUrn, responseData, index)
+                    pasteShowhideInAside(item, manifestUrn, responseData, pasteSHIndex)
                 } else if(item?.type === "groupedcontent") {
                     item?.groupeddata?.bodymatter?.map(item_4 => {
                         item_4?.groupdata?.bodymatter?.map(item_5 => {
                             if(item_5?.type === 'element-aside') {
-                                pasteShowhideInAside(item_5, manifestUrn, responseData, index);
+                                pasteShowhideInAside(item_5, manifestUrn, responseData, pasteSHIndex);
                             }
                         })
                     })
