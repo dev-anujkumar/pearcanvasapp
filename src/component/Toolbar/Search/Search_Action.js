@@ -38,8 +38,9 @@ export const getContainerData = (searchTerm, deeplink = false) => {
                 let totalCount = 0;
                 bodymatter.forEach((item, index) => {
                     if((JSON.stringify(item)).indexOf(searchTerm) >= 0) {
-                        // BG-4794 | Checking for 3 column to get column index
-                        if (item?.type === SLATE_CONSTANTS.MULTI_COLUMN && item?.groupeddata?.bodymatter.length === 3) {
+                        // BG-4794 | Checking for multi column to get column index
+                        let columnLengthArr = [2, 3];
+                        if (item?.type === SLATE_CONSTANTS.MULTI_COLUMN && columnLengthArr.includes(item?.groupeddata?.bodymatter.length)) {
                             item.groupeddata.bodymatter.forEach((column, columnIndex) => {
                                 if (JSON.stringify(column).includes(searchTerm)) {
                                     multiColumnIndex = columnIndex + 1;
