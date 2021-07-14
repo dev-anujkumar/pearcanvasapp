@@ -401,7 +401,7 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
     let elementDetails;
     const { wipData, elementId, tag, actionStatus,popupInContainer,slateManifestVersioning } = snapshotsData;
     const { asideData, parentUrn } = containerElement
-    tag.parentTag = asideData && fetchElementsTag(asideData) && asideData?.type !== MULTI_COLUMN ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
+    tag.parentTag = asideData && fetchElementsTag(asideData) && asideData?.type !== MULTI_COLUMN ? fetchElementsTag(asideData) : fetchElementsTag(wipData);
     elementId.parentId = asideData && asideData.id && asideData?.type !== MULTI_COLUMN ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     wipData.contents.bodymatter.map((item) => {
         if (elementType.indexOf(item.type) !== -1) {
@@ -1339,7 +1339,7 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
  * @param {Object} currentSlateData current Slate data 
  * @returns {Object} Updated Container Element with latest Manifest Urns
 */
-export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData) => {
+export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData, actionType, deleteElementType) => {
     /** latest version for WE/CE/PE/AS*/
     if (versionStatus && versionStatus.parentStatus && versionStatus.parentStatus === "approved") {
         let contentUrn = containerElement.asideData ? containerElement.asideData.contentUrn : containerElement.poetryData ? containerElement.poetryData.contentUrn : containerElement.parentUrn ? containerElement.parentUrn.contentUrn : ""
@@ -1361,10 +1361,11 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         }
     }
     /** latest version for SB*/
-    if (versionStatus && versionStatus.childStatus && versionStatus.childStatus === "approved") {
+    if ((versionStatus && versionStatus.childStatus && versionStatus.childStatus === "approved") || (actionType === 'delete' && deleteElementType === 'manifest')) {
         let newSectionManifest = await getLatestVersion(containerElement.parentUrn.contentUrn);
         containerElement.parentUrn.manifestUrn = newSectionManifest ? newSectionManifest : containerElement.parentUrn.manifestUrn
     }
+
     if(versionStatus && versionStatus.popupStatus && versionStatus.popupStatus === "approved"){
         let updatedPopupUrn = containerElement && containerElement.parentElement && containerElement.parentElement.contentUrn ? containerElement.parentElement.contentUrn : "";
         if(updatedPopupUrn){
