@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import ElementContainerType from './../../../src/component/ElementContainerType/ElementContainerType';
+import { blocktextList, interactiveList } from "../../../fixtures/ElementContainerTypeTestingData";
 let props = {
     closeDropDown: jest.fn(),
     data: [
@@ -28,52 +29,6 @@ let props = {
 
 
 }
-
-const blocktextList = [
-    {
-        "buttonType": "figure-mml-elem",
-        "text": "Block Math"
-    },
-    {
-        "buttonType": "blockcode-elem",
-        "text": "Block Code"
-    },
-    { 
-        "buttonType": "poetry-elem",
-        "text": "Block Poetry" 
-    },
-    { 
-        "buttonType": "element-dialogue",
-        "text": "Playscript" 
-    }
-];
-
-const interactiveList = [
-    { 
-        "buttonType": "elm-interactive-elem", 
-        "text": "Add Elm Interactive" 
-    },
-    { 
-        "buttonType": "interactive-elem", 
-        "text": "Add Quad Interactive" 
-    },
-    { 
-        "buttonType": "smartlink-elem", 
-        "text": "Add Smart Link" 
-    },
-    { 
-        "buttonType": "show-hide-elem", 
-        "text": "Add Show Hide" 
-    },
-    { 
-        "buttonType": "popup-elem", 
-        "text": "Add Pop Up" 
-    },
-    { 
-        "buttonType": "element-discussion", 
-        "text": "Add Discussion" 
-    }
-];
 
 let wrapper = mount(<ElementContainerType  {...props} />)
 describe('ContainerType Component', () => {
