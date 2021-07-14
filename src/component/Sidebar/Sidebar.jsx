@@ -12,13 +12,14 @@ import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE } from '../SlateWrapper/SlateWrapperConstants.js';
-import { showBlocker, hideBlocker, showTocBlocker,disableHeader, hideTocBlocker} from '../../js/toggleLoader';
+import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
+import {WARNING} from '../ElementContainer/ElementConstants';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -201,12 +202,13 @@ class Sidebar extends Component {
 
     showUpdateAssessmentTypePopup=()=>{
         this.props.showCanvasBlocker(true);
+        hideToc();
         showBlocker(true);
         return(
             <PopUp
                 togglePopup={this.handleUpdateAssessmentTypePopup}
                 dialogText={CHANGE_ASSESSMENT_TYPE}
-                warningHeaderText={`Warning`}
+                warningHeaderText={WARNING}
                 lOPopupClass="lo-warning-txt"
                 AssessmentPopup={true}
                 agree={this.setUpdatedAssessmentType}

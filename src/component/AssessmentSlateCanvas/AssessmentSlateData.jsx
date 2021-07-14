@@ -19,6 +19,7 @@ import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } f
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
 import { handlePostMsgOnAddAssess, handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling';
+import {WARNING} from '../ElementContainer/ElementConstants';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -39,8 +40,7 @@ class AssessmentSlateData extends Component {
             updateAssessmentTypePopup: false,
             updatedAssessmentType:'',
             showUpdatePopup:false,
-            isAssessmentTypeUpdate:false,
-            isUpdateFinal:true,
+            isUpdateFinal:false,
             openUsageDropdown:false,
             openAssessmentDropdown:false
         }
@@ -187,6 +187,9 @@ class AssessmentSlateData extends Component {
     */
     addCiteTdxAssessment = (citeTdxObj) => {
         this.props.addCiteTdxAssessment(citeTdxObj, this.state.activeAssessmentType);
+        this.setState({
+            isUpdateFinal: false
+        })
     }
 
     /*** @description - This function is to close CITE/TDX PopUp */
@@ -215,6 +218,9 @@ class AssessmentSlateData extends Component {
         }
         this.props.addPufAssessment(dataToSend, this.state.activeAssessmentType, 'insert');
         const elmData = { targetId: pufObj.id }
+        this.setState({
+            isUpdateFinal: false
+        })
         this.props.checkElmAssessmentStatus('assessment', 'fromAddElm', elmData, {});
         handlePostMsgOnAddAssess("", "", "", "remove","");
     }
@@ -321,6 +327,9 @@ class AssessmentSlateData extends Component {
     linkLearningApp = (selectedLearningType) => {
         this.props.handleCanvasBlocker.ShowLoader(true);
         this.props.updateAssessment(selectedLearningType.learningtemplateUrn, "", selectedLearningType.label.en, LEARNING_TEMPLATE, this.state.activeAssessmentUsageType, 'insert', selectedLearningType.learningsystem, selectedLearningType.templateid, selectedLearningType.type);
+        this.setState({
+            isUpdateFinal: false
+        })
         this.props.closeLtAction();
     }
 
@@ -429,31 +438,29 @@ class AssessmentSlateData extends Component {
      * @param type - the type of assessment selected from the dropdown
      * @param e - event triggered 
     */
-    handleAssessmentTypeChange = (type, e) => {  //for handling asssessmentType dropdown
-        if (type === assessmentFormats[this.state.activeAssessmentType]) { // if same type of assessmentType
-            this.setState({ 
-            openAssessmentDropdown: false,
-            })
-            return null;
-        }
-        this.setState({
-            updatedAssessmentType: type,
-        })
-        if (this.props.assessmentSlateObj.assessmentId !== '') { //for handling popup only when we are in final 
+    handleAssessmentTypeChange = (type, e, calledFrom) => {
+        e?.preventDefault();
+        if (calledFrom === 'updateAssessmentFormat') {
+            if (type === assessmentFormats[this.state.activeAssessmentType]) {
+                this.setState({
+                    openAssessmentDropdown: false,
+                })
+                return null;
+            }
             this.setState({
+                updatedAssessmentType: type,
                 updateAssessmentTypePopup: true
             })
-            return null;
-        }else{    
-            this.setState({
-                isUpdateFinal: false,
-                isAssessmentTypeUpdate:false
-            })
         }
-        this.setUpdateAssessmentType(type); //updating AssessmentType from new Slate
+        else {
+            this.setUpdateAssessmentType(type);
+        }
     }
 
-    setUpdateAssessmentType=(type)=>{ //method for updating AssessmentType
+    /**@description - This Function sets the AssessmentType 
+     * * @param type - the type of assessment selected from the dropdown
+    */
+    setUpdateAssessmentType=(type)=>{
         this.setState({
             activeAssessmentType: Object.keys(assessmentFormats).find(key => assessmentFormats[key] === type),
             openAssessmentDropdown:false,
@@ -462,7 +469,7 @@ class AssessmentSlateData extends Component {
     }
 
     /*** @description - This function is to select the Assessment type from dropdown*/
-    selectAssessmentType = () => {
+    selectAssessmentType = (calledFrom) => {
         if (hasReviewerRole()) {
             return true
         }
@@ -474,7 +481,7 @@ class AssessmentSlateData extends Component {
             if(type === FULL_ASSESSMENT_LEARNOSITY){
                 addClass='disabled'
             }
-               return <li key={i} className= {`slate_assessment_dropdown_name ${addClass}`} onClick={(e) => this.handleAssessmentTypeChange(type, e)}>{type}</li>
+               return <li key={i} className= {`slate_assessment_dropdown_name ${addClass}`} onClick={(e) => this.handleAssessmentTypeChange(type, e, calledFrom)}>{type}</li>
             })
         }
         return assessmentTypeValue
@@ -544,7 +551,7 @@ class AssessmentSlateData extends Component {
         } else if (changeLearningData && activeAssessmentType === LEARNING_TEMPLATE) {
             return <LearningTool closePopUp={this.closeLTLAPopUp} linkLearningApp={this.linkLearningApp} closelearningPopup={this.closelearningPopup} />
         } else if (getAssessmentData && getAssessmentDataPopup === false && changeLearningData === false) {
-            assessmentSlateJSX = this.state.isAssessmentTypeUpdate && this.state.isUpdateFinal ? this.showNewAssessmentSlate( this.state.activeAssessmentType,this.state.activeAssessmentUsageType) : this.showFinalAssessmentSlate(slatePlaceholder, activeAssessmentType, assessmentSlateObj, activeAssessmentUsageType);
+            assessmentSlateJSX = this.state.isUpdateFinal ? this.showNewAssessmentSlate( this.state.activeAssessmentType,this.state.activeAssessmentUsageType) : this.showFinalAssessmentSlate(slatePlaceholder, activeAssessmentType, assessmentSlateObj, activeAssessmentUsageType);
         } else if (getAssessmentData && (getAssessmentDataPopup === true || learningToolStatus)) {
             assessmentSlateJSX = this.showSuccessMessage(slatePlaceholder.title,activeAssessmentUsageType);
         } else {
@@ -606,7 +613,7 @@ class AssessmentSlateData extends Component {
             <PopUp
                 togglePopup={this.handleChangeAssessmentPopup}
                 dialogText={UPDATE_ASSESSMENT_TYPE}
-                warningHeaderText={`Warning`}
+                warningHeaderText= {WARNING}
                 lOPopupClass="lo-warning-txt"
                 AssessmentPopup={true}
                 agree={this.setChangeAssessmentType}
@@ -621,18 +628,28 @@ class AssessmentSlateData extends Component {
         })
     }
 
-    setChangeAssessmentType = () => { //on clicking yes in update popup 
+    setChangeAssessmentType = () => {
         this.showCanvasBlocker(false);
         this.setState({
             updateAssessmentTypePopup: false,
-            isAssessmentTypeUpdate:false // for directing to final slate
         })
-        this.props.updateAssessment();  
-        console.log("assessmentid",this.props.assessmentSlateObj.assessmentId);
-        this.setUpdateAssessmentType(this.state.updatedAssessmentType);  // updated assessment type from final Slate
+        const newASFormat = Object.keys(assessmentFormats).find(key => assessmentFormats[key] === this.state.updatedAssessmentType)
+        let dataToSend = {
+            format: newASFormat,
+            usageType: this.state.activeAssessmentUsageType,
+            calledFrom: "updateAssessmentFormat"
+        }
+        console.log("dataToSend",dataToSend);
+        console.log("dataToSend",dataToSend);
+        this.props.handleAssessmentBlur(dataToSend, () => {
+            this.setState({
+                isUpdateFinal: true
+            })
+        });
+        this.setUpdateAssessmentType(this.state.updatedAssessmentType);
     }
 
-    setAssessmentType = (assessmentUsageType, assessmentType) => {
+    setAssessmentType = (assessmentUsageType, assessmentType, calledFrom) => {
         let assessmentSelectionType = <><div className={`assessment-parent ${assessmentUsageType ? '' : 'disabled'}`}>
             <div className="assessment-label">Select assessment type</div>
             <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
@@ -641,7 +658,7 @@ class AssessmentSlateData extends Component {
                 <div className="clr"></div>
                 {(!(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName)) && this.state.openAssessmentDropdown &&
                     <ul className="slate_assessment_type_dropdown_options" ref={this.dropdownRef}>
-                        {this.selectAssessmentType()}
+                    {this.selectAssessmentType(calledFrom)}
                     </ul>
                 }
             </div>
@@ -654,20 +671,7 @@ class AssessmentSlateData extends Component {
     showNewAssessmentSlate = (assessmentType, assessmentUsageType) => {
         let newAssessmentSlate = <div className="slate_initial_selection">
             {this.setUsageType(assessmentUsageType)}
-            {this.setAssessmentType(assessmentUsageType,assessmentType)}
-            {/* <div className={`assessment-parent ${assessmentUsageType ? '' : 'disabled'}`}>
-                <div className="assessment-label">Select assessment type</div>
-                <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
-                    <span className="slate_assessment_dropdown_label" title={assessmentType ? assessmentFormats[assessmentType] : ""}>{assessmentType ? assessmentFormats[assessmentType] : "Select"}</span>
-                   {this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? "" : <span className="slate_assessment_dropdown_image"></span>}
-                    <div className="clr"></div>
-                    {(!(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName)) && this.state.openAssessmentDropdown &&
-                        <ul className="slate_assessment_type_dropdown_options" ref={this.dropdownRef}>
-                            {this.selectAssessmentType()}
-                        </ul>
-                    }
-                </div>
-            </div> */}
+            {this.setAssessmentType(assessmentUsageType,assessmentType,"addASFormat")}
             <div className="clr"></div>
             <div className={`slate_assessment_type_button ${assessmentType && assessmentUsageType ? '' : 'disabled'}`} onClick={(e) => this.mainAddAssessment(e, assessmentType)}>Add Assessment</div>
             <div className="clr"></div>
@@ -698,8 +702,7 @@ class AssessmentSlateData extends Component {
                 </div>
             </div>
             {this.setUsageType(assessmentUsageType)}
-            {this.setAssessmentType(assessmentUsageType, assessmentType)}
-            <div className={`slate_assessment_type_button ${assessmentType && assessmentUsageType ? '' : 'disabled'}`} onClick={(e) => this.mainAddAssessment(e, assessmentType)}>Update Assessment</div>
+            {this.setAssessmentType(assessmentUsageType, assessmentType,'updateAssessmentFormat')}
             {(this.state.activeAssessmentType == PUF || this.state.activeAssessmentType == LEARNOSITY) && this.showElmVersionStatus()}
         </div>
         return assessmentSlate;
