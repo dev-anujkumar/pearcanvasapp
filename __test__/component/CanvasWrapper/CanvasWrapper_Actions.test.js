@@ -1,5 +1,5 @@
 /**************************Import Plugins**************************/
-import axios,{ mockAxios } from 'axios';
+import axios from 'axios';
 import { JSDOM } from 'jsdom'
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("getElementById")) {
@@ -24,16 +24,12 @@ import {
     SET_PARENT_SHOW_DATA,
     SET_PARENT_ASIDE_DATA,
     AUTHORING_ELEMENT_UPDATE,
-    OPEN_POPUP_SLATE,
-    UPDATE_PROJECT_INFO,
-    UPDATE_LOB_PERMISSIONS
+    OPEN_POPUP_SLATE
 } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
 /*************************Import Test Data*************************/
 import { slateTestData } from './mockData.js';
-import { debug } from 'webpack';
-import { response } from 'express';
 /**********************Mock Helper Functions***********************/
 jest.mock('axios');
 jest.mock('../../../src/constants/ga', () => {
