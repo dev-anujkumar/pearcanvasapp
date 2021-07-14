@@ -8,6 +8,8 @@ import slateData from '../../../fixtures/SidebarTestData'
 import activeElementData from './SidebarInitialState';
 import * as sidebarAction from '../../../src/component/Sidebar/Sidebar_Action';
 import config from '../../../src/config/config';
+import testData from "./TestData";
+
 jest.mock('axios');
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn()
@@ -1538,12 +1540,63 @@ describe('1 Test handleElementConversion  ', () => {
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
     });
-    it('1.1 Test handleElementConversion  - Object.keys(store).length < 0; Else Case ', () => {
-        let store = mockStore(() => initialState);
+    it('1.2 Test handleElementConversion  - appStore && appStore.parentUrn ', () => {
+        config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+        const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase1;
+        const storeMock = mockStore(() => initState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
-        store.dispatch(sidebarAction.handleElementConversion({}, {}, "", "","")); 
+        storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
+    });
+    describe('1.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
+        const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase2;
+        it('1.3.1 indexes.length === 4 ', () => {
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        it('1.3.2 indexes.length === 5 ', () => {
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const newActiveElement = { ...activeElement, index: "0-0-0-2-0" }
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, newActiveElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+    });
+    describe('1.4 indexes.forEach(index => {  ', () => {
+        it('1.4.1 bodymatter[index] else case ', () => {
+            const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase3;
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        it('1.4.2 elementData.elementId !== bodymatter[index].id ', () => {
+            const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase4;
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+         it('1.4.3 else ', () => {
+            const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase5;
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
     });
 });
 
