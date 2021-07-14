@@ -55,7 +55,15 @@ const alfresco = {
 }
 
 const mockStore = configureMockStore(middlewares);
-let initialState = {};
+let initialState = {
+	alfrescoReducer: {
+	alfrescoAssetData: {},
+	elementId: "urn",
+	alfrescoListOption: [],
+	launchAlfrescoPopup: true,
+	editor: true,
+	Permission: false
+}};
 const event = {
 	stopPropagation: jest.fn(),
 	preventDefault: jest.fn()
