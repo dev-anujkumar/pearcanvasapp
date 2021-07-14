@@ -1829,6 +1829,106 @@ export const communicationMockData = {
         }
     }
 }
+
+export const slateMockData = {
+    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+        "id": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c",
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+        "type": "popup",
+        "status": "approved",
+        "contents": {
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+            "title": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "Test Slate 3"
+            },
+            "frontmatter": [],
+            "bodymatter": [
+                {
+                    "id": "urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "type": "element-aside",
+                    "subtype": "sidebar",
+                    "designtype": "asideSidebar02",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                        "frontmatter": [],
+                        "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                "type": "element-authoredtext",
+                                "subtype": "",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                },
+                                "comments": false,
+                                "tcm": true,
+                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                            }
+                        ],
+                        "backmatter": []
+                    },
+                    "contents": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                        "frontmatter": [],
+                        "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                                "type": "element-authoredtext",
+                                "subtype": "",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "asdfasdfasdf"
+                                },
+                                "headers": [
+                                    {
+                                        "charStart": 0,
+                                        "charEnd": -1,
+                                        "level": 4
+                                    }
+                                ],
+                                "html": {
+                                    "text": "<h5 class=\"heading5NummerEins\">Heading 5</h5>"
+                                },
+                                "comments": true,
+                                "tcm": true,
+                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                            },
+                            {
+                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0v",
+                                "type": "element-authoredtext",
+                                "subtype": "",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "asdfasdfasdf"
+                                },
+                                "html": {
+                                    "text": "<p class=\"heading1NummerEins\">Heading 1</p>"
+                                },
+                                "comments": true,
+                                "tcm": true,
+                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                            }
+                        ],
+                        "backmatter": []
+                    },
+                    "contentUrn": "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
+                    "versionUrn": "urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7"
+                }]
+        }
+    }
+}
+
 export const GlossaryMockState = {
     "type": "Glossary",
     "popUpStatus": false

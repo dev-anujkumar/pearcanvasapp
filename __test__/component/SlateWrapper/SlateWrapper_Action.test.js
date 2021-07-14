@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import axios from 'axios';
 import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
-import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure } from "../../../fixtures/slateTestingData"
+import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure, slateMockData } from "../../../fixtures/slateTestingData"
 import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE,SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED,SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
 import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2 } from '../../../fixtures/elementAsideData';
@@ -20,6 +20,8 @@ describe('Tests Slate Wrapper Actions', () => {
     let initialState={appStore : {}};
     let store2;
     let initialState2={appStore : {}};
+    let store3;
+    let initialState3={appStore : {}};
     beforeEach(() => {
         initialState = {
             appStore : {
@@ -941,5 +943,126 @@ describe('Tests Slate Wrapper Actions', () => {
         actions.cloneContainer(insertionIndex, manifestUrn)(jest.fn)
         expect(spycloneContainer).toHaveBeenCalled();
     })
+
+    it('createPowerPasteElements action - approved slate', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: slateMockData,
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {},
+                popupSlateData: {
+                    type: "popup"
+                }
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        const spyPowerPasteElement = jest.spyOn(actions, 'createPowerPasteElements');
+        const powerPasteData = [{
+            "html": {
+                "text": `<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+            }
+        }];
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        config.slateEntityURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        const index = 0;
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: [{}, {}] }));
+        await store3.dispatch(actions.createPowerPasteElements(powerPasteData, index)).then(() => {
+            expect(spyPowerPasteElement).toHaveBeenCalled();
+        });
+    })
+
+    it('createPowerPasteElements action - wip slate', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    'urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5': {
+                        ...slateMockData['urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5'],
+                        status: 'wip'
+                    }
+                },
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {},
+                popupSlateData: {
+                    type: "popup"
+                }
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        const spyPowerPasteElement = jest.spyOn(actions, 'createPowerPasteElements');
+        const powerPasteData = [{
+            "html": {
+                "text": `<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+            }
+        }];
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        config.slateEntityURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        const index = 0;
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: [{}, {}] }));
+        await store3.dispatch(actions.createPowerPasteElements(powerPasteData, index)).then(() => {
+            expect(spyPowerPasteElement).toHaveBeenCalled();
+        });
+    })
+
+    it('createPowerPasteElements action - catch block', async () => {
+        const spyPowerPasteElement = jest.spyOn(actions, 'createPowerPasteElements');
+        const powerPasteData = [{
+            "html": {
+                "text": `<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+            }
+        }];
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        config.slateEntityURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        const index = 0;
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: [{}, {}] }));
+        await store2.dispatch(actions.createPowerPasteElements(powerPasteData, index)).then(() => {
+            expect(spyPowerPasteElement).toHaveBeenCalled();
+        });
+    })
+
+    it('wirisAltTextPopup action', () => {
+        store2.dispatch(actions.wirisAltTextPopup({}))
+        const { type } = store2.getActions()[0];
+        expect(type).toBe('WIRIS_ALT_TEXT_POPUP');
+    });
      
+    it('pageData action', () => {
+        store2.dispatch(actions.pageData());
+        const { type } = store2.getActions()[0];
+        expect(type).toBe('GET_PAGE_NUMBER');
+    });
+
+    it('setElementPageNumber action - else block', () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: slateMockData,
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {
+                   'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f': {
+                       'pagereference': 1
+                   }
+                },
+                popupSlateData: {
+                    type: "popup"
+                }
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        store3.dispatch(actions.setElementPageNumber({
+            id: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f'
+        }));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('GET_PAGE_NUMBER');
+    });
 });
