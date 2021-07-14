@@ -52,10 +52,13 @@ const store = mockStore({
     },
     alfrescoReducer: {
         alfrescoAssetData: {},
-        elementId: "",
+        elementId: "urn",
         alfrescoListOption: [],
-        launchAlfrescoPopup: false
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
     }
+
 });
 
 describe('Testing Opener component with props', () => {
