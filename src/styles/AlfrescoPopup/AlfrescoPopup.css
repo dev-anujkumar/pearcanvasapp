@@ -18,6 +18,8 @@
 
 .MuiDialogContent-root{
     overflow-y: hidden!important;
+    flex: none !important;
+    padding: 5px 24px !important;
 }
 
 .MuiTypography-body1{
@@ -27,10 +29,6 @@
 }
 .MuiDialogContentText-root{
     margin-bottom: 0px !important;
-}
-.MuiDialogContent-root{
-    flex: none !important;
-    padding: 5px 24px !important;
 }
 .MuiFilledInput-input{
     padding: 10px 12px 20px !important;
@@ -133,15 +131,6 @@ background-color: #f7f7f7 !important;
     .MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded{
         top: 278px !important;
       }
-  }
-  .MuiListItem-button:hover{
-      background-color: #f3f7f8 !important;
-  }
-  .MuiInputLabel-filled.MuiInputLabel-shrink{
-    transform: translate(10px, 14px) !important;
-  }
-  .MuiSelect-iconFilled{
-      font-size: 24px !important;
   }
   @media (max-width: 1280px) {
     .MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded{
