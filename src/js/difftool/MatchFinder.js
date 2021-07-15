@@ -1,5 +1,4 @@
 import Match from './Match';
-import MatchOptions from './MatchOptions';
 import * as Utils from './Utils';
 
 function putNewWord(block, word, blockSize) {
