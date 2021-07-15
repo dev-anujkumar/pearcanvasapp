@@ -570,7 +570,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
 
         if (showHideElement || asideParent?.type === 'showhide') {/** Glossary-Footnotes inside Show-Hide */
-            newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, showHideElement, tempIndex)
+            newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         }
         else if (tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data

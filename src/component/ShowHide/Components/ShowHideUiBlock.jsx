@@ -47,7 +47,8 @@ const ShowHideUiBlock = (props) => {
 			grandParent: {
 				asideData,
 				parentUrn
-			}
+			},
+			sectionType
 		}
 		return <ElementSaprator
 			index = {i}
@@ -83,7 +84,8 @@ const ShowHideUiBlock = (props) => {
 			grandParent: {
 				asideData,
 				parentUrn
-			}
+			},
+			sectionType
 		}
 		const shParentUrn = {
 			contentUrn: element.contentUrn,

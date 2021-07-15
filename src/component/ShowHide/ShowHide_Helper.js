@@ -251,7 +251,7 @@ export const getShowHideIndex = (tempIndex) => {
  * @param {*} indexes element index
  * @returns 
  */
-export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => { // activeElemType, showHideObj
+export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => {
     let showHideElement = getShowHideElement(bodymatter, indexes?.length, indexes);
     if(showHideElement?.type === ElementConstants.SHOW_HIDE) {
         const showHideType = indexOfSectionType(indexes);
@@ -259,33 +259,48 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => { // 
             showHideElement.interactivedata[showHideType][indexes[indexes.length - 1]] = resData;
         }
     }
-    /*const indexLength = Array.isArray(indexes) ? indexes.length : 0;
-    const showHideIndex = (indexLength > 2) ? indexes[indexLength - 2] : "" 
-    const showHideType = findSectionType(showHideIndex)
-    if (activeElemType && showHideType) {
-        switch (indexes.length) {
-            case 3:
-                bodymatter[indexes[0]].interactivedata[showHideType][indexes[2]] = resData
-                break;
-            case 4:
-                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideType][indexes[3]] = resData
-                break
-            case 5:
-                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideType][indexes[4]] = resData
-
-                break
-            case 6:
-                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType][indexes[5]] = resData
-                break
-            case 7:
-                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
-                break
-            case 8:
-                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
-                break
+}
+export const onGlossaryFnUpdateSuccessInShowHide123 = (resData, bodymatter, activeElemType, sectionType, indexes) => {
+    let shAtIndex;
+    /**/
+    if(activeElemType === "element-dialogue") {
+        const indexString = Array.isArray(indexes) ? indexes?.join("-") : indexes?.toString();
+        /**/
+        const placeHolder = document.getElementById(`cypress-${indexString}`)?.getAttribute("placeholder");
+        const indexLength = indexes?.length;
+        
+        /**/
+        if(indexLength > 3 && placeHolder === "Enter Stage Directions...") {
+            shAtIndex = indexLength - 1;
+        } else if(indexLength > 4 && ["Enter Character Name...", "Enter Dialogue..."].includes(placeHolder)) {
+            shAtIndex = indexLength - 2;
         }
+        
     }
-    return bodymatter */
+    let sh_Object = getShowHideElement(bodymatter, shAtIndex, indexes);
+    /**/
+    if(sh_Object?.type === ElementConstants.SHOW_HIDE && sectionType && shAtIndex) {
+        const psElement = sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]];
+        console.log("1 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
+
+        sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]] = {
+            ...psElement,
+            html: {...psElement.html, ...resData.html},
+            elementdata:resData.elementdata 
+        }
+        console.log("2 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
+
+        //const psElement = bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]];
+        //console.log("1 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
+        //bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]] = {
+        //    ...psElement,
+        //    html: {...psElement.html, ...resData.html},
+        //    elementdata:resData.elementdata 
+        //}
+        //console.log("2 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
+    }
+    
+    return bodymatter;
 }
 
 export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
