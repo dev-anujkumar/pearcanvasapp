@@ -6069,6 +6069,68 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(spyhandleCodeClick).toHaveBeenCalled()
         });
     });
+describe('Test function--handleBlankLineArrowKeys', () => {
+    it('handleBlankLineArrowKeys--CASE key 37', () => {
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: editor.selection,
+            setContent: () => { },
+            insertContent: () => { },
+            formatter: {
+                match: () => { },
+                formatChanged: () => { return jest.fn() },
+                unbind: () => { }
+            }
+        }
+        tinymce.activeEditor.selection = editor.selection;
+        tinymce.activeEditor.dom = domObj;
+        instance.setCursorOnCode = jest.fn()
+        const spyhandleCodeClick = jest.spyOn(instance, 'handleBlankLineArrowKeys')
+        instance.handleBlankLineArrowKeys(37, nextEditor);
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+
+    it('handleBlankLineArrowKeys--CASE key is not 37', () => {
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: editor.selection,
+            setContent: () => { },
+            insertContent: () => { },
+            formatter: {
+                match: () => { },
+                formatChanged: () => { return jest.fn() },
+                unbind: () => { }
+            }
+        }
+        tinymce.activeEditor.selection = editor.selection;
+        tinymce.activeEditor.dom = domObj;
+        instance.setCursorOnCode = jest.fn()
+        const spyhandleCodeClick = jest.spyOn(instance, 'handleBlankLineArrowKeys')
+        instance.handleBlankLineArrowKeys(35, nextEditor);
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+ describe('Testing function--setCalloutToSelection', () => {
+    xit('setCalloutToSelection', () => {
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: editor.selection,
+            setContent: () => { },
+            insertContent: () => { },
+            formatter: {
+                match: () => { },
+                formatChanged: () => { return jest.fn() },
+                unbind: () => { }
+            }
+        }
+        const spyhandleCodeClick = jest.spyOn(instance, 'setCalloutToSelection')
+        instance.setCalloutToSelection(nextEditor,0,'dummy');
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+
     describe('Test-40-Method--3--editorExecCommand-branch coverage', () => {
         it('Test-40.1-Method--6--editorBeforeExecCommand --CASE--Underline', () => {
             let event = {
