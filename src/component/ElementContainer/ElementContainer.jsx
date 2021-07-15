@@ -35,7 +35,6 @@ import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from '
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
-import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
 import { CitationGroupContext } from './ElementCitationContext'
 import CitationGroup from '../CitationGroup'
@@ -1396,32 +1395,6 @@ class ElementContainer extends Component {
                     />;
                     labelText = 'Pop'
                     break;
-                /* case elementTypeConstant.SHOW_HIDE:
-                     editor = <ElementContainerContext.Provider value={{
-                         onListSelect: this.props.onListSelect,
-                         showHideId: this.props.showHideId,
-                         createShowHideElement: this.props.createShowHideElement,
-                         deleteShowHideUnit: this.props.deleteShowHideUnit,
-                         activeElement: this.props.activeElement,
-                         showBlocker: this.props.showBlocker,
-                         permissions: permissions,
-                         handleFocus: this.handleFocus,
-                         handleBlur: this.handleBlur,
-                         index: index,
-                         element: element,
-                         model: element.html,
-                         slateLockInfo: slateLockInfo,
-                         onClick: this.handleFocus,
-                         glossaryFootnoteValue: this.props.glossaryFootnoteValue,
-                         elementStatus: config.elementStatus,
-                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
-                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
-                         getElementStatus: this.props.getElementStatus
-                     }}><ElementShowHide userRole={this.props.userRole} />
-                     </ElementContainerContext.Provider >;
-                     labelText = 'SH'
-                     break;
-                 */
                 case elementTypeConstant.SHOW_HIDE:
                     editor = <ShowHide
                         onListSelect={this.props.onListSelect}

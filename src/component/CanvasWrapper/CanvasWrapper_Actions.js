@@ -335,7 +335,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     })
                 }
             }).catch(error => {
-                console.log("API Failed!!")
+                console.log("Get LOB permissions API Failed!!")
             })
 
             // call api to get usage types
@@ -391,7 +391,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             }) 
         }
     }).catch(error => {
-        console.log("cannnow proceed")
+        console.log("API Failed!!!")
     })  
 }
 
@@ -548,11 +548,15 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
-                if(versioning && (versioning.type === 'element-aside')){
+                if(versioning && (versioning.type === 'element-aside')) {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
-                    let index = versioning.indexes[0];
-                    newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    if (versioning.indexes.length === 4 && versioning.parent.type === 'groupedcontent') {
+                        newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]].groupeddata.bodymatter[versioning.indexes[1]] = Object.values(slateData.data)[0].groupeddata.bodymatter[versioning.indexes[1]];
+                    } else {
+                        let index = versioning.indexes[0];
+                        newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    }
                     return dispatch({
                         type: AUTHORING_ELEMENT_UPDATE,
                         payload: {

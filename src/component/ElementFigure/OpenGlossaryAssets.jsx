@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
 import { connect } from 'react-redux'
-import { hideTocBlocker } from '../../js/toggleLoader';
 import { audioNarrationCloseIcon } from '../../images/TinyMce/TinyMce.jsx'
 import AddImageGlossary from './AddImageGlossary.jsx';
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
@@ -119,7 +118,7 @@ class OpenGlossaryAssets extends Component {
       }
 
     render = () => {
-        const { position, imageGlossaryRemovePopup } = this.props;
+        const { position } = this.props;
         let { tabValue, replaceAudioToggle, replaceImageToggle, figureGlossaryData, audioGlossaryData } = this.state;
         let imageMediaSrc, imageMediaTitle, audioMediaSrc, audioMediaTitle = "";
         
