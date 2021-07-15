@@ -1132,88 +1132,7 @@ describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
 describe('1 Test convertElement ', () => {
   
     it('1.1 Test convertElement  Image ', () => {
-        const oldElementData = {
-            "id":"urn:pearson:work:1d3f6612-66e2-46bb-a748-f836353ecedc",
-            "type":"figure",
-            "figuretype":"table",
-            "subtype":"image50TextTableImage",
-            "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
-            "alignment":"half-text",
-            "title":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "captions":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "credits":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "figuredata":{
-                "schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-                "imageid":"",
-                "path":"https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
-                "height":"422",
-                "width":"680",
-                "podwidth":"",
-                "srctype":"src",
-                "interactivetype":"elm",
-                "postertext": {"text":"hello world"}
-            },
-            "html":{
-                "title":"<p><br></p>",
-                "text":"",
-                "postertext":"",
-                "captions":"<p><br></p>",
-                "credits":"<p><br></p>",
-                "footnotes":{},
-                "assetsPopover":{},
-                "glossaryentries":{}
-            },
-            "versionUrn":"urn:pearson:work:1d3f6612-66e2-46bb-a748-f836353ecedc",
-            "contentUrn":"urn:pearson:entity:73489985-c5d4-4757-8e4f-3a7cccf15a22"
-        }
-        const newElementData = {
-            "elementId":"urn:pearson:work:1d3f6612-66e2-46bb-a748-f836353ecedc",
-            "elementType":"figure",
-            "primaryOption":"primary-image-figure",
-            "secondaryOption":"secondary-image-figure-width",
-            "labelText":"Fg",
-            "toolbar":[
-                "insertMedia",
-                "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
-            ]
-        }
-        const oldElementInfo  = {
-        "elementType":"figure",
-        "primaryOption":"primary-image-table",
-        "altText":"",
-        "longDesc":"",
-        "podwidth":"",
-        "secondaryOption":"secondary-image-table-half",
-        "elementId":"urn:pearson:work:1d3f6612-66e2-46bb-a748-f836353ecedc",
-        "index":0,
-        "elementWipType":"figure",
-        "toolbar":[
-            "insertMedia",
-            "formatSelector",
-            "crossLinkingIcon",
-            "assetpopover",
-            "glossary",
-            "decreaseindent",
-            "alignment",
-            "calloutIcon"
-        ],
-        "tag":"TB"
-        }
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase8;
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
         store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
@@ -1222,81 +1141,8 @@ describe('1 Test convertElement ', () => {
         
     });
     it('1.2 Test convertElement - codelisting Element ', () => {
-        const oldElementData = {
-            "id":"urn:pearson:work:312c6572-701b-4c28-bdbf-9befc939a0f2",
-            "type":"figure",
-            "figuretype":"codelisting",
-            "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
-            "title":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "captions":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "credits":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "figuredata":{
-                "schema":"http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
-                "type":"codelistingformatted",
-                "numbered":true,
-                "startNumber":"1",
-                "preformattedtext":[],
-                "syntaxhighlighting":true,
-                "programlanguage":"Select"
-            },
-            "html":{
-                "title":"<p><br></p>",
-                "preformattedtext":"<p></p>",
-                "captions":"<p><br></p>",
-                "credits":"<p><br></p>"
-            },
-            "versionUrn":"urn:pearson:work:312c6572-701b-4c28-bdbf-9befc939a0f2",
-            "contentUrn":"urn:pearson:entity:bc8cbe82-7e32-4c6b-8ccd-c90d5a63d2bc",
-            "status":"wip"
-        }
-        const newElementData = {
-            "elementId":"urn:pearson:work:312c6572-701b-4c28-bdbf-9befc939a0f2",
-            "elementType":"figure",
-            "primaryOption":"primary-blockcode-equation",
-            "secondaryOption":"secondary-blockcode-language-default",
-            "labelText":"BCE",
-            "toolbar":[
-                "insertMedia",
-                "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
-            ]                   
-        }
-        const oldElementInfo = {
-            "elementType":"figure",
-            "primaryOption":"primary-blockcode-equation",
-            "numbered":true,
-            "startNumber":"1",
-            "syntaxhighlighting":true,
-            "secondaryOption":"secondary-blockcode-language-default",
-            "elementId":"urn:pearson:work:312c6572-701b-4c28-bdbf-9befc939a0f2",
-            "index":0,
-            "elementWipType":"figure",
-            "toolbar":[
-                "insertMedia",
-                "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
-            ],
-            "tag":"BCE"
-        }
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase9;
+        
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
         store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
@@ -1305,58 +1151,8 @@ describe('1 Test convertElement ', () => {
         
     });
     it('1.3 Test convertElement - Remove subtype key on conversion from BQ to P/H/LO ', () => {
-        const oldElementData = {
-            "id":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "type":"element-blockfeature",
-            "subtype":"quote",
-            "schema":"http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata":{
-                "schema":"http://schemas.pearson.com/wip-authoring/blockfeature/1#/definitions/blockfeature",
-                "type":"blockquote",
-                "authoredtext":{
-                    "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text":""
-                }
-            },
-            "html":{
-                "text":"<blockquote class=\"blockquoteMarginalia\"><p class=\"paragraphNummerEins\"><br></p><p class=\"blockquoteTextCredit\" contenteditable=\"true\" data-placeholder=\"Attribution Text\"></p></blockquote>",
-                "footnotes":{},
-                "assetsPopover":{},
-                "glossaryentries":{}
-            },
-            "versionUrn":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "contentUrn":"urn:pearson:entity:add7ac55-e30f-486f-b5da-2af5955e7a55"
-        }
-        const newElementData = {
-            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "elementType":"element-authoredtext",
-            "primaryOption":"primary-paragraph",
-            "secondaryOption":"secondary-paragraph",
-            "labelText":"P",
-            "toolbar":[
-                "insertMedia"
-            ]
-        }
-        const oldElementInfo = {
-            "elementType":"element-authoredtext",
-            "primaryOption":"primary-blockquote",
-            "secondaryOption":"secondary-marginalia",
-            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "index":0,
-            "elementWipType":"element-blockfeature",
-            "toolbar":[
-                "insertMedia",
-                "bold",
-                "underline",
-                "strikethrough",
-                "orderedlist",
-                "unorderedlist",
-                "glossary",
-                "slatetag",
-                "alignment"
-            ],
-            "tag":"BQ"
-        }
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase10;
+        
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
         store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
@@ -1382,59 +1178,8 @@ describe('1 Test convertElement ', () => {
         
     });
     it('1.5 Test convertElement - outputSubTypeEnum !== "DISC" ', () => {
-        const oldElementData = {
-            "id":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "type":"element-authoredtext",
-            "subtype":"quote",
-            "schema":"http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata":{
-                "schema":"http://schemas.pearson.com/wip-authoring/blockfeature/1#/definitions/blockfeature",
-                "type":"list",
-                "authoredtext":{
-                    "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text":""
-                },
-                startNumber:"2"
-            },
-            "html":{
-                "text":"<blockquote class=\"blockquoteMarginalia\"><p class=\"paragraphNummerEins\"><br></p><p class=\"blockquoteTextCredit\" contenteditable=\"true\" data-placeholder=\"Attribution Text\"></p></blockquote>",
-                "footnotes":{},
-                "assetsPopover":{},
-                "glossaryentries":{}
-            },
-            "versionUrn":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "contentUrn":"urn:pearson:entity:add7ac55-e30f-486f-b5da-2af5955e7a55"
-        }
-        const newElementData = {
-            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "elementType":"element-authoredtext",
-            "primaryOption":"primary-list",
-            "secondaryOption":"secondary-list-2",
-            "labelText":"P",
-            "toolbar":[
-                "insertMedia"
-            ]
-        }
-        const oldElementInfo = {
-            "elementType":"element-authoredtext",
-            "primaryOption":"primary-list",
-            "secondaryOption":"secondary-list-2",
-            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "index":0,
-            "elementWipType":"element-blockfeature",
-            "toolbar":[
-                "insertMedia",
-                "bold",
-                "underline",
-                "strikethrough",
-                "orderedlist",
-                "unorderedlist",
-                "glossary",
-                "slatetag",
-                "alignment"
-            ],
-            "tag":"BQ"
-        }
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase11;
+        
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
         store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
@@ -1443,92 +1188,18 @@ describe('1 Test convertElement ', () => {
         
     });
     it('1.6 Test convertElement - oldElementInfo.primaryOption === "primary-list" ', () => {
-        const oldElementData6 = {
-            "id":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "type":"element-authoredtext",
-            "subtype":"secondary-paragraph",
-            "elementdata":{
-                "type":"list",
-                startNumber:"2"
-            },
-            "versionUrn":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "contentUrn":"urn:pearson:entity:add7ac55-e30f-486f-b5da-2af5955e7a55"
-        }
-        const newElementData6 = {
-            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "elementType":"element-authoredtext",
-            "primaryOption":"primary-paragraph",
-            "secondaryOption":"secondary-paragraph",
-            "labelText":"P",
-            "toolbar":[
-                "insertMedia"
-            ]
-        }
-        const oldElementInfo6 = {
-            "elementType":"element-authoredtext",
-            "primaryOption":"primary-list",
-            "secondaryOption":"secondary-list-2",
-            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "index":0,
-            "elementWipType":"element-blockfeature",
-            "toolbar":[
-                "insertMedia",
-                "bold",
-                "underline",
-                "strikethrough",
-                "orderedlist",
-                "unorderedlist",
-                "glossary",
-                "slatetag",
-                "alignment"
-            ],
-            "tag":"BQ"
-        }
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase12;
+       
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
-        store.dispatch(sidebarAction.convertElement(oldElementData6, newElementData6, oldElementInfo6, store, ["0"], "",""));
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
         
     });
     it('1.7 Test convertElement - inputPrimaryOptionEnum === outputPrimaryOptionEnum ', () => {
-        const oldElementData = {
-            "id":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "type":"element-authoredtext",
-            "subtype":"quote",
-            "versionUrn":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "contentUrn":"urn:pearson:entity:add7ac55-e30f-486f-b5da-2af5955e7a55"
-        }
-        const newElementData = {
-            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "elementType":"element-authoredtext",
-            "primaryOption":"primary-list",
-            "secondaryOption":"secondary-list-2",
-            "labelText":"P",
-            "toolbar":[
-                "insertMedia"
-            ]
-        }
-        const oldElementInfo = {
-            "elementType":"element-authoredtext",
-            "primaryOption":"primary-list",
-            "secondaryOption":"secondary-list-2",
-            "elementId":"urn:pearson:work:6e2b4d66-4fd7-4d7e-a7d6-1b3b2b4a775b",
-            "index":0,
-            "elementWipType":"element-blockfeature",
-            "toolbar":[
-                "insertMedia",
-                "bold",
-                "underline",
-                "strikethrough",
-                "orderedlist",
-                "unorderedlist",
-                "glossary",
-                "slatetag",
-                "alignment"
-            ],
-            "tag":"BQ"
-        }
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase13;
+        
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
         store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"],{ toolbar: ['insertMedia']},"")); 
@@ -1537,16 +1208,16 @@ describe('1 Test convertElement ', () => {
         
     });
 });
-describe('1 Test handleElementConversion  ', () => {
+describe('2 Test handleElementConversion  ', () => {
  
-    it('1.1 Test handleElementConversion  - Object.keys(store).length < 0; Else Case ', () => {
+    it('2.1 Test handleElementConversion  - Object.keys(store).length < 0; Else Case ', () => {
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
         store.dispatch(sidebarAction.handleElementConversion({}, {}, "", "","")); 
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
     });
-    it('1.2 Test handleElementConversion  - appStore && appStore.parentUrn ', () => {
+    it('2.2 Test handleElementConversion  - appStore && appStore.parentUrn ', () => {
         config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
         const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase1;
         const storeMock = mockStore(() => initState);
@@ -1555,7 +1226,7 @@ describe('1 Test handleElementConversion  ', () => {
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
     });
-    describe('1.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
+    describe('2.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
         const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase2;
         it('1.3.1 indexes.length === 4 ', () => {
             config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
@@ -1575,7 +1246,7 @@ describe('1 Test handleElementConversion  ', () => {
             spyconversionElement.mockClear()
         });
     });
-    describe('1.4 indexes.forEach(index => {  ', () => {
+    describe('2.4 indexes.forEach(index => {  ', () => {
         it('1.4.1 bodymatter[index] else case ', () => {
             const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase3;
             config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
@@ -1604,19 +1275,28 @@ describe('1 Test handleElementConversion  ', () => {
             spyconversionElement.mockClear()
         });
     });
-    describe('1.5 Test setBCEMetadata ', () => {
-        it('1.5.1 Test setBCEMetadata ', () => {
-            //config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
-            const { initState, attribute, value } = testData?.testcase6;
-            const storeMock = mockStore(() => initState);
-            const spyconversionElement = jest.spyOn(sidebarAction, 'setBCEMetadata');
-            storeMock.dispatch(sidebarAction.setBCEMetadata(attribute,value)); 
-            expect(spyconversionElement).toHaveBeenCalled()
-            spyconversionElement.mockClear()
-        });
+});
+describe('3 Test setBCEMetadata ', () => {
+    it('3.1 Test setBCEMetadata ', () => {
+        const { initState, attribute, value } = testData?.testcase6;
+        const storeMock = mockStore(() => initState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'setBCEMetadata');
+        storeMock.dispatch(sidebarAction.setBCEMetadata(attribute,value)); 
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
     });
 });
-
+describe('4 Test tcmSnapshotsForConversion  ', () => {
+    const { elementConversionData, indexes, appStore } = testData?.testcase14;
+    it('4.1 Test response.hasOwnProperty("figuretype") ', () => {
+        config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+        const storeMock = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'tcmSnapshotsForConversion');
+        sidebarAction.tcmSnapshotsForConversion(elementConversionData,indexes,appStore, storeMock.dispatch); 
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+    });
+});
 
 //console.log("oldElementData = ",JSON.stringify(oldElementData));
 // console.log("newElementData = ",JSON.stringify(newElementData));
@@ -1624,3 +1304,7 @@ describe('1 Test handleElementConversion  ', () => {
 // console.log("store = ",JSON.stringify(store));
 // console.log("indexes = ",JSON.stringify(indexes));
 //console.log("fromToolbar = ",JSON.stringify(fromToolbar));
+//elementConversionData,indexes,appStore
+//console.log("elementConversionData = ",JSON.stringify(elementConversionData));
+// console.log("indexes = ",indexes);
+// console.log("appStore = ",JSON.stringify(appStore));
