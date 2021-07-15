@@ -1297,14 +1297,3 @@ describe('4 Test tcmSnapshotsForConversion  ', () => {
         spyconversionElement.mockClear()
     });
 });
-
-//console.log("oldElementData = ",JSON.stringify(oldElementData));
-// console.log("newElementData = ",JSON.stringify(newElementData));
-// console.log("oldElementInfo = ",JSON.stringify(oldElementInfo));
-// console.log("store = ",JSON.stringify(store));
-// console.log("indexes = ",JSON.stringify(indexes));
-//console.log("fromToolbar = ",JSON.stringify(fromToolbar));
-//elementConversionData,indexes,appStore
-//console.log("elementConversionData = ",JSON.stringify(elementConversionData));
-// console.log("indexes = ",indexes);
-// console.log("appStore = ",JSON.stringify(appStore));
