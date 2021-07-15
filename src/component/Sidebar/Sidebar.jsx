@@ -19,7 +19,7 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-import {WARNING} from '../ElementContainer/ElementConstants';
+import { WARNING } from '../ElementContainer/ElementConstants';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -237,6 +237,7 @@ class Sidebar extends Component {
         })
     }
 
+    /**@description function handles the secondaryoption change dropdown */
     handleSecondaryOptionChange = e => {
         let value = e.target.getAttribute('data-value').toLowerCase();
         let elementTypeList = elementList[this.state.activeElementType];
@@ -247,18 +248,16 @@ class Sidebar extends Component {
             })
             return null;
         }
-        this.setState({
-            elementDropdown:'',
-            activeSecondaryOption:value,
-            activeLabelText:labelText,
-            podOption:false
-        })
 
         if (this.props.activeElement.primaryOption === 'primary-single-assessment') {
             this.setState({
                 updateAssessmentTypePopup: true,
                 secondaryValue: value,
                 secondaryLabel: labelText,
+                elementDropdown:'',
+                activeSecondaryOption: value,
+                activeLabelText: labelText,
+                podOption: false
             });
         }
         else {
@@ -266,6 +265,10 @@ class Sidebar extends Component {
         }
     }
 
+    /**@description sets the values form the selected dropdown
+     * @param-value is AssessmentType selected from the dropdown
+     * @param-labelText is the label of the Element
+     */
     setSecondary=(value,labelText)=>{
         this.setState({
             elementDropdown: '',
@@ -730,7 +733,7 @@ class Sidebar extends Component {
                         elementData={this.props.elementData}
                         tcmStatus = {this.props.tcmStatus}
                     />}
-                {this.state.updateAssessmentTypePopup && this.props.activeElement.primaryOption === 'primary-single-assessment'  && this.showUpdateAssessmentTypePopup()}
+                {this.state.updateAssessmentTypePopup && this.props?.activeElement?.primaryOption === 'primary-single-assessment'  && this.showUpdateAssessmentTypePopup()}
             </>
         );
     }

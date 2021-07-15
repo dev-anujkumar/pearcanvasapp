@@ -19,6 +19,7 @@ import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } f
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
 import { handlePostMsgOnAddAssess, handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling';
+/**-----------import Constants --------------*/
 import {WARNING} from '../ElementContainer/ElementConstants';
 /**
 * Module | AssessmentSlateData
@@ -98,7 +99,7 @@ class AssessmentSlateData extends Component {
         if ((newProps?.assessmentSlateObj?.title !== newPropsTitle) && (prevPropsTitle != newPropsTitle) && config.saveElmOnAS) {
             config.saveElmOnAS = false
             handleElmPortalEvents('remove');
-            this.updateElmOnSaveEvent(newProps);//
+            this.updateElmOnSaveEvent(newProps);
         }
     }
 
@@ -464,7 +465,7 @@ class AssessmentSlateData extends Component {
         this.setState({
             activeAssessmentType: Object.keys(assessmentFormats).find(key => assessmentFormats[key] === type),
             openAssessmentDropdown:false,
-            openUsageDropdown:false,
+            openUsageDropdown:false
         });
     }
 
@@ -551,7 +552,7 @@ class AssessmentSlateData extends Component {
         } else if (changeLearningData && activeAssessmentType === LEARNING_TEMPLATE) {
             return <LearningTool closePopUp={this.closeLTLAPopUp} linkLearningApp={this.linkLearningApp} closelearningPopup={this.closelearningPopup} />
         } else if (getAssessmentData && getAssessmentDataPopup === false && changeLearningData === false) {
-            assessmentSlateJSX = this.state.isUpdateFinal ? this.showNewAssessmentSlate( this.state.activeAssessmentType,this.state.activeAssessmentUsageType) : this.showFinalAssessmentSlate(slatePlaceholder, activeAssessmentType, assessmentSlateObj, activeAssessmentUsageType);
+            assessmentSlateJSX = this.state.isUpdateFinal ? this.showNewAssessmentSlate(activeAssessmentType, activeAssessmentUsageType) : this.showFinalAssessmentSlate(slatePlaceholder, activeAssessmentType, assessmentSlateObj, activeAssessmentUsageType);
         } else if (getAssessmentData && (getAssessmentDataPopup === true || learningToolStatus)) {
             assessmentSlateJSX = this.showSuccessMessage(slatePlaceholder.title,activeAssessmentUsageType);
         } else {
@@ -607,6 +608,7 @@ class AssessmentSlateData extends Component {
         return usageType;
     }
 
+    /**@description -shows updateAssessment Popup when you select other AssessmentTypes in Final Slate */
     showUpdateAssessmentTypePopup = () => {
         this.showCanvasBlocker(true);
         return (
@@ -621,6 +623,7 @@ class AssessmentSlateData extends Component {
         )
     }
 
+    /**@description handles cancel in updateAssessmentType Popup */
     handleChangeAssessmentPopup = () => {
         this.showCanvasBlocker(false);
         this.setState({
@@ -628,6 +631,7 @@ class AssessmentSlateData extends Component {
         })
     }
 
+    /**-----@description function for updating AssessmentTytpe on Clicking yes on the Popup */
     setChangeAssessmentType = () => {
         this.showCanvasBlocker(false);
         this.setState({
@@ -639,16 +643,20 @@ class AssessmentSlateData extends Component {
             usageType: this.state.activeAssessmentUsageType,
             calledFrom: "updateAssessmentFormat"
         }
-        console.log("dataToSend",dataToSend);
-        console.log("dataToSend",dataToSend);
         this.props.handleAssessmentBlur(dataToSend, () => {
             this.setState({
                 isUpdateFinal: true
             })
         });
+        this.props.setAssessmentFilterParams("", "");
         this.setUpdateAssessmentType(this.state.updatedAssessmentType);
     }
 
+    /**@description this function sets the AssessmentType whether it is from New or Final Assessment Slates
+     * @param assessmentUsageType - selected Usage Type of an Assessment
+     * @param assessmentType- selected AssessmentType
+     * @param calledFrom- whether it is called from New or Final AssessmentSlate
+     */
     setAssessmentType = (assessmentUsageType, assessmentType, calledFrom) => {
         let assessmentSelectionType = <><div className={`assessment-parent ${assessmentUsageType ? '' : 'disabled'}`}>
             <div className="assessment-label">Select assessment type</div>

@@ -121,17 +121,6 @@
     width: 34%;
     font-weight: normal;
   }
-  .slate_fetch_canvas .slate_assessment_type_button{
-    margin: 36px 0px 36px 94px;
-    font-size: 14px;
-    color: #fff;
-    border-radius: 20px;
-    background-color: #005a70;
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    width: 200px;
-  }
   .slate_fetch_canvas .slate_assessment_type_dropdown{
     margin-left: 0;
   }

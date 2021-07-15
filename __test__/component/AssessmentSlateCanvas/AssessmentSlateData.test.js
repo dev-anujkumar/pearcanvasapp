@@ -710,28 +710,9 @@ describe('Testing Assessment Slate Data component', () => {
             }
             jest.spyOn(assessmentSlateInstance11, 'selectAssessmentType')
             assessmentSlateInstance11.selectAssessmentType();
-             // assessmentSlateInstance11.find('slate_assessment_dropdown_name').simulate('click');
             assessmentSlateInstance11.handleAssessmentTypeChange('Full Assessment QuAd CITE', event,"updateAssessmentFormat");
-            // assessmentSlateInstance11.setState({
-            //     openAssessmentDropdown:false 
-            // })
             expect(assessmentSlateInstance11.state.openAssessmentDropdown).toBe(false)
             expect(assessmentSlateInstance11.state.openUsageDropdown).toBe(false)
-            // expect(assessmentSlateInstance11.handleAssessmentTypeChange).toHaveBeenCalled();
         });
-        // it('Test handleAssessmnetTypeChange',()=>{
-        //     let event = {
-        //         stopPropagation: jest.fn(),
-        //         preventDefault: jest.fn(),
-        //         target: { classList: { contains: () => { return false } } }
-        //     }
-        //     jest.spyOn(assessmentSlateInstance11, 'handleAssessmentTypeChange')
-        //     assessmentSlateInstance11.handleAssessmentTypeChange("Full Assessment Elm", event,"updateAssessmentFormat");
-        //     assessmentSlateInstance11.setState({
-        //         openAssessmentDropdown:false 
-        //     });
-        //     expect(assessmentSlateInstance11.state.openAssessmentDropdown).toBe(false);
-        //     expect(assessmentSlateInstance11.handleAssessmentTypeChange).toHaveReturned();
-        // })
     })
 })
