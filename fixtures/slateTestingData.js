@@ -1929,6 +1929,100 @@ export const slateMockData = {
     }
 }
 
+export const sectionBreakMockSlateData = {
+    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+        contents: {
+            bodymatter: [{
+                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                groupeddata: {
+                    bodymatter: [{
+                        groupdata: {
+                            bodymatter: [
+                                {
+                                    id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e",
+                                    subtype: "workedexample",
+                                    elementdata: {
+                                        bodymatter: [
+                                            {
+                                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                                                contents: {
+                                                    bodymatter: [{
+                                                        "type": "element-authoredtext",
+                                                        "subtype": "",
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                        "elementdata": {
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                            "text": ""
+                                                        },
+                                                        "html": {
+                                                            "text": "<p class=\"paragraphNumeroUno\">React previously shipped with an experimental context API. The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.</p>"
+                                                        },
+                                                        "comments": false,
+                                                        "tcm": true,
+                                                        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d534dr5td5354sd",
+                                                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-ert4er45643tfg4"
+                                                    }]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }]
+                }
+            }]
+        }
+    }
+}
+
+export const NotSectionBreakMockSlateData = {
+    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+        contents: {
+            bodymatter: [{
+                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e",
+                groupeddata: {
+                    bodymatter: [{
+                        groupdata: {
+                            bodymatter: [
+                                {
+                                    id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e",
+                                    subtype: "workedexample",
+                                    elementdata: {
+                                        bodymatter: [
+                                            {
+                                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                                                contents: {
+                                                    bodymatter: [{
+                                                        "type": "element-authoredtext",
+                                                        "subtype": "",
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                        "elementdata": {
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                            "text": ""
+                                                        },
+                                                        "html": {
+                                                            "text": "<p class=\"paragraphNumeroUno\">React previously shipped with an experimental context API. The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.</p>"
+                                                        },
+                                                        "comments": false,
+                                                        "tcm": true,
+                                                        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d534dr5td5354sd",
+                                                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-ert4er45643tfg4"
+                                                    }]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }]
+                }
+            }]
+        }
+    }
+}
+
 export const GlossaryMockState = {
     "type": "Glossary",
     "popUpStatus": false
