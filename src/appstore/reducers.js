@@ -46,7 +46,7 @@ import {
     SET_FIGURE_GLOSSARY,
     ADD_FIGURE_GLOSSARY_POPUP,
     WRONG_IMAGE_POPUP,
-    UPDATE_THREE_COLUMN_INFO,
+    UPDATE_MULTIPLE_COLUMN_INFO,
     SHOW_REMOVE_GLOSSARY_IMAGE
 } from '../constants/Action_Constants';
 
@@ -84,7 +84,7 @@ const INITIAL_STATE = {
     figureGlossaryData : {},
     addfigureGlossarypopup:false,
     openWrongImagePopup:false,
-    threeColumnData: [],
+    multipleColumnData: [],
     removeGlossaryImage:false
 };
 
@@ -293,20 +293,20 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 removeGlossaryImage:action.payload
             }
 
-        case UPDATE_THREE_COLUMN_INFO:
+        case UPDATE_MULTIPLE_COLUMN_INFO:
             if (action.key) {
-                let threeColumnData = state.threeColumnData;
-                threeColumnData = threeColumnData.filter(function (data) {
+                let multipleColumnData = state.multipleColumnData;
+                multipleColumnData = multipleColumnData.filter(function (data) {
                     return data.containerId !== action.key
                 })
                 return {
                     ...state,
-                    threeColumnData: [...threeColumnData, action.payload]
+                    multipleColumnData: [...multipleColumnData, action.payload]
                 }
             } else {
                 return {
                     ...state,
-                    threeColumnData: []
+                    multipleColumnData: []
                 }
             }
 
