@@ -3,7 +3,7 @@ import TcmCloseIcon from '../../images/CanvasTCMPopup/TcmCloseIcon.png'
 import TcmExpandIcon from '../../images/CanvasTCMPopup/TcmExpandIcon.png'
 import TcmRefreshIcon from '../../images/CanvasTCMPopup/TcmRefreshIcon.png'
 import { connect } from 'react-redux';
-import TCMUtiles from '../../component/TcmSnapshots/TCMpopup_Utilty'
+import TCMUtiles from '../TcmSnapshots/TCM'
 import {handleTCM, closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 import config from '../../config/config'
@@ -38,13 +38,13 @@ class RenderTCMIcons extends React.Component {
                     <span>{readableTime}</span>
                 </div>
                 <div className="tcmIconContainer">
-                    <span className="btn-element tcmIcon">
+                    <span className="btn-element tcmIcon refresh">
                         {<img src={TcmRefreshIcon} id={(this.props.spinnerStatus) ? "loading" : ""} alt="TcmRefreshIcon" onClick={() => this.props.handleTCM(element)} />}
                     </span>
-                    <span className="btn-element tcmIcon" onClick={(e) => this.handleTCMSPALaunch(e, element.id)}>
+                    <span className="btn-element tcmIcon expand" onClick={(e) => this.handleTCMSPALaunch(e, element.id)}>
                         {<img src={TcmExpandIcon} alt="TcmExpandIcon" />}
                     </span>
-                    <span className="btn-element tcmIcon" onClick={() => this.props.closeTcmPopup()}>
+                    <span className="btn-element tcmIcon close" onClick={() => this.props.closeTcmPopup()}>
                         {<img src={TcmCloseIcon} alt="TcmCloseIcon" />}
                     </span>
                 </div>

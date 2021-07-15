@@ -50,7 +50,7 @@ let initialState = {
         ],
         oldImage: "",
         showHideId: "",
-        threeColumnData: [{
+        multipleColumnData: [{
             columnId: "urn:pearson:manifest:d9ddbc13-2252-4a2f-8b4d-dbbe03452385",
             columnIndex: "C3",
             containerId: "urn:pearson:manifest:5a3a5bac-bea1-4ff8-a8d3-38de4c15613b"

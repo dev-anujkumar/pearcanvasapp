@@ -667,3 +667,7 @@ color: transparent !important;
 span.answerLineContent{
   border-bottom: 1px solid #bcbcbc !important;
 }
+ins.mod{
+  background: rgb(251, 188, 72) !important;
+  color: rgb(121, 121, 121);
+}

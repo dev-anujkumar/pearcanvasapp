@@ -14,13 +14,13 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateThreeColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -35,7 +35,6 @@ import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from '
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
-import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
 import { CitationGroupContext } from './ElementCitationContext'
 import CitationGroup from '../CitationGroup'
@@ -829,7 +828,17 @@ class ElementContainer extends Component {
         const oldAssessmentData = JSON.parse(JSON.stringify(this.props.element));
         this.props.storeOldAssetForTCM(oldAssessmentData.elementdata);
         let dataToSend = { ...this.props.element }
-        if (assessmentData.id) {
+        if (assessmentData?.calledFrom == 'updateAssessmentFormat') {
+            dataToSend.elementdata = {
+                schema: "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+                assessmentid: "",
+                assessmenttitle: "",
+                usagetype: assessmentData.usageType,
+                assessmentformat: assessmentData.format
+            }
+            this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + assessmentData.format)
+        }
+        else if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
             dataToSend.elementdata.usagetype = assessmentData.usageType;
             dataToSend.elementdata.assessmentid = assessmentData.id;
@@ -1049,8 +1058,8 @@ class ElementContainer extends Component {
      * @param {*} index index of figure element
      * @param {*} cb callback method
      */
-    updateFigureData = (figureData, index, elementId, cb) => {
-        this.props.updateFigureData(figureData, index, elementId, cb)
+    updateFigureData = (figureData, index, elementId, asideData, cb) => {
+        this.props.updateFigureData(figureData, index, elementId, asideData, cb)
     }
 
     toolbarHandling = (action = "") => {
@@ -1308,12 +1317,12 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
+                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData}  updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo model={element} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
+                            editor = <ElementAudioVideo model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -1321,7 +1330,7 @@ class ElementContainer extends Component {
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} editInteractiveId={this.state.editInteractiveId} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} />;
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} asideData={this.props.asideData} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} editInteractiveId={this.state.editInteractiveId} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} />;
                             labelText = LABELS[element.figuredata.interactiveformat];
                             isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
                             break;
@@ -1396,32 +1405,6 @@ class ElementContainer extends Component {
                     />;
                     labelText = 'Pop'
                     break;
-                /* case elementTypeConstant.SHOW_HIDE:
-                     editor = <ElementContainerContext.Provider value={{
-                         onListSelect: this.props.onListSelect,
-                         showHideId: this.props.showHideId,
-                         createShowHideElement: this.props.createShowHideElement,
-                         deleteShowHideUnit: this.props.deleteShowHideUnit,
-                         activeElement: this.props.activeElement,
-                         showBlocker: this.props.showBlocker,
-                         permissions: permissions,
-                         handleFocus: this.handleFocus,
-                         handleBlur: this.handleBlur,
-                         index: index,
-                         element: element,
-                         model: element.html,
-                         slateLockInfo: slateLockInfo,
-                         onClick: this.handleFocus,
-                         glossaryFootnoteValue: this.props.glossaryFootnoteValue,
-                         elementStatus: config.elementStatus,
-                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
-                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
-                         getElementStatus: this.props.getElementStatus
-                     }}><ElementShowHide userRole={this.props.userRole} />
-                     </ElementContainerContext.Provider >;
-                     labelText = 'SH'
-                     break;
-                 */
                 case elementTypeConstant.SHOW_HIDE:
                     editor = <ShowHide
                         onListSelect={this.props.onListSelect}
@@ -1586,9 +1569,10 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
                     } else {
+                        labelText = MULTI_COLUMN_2C.ELEMENT_TAG_NAME
                         editor = <MultiColumnContext.Provider value={{
                             activeElement: this.props.activeElement,
                             showBlocker: this.props.showBlocker,
@@ -1606,9 +1590,8 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
-                        labelText = '2C'
                     }
                     break;
 
@@ -1738,8 +1721,8 @@ class ElementContainer extends Component {
                 {this.renderCopyComponent(this.props, index, inContainer)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
-                    {/* render 3 column labels when labelText is 3C  */}
-                    {labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME && <div> {this.renderMultipleColumnLabels(element)}</div>}
+                    {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
+                    {(labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME || MULTI_COLUMN_2C.ELEMENT_TAG_NAME) && <div>{this.renderMultipleColumnLabels(element)}</div>}
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e, true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
@@ -1782,6 +1765,7 @@ class ElementContainer extends Component {
                         handleBlur={this.handleBlur}
                         element={this.props.element}
                         index={this.props.index}
+                        asideData={this.props.asideData}
                     />}
                 {this.props.children &&
                     <PageNumberContext.Consumer>
@@ -1797,7 +1781,7 @@ class ElementContainer extends Component {
     // function to render multiple columns for 3 column container based on bodymatter
     renderMultipleColumnLabels = (element) => {
         let activeColumnLabel = "C1"
-        for (let propsElementObject of this.props.threeColumnData) {
+        for (let propsElementObject of this.props.multipleColumnData) {
             if (propsElementObject.containerId === element.id) {
                 activeColumnLabel = propsElementObject.columnIndex;
             }
@@ -1814,11 +1798,11 @@ class ElementContainer extends Component {
 
     updateColumnValues = (index, element) => {
         let objKey = element.id;
-        let threeColumnObjData = {
+        let multipleColumnObjData = {
             containerId: objKey,
             columnIndex: `C${index + 1}`
         }
-        this.props.updateThreeColumnData(threeColumnObjData, objKey);
+        this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
     }
 
     /**
@@ -2128,8 +2112,8 @@ const mapDispatchToProps = (dispatch) => {
         updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => {
             dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData))
         },
-        updateFigureData: (figureData, index, elementId, cb) => {
-            dispatch(updateFigureData(figureData, index, elementId, cb))
+        updateFigureData: (figureData, index, elementId, asideData, cb) => {
+            dispatch(updateFigureData(figureData, index, elementId, asideData, cb))
         },
         updatePageNumber: (pagenumber, elementId, asideData, parentUrn) => {
             dispatch(updatePageNumber(pagenumber, elementId, asideData, parentUrn))
@@ -2181,8 +2165,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteElementAction: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
             dispatch(deleteElementAction(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
         },
-        updateThreeColumnData: (threeColumnObjData, objKey) => {
-            dispatch(updateThreeColumnData(threeColumnObjData, objKey))
+        updateMultipleColumnData: (multipleColumnObjData, objKey) => {
+            dispatch(updateMultipleColumnData(multipleColumnObjData, objKey))
         },
         storeOldAssetForTCM: (data) => {
             dispatch(storeOldAssetForTCM(data))
@@ -2217,7 +2201,7 @@ const mapStateToProps = (state) => {
         slateLevelData: state.appStore.slateLevelData,
         assessmentReducer: state.assessmentReducer,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
-        threeColumnData: state.appStore.threeColumnData
+        multipleColumnData: state.appStore.multipleColumnData
     }
 }
 

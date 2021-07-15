@@ -82,13 +82,13 @@ class MetaDataPopUp extends React.Component {
 	}
 
 	updateElementData = () => {
-		const { index, element } = this.props;
+		const { index, element, asideData } = this.props;
 		/*-- Form data to send to wip */
 		let figureData = { ...element.figuredata };
 		figureData.alttext = this.state.altText;
 		figureData.longdescription = this.state.longDescription;
 		/*-- Updata the image metadata in wip */
-		this.props.updateFigureData(figureData, index, element.id, () => {
+		this.props.updateFigureData(figureData, index, element.id, asideData, () => {
 			this.props.handleFocus("updateFromC2")
 			this.props.handleBlur()
 		})
