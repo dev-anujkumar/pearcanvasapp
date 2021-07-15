@@ -29,7 +29,7 @@
         }
         flattenedIndexOfElements.forEach((value) => {
             if (isNested && element.elementChangeType && !isDeleteElement) {
-                const dataAtIndex = flattenedIndexOfElements.find(item => item.urn == element.elementURN[element.elementURN.length - 1]);
+                const dataAtIndex = flattenedIndexOfElements.find(item => item.urn == element.elementURN && element.elementURN[element.elementURN?.length - 1]);
                 const indexValue = dataAtIndex ? dataAtIndex.index : NaN;
                 element.elemIndex = indexValue;
             } else if (element.elementID === value.urn && !isDeleteElement) {

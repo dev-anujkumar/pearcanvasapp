@@ -517,7 +517,7 @@ const validateRevealAnswerData = (showHideType, node, elementType, isHeader) => 
  * @param {*} popupdata Popup container data 
  * @param {*} _previousElementData element data inside popup
  */
-const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousElementData) => {
+export const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousElementData) => {
     let hasFormattedTitle = _popupdata.hasOwnProperty("formatted-title"),
         hasFormattedSubtitle = _popupdata.hasOwnProperty("formatted-subtitle");
 

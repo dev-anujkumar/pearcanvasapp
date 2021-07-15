@@ -12,7 +12,7 @@
         "storybook": "start-storybook -p 6006 --debug-webpack --https --ssl-cert ./cert.pem --ssl-key ./key.pem",
         "build-storybook": "build-storybook",
         "test": "jest",
-        "test:watch": "jest --watch",
+        "test:watch": "jest --watch --runInBand --detectOpenHandles",
         "test:coverage": "jest --coverage --detectOpenHandles"
     },
     "author": "Magic EdTech",

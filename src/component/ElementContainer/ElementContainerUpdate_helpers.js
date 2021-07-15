@@ -48,6 +48,8 @@ export const updateNewVersionElementInStore = (paramObj) => {
         asideData.indexes = indexes;
         if (indexes.length === 2 || indexes.length === 3) {
             dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+        } else if (indexes.length === 4 && asideData.parent.type === 'groupedcontent') {
+            dispatch(fetchSlateData(asideData.parent.id, asideData.parent.parentContentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {

@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import ElementFigure from '../../../src/component/ElementFigure/ElementFigure';
-import { figureImage25TextElementDefault, figureImage25TextElementWithData ,figureImage50TextElementDefault,figureImage50TextElementWithData, figureImageTextWidthElementDefault,figureImageTextWidthElementWithData, figureImageWiderElementDefault,figureImageWiderElementWithData, figureImageFullElementDefault,figureImageFullElementWithData,tableImage50TextElementDefault,tableImage50TextElementWithData,tableImageTextWidthElementDefault,tableImageTextWidthElementWithData,tableImageWiderElementDefault,tableImageWiderElementWithData,tableImageFullElementDefault,tableImageFullElementWithData, mathImage50TextElementDefault,mathImage50TextElementWithData,mathImageTextWidthElementDefault,mathImageTextWidthElementWithData,mathImageWiderElementDefault,mathImageWiderElementWithData,mathImageFullElementDefault,mathImageFullElementWithData, mathmlEditorDefault,mathmlEditorWithData,blockCodeEditorDefault,blockCodeEditorWithData, figureTableEditorTextWidthElementDefault, figureTableEditorTextWidthElementWithData } from '../../../fixtures/ElementFigureTestingData.js'
+import { figureImage50TextElementDefault,figureImage50TextElementWithData, mathmlEditorDefault, mathmlEditorWithData,mathImage50TextElementDefault, blockCodeEditorDefault,blockCodeEditorWithData, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData } from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
@@ -19,13 +19,18 @@ global.fetch = jest.fn().mockImplementation(() => {
       resolve({json:jest.fn(),id:'urn:pearson134'});
    });
  });
-xdescribe('Testing Figure element component', () => {
-    const initialState = {
-        permissions:[
-            'add_multimedia_via_alfresco'
-        ]
-    };
-    let store = mockStore(initialState);
+describe('Testing Figure element component', () => {
+    let initialState = {
+        alfrescoReducer: {
+            alfrescoAssetData: {},
+            elementId: "urn",
+            alfrescoListOption: [],
+            launchAlfrescoPopup: true,
+            editor: true,
+            Permission: false
+        }
+    }
+    const store = mockStore(initialState);
 
     test('renders without crashing', () => {
         let props = {
@@ -39,7 +44,7 @@ xdescribe('Testing Figure element component', () => {
             handleFocus: function(){},
             permissions: ['add_multimedia_via_alfresco'],
         }
-        const component = mount(<ElementFigure {...props} />)
+        const component = mount(<Provider store={store}><ElementFigure {...props} /></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance(); 
         expect(instance).toBeDefined();
@@ -56,7 +61,7 @@ xdescribe('Testing Figure element component', () => {
             handleFocus: function(){},
             permissions: ['add_multimedia_via_alfresco'],
         }
-        let elementFigure = mount(<ElementFigure {...props}  />);
+        let elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider>)
         const elementFigureInstance = elementFigure.find('ElementFigure').instance();
         const spyrenderFigureType = jest.spyOn(elementFigureInstance, 'renderFigureType')
         elementFigureInstance.renderFigureType(figureImage50TextElementWithData);
@@ -77,71 +82,16 @@ xdescribe('Testing Figure element component', () => {
             handleFocus: function(){},
             permissions:['add_multimedia_via_alfresco'],
         };
-        let component = mount(<ElementFigure {...props} />);
+        let component = mount(<Provider store={store}><ElementFigure {...props} /></Provider>)
+        const instance1 = component.find('ElementFigure').instance()
         const div = document.createElement('div');
-        test('renders properly with default figureImage-50% Text', () => {
+        it('renders properly with default figureImage-50% Text', () => {
             expect(component.find('.divImage50Text .figureImage50Text .image50Text')).toHaveLength(1)
         })
-        test('renders  properly with mock data figureImage-50% Text', () => {
+        it('renders  properly with mock data figureImage-50% Text', () => {
             component.setProps({ model: figureImage50TextElementWithData ,index: 2});
             expect(component.find('.divImage50Text .figureImage50Text .image50Text')).toHaveLength(1)
         })
-        test('renders  properly with default figureImage-TextWidth', () => {         
-            component.setProps({ model: figureImageTextWidthElementDefault ,index: 3});
-            expect(component.find('.divImageTextWidth .figureImageTextWidth .imageTextWidth')).toHaveLength(1)
-        })
-        test('renders  properly with mock data figureImage-TextWidth', () => {          
-            component.setProps({ model: figureImageTextWidthElementWithData ,index: 4});
-            expect(component.find('.divImageTextWidth .figureImageTextWidth .imageTextWidth')).toHaveLength(1)
-        })
-        test('renders  properly with default figureImage-Wider than Text', () => {          
-            component.setProps({ model: figureImageWiderElementDefault,index: 5 });
-            expect(component.find('.divImageWiderThanText .figureImageWiderThanText .imageWiderThanText')).toHaveLength(1)
-        })
-        test('renders  properly with mock data figureImage-Wider than Text', () => {          
-            component.setProps({ model: figureImageWiderElementWithData,index: 6 });
-            expect(component.find('.divImageWiderThanText .figureImageWiderThanText .imageWiderThanText')).toHaveLength(1)
-        })
-        xtest('renders  properly with default figureImage-Fullscreen', () => {           
-            component.setProps({ model: figureImageFullElementDefault ,index: 7});
-            expect(component.find('.divImageFullscreenImage .figureImageFullscreen .imageFullscreen')).toHaveLength(1)
-        })
-        xtest('renders  properly with mock data figureImage-Fullscreen', () => {           
-            component.setProps({ model: figureImageFullElementWithData,index: 8 });
-            expect(component.find('.divImageFullscreenImage .figureImageFullscreen .imageFullscreen')).toHaveLength(1)
-        })
-        test('renders properly with default figureImage-25% Text', () => {
-            component.setProps({ model: figureImage25TextElementDefault ,index: 9});
-            expect(component.find('.divImage25Text .figureImage25Text .image25Text')).toHaveLength(1)
-        })
-        test('renders  properly with mock data figureImage-25% Text', () => {
-            component.setProps({ model: figureImage25TextElementWithData ,index: 10});
-            expect(component.find('.divImage25Text .figureImage25Text .image25Text')).toHaveLength(1)
-        })
-    });
-    describe('With table editor element', () => {
-        let props = {
-            model: figureTableEditorTextWidthElementDefault,
-            index: 9,
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            onClick : ()=>{},
-            handleFocus: function(){},
-            permissions:['add_multimedia_via_alfresco'],
-        };
-        let component = mount(<ElementFigure {...props} />);
-        const div = document.createElement('div');
-        xtest('renders  properly with default TableEditor-TextWidth', () => {
-            component.setProps({ model: figureTableEditorTextWidthElementDefault ,index:11});
-            expect(component.find('.divImageTextWidth .figureImageTextWidth .imageTextWidth')).toHaveLength(1)
-        })
-        xtest('renders  properly with mock data TableEditor-TextWidth', () => {
-            component.setProps({ model: figureTableEditorTextWidthElementWithData ,index:12});
-            expect(component.find('.divImageTextWidth .figureImageTextWidth .imageTextWidth')).toHaveLength(1)
-        })
-
     });
     describe('With table image element', () => {
         let props = {
@@ -155,38 +105,14 @@ xdescribe('Testing Figure element component', () => {
             handleFocus: function(){},
             permissions: ['add_multimedia_via_alfresco'],
         };
-        let component = mount(<ElementFigure {...props} />);
-        test('renders properly with default tableImage-50% Text', () => {
+        let component = mount(<Provider store={store}><ElementFigure {...props} /></Provider>);
+        it('renders properly with default tableImage-50% Text', () => {
             component.setProps({ model: tableImage50TextElementDefault ,index:9});
             expect(component.find('.divImage50TextTableImage .figureImage50TextTableImage .image50TextTableImage')).toHaveLength(1)
         })
-        test('renders  properly with mock data tableImage-50% Text', () => {
+        it('renders  properly with mock data tableImage-50% Text', () => {
             component.setProps({ model: tableImage50TextElementWithData ,index:10});
             expect(component.find('.divImage50TextTableImage .figureImage50TextTableImage .image50TextTableImage')).toHaveLength(1)
-        })
-        test('renders  properly with default tableImage-TextWidth', () => {
-            component.setProps({ model: tableImageTextWidthElementDefault ,index:11});
-            expect(component.find('.divImageTextWidthTableImage .figureImageTextWidthTableImage .imageTextWidthTableImage')).toHaveLength(1)
-        })
-        test('renders  properly with mock data tableImage-TextWidth', () => {
-            component.setProps({ model: tableImageTextWidthElementWithData ,index:12});
-            expect(component.find('.divImageTextWidthTableImage .figureImageTextWidthTableImage .imageTextWidthTableImage')).toHaveLength(1)
-        })
-        test('renders  properly with default tableImage-Wider than Text', () => {
-            component.setProps({ model: tableImageWiderElementDefault ,index:13});
-            expect(component.find('.divImageWiderThanTextTableImage .figureImageWiderThanTextTableImage .imageWiderThanTextTableImage')).toHaveLength(1)  
-        })
-        test('renders  properly with mock data tableImage-Wider than Text', () => {
-            component.setProps({ model: tableImageWiderElementWithData,index:14 });
-            expect(component.find('.divImageWiderThanTextTableImage .figureImageWiderThanTextTableImage .imageWiderThanTextTableImage')).toHaveLength(1)
-        })
-        test('renders  properly with default tableImage-Fullscreen', () => {
-            component.setProps({ model: tableImageFullElementDefault,index:15 });
-            expect(component.find('.divImageFullscreenTableImage .figureImageFullscreenTableImage .imageFullscreenTableImage')).toHaveLength(1)
-        })
-        test('renders  properly with mock data tableImage-Fullscreen', () => {
-            component.setProps({ model: tableImageFullElementWithData ,index:16});
-            expect(component.find('.divImageFullscreenTableImage .figureImageFullscreenTableImage .imageFullscreenTableImage')).toHaveLength(1)
         })
     });
     describe('With math image element', () => {
@@ -199,39 +125,15 @@ xdescribe('Testing Figure element component', () => {
             },
             permissions: ['add_multimedia_via_alfresco'],
         };
-        let component = mount(<ElementFigure {...props} />);
+        let component = mount(<Provider store={store}><ElementFigure {...props} /></Provider>);
         const div = document.createElement('div');
-        test('renders properly with default mathImage-50% Text', () => {
+        it('renders properly with default mathImage-50% Text', () => {
             component.setProps({ model: mathImage50TextElementDefault,index:17 });
             expect(component.find('.divImage50TextMathImage .figureImage50TextMathImage .image50TextMathImage')).toHaveLength(1)
         })
-        test('renders  properly with mock data mathImage-50% Text', () => {
+        it('renders  properly with mock data mathImage-50% Text', () => {
             component.setProps({ model: mathImage50TextElementWithData,index:18 });
             expect(component.find('.divImage50TextMathImage .figureImage50TextMathImage .image50TextMathImage')).toHaveLength(1)
-        })
-        test('renders  properly with default mathImage-TextWidth', () => {
-            component.setProps({ model: mathImageTextWidthElementDefault ,index:19});
-            expect(component.find('.divImageTextWidthMathImage .figureImageTextWidthMathImage .imageTextWidthMathImage')).toHaveLength(1)
-        })
-        test('renders  properly with mock data mathImage-TextWidth', () => {
-            component.setProps({ model: mathImageTextWidthElementWithData,index: 20});
-            expect(component.find('.divImageTextWidthMathImage .figureImageTextWidthMathImage .imageTextWidthMathImage')).toHaveLength(1)
-        })
-        test('renders  properly with default mathImage-Wider than Text', () => {
-            component.setProps({ model: mathImageWiderElementDefault,index:21 });
-            expect(component.find('.divImageWiderThanTextMathImage .figureImageWiderThanTextMathImage .imageWiderThanTextMathImage')).toHaveLength(1)
-        })
-        test('renders  properly with mock data mathImage-Wider than Text', () => {
-            component.setProps({ model: mathImageWiderElementWithData ,index:22});
-            expect(component.find('.divImageWiderThanTextMathImage .figureImageWiderThanTextMathImage .imageWiderThanTextMathImage')).toHaveLength(1)
-        })
-        test('renders  properly with default mathImage-Fullscreen', () => {
-            component.setProps({ model: mathImageFullElementDefault ,index:23});
-            expect(component.find('.divImageFullscreenMathImage .figureImageFullscreenMathImage .imageFullscreenMathImage')).toHaveLength(1) 
-        })
-        test('renders  properly with mock data mathImage-Fullscreen', () => {
-            component.setProps({ model: mathImageFullElementWithData, index: 24 });
-            expect(component.find('.divImageFullscreenMathImage .figureImageFullscreenMathImage .imageFullscreenMathImage')).toHaveLength(1)
         })
     });
     describe('With mathML element', () => {
@@ -244,7 +146,7 @@ xdescribe('Testing Figure element component', () => {
             },
             permissions: ['add_multimedia_via_alfresco'],
         };
-        let component = mount(<ElementFigure {...props} />);
+        let component = mount(<Provider store={store}><ElementFigure {...props} /></Provider>);
         test('renders properly with default mathML', () => {
             component.setProps({ model: mathmlEditorDefault, index: 25 });
             expect(component.find('.paragraphNumeroUno.mathml.figureData.mathmlDiv')).toHaveLength(1)
@@ -265,7 +167,7 @@ xdescribe('Testing Figure element component', () => {
             },
             permissions: ['add_multimedia_via_alfresco'],
         };
-        let component = mount(<ElementFigure {...props} />);
+        let component = mount(<Provider store={store}><ElementFigure {...props} /></Provider>);
         test('renders properly with default blockCodeEditor', () => {
             component.setProps({ model: blockCodeEditorDefault,index: 27});
             expect(component.find('.divCodeSnippetFigure.blockCodeFigure')).toHaveLength(1)
@@ -459,7 +361,7 @@ xdescribe('Testing Figure element component', () => {
             },
             stopPropagation() { }
         }
-        const elementFigure = mount(<ElementFigure type={type} index="30" {...props}/>);
+        const elementFigure = mount(<Provider store={store}><ElementFigure type={type} index="30" {...props}/></Provider>);
         let elementFigureInstance = elementFigure.find('ElementFigure').instance();
         it('TEST- Call AddResource function',()=>{
             const spyaddFigureResource = jest.spyOn(elementFigureInstance, 'addFigureResource') 
