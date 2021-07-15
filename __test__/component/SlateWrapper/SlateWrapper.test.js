@@ -16,7 +16,15 @@ const store = mockStore({
     audioReducer: {openRemovePopUp: false},
     searchReducer: {searchTerm: '', parentId: '', deeplink: false},
     commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-    assessmentReducer:{showConfirmationPopup:false}
+    assessmentReducer:{showConfirmationPopup:false},
+    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    }
 })
 import config from '../../../src/config/config';
 import { showTocBlocker } from "../../../src/js/toggleLoader";
@@ -181,7 +189,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -203,7 +219,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -225,7 +249,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             //config.savingInProgress=true
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -328,7 +360,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 showAudioRemovePopup : jest.fn(),
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -350,7 +390,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -381,7 +429,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 withinLockPeriod: true,
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -415,7 +471,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 withinLockPeriod: true,
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } accesDeniedPopup = {true} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -451,7 +515,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -488,7 +560,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -525,7 +605,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -562,7 +650,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -633,7 +729,15 @@ xdescribe('splihandler function', () => {
         audioReducer: {openRemovePopUp: false},
         searchReducer: {searchTerm: '', parentId: '', deeplink: false},
         commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-        assessmentReducer:{showConfirmationPopup:false}
+        assessmentReducer:{showConfirmationPopup:false},
+        alfrescoReducer: {
+            alfrescoAssetData: {},
+            elementId: "urn",
+            alfrescoListOption: [],
+            launchAlfrescoPopup: true,
+            editor: true,
+            Permission: false
+        }
     })
     //config.savingInProgress=true
     const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -720,7 +824,15 @@ xdescribe('splihandler function', () => {
             audioReducer: {openRemovePopUp: false, openWrongAudioPopup : true, openSplitPopUp:false},
             searchReducer: {searchTerm: '', parentId: '', deeplink: false},
             commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-            assessmentReducer:{showConfirmationPopup:false}
+            assessmentReducer:{showConfirmationPopup:false},
+            alfrescoReducer: {
+                alfrescoAssetData: {},
+                elementId: "urn",
+                alfrescoListOption: [],
+                launchAlfrescoPopup: true,
+                editor: true,
+                Permission: false
+            }
         })
         //config.savingInProgress=true
         const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -758,7 +870,15 @@ xdescribe('splihandler function', () => {
             audioReducer: {openRemovePopUp: false, openWrongAudioPopup : true, openSplitPopUp:false},
             searchReducer: {searchTerm: '', parentId: '', deeplink: false},
             commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-            assessmentReducer:{showConfirmationPopup:false}
+            assessmentReducer:{showConfirmationPopup:false},
+            alfrescoReducer: {
+                alfrescoAssetData: {},
+                elementId: "urn",
+                alfrescoListOption: [],
+                launchAlfrescoPopup: true,
+                editor: true,
+                Permission: false
+            }
         })
         
         //config.savingInProgress=true

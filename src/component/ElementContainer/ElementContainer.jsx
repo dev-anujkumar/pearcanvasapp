@@ -35,7 +35,6 @@ import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from '
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
-import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
 import { CitationGroupContext } from './ElementCitationContext'
 import CitationGroup from '../CitationGroup'
@@ -1049,8 +1048,8 @@ class ElementContainer extends Component {
      * @param {*} index index of figure element
      * @param {*} cb callback method
      */
-    updateFigureData = (figureData, index, elementId, cb) => {
-        this.props.updateFigureData(figureData, index, elementId, cb)
+    updateFigureData = (figureData, index, elementId, asideData, cb) => {
+        this.props.updateFigureData(figureData, index, elementId, asideData, cb)
     }
 
     toolbarHandling = (action = "") => {
@@ -1308,12 +1307,12 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
+                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData}  updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo model={element} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
+                            editor = <ElementAudioVideo model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -1321,7 +1320,7 @@ class ElementContainer extends Component {
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            editor = <ElementInteractive accessDenied={this.props.accessDenied} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} editInteractiveId={this.state.editInteractiveId} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} />;
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} asideData={this.props.asideData} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} editInteractiveId={this.state.editInteractiveId} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} />;
                             labelText = LABELS[element.figuredata.interactiveformat];
                             isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
                             break;
@@ -1396,32 +1395,6 @@ class ElementContainer extends Component {
                     />;
                     labelText = 'Pop'
                     break;
-                /* case elementTypeConstant.SHOW_HIDE:
-                     editor = <ElementContainerContext.Provider value={{
-                         onListSelect: this.props.onListSelect,
-                         showHideId: this.props.showHideId,
-                         createShowHideElement: this.props.createShowHideElement,
-                         deleteShowHideUnit: this.props.deleteShowHideUnit,
-                         activeElement: this.props.activeElement,
-                         showBlocker: this.props.showBlocker,
-                         permissions: permissions,
-                         handleFocus: this.handleFocus,
-                         handleBlur: this.handleBlur,
-                         index: index,
-                         element: element,
-                         model: element.html,
-                         slateLockInfo: slateLockInfo,
-                         onClick: this.handleFocus,
-                         glossaryFootnoteValue: this.props.glossaryFootnoteValue,
-                         elementStatus: config.elementStatus,
-                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
-                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
-                         getElementStatus: this.props.getElementStatus
-                     }}><ElementShowHide userRole={this.props.userRole} />
-                     </ElementContainerContext.Provider >;
-                     labelText = 'SH'
-                     break;
-                 */
                 case elementTypeConstant.SHOW_HIDE:
                     editor = <ShowHide
                         onListSelect={this.props.onListSelect}
@@ -1782,6 +1755,7 @@ class ElementContainer extends Component {
                         handleBlur={this.handleBlur}
                         element={this.props.element}
                         index={this.props.index}
+                        asideData={this.props.asideData}
                     />}
                 {this.props.children &&
                     <PageNumberContext.Consumer>
@@ -2128,8 +2102,8 @@ const mapDispatchToProps = (dispatch) => {
         updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => {
             dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData))
         },
-        updateFigureData: (figureData, index, elementId, cb) => {
-            dispatch(updateFigureData(figureData, index, elementId, cb))
+        updateFigureData: (figureData, index, elementId, asideData, cb) => {
+            dispatch(updateFigureData(figureData, index, elementId, asideData, cb))
         },
         updatePageNumber: (pagenumber, elementId, asideData, parentUrn) => {
             dispatch(updatePageNumber(pagenumber, elementId, asideData, parentUrn))

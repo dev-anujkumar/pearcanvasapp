@@ -118,7 +118,7 @@ class ElementFigure extends Component {
             
             Object.assign(setFigureData, (Object.keys(scaleMarkerData).length > 0) ? { scaleimage: scaleMarkerData } : null);
 
-            this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, () => {
+            this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId,this.props.asideData, () => {
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur()
             })

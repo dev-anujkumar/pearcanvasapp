@@ -178,7 +178,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on element in WE/PE/CG/2C */
-    else if (poetryData || asideData || parentUrn || showHideObj) {
+    else if (poetryData || asideData || parentUrn || (showHideObj && Object.keys(showHideObj) > 0)) {
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType)
     }
     /* action on PE and CG */
@@ -401,7 +401,7 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
     let elementDetails;
     const { wipData, elementId, tag, actionStatus,popupInContainer,slateManifestVersioning } = snapshotsData;
     const { asideData, parentUrn } = containerElement
-    tag.parentTag = asideData && fetchElementsTag(asideData) && asideData?.type !== MULTI_COLUMN ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
+    tag.parentTag = asideData && fetchElementsTag(asideData) && asideData?.type !== MULTI_COLUMN ? fetchElementsTag(asideData) : fetchElementsTag(wipData);
     elementId.parentId = asideData && asideData.id && asideData?.type !== MULTI_COLUMN ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     wipData.contents.bodymatter.map((item) => {
         if (elementType.indexOf(item.type) !== -1) {
@@ -639,7 +639,7 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
         }
     }
-    else if (defaultKeys.action === 'create' && type == POPUP_ELEMENT && operationType==='copy') {     /** Create Popup */
+    else if ((defaultKeys.action === 'create' && type == POPUP_ELEMENT && operationType==='copy') || (operationType === 'cut' && defaultKeys.action === 'update')) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
         if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
@@ -651,12 +651,6 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
          tcmSnapshotsDeletePopup(snapshotsData, defaultKeys,index,containerElement,type);
         if(defaultKeys.action === 'delete' && type == POPUP_ELEMENT && (metaDataField && formattedTitleField.includes(metaDataField))){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'delete');
-        }
-    }
-    else if(operationType==='cut' && defaultKeys.action === 'update'){
-        tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
-        if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
-            tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
         }
     }
     else if ((type && formattedTitleField.includes(type)) || (metaDataField && formattedTitleField.includes(metaDataField))) { /** Formatted-title */
@@ -1345,7 +1339,7 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
  * @param {Object} currentSlateData current Slate data 
  * @returns {Object} Updated Container Element with latest Manifest Urns
 */
-export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData) => {
+export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData, actionType, deleteElementType) => {
     /** latest version for WE/CE/PE/AS*/
     if (versionStatus && versionStatus.parentStatus && versionStatus.parentStatus === "approved") {
         let contentUrn = containerElement.asideData ? containerElement.asideData.contentUrn : containerElement.poetryData ? containerElement.poetryData.contentUrn : containerElement.parentUrn ? containerElement.parentUrn.contentUrn : ""
@@ -1367,10 +1361,11 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         }
     }
     /** latest version for SB*/
-    if (versionStatus && versionStatus.childStatus && versionStatus.childStatus === "approved") {
+    if ((versionStatus && versionStatus.childStatus && versionStatus.childStatus === "approved") || (actionType === 'delete' && deleteElementType === 'manifest')) {
         let newSectionManifest = await getLatestVersion(containerElement.parentUrn.contentUrn);
         containerElement.parentUrn.manifestUrn = newSectionManifest ? newSectionManifest : containerElement.parentUrn.manifestUrn
     }
+
     if(versionStatus && versionStatus.popupStatus && versionStatus.popupStatus === "approved"){
         let updatedPopupUrn = containerElement && containerElement.parentElement && containerElement.parentElement.contentUrn ? containerElement.parentElement.contentUrn : "";
         if(updatedPopupUrn){
