@@ -1,5 +1,6 @@
 import config from '../../config/config.js';
-import { VIDEO, IMAGE, TEXT, TABLE_EDITOR, BLOCKCODE, ELEMENT_DIALOGUE, FIGURE_MML } from '../SlateWrapper/SlateWrapperConstants.js';
+import { VIDEO, IMAGE, TEXT, TABLE_EDITOR, BLOCKCODE, ELEMENT_DIALOGUE, FIGURE_MML, SMARTLINK,
+    MMI_ELM, ELEMENT_DISCUSSION, INTERACTIVE } from '../SlateWrapper/SlateWrapperConstants.js';
 import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const showHideConstants = {
@@ -333,12 +334,21 @@ export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeE
     }
     return bodymatter
 }
-/**/
+/**
+ * @function getElementType
+ * @description This function return the element type in format which required for element creation
+ * @param {*} type2BAdded  type of element ex. - "blockcode-elem"
+ * @returns 
+ */
 function getElementType(type2BAdded) {
     switch(type2BAdded){
         case "figure-mml-elem": return FIGURE_MML;
         case "blockcode-elem": return BLOCKCODE;
         case "element-dialogue": return ELEMENT_DIALOGUE;
+        case "smartlink-elem": return SMARTLINK;
+        case "element-discussion": return ELEMENT_DISCUSSION;
+        case "elm-interactive-elem": return MMI_ELM;
+        case "interactive-elem": return INTERACTIVE;
         default: return type2BAdded;
     }
 }

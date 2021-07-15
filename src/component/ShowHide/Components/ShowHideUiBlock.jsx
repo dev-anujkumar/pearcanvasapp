@@ -66,6 +66,7 @@ const ShowHideUiBlock = (props) => {
 			createShowHideElement = {props?.createShowHideElement}
 			element = {props?.element}
 			showPlayscript = {true}
+			showDiscussion = {true}
 		/>
 	}
 
@@ -102,8 +103,6 @@ const ShowHideUiBlock = (props) => {
 			parentElement = {element}
 			onListSelect = {props.onListSelect}
 			userRole = {props.userRole}
-			//elementSepratorProps = {props.elementSepratorProps}
-			//splithandlerfunction = {props.splithandlerfunction}
 			pasteElement = {props.pasteElement}
 			showHideType = {sectionType}
 			handleFocus = {props.handleFocus}
