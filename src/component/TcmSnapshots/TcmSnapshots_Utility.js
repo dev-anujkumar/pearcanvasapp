@@ -964,7 +964,7 @@ const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
     const elementData =element?.elementdata;
     let elementSnapshot = {};
     elementSnapshot = {
-            assessmentTitle: `<p>${elementData?.assessmenttitle || ''}</p>`,
+            assessmentTitle: `<p>${elementData?.assessmenttitle || elementData?.templatelabel || ''}</p>`,
             assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
             assessmentId: `<p>${elementData?.assessmentid|| ''}</p>`,
             assessmentItemId: `<p>${elementData?.assessmentitemid|| ''}</p>`,
