@@ -1686,7 +1686,65 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     dispatchEvent: () => { }
                 },
                 selection: {
-                    getNode : ()=>{ return {tagName: 'sup', getElementsByTagName : ()=>{return []} , parentNode : {tagName : 'SUP'} } },
+                    getNode : ()=>{ return {innerHTML:'aa', textContent:'@', tagName: 'sup', getElementsByTagName : ()=>{return []} , parentNode : {tagName : 'SUP',innerHTML:'aaa'},lastChild:{tagName:'SUP',getElementsByTagName:() => { return 'A'}}} },
+                    getStart : ()=>{}
+                },
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder"><sup><a>*</a></sup>hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'A'
+                                }
+                            ],
+                            nodeName: "SUP",
+                            innerText: "hello",
+                            tagName: 'sup',
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+
+        xit('Test-8.10-Method--7--editorBeforeExecCommand --CASE_9--MceToggleFormat-- 1st case',()=>{
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    },
+                    targetElm: {
+                        nodeName: "SUP"
+                    }
+                },
+                value: "superscript",
+                command: 'mceToggleFormat',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            } 
+
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: {
+                    getNode : ()=>{ return {textContent:'@', tagName: 'up', getElementsByTagName : ()=>{return []} , parentNode : {tagName : 'SUP'},lastChild:{tagName:'SUP',getElementsByTagName:() => { return 'A'}}} },
                     getStart : ()=>{}
                 },
                 dom: {
@@ -3176,8 +3234,29 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 children: ['<code class="bce place-holder">hello<ol></code>'],
                 classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
             }
+
+            let event1 = {...event,which:98}
+            let nextEditor1 = {...nextEditor,on: (temp, cb) => { cb(event1) }}
+
+            let event2 = {...event,which:73}
+            let nextEditor2 = {...nextEditor,on: (temp, cb) => { cb(event2) }}
+
+            let event3 = {...event,which:85}
+            let nextEditor3 = {...nextEditor,on: (temp, cb) => { cb(event3) }}
+
+            let event4 = {...event,which:105}
+            let nextEditor4 = {...nextEditor,on: (temp, cb) => { cb(event4) }}
+
+            let event5 = {...event,which:117}
+            let nextEditor5 = {...nextEditor,on: (temp, cb) => { cb(event5) }}
+
             const spyeditorKeyup = jest.spyOn(instance, 'editorKeyup')
             instance.editorKeyup(nextEditor);
+            instance.editorKeyup(nextEditor1);
+            instance.editorKeyup(nextEditor2);
+            instance.editorKeyup(nextEditor3);
+            instance.editorKeyup(nextEditor4);
+            instance.editorKeyup(nextEditor5);
             expect(spyeditorKeyup).toHaveBeenCalled()
         });
         it('Test-28.3.1-Method--26--editorKeyup-POETRY Element-KeyCode=13', () => {
@@ -6130,6 +6209,39 @@ describe('Test function--handleBlankLineArrowKeys', () => {
     });
  })
 
+
+ describe('Testing function--elementConversion', () => {
+    it('elementConversion', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'elementConversion')
+        instance.elementConversion('P');
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+ describe('Testing function--makeBqReplace', () => {
+    xit('makeBqReplace', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'makeBqReplace')
+        instance.makeBqReplace();
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+ describe('Testing function--makeReplace', () => {
+    xit('makeReplace', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'makeReplace')
+        instance.makeReplace();
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+
+ describe('Testing function--getNodeContent', () => {
+    it('getNodeContent', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'getNodeContent')
+        instance.getNodeContent();
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
 
     describe('Test-40-Method--3--editorExecCommand-branch coverage', () => {
         it('Test-40.1-Method--6--editorBeforeExecCommand --CASE--Underline', () => {
