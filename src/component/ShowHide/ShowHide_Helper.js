@@ -71,7 +71,7 @@ export const addElementInShowHide = (index, sectionType, type2BAdded, props) => 
 	}
     const { element, asideData, parentUrn } = props || {};
 	const { id, contentUrn, } = element || {};
-    const elementLineage = {
+    const elementLineage = (asideData?.type === ElementConstants.SHOW_HIDE) ? asideData : {
         ...element ,
         grandParent: {
             asideData,
