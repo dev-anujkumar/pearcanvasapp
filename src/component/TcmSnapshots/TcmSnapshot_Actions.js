@@ -150,3 +150,17 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
     })
 }
 
+/** TCM Snapshots API for CUT/COPY PASTE operation */
+export const callCutCopySnapshotAPI = async (snapshotData) => {
+    // const url = config.TCM_CUT_COPY_URL
+    const url = 'http://localhost:5000/cut-copy-snapshots'
+    return axios.post(url, snapshotData, {
+        headers: {
+            PearsonSSOSession: config.ssoToken
+        }
+    }).then((res) => {
+        console.log("Successs !!!")
+    }).catch((error) => {
+        console.log("Error in sending TCM Snapshots for cut/copy>>>>", error)
+    })
+}

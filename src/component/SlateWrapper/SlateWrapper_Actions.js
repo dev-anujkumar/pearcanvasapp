@@ -966,7 +966,16 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
-
+        /** Cut-Copy TCM snapshots API Payload Params*/
+        let tcmSnapshotParams = {
+            selection,
+            asideData,
+            parentUrn,
+            elementType: selection.element.type,
+            projectUrn: config.projectUrn,
+            destnSlateManifestURN: config.slateManifestURN,
+            destnSlateEntityURN: config.slateEntityURN
+        }
         try {
             let url = `${config.REACT_APP_API_URL}v1/projects/${config.projectUrn}/containers/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
@@ -1010,6 +1019,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     slateEntityUrn, index2ShowHide
                 };
                 await onPasteSuccess(pasteSuccessArgs)
+                /** Cut-Copy TCM snapshots API */
+                tcmSnapshotParams.elementId = responseData[0].id
+                const tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
+                callCutCopySnapshotAPI(tcmSnapshotPayload)
+                /******************************/
                 if (responseData[0].elementdata?.type === "blockquote") {  
                     setTimeout(() => {
                         const node1 = document.querySelector(`[data-id="${responseData[0].id}"]`)
