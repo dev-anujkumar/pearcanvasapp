@@ -60,7 +60,7 @@ class MultipleColumnContainer extends PureComponent {
      */
      renderElement = (_elements, parentUrn, parentIndex) => {
         let columnIndex;
-        for (let element of this.props.threeColumnData) {
+        for (let element of this.props.multipleColumnData) {
             if (element.containerId === parentUrn.mcId) {
                 columnIndex = element.columnIndex;
             }
@@ -158,7 +158,7 @@ class MultipleColumnContainer extends PureComponent {
             newIndex: event.newDraggableIndex,
             swappedElementData: swappedElementData,
             currentSlateEntityUrn: parentUrn.contentUrn,
-            containerTypeElem: '3C',
+            containerTypeElem: `${this.props.labelText}`,
             columnIndex: parentUrn.columnIndex,
             containerIndex: this.context.index
         }
@@ -182,7 +182,7 @@ class MultipleColumnContainer extends PureComponent {
                 contentUrn: group.contentUrn,
                 elementType: _containerType,
                 mcId: this.context?.element?.id, /* Will be used in tcm snapshot -2c->we */
-                multiColumnType: "3C" /* Will be used in tcm snapshot -2c->we */
+                multiColumnType: `${this.props.labelText}` /* Will be used in tcm snapshot -2c->we */
             }
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
@@ -258,7 +258,7 @@ class MultipleColumnContainer extends PureComponent {
     render() {
         const { context } = this;
         return (
-            <div className = "multi-column-container-3c" onMouseUp = {this.handleFocus}>
+            <div className = "multi-column-container" onMouseUp = {this.handleFocus}>
                 {/* Please select a column to start editing */}
                 {this.renderContainer(context)}
             </div>
@@ -268,7 +268,7 @@ class MultipleColumnContainer extends PureComponent {
 
 const mapStateToProps = state => {
     return {
-        threeColumnData: state.appStore.threeColumnData
+        multipleColumnData: state.appStore.multipleColumnData
     }
 };
 

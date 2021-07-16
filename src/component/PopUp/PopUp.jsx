@@ -160,6 +160,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if (props.AssessmentPopup) {
+            return (
+                <div className={`dialog-buttons`}>
+                    <span className={`lo-save-button`} onClick={(e) => props.agree(false, e)}>{props.yesButton}</span>
+                    <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -174,7 +182,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage  || props.isTCMCanvasPopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -209,7 +217,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary  || props.isTCMCanvasPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary  || props.isTCMCanvasPopup || props.AssessmentPopup) {
             return null
         }
         else {
@@ -306,6 +314,14 @@ class PopUp extends React.Component {
                 <div ref={this.contentRef} className={`dialog-window ${props.assessmentClass}`} dangerouslySetInnerHTML={{ __html: props.dialogText }}></div>
             )
         }
+        else if (props.AssessmentPopup) {
+            return (
+                <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{'Do you want to proceed?'}</div>
+                </>
+            )
+        }
         else {
             return (
                 <div className={`dialog-window  ${props.isAddComment ? 'add-comment' : ""} ${props.assessmentClass}`} >{props.dialogText}</div>
@@ -315,7 +331,7 @@ class PopUp extends React.Component {
 
 
     renderTcmPopupIcons = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup) {
             return null
         }
         else {

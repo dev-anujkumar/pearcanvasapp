@@ -1,5 +1,6 @@
 /**************************Import Plugins**************************/
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { JSDOM } from 'jsdom';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -216,6 +217,34 @@ describe('Testing Assessment Slate Data component', () => {
         expect(assessmentSlateInstance2.state.changeLearningData).toBe(false)
         expect(assessmentSlateInstance2.state.activeAssessmentUsageType).toBe('Homework')
         expect(assessmentSlateInstance2.props.getAssessmentDataPopup).toBe(false)
+    });
+    it('Test 3.2-renderAssessmentSlate - Render Assessment Slate Final Slate to New Slate Condition', () => {
+        const component2 = mount(<Provider store={store}><AssessmentSlateData
+            {...props}
+            assessmentSlateObj={{
+                assessmentId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                itemId: "",
+                title: "Test Puf",
+            }}
+            getAssessmentData={true}
+            getAssessmentDataPopup={false}
+        /></Provider>)
+        let assessmentSlateInstance2 = component2.find('AssessmentSlateData').instance();
+        assessmentSlateInstance2.setState({
+            changeLearningData: false,
+            activeAssessmentUsageType: 'Homework',
+            isUpdateFinal:true,
+            activeAssessmentType:"puf"
+        })
+        component2.update();
+        assessmentSlateInstance2.forceUpdate();
+        jest.spyOn(assessmentSlateInstance2, 'showNewAssessmentSlate');
+        assessmentSlateInstance2.showNewAssessmentSlate("puf","Homework");
+        expect(assessmentSlateInstance2.props.getAssessmentData).toBe(true)
+        expect(assessmentSlateInstance2.state.changeLearningData).toBe(false)
+        expect(assessmentSlateInstance2.state.activeAssessmentUsageType).toBe('Homework')
+        expect(assessmentSlateInstance2.props.getAssessmentDataPopup).toBe(false)
+        expect(assessmentSlateInstance2.showNewAssessmentSlate).toHaveBeenCalled();
     });
     it('Test 4-renderAssessmentSlate - Render Assessment Slate-Success Message', () => {
         const component3 = mount(<Provider store={store}><AssessmentSlateData
@@ -625,5 +654,65 @@ describe('Testing Assessment Slate Data component', () => {
             expect(assessmentSlateInstance9.componentDidUpdate).toHaveBeenCalled()
             expect(assessmentSlateInstance9.props.getAssessmentDataPopup).toBe(false)
         })
+    });
+    describe(" Test 11 render Update AssessmentType Popup",()=>{
+        let pufObj = {
+            assessmentId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            title: "Test Puf",
+            assessmentFormat: "puf",
+            usagetype: "Homework"
+        }
+        let nextProps={
+            handleAssessmentBlur: jest.fn(),
+            ...props
+        }
+        const component11 = mount(<Provider store={store}><AssessmentSlateData
+            {...nextProps}
+            model={assessmentSlateELM}
+            assessmentSlateObj={pufObj}
+            getAssessmentData={true}
+            getAssessmentDataPopup={false}
+        /></Provider>)
+        let assessmentSlateInstance11 = component11.find('AssessmentSlateData').instance();
+        it('Test 11.1-render showUpdateAssessmentTypePopup',()=>{
+            jest.spyOn(assessmentSlateInstance11, 'showUpdateAssessmentTypePopup')
+            assessmentSlateInstance11.setState({
+                updateAssessmentTypePopup:true 
+            })
+            assessmentSlateInstance11.showUpdateAssessmentTypePopup();
+            expect(assessmentSlateInstance11.showUpdateAssessmentTypePopup).toHaveBeenCalled();
+        })
+        it('Test 11.2- handleChangeAssessmentPopup',()=>{
+            jest.spyOn(assessmentSlateInstance11, 'handleChangeAssessmentPopup')
+            assessmentSlateInstance11.setState({
+                updateAssessmentTypePopup:false 
+            })
+            assessmentSlateInstance11.handleChangeAssessmentPopup();
+            expect(assessmentSlateInstance11.handleChangeAssessmentPopup).toHaveBeenCalled();
+        });
+        it('Test 11.2- setChangeAssessmentType',()=>{
+            let format='puf'
+            jest.spyOn(assessmentSlateInstance11, 'setChangeAssessmentType');
+            jest.spyOn(assessmentSlateInstance11, 'setUpdateAssessmentType');
+            assessmentSlateInstance11.setState({
+                updateAssessmentTypePopup:false 
+            });
+            assessmentSlateInstance11.setChangeAssessmentType();
+            assessmentSlateInstance11.setUpdateAssessmentType(format);
+            expect(assessmentSlateInstance11.setChangeAssessmentType).toHaveBeenCalled();
+            expect(assessmentSlateInstance11.setUpdateAssessmentType).toHaveBeenCalled();
+        })
+        it('Test 11.3-selectAssessmentType',()=>{
+            let event = {
+                stopPropagation: jest.fn(),
+                preventDefault: jest.fn(),
+                target: { classList: { contains: () => { return false } } }
+            }
+            jest.spyOn(assessmentSlateInstance11, 'selectAssessmentType')
+            assessmentSlateInstance11.selectAssessmentType();
+            assessmentSlateInstance11.handleAssessmentTypeChange('Full Assessment QuAd CITE', event,"updateAssessmentFormat");
+            expect(assessmentSlateInstance11.state.openAssessmentDropdown).toBe(false)
+            expect(assessmentSlateInstance11.state.openUsageDropdown).toBe(false)
+        });
     })
 })
