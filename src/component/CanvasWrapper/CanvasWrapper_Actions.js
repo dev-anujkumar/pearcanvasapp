@@ -885,7 +885,7 @@ function getPathOfFigureAsset(bodymatter, indexes, keyName, activeID) {
 
 const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     let parentData = getState().appStore.slateLevelData,
-        { parentUrn } = getState().appStore,
+        { parentUrn, asideData } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -898,6 +898,10 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     } else {
         let indexes = index.split('-');
         let indexesLen = indexes.length, condition;
+         /* update the store on update of interactive elements inside showhide elements */
+        if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
+            oldPath = getPathOfFigureAsset(bodymatter, indexes, "interactiveid", activeElement?.id);
+        } else
         if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
