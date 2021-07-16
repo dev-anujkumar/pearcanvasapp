@@ -679,18 +679,6 @@ export default {
             "subtype":"image50TextTableImage",
             "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
             "alignment":"half-text",
-            "title":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "captions":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "credits":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
             "figuredata":{
                 "schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
                 "imageid":"",
@@ -723,13 +711,7 @@ export default {
             "labelText":"Fg",
             "toolbar":[
                 "insertMedia",
-                "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
+                "formatSelector"
             ]
         },
         oldElementInfo: {
@@ -745,12 +727,7 @@ export default {
         "toolbar":[
             "insertMedia",
             "formatSelector",
-            "crossLinkingIcon",
-            "assetpopover",
-            "glossary",
-            "decreaseindent",
-            "alignment",
-            "calloutIcon"
+            "crossLinkingIcon"
         ],
         "tag":"TB"
         }
@@ -761,18 +738,6 @@ export default {
             "type":"figure",
             "figuretype":"codelisting",
             "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
-            "title":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "captions":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "credits":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
             "figuredata":{
                 "schema":"http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
                 "type":"codelistingformatted",
@@ -801,12 +766,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
+                "crossLinkingIcon"
             ]                   
         },
         oldElementInfo: {
@@ -822,12 +782,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
+                "crossLinkingIcon"
             ],
             "tag":"BCE"
         }
@@ -840,11 +795,7 @@ export default {
             "schema":"http://schemas.pearson.com/wip-authoring/element/1",
             "elementdata":{
                 "schema":"http://schemas.pearson.com/wip-authoring/blockfeature/1#/definitions/blockfeature",
-                "type":"blockquote",
-                "authoredtext":{
-                    "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text":""
-                }
+                "type":"blockquote"
             },
             "html":{
                 "text":"<blockquote class=\"blockquoteMarginalia\"><p class=\"paragraphNummerEins\"><br></p><p class=\"blockquoteTextCredit\" contenteditable=\"true\" data-placeholder=\"Attribution Text\"></p></blockquote>",
@@ -875,13 +826,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "bold",
-                "underline",
-                "strikethrough",
-                "orderedlist",
-                "unorderedlist",
-                "glossary",
-                "slatetag",
-                "alignment"
+                "underline"
             ],
             "tag":"BQ"
         }
@@ -930,13 +875,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "bold",
-                "underline",
-                "strikethrough",
-                "orderedlist",
-                "unorderedlist",
-                "glossary",
-                "slatetag",
-                "alignment"
+                "underline"
             ],
             "tag":"BQ"
         }

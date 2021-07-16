@@ -1179,10 +1179,20 @@ describe('1 Test convertElement ', () => {
     });
     it('1.5 Test convertElement - outputSubTypeEnum !== "DISC" ', () => {
         const { oldElementData, newElementData, oldElementInfo } = testData?.testcase11;
-        
+        const elementDiv3 = document.createElement('div');
+        elementDiv3.setAttribute("id", "cypress-0-0'");
+        document.body.appendChild(elementDiv3);
+
+        jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+            return {querySelector: () => ({
+                querySelector: () => {
+                    return {"innerHTML":"world"};
+                }
+            })};
+        })
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
-        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",{index: "0-0"}));
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
         
