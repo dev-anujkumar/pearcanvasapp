@@ -45,7 +45,7 @@ describe('Tests Slate Wrapper Actions', () => {
                             slateLevelData: ''
                         }
                     },
-                    element: {id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1"},
+                    element: {id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1", html: {text:''}},
                     inputSubType: "NA",
                     inputType: "AUTHORED_TEXT",
                     operationType: "copy",
@@ -677,7 +677,10 @@ describe('Tests Slate Wrapper Actions', () => {
                     // elementsTag: {},
                     activeElement: {},
                     splittedElementIndex: 0,
-                    pageNumberData: {}
+                    pageNumberData: [{
+                        id: "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6er"
+                    }],
+                    allElemPageData: [{}]
                 }
             }
         }
@@ -891,6 +894,29 @@ describe('Tests Slate Wrapper Actions', () => {
         actions.getPageNumber("1")(store.dispatch, store.getState)
         expect(spyGetPageNumber).toHaveBeenCalled()
     });
+
+    it('testing------- getPageNumber ------action -- then', async () => {
+        jest.mock('axios');
+        axios.get = jest.fn(() => Promise.resolve({data:{pageNumber: 1}}));
+
+        initialState = {
+            appStore : {
+                slateLevelData: slateLevelData2,
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: [],
+                allElemPageData: []
+            },
+            tcmReducer: {tcmSnapshot: []}
+        };
+        
+        store = mockStore(() => initialState);
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        await store.dispatch(actions.getPageNumber('1'));
+        const { type } = store.getActions()[2];
+        expect(type).toBe('PAGE_NUMBER_LOADER');
+    });
+
     it("pasteElement action", async () => {
         config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0";
         config.tcmStatus = true;
@@ -932,8 +958,15 @@ describe('Tests Slate Wrapper Actions', () => {
                 response: axiosPayload
             });
         }); */
+        config.slateEntityURN = 'urn:pearson:entity:ed185293-3805-4aa1-99bd-12809b8a22e7';
         const spypasteElement = jest.spyOn(actions, "pasteElement")
-        return await store.dispatch(actions.pasteElement({index: 1})).then(() => {
+        const params = {
+            index: 1, 
+            parentUrn: {
+                contentUrn:'urn:pearson:entity:ed185293-3805-4aa1-99bd-12809b8a22e7'
+            }
+        }
+        return await store.dispatch(actions.pasteElement(params)).then(() => {
             expect(spypasteElement).toHaveBeenCalled();
         });
     })
@@ -946,6 +979,18 @@ describe('Tests Slate Wrapper Actions', () => {
         };
         mock.onPost(`${config.AUDIO_NARRATION_URL}container/${manifestUrn}/clone`).reply(500, failResponse);
         
+        const spycloneContainer = jest.spyOn(actions, "cloneContainer")
+        actions.cloneContainer(insertionIndex, manifestUrn)(jest.fn)
+        expect(spycloneContainer).toHaveBeenCalled();
+    })
+
+    it("cloneContainer action - then", async () => {
+        const insertionIndex = 2, manifestUrn = "urn:pearson:manifest:325dssd-23523rccdfdsf3-3223ewaasa"
+        const mock = new MockAdapter(axios);
+        const successResponse = {
+           message: " , request id"
+        };
+        axios.post = jest.fn(() => Promise.resolve({ data: successResponse }));
         const spycloneContainer = jest.spyOn(actions, "cloneContainer")
         actions.cloneContainer(insertionIndex, manifestUrn)(jest.fn)
         expect(spycloneContainer).toHaveBeenCalled();
