@@ -260,50 +260,51 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => {
         }
     }
 }
-export const onGlossaryFnUpdateSuccessInShowHide123 = (resData, bodymatter, activeElemType, sectionType, indexes) => {
-    let shAtIndex;
-    /**/
-    if(activeElemType === "element-dialogue") {
-        const indexString = Array.isArray(indexes) ? indexes?.join("-") : indexes?.toString();
-        /**/
-        const placeHolder = document.getElementById(`cypress-${indexString}`)?.getAttribute("placeholder");
+export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, sectionType, indexes) => {
+    try {
+        let shAtIndex = indexes?.length;
         const indexLength = indexes?.length;
-        
-        /**/
-        if(indexLength > 3 && placeHolder === "Enter Stage Directions...") {
-            shAtIndex = indexLength - 1;
-        } else if(indexLength > 4 && ["Enter Character Name...", "Enter Dialogue..."].includes(placeHolder)) {
-            shAtIndex = indexLength - 2;
+        /* if element type is playscript then get the index of SH Element */
+        if(activeElemType === "element-dialogue") {
+            const indexString = Array.isArray(indexes) ? indexes?.join("-") : indexes?.toString();
+            /* get the placeholder of Playscript to find excat type of inner element(SD/DE) in PS and index of SH at slate */
+            const placeHolder = document.getElementById(`cypress-${indexString}`)?.getAttribute("placeholder");
+            /* Based on placeholder of SD/DE of PS; Calculate index length to get SH Element from slate data */
+            if(indexLength > 3 && placeHolder === "Enter Stage Directions...") {
+                shAtIndex = indexLength - 1;
+            } else if(indexLength > 4 && ["Enter Character Name...", "Enter Dialogue..."].includes(placeHolder)) {
+                shAtIndex = indexLength - 2;
+            }
+        } else /* if element type is figure then get SH Element by calculating length */
+            if(activeElemType === "figure") {
+                shAtIndex = indexLength - 1;
         }
-        
-    }
-    let sh_Object = getShowHideElement(bodymatter, shAtIndex, indexes);
-    /**/
-    if(sh_Object?.type === ElementConstants.SHOW_HIDE && sectionType && shAtIndex) {
-        const psElement = sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]];
-        console.log("1 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
-
-        sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]] = {
-            ...psElement,
-            html: {...psElement.html, ...resData.html},
-            elementdata:resData.elementdata 
+        /* Get the SH element to update footnote and glossery of inner element */
+        let sh_Object = getShowHideElement(bodymatter, shAtIndex, indexes);
+        if(sh_Object?.type === ElementConstants.SHOW_HIDE && sectionType && shAtIndex) {
+            const elementInSH = sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]];
+            /* Folloing condition is to get element where Footnote and Glossery added */
+            if(typeof (resData) === "string" && resData === "GetElementWithFnGlry_SH") {
+                /** @function onGlossaryFnUpdateSuccessInShowHide - Being reused to get element when - */
+                /* Footnote/Glossery popup opened to display data; Called from glossaaryFootnotePopup Function */
+                return elementInSH;
+            }
+            //console.log("1 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
+            /* Update the slate level data to update redux store */
+            sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]] = {
+                ...elementInSH,
+                html: {...elementInSH?.html, ...resData?.html},
+                elementdata: resData?.elementdata 
+            }
+            //console.log("2 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
         }
-        console.log("2 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
-
-        //const psElement = bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]];
-        //console.log("1 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
-        //bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]] = {
-        //    ...psElement,
-        //    html: {...psElement.html, ...resData.html},
-        //    elementdata:resData.elementdata 
-        //}
-        //console.log("2 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
+        return bodymatter;
+    } catch(error) {
+        console.error("Something went wrong on updating Footnote/Glossery...",error);
     }
-    
-    return bodymatter;
 }
 
-export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
+export const onGlossaryFnUpdateSuccessInShowHide123 = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
     const indexLength = Array.isArray(indexes) ? indexes.length : 0;
     const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 3] : "" : ""
     const showHideType = findSectionType(showHideIndex)
