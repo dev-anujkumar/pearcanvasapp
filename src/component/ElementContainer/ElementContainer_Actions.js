@@ -11,6 +11,7 @@ import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementCo
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
 import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 
 import ElementConstants from "./ElementConstants";
 const { SHOW_HIDE } = ElementConstants;
@@ -435,14 +436,13 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             bodymatter: currentSlateData.contents.bodymatter,
             response: createdElemData.data
         };
-        if (currentSlateData.status === 'approved') {
-            await tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
+        if (slateWrapperConstants?.elementType?.indexOf(type2BAdded) !== -1) {
+            if (currentSlateData.status === 'approved') {
+                await tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
+            } else {
+                tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
+            }
         }
-        else {
-            tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
-        } 
-        
-
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
