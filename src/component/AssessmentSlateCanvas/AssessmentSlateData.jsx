@@ -41,8 +41,7 @@ class AssessmentSlateData extends Component {
             showUpdatePopup:false,
             isUpdateFinal:false,
             openUsageDropdown:false,
-            openAssessmentDropdown:false,
-            // calledFrom:''
+            openAssessmentDropdown:false
         }
         this.dropdownRef = React.createRef();
     }
