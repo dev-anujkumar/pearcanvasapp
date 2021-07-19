@@ -339,7 +339,7 @@ const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,item, co
                 id: wipData?.id,
                 type: "groupedcontent",
                 columnId: wipData?.groupeddata?.bodymatter[columnIndex]?.id,
-                columnName: (columnIndex == 0) ? "C1" : "C2",
+                columnName: (columnIndex == 0) ? "C1" : (columnIndex == 0) ? "C2" : "C3",
                 source:"fromCutCopy",
                 multiColumnType: wipData?.groupeddata.bodymatter?.length === 2 ? "2C" : "3C" /* 2C||3C */
             }
