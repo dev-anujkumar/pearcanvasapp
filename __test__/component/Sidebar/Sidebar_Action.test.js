@@ -1128,7 +1128,6 @@ describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
         await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
     });
 });
-
 describe('1 Test convertElement ', () => {
   
     it('1.1 Test convertElement  Image ', () => {
@@ -1180,13 +1179,55 @@ describe('1 Test convertElement ', () => {
     it('1.5 Test convertElement - outputSubTypeEnum !== "DISC" ', () => {
         const { oldElementData, newElementData, oldElementInfo } = testData?.testcase11;
         const elementDiv3 = document.createElement('div');
-        elementDiv3.setAttribute("id", "cypress-0-0'");
+        elementDiv3.setAttribute("id", "cypress-0-0");
         document.body.appendChild(elementDiv3);
 
         jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
             return {querySelector: () => ({
                 querySelector: () => {
                     return {"innerHTML":"world"};
+                }
+            })};
+        })
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",{index: "0-0"}));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+        
+    });
+    it('1.5.1 Test convertElement - Else Cases ', () => {
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase11;
+        const newElementData_1 = {...newElementData, startvalue: "1" }
+        const elementDiv3 = document.createElement('div');
+        elementDiv3.setAttribute("id", "cypress-0-0");
+        elementDiv3.setAttribute("innerHTML", oldElementData.html.text);
+        document.body.appendChild(elementDiv3);
+
+        jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+            return {querySelector: () => ({
+                querySelector: () => {
+                    return { "innerHTML": oldElementData.html.text };
+                }
+            })};
+        })
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData_1, oldElementInfo, store, ["0"], "",{index: "0-0"}));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+        
+    });
+    it('1.5.2 Test convertElement - Else Cases - editableDom, containerDom ', () => {
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase11;
+        const elementDiv3 = document.createElement('div');
+        elementDiv3.setAttribute("id", "cypress-0-0-0");
+        document.body.appendChild(elementDiv3);
+
+        jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+            return {querySelector: () => ({
+                querySelector: () => {
+                    return null;
                 }
             })};
         })
@@ -1209,6 +1250,16 @@ describe('1 Test convertElement ', () => {
     });
     it('1.7 Test convertElement - inputPrimaryOptionEnum === outputPrimaryOptionEnum ', () => {
         const { oldElementData, newElementData, oldElementInfo } = testData?.testcase13;
+        
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"],{ toolbar: ['insertMedia']},"")); 
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+        
+    });
+    it('1.8 Test convertElement - oldElementData.subtype === "workedexample" ', () => {
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase15;
         
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
