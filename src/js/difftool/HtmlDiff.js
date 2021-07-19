@@ -5,7 +5,7 @@ import Operation from './Operation';
 import MatchOptions from './MatchOptions';
 import * as WordSplitter from './WordSplitter';
 import * as Utils from './Utils';
-import TCMUtils from '../../js/tcmUtils.js';
+import TCMUtils from '../tcmUtils.js';
 
 // This value defines balance between speed and memory utilization. The higher it is the faster it works and more memory consumes.
 const MatchGranuarityMaximum = 4;
@@ -282,7 +282,6 @@ class HtmlDiff {
             if (prev.endInOld === curr.startInOld && prev.endInNew === curr.startInNew ||
                 curr.endInOld === next.startInOld && curr.endInNew === next.startInNew) {
                 yield curr;
-                let tmp = prev = curr; // "let tmp" avoids babel traspiling error
                 curr = next;
                 continue;
             }

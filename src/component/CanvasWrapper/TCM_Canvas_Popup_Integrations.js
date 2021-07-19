@@ -1,7 +1,6 @@
 import config from "../../config/config"
 import axios from 'axios';
-import { loadTrackChanges } from './TCM_Integration_Actions'
-import FetchAllDataMapper from '../TcmSnapshots/FetchAllDataMapper/FetchTcmDataMapper';
+import FetchAllDataMapper from '../TcmSnapshots/FetchAllDataMapper/FetchAllDataMapper';
 import { LAUNCH_TCM_CANVAS_POPUP, SPINNER } from '../../constants/Action_Constants'
 import {handleSlateRefresh} from '../CanvasWrapper/SlateRefresh_Actions'
 

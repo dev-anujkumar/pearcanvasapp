@@ -1601,7 +1601,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorBeforeExecCommand(nextEditor);
             expect(getContent).toHaveBeenCalled()
         })
-        xit('Test-8.9-Method--6--editorBeforeExecCommand --CASE_8--Underline', () => {
+        it('Test-8.9-Method--6--editorBeforeExecCommand --CASE_8--Underline', () => {
             let event = {
                 target: {
                     getContent: () => {
@@ -1686,7 +1686,65 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     dispatchEvent: () => { }
                 },
                 selection: {
-                    getNode : ()=>{ return {tagName: 'sup', getElementsByTagName : ()=>{return []} , parentNode : {tagName : 'SUP'} } },
+                    getNode : ()=>{ return {innerHTML:'aa', textContent:'@', tagName: 'sup', getElementsByTagName : ()=>{return []} , parentNode : {tagName : 'SUP',innerHTML:'aaa'},lastChild:{tagName:'SUP',getElementsByTagName:() => { return 'A'}}} },
+                    getStart : ()=>{}
+                },
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder"><sup><a>*</a></sup>hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'A'
+                                }
+                            ],
+                            nodeName: "SUP",
+                            innerText: "hello",
+                            tagName: 'sup',
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                setContent: () => { },
+            }
+
+            const getContent = jest.spyOn(event.target, 'getContent');
+            instance.editorBeforeExecCommand(nextEditor);
+            expect(getContent).toHaveBeenCalled()
+        })
+
+        xit('Test-8.10-Method--7--editorBeforeExecCommand --CASE_9--MceToggleFormat-- 1st case',()=>{
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    },
+                    targetElm: {
+                        nodeName: "SUP"
+                    }
+                },
+                value: "superscript",
+                command: 'mceToggleFormat',
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            } 
+
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                    dispatchEvent: () => { }
+                },
+                selection: {
+                    getNode : ()=>{ return {textContent:'@', tagName: 'up', getElementsByTagName : ()=>{return []} , parentNode : {tagName : 'SUP'},lastChild:{tagName:'SUP',getElementsByTagName:() => { return 'A'}}} },
                     getStart : ()=>{}
                 },
                 dom: {
@@ -2516,7 +2574,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(spyhandlePlaceholder).toHaveBeenCalled();
             spyhandlePlaceholder.mockClear()
         });
-        xit('Test-23.5-Method--21--handlePlaceholder-Other Elements', () => {
+        it('Test-23.5-Method--21--handlePlaceholder-Other Elements', () => {
             let mathMLData = '<p class=\"paragraphNumeroUno\"><img align="middle" class="temp_Wirisformula" src="data:image/png;base64,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" data-temp-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨ class=¨¨»«mi»m«/mi»«mi»a«/mi»«mi»t«/mi»«mi»h«/mi»«mi»M«/mi»«mi»L«/mi»«mo»&amp;nbsp;«/mo»«mi»t«/mi»«mi»e«/mi»«mi»x«/mi»«mi»t«/mi»«mo»-«/mo»«mi mathvariant=¨normal¨»π«/mi»«mo»∞«/mo»«mo»∅«/mo»«mo»∆«/mo»«mo»∂«/mo»«/math»" alt="m a t h M L space t e x t minus straight pi infinity empty set increment partial differential" role="math"></p>';
             component.setProps({
                 ...props,
@@ -3176,8 +3234,29 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 children: ['<code class="bce place-holder">hello<ol></code>'],
                 classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
             }
+
+            let event1 = {...event,which:98}
+            let nextEditor1 = {...nextEditor,on: (temp, cb) => { cb(event1) }}
+
+            let event2 = {...event,which:73}
+            let nextEditor2 = {...nextEditor,on: (temp, cb) => { cb(event2) }}
+
+            let event3 = {...event,which:85}
+            let nextEditor3 = {...nextEditor,on: (temp, cb) => { cb(event3) }}
+
+            let event4 = {...event,which:105}
+            let nextEditor4 = {...nextEditor,on: (temp, cb) => { cb(event4) }}
+
+            let event5 = {...event,which:117}
+            let nextEditor5 = {...nextEditor,on: (temp, cb) => { cb(event5) }}
+
             const spyeditorKeyup = jest.spyOn(instance, 'editorKeyup')
             instance.editorKeyup(nextEditor);
+            instance.editorKeyup(nextEditor1);
+            instance.editorKeyup(nextEditor2);
+            instance.editorKeyup(nextEditor3);
+            instance.editorKeyup(nextEditor4);
+            instance.editorKeyup(nextEditor5);
             expect(spyeditorKeyup).toHaveBeenCalled()
         });
         it('Test-28.3.1-Method--26--editorKeyup-POETRY Element-KeyCode=13', () => {
@@ -4172,7 +4251,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.6.3-Method--27--editorKeydown-POETRY Element-KeyCode=13', () => {
+        it('Test-29.6.3-Method--27--editorKeydown-POETRY Element-KeyCode=13', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -4384,8 +4463,9 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(spyeditorOnClick).toHaveBeenCalled()
             expect(setDisabled).toHaveBeenCalled()
         });
-        xit('Test-30.2.2-Method--28--editorOnClick--nodeName:DFN & alreadyExist:TRUE', () => {
+        it('Test-30.2.2-Method--28--editorOnClick--nodeName:DFN & alreadyExist:TRUE', () => {
             instance.props.handleAudioPopupLocation = jest.fn();
+            instance.props.handleAssetsPopupLocation = jest.fn();
             document.querySelector = () => { return false; }
             let event = {
                 currentTarget:{
@@ -5671,7 +5751,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(spyaddPageLink).toHaveBeenCalled();
             spyaddPageLink.mockClear()
         });
-        xit('Test-36.3-Method--34--addPageLink-Outermost Else true', () => {
+        it('Test-36.3-Method--34--addPageLink-Outermost Else true', () => {
             const domFunction = () =>{
                 return [{
                     parentNode: {
@@ -5710,7 +5790,9 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                                 classList: { contains: () => { return false } },
                                 getElementsByTagName: domFunction,
                                 getElementsByClassName:domFunction,
-                                parentNode: {},
+                                parentNode: {
+                                    removeChild:()=>{}
+                                },
                                 removeChild:()=>{},
                             }
                         },
@@ -5978,7 +6060,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.handleCodeClick(nextEditor, showHide);
             expect(spyhandleCodeClick).toHaveBeenCalled()
         });
-        xit('Test-39.2-Method--37--handleCodeClick-showhide not present', () => {
+        it('Test-39.2-Method--37--handleCodeClick-showhide not present', () => {
             component.setProps({
                 ...props,
                 permissions: ["login", "logout"],
@@ -6027,7 +6109,24 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                                 },
                                 "1": {
                                     tagName: 'BR',
-                                    className: 'poetryLine'
+                                    className: 'poetryLine',
+                                    innerHTML:"<br>",
+                                    removeChild: () => { },
+                                    parentNode:{
+                                        removeChild: () => { },
+                                        nodeName: "BR",
+                                        innerHTML: "<span>Hello1</span>",
+                                        outerHTML: "<p><span>Hello</span></p>",
+                                        classList: { contains: () => { return false } },
+                                        parentNode: {
+                                            removeChild: () => { },
+                                            nodeName: "BR",
+                                            innerHTML: "<span>Hello1</span>",
+                                            outerHTML: "<p><span>Hello</span></p>",
+                                            classList: { contains: () => { return false } },
+                                            parentNode: {}
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -6049,6 +6148,101 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(spyhandleCodeClick).toHaveBeenCalled()
         });
     });
+describe('Test function--handleBlankLineArrowKeys', () => {
+    it('handleBlankLineArrowKeys--CASE key 37', () => {
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: editor.selection,
+            setContent: () => { },
+            insertContent: () => { },
+            formatter: {
+                match: () => { },
+                formatChanged: () => { return jest.fn() },
+                unbind: () => { }
+            }
+        }
+        tinymce.activeEditor.selection = editor.selection;
+        tinymce.activeEditor.dom = domObj;
+        instance.setCursorOnCode = jest.fn()
+        const spyhandleCodeClick = jest.spyOn(instance, 'handleBlankLineArrowKeys')
+        instance.handleBlankLineArrowKeys(37, nextEditor);
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+
+    it('handleBlankLineArrowKeys--CASE key is not 37', () => {
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: editor.selection,
+            setContent: () => { },
+            insertContent: () => { },
+            formatter: {
+                match: () => { },
+                formatChanged: () => { return jest.fn() },
+                unbind: () => { }
+            }
+        }
+        tinymce.activeEditor.selection = editor.selection;
+        tinymce.activeEditor.dom = domObj;
+        instance.setCursorOnCode = jest.fn()
+        const spyhandleCodeClick = jest.spyOn(instance, 'handleBlankLineArrowKeys')
+        instance.handleBlankLineArrowKeys(35, nextEditor);
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+ describe('Testing function--setCalloutToSelection', () => {
+    xit('setCalloutToSelection', () => {
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            selection: editor.selection,
+            setContent: () => { },
+            insertContent: () => { },
+            formatter: {
+                match: () => { },
+                formatChanged: () => { return jest.fn() },
+                unbind: () => { }
+            }
+        }
+        const spyhandleCodeClick = jest.spyOn(instance, 'setCalloutToSelection')
+        instance.setCalloutToSelection(nextEditor,0,'dummy');
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+
+ describe('Testing function--elementConversion', () => {
+    it('elementConversion', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'elementConversion')
+        instance.elementConversion('P');
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+ describe('Testing function--makeBqReplace', () => {
+    xit('makeBqReplace', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'makeBqReplace')
+        instance.makeBqReplace();
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+ describe('Testing function--makeReplace', () => {
+    xit('makeReplace', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'makeReplace')
+        instance.makeReplace();
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+
+ describe('Testing function--getNodeContent', () => {
+    it('getNodeContent', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'getNodeContent')
+        instance.getNodeContent();
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
     describe('Test-40-Method--3--editorExecCommand-branch coverage', () => {
         it('Test-40.1-Method--6--editorBeforeExecCommand --CASE--Underline', () => {
             let event = {
@@ -7491,6 +7685,95 @@ describe('------------------------------Test4 TINY_MCE_EDITOR-------------------
         ...props,
         permissions: ["login", "logout"],
         tagName: "h4",
+        elementId: "work:urn",
+        poetryField:"formatted-title",
+        element:{
+            type:"popup"
+        },
+        model:"<p class='paragraphNumeroUno'>test</p>"
+    }
+    const component2 = mount(<Provider store={store}> < TinyMceEditor {...newProps} /> </Provider>)
+    let instance2 = component2.find('TinyMceEditor').instance();
+    let tinymceDiv = document.createElement('div');
+    tinymceDiv.id = editor.id;
+    let tinymceDiv2 = document.createElement('p');
+    tinymceDiv2.id = `cypress-${props.id}`
+    tinymceDiv2.innerHTML = '<p><img align="middle" class="temp_Wirisformula" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK0AAAAPCAYAAACWe0+mAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAABGJhU0UAAAAOJ5y/mQAABiFJREFUeNrtmXlsVEUcx99uUUsrIlQQTNQGFGireCFqCxgVK1Q8MAaoKIJn0GDQFhXQSBWoGERTsfUkUgWiFbxQQawRCypojEetqBCPKIhiSj1QxLr+Jnye+TmZ93brbhv/2G/yTXdm3pv3m5nfOfW8NNL4/+FG4dvClcI3hfcKO6e3JY1kMFC4VNi9neY/Qpil2kZpl6S3PY146Cm8W7hZuFv4vfBp4RnCTcKyBOYYLIwJT0xSli7Cn4X9O3IDjEXeJFwjLAp45jzh1yyyh2O8t7BZ+KfwOvrGCLfyzmPCI9O6lhIMEm5HYe8QXkrIXs1exxKcZ7Hwdc4mWWwQTunojRgq3IPVBOEjNuQ4x9gTjK2w+k3u86Vwn7SupQQHCbcJ5zj29AqltOckMM83OKxvhTlJyvWcsKq9F58hvFm1r8fqgtBLWB+wIReQ05ixK1W/Sc5/Fy5MUrZUrTEZHCh8V/iXUgwXbYwSrhN+J/xQWGkpyAD2biP7W4HcQZjDszaOErYITxZOF36SQDF1F7/nC6e1YS9MWjEXuatIL0xqUpsqxSwiLBvv2Id+E96fElarZ18UzgiZ62LCkDmYyaq/m/B53o2pbxgMp+/8Nsjsks0gIswTnincL4l5/itOIIfsbilnJyKUC+NIuYzinsU+xfCURslKhY3CIeqdEcJ5caLdTKsvW9ik8tgBfKdfiF5sVmfVl3Y0gdy1TviwMF+YicPaKfxM+Kj/4MFY5yZyGePlPqY6NLhM+LnwNusDQ7AEc9Dj2SjTty/ex2z04yij6fuF+YvwuE2WciziwFqwdh8PCI8ln/rCksHI3YqXSgQu2QyORgELhPcp73k2312gooUf6lzzpAJRS2kzyONdWObwmnN5/wf22FUf3B4Srnc51lOLQURUhIthAF6A919p9b0kLImz9nr0wMZMvlehO8ezyMFotil0XqO/UPgg7tnHaYSiA2gXE6Z9JexvKZPJZ3/E+ifwV4+bzXiW300k8B6VaiXz7sICNd4hQW8LbNmOx1AKUJj1eCgfpRjkKJ7JCZhHI5YAgxCxxqN8x4X5Af0PMcd7wv0d4xcKT0pQaY3T+sq63spk/pEBc7gU1KXIGmauP4SHOsYu4XvFutMo5SrhubTr8LSFtI2CXq0ENq7+IvV+uXCtal8rfMuybOOxxtKebOVNeSpkvYLFZfOOua87FaHHWWlDq+WVE4GWzRQaH3AP2JXDnq08ih+JzLcnhsyTSthKGyHPdaE6IDQvJ8eNsZf2xfxCaggXGlUaV0BoPsV6xk8PXFdQfYnM0Tgpg417+LYLM1hPJ935qfAFNiiK161RuZsRMJe2ObwdKixF8Y6z1XzPcFXiw/xXo0Epg9nUO9X4FGVFi5BnPp7WIyzEuDv0MZq+0wPSgCBo2YYyxy1El9yAuZot7+taY3sprYdxRhzPmj2Ypc4il9qhGiNsYK5GnMxw0q2wPLwSh+LnseWOZ6ZzRkHevzykOAvKp5eEeOK1vPsPDmFh/v3pQNqH0R6L8Dr0vKzaJeR2xapwMNY5jI3uSk42UllcMwWPVoAs5ZXNfI+o8XV4e437hb/h+W3cGrB4W7Yy2pGQQywjn6sJmSeVyHYUXs0hOWgp3nQ9RdkIS85rGNvOHk6Lc3vQg2djRF97feacf8JgbHTmmisnzjVYZoCnXePoL6E4/Nc7k7y9l/q+cFO5etEhqAphu+El/aurQnKVVq5CCim2fiVMDCLl2Knu/I5B2foQdnpZqcJV3t7/vuQoo9pDgaS90RaHIhuvf0PILYUt20QOJ5/xwzFSY0C9UYhCcrwt5FvDHPOkEnnk/55ltLMoSDsCNexLM05kAsq+mlQlyJNOCiikNBYzn+co7JtVDh7lNul9V0pRp6pjD+vSNwVLKZL6qSLMpA9vkNAXYJmXK8vYxgc9FH6ZdeWylfGejLVQAPrvl6r7ulfZwAYUJos81i9olmNYtUSEGDJ5AVarZTMF3pOkO9V4pQiGaNY4hue6cnOxgHF7nlRiKmdgy70jpPBKJfJxMqPxfsZYd7MfKxz5rcbGBIvQDSFrr+cmZxURs4uXRhpxUKEcUHshI5mX/waGpqG4QDDAPQAAAS50RVh0TWF0aE1MADxtYXRoIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk4L01hdGgvTWF0aE1MIiBjbGFzcz0iIj48bWk+bTwvbWk+PG1pPmE8L21pPjxtaT50PC9taT48bWk+aDwvbWk+PG1pPk08L21pPjxtaT5MPC9taT48bW8+JiN4QTA7PC9tbz48bWk+dDwvbWk+PG1pPmU8L21pPjxtaT54PC9taT48bWk+dDwvbWk+PG1vPi08L21vPjxtaSBtYXRodmFyaWFudD0ibm9ybWFsIj4mI3gzQzA7PC9taT48bW8+JiN4MjIxRTs8L21vPjxtbz4mI3gyMjA1OzwvbW8+PG1vPiYjeDIyMDY7PC9tbz48bW8+JiN4MjIwMjs8L21vPjwvbWF0aD4yVf2NAAAAAElFTkSuQmCC" data-temp-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨ class=¨¨»«mi»m«/mi»«mi»a«/mi»«mi»t«/mi»«mi»h«/mi»«mi»M«/mi»«mi»L«/mi»«mo»&amp;nbsp;«/mo»«mi»t«/mi»«mi»e«/mi»«mi»x«/mi»«mi»t«/mi»«mo»-«/mo»«mi mathvariant=¨normal¨»π«/mi»«mo»∞«/mo»«mo»∅«/mo»«mo»∆«/mo»«mo»∂«/mo»«/math»" alt="m a t h M L space t e x t minus straight pi infinity empty set increment partial differential" role="math"></p>'
+    tinymceDiv.appendChild(tinymceDiv2)
+    document.body.appendChild(tinymceDiv)
+});
+
+describe('------------------------------Test TINY_MCE_EDITOR case: figureCredit------------------------------', () => {
+    let editor = {
+        on: (temp, cb) => {
+            cb(event)
+        },
+        setContent: () => { },
+        children: ['<p class="paragraphNumeroUno">hello</p>'],
+        classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder'],
+        getContentAreaContainer: () => {
+            return true;
+        },
+        ...tinymce.activeEditor
+    }
+    const mockStore = configureMockStore(middlewares);
+    const store = mockStore({     alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    } });
+    let newProps = {
+        ...props,
+        permissions: ["login", "logout"],
+        tagName: "figureCredit",
+        elementId: "work:urn",
+        poetryField:"formatted-title",
+        element:{
+            type:"popup"
+        },
+        model:"<p class='paragraphNumeroUno'>test</p>"
+    }
+    const component2 = mount(<Provider store={store}> < TinyMceEditor {...newProps} /> </Provider>)
+    let instance2 = component2.find('TinyMceEditor').instance();
+    let tinymceDiv = document.createElement('div');
+    tinymceDiv.id = editor.id;
+    let tinymceDiv2 = document.createElement('p');
+    tinymceDiv2.id = `cypress-${props.id}`
+    tinymceDiv2.innerHTML = '<p><img align="middle" class="temp_Wirisformula" src="data:image/png;base64,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" data-temp-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨ class=¨¨»«mi»m«/mi»«mi»a«/mi»«mi»t«/mi»«mi»h«/mi»«mi»M«/mi»«mi»L«/mi»«mo»&amp;nbsp;«/mo»«mi»t«/mi»«mi»e«/mi»«mi»x«/mi»«mi»t«/mi»«mo»-«/mo»«mi mathvariant=¨normal¨»π«/mi»«mo»∞«/mo»«mo»∅«/mo»«mo»∆«/mo»«mo»∂«/mo»«/math»" alt="m a t h M L space t e x t minus straight pi infinity empty set increment partial differential" role="math"></p>'
+    tinymceDiv.appendChild(tinymceDiv2)
+    document.body.appendChild(tinymceDiv)
+});
+
+
+describe('------------------------------Test TINY_MCE_EDITOR case: element-citation------------------------------', () => {
+    let editor = {
+        on: (temp, cb) => {
+            cb(event)
+        },
+        setContent: () => { },
+        children: ['<p class="paragraphNumeroUno">hello</p>'],
+        classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder'],
+        getContentAreaContainer: () => {
+            return true;
+        },
+        ...tinymce.activeEditor
+    }
+    const mockStore = configureMockStore(middlewares);
+    const store = mockStore({     alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    } });
+    let newProps = {
+        ...props,
+        permissions: ["login", "logout"],
+        tagName: "element-citation",
         elementId: "work:urn",
         poetryField:"formatted-title",
         element:{

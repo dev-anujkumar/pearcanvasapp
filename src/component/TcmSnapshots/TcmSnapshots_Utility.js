@@ -178,7 +178,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on element in WE/PE/CG/2C */
-    else if (poetryData || asideData || parentUrn || (showHideObj && Object.keys(showHideObj) > 0)) {
+    else if (poetryData || asideData || parentUrn || (showHideObj && Object.keys(showHideObj).length > 0)) {
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType)
     }
     /* action on PE and CG */
@@ -339,7 +339,7 @@ const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,item, co
                 id: wipData?.id,
                 type: "groupedcontent",
                 columnId: wipData?.groupeddata?.bodymatter[columnIndex]?.id,
-                columnName: (columnIndex == 0) ? "C1" : (columnIndex == 0) ? "C2" : "C3",
+                columnName: (columnIndex == 0) ? "C1" : (columnIndex == 1) ? "C2" : "C3",
                 source:"fromCutCopy",
                 multiColumnType: wipData?.groupeddata.bodymatter?.length === 2 ? "2C" : "3C" /* 2C||3C */
             }
@@ -964,7 +964,7 @@ const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
     const elementData =element?.elementdata;
     let elementSnapshot = {};
     elementSnapshot = {
-            assessmentTitle: `<p>${elementData?.assessmenttitle || ''}</p>`,
+            assessmentTitle: `<p>${elementData?.assessmenttitle || elementData?.templatelabel || ''}</p>`,
             assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
             assessmentId: `<p>${elementData?.assessmentid|| ''}</p>`,
             assessmentItemId: `<p>${elementData?.assessmentitemid|| ''}</p>`,

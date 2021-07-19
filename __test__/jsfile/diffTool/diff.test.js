@@ -1,4 +1,4 @@
-import HtmlDiff from '../../../src/js/difftool/Diff';
+import HtmlDiff from '../../../src/js/difftool/HtmlDiff';
 
 describe('Html diff tool test cases', () => {
   test('verifying scenario 1', () => {
