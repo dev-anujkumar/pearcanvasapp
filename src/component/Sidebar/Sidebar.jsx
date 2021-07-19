@@ -19,7 +19,6 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-import { WARNING } from '../ElementContainer/ElementConstants';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -208,7 +207,7 @@ class Sidebar extends Component {
             <PopUp
                 togglePopup={this.handleUpdateAssessmentTypePopup}
                 dialogText={CHANGE_ASSESSMENT_TYPE}
-                warningHeaderText={WARNING}
+                warningHeaderText={`Warning`}
                 lOPopupClass="lo-warning-txt"
                 AssessmentPopup={true}
                 agree={this.setUpdatedAssessmentType}
