@@ -19,8 +19,6 @@ import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } f
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
 import { handlePostMsgOnAddAssess, handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling';
-/**-----------import Constants --------------*/
-import {WARNING} from '../ElementContainer/ElementConstants';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -590,8 +588,9 @@ class AssessmentSlateData extends Component {
     * @param assessmentUsageType usage type 
     */
     setUsageType = (assessmentUsageType) => { 
+        let newSlateSelectType = <div className="assessment-label">Select usage type<span className="required">*</span></div>
         let usageType = <><div className="slate_assessment_metadata_container">
-            <div className="assessment-label">Select usage type<span className="required">*</span></div>
+            {this.props.getAssessmentData === false && this.props.getAssessmentDataPopup === false ? newSlateSelectType : this.state.isUpdateFinal === false ? <div className="assessment-label">Usage type</div> : newSlateSelectType}
             <div className="slate_assessment_type_dropdown" onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
                 <span className="slate_assessment_dropdown_label" id="AssessmentSlateUsageType">{assessmentUsageType ? assessmentUsageType : "Select"}</span>
                 <span className="slate_assessment_dropdown_image"></span>
@@ -615,7 +614,7 @@ class AssessmentSlateData extends Component {
             <PopUp
                 togglePopup={this.handleChangeAssessmentPopup}
                 dialogText={UPDATE_ASSESSMENT_TYPE}
-                warningHeaderText= {WARNING}
+                warningHeaderText={`Warning`}
                 lOPopupClass="lo-warning-txt"
                 AssessmentPopup={true}
                 agree={this.setChangeAssessmentType}
@@ -647,8 +646,10 @@ class AssessmentSlateData extends Component {
             this.setState({
                 isUpdateFinal: true
             })
-        });
+        this.props.setCurrentCiteTdx({});
+        this.AssessmentSearchTitle('', '');
         this.props.setAssessmentFilterParams("", "");
+        });
         this.setUpdateAssessmentType(this.state.updatedAssessmentType);
     }
 
@@ -658,8 +659,9 @@ class AssessmentSlateData extends Component {
      * @param calledFrom- whether it is called from New or Final AssessmentSlate
      */
     setAssessmentType = (assessmentUsageType, assessmentType, calledFrom) => {
+        let newSlateAssessmentSelect = <div className="assessment-label">Select assessment type</div>
         let assessmentSelectionType = <><div className={`assessment-parent ${assessmentUsageType ? '' : 'disabled'}`}>
-            <div className="assessment-label">Select assessment type</div>
+            {this.props.getAssessmentData === false && this.props.getAssessmentDataPopup === false ? newSlateAssessmentSelect : this.state.isUpdateFinal === false ? <div className="assessment-label">Assessment type</div> : newSlateAssessmentSelect}
             <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
                 <span className="slate_assessment_dropdown_label" title={assessmentType ? assessmentFormats[assessmentType] : ""}>{assessmentType ? assessmentFormats[assessmentType] : "Select"}</span>
                 {this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? "" : <span className="slate_assessment_dropdown_image"></span>}
