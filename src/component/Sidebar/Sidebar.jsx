@@ -478,7 +478,6 @@ class Sidebar extends Component {
             if (this.state.activePrimaryOption === "primary-poetry" && this.props.activeElement.elementId) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement ? activeElement.querySelector(".element-container.pe") : null
-                console.log('poetry attrNode', attrNode)
                 if (attrNode && attrNode.setAttribute) {
                     attrNode.setAttribute("numbered", ((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true))
                     attrNode.setAttribute("startNumber", (this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'))

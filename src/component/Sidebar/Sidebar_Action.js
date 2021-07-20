@@ -714,7 +714,6 @@ const prepareElementToUpdate = (dataToUpdate, index, activeElement, currentSlate
             const { elementType } = activeElement
             updatedElement = currentSlateData.contents.bodymatter[index]
             if (elementType == 'poetry') {
-                console.log('dataToUpdate', dataToUpdate)
                 updatedElement = {
                     ...updatedElement,
                     numberedline: dataToUpdate.isNumbered,
