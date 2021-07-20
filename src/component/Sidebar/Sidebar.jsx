@@ -11,8 +11,8 @@ import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
-import { showBlocker, hideBlocker } from '../../js/toggleLoader';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE } from '../SlateWrapper/SlateWrapperConstants.js';
+import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
@@ -44,6 +44,9 @@ class Sidebar extends Component {
             bceToggleValue: numbered,
             syntaxHighlightingToggleValue: syntaxhighlighting,
             showSyntaxHighlightingPopup: false,
+            updateAssessmentTypePopup: false,
+            secondaryValue:'',
+            secondaryLabel:'',
             bceNumberStartFrom: startNumber,
             podOption: false,
             podValue: podwidth,
@@ -86,7 +89,6 @@ class Sidebar extends Component {
 
         return null;
     }
-
     handlePrimaryOptionChange = e => {
         let value = e.target.getAttribute('data-value');
         let secondaryelementList = elementList[this.state.activeElementType][value].subtype;
@@ -197,10 +199,76 @@ class Sidebar extends Component {
 
     }
 
+    showUpdateAssessmentTypePopup=()=>{
+        this.props.showCanvasBlocker(true);
+        hideToc();
+        showBlocker(true);
+        return(
+            <PopUp
+                togglePopup={this.handleUpdateAssessmentTypePopup}
+                dialogText={CHANGE_ASSESSMENT_TYPE}
+                warningHeaderText={`Warning`}
+                lOPopupClass="lo-warning-txt"
+                AssessmentPopup={true}
+                agree={this.setUpdatedAssessmentType}
+            />
+        )
+    }
+    setUpdatedAssessmentType=(value)=>{
+        showBlocker(false);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
+        this.setState({
+            updateAssessmentTypePopup: false,
+        })
+        this.setSecondary(this.state.secondaryValue,this.state.secondaryLabel);
+
+    }
+
+    handleUpdateAssessmentTypePopup = (value) => {
+        showBlocker(false);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
+            this.setState({
+            updateAssessmentTypePopup: false,
+            secondaryValue: "",
+            secondaryLabel: ""
+        })
+    }
+
+    /**@description function handles the secondaryoption change dropdown */
     handleSecondaryOptionChange = e => {
         let value = e.target.getAttribute('data-value').toLowerCase();
         let elementTypeList = elementList[this.state.activeElementType];
         let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
+        if (value === this.state.activeSecondaryOption) {
+            this.setState({
+                elementDropdown: ''
+            })
+            return null;
+        }
+
+        if (this.props.activeElement.primaryOption === 'primary-single-assessment') {
+            this.setState({
+                updateAssessmentTypePopup: true,
+                secondaryValue: value,
+                secondaryLabel: labelText,
+                elementDropdown:'',
+                activeSecondaryOption: value,
+                activeLabelText: labelText,
+                podOption: false
+            });
+        }
+        else {
+            this.setSecondary(value, labelText)
+        }
+    }
+
+    /**@description sets the values form the selected dropdown
+     * @param-value is AssessmentType selected from the dropdown
+     * @param-labelText is the label of the Element
+     */
+    setSecondary=(value,labelText)=>{
         this.setState({
             elementDropdown: '',
             activeSecondaryOption: value,
@@ -219,7 +287,6 @@ class Sidebar extends Component {
             });
         }
     }
-
     secondaryOption = () => {
         let secondaryOptions = '';
         let enableColumn3SecondaryOption = false;
@@ -665,6 +732,7 @@ class Sidebar extends Component {
                         elementData={this.props.elementData}
                         tcmStatus = {this.props.tcmStatus}
                     />}
+                {this.state.updateAssessmentTypePopup && this.props?.activeElement?.primaryOption === 'primary-single-assessment'  && this.showUpdateAssessmentTypePopup()}
             </>
         );
     }

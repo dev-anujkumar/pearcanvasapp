@@ -44,7 +44,7 @@ export const REMOVE_LINKED_IMAGE_GLOSSARY = "Do you want to remove the linked Im
 export const NOT_IMAGE_ASSET = "Selected alfresco media type is not an Image."
 export const ERROR_CREATING_GLOSSARY = "You can not apply Glossary over multiple lines of stanza!!!"
 export const ERROR_CREATING_ASSETPOPOVER = "You can not apply Asset PopOver over multiple lines of stanza!!!"
-
+export const CHANGE_ASSESSMENT_TYPE="Changing the Assessment type will lead to a change in the Assessment picker options for this embedded assessment."
 /*****************************TOC Delete Popup Dialog text***************************/
 export const SINGLE_CONTAINER_DELETE = 'A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
 export const WITH_PENDING_TRACK = ' Are you sure you want to delete this slate/container with pending changes?'

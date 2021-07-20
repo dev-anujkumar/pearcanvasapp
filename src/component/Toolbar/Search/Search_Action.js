@@ -4,7 +4,7 @@ import { fetchSlateData } from './../../CanvasWrapper/CanvasWrapper_Actions';
 
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../../constants/Search_Constants.js';
 import SLATE_CONSTANTS from '../../ElementSaprator/ElementSepratorConstants';
-import { UPDATE_THREE_COLUMN_INFO } from '../../../constants/Action_Constants';
+import { UPDATE_MULTIPLE_COLUMN_INFO } from '../../../constants/Action_Constants';
 
 export const searchEvent = {
     index: 0,
@@ -38,8 +38,9 @@ export const getContainerData = (searchTerm, deeplink = false) => {
                 let totalCount = 0;
                 bodymatter.forEach((item, index) => {
                     if((JSON.stringify(item)).indexOf(searchTerm) >= 0) {
-                        // BG-4794 | Checking for 3 column to get column index
-                        if (item?.type === SLATE_CONSTANTS.MULTI_COLUMN && item?.groupeddata?.bodymatter.length === 3) {
+                        // BG-4794 | Checking for multi column to get column index
+                        let columnLengthArr = [2, 3];
+                        if (item?.type === SLATE_CONSTANTS.MULTI_COLUMN && columnLengthArr.includes(item?.groupeddata?.bodymatter.length)) {
                             item.groupeddata.bodymatter.forEach((column, columnIndex) => {
                                 if (JSON.stringify(column).includes(searchTerm)) {
                                     multiColumnIndex = columnIndex + 1;
@@ -76,7 +77,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
                 columnIndex: `C${multiColumnIndex}`
             }
             // BG-4794 | dispatch action to select column by column index
-            dispatch({ type: UPDATE_THREE_COLUMN_INFO, key: parent, payload: multiColumnPayload });
+            dispatch({ type: UPDATE_MULTIPLE_COLUMN_INFO, key: parent, payload: multiColumnPayload });
         }
         dispatch({ type: SET_SEARCH_URN, payload, parent, deeplink, scroll: false, scrollTop: 0 });
     }

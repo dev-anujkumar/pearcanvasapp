@@ -1,5 +1,5 @@
 import moment from 'moment';
-import HtmlDiff from './difftool/Diff';
+import HtmlDiff from './difftool/HtmlDiff';
 
 const TCMUtils = {
   getDiffContent(latestAcepted, latestPending) {
@@ -103,7 +103,7 @@ const TCMUtils = {
     data = data.replace(/data-temp-mathml/g, 'data-mathml');
     let mathMLImages = data.match(/<(img)\s[^>]*data-mathml=.*?>/g);
     let tempmathMLImages = JSON.parse(JSON.stringify(mathMLImages));
-    if(mathMLImages!=null || mathMLImages!=undefined){
+    if(mathMLImages){
       for(let index = 0; index < mathMLImages.length; index++) {
         mathMLImages[index] = mathMLImages[index].replace(/ height=\\"[0-9]*\\"/, '').replace(/ width=\\"[0-9]*\\"/, '').replace(/ align=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ class=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ role=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ style=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ alt=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ draggable=\\"[a-zA-Z]*\\"/, '').replace(/ data-custom-editor=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ data-mce-style=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ height=\\\\\\"[0-9]*\\\\\\"/, '').replace(/ width=\\\\\\"[0-9]*\\\\\\"/, '').replace(/ align=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ class=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ role=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ style=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ alt=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ draggable=\\\\\\"[a-zA-Z]*\\\\\\"/, '').replace(/ data-custom-editor=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ data-mce-style=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/(?:\.png)[?][0-9].*?[\\"]/g,'.png\\');
         data = data.replace(tempmathMLImages[index],mathMLImages[index]);

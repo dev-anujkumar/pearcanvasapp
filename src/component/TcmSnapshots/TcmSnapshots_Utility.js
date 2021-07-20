@@ -178,7 +178,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on element in WE/PE/CG/2C */
-    else if (poetryData || asideData || parentUrn || showHideObj) {
+    else if (poetryData || asideData || parentUrn || (showHideObj && Object.keys(showHideObj).length > 0)) {
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType)
     }
     /* action on PE and CG */
@@ -339,7 +339,7 @@ const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,item, co
                 id: wipData?.id,
                 type: "groupedcontent",
                 columnId: wipData?.groupeddata?.bodymatter[columnIndex]?.id,
-                columnName: (columnIndex == 0) ? "C1" : "C2",
+                columnName: (columnIndex == 0) ? "C1" : (columnIndex == 1) ? "C2" : "C3",
                 source:"fromCutCopy",
                 multiColumnType: wipData?.groupeddata.bodymatter?.length === 2 ? "2C" : "3C" /* 2C||3C */
             }
@@ -401,7 +401,7 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
     let elementDetails;
     const { wipData, elementId, tag, actionStatus,popupInContainer,slateManifestVersioning } = snapshotsData;
     const { asideData, parentUrn } = containerElement
-    tag.parentTag = asideData && fetchElementsTag(asideData) && asideData?.type !== MULTI_COLUMN ? fetchElementsTag(asideData) : fetchElementsTag(wipData)
+    tag.parentTag = asideData && fetchElementsTag(asideData) && asideData?.type !== MULTI_COLUMN ? fetchElementsTag(asideData) : fetchElementsTag(wipData);
     elementId.parentId = asideData && asideData.id && asideData?.type !== MULTI_COLUMN ? asideData.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
     wipData.contents.bodymatter.map((item) => {
         if (elementType.indexOf(item.type) !== -1) {
@@ -964,7 +964,7 @@ const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
     const elementData =element?.elementdata;
     let elementSnapshot = {};
     elementSnapshot = {
-            assessmentTitle: `<p>${elementData?.assessmenttitle || ''}</p>`,
+            assessmentTitle: `<p>${elementData?.assessmenttitle || elementData?.templatelabel || ''}</p>`,
             assessmentItemTitle: `<p>${elementData?.assessmentitemtitle|| ''}</p>`,
             assessmentId: `<p>${elementData?.assessmentid|| ''}</p>`,
             assessmentItemId: `<p>${elementData?.assessmentitemid|| ''}</p>`,
@@ -1339,7 +1339,7 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
  * @param {Object} currentSlateData current Slate data 
  * @returns {Object} Updated Container Element with latest Manifest Urns
 */
-export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData) => {
+export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData, actionType, deleteElementType) => {
     /** latest version for WE/CE/PE/AS*/
     if (versionStatus && versionStatus.parentStatus && versionStatus.parentStatus === "approved") {
         let contentUrn = containerElement.asideData ? containerElement.asideData.contentUrn : containerElement.poetryData ? containerElement.poetryData.contentUrn : containerElement.parentUrn ? containerElement.parentUrn.contentUrn : ""
@@ -1361,10 +1361,11 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         }
     }
     /** latest version for SB*/
-    if (versionStatus && versionStatus.childStatus && versionStatus.childStatus === "approved") {
+    if ((versionStatus && versionStatus.childStatus && versionStatus.childStatus === "approved") || (actionType === 'delete' && deleteElementType === 'manifest')) {
         let newSectionManifest = await getLatestVersion(containerElement.parentUrn.contentUrn);
         containerElement.parentUrn.manifestUrn = newSectionManifest ? newSectionManifest : containerElement.parentUrn.manifestUrn
     }
+
     if(versionStatus && versionStatus.popupStatus && versionStatus.popupStatus === "approved"){
         let updatedPopupUrn = containerElement && containerElement.parentElement && containerElement.parentElement.contentUrn ? containerElement.parentElement.contentUrn : "";
         if(updatedPopupUrn){
