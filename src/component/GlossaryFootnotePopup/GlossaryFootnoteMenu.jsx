@@ -187,7 +187,7 @@ class GlossaryFootnoteMenu extends React.Component {
             const audioTerm = `<p audio-id=${audioGlossaryData.narrativeAudioUrn} audio-path=${audioGlossaryData.location}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
             term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
                 : isAudioDataPresent ? audioTerm : `<p>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
-            const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}<img src=${figureGlossaryData.path} class="imageAssetContent" width="${figureGlossaryData.width}" height="${figureGlossaryData.height}" imageid="${figureGlossaryData.imageid}" alt="${figureGlossaryData.alttext}" longdescription="${figureGlossaryData.longdescription}"></p>`;
+            const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}<img src="${figureGlossaryData.path}" class="imageAssetContent" width="${figureGlossaryData.width}" height="${figureGlossaryData.height}" imageid="${figureGlossaryData.imageid}" alt="${figureGlossaryData.alttext}" longdescription="${figureGlossaryData.longdescription}"></p>`;
             definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") 
                         : isFigureDataPresent ? imageDefinition : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             term = this.replaceUnwantedtags(term);
