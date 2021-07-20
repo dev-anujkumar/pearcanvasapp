@@ -241,7 +241,7 @@ export const findElementType = (element, index) => {
                     primaryOption: elementDataBank[element.type]["primaryOption"],
                     secondaryOption: elementDataBank[element.type]["secondaryOption"],
                     numbered: element.numberedline ?? false,
-                    startNumber: element.startlinenumber && element.numberedline ? element.startlinenumber : undefined,
+                    startNumber: element.startlinenumber && element.numberedline ? element.startlinenumber : '1',
                 }
                 break;
             case "element-assessment":
