@@ -607,49 +607,74 @@ export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
 export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
-    const currentSlateData = currentParentData[config.slateManifestURN];
-    let dataToSend = JSON.stringify(dataToUpdate)
+    let currentSlateData = currentParentData[config.slateManifestURN];
     const updateParams = {
         dataToUpdate,
         activeElement: getState().appStore.activeElement,
         currentSlateData
     }
-    dataToSend = {
+    let dataToSend = {
         numberedline: dataToUpdate.isNumbered
     }
-    if (dataToUpdate.isNumbered === true) {
+    if (dataToUpdate.isNumbered == true) {
         number.startlinenumber = dataToUpdate.startNumber
     }
+    let elementEntityUrn = ""
+    const updatedData = dispatch(updateContainerMetadataInStore(updateParams,""))
+    if(updatedData?.elementEntityUrn){
+        elementEntityUrn = updatedData.elementEntityUrn
+    }
     dispatch({
-        type: UPDATE_POETRY_METADATA,
+        type: AUTHORING_ELEMENT_UPDATE,
         payload: {
-            numberedline: dataToUpdate.numberedline,
-            startlinenumber: dataToUpdate.startNumber
+            slateLevelData: {[config.slateManifestURN] : updatedData.currentSlateData}
         }
     })
-    let elementEntityUrn = ''
-    updateContainerMetadataInStore(updateParams, elementEntityUrn);
-    const url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn.containerUrn}/metadata`
+    const url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata`
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res => {
-        if (currentSlateData && currentSlateData.status === 'approved') {
-            sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+        if (currentSlateData?.status === 'approved') {
+            if (currentSlateData.type === "popup") {
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
+            }
+            else {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            config.conversionInProcess = false
+            if (currentSlateData.status === 'wip') {
+                config.savingInProgress = false
+            }
+            config.isSavingElement = false
         } else {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             const newParentData = getState().appStore.slateLevelData;
             const parsedParentData = JSON.parse(JSON.stringify(newParentData));
-            let newslateData = parsedParentData[config.slateManifestURN];
+            let newSlateData = parsedParentData[config.slateManifestURN];
             const newParams = {
                 dataToUpdate,
                 activeElement: getState().appStore.activeElement,
-                currentSlateData: newslateData,
+                currentSlateData: newSlateData,
                 resData: res.data
             }
-            updateContainerMetadataInStore(newParams);
+            const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
+            dispatch({
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: {[config.slateManifestURN] : updatedStore.currentSlateData}
+                }
+            })
         }
+       
+        config.conversionInProcess = false
+        config.savingInProgress = false
+        config.isSavingElement = false
     })
         .catch(err => {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
@@ -661,7 +686,7 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         })
 
 }
-const updateContainerMetadataInStore = (updateParams, elementEntityUrn) => (dispatch) => {
+const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch) => {
     const {
         dataToUpdate,
         activeElement,
@@ -673,14 +698,12 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn) => (disp
     if (typeof tmpIndex === 'number') {
         const updatedElement = prepareElementToUpdate(dataToUpdate, tmpIndex, activeElement, currentSlateData, versionedElement)
         elementEntityUrn = updatedElement.contentUrn
-        currentSlateData.contents.bodymatter[tmpIndex] === updatedElement
+        currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
     }
-    dispatch({
-        type: AUTHORING_ELEMENT_UPDATE,
-        payload: {
-            slateLevelData: currentSlateData
-        }
-    })
+    return {
+        elementEntityUrn, currentSlateData
+    }
+
 }
 
 const prepareElementToUpdate = (dataToUpdate, index, activeElement, currentSlateData, versionedElement) => {
