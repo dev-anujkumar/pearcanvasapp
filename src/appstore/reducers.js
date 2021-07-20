@@ -47,7 +47,8 @@ import {
     ADD_FIGURE_GLOSSARY_POPUP,
     WRONG_IMAGE_POPUP,
     UPDATE_MULTIPLE_COLUMN_INFO,
-    SHOW_REMOVE_GLOSSARY_IMAGE
+    SHOW_REMOVE_GLOSSARY_IMAGE,
+    UPDATE_POETRY_METADATA
 } from '../constants/Action_Constants';
 
 /**
@@ -85,7 +86,9 @@ const INITIAL_STATE = {
     addfigureGlossarypopup:false,
     openWrongImagePopup:false,
     multipleColumnData: [],
-    removeGlossaryImage:false
+    removeGlossaryImage:false,
+    numberedline: true,
+    startlinenumber: '1'
 };
 
 const INITIAL_ACTION = {
@@ -308,6 +311,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                     ...state,
                     multipleColumnData: []
                 }
+            }
+        case UPDATE_POETRY_METADATA:
+            return {
+                numberedline: action.payload.numberedline,
+                startlinenumber: action.payload.startlinenumber
             }
 
         default:

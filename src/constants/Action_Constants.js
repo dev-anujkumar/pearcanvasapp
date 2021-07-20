@@ -176,3 +176,5 @@ export const LAUNCH_TCM_CANVAS_POPUP = 'LAUNCH_TCM_CANVAS_POPUP';
 export const UPDATE_MULTIPLE_COLUMN_INFO = 'UPDATE_MULTIPLE_COLUMN_INFO';
 /*---------------- spinner Info ------------------------*/
 export const SPINNER = 'SPINNER';
+/*-----------------Poetry ---------------------------*/
+export const UPDATE_POETRY_METADATA = "UPDATE_POETRY_METADATA";

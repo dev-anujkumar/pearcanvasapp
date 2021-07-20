@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { conversionElement, setBCEMetadata } from './Sidebar_Action';
+import { conversionElement, setBCEMetadata ,updateContainerMetadata} from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
@@ -475,6 +475,29 @@ class Sidebar extends Component {
                 return attributions;
             }
 
+            if (this.state.activePrimaryOption === "primary-poetry" && this.props.activeElement.elementId) {
+                let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+                let attrNode = activeElement ? activeElement.querySelector(".element-container.pe") : null
+                console.log('attrNode', attrNode)
+                if (attrNode && attrNode.setAttribute) {
+                    attrNode.setAttribute("numbered", ((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true))
+                    attrNode.setAttribute("startNumber", (this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'))
+                }
+                attributions = <div>
+                    <div className="panel_show_module">
+                        <div className="toggle-value-bce">Use Line Numbers</div>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleNumberedLineToggle} />
+                            <span className="slider round"></span></label>
+                    </div>
+                    <div className="alt-Text-LineNumber" >
+                        <div className="toggle-value-bce">Start numbering from</div>
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.setStartLineNumber} value={this.state.bceNumberStartFrom}
+                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.saveElementAttributes} />
+                    </div>
+                </div>
+                return attributions;
+            }
+
             attributions = <div className="attributions">
                 {attributions}
             </div>;
@@ -492,7 +515,50 @@ class Sidebar extends Component {
     }
 
 
+    handleNumberedLineToggle = () => {
+        this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
+        this.setState({
+            bceToggleValue: !this.state.bceToggleValue
+        }, () => this.saveElementAttributes())
+    }
+    setStartLineNumber = (e) => {
+        const regex = /^[0-9]*(?:\.\d{1,2})?$/
+        if (regex.test(e.target.value)) {
+            this.props.setBCEMetadata('startNumber', e.target.value);
+            this.setState({ bceNumberStartFrom: e.target.value })
+        }
+    }
 
+    saveElementAttributes = () => {
+        const { elementType } = this.props.activeElement
+        switch (elementType) {
+            case 'poetry':
+                let activePoetryNode = document.querySelector('.element-container.pe')
+                if (activePoetryNode) {
+                    console.log('ACTIVE NODE')
+                    const dataToUpdate = {
+                        isNumbered: activePoetryNode.getAttribute("numbered"),
+                        startNumber: activePoetryNode.getAttribute("startnumber")
+                    }
+                    this.props.updateContainerMetadata(dataToUpdate)
+                }
+                break;
+            case 'dialogue':
+                let activeElementNode1 = document.querySelector('.element-container.pe')
+                // if (activeBCEElementNode) {
+                //     console.log('ACTIVE NODE')
+                // }
+                break;
+            case 'bce':
+            default:
+                let activeElementNode2 = document.querySelector('.element-container.pe')
+                // if (activeBCEElementNode) {
+                //     console.log('ACTIVE NODE')
+                // }
+                break;
+        }
+
+    }
 
 
     handleBQAttributionBlur = () => {
@@ -770,6 +836,7 @@ export default connect(
         setCurrentModule,
         conversionElement,
         setBCEMetadata,
-        tcmButtonHandler
+        tcmButtonHandler,
+        updateContainerMetadata
     }
 )(Sidebar);

@@ -229,11 +229,19 @@ export const findElementType = (element, index) => {
             case "showhide":
             case "citations":
             case "element-citation":
-            case  'poetry':
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"],
                     secondaryOption: elementDataBank[element.type]["secondaryOption"]
+                }
+                break;
+            case 'poetry':
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    primaryOption: elementDataBank[element.type]["primaryOption"],
+                    secondaryOption: elementDataBank[element.type]["secondaryOption"],
+                    numbered: element.numberedline ?? false,
+                    startNumber: element.startlinenumber && element.numberedline ? element.startlinenumber : "",
                 }
                 break;
             case "element-assessment":
