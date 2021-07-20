@@ -478,7 +478,7 @@ class Sidebar extends Component {
             if (this.state.activePrimaryOption === "primary-poetry" && this.props.activeElement.elementId) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement ? activeElement.querySelector(".element-container.pe") : null
-                console.log('attrNode', attrNode)
+                console.log('poetry attrNode', attrNode)
                 if (attrNode && attrNode.setAttribute) {
                     attrNode.setAttribute("numbered", ((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true))
                     attrNode.setAttribute("startNumber", (this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'))
@@ -535,7 +535,6 @@ class Sidebar extends Component {
             case 'poetry':
                 let activePoetryNode = document.querySelector('.element-container.pe')
                 if (activePoetryNode) {
-                    console.log('ACTIVE NODE')
                     const dataToUpdate = {
                         isNumbered: activePoetryNode.getAttribute("numbered"),
                         startNumber: activePoetryNode.getAttribute("startnumber")
@@ -544,20 +543,11 @@ class Sidebar extends Component {
                 }
                 break;
             case 'dialogue':
-                let activeElementNode1 = document.querySelector('.element-container.pe')
-                // if (activeBCEElementNode) {
-                //     console.log('ACTIVE NODE')
-                // }
-                break;
             case 'bce':
             default:
                 let activeElementNode2 = document.querySelector('.element-container.pe')
-                // if (activeBCEElementNode) {
-                //     console.log('ACTIVE NODE')
-                // }
                 break;
         }
-
     }
 
 

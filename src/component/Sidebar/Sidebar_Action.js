@@ -712,14 +712,14 @@ const prepareElementToUpdate = (dataToUpdate, index, activeElement, currentSlate
         return versionedElement
     } else {
         if (typeof index === 'number') {
-            const { elmentType } = activeElement
+            const { elementType } = activeElement
             updatedElement = currentSlateData.contents.bodymatter[index]
-            if (elmentType == 'poetry') {
+            if (elementType == 'poetry') {
                 console.log('dataToUpdate', dataToUpdate)
                 updatedElement = {
                     ...updatedElement,
                     numberedline: dataToUpdate.isNumbered,
-                    startlinenumber: dataToSend.startNumber
+                    startlinenumber: dataToUpdate.startNumber
                 }
             }
         }
