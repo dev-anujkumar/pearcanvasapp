@@ -617,7 +617,7 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         numberedline: dataToUpdate.isNumbered
     }
     if (dataToUpdate.isNumbered == true) {
-        number.startlinenumber = dataToUpdate.startNumber
+        dataToSend.startlinenumber = dataToUpdate.startNumber
     }
     let elementEntityUrn = ""
     const updatedData = dispatch(updateContainerMetadataInStore(updateParams,""))

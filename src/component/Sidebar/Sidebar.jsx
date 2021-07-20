@@ -535,8 +535,9 @@ class Sidebar extends Component {
             case 'poetry':
                 let activePoetryNode = document.querySelector('.element-container.pe')
                 if (activePoetryNode) {
+                    let isNumbered = activePoetryNode.getAttribute("numbered")
                     const dataToUpdate = {
-                        isNumbered: activePoetryNode.getAttribute("numbered"),
+                        isNumbered: isNumbered == "true" ? true : false,
                         startNumber: activePoetryNode.getAttribute("startnumber")
                     }
                     this.props.updateContainerMetadata(dataToUpdate)
