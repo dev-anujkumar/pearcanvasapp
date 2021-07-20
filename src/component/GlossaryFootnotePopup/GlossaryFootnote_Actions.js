@@ -927,7 +927,6 @@ export const showRemoveImageGlossaryPopup = (value) => (dispatch, getState) => {
 }
 
 export const saveImageDataFromAlfresco = (message) => dispatch => {
-    console.log("message",message)
     let imageData = message?.asset;
     let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
     // let figureType = imageData?.content?.mimeType?.split('/')[0]
