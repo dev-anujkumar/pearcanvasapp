@@ -623,10 +623,11 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
     if(updatedData?.elementEntityUrn){
         elementEntityUrn = updatedData.elementEntityUrn
     }
+    let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
     dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
         payload: {
-            slateLevelData: {[config.slateManifestURN] : updatedData.currentSlateData}
+            slateLevelData: {[config.slateManifestURN] : updatedSlateLevelData }
         }
     })
     const url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata`
@@ -659,16 +660,17 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             const newParams = {
                 dataToUpdate,
                 activeElement: getState().appStore.activeElement,
-                currentSlateData: newSlateData,
-                resData: res.data
+                currentSlateData: newSlateData
             }
             const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
-            dispatch({
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: {
-                    slateLevelData: {[config.slateManifestURN] : updatedStore.currentSlateData}
-                }
-            })
+            if(updatedStore.currentSlateData){
+                dispatch({
+                    type: AUTHORING_ELEMENT_UPDATE,
+                    payload: {
+                        slateLevelData: {[config.slateManifestURN] : updatedStore.currentSlateData}
+                    }
+                })
+            }
         }
        
         config.conversionInProcess = false
