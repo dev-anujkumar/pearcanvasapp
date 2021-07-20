@@ -6,7 +6,6 @@ import {
     SET_ACTIVE_ELEMENT,
     ERROR_POPUP,
     GET_TCM_RESOURCES,
-    UPDATE_POETRY_METADATA,
     AUTHORING_ELEMENT_UPDATE,
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
@@ -682,7 +681,7 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             config.conversionInProcess = false
             config.savingInProgress = false
             config.isSavingElement = false
-            console.error("Conversion Error >> ", err)
+            console.error(" Error >> ", err)
         })
 
 }
