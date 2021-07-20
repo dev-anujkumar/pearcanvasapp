@@ -35,7 +35,6 @@ class RenderTCMIcons extends React.Component {
             <div className="userNametcmIconContainer">
                 <div className="userName">
                     <span>{userName}</span>
-                    <span>{readableTime}</span>
                 </div>
                 <div className="tcmIconContainer">
                     <span className="btn-element tcmIcon refresh">
