@@ -885,6 +885,16 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 elmHtml = { "title": selection.element.title.text || "" }
             }
         }
+        if (elmSubtype.indexOf(selection.element.figuretype) >= 0) {
+            if(!('html' in selection.element)) {
+                elmHtml = { "title": selection.element.title.text || "" }
+            } else if (!('title' in selection.element.html)) {
+                elmHtml = { 
+                    ...elmHtml,
+                    "title": "" 
+                }
+            }
+        }
         
         if(selection.operationType === 'copy' && 'html' in selection.element && 'text' in  selection.element.html) {
             let htmlText = (selection.element.html.text);
@@ -1007,7 +1017,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     parentUrn,
                     asideData,
                     poetryData,
-                    slateEntityUrn, index2ShowHide
+                    slateEntityUrn, index2ShowHide, pasteSHIndex: _requestData?.content[0]?.index
                 };
                 await onPasteSuccess(pasteSuccessArgs)
                 if (responseData[0].elementdata?.type === "blockquote") {  

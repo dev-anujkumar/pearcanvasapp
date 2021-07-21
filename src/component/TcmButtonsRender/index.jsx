@@ -3,7 +3,7 @@ import TcmCloseIcon from '../../images/CanvasTCMPopup/TcmCloseIcon.png'
 import TcmExpandIcon from '../../images/CanvasTCMPopup/TcmExpandIcon.png'
 import TcmRefreshIcon from '../../images/CanvasTCMPopup/TcmRefreshIcon.png'
 import { connect } from 'react-redux';
-import TCMUtiles from '../../component/TcmSnapshots/TCMpopup_Utilty'
+import TCMUtiles from '../TcmSnapshots/TCM'
 import {handleTCM, closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 import config from '../../config/config'
@@ -35,7 +35,6 @@ class RenderTCMIcons extends React.Component {
             <div className="userNametcmIconContainer">
                 <div className="userName">
                     <span>{userName}</span>
-                    <span>{readableTime}</span>
                 </div>
                 <div className="tcmIconContainer">
                     <span className="btn-element tcmIcon refresh">

@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { conversionElement, setBCEMetadata } from './Sidebar_Action';
+import { conversionElement, setBCEMetadata ,updateContainerMetadata} from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING } from '../SlateWrapper/SlateWrapperConstants.js';
-import { showBlocker, hideBlocker } from '../../js/toggleLoader';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE } from '../SlateWrapper/SlateWrapperConstants.js';
+import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
@@ -44,6 +44,9 @@ class Sidebar extends Component {
             bceToggleValue: numbered,
             syntaxHighlightingToggleValue: syntaxhighlighting,
             showSyntaxHighlightingPopup: false,
+            updateAssessmentTypePopup: false,
+            secondaryValue:'',
+            secondaryLabel:'',
             bceNumberStartFrom: startNumber,
             podOption: false,
             podValue: podwidth,
@@ -86,7 +89,6 @@ class Sidebar extends Component {
 
         return null;
     }
-
     handlePrimaryOptionChange = e => {
         let value = e.target.getAttribute('data-value');
         let secondaryelementList = elementList[this.state.activeElementType][value].subtype;
@@ -197,10 +199,76 @@ class Sidebar extends Component {
 
     }
 
+    showUpdateAssessmentTypePopup=()=>{
+        this.props.showCanvasBlocker(true);
+        hideToc();
+        showBlocker(true);
+        return(
+            <PopUp
+                togglePopup={this.handleUpdateAssessmentTypePopup}
+                dialogText={CHANGE_ASSESSMENT_TYPE}
+                warningHeaderText={`Warning`}
+                lOPopupClass="lo-warning-txt"
+                AssessmentPopup={true}
+                agree={this.setUpdatedAssessmentType}
+            />
+        )
+    }
+    setUpdatedAssessmentType=(value)=>{
+        showBlocker(false);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
+        this.setState({
+            updateAssessmentTypePopup: false,
+        })
+        this.setSecondary(this.state.secondaryValue,this.state.secondaryLabel);
+
+    }
+
+    handleUpdateAssessmentTypePopup = (value) => {
+        showBlocker(false);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
+            this.setState({
+            updateAssessmentTypePopup: false,
+            secondaryValue: "",
+            secondaryLabel: ""
+        })
+    }
+
+    /**@description function handles the secondaryoption change dropdown */
     handleSecondaryOptionChange = e => {
         let value = e.target.getAttribute('data-value').toLowerCase();
         let elementTypeList = elementList[this.state.activeElementType];
         let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
+        if (value === this.state.activeSecondaryOption) {
+            this.setState({
+                elementDropdown: ''
+            })
+            return null;
+        }
+
+        if (this.props.activeElement.primaryOption === 'primary-single-assessment') {
+            this.setState({
+                updateAssessmentTypePopup: true,
+                secondaryValue: value,
+                secondaryLabel: labelText,
+                elementDropdown:'',
+                activeSecondaryOption: value,
+                activeLabelText: labelText,
+                podOption: false
+            });
+        }
+        else {
+            this.setSecondary(value, labelText)
+        }
+    }
+
+    /**@description sets the values form the selected dropdown
+     * @param-value is AssessmentType selected from the dropdown
+     * @param-labelText is the label of the Element
+     */
+    setSecondary=(value,labelText)=>{
         this.setState({
             elementDropdown: '',
             activeSecondaryOption: value,
@@ -219,7 +287,6 @@ class Sidebar extends Component {
             });
         }
     }
-
     secondaryOption = () => {
         let secondaryOptions = '';
         let enableColumn3SecondaryOption = false;
@@ -408,6 +475,28 @@ class Sidebar extends Component {
                 return attributions;
             }
 
+            if (this.state.activePrimaryOption === "primary-poetry" && this.props.activeElement.elementId) {
+                let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+                let attrNode = activeElement ? activeElement.querySelector(".element-container.pe") : null
+                if (attrNode && attrNode.setAttribute) {
+                    attrNode.setAttribute("numbered", ((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true))
+                    attrNode.setAttribute("startNumber", (this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'))
+                }
+                attributions = <div>
+                    <div className="panel_show_module">
+                        <div className="toggle-value-bce">Use Line Numbers</div>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleNumberedLineToggle} />
+                            <span className="slider round"></span></label>
+                    </div>
+                    <div className="alt-Text-LineNumber" >
+                        <div className="toggle-value-bce">Start numbering from</div>
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.setStartLineNumber} value={this.state.bceNumberStartFrom}
+                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.saveElementAttributes} />
+                    </div>
+                </div>
+                return attributions;
+            }
+
             attributions = <div className="attributions">
                 {attributions}
             </div>;
@@ -425,7 +514,41 @@ class Sidebar extends Component {
     }
 
 
+    handleNumberedLineToggle = () => {
+        this.props.setBCEMetadata('numbered', !this.state.bceToggleValue);
+        this.setState({
+            bceToggleValue: !this.state.bceToggleValue
+        }, () => this.saveElementAttributes())
+    }
+    setStartLineNumber = (e) => {
+        const regex = /^[0-9]*(?:\.\d{1,2})?$/
+        if (regex.test(e.target.value)) {
+            this.props.setBCEMetadata('startNumber', e.target.value);
+            this.setState({ bceNumberStartFrom: e.target.value })
+        }
+    }
 
+    saveElementAttributes = () => {
+        const { elementType } = this.props.activeElement
+        switch (elementType) {
+            case 'poetry':
+                let activePoetryNode = document.querySelector('.element-container.pe')
+                if (activePoetryNode) {
+                    let isNumbered = activePoetryNode.getAttribute("numbered")
+                    const dataToUpdate = {
+                        isNumbered: isNumbered == "true" ? true : false,
+                        startNumber: activePoetryNode.getAttribute("startnumber")
+                    }
+                    this.props.updateContainerMetadata(dataToUpdate)
+                }
+                break;
+            case 'dialogue':
+            case 'bce':
+            default:
+                let activeElementNode2 = document.querySelector('.element-container.pe')
+                break;
+        }
+    }
 
 
     handleBQAttributionBlur = () => {
@@ -665,6 +788,7 @@ class Sidebar extends Component {
                         elementData={this.props.elementData}
                         tcmStatus = {this.props.tcmStatus}
                     />}
+                {this.state.updateAssessmentTypePopup && this.props?.activeElement?.primaryOption === 'primary-single-assessment'  && this.showUpdateAssessmentTypePopup()}
             </>
         );
     }
@@ -702,6 +826,7 @@ export default connect(
         setCurrentModule,
         conversionElement,
         setBCEMetadata,
-        tcmButtonHandler
+        tcmButtonHandler,
+        updateContainerMetadata
     }
 )(Sidebar);

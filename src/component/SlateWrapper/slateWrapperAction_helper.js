@@ -24,7 +24,7 @@ export const onPasteSuccess = async (params) => {
         parentUrn,
         asideData,
         poetryData,
-        slateEntityUrn, index2ShowHide
+        slateEntityUrn, index2ShowHide, pasteSHIndex
     } = params
     
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -158,14 +158,14 @@ export const onPasteSuccess = async (params) => {
         try {
             currentSlateData?.contents?.bodymatter?.map(item => {
                 if(item?.id === manifestUrn) {
-                    pasteInShowhide(item, responseData, index);
+                    pasteInShowhide(item, responseData, pasteSHIndex);
                 } else if(item?.type === 'element-aside') {
-                    pasteShowhideInAside(item, manifestUrn, responseData, index)
+                    pasteShowhideInAside(item, manifestUrn, responseData, pasteSHIndex)
                 } else if(item?.type === "groupedcontent") {
                     item?.groupeddata?.bodymatter?.map(item_4 => {
                         item_4?.groupdata?.bodymatter?.map(item_5 => {
                             if(item_5?.type === 'element-aside') {
-                                pasteShowhideInAside(item_5, manifestUrn, responseData, index);
+                                pasteShowhideInAside(item_5, manifestUrn, responseData, pasteSHIndex);
                             }
                         })
                     })
@@ -187,18 +187,24 @@ export const onPasteSuccess = async (params) => {
                 })
             } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id) {
                 /* 2C:ASIDE/WE:Elements; Update the store */
-                const indexs = asideData?.index?.split("-") || [];
-                if(indexs.length === 3) { /* Inside 2C:AS; COPY-PASTE elements */
+                const indexes = asideData?.index?.split("-") || [];
+                if(indexes.length === 3) { /* Inside 2C:AS; COPY-PASTE elements */
                     const selcetIndex = sourceElementIndex?.toString().split("-") || [];
                     /* @newIndex@ for cut form same column to inner aside/we */
                     let newIndex;
-                    if (operationType === 'cut') {
-                        newIndex = (selcetIndex?.length === 3) && indexs[2] !== selcetIndex[2] ? selcetIndex : indexs;
+                    if (operationType === 'cut' && selcetIndex?.length === 3 && indexes[1] === selcetIndex[1] && selcetIndex[2] < indexes[2]) {
+                        newIndex = indexes;
+                        newIndex[2] = newIndex[2] - 1;
                     } else {
-                        newIndex = indexs
+                        newIndex = indexes;
                     }
                     if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest" && selcetIndex.length === 5 ) { /* paste inner level elements inside 2C/Aside */
-                        item?.groupeddata?.bodymatter[selcetIndex[1]]?.groupdata?.bodymatter[selcetIndex[2]]?.elementdata?.bodymatter[selcetIndex[3]]?.contents.bodymatter?.splice(cutIndex, 0, responseData);
+                        //item?.groupeddata?.bodymatter[selcetIndex[1]]?.groupdata?.bodymatter[selcetIndex[2]]?.elementdata?.bodymatter[selcetIndex[3]]?.contents.bodymatter?.splice(cutIndex, 0, responseData);
+                        item?.groupeddata?.bodymatter?.[selcetIndex[1]]?.groupdata?.bodymatter?.[selcetIndex[2]]?.elementdata?.bodymatter?.map(item_L0 => {
+                            if(item_L0?.id === parentUrn.manifestUrn) { /* 2/3C:WE:SectionBreak: Paste Element */
+                                item_L0?.contents.bodymatter?.splice(cutIndex, 0, responseData)
+                            }
+                        });
                     } else if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest") { /* paste slate level elements inside 2C/WE/Body */ 
                         item?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]?.elementdata?.bodymatter?.map(item_L2 => {
                             if(item_L2.id === parentUrn?.manifestUrn) {
@@ -254,7 +260,7 @@ export const onPasteSuccess = async (params) => {
     })
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
 }
-/**/
+/* Paste Element inside showhide */
 function pasteInShowhide(element, responseData, cutIndex) {
     /**/
     if(element?.type === SHOW_HIDE) {
@@ -267,7 +273,7 @@ function pasteInShowhide(element, responseData, cutIndex) {
         }
     }
 }
-/**/
+/* Paste element inside Aside:SH */
 function pasteShowhideInAside(item, manifestUrn, responseData, cutIndex) {
     item?.elementdata?.bodymatter.map(item_2 => {
         if(item_2?.id === manifestUrn) {

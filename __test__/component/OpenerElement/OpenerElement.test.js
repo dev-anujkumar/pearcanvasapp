@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import OpenerElement from '../../../src/component/OpenerElement';
 import { openerElementData } from '../../../fixtures/OpenerElementData'
@@ -6,7 +7,12 @@ import config from '../../../src/config/config';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
-import { hasReviewerRole } from '../../../src/constants/utility';
+import { getOpenerContent, getOpenerImageSource } from '../../../src/component/OpenerElement/OpenerConstants';
+jest.mock('../../../src/component/OpenerElement/OpenerConstants', () => ({
+    getOpenerContent: jest.fn(),
+    getOpenerImageSource: jest.fn(),
+    labelOptions: ["No Label", "Chapter", "Ch", "Part", "Unit"]
+}));
 jest.mock('../../../src/config/config.js', () => {
     return {
         alfrescoMetaData:{   alfresco:{
@@ -22,6 +28,10 @@ jest.mock('../../../src/js/toggleLoader', () => ({
     hideTocBlocker: jest.fn(),
     disableHeader: jest.fn(),
     showTocBlocker: jest.fn()
+}))
+jest.mock('../../../src/component/AlfrescoPopup/Alfresco_Action', () => ({
+    alfrescoPopup: jest.fn(),
+    saveSelectedAssetData: jest.fn()
 }))
 jest.mock('../../../src/constants/utility.js', () => {
     return { sendDataToIframe: jest.fn(),
@@ -51,7 +61,7 @@ const store = mockStore({
 
 });
 
-xdescribe('Testing Opener component with props', () => {
+describe('Testing Opener component with props', () => {
     const props = {
         slateLockInfo: {
             isLocked: false,
@@ -88,8 +98,11 @@ xdescribe('Testing Opener component with props', () => {
    
     describe('testing background image is already selected',()=>{
         it('Simulating click event to open dropdown when background image is already selected', () => {
+            getOpenerImageSource.mockImplementation(() => "urn:pearson:alfresco:4932d1fb-e6d3-4080-9f23-032e0dfa219a")
             const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
             const OpenerInstance = openerComponent.find('OpenerElement').instance()
+            OpenerInstance.state.imgSrc = getOpenerImageSource();
+            OpenerInstance.renderExistingCOImage();
             openerComponent.find('div.update-image-label').simulate('click');
             expect(OpenerInstance.state.updateImageOptions).toBe(true)
             // openerComponent.find('ul.image-global-button>li:first-child').simulate('click');
@@ -118,6 +131,16 @@ xdescribe('Testing Opener component with props', () => {
             openerComponent.find('input.element-dropdown-title.opener-number').simulate('keypress', { which: 91 });
             let openerElementInstance = openerComponent.find('OpenerElement').instance()
             expect(openerElementInstance.numberValidatorHandler(event)).toBe(false)
+        })
+        it('Simulating keyPress event on input number - keyCode > 97', () => {
+            const event = {
+                keyCode: 97,
+                stopPropagation() { },
+                preventDefault() { }
+            }
+            openerComponent.find('input.element-dropdown-title.opener-number').simulate('keypress', { keyCode: 97 });
+            let openerElementInstance = openerComponent.find('OpenerElement').instance()
+            expect(openerElementInstance.numberValidatorHandler(event)).toBe(true)
         })
     })
     it('Changing input title', () => {
@@ -351,6 +374,46 @@ xdescribe('Testing Opener component with props', () => {
 
             spydataFromAlfresco.mockClear()
         })
+        it('Test- with more properties', () => {
+            let data = {
+                'assetType': "table",
+                'EpsUrl': "test",
+                'alt-text': "ält-text",
+                'longDescription': "longDescription",
+                'uniqueID': '1234',
+                'width': '320'
+            }
+            openerElementInstance.dataFromAlfresco(data)
+            openerElementInstance.forceUpdate();
+            openerComponent.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(openerElementInstance.state.imgSrc).toBe('test')
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- first else case coverage', () => {
+            let data = {
+                'assetType': ""
+            }
+            openerElementInstance.dataFromAlfresco(data)
+            openerElementInstance.forceUpdate();
+            openerComponent.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(openerElementInstance.state.imgSrc).toBe('test')
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- 2nd and 3rd else case coverage', () => {
+            let data = {
+                'assetType': "image",
+                'alt-text': "",
+                'longDescription': ""
+            }
+            openerElementInstance.dataFromAlfresco(data)
+            openerElementInstance.forceUpdate();
+            openerComponent.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(openerElementInstance.state.imgSrc).toBe('')
+            spydataFromAlfresco.mockClear()
+        })
     })
     it("Clicking on opener element with locked slate", () => {
         const props = {
@@ -405,6 +468,90 @@ xdescribe('Testing Opener component with props', () => {
         expect(OpenerInstance.handleOpenerClick(props.slateLockInfo,event)).toEqual(false)
         spyhandleBlur.mockClear()
     })
+    it("Test-HandleBlur with classes", () => {
+        const props = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: ''
+            },
+            element : openerElementData,
+            onClick : ()=>{},
+            permissions: [],
+            updateElement : ()=>{},
+        }
+        const event = {
+            stopPropagation() { },
+            preventDefault() { },
+            currentTarget: {
+                classList: { contains: jest.fn(()=>{return true}), length: 2, value: "element-dropdown-title opener-number" }
+            }
+        }
+        
+        const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
+        const OpenerInstance = openerComponent.find('OpenerElement').instance();
+        OpenerInstance.setState({
+            label: undefined,
+            number: undefined,
+            title: undefined
+        });
+        OpenerInstance.forceUpdate();
+        openerComponent.update();
+        const { textsemantics, text } = props.element.title;
+        const spyhandleBlur = jest.spyOn(OpenerInstance, 'handleBlur')
+        OpenerInstance.handleBlur(event)
+        event.currentTarget.classList.contains.mockReturnValueOnce(true);
+        expect(OpenerInstance.state.label).toEqual(getOpenerContent(textsemantics, 'label', text));
+        expect(OpenerInstance.state.number).toEqual(getOpenerContent(textsemantics, 'number', text));
+        expect(OpenerInstance.state.title).toEqual(getOpenerContent(textsemantics, 'title', text));
+        spyhandleBlur.mockClear()
+    })
+    it("Test-HandleBlur with classes length zero", () => {
+        const props = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: ''
+            },
+            element : openerElementData,
+            onClick : ()=>{},
+            permissions: [],
+            updateElement : ()=>{},
+        }
+        let event = {
+            stopPropagation() { },
+            preventDefault() { },
+            currentTarget: {
+                classList: { contains: jest.fn(()=>{return true}), length: 0 }
+            },
+            imgSrc: 'test image',
+            target: {
+                innerText: 'No Label'
+            }
+        }
+        
+        const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
+        const OpenerInstance = openerComponent.find('OpenerElement').instance();
+        OpenerInstance.setState({
+            label: undefined,
+            number: undefined,
+            title: undefined
+        });
+        OpenerInstance.forceUpdate();
+        openerComponent.update();
+        const { textsemantics, text } = props.element.title;
+        const spyhandleBlur = jest.spyOn(OpenerInstance, 'handleBlur')
+        OpenerInstance.handleBlur(event);
+        expect(OpenerInstance.state.label).toEqual(getOpenerContent(textsemantics, 'label', text));
+        expect(OpenerInstance.state.number).toEqual(getOpenerContent(textsemantics, 'number', text));
+        expect(OpenerInstance.state.title).toEqual(getOpenerContent(textsemantics, 'title', text));
+        event = {
+            ...event,
+            target: {
+                innerText: 'New Label'
+            }
+        }
+        OpenerInstance.handleBlur(event);
+        spyhandleBlur.mockClear();
+    })
     it("Test-handleToolbarOpener ", () => {
         const props = {
             slateLockInfo: {
@@ -419,10 +566,24 @@ xdescribe('Testing Opener component with props', () => {
             stopPropagation() { },
             preventDefault() { }
         }
-        document.getElementById["tinymceToolbar"] = true
+        document.body.innerHTML = `<div id="tinymceToolbar"> Toolbar </div>`;
+        let toolbar = document.getElementById["tinymceToolbar"];
         const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
         const OpenerInstance = openerComponent.find('OpenerElement').instance()
-        const spyhandleBlur = jest.spyOn(OpenerInstance, 'handleToolbarOpener')
+        OpenerInstance.handleToolbarOpener(event)
+    })
+    it("Test-handleToolbarOpener else case ", () => {
+        const props = {
+            element : openerElementData,
+        }
+        const event = {
+            stopPropagation() { },
+            preventDefault() { }
+        }
+        document.body.innerHTML = ``;
+        let toolbar = document.getElementById["tinymceToolbar"];
+        const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
+        const OpenerInstance = openerComponent.find('OpenerElement').instance()
         OpenerInstance.handleToolbarOpener(event)
     })
     describe('testing componentWillUnmount',()=>{
@@ -445,13 +606,43 @@ xdescribe('Testing Opener component with props', () => {
         })
       })
     describe('testing handleClickOutside',()=>{
-        it('Test-handleClickOutside Function', () => {
-          const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
-          const OpenerInstance = openerComponent.find('OpenerElement').instance()
-          const handleClickOutside  = jest.spyOn(OpenerInstance, 'handleClickOutside')
-          OpenerInstance.handleClickOutside();
-          expect(handleClickOutside).toHaveBeenCalled()
+        it('Test-handleClickOutside Function if case', () => {
+            const map = {}
+            document.addEventListener = jest.fn((event, cb) => {
+                map[event] = cb
+            })
+            const props = {
+                element: openerElementData,
+                actions: {
+                    updateFunction: jest.fn(),
+                }
+            }
+            const event = {
+                stopPropagation() { },
+                preventDefault() { }
+            }
+            const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
+            const OpenerInstance = openerComponent.find('OpenerElement').instance()
+            OpenerInstance.setState({
+                updateImageOptions: true
+            });
+            OpenerInstance.forceUpdate();
+            openerComponent.update();
+            const handleClickOutside = jest.spyOn(OpenerInstance, 'handleClickOutside')
+            OpenerInstance.handleClickOutside(event);
+            expect(handleClickOutside).toHaveBeenCalled();
+            map.mousedown({
+                target: ReactDOM.findDOMNode(openerComponent.instance()),
+            })
+            expect(OpenerInstance.state.updateImageOptions).toBe(false)
         })
+        it('Test-handleClickOutside Function', () => {
+            const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
+            const OpenerInstance = openerComponent.find('OpenerElement').instance()
+            const handleClickOutside  = jest.spyOn(OpenerInstance, 'handleClickOutside')
+            OpenerInstance.handleClickOutside();
+            expect(handleClickOutside).toHaveBeenCalled()
+          })
     })
     describe('Test-handleC2GlobalCO function',()=>{
         const props = {
@@ -559,6 +750,47 @@ xdescribe('Testing Opener component with props', () => {
             expect(spyhandleC2GlobalCO).toHaveBeenCalledWith(event);
             spyhandleC2GlobalCO.mockClear()
         })
+        describe('testing label, number, title, imageId field for undefined values', () => {
+            const props = {
+                element : openerElementData
+            }
+            getOpenerContent.mockImplementation(() => undefined)
+            getOpenerImageSource.mockImplementation(() => undefined)
+            const OpenerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
+            it('we get undefined value from getOpenerContent for label', () => {
+                OpenerComponent.state.label = getOpenerContent() || "No Label";
+                expect(OpenerComponent.state.label).toBe("No Label")
+            })
+            it('we get undefined value from getOpenerContent for number', () => {
+                OpenerComponent.state.number = getOpenerContent() || "";
+                expect(OpenerComponent.state.number).toBe("")
+            })
+            it('we get undefined value from getOpenerContent for title', () => {
+                OpenerComponent.state.title = getOpenerContent() || "";
+                expect(OpenerComponent.state.title).toBe("")
+            })
+        })
+        describe('componentDidUpdate', () => {
+            const props = {
+                element : openerElementData
+            }
+            const mDataHeaderPos = { top: 100 };
+            const mHeaderPos = { height: 50 };
+            const mHeader = { offsetTop: 100, getBoundingClientRect: jest.fn().mockReturnValueOnce(mHeaderPos) };
+            const mDataHeader = { getBoundingClientRect: jest.fn().mockReturnValueOnce(mDataHeaderPos) };
+            jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+                switch (selector) {
+                    case "[name='alt_text']":
+                        return mHeader;
+                    case "[name='long_description']":
+                        return mDataHeader;
+                }
+            });
+            const OpenerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
+            let openerElementInstance = OpenerComponent.find('OpenerElement').instance()
+            it('if conditions in constructor', () => { 
+                expect(openerElementInstance.state.showLabelDropdown).toEqual(false);
+            })
+        })
     })
-
 })
