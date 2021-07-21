@@ -101,7 +101,7 @@ class ElementAudioVideo extends Component {
             //         }
             //     }
             // }
-            if(imageData?.clip){
+            if(imageData?.clip && Object.keys(imageData.clip).length >0){
                 clipInfo = {
                     "clipid": imageData.clip.id ?? "",
                     "starttime": imageData.clip.start ?? "",
