@@ -630,6 +630,9 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             slateLevelData: {[config.slateManifestURN] : updatedSlateLevelData }
         }
     })
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+    config.conversionInProcess = true
+    config.isSavingElement = true
     const url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata`
     return axios.put(url, dataToSend, {
         headers: {

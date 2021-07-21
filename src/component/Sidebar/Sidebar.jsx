@@ -529,10 +529,11 @@ class Sidebar extends Component {
     }
 
     saveElementAttributes = () => {
-        const { elementType } = this.props.activeElement
+        const { elementType ,elementId } = this.props.activeElement
         switch (elementType) {
             case 'poetry':
-                let activePoetryNode = document.querySelector('.element-container.pe')
+                let activeElement = document.querySelector(`[data-id="${elementId}"]`)
+                let activePoetryNode = activeElement ? activeElement.querySelector(".element-container.pe") : null
                 if (activePoetryNode) {
                     let isNumbered = activePoetryNode.getAttribute("numbered")
                     const dataToUpdate = {
