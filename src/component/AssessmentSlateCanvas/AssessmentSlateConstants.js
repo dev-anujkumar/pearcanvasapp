@@ -63,7 +63,7 @@ export const DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_p
 export const SLATE_TYPE_ASSESSMENT = "assessment";
 
 /*----------------Popup ---------------------*/
-export const UPDATE_ASSESSMENT_TYPE= "Changing the Assessment type will lead to a change in the Assessment picker options for this Assessment Slate"
+export const UPDATE_ASSESSMENT_TYPE= "Changing the Assessment type will lead to a change in the Assessment picker options for this Assessment Slate."
 /*--------------- PDF Slate ----------------*/
 export const ELEMENT_TYPE_PDF = "element-pdf";
 export const SLATE_TYPE_PDF = "pdfslate";

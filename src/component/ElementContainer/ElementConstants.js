@@ -3,7 +3,6 @@ export default {
     AUTHORED_TEXT : "element-authoredtext",
     BLOCKFEATURE : "element-blockfeature",
     ELEMENT_LIST : "element-list",
-    WARNING:'Warning',
 /****************Figure Element************************ */    
     FIGURE : "figure",
     FIGURE_IMAGE : "image",

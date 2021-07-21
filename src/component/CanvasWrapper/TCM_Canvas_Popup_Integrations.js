@@ -8,16 +8,16 @@ import {handleSlateRefresh} from '../CanvasWrapper/SlateRefresh_Actions'
 * This function opens TCM w.r.t. current Element
 */
 export const handleTCM = (element, index) => (dispatch) => {
-    dispatch({
-        type: SPINNER,
-        payload:true
-    })
     const currentProjectUrn = config.projectUrn;
     const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
     let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}`
     if (config.isSavingElement) {
         return false
     }
+    dispatch({
+        type: SPINNER,
+        payload:true
+    })
     return axios.get(url, {
         headers: {
             PearsonSSOSession: config.ssoToken,
