@@ -379,7 +379,7 @@ const dispatchActions = {
 
 const mapStateToProps = ({ appStore }) => {
     return {
-        asideData: appStore.asideData,
+        //asideData: appStore.asideData,
         parentUrn: appStore.parentUrn
     }
 }
