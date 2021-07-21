@@ -1375,7 +1375,6 @@ describe('Tests Slate Wrapper Actions', () => {
         jest.mock('axios');
         axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
         await store3.dispatch(actions.createElement('LO', 0, {manifestUrn: config.projectUrn}, asideDataMock, 0, "loref"));
-        console.log("Stopre3", store3);
     });
 
     it('pasteElement  action - with poetryData', async () => {
@@ -1874,7 +1873,6 @@ describe('Tests Slate Wrapper Actions', () => {
         jest.mock('axios');
         axios.post = jest.fn(() => Promise.resolve({ status: '200'}));
         await store3.dispatch(actions.swapElement(dataObj, jest.fn()));
-        console.log("Store2121", store3.getActions());
         const { type } = store3.getActions()[0];
         expect(type).toBe('SWAP_ELEMENT');
     })
