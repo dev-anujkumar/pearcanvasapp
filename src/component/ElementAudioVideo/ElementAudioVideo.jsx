@@ -70,35 +70,44 @@ class ElementAudioVideo extends Component {
                     assetFormat = smartLinkAssetType + "/" + smartLinkUrl?.split('=')[1]
                 }
             }
-            if (imageData?.properties["cp:clips"]) {
-                if (typeof (imageData.properties["cp:clips"]) == "string") {
-                    let clipInfoData = JSON.parse(imageData.properties["cp:clips"])
-                    if (clipInfoData === null) {
-                        clipInfo = null;
-                    }
-                    else {
-                        clipInfo = {
-                            "clipid": clipInfoData[0]?.id ? clipInfoData[0].id : "",
-                            "starttime": clipInfoData[0]?.start ? clipInfoData[0].start : "",
-                            "endtime": clipInfoData[2]?.end ? clipInfoData[2].end : "",
-                            "description": clipInfoData[0]?.description ? clipInfoData[0].description : "",
-                            "duration": clipInfoData[0].duration ? clipInfoData[0].duration : ""
-                        }
-                    }
-                }
-                else {
-                    if (imageData['clipinfo'] === null) {
-                        clipInfo = null;
-                    }
-                    else {
-                        clipInfo = {
-                            "clipid": imageData['clipinfo'].id ? imageData['clipinfo'].id : "",
-                            "starttime": imageData['clipinfo'].start ? imageData['clipinfo'].start : "",
-                            "endtime": imageData['clipinfo'].end ? imageData['clipinfo'].end : "",
-                            "description": imageData['clipinfo'].description ? imageData['clipinfo'].description : "",
-                            "duration": imageData['clipinfo'].duration ? imageData['clipinfo'].duration : ""
-                        }
-                    }
+            // if (imageData?.properties["cp:clips"]) {
+            //     if (typeof (imageData.properties["cp:clips"]) == "string") {
+            //         let clipInfoData = JSON.parse(imageData.properties["cp:clips"])
+            //         if (clipInfoData === null) {
+            //             clipInfo = null;
+            //         }
+            //         else {
+            //             clipInfo = {
+            //                 "clipid": clipInfoData[0]?.id ? clipInfoData[0].id : "",
+            //                 "starttime": clipInfoData[0]?.start ? clipInfoData[0].start : "",
+            //                 "endtime": clipInfoData[2]?.end ? clipInfoData[2].end : "",
+            //                 "description": clipInfoData[0]?.description ? clipInfoData[0].description : "",
+            //                 "duration": clipInfoData[0].duration ? clipInfoData[0].duration : ""
+            //             }
+            //         }
+            //     }
+            //     else {
+            //         if (imageData['clipinfo'] === null) {
+            //             clipInfo = null;
+            //         }
+            //         else {
+            //             clipInfo = {
+            //                 "clipid": imageData['clipinfo'].id ? imageData['clipinfo'].id : "",
+            //                 "starttime": imageData['clipinfo'].start ? imageData['clipinfo'].start : "",
+            //                 "endtime": imageData['clipinfo'].end ? imageData['clipinfo'].end : "",
+            //                 "description": imageData['clipinfo'].description ? imageData['clipinfo'].description : "",
+            //                 "duration": imageData['clipinfo'].duration ? imageData['clipinfo'].duration : ""
+            //             }
+            //         }
+            //     }
+            // }
+            if(imageData?.clip){
+                clipInfo = {
+                    "clipid": imageData.clip.id ?? "",
+                    "starttime": imageData.clip.start ?? "",
+                    "endtime": imageData.clip.end ?? "",
+                    "description": imageData.clip.description ?? "",
+                    "duration": imageData.clip.duration ?? ""
                 }
             }
             const videoFormat = imageData?.mimetype ?? imageData?.content?.mimeType ?? assetFormat ?? "";
