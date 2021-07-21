@@ -7,7 +7,7 @@ import SortElement from './SortElement.jsx';
 
 const ShowHideUiBlock = (props) => {
 	const { index, parentUrn, asideData, element, addNestedElements,
-			sepratorIndex, sectionType, onSortUpdate } = props || {};
+			sepratorIndex, sectionType, onSortUpdate, showDiscussion, showPlayscript } = props || {};
 	/** @description sectionHeading - get the heading of section of showhide */
 	const sectionHeading = sectionType === showHideConstants.SHOW ? "Show" : "Hide";
 
@@ -66,8 +66,8 @@ const ShowHideUiBlock = (props) => {
 			sectionType = {sectionType}
 			createShowHideElement = {props?.createShowHideElement}
 			element = {props?.element}
-			showPlayscript = {true}
-			showDiscussion = {true}
+			showPlayscript = {showPlayscript}
+			showDiscussion = {showDiscussion}
 		/>
 	}
 
