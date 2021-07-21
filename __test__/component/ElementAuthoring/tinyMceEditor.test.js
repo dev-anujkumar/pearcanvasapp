@@ -6243,6 +6243,64 @@ describe('Test function--handleBlankLineArrowKeys', () => {
     });
  })
 
+ describe('Testing function--getElementTypeForToolbar', () => {
+    let elementCase1 = {type:'element-authoredtext',elementdata:{headers:[{level:'level'}]}}
+    let elementCase2 = {type:'element-authoredtext',elementdata:{designtype:'handwritingstyle'}}
+    let elementCase3 = {type:'element-authoredtext',elementdata:{}}
+    let elementCase4 = {type:'element-blockfeature',elementdata:{type:'pullquote'}}
+    let elementCase5 = {type:'element-blockfeature',elementdata:{type:''}}
+    let elementCase6 = {type:'element-learningobjectives',elementdata:{type:''}}
+
+    it('getElementTypeForToolbar --- Case1', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'getElementTypeForToolbar')
+        instance.getElementTypeForToolbar(elementCase1);
+        expect(spyhandleCodeClick).toHaveBeenCalled();
+    });
+    it('getElementTypeForToolbar  Case2', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'getElementTypeForToolbar')
+        instance.getElementTypeForToolbar(elementCase2);
+        expect(spyhandleCodeClick).toHaveBeenCalled();
+    });
+    it('getElementTypeForToolbar  Case3', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'getElementTypeForToolbar')
+        instance.getElementTypeForToolbar(elementCase3);
+        expect(spyhandleCodeClick).toHaveBeenCalled();
+    });
+    it('getElementTypeForToolbar  Case4', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'getElementTypeForToolbar')
+        instance.getElementTypeForToolbar(elementCase4);
+        expect(spyhandleCodeClick).toHaveBeenCalled();
+    });
+    it('getElementTypeForToolbar  Case5', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'getElementTypeForToolbar')
+        instance.getElementTypeForToolbar(elementCase5);
+        expect(spyhandleCodeClick).toHaveBeenCalled();
+    });
+    it('getElementTypeForToolbar  Case6', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'getElementTypeForToolbar')
+        instance.getElementTypeForToolbar(elementCase6);
+        expect(spyhandleCodeClick).toHaveBeenCalled();
+    });
+ })
+
+ describe('Testing function--isABBR', () => {
+     let elCase1 = {parentNode:{tagName:'ABBR'},nodeName:'ABBR'};
+     let elCase2 = {parentNode:{tagName:'P'}};
+     let elCase3 = {parentNode:{tagName:'H3'}};
+     let elCase4 = {parentNode:{tagName:'BLOCKQUOTE'}};
+
+     let target = 'dummy';
+    it('isABBR', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'isABBR')
+        instance.isABBR(elCase1,target);
+        instance.isABBR(elCase2,target);
+        instance.isABBR(elCase3,target);
+        instance.isABBR(elCase4,target);
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+
     describe('Test-40-Method--3--editorExecCommand-branch coverage', () => {
         it('Test-40.1-Method--6--editorBeforeExecCommand --CASE--Underline', () => {
             let event = {

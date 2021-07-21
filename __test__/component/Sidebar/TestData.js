@@ -679,18 +679,6 @@ export default {
             "subtype":"image50TextTableImage",
             "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
             "alignment":"half-text",
-            "title":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "captions":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "credits":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
             "figuredata":{
                 "schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
                 "imageid":"",
@@ -723,13 +711,7 @@ export default {
             "labelText":"Fg",
             "toolbar":[
                 "insertMedia",
-                "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
+                "formatSelector"
             ]
         },
         oldElementInfo: {
@@ -745,12 +727,7 @@ export default {
         "toolbar":[
             "insertMedia",
             "formatSelector",
-            "crossLinkingIcon",
-            "assetpopover",
-            "glossary",
-            "decreaseindent",
-            "alignment",
-            "calloutIcon"
+            "crossLinkingIcon"
         ],
         "tag":"TB"
         }
@@ -761,18 +738,6 @@ export default {
             "type":"figure",
             "figuretype":"codelisting",
             "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
-            "title":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "captions":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "credits":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
             "figuredata":{
                 "schema":"http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
                 "type":"codelistingformatted",
@@ -801,12 +766,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
+                "crossLinkingIcon"
             ]                   
         },
         oldElementInfo: {
@@ -822,12 +782,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
+                "crossLinkingIcon"
             ],
             "tag":"BCE"
         }
@@ -840,11 +795,7 @@ export default {
             "schema":"http://schemas.pearson.com/wip-authoring/element/1",
             "elementdata":{
                 "schema":"http://schemas.pearson.com/wip-authoring/blockfeature/1#/definitions/blockfeature",
-                "type":"blockquote",
-                "authoredtext":{
-                    "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text":""
-                }
+                "type":"blockquote"
             },
             "html":{
                 "text":"<blockquote class=\"blockquoteMarginalia\"><p class=\"paragraphNummerEins\"><br></p><p class=\"blockquoteTextCredit\" contenteditable=\"true\" data-placeholder=\"Attribution Text\"></p></blockquote>",
@@ -875,13 +826,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "bold",
-                "underline",
-                "strikethrough",
-                "orderedlist",
-                "unorderedlist",
-                "glossary",
-                "slatetag",
-                "alignment"
+                "underline"
             ],
             "tag":"BQ"
         }
@@ -930,13 +875,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "bold",
-                "underline",
-                "strikethrough",
-                "orderedlist",
-                "unorderedlist",
-                "glossary",
-                "slatetag",
-                "alignment"
+                "underline"
             ],
             "tag":"BQ"
         }
@@ -1038,18 +977,6 @@ export default {
 				"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 				"titlecontentintitlefield":true,
 				"alignment":"text-width",
-				"title":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
-				"captions":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
-				"credits":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
 				"figuredata":{
 					"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 					"imageid":"",
@@ -1077,18 +1004,6 @@ export default {
 				"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 				"titlecontentintitlefield":true,
 				"alignment":"half-text",
-				"title":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
-				"captions":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
-				"credits":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
 				"figuredata":{
 					"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 					"imageid":"",
@@ -1147,15 +1062,9 @@ export default {
 												},
 												"html":{
 												"text":"<p class=\"paragraphNumeroUno\"><br></p>",
-												"footnotes":{
-													
-												},
-												"assetsPopover":{
-													
-												},
-												"glossaryentries":{
-													
-												}
+												"footnotes":{},
+												"assetsPopover":{},
+												"glossaryentries":{}
 												},
 												"versionUrn":"urn:pearson:work:1789717a-b9ab-4de3-bdb6-adde013aefcd",
 												"contentUrn":"urn:pearson:entity:f0266083-3328-47eb-9d1d-33be5948c647"
@@ -1238,18 +1147,7 @@ export default {
 																"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 																"titlecontentintitlefield":true,
 																"alignment":"text-width",
-																"title":{
-																	"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-																	"text":""
-																},
-																"captions":{
-																	"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-																	"text":""
-																},
-																"credits":{
-																	"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-																	"text":""
-																},
+																
 																"figuredata":{
 																	"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 																	"imageid":"",
@@ -1560,18 +1458,7 @@ export default {
 						"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 						"titlecontentintitlefield":true,
 						"alignment":"text-width",
-						"title":{
-							"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-							"text":""
-						},
-						"captions":{
-							"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-							"text":""
-						},
-						"credits":{
-							"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-							"text":""
-						},
+						
 						"figuredata":{
 							"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 							"imageid":"",
@@ -1795,18 +1682,7 @@ export default {
 											"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 											"titlecontentintitlefield":true,
 											"alignment":"text-width",
-											"title":{
-												"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-												"text":""
-											},
-											"captions":{
-												"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-												"text":""
-											},
-											"credits":{
-												"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-												"text":""
-											},
+											
 											"figuredata":{
 												"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 												"imageid":"",
@@ -2045,18 +1921,7 @@ export default {
 					"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 					"titlecontentintitlefield":true,
 					"alignment":"text-width",
-					"title":{
-						"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-						"text":""
-					},
-					"captions":{
-						"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-						"text":""
-					},
-					"credits":{
-						"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-						"text":""
-					},
+					
 					"figuredata":{
 						"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 						"imageid":"",
@@ -2119,18 +1984,7 @@ export default {
 							"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 							"titlecontentintitlefield":true,
 							"alignment":"text-width",
-							"title":{
-								"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-								"text":""
-							},
-							"captions":{
-								"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-								"text":""
-							},
-							"credits":{
-								"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-								"text":""
-							},
+							
 							"figuredata":{
 								"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 								"imageid":"",
@@ -2598,6 +2452,102 @@ export default {
 				"showHideType":"show"
 			}
 		},
+	},
+	testcase15: {
+		oldElementData: {
+			"id":"urn:pearson:manifest:88c63d61-753f-4f9d-947a-1ac6edd77934",
+			"type":"element-aside",
+			"subtype":"workedexample",
+			"designtype":"workedexample1",
+			"elementdata":{
+				"bodymatter":[
+					{
+						"id":"urn:pearson:work:357ed147-c460-4838-8638-7e12d509aeba",
+						"type":"element-authoredtext",
+						"elementdata":{
+						"text":"",
+						"headers":[
+							{
+								"level":4
+							}
+						]
+						},
+						"html":{
+							"text":"<h4 class=\"heading4NummerEins\"><br></h4>",
+						},
+						"versionUrn":"urn:pearson:work:357ed147-c460-4838-8638-7e12d509aeba",
+						"contentUrn":"urn:pearson:entity:0a9dfa7c-4a4b-420c-933c-16554a639444"
+					},
+					{
+						"id":"urn:pearson:manifest:eb26a09b-feae-492a-8d83-818c0c7d31b8",
+						"type":"manifest",
+						"versionUrn":"urn:pearson:manifest:eb26a09b-feae-492a-8d83-818c0c7d31b8",
+						"contentUrn":"urn:pearson:entity:457dbec1-ab94-4310-abea-e1b3fa5e84f9",
+						"contents":{
+						"bodymatter":[
+							{
+								"id":"urn:pearson:work:b8a238ef-0d4c-4f74-bcbb-213f7469d0d0",
+								"type":"element-authoredtext",
+								"elementdata":{
+									"text":"",
+									"headers":[
+									{
+										"level":5
+									}
+									]
+								},
+								"html":{
+									"text":"<h5 class=\"heading5NummerEins\"><br></h5>",
+								},
+								"versionUrn":"urn:pearson:work:b8a238ef-0d4c-4f74-bcbb-213f7469d0d0",
+								"contentUrn":"urn:pearson:entity:495fc553-35de-453a-b21d-00932379b763"
+							},
+							{
+								"id":"urn:pearson:work:641d649c-c7b0-4a8f-a571-d455fc94264e",
+								"type":"element-authoredtext",
+								"elementdata":{
+									"text":""
+								},
+								"html":{
+									"text":"<p class=\"paragraphNumeroUno\"><br></p>",
+								},
+								"versionUrn":"urn:pearson:work:641d649c-c7b0-4a8f-a571-d455fc94264e",
+								"contentUrn":"urn:pearson:entity:0372cd59-0e9d-49c0-b07c-9a7396a927bf"
+							}
+						],
+						},
+						"status":"wip"
+					}
+				],
+				"schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+			},
+			"versionUrn":"urn:pearson:manifest:88c63d61-753f-4f9d-947a-1ac6edd77934",
+			"contentUrn":"urn:pearson:entity:fe76d7ff-7878-41cb-bb62-a7937831d74c",
+			"status":"wip"
+		},
+		newElementData: {
+			"elementId":"urn:pearson:manifest:88c63d61-753f-4f9d-947a-1ac6edd77934",
+			"elementType":"element-workedexample",
+			"primaryOption":"primary-workedexample-we2",
+			"secondaryOption":"secondary-workedexample-we2",
+			"labelText":"WE",
+			"toolbar":[
+					"insertMedia"
+				]
+		},
+		oldElementInfo: {
+			"elementType":"element-workedexample",
+			"primaryOption":"primary-workedexample-we1",
+			"secondaryOption":"secondary-workedexample-we1",
+			"elementId":"urn:pearson:manifest:88c63d61-753f-4f9d-947a-1ac6edd77934",
+			"index":0,
+			"elementWipType":"element-aside",
+			"toolbar":[
+				"insertMedia"
+			],
+			"tag":"WE"
+		}
+
 	}
 }
 

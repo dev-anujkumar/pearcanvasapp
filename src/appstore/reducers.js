@@ -47,7 +47,7 @@ import {
     ADD_FIGURE_GLOSSARY_POPUP,
     WRONG_IMAGE_POPUP,
     UPDATE_MULTIPLE_COLUMN_INFO,
-    SHOW_REMOVE_GLOSSARY_IMAGE
+    SHOW_REMOVE_GLOSSARY_IMAGE,
 } from '../constants/Action_Constants';
 
 /**
