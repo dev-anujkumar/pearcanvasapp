@@ -385,5 +385,5 @@ const mapStateToProps = ({ appStore }) => {
 }
 */
 ElementDialogue.displayName = "ElementDialogue"
-export default connect(mapStateToProps, dispatchActions)(ElementDialogue);
+export default connect(null, dispatchActions)(ElementDialogue);
 
