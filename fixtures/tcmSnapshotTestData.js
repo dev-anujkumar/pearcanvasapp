@@ -755,6 +755,57 @@ export default {
             "versionUrn": "urn:pearson:work:6ca7667e-03ec-4434-9dc3-8379fbdef980",
             "contentUrn": "urn:pearson:entity:73f45499-aa32-4e3e-83ac-32848d1667b1"
         },
+        "paragraph2": {
+            "id": "urn:pearson:work:6ca7667e-03ec-4434-9dc3-8379fbdef980",
+            "type": "element-authoredtext",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "elementdata": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "this is new  . This is footnote. This is Asset Popover. ",
+                "footnotes": [{
+                    "charAt": 32,
+                    "footnoteid": "urn:pearson:work:ba8326bd-65da-474c-bd46-ad39ae7306ff",
+                    "footnotecontent": [{
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "id": "urn:pearson:work:ba8326bd-65da-474c-bd46-ad39ae7306ff",
+                        "type": "element-authoredtext",
+                        "elementdata": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            "text": "footnote test"
+                        }
+                    }]
+                }],
+                "glossaryentries": [{
+                    "charAt": 12,
+                    "itemid": "urn:pearson:work:1030ab55-0450-437d-a083-1591cd9601ac",
+                    "glossaryentrytype": "monolingual",
+                    "glossaryentry": [{
+                        "narrativeform": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            "text": "data"
+                        }
+                    }]
+                }],
+                "internallinks": [{
+                    "effect": "pop-over",
+                    "linkid": "urn:pearson:entity:4accb6e3-ec83-4cff-bcde-1363be8fda73",
+                    "charStart": 41,
+                    "charEnd": 45
+                }]
+            },
+            "html": {
+                "text": "<p class=\"paragraphNumeroUno\">this is new&nbsp;<dfn class=\"Pearson-Component GlossaryTerm\" data-uri=\"urn:pearson:work:1030ab55-0450-437d-a083-1591cd9601ac\">data</dfn> . This is footnote.<sup><a href=\"#\" id=\"urn:pearson:work:ba8326bd-65da-474c-bd46-ad39ae7306ff\" data-uri=\"urn:pearson:work:ba8326bd-65da-474c-bd46-ad39ae7306ff\" data-footnoteelementid=\"urn:pearson:work:ba8326bd-65da-474c-bd46-ad39ae7306ff\" class=\"Pearson-Component paragraphNumeroUnoFootnote\" data-mce-href=\"#\">*</a></sup> This is <abbr title=\"Asset Popover\" asset-id=\"urn:pearson:work:76773fa8-da92-4b4a-bbc6-449593503963\" data-uri=\"urn:pearson:entity:4accb6e3-ec83-4cff-bcde-1363be8fda73\" class=\"Pearson-Component AssetPopoverTerm\">Asset</abbr> Popover.&nbsp;</p>",
+                "footnotes": {
+                    "urn:pearson:work:ba8326bd-65da-474c-bd46-ad39ae7306ff": "<p>footnote test</p>"
+                },
+                "assetsPopover": {},
+                "glossaryentries": {
+                    "urn:pearson:work:1030ab55-0450-437d-a083-1591cd9601ac": "{}"
+                }
+            },
+            "versionUrn": "urn:pearson:work:6ca7667e-03ec-4434-9dc3-8379fbdef980",
+            "contentUrn": "urn:pearson:entity:73f45499-aa32-4e3e-83ac-32848d1667b1"
+        },
         "blockquote": {
             "id": "urn:pearson:work:5c790c66-c6d9-4052-b210-e64d19e75600",
             "type": "element-blockfeature",
@@ -1278,7 +1329,25 @@ export default {
                 "type":"element-authoredtext",
                 "elementdata":{
                     "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text":""
+                    "text":"",
+                    "footnotes": [
+                        {
+                            "charAt": 11,
+                            "footnoteid": "urn:pearson:work:d76ed607-3b61-4002-bd36-086720db5487",
+                            "footnotecontent": [
+                                {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "id": "urn:pearson:work:d76ed607-3b61-4002-bd36-086720db5487",
+                                    "type": "element-authoredtext",
+                                    "elementdata": {
+                                    "schema":
+                                        "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "footnote 1",
+                                    },
+                                },
+                            ],
+                        },
+                    ]
                 }
             },
             "html":{
@@ -1412,6 +1481,74 @@ export default {
                    "includechapteropenerimage":false
                 }],
                 "includechapteropenerimage":false
+            },
+            "html":{
+                "text":"<ol class=\"decimal\" treelevel=\"1\" style=\"counter-increment: section 0;\"><li class=\"listItemNumeroUnoNumber\">gdh</li><li class=\"listItemNumeroUnoNumber\">fhgfhgf</li></ol>",
+                "footnotes":{},
+                "glossaryentries":{}
+            },
+            "versionUrn":"urn:pearson:work:97a5e089-370e-4b13-8704-30c45f748cb1","contentUrn":"urn:pearson:entity:04e5960e-4162-4b29-9ded-a9c19f6ce85a"
+        },
+        "list2": {
+            "id":"urn:pearson:work:97a5e089-370e-4b13-8704-30c45f748cb1",
+           "type":"element-list","subtype":"decimal",
+           "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+           "elementdata":{
+             "startNumber":"1","schema":"http://schemas.pearson.com/wip-authoring/list/1#/definitions/list",
+             "type":"list",
+             "listtype":"ordered",
+             "designtype":"list",
+             "subtype":"decimal",
+             "listitems":[{
+                 "type":"list2",
+                 "authoredtext":{
+                      "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                     "text":"gdh",
+                      "includechapteropenerimage":false
+                    },
+                    "includechapteropenerimage":false,
+                    "listitems" : [{
+                        "type":"paragraph",
+                        "authoredtext":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text":"fhgfhgf","includechapteropenerimage":false
+                       },
+                      "includechapteropenerimage":false
+                   }]
+                  },
+                   {
+                     "type":"paragraph",
+                     "authoredtext":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                     "text":"fhgfhgf","includechapteropenerimage":false
+                    },
+                   "includechapteropenerimage":false
+                }],
+                "includechapteropenerimage":false
+            },
+            "html":{
+                "text":"<ol class=\"decimal\" treelevel=\"1\" style=\"counter-increment: section 0;\"><li class=\"listItemNumeroUnoNumber\">gdh</li><li class=\"listItemNumeroUnoNumber\">fhgfhgf</li></ol>",
+                "footnotes":{},
+                "glossaryentries":{}
+            },
+            "versionUrn":"urn:pearson:work:97a5e089-370e-4b13-8704-30c45f748cb1","contentUrn":"urn:pearson:entity:04e5960e-4162-4b29-9ded-a9c19f6ce85a"
+        },
+        "list3": {
+            "id":"urn:pearson:work:97a5e089-370e-4b13-8704-30c45f748cb1",
+           "type":"element-list","subtype":"decimal",
+           "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+           "elementdata":{
+             "startNumber":"1","schema":"http://schemas.pearson.com/wip-authoring/list/1#/definitions/list",
+             "type":"list",
+             "listtype":"ordered",
+             "designtype":"list",
+             "subtype":"decimal",
+             "listitems": [{
+                "type":"para",
+                "authoredtext":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":"fhgfhgf","includechapteropenerimage":false
+               },
+              "includechapteropenerimage":false
+           }],
+            "includechapteropenerimage":false
             },
             "html":{
                 "text":"<ol class=\"decimal\" treelevel=\"1\" style=\"counter-increment: section 0;\"><li class=\"listItemNumeroUnoNumber\">gdh</li><li class=\"listItemNumeroUnoNumber\">fhgfhgf</li></ol>",

@@ -16,7 +16,7 @@ jest.mock("../../../src/component/TcmSnapshots/TcmSnapshot_Actions.js", () => {
 
 describe('-----------------------Test ElementSnapshot_Utility Functions-----------------------', () => {
     describe('Test-1-Function--1--setSemanticsSnapshots', () => {
-        const { stanza, paragraph, blockquote, figure,list } = tcmTestData.setSemanticsSnapshotsData
+        let { stanza, paragraph, paragraph2, blockquote, figure, list, authoredtext, list2, list3 } = tcmTestData.setSemanticsSnapshotsData
         let actionStatus = {
             action:"create",
             status:"accepted",
@@ -27,23 +27,50 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             elementSnapshotUtilityFn.setSemanticsSnapshots({ type: "element-learningobjectives" },"accepted" );
             expect(spyFunction).toHaveBeenCalledWith( { type: "element-learningobjectives" },"accepted",);
         })
-        it('Test-1.2-Function--1--setSemanticsSnapshots - Paragraph', () => {
-            
+        it('Test-1.2-Function--1--setSemanticsSnapshots - Paragraph', () => { 
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(paragraph, actionStatus);
+            expect(spyFunction).toHaveBeenCalledWith(paragraph, actionStatus);
+        })
+        it('Test-1.2.1-Function--1--setSemanticsSnapshots - Paragraph conditional coverage', () => { 
+            delete paragraph.elementdata.glossaryentries[0].glossaryentry;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(paragraph, actionStatus);
+            expect(spyFunction).toHaveBeenCalledWith(paragraph, actionStatus);
+        })
+        it('Test-1.2.3-Function--1--setSemanticsSnapshots - Paragraph conditional coverage', () => {
+            paragraph = {
+                ...paragraph,
+                elementdata: {}
+            }
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
             elementSnapshotUtilityFn.setSemanticsSnapshots(paragraph,actionStatus);
             expect(spyFunction).toHaveBeenCalledWith(paragraph, actionStatus);
+        })
+        it('Test-1.2.4-Function--1--setSemanticsSnapshots - Paragraph conditional coverage', () => {
+            // paragraph.html.glossaryentries = [];
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(paragraph2,actionStatus);
+            expect(spyFunction).toHaveBeenCalledWith(paragraph2, actionStatus);
         })
         it('Test-1.3-Function--1--setSemanticsSnapshots - Stanza', () => {
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
             elementSnapshotUtilityFn.setSemanticsSnapshots(stanza,actionStatus);
             expect(spyFunction).toHaveBeenCalledWith(stanza,actionStatus);
-
         })
         it('Test-1.4-Function--1--setSemanticsSnapshots - Blockquote', () => {
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
-            elementSnapshotUtilityFn.setSemanticsSnapshots(blockquote,actionStatus );
+            elementSnapshotUtilityFn.setSemanticsSnapshots(blockquote, actionStatus);
             expect(spyFunction).toHaveBeenCalledWith(blockquote,actionStatus);
-
+        })
+        it('Test-1.4.1-Function--1--setSemanticsSnapshots - Blockquote conditional coverage', () => {
+            blockquote = {
+                ...blockquote,
+                elementdata: {}
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(blockquote, actionStatus);
+            expect(spyFunction).toHaveBeenCalledWith(blockquote, actionStatus);
         })
         it('Test-1.5-Function--1--setSemanticsSnapshots - figure', () => {
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
@@ -51,10 +78,46 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             expect(spyFunction).toHaveBeenCalledWith(figure, actionStatus);
 
         })
+        it('Test-1.5.1-Function--1--setSemanticsSnapshots - figure conditional coverage', () => {
+            delete figure.title;
+            delete figure.subtitle;
+            delete figure.captions;
+            delete figure.credits;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(figure, actionStatus);
+            expect(spyFunction).toHaveBeenCalledWith(figure, actionStatus);
+        })
         it('Test-1.6-Function--1--setSemanticsSnapshots - element-list', () => {
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
             elementSnapshotUtilityFn.setSemanticsSnapshots(list, actionStatus );
             expect(spyFunction).toHaveBeenCalledWith(list, actionStatus);
+        })
+        it('Test-1.6.1-Function--1--setSemanticsSnapshots - element-list conditional coverage', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(list2, actionStatus );
+            expect(spyFunction).toHaveBeenCalledWith(list2, actionStatus);
+        })
+        it('Test-1.6.2-Function--1--setSemanticsSnapshots - element-list conditional coverage', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(list3, actionStatus );
+            expect(spyFunction).toHaveBeenCalledWith(list3, actionStatus);
+        })
+        it('Test-1.7-Function--1--setSemanticsSnapshots - authoredtext', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(authoredtext, actionStatus );
+            expect(spyFunction).toHaveBeenCalledWith(authoredtext, actionStatus);
+        })
+        it('Test-1.7.1-Function--1--setSemanticsSnapshots - authoredtext conditional coverage', () => {
+            authoredtext = {
+                ...authoredtext,
+                figuredata: {
+                    ...authoredtext.figuredata,
+                    elementdata: {}
+                }
+            }
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'setSemanticsSnapshots');
+            elementSnapshotUtilityFn.setSemanticsSnapshots(authoredtext, actionStatus );
+            expect(spyFunction).toHaveBeenCalledWith(authoredtext, actionStatus);
         })
     });
     describe('Test-2-Function--2--fetchElementsTag', () => {
