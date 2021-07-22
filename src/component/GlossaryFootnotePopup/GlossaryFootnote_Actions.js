@@ -177,7 +177,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
     if(glossaryContentText && glossaryContentText.includes('audio-id')){
         const audioId = glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[1];
         const audioPath =glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[3]
-        const title = audioPath.split("/").pop().replace(/%20/g,' ');
+        const title = audioPath?.split("/")?.pop()?.replace(/%20/g,' ');
         const data = {
             'title':{
                 'en':title
@@ -202,7 +202,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 const classValue = glossaryImageAssets[i]?.attributes?.class?.nodeValue
                 const imageHeight = glossaryImageAssets[i]?.attributes?.height?.nodeValue
                 const imageWidth = glossaryImageAssets[i]?.attributes?.width?.nodeValue
-                const title = imagePath.split("/").pop().replace(/%20/g,' ');
+                const title = imagePath?.split("/")?.pop()?.replace(/%20/g,' ');
                 const Longdescription = glossaryImageAssets[i]?.attributes?.longdescription?.nodeValue
                 const data = {
                         imageid: imageId,
