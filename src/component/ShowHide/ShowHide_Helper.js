@@ -47,12 +47,10 @@ export const addNestedElements = (index, sectionType, props) => {
 			tooltipDirection: 'left'
 		},{
             buttonType: 'block-text-button',
-            //buttonHandler: () => addElementInShowHide(index, sectionType, BLOCKCODE, props),
             tooltipText: 'Block Text',
             tooltipDirection: 'left'
         },{
             buttonType: 'interactive-elem-button',
-            //buttonHandler: () => addElementInShowHide(index, sectionType, INTERACTIVE, props),
             tooltipText: 'Interactive',
             tooltipDirection: 'left'
         },{
@@ -289,21 +287,19 @@ export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeE
                 /* Footnote/Glossery popup opened to display data; Called from glossaaryFootnotePopup Function */
                 return elementInSH;
             }
-            //console.log("1 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
             /* Update the slate level data to update redux store */
             sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]] = {
                 ...elementInSH,
                 html: {...elementInSH?.html, ...resData?.html},
                 elementdata: resData?.elementdata 
             }
-            //console.log("2 = ",bodymatter[indexes[0]].interactivedata[sectionType][indexes[2]])
         }
         return bodymatter;
     } catch(error) {
         console.error("Something went wrong on updating Footnote/Glossery...",error);
     }
 }
-
+/*
 export const onGlossaryFnUpdateSuccessInShowHide123 = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
     const indexLength = Array.isArray(indexes) ? indexes.length : 0;
     const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 3] : "" : ""
@@ -350,6 +346,7 @@ export const onGlossaryFnUpdateSuccessInShowHide123 = (resData, bodymatter, acti
     }
     return bodymatter
 }
+*/
 /**
  * @function getElementType
  * @description This function return the element type in format which required for element creation
