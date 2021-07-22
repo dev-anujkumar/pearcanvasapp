@@ -1,4 +1,5 @@
 import * as showHideHelper from "../../../src/component/ShowHide/ShowHide_Helper.js";
+import config from "../../../src/config/config.js";
 
 const showHide = {
     "id":"urn:pearson:manifest:856a0a7f-e4f8-4cfa-9409-5f564ad1211f",
@@ -100,23 +101,20 @@ describe('1. ShowHide test cases', () => {
         });
     });
 
-    describe('test cases for add elements in showHide', () => {
+    describe('1.4 - test cases for add elements in showHide', () => {
         const props = {
             createShowHideElement: jest.fn()
         }
-        it('add text element inside sh', () => {
+        const elementList = ["TEXT","IMAGE","VIDEO","figure-mml-elem","blockcode-elem","element-dialogue","smartlink-elem","element-discussion","elm-interactive-elem","interactive-elem"];
+        it.each(elementList)('add %s element inside sh',(input) => {
+            const spyonAddElementInShowHide = jest.spyOn(showHideHelper, "addElementInShowHide");
+            showHideHelper.addElementInShowHide("0-0-1", "show", input, props);
+            expect(spyonAddElementInShowHide).toHaveBeenCalled();
+        })
+        it('config.savingInProgress If case', () => {
+            config.savingInProgress = true;
             const spyonAddElementInShowHide = jest.spyOn(showHideHelper, "addElementInShowHide");
             showHideHelper.addElementInShowHide("0-0-1", "show", "TEXT", props);
-            expect(spyonAddElementInShowHide).toHaveBeenCalled();
-        });
-        it('add IMAGE element inside sh', () => {
-            const spyonAddElementInShowHide = jest.spyOn(showHideHelper, "addElementInShowHide");
-            showHideHelper.addElementInShowHide("0-0-1", "show", "IMAGE", props);
-            expect(spyonAddElementInShowHide).toHaveBeenCalled();
-        });
-        it('add VIDEO element inside sh', () => {
-            const spyonAddElementInShowHide = jest.spyOn(showHideHelper, "addElementInShowHide");
-            showHideHelper.addElementInShowHide("0-0-1", "show", "VIDEO", props);
             expect(spyonAddElementInShowHide).toHaveBeenCalled();
         })
     })
@@ -770,7 +768,7 @@ describe('1. ShowHide test cases', () => {
         expect(spyonGetShowHideIndex).toHaveBeenCalled();
     });
     describe('onGlossaryFnUpdateSuccessInShowHide renders', () => {
-        describe('onGlossaryFnUpdateSuccessInShowHide for figure type', () => {
+        describe('onGlossaryFnUpdateSuccessInShowHide for various element type', () => {
             const resData = {
                 alignment: "text-width",
                 type: "element-authoredtext",
@@ -786,25 +784,35 @@ describe('1. ShowHide test cases', () => {
             };
             const activeElemType = "figure";
             const showHideObj = "show";
-            it('onGlossaryFnUpdateSuccessInShowHide renders index for figure else', () => {
+            it('onGlossaryFnUpdateSuccessInShowHide renders index for "element-dialogue" else', () => {
+                let elmDiv = document.createElement('div');
+                elmDiv.setAttribute('id', 'cypress-0-0-0-0')
+                elmDiv.setAttribute('placeHolder', "Enter Stage Directions...")
+                document.body.appendChild(elmDiv);
+
                 const indexes = ["0", "0", "0", "0"];
                 const bodymatter = [{...showHide}];
                 const spyonGlossaryFnUpdateSuccessInShowHide = jest.spyOn(showHideHelper, "onGlossaryFnUpdateSuccessInShowHide");
-                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, activeElemType, showHideObj, indexes);
+                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, "element-dialogue", showHideObj, indexes);
                 expect(spyonGlossaryFnUpdateSuccessInShowHide).toHaveReturnedWith(bodymatter);
             });
-            it('onGlossaryFnUpdateSuccessInShowHide renders case 4 figure Type', () => {
+            it('onGlossaryFnUpdateSuccessInShowHide renders case 5 "element-dialogue" Type', () => {
+                let elmDiv = document.createElement('div');
+                elmDiv.setAttribute('id', 'cypress-0-0-0-0-0')
+                elmDiv.setAttribute('placeHolder', "Enter Character Name...")
+                document.body.appendChild(elmDiv);
+
                 const indexes = ["0", "0", "0", "0","0"];
-                const bodymatter = [{elementdata: { bodymatter: [{...showHide}]}}];
+                 const bodymatter = [{...showHide}];
                 const spyonGlossaryFnUpdateSuccessInShowHide = jest.spyOn(showHideHelper, "onGlossaryFnUpdateSuccessInShowHide");
-                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, activeElemType, showHideObj, indexes);
+                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, "element-dialogue", showHideObj, indexes);
                 expect(spyonGlossaryFnUpdateSuccessInShowHide).toHaveBeenCalled();
             });
-            it('onGlossaryFnUpdateSuccessInShowHide renders case 5 figure Type', () => {
-                const indexes = ["0", "0", "0", "0", "0","0"];
+            it('onGlossaryFnUpdateSuccessInShowHide renders case 5 Text Type', () => {
+                const indexes = ["0", "0", "0", "0", "0"];
                 const bodymatter = [{elementdata:{ bodymatter: [{ contents: { bodymatter: [{...showHide}]}}]}}];
                 const spyonGlossaryFnUpdateSuccessInShowHide = jest.spyOn(showHideHelper, "onGlossaryFnUpdateSuccessInShowHide");
-                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, activeElemType, showHideObj, indexes);
+                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, "element-authoredtext", showHideObj, indexes);
                 expect(spyonGlossaryFnUpdateSuccessInShowHide).toHaveBeenCalled();
             });
             it('onGlossaryFnUpdateSuccessInShowHide renders case 6 figure Type', () => {
@@ -818,171 +826,24 @@ describe('1. ShowHide test cases', () => {
                 const indexes = ["0", "0", "0", "0", "0", "0", "0", "0"];
                 const bodymatter = [{groupeddata:{ bodymatter: [{ groupdata: { bodymatter: [{ elementdata: { bodymatter: [{ contents: { bodymatter: [{...showHide}]}}]}}]}}]}}];
                 const spyonGlossaryFnUpdateSuccessInShowHide = jest.spyOn(showHideHelper, "onGlossaryFnUpdateSuccessInShowHide");
-                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, activeElemType, showHideObj, indexes);
-                expect(spyonGlossaryFnUpdateSuccessInShowHide).toHaveBeenCalled();
-            });
-            xit('onGlossaryFnUpdateSuccessInShowHide renders case 8 figure Type', () => {
-                const indexes = ["0", "0", "0", "0", "0", "0", "0", "0","0"];
-                const bodymatter = [{
-                    groupeddata: {
-                        bodymatter: [{
-                            groupdata: {
-                                bodymatter: [{
-                                    elementdata: {
-                                        bodymatter: [{
-                                            contents: {
-                                                bodymatter: [{
-                                                    interactivedata: {
-                                                        hide: [{}],
-                                                        postertextobject: [{}],
-                                                        show: [{}, {}, {}, {}, {}, {}, {}]
-                                                    }
-                                                }]
-                                            }
-                                        }]
-                                    }
-                                }]
-                            }
-                        }],
-                    },
-                }]
-                const spyonGlossaryFnUpdateSuccessInShowHide = jest.spyOn(showHideHelper, "onGlossaryFnUpdateSuccessInShowHide");
-                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, activeElemType, showHideObj, indexes);
+                showHideHelper.onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", bodymatter, activeElemType, showHideObj, indexes);
                 expect(spyonGlossaryFnUpdateSuccessInShowHide).toHaveBeenCalled();
             });
         });
-        xdescribe('onGlossaryFnUpdateSuccessInShowHide for text type', () => {
-            const activeElemType = "element-authoredtext";
-            const showHideObj = undefined;
+    });
+   describe('1.10 onUpdateSuccessInShowHide ', () => {
             const resData = {
-                alignment: "text-width",
                 type: "element-authoredtext",
                 elementdata: { text: "test1" },
                 contentUrn: "urn:pearson:entity:6f165c38-6a3f-40b3-a36f-ee17857c94d5",
             };
-            it('onGlossaryFnUpdateSuccessInShowHide renders case 3 ', () => {
+            it('showHideElement?.type === SHOW_HIDE ', () => {
                 const indexes = ["0", "0", "0"];
-                const bodymatter = [{
-                    contentUrn: "urn:pearson:entity:6f165c38-6a3f-40b3-a36f-ee17857c94d5",
-                    id: "urn:pearson:manifest:5f773b02-1b8e-4e58-bd30-12cd5c8141ce",
-                    index: "0-0-0",
-                    interactivedata: {
-                        hide: [{}],
-                        postertextobject: [{}],
-                        show: [{}, {}, {}]
-                    },
-                    status: "wip",
-                    type: "showhide"
-                }]
-                const spyonGlossaryFnUpdateSuccessInShowHide = jest.spyOn(showHideHelper, "onGlossaryFnUpdateSuccessInShowHide");
-                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, activeElemType, showHideObj, indexes);
-                expect(spyonGlossaryFnUpdateSuccessInShowHide).toHaveBeenCalled();
-            });
-            it('onGlossaryFnUpdateSuccessInShowHide renders case 4 text Type', () => {
-                const indexes = ["0", "0", "0", "0"];
-                const bodymatter = [{
-                    contentUrn: "urn:pearson:entity:6f165c38-6a3f-40b3-a36f-ee17857c94d5",
-                    id: "urn:pearson:manifest:5f773b02-1b8e-4e58-bd30-12cd5c8141ce",
-                    elementdata: {
-                        bodymatter: [{
-                            interactivedata: {
-                                hide: [{}],
-                                postertextobject: [{}],
-                                show: [{}, {}, {}]
-                            }
-                        }]
-                    },
-                    status: "wip",
-                    type: "showhide"
-                }]
-                const spyonGlossaryFnUpdateSuccessInShowHide = jest.spyOn(showHideHelper, "onGlossaryFnUpdateSuccessInShowHide");
-                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, activeElemType, showHideObj, indexes);
-                expect(spyonGlossaryFnUpdateSuccessInShowHide).toHaveBeenCalled();
-            });
-            it('onGlossaryFnUpdateSuccessInShowHide renders case 5 text Type', () => {
-                const indexes = ["0", "0", "0", "0", "0"];
-                const bodymatter = [{
-                    elementdata: {
-                        bodymatter: [{
-                            contents: {
-                                bodymatter: [{
-                                    interactivedata: {
-                                        hide: [{}],
-                                        postertextobject: [{}],
-                                        show: [{}, {}, {}, {}]
-                                    }
-                                }]
-                            }
-                        }]
-                    },
-                }]
-                const spyonGlossaryFnUpdateSuccessInShowHide = jest.spyOn(showHideHelper, "onGlossaryFnUpdateSuccessInShowHide");
-                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, activeElemType, showHideObj, indexes);
-                expect(spyonGlossaryFnUpdateSuccessInShowHide).toHaveBeenCalled();
-            });
-
-            it('onGlossaryFnUpdateSuccessInShowHide renders case 6 text Type', () => {
-                const indexes = ["0", "0", "0", "0", "0", "0"];
-                const bodymatter = [{
-                    contentUrn: "urn:pearson:entity:6f165c38-6a3f-40b3-a36f-ee17857c94d5",
-                    id: "urn:pearson:manifest:5f773b02-1b8e-4e58-bd30-12cd5c8141ce",
-                    groupeddata: {
-                        bodymatter: [{
-                            groupdata: {
-                                bodymatter: [{
-                                    elementdata: {
-                                        bodymatter: [{
-                                            interactivedata: {
-                                                hide: [{}],
-                                                postertextobject: [{}],
-                                                show: [{}, {}, {}, {}, {}, {}]
-                                            }
-                                        }
-                                            , {}]
-                                    }
-                                }]
-                            }
-                        }],
-                    },
-                    type: "element-aside"
-                }]
-                const spyonGlossaryFnUpdateSuccessInShowHide = jest.spyOn(showHideHelper, "onGlossaryFnUpdateSuccessInShowHide");
-                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, activeElemType, showHideObj, indexes);
-                expect(spyonGlossaryFnUpdateSuccessInShowHide).toHaveBeenCalled();
-            });
-            it('onGlossaryFnUpdateSuccessInShowHide renders case 7 text Type', () => {
-                const indexes = ["0", "0", "0", "0", "0", "0", "0"];
-                const bodymatter = [{
-                    groupeddata: {
-                        bodymatter: [{
-                            groupdata: {
-                                bodymatter: [{
-                                    elementdata: {
-                                        bodymatter: [{
-                                            contents: {
-                                                bodymatter: [{
-                                                    interactivedata: {
-                                                        hide: [{}],
-                                                        postertextobject: [{}],
-                                                        show: [{}, {}, {}, {}, {}, {}]
-                                                    }
-                                                }]
-                                            }
-                                        }
-                                            , {}]
-                                    }
-                                }]
-                            }
-                        }],
-                    },
-
-                }]
-                const spyonGlossaryFnUpdateSuccessInShowHide = jest.spyOn(showHideHelper, "onGlossaryFnUpdateSuccessInShowHide");
-                showHideHelper.onGlossaryFnUpdateSuccessInShowHide(resData, bodymatter, activeElemType, showHideObj, indexes);
-                expect(spyonGlossaryFnUpdateSuccessInShowHide).toHaveBeenCalled();
+                const bodymatter = [{...showHide}]
+                const spyonFunc = jest.spyOn(showHideHelper, "onUpdateSuccessInShowHide");
+                showHideHelper.onUpdateSuccessInShowHide(resData, bodymatter, indexes);
+                expect(spyonFunc).toHaveBeenCalled();
             });
         });
-
-    });
 
 });
