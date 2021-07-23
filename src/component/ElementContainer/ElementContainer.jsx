@@ -1606,7 +1606,8 @@ class ElementContainer extends Component {
                         element={element}
                         elementId={element.id}
                         slateLockInfo={slateLockInfo}
-                        // splithandlerfunction={splithandlerfunction}
+                        asideData = { this.props?.asideData }
+                        parentUrn = { this.props?.parentUrn }
                         userRole={this.props.userRole}
                         activeElement={this.props.activeElement}
                         onClickCapture={this.props.onClickCapture}
