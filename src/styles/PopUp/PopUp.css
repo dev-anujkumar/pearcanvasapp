@@ -665,6 +665,9 @@ ins.mod{
   background: rgb(251, 188, 72) !important;
   color: rgb(121, 121, 121);
 }
+
+/* added css for callout, Glossary in tCM after accepted changes */
+
 .modal-content.tcm-canvas-popup dfn.DeactivateTerm{
   color: #007FA3 !important;
   text-decoration: none !important;
