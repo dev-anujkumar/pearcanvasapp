@@ -133,7 +133,7 @@ let glossaryFootnoteObject = {
     elementSubType: undefined,
     elementType: undefined,
     elementWorkId: undefined,
-    glossaryTermText: undefined,
+    glossaryTermText: 'dummy',
     glossaryfootnoteid: undefined,
     poetryField: undefined,
     popUpStatus: false,
@@ -204,7 +204,8 @@ let selectionEditor = {
             childNodes:[{
                 tagName: 'span',
                 className: 'poetryLine',
-            }]
+            }],
+            parentNode:{innerHTML:'testdata'}
         }
     },
     getContent: () => {
@@ -2134,7 +2135,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         });
     });
     describe('Test-19-Method--17--addFootnote', () => {
-        it('Test-19.1-Method--17--addFootnote--POPUP Element-FormattedTitle', () => {
+        xit('Test-19.1-Method--17--addFootnote--POPUP Element-FormattedTitle', () => {
             let addFootnoteEvent = {
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn(),
@@ -2144,7 +2145,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             }
             let nextEditor = {
                 on: (temp, cb) => { cb(addFootnoteEvent) },
-                selection: editor.selection,
+                selection: {getNode:()=>{return{childNodes:[{}], tagName:'sup',parentNode:{parentNode:{innerHTML:'dummy'}, tagName:'sup'}}}},
                 setContent: () => { },
                 insertContent: () => {
                     return '<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>'
@@ -6191,7 +6192,7 @@ describe('Test function--handleBlankLineArrowKeys', () => {
  })
 
  describe('Testing function--setCalloutToSelection', () => {
-    xit('setCalloutToSelection', () => {
+    it('setCalloutToSelection', () => {
         let nextEditor = {
             on: (temp, cb) => { cb(event) },
             selection: editor.selection,
@@ -6235,6 +6236,15 @@ describe('Test function--handleBlankLineArrowKeys', () => {
  })
 
 
+ describe('Testing function--removeSupFormat', () => {
+    it('removeSupFormat', () => {
+        const spyhandleCodeClick = jest.spyOn(instance, 'removeSupFormat')
+        instance.removeSupFormat();
+        expect(spyhandleCodeClick).toHaveBeenCalled()
+    });
+ })
+
+
  describe('Testing function--getNodeContent', () => {
     it('getNodeContent', () => {
         const spyhandleCodeClick = jest.spyOn(instance, 'getNodeContent')
@@ -6242,6 +6252,7 @@ describe('Test function--handleBlankLineArrowKeys', () => {
         expect(spyhandleCodeClick).toHaveBeenCalled()
     });
  })
+
 
  describe('Testing function--getElementTypeForToolbar', () => {
     let elementCase1 = {type:'element-authoredtext',elementdata:{headers:[{level:'level'}]}}
