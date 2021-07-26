@@ -43,8 +43,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
         if (showHideElement || asideParent?.type === 'showhide') { /** Glossary-Footnotes inside Show-Hide */
-            let showHideChild = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement, 'glossaryFootnote')
-            glossaryFootElem = showHideChild?.currentElement
+            //let showHideChild = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement, 'glossaryFootnote')
+            //glossaryFootElem = showHideChild?.currentElement
+            /* Get the element where footnote/Glossery is added */
+            glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         }
         else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
@@ -570,7 +572,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
 
         if (showHideElement || asideParent?.type === 'showhide') {/** Glossary-Footnotes inside Show-Hide */
-            newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, showHideElement, tempIndex)
+            newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         }
         else if (tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data

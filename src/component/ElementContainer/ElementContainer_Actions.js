@@ -11,6 +11,7 @@ import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementCo
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
 import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 
 import ElementConstants from "./ElementConstants";
 const { SHOW_HIDE } = ElementConstants;
@@ -338,10 +339,12 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
             }
         }
     ).then(response => {
-        let parentData = getState().appStore.slateLevelData
+        let parentData = getState().appStore.slateLevelData;
+        /* Table in Showhide - Get the section type */
+        const sectionType = getState()?.appStore?.asideData?.sectionType;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         if (newParentData[config.slateManifestURN].status === 'wip') {
-            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter)
+            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter, sectionType)
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         } else if (newParentData[config.slateManifestURN].status === 'approved') {
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -358,7 +361,7 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
     })
 }
 
-const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
+const updateTableEditorData = (elementId, tableData, slateBodyMatter, sectionType) => {
 
     return slateBodyMatter = slateBodyMatter.map(elm => {
         if (elm.id === elementId) {
@@ -366,18 +369,21 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
                 ...elm,
                 ...tableData
             }
-        }
+        } else /* "Table in Showhide" - Update the store on adding data in table */
+        if (sectionType && elm?.interactivedata?.[sectionType]) {
+            elm.interactivedata[sectionType] = updateTableEditorData(elementId, tableData, elm.interactivedata[sectionType], sectionType)
+        } 
         else if (elm.elementdata && elm.elementdata.bodymatter) {
-            elm.elementdata.bodymatter = updateTableEditorData(elementId, tableData, elm.elementdata.bodymatter)
+            elm.elementdata.bodymatter = updateTableEditorData(elementId, tableData, elm.elementdata.bodymatter, sectionType)
         }
         else if (elm.contents && elm.contents.bodymatter) {
-            elm.contents.bodymatter = updateTableEditorData(elementId, tableData, elm.contents.bodymatter)
+            elm.contents.bodymatter = updateTableEditorData(elementId, tableData, elm.contents.bodymatter, sectionType)
         }
         else if (elm.groupeddata && elm.groupeddata.bodymatter) {
-            elm.groupeddata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupeddata.bodymatter)
+            elm.groupeddata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupeddata.bodymatter, sectionType)
         }
         else if (elm.groupdata && elm.groupdata.bodymatter) {
-            elm.groupdata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupdata.bodymatter)
+            elm.groupdata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupdata.bodymatter, sectionType)
         }
         return elm;
     })
@@ -435,14 +441,13 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             bodymatter: currentSlateData.contents.bodymatter,
             response: createdElemData.data
         };
-        if (currentSlateData.status === 'approved') {
-            await tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
+        if (slateWrapperConstants?.elementType?.indexOf(type2BAdded) !== -1) {
+            if (currentSlateData.status === 'approved') {
+                await tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
+            } else {
+                tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
+            }
         }
-        else {
-            tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
-        } 
-        
-
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });

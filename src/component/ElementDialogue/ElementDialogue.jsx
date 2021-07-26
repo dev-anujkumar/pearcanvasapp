@@ -376,14 +376,14 @@ const dispatchActions = {
     updateElement,
     setBCEMetadata
 }
-
+/*
 const mapStateToProps = ({ appStore }) => {
     return {
         asideData: appStore.asideData,
         parentUrn: appStore.parentUrn
     }
 }
-
+*/
 ElementDialogue.displayName = "ElementDialogue"
-export default connect(mapStateToProps, dispatchActions)(ElementDialogue);
+export default connect(null, dispatchActions)(ElementDialogue);
 
