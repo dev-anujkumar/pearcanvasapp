@@ -25,7 +25,8 @@ import { sendDataToIframe } from '../../constants/utility.js';
     
     checkSlateLock = (slateLockInfo) => {
         if(slateLockInfo){
-            let lockedUserId = slateLockInfo.userId.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
+            // TK-11991 - fixing test cases console errors
+            let lockedUserId = slateLockInfo.userId && slateLockInfo.userId.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
             if(slateLockInfo.isLocked && config.userId !== lockedUserId){
                 sendDataToIframe({ 'type': SlateLockStatus, 'message': { slateLockInfo: slateLockInfo } });
                 return this.renderSlateLockJSX(slateLockInfo.userId) // (`${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`)

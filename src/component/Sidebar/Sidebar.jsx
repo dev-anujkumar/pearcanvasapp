@@ -754,7 +754,7 @@ class Sidebar extends Component {
                                 <li data-value="print75">75%</li>
                                 <li data-value="print100">100%</li>
                             </ul>
-                            <svg class="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg>
+                            <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg>
                         </div>
                     </div>
                 </div>
