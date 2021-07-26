@@ -36,7 +36,7 @@ import {
     SET_TOAST_MESSAGE,
     SHOW_TOAST_MESSAGE,
     WIRIS_ALT_TEXT_POPUP,
-    UPDATE_THREE_COLUMN_INFO,
+    UPDATE_MULTIPLE_COLUMN_INFO,
     WRONG_IMAGE_POPUP,
     SHOW_REMOVE_GLOSSARY_IMAGE,
     ADD_FIGURE_GLOSSARY_POPUP,
@@ -48,7 +48,7 @@ import { createstoreWithFigure, newslateData, figureDataTCM, learnosityData, pop
 import { slateLevelData } from '../../fixtures/containerActionsTestingData';
 import { threeMultiColumnContainer } from '../../fixtures/multiColumnContainer';
 
-const threeColumnData = [
+const multipleColumnData = [
     {
         containerId: "urn:pearson:manifest:0beacb79-ee4c-4c26-abcc-dd973c6893c9",
         columnIndex: "C3",
@@ -63,7 +63,7 @@ const initialState = {
     pageNumberData: [],
     permissions: [],
     allElemPageData: [],
-    threeColumnData: threeColumnData,
+    multipleColumnData: multipleColumnData,
     openWrongImagePopup:false,
     removeGlossaryImage:false,
     addfigureGlossarypopup:false,
@@ -587,13 +587,13 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
             payload: {}
         })).toEqual(output)
     });
-    it('case 37- UPDATE_THREE_COLUMN_INFO IF CONDITION', () => {
+    it('case 37- UPDATE_MULTIPLE_COLUMN_INFO IF CONDITION', () => {
         let output = {
             ...initialState,
-            threeColumnData: threeColumnData
+            multipleColumnData: multipleColumnData
         };
         expect(reducer(initialState, {
-            type: UPDATE_THREE_COLUMN_INFO,
+            type: UPDATE_MULTIPLE_COLUMN_INFO,
             key: 'urn:pearson:manifest:0beacb79-ee4c-4c26-abcc-dd973c6893c9',
             payload: {
                 containerId: "urn:pearson:manifest:0beacb79-ee4c-4c26-abcc-dd973c6893c9",
@@ -602,13 +602,13 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
             }
         })).toEqual(output)
     });
-    it('case 38- UPDATE_THREE_COLUMN_INFO ELSE CONDITION', () => {
+    it('case 38- UPDATE_MULTIPLE_COLUMN_INFO ELSE CONDITION', () => {
         let output = {
             ...initialState,
-            threeColumnData: []
+            multipleColumnData: []
         };
         expect(reducer(initialState, {
-            type: UPDATE_THREE_COLUMN_INFO,
+            type: UPDATE_MULTIPLE_COLUMN_INFO,
         })).toEqual(output)
     });
     it('case 39- WRONG_IMAGE_POPUP ', () => {

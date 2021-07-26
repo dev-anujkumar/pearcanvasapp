@@ -1,4 +1,4 @@
-export const labelOptions = ["No Label", "Chapter", "Ch", "Part", "Unit"]
+export const labelOptions = ["No Label", "Chapter", "Ch", "Lesson", "Part", "Unit", "Workshop"]
 
 /**
  * Extracts and returns title, number and label from titleText to populate opener element.

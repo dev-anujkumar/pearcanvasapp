@@ -28,6 +28,8 @@ export const openerElementData = {
         "credits": {
             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
             "text": "Opening element credits for the background image."
-        }
+        },
+        "alttext": "Alt Text",
+        "longdescripton": "Long Descripton"
     }
 }

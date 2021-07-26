@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_THREE_COLUMN_INFO } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
@@ -679,10 +679,10 @@ export const storeOldAssetForTCM = (value) => {
     }
 }
 
-export const updateThreeColumnData = (threeColumnObjData, objKey) => (dispatch) => {
+export const updateMultipleColumnData = (multipleColumnObjData, objKey) => (dispatch) => {
     dispatch({
-        type: UPDATE_THREE_COLUMN_INFO,
+        type: UPDATE_MULTIPLE_COLUMN_INFO,
         key: objKey,
-        payload: threeColumnObjData
+        payload: multipleColumnObjData
     })
 }
