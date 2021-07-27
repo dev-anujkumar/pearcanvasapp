@@ -130,7 +130,6 @@ describe('when audio is selected from glossary',()=>{
     const narrativeAudio = mount(<Provider store={store}><OpenGlossaryAssets {...props} /></Provider>);
     let narrativeAudioInstance = narrativeAudio.find('OpenGlossaryAssets').instance();
     narrativeAudio.find('.close-icon-image').simulate('click');
-    const spyHandleClick = jest.spyOn(narrativeAudioInstance, 'handleClick')
     const spyNarrativeAudioInstance = jest.spyOn(narrativeAudioInstance,'handleTab')
     test('renders without crashing', () => {
         expect(narrativeAudio).toHaveLength(1);
@@ -144,11 +143,6 @@ describe('when audio is selected from glossary',()=>{
     it('testing closeFigurePopup ',()=>{
         narrativeAudioInstance.closeFigurePopup();
         expect(narrativeAudioInstance.state.replaceToggle).toBe(false)
-    })
-    it('Blur Dropdown', () => {
-        narrativeAudio.find('.glossary-figuredropdown').simulate('blur');
-        expect(spyHandleClick).toHaveBeenCalled();
-        spyHandleClick.mockClear();   
     })
     it('testing handleTab',()=>{
         narrativeAudio.find('#audio-tab').simulate('click');

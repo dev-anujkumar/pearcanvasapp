@@ -25,7 +25,7 @@ export const preparePayloadData = (pasteParams) => {
     let payload = {
         "elementUrn": elementId,//manifest - popupid
         "type": elementType,//popup
-        "elementTag": elementTag[type],
+        "elementTag": elementTag[elementType],
         "projectUrn": projectUrn,//new key
         "sourceSlateUrn": selection.sourceSlateManifestUrn,
         "sourceSlateEntityUrn": selection.sourceSlateEntityUrn,
@@ -69,7 +69,7 @@ export const preparePayloadData = (pasteParams) => {
         const elementTagPrefix = prepareTagPrefix(tagPrefixParams)
         payload.destinationContainer.ContainerTag = elementTagPrefix
     }
-    console.log('request payload', payload)
+    console.log('from cutcopysnapshots request payload ', payload)
     return payload;
 }
 

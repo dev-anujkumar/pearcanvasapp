@@ -34,6 +34,8 @@ import ElementConstants from '../ElementContainer/ElementConstants';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE } = ElementConstants;
+import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
+import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -1030,9 +1032,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 };
                 await onPasteSuccess(pasteSuccessArgs)
                 /** Cut-Copy TCM snapshots API */
+                if(_requestData?.content[0]?.type === 'popup'){
                 tcmSnapshotParams.elementId = responseData[0].id
                 const tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
                 callCutCopySnapshotAPI(tcmSnapshotPayload)
+                }
                 /******************************/
                 if (responseData[0].elementdata?.type === "blockquote") {  
                     setTimeout(() => {
