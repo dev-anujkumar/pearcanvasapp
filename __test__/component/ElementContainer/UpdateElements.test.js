@@ -12,6 +12,7 @@ config["elementStatus"] = {}
 
 describe('Test for UpdateElements Functions', () => {
     it('Test for ELEMENT-TYPE----->element-authoredtext', () => {
+        config.elementStatus["urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0"] = 'approved';
         let type = "element-authoredtext",
             previousElementData = elementAuthoredText,
             node = {},
@@ -252,8 +253,37 @@ describe('Test for UpdateElements Functions', () => {
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
+    it('Test for ELEMENT-TYPE----->Assessment Slate - learningtemplate as assessmentformat', () => {
+        let type = "element-assessment",
+            previousElementData = assessmentSlateData,
+            elementType = "element-assessment",
+            primaryOption = "primary-assessment-slate",
+            secondaryOption = "secondary-assessment-cite",
+            index = 0,
+            node = "",
+            activeEditorId = "cypress-7-1",
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        previousElementData["elementdata"]["assessmentformat"] = 'learningtemplate';
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
     it('Test for ELEMENT-TYPE----->Opener Element', () => {
+        config.elementStatus["urn:pearson:work:b1468edb-1fe1-464e-9e2c-90885e2882d0"] = "approved";
         let elementData = openerElementData,
+            elementType = "openerelement",
+            primaryOption = "primary-openerelement",
+            secondaryOption = "secondary-openerelement";
+        jest.spyOn(updateFunction, 'createOpenerElementData')
+        updateFunction.createOpenerElementData(elementData, elementType, primaryOption, secondaryOption);
+        expect(updateFunction.createOpenerElementData).toHaveBeenCalledWith(elementData, elementType, primaryOption, secondaryOption)
+    })
+    it('Test for ELEMENT-TYPE----->Opener Element without elementData', () => {
+        let elementData = null,
             elementType = "openerelement",
             primaryOption = "primary-openerelement",
             secondaryOption = "secondary-openerelement";
@@ -290,7 +320,8 @@ describe('Test for UpdateElements Functions', () => {
             index = "0-1",
             containerContext = {},
             asideData={
-                contentUrn:"80"
+                contentUrn:"80",
+                type: 'showhide'
             },
             parentElement = {
                 type: 'citations',
@@ -370,8 +401,8 @@ describe('Test for UpdateElements Functions', () => {
                 id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
             };
         jest.spyOn(updateFunction, 'createUpdatedData')
-        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
-        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement, "hide");
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement, "hide")
     })
     it('Test for ELEMENT-TYPE----->poetry', () => {
         let type = "element-authoredtext",
@@ -384,6 +415,23 @@ describe('Test for UpdateElements Functions', () => {
             index = "0-1",
             containerContext = {},
             parentElement = poetryElementData
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+    it('Test for ELEMENT-TYPE -----> poetry without formatted-title', () => {
+        let type = "element-authoredtext",
+            previousElementData = poetryTitle,
+            node = {},
+            elementType = "element-authoredtext",
+            primaryOption = "primary-paragraph",
+            secondaryOption = "secondary-paragraph",
+            activeEditorId = "cypress-0-1",
+            index = "0-1",
+            containerContext = {},
+            parentElement = poetryElementData
+        delete parentElement["contents"]["formatted-title"];
+        parentElement["contents"]["creditsarray"][0]["id"] = "urn:pearson:work:ae3869c3-3d38-4219-9546-027cdfbaafad";
         jest.spyOn(updateFunction, 'createUpdatedData')
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
@@ -584,7 +632,8 @@ describe('Test for UpdateElements Functions', () => {
                 html: {
                     footnotes: []
                 },
-                figuredata: { programlanguage: '' }
+                figuredata: { programlanguage: '' },
+                subtitle: '<p></p><p class="paragraphNumeroUno"><br></p><p></p>'
             },
             node = {},
             elementType = "figure",
@@ -604,6 +653,120 @@ describe('Test for UpdateElements Functions', () => {
                     return null;
             }
         });
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+
+    it('Testing - podHtmlmatchWithRegex method - with parameter', () => {
+        const getpodHtmlmatchWithRegex = updateFunction.podHtmlmatchWithRegex('print');
+        expect(getpodHtmlmatchWithRegex).toBe(true);
+    })
+
+    it('Testing - podHtmlmatchWithRegex method - without parameter', () => {
+        const getpodHtmlmatchWithRegex = updateFunction.podHtmlmatchWithRegex('');
+        expect(getpodHtmlmatchWithRegex).toBe(false);
+    })
+
+    it('Test for ELEMENT-TYPE----->figure---->image/tableImage/mathImage - with DOM reference', () => {
+
+        // creating cypress DOM elements for handling getElementById reference 
+        for (let element = 0; element < 6; element++) {
+            let cypress = document.createElement('div')
+            cypress.id = `cypress-7-${element}`;
+            cypress.innerHTML = '<p>cypress</p>';
+            cypress.innerText = 'cypress'
+            document.body.append(cypress);
+        }
+
+        let type = "figure",
+            previousElementData = figureData,
+            node = {},
+            elementType = "figure",
+            primaryOption = "primary-image-figure",
+            secondaryOption = "secondary-image-figure-width",
+            activeEditorId = "cypress-7-4",
+            index = 7,
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+
+    it('Test for ELEMENT-TYPE----->figure---->interactive - with DOM reference', () => {
+        let type = "figure",
+            previousElementData = interactiveData,
+            node = {},
+            elementType = "element-interactive",
+            primaryOption = "primary-mmi",
+            secondaryOption = "secondary-interactive-mmi",
+            activeEditorId = "cypress-7-1",
+            index = 7,
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+
+    it('Test for ELEMENT-TYPE----->figure---->codelisting - with DOM reference', () => {
+        let type = "figure",
+            previousElementData = {
+                figuretype: 'codelisting',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+                html: {
+                    footnotes: []
+                },
+                figuredata: { programlanguage: '' }
+            },
+            node = {},
+            elementType = "figure",
+            primaryOption = "primary-blockcode-equation",
+            secondaryOption = "secondary-blockcode-language-default",
+            activeEditorId = "cypress-0-1",
+            index = 7,
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
+        jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+            switch (selector) {
+                case '.div.element-container.active[data-id="urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y"] div.blockCodeFigure':
+                    return null;
+            }
+        });
+        updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
+        expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+
+    it('Test for ELEMENT-TYPE -----> figure ---->authoredtext - with DOM reference', () => {
+        let type = "figure",
+            previousElementData = {
+                figuretype: 'authoredtext',
+                html: {
+                    footnotes: []
+                }
+            },
+            node = {},
+            elementType = "figure",
+            primaryOption = "primary-mathml-equation",
+            secondaryOption = "secondary-mathml-equation",
+            activeEditorId = "cypress-7-1",
+            index = 7,
+            containerContext = {},
+            parentElement = {
+                type: 'showhide',
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y'
+            };
+        jest.spyOn(updateFunction, 'createUpdatedData')
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
