@@ -1,9 +1,13 @@
-import {
+import TcmConstants from './TcmConstants.js';
+const {
     ASIDE,
     MULTI_COLUMN,
     POPUP_ELEMENT,
     WORKED_EXAMPLE,
-} from './TcmConstants';
+    WE_MANIFEST,
+    ELEMENT_ASIDE,
+    MULTI_COLUMN_GROUP
+} = TcmConstants;
 
 /**
  * This function is used to prepare request payload for cut-copy-snapshots
@@ -44,10 +48,16 @@ export const preparePayloadData = (pasteParams) => {
             "type": asideData.type,
             "versionUrn": asideData?.id,
             "entityUrn": asideData?.contentUrn,
-            "hasChild": asideData.id !== parentUrn.manifestUrn ? true : false, //SB/Col1/2/3
-            "childType": parentUrn?.elementType,
-            "childVersionUrn": parentUrn?.manifestUrn,
-            "childEntityUrn": parentUrn?.contentUrn,//optional,
+            "hasChild": false
+        }
+        if (asideData.id !== parentUrn.manifestUrn) {
+            payload.destinationContainer = {
+                ...payload.destinationContainer,
+                "hasChild": true, //SB/Col1/2/3
+                "childType": parentUrn?.elementType,
+                "childVersionUrn": parentUrn?.manifestUrn,
+                "childEntityUrn": parentUrn?.contentUrn,//optional,
+            }
         }
         if (asideData?.parent) {
             const { id, columnId, type, columnName, parentContentUrn, columnContentUrn } = asideData.parent
