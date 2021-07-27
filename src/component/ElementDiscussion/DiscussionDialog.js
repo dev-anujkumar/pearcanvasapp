@@ -95,7 +95,7 @@ const DiscussionDialog = ({
                         name={elemendId + "-" + item.discussionUrn}
                         value={item.title}
                       />
-                      <label for={item.title} className="radioLabelDiscussion">
+                      <label htmlFor={item.title} className="radioLabelDiscussion">
                         {item.title}
                       </label>
                     </div>
