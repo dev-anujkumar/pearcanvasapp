@@ -30,7 +30,7 @@ export const preparePayloadData = (pasteParams) => {
         "projectUrn": projectUrn,
         "sourceSlateUrn": selection?.sourceSlateManifestUrn,
         "sourceSlateEntityUrn": selection?.sourceSlateEntityUrn,
-        "operationType": "cut",//copy
+        "operationType": selection.operationType,//cut|copy
         "typeOfElement": "container",//narrative
         "sourceElementIndex": selection?.sourceElementIndex?.toString(),
         "destinationSlateUrn": destnSlateManifestURN,
@@ -40,7 +40,7 @@ export const preparePayloadData = (pasteParams) => {
         payload["oldElementUrn"] = selection.element.id
     }
     if (asideData) {
-        payload["destinationContainer"] = { //optional
+        payload.destinationContainer = { //optional
             "type": asideData.type,
             "versionUrn": asideData?.id,
             "entityUrn": asideData?.contentUrn,
@@ -62,13 +62,12 @@ export const preparePayloadData = (pasteParams) => {
             }
         }
         const tagPrefixParams = {
-            type,
             asideData,
             parentUrn,
             destinationContainer: payload?.destinationContainer
         }
         const elementTagPrefix = prepareTagPrefix(tagPrefixParams)
-        payload["destinationContainer"]["ContainerTag"] = elementTagPrefix
+        payload.destinationContainer.elementTagPrefix = elementTagPrefix
     }
     //This console will be removed in future
     console.log('from cutcopysnapshots request payload ', payload)
@@ -94,7 +93,7 @@ export const prepareTagPrefix = (parentData) => {
             prefixTag = grandParentTag + ":" + prefixTag
         }
     }
-    console.log('prefixTag',prefixTag)
+    // console.log('prefixTag',prefixTag)
     return prefixTag
 }
 
