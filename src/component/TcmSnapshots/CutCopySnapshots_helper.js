@@ -23,28 +23,29 @@ export const preparePayloadData = (pasteParams) => {
         oldElementId
     } = pasteParams
     let payload = {
-        "elementUrn": elementId,//manifest - popupid
-        "type": elementType,//popup
+        "elementUrn": elementId,
+        "elementEntityUrn": selection.element.contentUrn,
+        "type": elementType,
         "elementTag": elementTag[elementType],
-        "projectUrn": projectUrn,//new key
+        "projectUrn": projectUrn,
         "sourceSlateUrn": selection.sourceSlateManifestUrn,
         "sourceSlateEntityUrn": selection.sourceSlateEntityUrn,
         "operationType": "cut",//copy
         "typeOfElement": "container",//narrative
-        "sourceElementIndex": selection.sourceElementIndex,
+        "sourceElementIndex": selection.sourceElementIndex?.toString(),
         "destinationSlateUrn": destnSlateManifestURN,
         "destinationSlateEntityUrn": destnSlateEntityURN
     }
     if(oldElementId !== elementId){
-        payload.oldElementUrn = selection.element.id
+        payload["oldElementUrn"] = selection.element.id
     }
     if (asideData) {
-        payload.destinationContainer = { //optional
+        payload["destinationContainer"] = { //optional
             "type": asideData.type,
             "versionUrn": asideData.id,
             "entityUrn": asideData.contentUrn,
             "hasChild": asideData.id !== parentUrn.manifestUrn ? true : false, //SB/Col1/2/3
-            "childType": parentUrn.elementType,//we - create a function to set
+            "childType": parentUrn.elementType,
             "childVersionUrn": parentUrn.manifestUrn,
             "childEntityUrn": parentUrn.contentUrn,//optional,
         }
@@ -67,10 +68,10 @@ export const preparePayloadData = (pasteParams) => {
             destinationContainer: payload?.destinationContainer
         }
         const elementTagPrefix = prepareTagPrefix(tagPrefixParams)
-        payload.destinationContainer.ContainerTag = elementTagPrefix
+        payload["destinationContainer"]["ContainerTag"] = elementTagPrefix
     }
     console.log('from cutcopysnapshots request payload ', payload)
-    return payload;
+    return JSON.parse(JSON.stringify(payload));
 }
 
 export const prepareTagPrefix = (parentData) => {
