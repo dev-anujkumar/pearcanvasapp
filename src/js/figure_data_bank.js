@@ -160,5 +160,8 @@ export default {
             },
             "usagetype": "Quiz"
         }
+    },
+    "secondary-image-figure-width": {
+         "postertext": {"text":"hello world"}
     }
 }

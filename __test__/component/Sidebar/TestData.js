@@ -46,15 +46,6 @@ export default {
 											},
 											"html":{
 												"text":"<p class=\"paragraphNumeroUno\"><br></p>",
-												"footnotes":{
-												
-												},
-												"assetsPopover":{
-												
-												},
-												"glossaryentries":{
-												
-												}
 											},
 											"versionUrn":"urn:pearson:work:1789717a-b9ab-4de3-bdb6-adde013aefcd",
 											"contentUrn":"urn:pearson:entity:f0266083-3328-47eb-9d1d-33be5948c647"
@@ -81,16 +72,7 @@ export default {
 											},
 											"html":{
 												"text":"<p class=\"paragraphNumeroUno\"><br></p>",
-												"footnotes":{
-												
 												},
-												"assetsPopover":{
-												
-												},
-												"glossaryentries":{
-												
-												}
-											},
 											"versionUrn":"urn:pearson:work:dbddfcc2-2126-4a28-946f-519aa00628ef",
 											"contentUrn":"urn:pearson:entity:031a962b-8921-405a-95f2-371017ed72c3"
 										}
@@ -103,7 +85,6 @@ export default {
 						"status":"wip"
 						}
 					],
-					"schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
 				},
 				"status":"wip",
 				"pageNo":0,
@@ -679,18 +660,6 @@ export default {
             "subtype":"image50TextTableImage",
             "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
             "alignment":"half-text",
-            "title":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "captions":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "credits":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
             "figuredata":{
                 "schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
                 "imageid":"",
@@ -723,13 +692,7 @@ export default {
             "labelText":"Fg",
             "toolbar":[
                 "insertMedia",
-                "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
+                "formatSelector"
             ]
         },
         oldElementInfo: {
@@ -745,12 +708,7 @@ export default {
         "toolbar":[
             "insertMedia",
             "formatSelector",
-            "crossLinkingIcon",
-            "assetpopover",
-            "glossary",
-            "decreaseindent",
-            "alignment",
-            "calloutIcon"
+            "crossLinkingIcon"
         ],
         "tag":"TB"
         }
@@ -761,18 +719,6 @@ export default {
             "type":"figure",
             "figuretype":"codelisting",
             "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
-            "title":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "captions":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
-            "credits":{
-                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text":""
-            },
             "figuredata":{
                 "schema":"http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
                 "type":"codelistingformatted",
@@ -801,12 +747,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
+                "crossLinkingIcon"
             ]                   
         },
         oldElementInfo: {
@@ -822,15 +763,39 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "formatSelector",
-                "crossLinkingIcon",
-                "assetpopover",
-                "glossary",
-                "decreaseindent",
-                "alignment",
-                "calloutIcon"
+                "crossLinkingIcon"
             ],
             "tag":"BCE"
-        }
+        },
+		store: {
+			"urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d":{
+				"id":"urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d",
+				"type":"manifest",
+				"versionUrn":"urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d",
+				"contentUrn":"urn:pearson:entity:e719e981-17af-48b6-b94c-c5cac5a3f405",
+				"contents":{
+					"bodymatter":[
+						{
+							"id":"urn:pearson:work:1789717a-b9ab-4de3-bdb6-adde013aefcd",
+							"type":"element-authoredtext",
+							"elementdata":{
+								"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+								"text":""
+							},
+							"html":{
+								"text":"<p class=\"paragraphNumeroUno\"><br></p>",
+							},
+							"versionUrn":"urn:pearson:work:1789717a-b9ab-4de3-bdb6-adde013aefcd",
+							"contentUrn":"urn:pearson:entity:f0266083-3328-47eb-9d1d-33be5948c647"
+						}
+					],
+				},
+				"status":"approved",
+				"pageNo":0,
+				"pageCount":1,
+				"pageLimit":25
+			}
+		}
 	},
 	testcase10: {
 		oldElementData: {
@@ -840,11 +805,7 @@ export default {
             "schema":"http://schemas.pearson.com/wip-authoring/element/1",
             "elementdata":{
                 "schema":"http://schemas.pearson.com/wip-authoring/blockfeature/1#/definitions/blockfeature",
-                "type":"blockquote",
-                "authoredtext":{
-                    "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    "text":""
-                }
+                "type":"blockquote"
             },
             "html":{
                 "text":"<blockquote class=\"blockquoteMarginalia\"><p class=\"paragraphNummerEins\"><br></p><p class=\"blockquoteTextCredit\" contenteditable=\"true\" data-placeholder=\"Attribution Text\"></p></blockquote>",
@@ -875,13 +836,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "bold",
-                "underline",
-                "strikethrough",
-                "orderedlist",
-                "unorderedlist",
-                "glossary",
-                "slatetag",
-                "alignment"
+                "underline"
             ],
             "tag":"BQ"
         }
@@ -930,13 +885,7 @@ export default {
             "toolbar":[
                 "insertMedia",
                 "bold",
-                "underline",
-                "strikethrough",
-                "orderedlist",
-                "unorderedlist",
-                "glossary",
-                "slatetag",
-                "alignment"
+                "underline"
             ],
             "tag":"BQ"
         }
@@ -1038,18 +987,6 @@ export default {
 				"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 				"titlecontentintitlefield":true,
 				"alignment":"text-width",
-				"title":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
-				"captions":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
-				"credits":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
 				"figuredata":{
 					"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 					"imageid":"",
@@ -1077,18 +1014,6 @@ export default {
 				"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 				"titlecontentintitlefield":true,
 				"alignment":"half-text",
-				"title":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
-				"captions":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
-				"credits":{
-					"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-					"text":""
-				},
 				"figuredata":{
 					"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 					"imageid":"",
@@ -1147,15 +1072,9 @@ export default {
 												},
 												"html":{
 												"text":"<p class=\"paragraphNumeroUno\"><br></p>",
-												"footnotes":{
-													
-												},
-												"assetsPopover":{
-													
-												},
-												"glossaryentries":{
-													
-												}
+												"footnotes":{},
+												"assetsPopover":{},
+												"glossaryentries":{}
 												},
 												"versionUrn":"urn:pearson:work:1789717a-b9ab-4de3-bdb6-adde013aefcd",
 												"contentUrn":"urn:pearson:entity:f0266083-3328-47eb-9d1d-33be5948c647"
@@ -1238,18 +1157,7 @@ export default {
 																"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 																"titlecontentintitlefield":true,
 																"alignment":"text-width",
-																"title":{
-																	"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-																	"text":""
-																},
-																"captions":{
-																	"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-																	"text":""
-																},
-																"credits":{
-																	"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-																	"text":""
-																},
+																
 																"figuredata":{
 																	"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 																	"imageid":"",
@@ -1560,18 +1468,7 @@ export default {
 						"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 						"titlecontentintitlefield":true,
 						"alignment":"text-width",
-						"title":{
-							"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-							"text":""
-						},
-						"captions":{
-							"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-							"text":""
-						},
-						"credits":{
-							"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-							"text":""
-						},
+						
 						"figuredata":{
 							"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 							"imageid":"",
@@ -1795,18 +1692,7 @@ export default {
 											"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 											"titlecontentintitlefield":true,
 											"alignment":"text-width",
-											"title":{
-												"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-												"text":""
-											},
-											"captions":{
-												"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-												"text":""
-											},
-											"credits":{
-												"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-												"text":""
-											},
+											
 											"figuredata":{
 												"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 												"imageid":"",
@@ -2045,18 +1931,7 @@ export default {
 					"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 					"titlecontentintitlefield":true,
 					"alignment":"text-width",
-					"title":{
-						"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-						"text":""
-					},
-					"captions":{
-						"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-						"text":""
-					},
-					"credits":{
-						"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-						"text":""
-					},
+					
 					"figuredata":{
 						"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 						"imageid":"",
@@ -2119,18 +1994,7 @@ export default {
 							"schema":"http://schemas.pearson.com/wip-authoring/figure/1",
 							"titlecontentintitlefield":true,
 							"alignment":"text-width",
-							"title":{
-								"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-								"text":""
-							},
-							"captions":{
-								"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-								"text":""
-							},
-							"credits":{
-								"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-								"text":""
-							},
+							
 							"figuredata":{
 								"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
 								"imageid":"",
@@ -2598,6 +2462,328 @@ export default {
 				"showHideType":"show"
 			}
 		},
+	},
+	testcase15: {
+		oldElementData: {
+			"id":"urn:pearson:manifest:88c63d61-753f-4f9d-947a-1ac6edd77934",
+			"type":"element-aside",
+			"subtype":"workedexample",
+			"designtype":"workedexample1",
+			"elementdata":{
+				"bodymatter":[
+					{
+						"id":"urn:pearson:work:357ed147-c460-4838-8638-7e12d509aeba",
+						"type":"element-authoredtext",
+						"elementdata":{
+						"text":"",
+						"headers":[
+							{
+								"level":4
+							}
+						]
+						},
+						"html":{
+							"text":"<h4 class=\"heading4NummerEins\"><br></h4>",
+						},
+						"versionUrn":"urn:pearson:work:357ed147-c460-4838-8638-7e12d509aeba",
+						"contentUrn":"urn:pearson:entity:0a9dfa7c-4a4b-420c-933c-16554a639444"
+					},
+					{
+						"id":"urn:pearson:manifest:eb26a09b-feae-492a-8d83-818c0c7d31b8",
+						"type":"manifest",
+						"versionUrn":"urn:pearson:manifest:eb26a09b-feae-492a-8d83-818c0c7d31b8",
+						"contentUrn":"urn:pearson:entity:457dbec1-ab94-4310-abea-e1b3fa5e84f9",
+						"contents":{
+						"bodymatter":[
+							{
+								"id":"urn:pearson:work:b8a238ef-0d4c-4f74-bcbb-213f7469d0d0",
+								"type":"element-authoredtext",
+								"elementdata":{
+									"text":"",
+									"headers":[
+									{
+										"level":5
+									}
+									]
+								},
+								"html":{
+									"text":"<h5 class=\"heading5NummerEins\"><br></h5>",
+								},
+								"versionUrn":"urn:pearson:work:b8a238ef-0d4c-4f74-bcbb-213f7469d0d0",
+								"contentUrn":"urn:pearson:entity:495fc553-35de-453a-b21d-00932379b763"
+							},
+							{
+								"id":"urn:pearson:work:641d649c-c7b0-4a8f-a571-d455fc94264e",
+								"type":"element-authoredtext",
+								"elementdata":{
+									"text":""
+								},
+								"html":{
+									"text":"<p class=\"paragraphNumeroUno\"><br></p>",
+								},
+								"versionUrn":"urn:pearson:work:641d649c-c7b0-4a8f-a571-d455fc94264e",
+								"contentUrn":"urn:pearson:entity:0372cd59-0e9d-49c0-b07c-9a7396a927bf"
+							}
+						],
+						},
+						"status":"wip"
+					}
+				],
+				"schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+			},
+			"versionUrn":"urn:pearson:manifest:88c63d61-753f-4f9d-947a-1ac6edd77934",
+			"contentUrn":"urn:pearson:entity:fe76d7ff-7878-41cb-bb62-a7937831d74c",
+			"status":"wip"
+		},
+		newElementData: {
+			"elementId":"urn:pearson:manifest:88c63d61-753f-4f9d-947a-1ac6edd77934",
+			"elementType":"element-workedexample",
+			"primaryOption":"primary-workedexample-we2",
+			"secondaryOption":"secondary-workedexample-we2",
+			"labelText":"WE",
+			"toolbar":[
+					"insertMedia"
+				]
+		},
+		oldElementInfo: {
+			"elementType":"element-workedexample",
+			"primaryOption":"primary-workedexample-we1",
+			"secondaryOption":"secondary-workedexample-we1",
+			"elementId":"urn:pearson:manifest:88c63d61-753f-4f9d-947a-1ac6edd77934",
+			"index":0,
+			"elementWipType":"element-aside",
+			"toolbar":[
+				"insertMedia"
+			],
+			"tag":"WE"
+		}
+	},
+	testcase16: {
+		oldElementData: {
+			"id":"urn:pearson:manifest:af90f8aa-8e6a-45cf-9692-0fae06ef4548",
+			"type":"element-aside",
+			"subtype":"sidebar",
+			"designtype":"asideSidebar01",
+			"elementdata":{
+				"bodymatter":[
+					{
+						"id":"urn:pearson:work:8f6846fd-75bf-4bed-8dc5-1f18dfe1bdef",
+						"type":"element-authoredtext",
+						"elementdata":{
+						"text":""
+						},
+						"html":{
+						"text":"<p class=\"paragraphNumeroUno\"><br></p>" },
+						"versionUrn":"urn:pearson:work:8f6846fd-75bf-4bed-8dc5-1f18dfe1bdef",
+						"contentUrn":"urn:pearson:entity:1df5c575-2e2e-4953-8360-a52241133543"
+					}
+				]
+			},
+			"versionUrn":"urn:pearson:manifest:af90f8aa-8e6a-45cf-9692-0fae06ef4548",
+			"contentUrn":"urn:pearson:entity:7c38e83c-c03a-4e07-9c94-f46bfcf6845b",
+			"status":"approved"
+		},
+		newElementData: {
+			"elementId":"urn:pearson:manifest:af90f8aa-8e6a-45cf-9692-0fae06ef4548",
+			"elementType":"element-aside",
+			"primaryOption":"primary-aside-aside",
+			"secondaryOption":"secondary-aside-sb2",
+			"labelText":"As",
+			"toolbar":[
+				"insertMedia"
+			]
+		},
+		oldElementInfo: {
+			"elementType":"element-aside",
+			"primaryOption":"primary-aside-aside",
+			"secondaryOption":"secondary-aside-sb1",
+			"elementId":"urn:pearson:manifest:af90f8aa-8e6a-45cf-9692-0fae06ef4548",
+			"index":0,
+			"elementWipType":"element-aside",
+			"toolbar":[
+				"insertMedia"
+			],
+			"tag":"As"
+		}
+	},
+	testcase17: {
+		oldElementData: {
+			"id":"urn:pearson:work:bf44530b-aba5-4935-a354-5c8f9e110647",
+			"type":"element-authoredtext",
+			"elementdata":{
+				"text":"weqwe"
+			},
+			"html":{
+				"text":"<p class=\"paragraphNumeroUno\">weqwe</p>"
+			},
+			"versionUrn":"urn:pearson:work:bf44530b-aba5-4935-a354-5c8f9e110647",
+			"contentUrn":"urn:pearson:entity:614e9d2f-3146-4ff1-98ad-0ff1fcafa243"
+		},
+		newElementData: {
+			"elementId":"urn:pearson:work:bf44530b-aba5-4935-a354-5c8f9e110647",
+			"elementType":"element-authoredtext",
+			"primaryOption":"primary-heading",
+			"secondaryOption":"secondary-heading-3",
+			"labelText":"H3",
+			"toolbar":[
+					"insertMedia"
+			]
+		},
+		oldElementInfo: {
+			"tag":"P",
+			"elementType":"element-authoredtext",
+			"primaryOption":"primary-paragraph",
+			"secondaryOption":"secondary-paragraph",
+			"elementId":"urn:pearson:work:bf44530b-aba5-4935-a354-5c8f9e110647",
+			"index":"0-0-0",
+			"elementWipType":"element-authoredtext",
+			"toolbar":[
+				"insertMedia"
+			]
+		},
+		store: {
+			"urn:pearson:manifest:c981f32b-7a2d-4a73-ae33-51ac40ad9fb4":{
+				"id":"urn:pearson:manifest:c981f32b-7a2d-4a73-ae33-51ac40ad9fb4",
+				"type":"manifest",
+				"schema":"http://schemas.pearson.com/wip-authoring/manifest/1",
+				"versionUrn":"urn:pearson:manifest:c981f32b-7a2d-4a73-ae33-51ac40ad9fb4",
+				"contentUrn":"urn:pearson:entity:1860082d-0482-4172-aebd-159881d3bcc1",
+				"contents":{
+					"bodymatter":[
+						{
+						"id":"urn:pearson:manifest:5e85f1d1-ee63-4652-ac9b-2edc84ff25b9",
+						"type":"showhide",
+						"schema":"http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+						"versionUrn":"urn:pearson:manifest:5e85f1d1-ee63-4652-ac9b-2edc84ff25b9",
+						"contentUrn":"urn:pearson:entity:9c723e06-5b17-4e2b-bb5e-fc29fc98cf24",
+						"status":"wip",
+						"interactivedata":{
+							"postertextobject":[
+								{
+									"id":"urn:pearson:work:bf126c89-c3be-496e-8dbf-98b1a31fd6f8",
+									"type":"element-authoredtext",
+									"elementdata":{
+									"text":"Reveal Answer:"
+									},
+									"html":{
+									"text":"<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
+									},
+									"versionUrn":"urn:pearson:work:bf126c89-c3be-496e-8dbf-98b1a31fd6f8",
+									"contentUrn":"urn:pearson:entity:af943790-a88f-4d50-be93-60ef20141aa3"
+								}
+							],
+							"show":[
+								{
+									"id":"urn:pearson:work:bf44530b-aba5-4935-a354-5c8f9e110647",
+									"type":"element-authoredtext",
+									"elementdata":{
+									"text":"weqwe"
+									},
+									"html":{
+									"text":"<p class=\"paragraphNumeroUno\">weqwe</p>"},
+									"versionUrn":"urn:pearson:work:bf44530b-aba5-4935-a354-5c8f9e110647",
+									"contentUrn":"urn:pearson:entity:614e9d2f-3146-4ff1-98ad-0ff1fcafa243"
+								}
+							],
+							"hide":[
+								{
+									"id":"urn:pearson:work:d9fc4be3-aaf7-41af-88fb-e45b21d8468c",
+									"type":"element-authoredtext",
+									"elementdata":{
+									"text":""
+									},
+									"html":{
+									"text":"<p class=\"paragraphNumeroUno\"><br></p>"},
+									"versionUrn":"urn:pearson:work:d9fc4be3-aaf7-41af-88fb-e45b21d8468c",
+									"contentUrn":"urn:pearson:entity:6128c6c2-e28e-4059-afaa-4fe39afdc6da"
+								}
+							]
+						}
+						}
+					],
+					"title":{
+						"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+						"text":"sh"
+					},
+					"schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+				},
+				"status":"wip",
+				"pageNo":0,
+				"pageCount":1,
+				"pageLimit":25
+			}
+		},
+		showHideObj : {
+			"currentElement":{
+				"id":"urn:pearson:work:bf44530b-aba5-4935-a354-5c8f9e110647",
+				"type":"element-authoredtext",
+				"elementdata":{
+					"text":"weqwe"
+				},
+				"html":{
+					"text":"<p class=\"paragraphNumeroUno\">weqwe</p>"},
+				"versionUrn":"urn:pearson:work:bf44530b-aba5-4935-a354-5c8f9e110647",
+				"contentUrn":"urn:pearson:entity:614e9d2f-3146-4ff1-98ad-0ff1fcafa243"
+			},
+			"index":"0-0-0",
+			"element":{
+				"id":"urn:pearson:manifest:5e85f1d1-ee63-4652-ac9b-2edc84ff25b9",
+				"type":"showhide",
+				"schema":"http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+				"versionUrn":"urn:pearson:manifest:5e85f1d1-ee63-4652-ac9b-2edc84ff25b9",
+				"contentUrn":"urn:pearson:entity:9c723e06-5b17-4e2b-bb5e-fc29fc98cf24",
+				"status":"wip",
+				"interactivedata":{
+					"postertextobject":[
+						{
+						"id":"urn:pearson:work:bf126c89-c3be-496e-8dbf-98b1a31fd6f8",
+						"type":"element-authoredtext",
+						"schema":"http://schemas.pearson.com/wip-authoring/element/1",
+						"elementdata":{
+							"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+							"text":"Reveal Answer:"
+						},
+						"html":{
+							"text":"<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"},
+						"versionUrn":"urn:pearson:work:bf126c89-c3be-496e-8dbf-98b1a31fd6f8",
+						"contentUrn":"urn:pearson:entity:af943790-a88f-4d50-be93-60ef20141aa3"
+						}
+					],
+					"show":[
+						{
+						"id":"urn:pearson:work:bf44530b-aba5-4935-a354-5c8f9e110647",
+						"type":"element-authoredtext",
+						"schema":"http://schemas.pearson.com/wip-authoring/element/1",
+						"elementdata":{
+							"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+							"text":"weqwe"
+						},
+						"html":{
+							"text":"<p class=\"paragraphNumeroUno\">weqwe</p>"},
+						"versionUrn":"urn:pearson:work:bf44530b-aba5-4935-a354-5c8f9e110647",
+						"contentUrn":"urn:pearson:entity:614e9d2f-3146-4ff1-98ad-0ff1fcafa243"
+						}
+					],
+					"hide":[
+						{
+						"id":"urn:pearson:work:d9fc4be3-aaf7-41af-88fb-e45b21d8468c",
+						"type":"element-authoredtext",
+						"schema":"http://schemas.pearson.com/wip-authoring/element/1",
+						"elementdata":{
+							"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+							"text":""
+						},
+						"html":{
+							"text":"<p class=\"paragraphNumeroUno\"><br></p>"},
+						"versionUrn":"urn:pearson:work:d9fc4be3-aaf7-41af-88fb-e45b21d8468c",
+						"contentUrn":"urn:pearson:entity:6128c6c2-e28e-4059-afaa-4fe39afdc6da"
+						}
+					]
+				},
+				"grandParent":{}
+			},
+			"showHideType":"show"
+		}
 	}
 }
 

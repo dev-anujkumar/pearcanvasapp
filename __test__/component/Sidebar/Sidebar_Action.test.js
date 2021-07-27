@@ -248,6 +248,7 @@ const initialState19 = {
         tcmSnapshot:[{elemURN : "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5"},{elemURN : "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b4"}]
     }
 }
+
 describe('Test - Sidebar_Actions',()=>{
     describe('Test convertElement- paragraph', () => {
         let store = mockStore(() => initialState);
@@ -1128,7 +1129,6 @@ describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
         await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
     });
 });
-
 describe('1 Test convertElement ', () => {
   
     it('1.1 Test convertElement  Image ', () => {
@@ -1140,15 +1140,20 @@ describe('1 Test convertElement ', () => {
         spyconversionElement.mockClear()
         
     });
-    it('1.2 Test convertElement - codelisting Element ', () => {
+    it('1.2 Test convertElement - codelisting Element ', async () => {
+         const expectedRes = {
+            status: 200,
+            statusText: "",
+            data: testData.testcase9.oldElementData
+        }
         const { oldElementData, newElementData, oldElementInfo } = testData?.testcase9;
-        
-        let store = mockStore(() => initialState);
+        config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+        const storeMock = mockStore(() => initialState);
+        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
-        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
+        await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, storeMock, ["0","0","0","0"], "", {}));
         expect(spyconversionElement).toHaveBeenCalled()
-        spyconversionElement.mockClear()
-        
+        spyconversionElement.mockClear();
     });
     it('1.3 Test convertElement - Remove subtype key on conversion from BQ to P/H/LO ', () => {
         const { oldElementData, newElementData, oldElementInfo } = testData?.testcase10;
@@ -1179,10 +1184,62 @@ describe('1 Test convertElement ', () => {
     });
     it('1.5 Test convertElement - outputSubTypeEnum !== "DISC" ', () => {
         const { oldElementData, newElementData, oldElementInfo } = testData?.testcase11;
-        
+        const elementDiv3 = document.createElement('div');
+        elementDiv3.setAttribute("id", "cypress-0-0");
+        document.body.appendChild(elementDiv3);
+
+        jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+            return {querySelector: () => ({
+                querySelector: () => {
+                    return {"innerHTML":"world"};
+                }
+            })};
+        })
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
-        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",{index: "0-0"}));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+        
+    });
+    it('1.5.1 Test convertElement - Else Cases ', () => {
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase11;
+        const newElementData_1 = {...newElementData, startvalue: "1" }
+        const elementDiv3 = document.createElement('div');
+        elementDiv3.setAttribute("id", "cypress-0-0");
+        elementDiv3.setAttribute("innerHTML", oldElementData.html.text);
+        document.body.appendChild(elementDiv3);
+
+        jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+            return {querySelector: () => ({
+                querySelector: () => {
+                    return { "innerHTML": oldElementData.html.text };
+                }
+            })};
+        })
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData_1, oldElementInfo, store, ["0"], "",{index: "0-0"}));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+        
+    });
+    it('1.5.2 Test convertElement - Else Cases - editableDom, containerDom ', () => {
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase11;
+        const elementDiv3 = document.createElement('div');
+        elementDiv3.setAttribute("id", "cypress-0-0-0");
+        document.body.appendChild(elementDiv3);
+
+        jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+            return {querySelector: () => ({
+                querySelector: () => {
+                    return null;
+                }
+            })};
+        })
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",{index: "0-0"}));
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
         
@@ -1206,6 +1263,151 @@ describe('1 Test convertElement ', () => {
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
         
+    });
+    it('1.8 Test convertElement - oldElementData.subtype === "workedexample" ', () => {
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase15;
+        
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"],{ toolbar: ['insertMedia']},"")); 
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear();
+    });
+    describe('1.9 Test convertElement - oldElementData.subtype === "sidebar" ', () => {
+        it('1.9.1 case "SIDEBAR_02": ', () => {
+            const { oldElementData, newElementData, oldElementInfo } = testData?.testcase16;
+            config.elementStatus = { "urn:pearson:manifest:af90f8aa-8e6a-45cf-9692-0fae06ef4548": "approved" }
+            let store = mockStore(() => initialState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+            store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"],{ toolbar: ['insertMedia']},"")); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        it('1.9.2 case "SIDEBAR_03": ', () => {
+            const { oldElementData, newElementData, oldElementInfo } = testData?.testcase16;
+            const newElementData_3 = {...newElementData, "secondaryOption":"secondary-aside-sb3",}
+            let store = mockStore(() => initialState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+            store.dispatch(sidebarAction.convertElement(oldElementData, newElementData_3, oldElementInfo, store, ["0"],{ toolbar: ['insertMedia']},"")); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        it('1.9.2 case "SIDEBAR_04": ', () => {
+            const { oldElementData, newElementData, oldElementInfo } = testData?.testcase16;
+            const newElementData_4 = {...newElementData, "secondaryOption":"secondary-aside-sb4",}
+            let store = mockStore(() => initialState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+            store.dispatch(sidebarAction.convertElement(oldElementData, newElementData_4, oldElementInfo, store, ["0"],{ toolbar: ['insertMedia']},"")); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        it('1.9.2 case "SIDEBAR_05": ', () => {
+            const { oldElementData, newElementData, oldElementInfo } = testData?.testcase16;
+            const newElementData_5 = {...newElementData, "secondaryOption":"secondary-aside-sb5",}
+            let store = mockStore(() => initialState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+            store.dispatch(sidebarAction.convertElement(oldElementData, newElementData_5, oldElementInfo, store, ["0"],{ toolbar: ['insertMedia']},"")); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        it('1.9.2 case "SIDEBAR_01": ', () => {
+            const { oldElementData, newElementData, oldElementInfo } = testData?.testcase16;
+            const newElementData_1 = {...newElementData, "secondaryOption":"secondary-aside-sb1",}
+            let store = mockStore(() => initialState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+            store.dispatch(sidebarAction.convertElement(oldElementData, newElementData_1, oldElementInfo, store, ["0"],{ toolbar: ['insertMedia']},"")); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+    });
+    describe('1.10 Test convertElement - Update showhide inner elements ', () => {
+        const expectedRes = {
+            status: 200,
+            statusText: "",
+            data: testData.testcase17.oldElementData
+        }
+        it('1.10.1 if (showHideObj) ', async () => {         
+            const { oldElementData, newElementData, oldElementInfo, store, showHideObj } = testData?.testcase17;
+            config.slateManifestURN = "urn:pearson:manifest:c981f32b-7a2d-4a73-ae33-51ac40ad9fb4";
+            let store_1 = mockStore(() => initialState);
+            axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+            const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+            await store_1.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0","0","0"], "", showHideObj));
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+            
+        });
+        it('1.10.2 Test  appStore.parentUrn.elementType === "group" ', async () => {
+            config.isPopupSlate = true;
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const { initState, store, showHideObj } = testData?.testcase1;
+            const { oldElementData, newElementData, oldElementInfo } = testData?.testcase17;
+            const storeMock = mockStore(() => initState);
+            axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+            const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+            await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0","0","0"], "", showHideObj));
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        xdescribe('1.10.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
+            it('1.10.3.1 indexes.length === 4 ', async () => {
+                const { initState, store, showHideObj } = testData?.testcase2;
+                const { oldElementData, newElementData, oldElementInfo } = testData?.testcase17;
+                config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+                const storeMock = mockStore(() => initState);
+                axios.post.mockImplementation(() => Promise.resolve(newExpectedRes));
+                const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+                await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0","0","0","0"], "", showHideObj));
+                expect(spyconversionElement).toHaveBeenCalled()
+                spyconversionElement.mockClear()
+            });
+            it('1.10.3.2 indexes.length === 5 ', async () => {
+                const { initState, store, showHideObj } = testData?.testcase2;
+                const { oldElementData, newElementData, oldElementInfo } = testData?.testcase17;
+                config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+                const storeMock = mockStore(() => initState);
+                axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+                const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+                await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0","0","0","2","0"], "", showHideObj));
+                expect(spyconversionElement).toHaveBeenCalled()
+                spyconversionElement.mockClear()
+            });
+        });
+        describe('1.10.4 indexes.forEach(index => {  ', () => {
+            it('1.10.4.1 bodymatter[index] else case ', async () => {
+                const { initState, store, showHideObj } = testData?.testcase3;
+                const { oldElementData, newElementData, oldElementInfo } = testData?.testcase17;
+                config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+                const storeMock = mockStore(() => initState);
+                axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+                const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+                await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0","0","0","2","0"], "", showHideObj));
+                expect(spyconversionElement).toHaveBeenCalled()
+                spyconversionElement.mockClear()
+            });
+            it('1.10.4.2 elementData.elementId !== bodymatter[index].id ', async () => {
+                const { initState, store, showHideObj } = testData?.testcase4;
+                const { oldElementData, newElementData, oldElementInfo } = testData?.testcase17;
+                config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+                const storeMock = mockStore(() => initState);
+                axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+                const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+                await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0","0","0","2","0"], "", showHideObj));
+                expect(spyconversionElement).toHaveBeenCalled()
+                spyconversionElement.mockClear()
+            });
+            it('1.10.4.3 else ', async () => {
+                const { initState, store, showHideObj } = testData?.testcase5;
+                const { oldElementData, newElementData, oldElementInfo } = testData?.testcase17;
+                config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+                const storeMock = mockStore(() => initState);
+                axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+                const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+                await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0","0","0","2","0"], "", showHideObj));
+                expect(spyconversionElement).toHaveBeenCalled()
+                spyconversionElement.mockClear()
+            });
+        });
     });
 });
 describe('2 Test handleElementConversion  ', () => {

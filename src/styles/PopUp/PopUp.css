@@ -628,12 +628,6 @@ del{
   color: gray !important;
 }
 
-/* added css for callout, footnotes, asset popover color in the popup */
-.calloutOne ins, .calloutTwo ins, .calloutThree ins, .calloutFour ins {
-  color: #a38e86 !important;
-  text-decoration: underline dotted !important
-} 
-
 a.paragraphNumeroUnoFootnote ins{
   text-decoration-line: line !important;
   color: #F56831 !important;
@@ -670,4 +664,66 @@ span.answerLineContent{
 ins.mod{
   background: rgb(251, 188, 72) !important;
   color: rgb(121, 121, 121);
+}
+
+/* added css for callout, Glossary in tCM after accepted changes */
+
+.modal-content.tcm-canvas-popup dfn.DeactivateTerm{
+  color: #007FA3 !important;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+.modal-content.tcm-canvas-popup dfn.GlossaryTerm .mod{
+    text-decoration-line: underline !important;
+    text-decoration-style: wavy !important;
+    text-decoration-color: #eb6f13 !important;
+    color: #eb6f13;
+    background-color: transparent !important;
+}
+.modal-content.tcm-canvas-popup 
+span.calloutOne.DeactivateAsset, span.calloutTwo.DeactivateAsset, 
+span.calloutThree.DeactivateAsset, 
+span.calloutFour.DeactivateAsset{
+  color: #007FA3 !important;
+    text-decoration: underline dotted #007FA3 !important;
+}
+.modal-content.tcm-canvas-popup 
+span.calloutOne, 
+span.calloutOne > ins.diffins, 
+span.calloutOne > ins.diffmod{
+  text-decoration-line: none;
+    color: #F56831;
+    text-decoration: underline dotted #F56831;
+    position: relative;
+    background: rgb(251, 188, 72);
+}
+.modal-content.tcm-canvas-popup 
+span.calloutTwo, 
+span.calloutTwo > ins.diffins, 
+span.calloutTwo > ins.diffmod{
+  text-decoration-line: none;
+    color: #F56831;
+    text-decoration: underline dotted #F56831;
+    position: relative;
+    background: rgb(251, 188, 72);
+}
+.modal-content.tcm-canvas-popup 
+span.calloutThree, 
+span.calloutThree > ins.diffins, 
+span.calloutThree > ins.diffmod{
+  text-decoration-line: none;
+    color: #F56831;
+    text-decoration: underline dotted #F56831;
+    position: relative;
+    background: rgb(251, 188, 72);
+}
+.modal-content.tcm-canvas-popup 
+span.calloutFour, 
+span.calloutFour > ins.diffins, 
+span.calloutFour > ins.diffmod{
+  text-decoration-line: none;
+    color: #F56831;
+    text-decoration: underline dotted #F56831;
+    position: relative;
+    background: rgb(251, 188, 72);
 }
