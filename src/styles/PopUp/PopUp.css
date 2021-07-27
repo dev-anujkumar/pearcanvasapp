@@ -537,6 +537,9 @@ overflow: unset;
   .modal-content.tcm-canvas-popup{
     left: -42%;
   }
+  .dialog-window.tcm-canvas-popup{
+    max-height: 270px !important;
+  }
 }
 .tcmIcon{
   padding: 2px !important;
