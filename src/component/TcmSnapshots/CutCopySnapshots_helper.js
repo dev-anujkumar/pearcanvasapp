@@ -24,15 +24,15 @@ export const preparePayloadData = (pasteParams) => {
     } = pasteParams
     let payload = {
         "elementUrn": elementId,
-        "elementEntityUrn": selection.element.contentUrn,
+        "elementEntityUrn": selection?.element?.contentUrn,
         "type": elementType,
         "elementTag": elementTag[elementType],
         "projectUrn": projectUrn,
-        "sourceSlateUrn": selection.sourceSlateManifestUrn,
-        "sourceSlateEntityUrn": selection.sourceSlateEntityUrn,
+        "sourceSlateUrn": selection?.sourceSlateManifestUrn,
+        "sourceSlateEntityUrn": selection?.sourceSlateEntityUrn,
         "operationType": "cut",//copy
         "typeOfElement": "container",//narrative
-        "sourceElementIndex": selection.sourceElementIndex?.toString(),
+        "sourceElementIndex": selection?.sourceElementIndex?.toString(),
         "destinationSlateUrn": destnSlateManifestURN,
         "destinationSlateEntityUrn": destnSlateEntityURN
     }
@@ -42,12 +42,12 @@ export const preparePayloadData = (pasteParams) => {
     if (asideData) {
         payload["destinationContainer"] = { //optional
             "type": asideData.type,
-            "versionUrn": asideData.id,
-            "entityUrn": asideData.contentUrn,
+            "versionUrn": asideData?.id,
+            "entityUrn": asideData?.contentUrn,
             "hasChild": asideData.id !== parentUrn.manifestUrn ? true : false, //SB/Col1/2/3
-            "childType": parentUrn.elementType,
-            "childVersionUrn": parentUrn.manifestUrn,
-            "childEntityUrn": parentUrn.contentUrn,//optional,
+            "childType": parentUrn?.elementType,
+            "childVersionUrn": parentUrn?.manifestUrn,
+            "childEntityUrn": parentUrn?.contentUrn,//optional,
         }
         if (asideData?.parent) {
             const { id, columnId, type, columnName, parentContentUrn, columnContentUrn } = asideData.parent
@@ -70,6 +70,7 @@ export const preparePayloadData = (pasteParams) => {
         const elementTagPrefix = prepareTagPrefix(tagPrefixParams)
         payload["destinationContainer"]["ContainerTag"] = elementTagPrefix
     }
+    //This console will be removed in future
     console.log('from cutcopysnapshots request payload ', payload)
     return JSON.parse(JSON.stringify(payload));
 }
