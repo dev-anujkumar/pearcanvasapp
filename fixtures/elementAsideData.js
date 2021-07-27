@@ -434,7 +434,7 @@ export const elementAside =
     "contentUrn": "urn:pearson:entity:b4cbda8f-7a22-4df5-965a-18623a581ec1",
     "versionUrn": "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec"
 }
-export const  element = {
+export const  element = [{
 	"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
 	"type": "element-authoredtext",
 	"subtype": "",
@@ -450,7 +450,7 @@ export const  element = {
 	"tcm": true,
 	"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
 	"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-}
+}]
 
 export const section = 
 	{

@@ -20,7 +20,7 @@ export const InputSearch = (props) => {
             className={searchClass}
             id={searchId}
             type="text"
-            maxlength = {maxInputLimit}
+            maxLength = {maxInputLimit}
             value={searchValue}
             onChange={handleChange}
             placeholder={placeholderText}

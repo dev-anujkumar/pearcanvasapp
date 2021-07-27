@@ -216,6 +216,8 @@ describe('Testing communication channel', () => {
         getSlateLockStatus: jest.fn(),
         withinLockPeriod: true,
         updateElement: jest.fn(),
+        currentSlateLOMath:jest.fn(),
+        getAllSlatesData:jest.fn(),
         currentSlateLOData: {
             id: 1,
             loUrn: "123",
@@ -465,6 +467,8 @@ describe('Testing communication channel', () => {
             logout: function () { },
             publishContent: jest.fn(),
             fetchAudioNarrationForContainer: jest.fn(),
+            currentSlateLOMath:jest.fn(),
+            getAllSlatesData:jest.fn(),
             introObject: {
                 isCO: false,
                 introSlate: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29"
@@ -497,6 +501,8 @@ describe('Testing communication channel', () => {
             logout: function () { },
             publishContent: jest.fn(),
             fetchAudioNarrationForContainer: jest.fn(),
+            currentSlateLOMath:jest.fn(),
+            getAllSlatesData:jest.fn(),
             introObject: {
                 isCO: false,
                 introSlate: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29"
@@ -933,6 +939,43 @@ describe('Testing communication channel', () => {
         let event = {
             data: {
                 type: "trackChanges",
+                message: ""
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    xtest('Test Case for onTOCHamburgerClick',()=>{
+        let listWrapper=document.querySelector = () => {
+            return {
+                querySelector: () => {
+                    return {}
+                }
+            }
+        }
+        listWrapper.querySelector=()=>{
+            return{
+                
+            }   
+             }
+        let event = {
+            data: {
+                type: "onTOCHamburgerClick",
+                message: ""
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+
+    })
+    xtest('Test for fetchAllSlateDataFromWrapper case', () => {
+        let event = {
+            data: {
+                type: "fetchAllSlateDataFromWrapper",
                 message: ""
             }
         }
