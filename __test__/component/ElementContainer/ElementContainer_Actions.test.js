@@ -16,11 +16,15 @@ const mockStore = configureMockStore(middlewares);
 global.document = (new JSDOM()).window.Element;
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
-    hasReviewerRole: jest.fn()
+    hasReviewerRole: jest.fn(),
+    getLabelNumberTitleHTML: jest.fn()
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
     tcmSnapshotsForUpdate: jest.fn(),
-    fetchElementWipData: jest.fn()
+    fetchElementWipData: jest.fn(),
+    fetchManifestStatus: jest.fn(),
+    prepareSnapshots_ShowHide: jest.fn(),
+    tcmSnapshotsForCreate: jest.fn()
 }))
 jest.mock('../../../src/component/ElementContainer/ElementContainerDelete_helpers.js', () => ({
     tcmSnapshotsForDelete: jest.fn(),

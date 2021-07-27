@@ -101,7 +101,6 @@ describe('Testing Button component with props', () => {
     })
     it('render Section break element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.SECTION_BREAK_ELEMENT} />);
-        console.log("this is component button functionality---",component.debug());
         expect(component.find('span.btn-element').hasClass('section-break-elem')).toBe(true);;
         expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(false);
         expect(component.find('svg#sectionBreakElement').exists()).toBe(true);
