@@ -2084,8 +2084,7 @@ ElementContainer.defaultProps = {
 
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
-    element: PropTypes.object,
-    elemBorderToggle: PropTypes.bool
+    element: PropTypes.object
 }
 
 const mapDispatchToProps = (dispatch) => {
