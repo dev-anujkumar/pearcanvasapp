@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import ElementFigure from '../../../src/component/ElementFigure/ElementFigure';
-import { figureImage50TextElementDefault,figureImage50TextElementWithData, mathmlEditorDefault, mathmlEditorWithData,mathImage50TextElementDefault, blockCodeEditorDefault,blockCodeEditorWithData, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData } from '../../../fixtures/ElementFigureTestingData.js'
+import { figureImage50TextElementDefault,figureImage50TextElementWithData, mathmlEditorDefault, mathmlEditorWithData,mathImage50TextElementDefault, blockCodeEditorDefault,blockCodeEditorWithData, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,figureTableEditorTextWidthElementDefault } from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
@@ -70,6 +70,38 @@ describe('Testing Figure element component', () => {
         elementFigure.update();
         expect(spyrenderFigureType).toHaveBeenCalledWith(figureImage50TextElementWithData) 
         spyrenderFigureType.mockClear()
+    })
+    describe('Testing alfrescoSiteUrl', () => {
+        let props = {
+            model:figureImage50TextElementWithData,
+            index:"" ,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick : ()=>{},
+            handleFocus: function(){},
+            permissions: ['add_multimedia_via_alfresco'],
+        }
+        test('Testing updateAlfrescoSiteUrl if condition', () => {
+            let elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider>)
+            const elementFigureInstance = elementFigure.find('ElementFigure').instance();
+            elementFigureInstance.setState({ alfrescoSiteData: {
+                title: 'test'
+            }});
+            elementFigureInstance.updateAlfrescoSiteUrl();
+            expect(elementFigureInstance.state.alfrescoSite).toBe('test')
+        })
+        test('Testing updateAlfrescoSiteUrl else condition', () => {
+            let elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider>)
+            const elementFigureInstance = elementFigure.find('ElementFigure').instance();
+            elementFigureInstance.setState({ alfrescoSiteData: {
+                title: null
+            }});
+            elementFigureInstance.updateAlfrescoSiteUrl();
+            let defaultSite = config.alfrescoMetaData?.alfresco?.repositoryFolder || config.alfrescoMetaData?.alfresco?.title
+            expect(elementFigureInstance.state.alfrescoSite).toBe(defaultSite)
+        })
     })
     describe('With figure image element', () => {
         let props = {
