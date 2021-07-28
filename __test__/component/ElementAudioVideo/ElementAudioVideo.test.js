@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import ElementAudioVideo from '../../../src/component/ElementAudioVideo/ElementAudioVideo';
 import config from '../../../src/config/config';
-import { audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault } from '../../../fixtures/ElementAudioVideoTestingData.js'
+import { audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault, audioData, audioData1, newAlfrescoData, videoSmartLinksData, newVideoData, smartLinkAudio } from '../../../fixtures/ElementAudioVideoTestingData.js'
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
@@ -21,7 +21,7 @@ jest.mock('../../../src/constants/utility.js', () => {
             return jest.fn()
         },
         hasReviewerRole: () => {
-            return jest.fn()
+            return false
         },
         sendDataToIframe: () => {
             return jest.fn()
@@ -189,6 +189,22 @@ describe('Testing Element Audio-Video component', () => {
             handleBlur: jest.fn(),
             handleFocus: jest.fn(),
             accessDenied: jest.fn(),
+            model:{
+                figuredata:{
+                    "schema":"http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio",
+                    "audioid":"urn:pearson:alfresco:df4e2218-7bab-4b65-bd14-214ab558a3df",
+                    "posterimage":{
+                       "imageid":"urn:pearson:alfresco:df4e2218-7bab-4b65-bd14-214ab558a3df"
+                    },
+                    "srctype":"externallink",
+                    "audio":{
+                       "path":"https://cite-media-stg.pearson.com/legacy_paths/df4e2218-7bab-4b65-bd14-214ab558a3df/media60feb1130ea34.mp3",
+                       "format":"audio/mpeg",
+                       "charAt":0
+                    }
+                 }
+            }
+            
         };
         const event = {
             target: {
@@ -225,11 +241,17 @@ describe('Testing Element Audio-Video component', () => {
             userApprover: null,
             userApproverFullName: null,
             userCount: 0,
-            'x-prsn-user-id': " ",
+            'x-prsn-user-id': " "
         }
         const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>);
         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
         it('handleC2MediaClick-default case', () => {
+            const event = {
+                target:{
+                    tagName: "p"
+                },
+                stopPropagation() { }
+            }
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick')
             elementAudioVideoInstance.handleC2MediaClick(event);
             elementAudioVideoInstance.forceUpdate();
@@ -249,7 +271,25 @@ describe('Testing Element Audio-Video component', () => {
                     "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
                     "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-                ]
+                ],
+                model:{
+                    figuredata:{
+                    "schema":"http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+                    "height":"399",
+                    "width":"600",
+                    "videoid":"",
+                    "posterimage":{
+                       "path":"https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png",
+                       "imageid":""
+                    },
+                    "videos":[
+                       {
+                          "path":"",
+                          "charAt":0
+                       }
+                    ]
+                 }
+                }
             };
 
             const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
@@ -280,6 +320,21 @@ describe('Testing Element Audio-Video component', () => {
                 handleFocus: function () { },
                 permissions: [],
                 accessDenied: jest.fn(),
+                model:{
+                    figuredata:{
+                        "schema":"http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio",
+                        "audioid":"urn:pearson:alfresco:df4e2218-7bab-4b65-bd14-214ab558a3df",
+                        "posterimage":{
+                           "imageid":"urn:pearson:alfresco:df4e2218-7bab-4b65-bd14-214ab558a3df"
+                        },
+                        "srctype":"externallink",
+                        "audio":{
+                           "path":"https://cite-media-stg.pearson.com/legacy_paths/df4e2218-7bab-4b65-bd14-214ab558a3df/media60feb1130ea34.mp3",
+                           "format":"audio/mpeg",
+                           "charAt":0
+                        }
+                     }
+                }
             };
 
             const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
@@ -289,9 +344,6 @@ describe('Testing Element Audio-Video component', () => {
                 target: { tagName: 'b' },
 
             }
-            elementAudioVideoInstance.setState({
-                projectMetadata: alfrescoPath
-            })
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideo.update();
 
@@ -314,6 +366,21 @@ describe('Testing Element Audio-Video component', () => {
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
                 ],
                 accessDenied: jest.fn(),
+                model:{
+                    figuredata:{
+                        "schema":"http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio",
+                        "audioid":"urn:pearson:alfresco:df4e2218-7bab-4b65-bd14-214ab558a3df",
+                        "posterimage":{
+                           "imageid":"urn:pearson:alfresco:df4e2218-7bab-4b65-bd14-214ab558a3df"
+                        },
+                        "srctype":"externallink",
+                        "audio":{
+                           "path":"https://cite-media-stg.pearson.com/legacy_paths/df4e2218-7bab-4b65-bd14-214ab558a3df/media60feb1130ea34.mp3",
+                           "format":"audio/mpeg",
+                           "charAt":0
+                        }
+                     }
+                }
             };
             config.alfrescoMetaData = {}
             const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
@@ -342,8 +409,8 @@ describe('Testing Element Audio-Video component', () => {
                 handleFocus: function () { },
                 permissions: [],
                 accessDenied: jest.fn(),
+                model:{}
             };
-            config.alfrescoMetaData = {}
             const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick')
@@ -361,14 +428,15 @@ describe('Testing Element Audio-Video component', () => {
             spyhandleC2MediaClick.mockClear()
         })
     })
-    xdescribe('Testing dataFromAlfresco function', () => {
+    describe('Testing dataFromAlfresco function', () => {
         let alfrescoPath = {
             alfresco: {
-                nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
                 repositoryFolder: "001_C5 Media POC - AWS US ",
                 repositoryName: "AWS US",
                 repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
                 visibility: "MODERATED",
+                title:'',
+                name:''
             },
             associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
             authorName: "Krajewski",
@@ -410,6 +478,7 @@ describe('Testing Element Audio-Video component', () => {
             handleBlur: jest.fn(),
             handleFocus: jest.fn(),
             accessDenied: jest.fn(),
+            isCiteChanged:true
         };
         let sampleAltTextDiv = document.createElement('at')
         sampleAltTextDiv.setAttribute('name', 'alt_text');
@@ -426,106 +495,86 @@ describe('Testing Element Audio-Video component', () => {
         const spydataFromAlfresco = jest.spyOn(elementAudioVideoInstance, 'dataFromAlfresco')
         const defaultPath = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         it('Test- if case workflow', () => {
-            let data = {
-                'assetType': "video",
-                'epsUrl': "",
-                'alt-text': "ält-text",
-                'longDescription': "longDescription",
-                properties: {
-
-                }
-            }
             config.alfrescoMetaData = alfrescoPath
-            elementAudioVideoInstance.dataFromAlfresco(data)
+            elementAudioVideoInstance.dataFromAlfresco(audioData1)
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideo.update();
             expect(spydataFromAlfresco).toHaveBeenCalled()
-            expect(elementAudioVideoInstance.state.imgSrc).toBe(defaultPath)
+            expect(elementAudioVideoInstance.state.imgSrc).toBe('https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3')
             spydataFromAlfresco.mockClear()
         })
         it('Test- if case workflow-  epsURL given, clipinfo given-English subtitles', () => {
-            let data = {
-                'assetType': "video",
-                epsUrl: "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png",
-                'alt-text': "ält-text",
-                'longDescription': "longDescription",
-                smartLinkURl: "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4",
-                clipinfo: {
-                    description: "Desc1",
-                    duration: "00:00:10",
-                    end: "00:00:10",
-                    id: "ClipID1",
-                    start: "00:00:00"
+            let data = newAlfrescoData
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(data)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow-  no publicationUrl ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(audioData)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow-  with viedo smartLinks ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(videoSmartLinksData)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow-  with viedo avs:jsonString filed else case ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(newVideoData)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementAudioVideoInstance.state.imgSrc).toBe(newVideoData.epsUrl)
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow-  with smartlink audio ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(smartLinkAudio)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementAudioVideoInstance.state.imgSrc).toBe(smartLinkAudio.epsUrl)
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow- switch case audio ', () => {
+            let props = {
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
                 },
-                subtitle: "https://mediaplayer.pearsoncmg.com/assets/_pmd.true/buildingDino2?mimeType=vtt&lang=en",
-            }
-
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions: [
+                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+                ],
+                model: audioElementTypeSLWithData,
+                updateFigureData: jest.fn(),
+                handleBlur: jest.fn(),
+                handleFocus: jest.fn(),
+                accessDenied: jest.fn(),
+                isCiteChanged:true
+            };
+            const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
+            let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+            const spydataFromAlfresco = jest.spyOn(elementAudioVideoInstance, 'dataFromAlfresco')
             elementAudioVideoInstance.forceUpdate();
-            elementAudioVideoInstance.dataFromAlfresco(data)
-            elementAudioVideoInstance.forceUpdate();
-            elementAudioVideo.update();
-            expect(spydataFromAlfresco).toHaveBeenCalled()
-            expect(elementAudioVideoInstance.state.imgSrc).toBe(data.epsUrl)
-            spydataFromAlfresco.mockClear()
-        })
-        it('Test- if case workflow-  epsURL given, clipinfo given-French subtitles', () => {
-            let data = {
-                'assetType': "video",
-                epsUrl: "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png",
-                'alt-text': "ält-text",
-                'longDescription': "longDescription",
-                smartLinkURl: "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4",
-                clipinfo: {
-                    description: "",
-                    duration: "",
-                    end: "",
-                    id: "",
-                    start: ""
-                },
-                frenchsubtitle: "https://mediaplayer.pearsoncmg.com/assets/_pmd.true/buildingDino2?mimeType=vtt&lang=fr",
-                req: {
-                    url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
-                }
-            }
-
-            elementAudioVideoInstance.forceUpdate();
-            elementAudioVideoInstance.dataFromAlfresco(data)
+            elementAudioVideoInstance.dataFromAlfresco(smartLinkAudio)
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideo.update();
             expect(spydataFromAlfresco).toHaveBeenCalled()
-            expect(elementAudioVideoInstance.state.imgSrc).toBe(data.epsUrl)
-            spydataFromAlfresco.mockClear()
-        })
-        it('Test- if case workflow-  epsURL given and without clipinfo', () => {
-            let data = {
-                'assetType': "audio",
-                epsUrl: "",
-                'alt-text': "ält-text",
-                'longDescription': "longDescription",
-                smartLinkURl: "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4",
-                clipinfo: false
-            }
-
-            elementAudioVideoInstance.forceUpdate();
-            elementAudioVideoInstance.dataFromAlfresco(data)
-            elementAudioVideoInstance.forceUpdate();
-            elementAudioVideo.update();
-            expect(spydataFromAlfresco).toHaveBeenCalled()
-            expect(elementAudioVideoInstance.state.imgSrc).toBe(data.epsUrl)
-            spydataFromAlfresco.mockClear()
-        })
-        it('Test- else case workflow', () => {
-            let data = {
-                'assetType': "figure",
-                'epsUrl': "",
-                'alt-text': "ält-text",
-                'longDescription': "longDescription",
-            }
-            elementAudioVideoInstance.forceUpdate();
-            elementAudioVideoInstance.dataFromAlfresco(data)
-            elementAudioVideoInstance.forceUpdate();
-            elementAudioVideo.update();
-            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementAudioVideoInstance.state.imgSrc).toBe(smartLinkAudio.epsUrl)
             spydataFromAlfresco.mockClear()
         })
 
