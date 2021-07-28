@@ -730,3 +730,15 @@ span.calloutFour > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
+
+/* added css for list elements */
+li ol, li ul{
+  counter-reset: section !important;
+}
+ol li.listItemNumeroUnoNumber, 
+ol li.listItemNumeroUnoUpperAlpha, 
+ol li.listItemNumeroUnoLowerAlpha, 
+ol li.listItemNumeroUnoUpperRoman, 
+ol li.listItemNumeroUnoLowerRoman {
+  list-style-type: none !important
+}
