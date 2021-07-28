@@ -2,12 +2,12 @@ import React from 'react';
 import { SHOW_HIDE } from '../../../constants/Element_Constants.js';
 import ElementContainer from '../../ElementContainer/ElementContainer.jsx';
 import { ElementSaprator } from '../../ElementSaprator/ElementSaprator.jsx';
-import { showHideConstants } from '../ShowHide_Helper';
+import { addElementInShowHide, showHideConstants } from '../ShowHide_Helper';
 import SortElement from './SortElement.jsx';
 
 const ShowHideUiBlock = (props) => {
 	const { index, parentUrn, asideData, element, addNestedElements,
-			sepratorIndex, sectionType, onSortUpdate } = props || {};
+			sepratorIndex, sectionType, onSortUpdate, showDiscussion, showPlayscript } = props || {};
 	/** @description sectionHeading - get the heading of section of showhide */
 	const sectionHeading = sectionType === showHideConstants.SHOW ? "Show" : "Hide";
 
@@ -47,7 +47,8 @@ const ShowHideUiBlock = (props) => {
 			grandParent: {
 				asideData,
 				parentUrn
-			}
+			},
+			sectionType
 		}
 		return <ElementSaprator
 			index = {i}
@@ -61,6 +62,12 @@ const ShowHideUiBlock = (props) => {
 			pasteElement = {props.pasteElement}
 			source={SHOW_HIDE}
 			elementSelection = {props?.elementSelection}
+			splithandlerfunction = {addElementInShowHide}
+			sectionType = {sectionType}
+			createShowHideElement = {props?.createShowHideElement}
+			element = {props?.element}
+			showPlayscript = {showPlayscript}
+			showDiscussion = {showDiscussion}
 		/>
 	}
 
@@ -77,7 +84,8 @@ const ShowHideUiBlock = (props) => {
 			grandParent: {
 				asideData,
 				parentUrn
-			}
+			},
+			sectionType
 		}
 		const shParentUrn = {
 			contentUrn: element.contentUrn,
@@ -97,8 +105,6 @@ const ShowHideUiBlock = (props) => {
 			parentElement = {element}
 			onListSelect = {props.onListSelect}
 			userRole = {props.userRole}
-			//elementSepratorProps = {props.elementSepratorProps}
-			//splithandlerfunction = {props.splithandlerfunction}
 			pasteElement = {props.pasteElement}
 			showHideType = {sectionType}
 			handleFocus = {props.handleFocus}
