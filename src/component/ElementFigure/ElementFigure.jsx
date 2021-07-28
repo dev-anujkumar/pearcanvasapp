@@ -221,7 +221,8 @@ class ElementFigure extends Component {
             elementId : this.props.elementId,
             currentProjectId: config.projectUrn,
             slateEntityUrn: config.slateEntityURN,
-            parentEntityUrn: this.props.parentEntityUrn
+            parentEntityUrn: this.props.parentEntityUrn,
+            sectionType: this.props?.asideData?.sectionType || null
         }
         let tableConfig = {
             S3MathImagePath: config.S3MathImagePath ? config.S3MathImagePath : "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/",
