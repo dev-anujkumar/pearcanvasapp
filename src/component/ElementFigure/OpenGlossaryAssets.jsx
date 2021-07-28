@@ -14,13 +14,15 @@ class OpenGlossaryAssets extends Component {
 
     constructor(props) {
         super(props);
-        this.state ={
+        this.state = {
             replaceAudioToggle: false,
             replaceImageToggle: false,
             tabValue: "",
             figureGlossaryData: {},
-            audioGlossaryData: {}
+            audioGlossaryData: {},
+            positionOfPopup: {}
         }
+        this.wrapperRef = React.createRef();
     }
 
     /**
@@ -38,7 +40,7 @@ class OpenGlossaryAssets extends Component {
     }
 
     componentDidMount() {
-        document.addEventListener('mousedown', this.handleClick, false);
+        document.addEventListener('mousedown', this.handleClickOutside);
         let {  figureGlossaryData, audioGlossaryData } = this.props;
         
         if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {
@@ -52,7 +54,25 @@ class OpenGlossaryAssets extends Component {
                 figureGlossaryData: figureGlossaryData
             });
         }
+        // for 100% zoom position popup set position
+        if (window && window.innerWidth === 1280 && parseInt(this.props.position.left) > 320) {
+            this.setState({
+                positionOfPopup: {
+                    left: "300px",
+                    top: this.props.position.top
+                }
+            })
+        } else {
+            this.setState({
+                positionOfPopup: this.props.position
+            })
+        }
     }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
 
     static getDerivedStateFromProps(nextProps, state) {
         if ((nextProps.figureGlossaryData !== state.figureGlossaryData) && Object.keys(nextProps.audioGlossaryData).length === 0 && Object.keys(nextProps.figureGlossaryData).length > 0) {
@@ -77,14 +97,12 @@ class OpenGlossaryAssets extends Component {
     }
 
     /**
-    * @description - handleClick function responsible for closing the dropdown whenever clicked outside.
+    * @description - handleClickOutside function responsible for closing the dropdown whenever clicked outside.
     */
-    handleClick = (e) => {
-        // console.log("handleclickkkkkkkkkkkkkkkkkkk " + this.node);
-        if (this.node.contains(e.target)) {
-            return;
+    handleClickOutside = (event) => {
+        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+            this.props.closeAssetsPopup();
         }
-        this.props.closeAssetsPopup();
     }
 
     handleReplaceAudioButton = () => {
@@ -118,8 +136,7 @@ class OpenGlossaryAssets extends Component {
       }
 
     render = () => {
-        const { position } = this.props;
-        let { tabValue, replaceAudioToggle, replaceImageToggle, figureGlossaryData, audioGlossaryData } = this.state;
+        let { tabValue, replaceAudioToggle, replaceImageToggle, figureGlossaryData, audioGlossaryData, positionOfPopup } = this.state;
         let imageMediaSrc, imageMediaTitle, audioMediaSrc, audioMediaTitle = "";
         
         if (figureGlossaryData && Object.keys(figureGlossaryData).length > 0) {
@@ -132,7 +149,7 @@ class OpenGlossaryAssets extends Component {
         }
         
         return (
-            <div className={'glossary-figuredropdown'} style={position} id='openFigureGlossary' ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
+            <div className={'glossary-figuredropdown'} style={positionOfPopup} id='openFigureGlossary' ref = {this.wrapperRef} onBlur={() => this.handleClick(this)}>
                 <div className="tabs-container">
                     <div className="audio-image-tab">
                         {

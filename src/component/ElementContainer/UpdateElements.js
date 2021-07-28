@@ -104,7 +104,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     return data
 }
 
-const podHtmlmatchWithRegex = (html) => {
+export const podHtmlmatchWithRegex = (html) => {
     let printValue = html && html.match(/print/g) ? true : false
     return printValue;
 }

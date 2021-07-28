@@ -1,3 +1,14 @@
+const elementData = {
+	"elementType":"figure",
+	"primaryOption":"primary-blockcode-equation",
+	"secondaryOption":"secondary-blockcode-language-default"
+}
+const activeElement = { 
+	"elementType":"figure",
+	"primaryOption":"primary-blockcode-equation",
+	"secondaryOption":"secondary-blockcode-language-default",
+}
+
 export default {
 	testcase1: {
 		initState: {
@@ -92,8 +103,8 @@ export default {
 				"pageLimit":25
 			}
 		},
-		elementData: {},
-		activeElement: { index: "0-0-0" },
+		elementData: {...elementData},
+		activeElement: { index: "0-0-0",...activeElement },
 		fromToolbar: {},
 		showHideObj: undefined
 	},
@@ -471,8 +482,8 @@ export default {
 				"pageLimit":25
 			}
 		},
-		elementData: {},
-		activeElement: { index: "0-0-0-0" },
+		elementData: {...elementData},
+		activeElement: { index: "0-0-0-0",...activeElement },
 		fromToolbar: {},
 		showHideObj: undefined
 	},
@@ -499,8 +510,8 @@ export default {
 				"pageLimit":25
 			}
 		},
-		elementData: {},
-		activeElement: { index: "0" },
+		elementData: {...elementData},
+		activeElement: { index: "0",...activeElement },
 		fromToolbar: {},
 		showHideObj: undefined
 	},
@@ -529,8 +540,8 @@ export default {
 				"pageLimit":25
 			}
 		},
-		elementData: { elementId: "urn:pearson:entity:e719e981-17af-48b6-b94c-c5cac5a3f400"},
-		activeElement: { index: "0" },
+		elementData: { elementId: "urn:pearson:entity:e719e981-17af-48b6-b94c-c5cac5a3f400",...elementData},
+		activeElement: { index: "0",...activeElement },
 		fromToolbar: {},
 		showHideObj: undefined
 	},
@@ -601,8 +612,8 @@ export default {
 				"pageLimit":25
 			}
 		},
-		elementData: {},
-		activeElement: { index: "0-0-0-0" },
+		elementData: {...elementData},
+		activeElement: { index: "0-0-0-0",...activeElement },
 		fromToolbar: {},
 		showHideObj: undefined
 	},
