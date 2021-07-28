@@ -222,7 +222,7 @@ class ElementFigure extends Component {
             currentProjectId: config.projectUrn,
             slateEntityUrn: config.slateEntityURN,
             parentEntityUrn: this.props.parentEntityUrn,
-            sectionType: this.props?.asideData?.sectionType || null
+            sectionType: this.props?.asideData?.sectionType || "bodymatter"
         }
         let tableConfig = {
             S3MathImagePath: config.S3MathImagePath ? config.S3MathImagePath : "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/",
