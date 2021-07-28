@@ -49,7 +49,7 @@ export const onPasteSuccess = async (params) => {
         }
     }
 
-    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut' && responseData.type !=='popup') {
+    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -59,7 +59,7 @@ export const onPasteSuccess = async (params) => {
         }
 
         // if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
-        if(cutSnap || asideData?.type === SHOW_HIDE) {
+        if((cutSnap || asideData?.type === SHOW_HIDE) && responseData.type !=='popup') {
             const tcmDeleteArgs = {
                 deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutcopyParentData)) : newParentData,
                 deleteElemData: { [deleteElm.id]: deleteElm.id },

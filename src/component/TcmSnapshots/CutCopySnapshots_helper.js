@@ -79,8 +79,6 @@ export const preparePayloadData = (pasteParams) => {
         const elementTagPrefix = prepareTagPrefix(tagPrefixParams)
         payload.destinationContainer.elementTagPrefix = elementTagPrefix
     }
-    //This console will be removed in future
-    console.log('from cutcopysnapshots request payload ', payload)
     return JSON.parse(JSON.stringify(payload));
 }
 
