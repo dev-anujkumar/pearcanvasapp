@@ -103,7 +103,6 @@ export const prepareTagPrefix = (parentData) => {
             prefixTag = grandParentTag + ":" + prefixTag
         }
     }
-    // console.log('prefixTag',prefixTag)
     return prefixTag
 }
 
@@ -112,7 +111,8 @@ const setParentTag = (element) => {
         case ELEMENT_ASIDE:
             return elementTag[element.subtype === WORKED_EXAMPLE ? WORKED_EXAMPLE : ASIDE];
         case MULTI_COLUMN:
-            return parentUrn.multiColumnType
+            let eleTag = element?.groupproportions === '33-33-33' ? '3C' : '2C'
+            return eleTag
         case POPUP_ELEMENT:
         default:
             return elementTag[element.type];
