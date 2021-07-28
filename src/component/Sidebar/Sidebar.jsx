@@ -535,10 +535,11 @@ class Sidebar extends Component {
                 let activeElement = document.querySelector(`[data-id="${elementId}"]`)
                 let activePoetryNode = activeElement ? activeElement.querySelector(".element-container.pe") : null
                 if (activePoetryNode) {
-                    let isNumbered = activePoetryNode.getAttribute("numbered")
+                    let isNumbered = activePoetryNode.getAttribute("numbered");
+                    let toNumber = parseInt(activePoetryNode.getAttribute("startnumber"));
                     const dataToUpdate = {
                         isNumbered: isNumbered == "true" ? true : false,
-                        startNumber: activePoetryNode.getAttribute("startnumber")
+                        startNumber: toNumber
                     }
                     this.props.updateContainerMetadata(dataToUpdate)
                 }
