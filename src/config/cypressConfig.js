@@ -60,6 +60,7 @@ let cypressConfig = {
     TCM_SNAPSHOT_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tctxsnapshot` :"http://localhost:5000/tctxsnapshot",
     TCM_SRVR_STATUS_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tcstats/proj/` :"http://localhost:5000/tcstats/proj/",
     TCM_CANVAS_POPUP_DATA: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tctx` :"http://localhost:5000/tctx",
+    TCM_CUT_COPY_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/cut-copy-snapshots` :"http://localhost:5000/cut-copy-snapshots",
     getENVConfig: process.env.NODE_ENV === "development" ? 'https://10.11.1.242:8081/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
     prodUrl : 'https://structuredauthoring.pearson.com',
     sitePointing : 'dev',

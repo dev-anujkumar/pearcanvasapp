@@ -200,7 +200,8 @@ const initialState16 = {
     appStore: {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.SH_ActiveElement,
-        parentUrn: {}
+        parentUrn: {},
+        asideData: {contentUrn: "urn:pearson:entity:808c0c76-1786-455a-8410-4f250384b142"}
     },
     elementStatusReducer:{},
     tcmReducer:{
@@ -216,6 +217,7 @@ const initialState17 = {
             contentUrn: "urn:pearson:entity:808c0c76-1786-455a-8410-4f250384b142",
             elementType: "element-aside"
         },
+        asideData: {contentUrn: "urn:pearson:entity:808c0c76-1786-455a-8410-4f250384b142"}
     },
     elementStatusReducer:{},
     tcmReducer:{
@@ -231,6 +233,7 @@ const initialState18 = {
             contentUrn: "urn:pearson:entity:5d6c4a51-2587-4250-8423-061b67aebe5e",
             elementType: "element-aside"
         },
+        asideData: {contentUrn: "urn:pearson:entity:808c0c76-1786-455a-8410-4f250384b142"}
     },
     elementStatusReducer:{},
     tcmReducer:{
@@ -681,7 +684,7 @@ describe('Test - Sidebar_Actions',()=>{
                 elementWipType: "figure",
                 index: 5,
                 primaryOption: "primary-video",
-                secondaryOption: "secondary-video-alfresco",
+                secondaryOption: "secondary-video-smartlink",
                 tag: "VID",
                 toolbar: ["assetpopover", "glossary"]
             }
@@ -1130,7 +1133,9 @@ describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
     });
 });
 describe('1 Test convertElement ', () => {
-  
+    const showHideObj = { index: "0-0",
+        element: { contentUrn: "urn:pearson:entity:808c0c76-1786-455a-8410-4f250384b142" }
+    };
     it('1.1 Test convertElement  Image ', () => {
         const { oldElementData, newElementData, oldElementInfo } = testData?.testcase8;
         let store = mockStore(() => initialState);
@@ -1183,6 +1188,7 @@ describe('1 Test convertElement ', () => {
         
     });
     it('1.5 Test convertElement - outputSubTypeEnum !== "DISC" ', () => {
+        
         const { oldElementData, newElementData, oldElementInfo } = testData?.testcase11;
         const elementDiv3 = document.createElement('div');
         elementDiv3.setAttribute("id", "cypress-0-0");
@@ -1197,7 +1203,7 @@ describe('1 Test convertElement ', () => {
         })
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
-        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",{index: "0-0"}));
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",showHideObj));
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
         
@@ -1219,7 +1225,7 @@ describe('1 Test convertElement ', () => {
         })
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
-        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData_1, oldElementInfo, store, ["0"], "",{index: "0-0"}));
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData_1, oldElementInfo, store, ["0"], "",showHideObj));
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
         
@@ -1239,7 +1245,7 @@ describe('1 Test convertElement ', () => {
         })
         let store = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
-        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",{index: "0-0"}));
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",showHideObj));
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
         

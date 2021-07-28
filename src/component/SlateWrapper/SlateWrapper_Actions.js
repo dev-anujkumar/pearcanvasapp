@@ -34,6 +34,8 @@ import ElementConstants from '../ElementContainer/ElementConstants';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE } = ElementConstants;
+import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
+import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
@@ -976,7 +978,16 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
-
+        /** Cut-Copy TCM snapshots API Payload Params*/
+        let tcmSnapshotParams = {
+            selection,
+            asideData,
+            parentUrn,
+            elementType: selection.element.type,
+            projectUrn: config.projectUrn,
+            destnSlateManifestURN: config.slateManifestURN,
+            destnSlateEntityURN: config.slateEntityURN
+        }
         try {
             let url = `${config.REACT_APP_API_URL}v1/projects/${config.projectUrn}/containers/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
@@ -1020,6 +1031,13 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     slateEntityUrn, index2ShowHide, pasteSHIndex: _requestData?.content[0]?.index
                 };
                 await onPasteSuccess(pasteSuccessArgs)
+                /** Cut-Copy TCM snapshots API */
+                if(_requestData?.content[0]?.type === 'popup'){
+                tcmSnapshotParams.elementId = responseData[0].id
+                let tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
+                callCutCopySnapshotAPI(tcmSnapshotPayload)
+                }
+                /******************************/
                 if (responseData[0].elementdata?.type === "blockquote") {  
                     setTimeout(() => {
                         const node1 = document.querySelector(`[data-id="${responseData[0].id}"]`)

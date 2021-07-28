@@ -1,5 +1,6 @@
 import config from '../../config/config.js';
-import { VIDEO, IMAGE, TEXT } from '../SlateWrapper/SlateWrapperConstants.js';
+import { VIDEO, IMAGE, TEXT, TABLE_EDITOR, BLOCKCODE, ELEMENT_DIALOGUE, FIGURE_MML, SMARTLINK,
+    MMI_ELM, ELEMENT_DISCUSSION, INTERACTIVE } from '../SlateWrapper/SlateWrapperConstants.js';
 import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const showHideConstants = {
@@ -44,28 +45,38 @@ export const addNestedElements = (index, sectionType, props) => {
 			buttonHandler: () => addElementInShowHide(index, sectionType, VIDEO, props),
 			tooltipText: 'Audio/Video',
 			tooltipDirection: 'left'
-		}
+		},{
+            buttonType: 'block-text-button',
+            tooltipText: 'Block Text',
+            tooltipDirection: 'left'
+        },{
+            buttonType: 'interactive-elem-button',
+            tooltipText: 'Interactive',
+            tooltipDirection: 'left'
+        },{
+            buttonType: 'table-editor-elem-button',
+            buttonHandler: () => addElementInShowHide(index, sectionType, TABLE_EDITOR, props),
+            tooltipText: 'Table',
+            tooltipDirection: 'left'
+        },
 	]
 }
 
 /* On Clicking of icons on Seprator Dropdown; */
 export const addElementInShowHide = (index, sectionType, type2BAdded, props) => {
-	/*if (this.checkLockStatus()) {
-	    this.togglePopup(true)
-	    return false
-	}*/
 	if (config.savingInProgress) {
 		return false
 	}
     const { element, asideData, parentUrn } = props || {};
 	const { id, contentUrn, } = element || {};
-    const elementLineage = {
+    const elementLineage = (asideData?.type === ElementConstants.SHOW_HIDE) ? asideData : {
         ...element ,
         grandParent: {
             asideData,
             parentUrn
         }
     }
+    type2BAdded = getElementType(type2BAdded);
 	/**
 	* @function createShowHideElement
 	* @description - This function is to create elements inside showhide
@@ -238,7 +249,7 @@ export const getShowHideIndex = (tempIndex) => {
  * @param {*} indexes element index
  * @returns 
  */
-export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => { // activeElemType, showHideObj
+export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => {
     let showHideElement = getShowHideElement(bodymatter, indexes?.length, indexes);
     if(showHideElement?.type === ElementConstants.SHOW_HIDE) {
         const showHideType = indexOfSectionType(indexes);
@@ -246,36 +257,50 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => { // 
             showHideElement.interactivedata[showHideType][indexes[indexes.length - 1]] = resData;
         }
     }
-    /*const indexLength = Array.isArray(indexes) ? indexes.length : 0;
-    const showHideIndex = (indexLength > 2) ? indexes[indexLength - 2] : "" 
-    const showHideType = findSectionType(showHideIndex)
-    if (activeElemType && showHideType) {
-        switch (indexes.length) {
-            case 3:
-                bodymatter[indexes[0]].interactivedata[showHideType][indexes[2]] = resData
-                break;
-            case 4:
-                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].interactivedata[showHideType][indexes[3]] = resData
-                break
-            case 5:
-                bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideType][indexes[4]] = resData
-
-                break
-            case 6:
-                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType][indexes[5]] = resData
-                break
-            case 7:
-                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
-                break
-            case 8:
-                bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
-                break
-        }
-    }
-    return bodymatter */
 }
-
-export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
+export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, sectionType, indexes) => {
+    try {
+        let shAtIndex = indexes?.length;
+        const indexLength = indexes?.length;
+        /* if element type is playscript then get the index of SH Element */
+        if(activeElemType === "element-dialogue") {
+            const indexString = Array.isArray(indexes) ? indexes?.join("-") : indexes?.toString();
+            /* get the placeholder of Playscript to find excat type of inner element(SD/DE) in PS and index of SH at slate */
+            const placeHolder = document.getElementById(`cypress-${indexString}`)?.getAttribute("placeholder");
+            /* Based on placeholder of SD/DE of PS; Calculate index length to get SH Element from slate data */
+            if(indexLength > 3 && placeHolder === "Enter Stage Directions...") {
+                shAtIndex = indexLength - 1;
+            } else if(indexLength > 4 && ["Enter Character Name...", "Enter Dialogue..."].includes(placeHolder)) {
+                shAtIndex = indexLength - 2;
+            }
+        } else /* if element type is figure then get SH Element by calculating length */
+            if(activeElemType === "figure") {
+                shAtIndex = indexLength - 1;
+        }
+        /* Get the SH element to update footnote and glossery of inner element */
+        let sh_Object = getShowHideElement(bodymatter, shAtIndex, indexes);
+        if(sh_Object?.type === ElementConstants.SHOW_HIDE && sectionType && shAtIndex) {
+            const elementInSH = sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]];
+            /* Folloing condition is to get element where Footnote and Glossery added */
+            if(typeof (resData) === "string" && resData === "GetElementWithFnGlry_SH") {
+                /** @function onGlossaryFnUpdateSuccessInShowHide - Being reused to get element when - */
+                /* Footnote/Glossery popup opened to display data; Called from glossaaryFootnotePopup Function */
+                return elementInSH;
+            }
+            /* Update the slate level data to update redux store */
+            sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]] = {
+                ...elementInSH,
+                html: {...elementInSH?.html, ...resData?.html},
+                elementdata: resData?.elementdata 
+            }
+        }
+        return bodymatter;
+    } catch(error) {
+        console.error("Something went wrong on updating Footnote/Glossery...",error);
+    }
+}
+/*
+export const onGlossaryFnUpdateSuccessInShowHide123 = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
     const indexLength = Array.isArray(indexes) ? indexes.length : 0;
     const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 3] : "" : ""
     const showHideType = findSectionType(showHideIndex)
@@ -320,4 +345,23 @@ export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeE
         }
     }
     return bodymatter
+}
+*/
+/**
+ * @function getElementType
+ * @description This function return the element type in format which required for element creation
+ * @param {*} type2BAdded  type of element ex. - "blockcode-elem"
+ * @returns 
+ */
+function getElementType(type2BAdded) {
+    switch(type2BAdded){
+        case "figure-mml-elem": return FIGURE_MML;
+        case "blockcode-elem": return BLOCKCODE;
+        case "element-dialogue": return ELEMENT_DIALOGUE;
+        case "smartlink-elem": return SMARTLINK;
+        case "element-discussion": return ELEMENT_DISCUSSION;
+        case "elm-interactive-elem": return MMI_ELM;
+        case "interactive-elem": return INTERACTIVE;
+        default: return type2BAdded;
+    }
 }

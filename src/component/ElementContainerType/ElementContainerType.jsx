@@ -4,6 +4,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import config from '../../config/config';
 import '../../styles/ElementContainerType/ElementContainerType.css'
+import elementTypeConstant from  '../ElementContainer/ElementConstants.js';
+const { SHOW_HIDE } = elementTypeConstant;
+
 export default function ElementContainerType(props) {
     const { closeDropDown, data } = props
     const [top, setTop] = useState('0px');
@@ -49,7 +52,9 @@ export default function ElementContainerType(props) {
         return propsData && propsData.map((item, index) => {
             if (((elementType === "element-aside" || elementType === "group") && text === "block-text-button" && item.text === "Block Poetry") ||
             (text === "interactive-elem-button" && (elementType === "group" && (item.text === "Add Show Hide" || item.text === "Add Pop Up")))
-            || (config.isPopupSlate && item.text === "Add Pop Up")) {
+            || (config.isPopupSlate && item.text === "Add Pop Up") ||
+            /* Not show poetry/Popup/SH inside SH interactive Picker */
+            (elementType === SHOW_HIDE && (["poetry-elem", "show-hide-elem", "popup-elem"].includes(item?.buttonType)))) {
                 return null
             }
             else {
