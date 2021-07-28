@@ -24,7 +24,8 @@ export const preparePayloadData = (pasteParams) => {
         destnSlateEntityURN,
         asideData,
         parentUrn,
-        oldElementId
+        oldElementId,
+        elementNewEntityUrn
     } = pasteParams
     let payload = {
         "elementUrn": elementId,
@@ -39,6 +40,9 @@ export const preparePayloadData = (pasteParams) => {
         "sourceElementIndex": selection?.sourceElementIndex?.toString(),
         "destinationSlateUrn": destnSlateManifestURN,
         "destinationSlateEntityUrn": destnSlateEntityURN
+    }
+    if(selection.operationType === 'copy'){
+        payload.elementEntityUrn = elementNewEntityUrn
     }
     if(oldElementId !== elementId){
         payload["oldElementUrn"] = selection.element.id

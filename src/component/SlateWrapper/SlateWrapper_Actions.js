@@ -1034,6 +1034,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 /** Cut-Copy TCM snapshots API */
                 if(_requestData?.content[0]?.type === 'popup'){
                 tcmSnapshotParams.elementId = responseData[0].id
+                tcmSnapshotParams.elementNewEntityUrn = responseData[0]?.contentUrn
                 let tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
                 callCutCopySnapshotAPI(tcmSnapshotPayload)
                 }
