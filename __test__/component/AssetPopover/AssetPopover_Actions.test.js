@@ -91,9 +91,12 @@ describe('testingAssetPopoverActions',() => {
     it('testing------- getCurrentlyLinkedImage if', () => {
         let id = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         const users = [{name: 'Bob'}];
-        const resp = {data: users};   
-
-        axios.get.mockImplementation(() => Promise.resolve(resp))
+        const resp = { data: users, json:jest.fn(() => [{}]) };
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+             resolve(resp);
+           });
+        });
         const cb = jest.fn()
         getCurrentlyLinkedImage(id, cb).then((data) => {
             expect(data).toEqual(users)
@@ -106,9 +109,13 @@ describe('testingAssetPopoverActions',() => {
     it('testing------- getCurrentlyLinkedImage else', () => {
         let id = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         const users = [];
-        const resp = {data: users};   
+        const resp = { data: users,json: jest.fn(() => []) };
 
-        axios.get.mockImplementation(() => Promise.resolve(resp))
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+             resolve(resp);
+           });
+        });
         const cb = jest.fn()
         getCurrentlyLinkedImage(id, cb).then((data) => {
             expect(data).toEqual(users)
@@ -122,7 +129,11 @@ describe('testingAssetPopoverActions',() => {
         let id = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d";
         const resp = {status:400,data:{}};   
 
-        axios.get.mockImplementation(() => Promise.reject(resp));
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+             reject(resp);
+           });
+        });
         const cb = (obj) => {
             expect(obj).toEqual({});
         }
@@ -136,10 +147,10 @@ describe('testingAssetPopoverActions',() => {
         });
     })
 
-   it('testing------- searchForFiguresAction else', async () => {
+    it('testing------- searchForFiguresAction else', async () => {
         let searchTerm = 'search', stateImageData = null, currentlySearching = false
         const users = [{name: 'Bob'}];
-        const resp = {data: users};  
+        const resp = {data: users, json: jest.fn(()=> [])};
         let  performance = {
             now : jest.fn()
         }
@@ -147,17 +158,17 @@ describe('testingAssetPopoverActions',() => {
         //     expect(data).toEqual(users)
         // })
         const store = mockStore({ todos: [] });
-       let dispatch = (obj) => {
-           if(obj.type){
-               expect(obj.type).toEqual(IMAGES_FROM_API);
-           }
-       }
-       global.fetch = jest.fn().mockImplementationOnce(() => {
-        return new Promise((resolve, reject) => {
-         resolve(resp);
-       });
-     });
-       searchForFiguresAction(searchTerm, stateImageData)(dispatch);
+        let dispatch = (obj) => {
+            if(obj.type){
+                expect(obj.type).toEqual('IMAGES_FROM_API');
+            }
+        }
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+                resolve(resp);
+            });
+        });
+        searchForFiguresAction(searchTerm, stateImageData)(dispatch);
     })
     it('testing------- assetPopoverPopup', () => {
         let argsObj = false;
@@ -174,9 +185,13 @@ describe('testingAssetPopoverActions',() => {
         // });
         let id = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         const users = [{id : '123'}];
-        const resp = {data: users};   
+        const resp = {data: users, json: jest.fn(() => [])};   
 
-        axios.get.mockImplementation(() => Promise.resolve(resp))
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+             resolve(resp);
+           });
+        });
         const cb = jest.fn()
         getAssetPopoverId(id).then((data) => async function(){
             const response = await data

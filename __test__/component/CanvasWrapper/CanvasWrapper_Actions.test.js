@@ -978,6 +978,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         })
     });
     describe('Test-6- createPopupUnit', () => {
+        config.tcmStatus = false;
         let slateManifestURN = 'urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9'
         it('Test-6.1-createPopupUnit - popupField - formatted-title', () => {
             let responseData = { data: slateTestData.popupLabelResponse }
@@ -987,7 +988,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             let getState = () => {
                 return {
                     appStore: {
-                        slateLevelData: slateTestData.slateData1,
+                        slateLevelData: {"urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670": slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"]},
                         activeElement: {},
                     }
                 };
@@ -1016,7 +1017,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             let getState = () => {
                 return {
                     appStore: {
-                        slateLevelData: slateTestData.slateData1,
+                        slateLevelData: {"urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670": slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"]},
                         activeElement: {},
                     }
                 };
@@ -1301,7 +1302,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
-                expect(obj.payload.apiStatus).toEqual(expectedPayload);
+                expect(obj.payload).toEqual(expectedPayload);
             }
             let responseData = { data: slateTestData.learningFrameworksApiResponse, status: 200 }
             const spyFunction = jest.spyOn(canvasActions, 'fetchProjectLFs')
@@ -1323,7 +1324,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
-                expect(obj.payload.apiStatus).toEqual(expectedPayload);
+                expect(obj.payload).toEqual(expectedPayload);
             }
             let responseData = { data: slateTestData.learningFrameworksApiResponse_ExtLF, status: 200 }
             const spyFunction = jest.spyOn(canvasActions, 'fetchProjectLFs')
@@ -1345,7 +1346,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
-                expect(obj.payload.apiStatus).toEqual(expectedPayload);
+                expect(obj.payload).toEqual(expectedPayload);
             }
             let responseData = { data: slateTestData.learningFrameworksApiResponse_CyLF, status: 200 }
             const spyFunction = jest.spyOn(canvasActions, 'fetchProjectLFs')
