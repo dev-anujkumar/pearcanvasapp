@@ -287,10 +287,25 @@ function parentData4CutCopyASWE_2C(asideData, parentUrn) {
         multiColumnType /* 2C||3C */
     }
 }
-
+/* If element is inside Body of Worked-Example then parentUrn 
+* should contain value of body(Manifest) of WE */
+function setParentUrnData(wipData, item) {
+    let parent = wipData;
+    wipData?.elementdata.bodymatter?.forEach(obj => {
+       if(obj?.type === WE_MANIFEST) {
+            obj?.contents.bodymatter?.forEach(obj_L1 => {
+                if(obj_L1?.id === item?.id) {
+                    parent = obj;
+                }
+            })
+        }
+    })
+    return parent;
+}
 
 const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, operationType=null) => {
     const { asideData, parentUrn } = containerElement || {};
+    const parentObj = setParentUrnData(wipData, item);
     const updatedContainerElement = {
         asideData: {
             contentUrn: wipData.contentUrn,
@@ -300,9 +315,9 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, o
             type: wipData.type
         },
         parentUrn: {
-            contentUrn: wipData.contentUrn,
-            elementType: wipData.type,
-            manifestUrn: wipData.id,
+            contentUrn: parentObj?.contentUrn,
+            elementType: parentObj?.type,
+            manifestUrn: parentObj?.id,
             multiColumnType: parentUrn?.multiColumnType /* 2C||3C */
         }
     }
