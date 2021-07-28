@@ -28,7 +28,8 @@ describe('Testing Figure element component', () => {
             launchAlfrescoPopup: true,
             editor: true,
             Permission: false
-        }
+        },
+        imgSrc: ''
     }
     const store = mockStore(initialState);
 
@@ -177,7 +178,7 @@ describe('Testing Figure element component', () => {
             expect(component.find('.divCodeSnippetFigure.blockCodeFigure')).toHaveLength(1)
         })
     });
-    xdescribe('Testing Element figure - C2 Media Handling Functions', () => {
+    describe('Testing Element figure - C2 Media Handling Functions', () => {
         let type = "figure";
         let props = {
             slateLockInfo: {
@@ -189,7 +190,7 @@ describe('Testing Figure element component', () => {
             updateFigureData: jest.fn(),
             handleBlur: jest.fn(),
             handleFocus: jest.fn(),
-            accessDenied: jest.fn(),
+            accessDenied: jest.fn()
         };
         const e = {
             target:{
@@ -197,7 +198,7 @@ describe('Testing Figure element component', () => {
             },
             stopPropagation() { }
         }
-        const elementFigure = mount(<ElementFigure type={type} model={figureImage50TextElementDefault} index="30" {...props}/>);
+        const elementFigure = mount(<Provider store={store}><ElementFigure type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
         let elementFigureInstance = elementFigure.find('ElementFigure').instance();
         it('onClick-default case', () => {
             const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
@@ -229,7 +230,7 @@ describe('Testing Figure element component', () => {
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
                 ]
             };
-            const elementFigure = mount(<ElementFigure type={type} model={figureImage50TextElementDefault} index="30" {...props}/>);
+            const elementFigure = mount(<Provider store={store}><ElementFigure type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
             let elementFigureInstance = elementFigure.find('ElementFigure').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
             elementFigureInstance.handleC2MediaClick({target : {tagName : 'g'}});
@@ -270,9 +271,8 @@ describe('Testing Figure element component', () => {
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith({target : {tagName : 'b'}})
             spyhandleC2MediaClick.mockClear()
         })
-        
-        describe('Alfresco Data Handling', () => {
 
+        describe('New Alfresco Data Handling', () => {
             let sampleAltTextDiv = document.createElement('at')
             sampleAltTextDiv.setAttribute('name', 'alt_text' );
             sampleAltTextDiv.innerHTML = "alt_text"
@@ -283,62 +283,69 @@ describe('Testing Figure element component', () => {
             sampleLongDescriptionDiv.innerHTML = "long_Description"
             document.body.appendChild(sampleLongDescriptionDiv)
 
-            const elementFigure = mount(<ElementFigure {...props} />)
+            const elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider>)
             let elementFigureInstance = elementFigure.find('ElementFigure').instance();
-            const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromAlfresco')    
+            const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco')    
             const defaultPath="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
             it('Test- if case workflow', () =>{
-                let data={
+                let data = {
                     'assetType': "image",
                     'epsUrl': "",
                     'alt-text': "",
                     'longDescription':"longDescription",
+                    'properties': {
+                        "exif:pixelXDimension": '',
+                        "cplg:altText": ''
+                    }
+                }
+                elementFigureInstance.forceUpdate();
+                elementFigureInstance.dataFromNewAlfresco(data)
+                elementFigureInstance.forceUpdate();
+                elementFigure.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled()
+                spydataFromAlfresco.mockClear()
+            })
+            xit('Test- if case workflow-  epsURL given', () =>{
+                let data={
+                    'assetType': "image",
+                    'epsUrl': "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    'alt-text': "ält-text",
+                    'longDescription':"",
+                    'width':'20',
+                    'height':'33',
+                    'uniqueID':'test',
+                    'properties': {
+                        "exif:pixelXDimension": '',
+                        "cplg:altText": ''
+                    }
+                }
+                elementFigureInstance.dataFromNewAlfresco(data)
+                elementFigureInstance.forceUpdate();
+                elementFigure.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled()
+                expect(elementFigureInstance.state.imgSrc).toEqual(data.epsUrl)
+                spydataFromAlfresco.mockClear()
+            }) 
+            xit('Test- else case workflow', () =>{
+                let data={
+                    'assetType': "figure",
+                    'epsUrl': "",
+                    'alt-text': "ält-text",
+                    'longDescription':"longDescription",
+                    'properties': {
+                        "exif:pixelXDimension": '',
+                        "cplg:altText": ''
+                    }
                  }
-                elementFigureInstance.dataFromAlfresco(data)
+ 
+                elementFigureInstance.dataFromNewAlfresco(data)
                 elementFigureInstance.forceUpdate();
                 elementFigure.update();
                 expect(spydataFromAlfresco).toHaveBeenCalled()
                 expect(elementFigureInstance.state.imgSrc).toBe(defaultPath)
                 spydataFromAlfresco.mockClear()
             })
-            it('Test- if case workflow-  epsURL given', () =>{
-                let data={
-                    'assetType': "image",
-                    'EpsUrl': "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
-                    'alt-text': "ält-text",
-                    'longDescription':"",
-                    'width':'20',
-                    'height':'33',
-                    'uniqueID':'test',
-                    'alt-text':'alt-text'
-                 }
-                
-                elementFigureInstance.forceUpdate();
-                elementFigureInstance.dataFromAlfresco(data)
-                elementFigureInstance.forceUpdate();
-                elementFigure.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                expect(elementFigureInstance.state.imgSrc).toBe(data.EpsUrl)
-                spydataFromAlfresco.mockClear()
-            }) 
-            it('Test- else case workflow', () =>{
-                let data={
-                    'assetType': "figure",
-                    'epsUrl': "",
-                    'alt-text': "ält-text",
-                    'longDescription':"longDescription",
-                 }
- 
-                elementFigureInstance.dataFromAlfresco(data)
-                elementFigureInstance.forceUpdate();
-                elementFigure.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                expect(elementFigureInstance.state.imgSrc).toBe(defaultPath)
-                spydataFromAlfresco.mockClear()
-            }) 
-         
-        }) 
- 
+        })
     })
     describe('TEST-----Table Editor',()=>{
         let type = "figure";
@@ -379,5 +386,5 @@ describe('Testing Figure element component', () => {
             expect(spylaunchSPA).toHaveBeenCalled()
             spylaunchSPA.mockClear()
         })
-    }) 
+    })
 });
