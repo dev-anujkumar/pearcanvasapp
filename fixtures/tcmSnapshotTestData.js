@@ -43,17 +43,30 @@ export default {
                 interactivetype: "table"
             }
         },
+        'interactive2': {
+            type: "figure",
+            figuretype: "interactive",
+            figuredata: {
+                interactivetype: "fpo"
+            }
+        },
         'list1': {
             type: "element-list",
             elementdata: {
                 "subtype": "disc"
             }
         },
+        'list2': {
+            type: "element-list",
+        },
         'groupedContent': {
             type: 'groupedcontent',
             groupeddata: {
                 bodymatter: [{}, {}, {}]
             }
+        },
+        'assessment': {
+            type: 'element-assessment',
         }
     },
     slate1: {
@@ -790,7 +803,14 @@ export default {
                     "effect": "pop-over",
                     "linkid": "urn:pearson:entity:4accb6e3-ec83-4cff-bcde-1363be8fda73",
                     "charStart": 41,
-                    "charEnd": 45
+                    "charEnd": 45,
+                    "internallinktype": "slate"
+                }, {
+                    "effect": "pop-over",
+                    "linkid": "urn:pearson:entity:4accb6e3-ec83-4cff-bcde-1363be8fda74",
+                    "charStart": 41,
+                    "charEnd": 45,
+                    "internallinktype": "non-slate"
                 }]
             },
             "html": {
