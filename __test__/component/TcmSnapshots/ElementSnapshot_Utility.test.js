@@ -253,29 +253,101 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "2-1")
             expect(spyFunction).toHaveReturnedWith(bodymatter[2].elementdata.bodymatter[1])
         })
-        it('Test-3.2--generateWipDataForFigure - figure - in WE', () => {
+        it('Test-3.3--generateWipDataForFigure - paragraph - in slate for conditional coverage', () => {
+            const { bodymatter } = slate1[manifestUrn].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "0-1");
+            expect(spyFunction).toHaveReturnedWith(undefined);
+        })
+        it('Test-3.4--generateWipDataForFigure - figure - in WE', () => {
             const { bodymatter } = slate1[manifestUrn].contents
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
             elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "2-2-2")
             expect(spyFunction).toHaveReturnedWith(bodymatter[2].elementdata.bodymatter[2].contents.bodymatter[2])
         })
-        it('Test-3.3--generateWipDataForFigure - figure - in slate - footnote updation', () => {
+        it('Test-3.5--generateWipDataForFigure - figure - in Aside conditional coverage', () => {
+            const { bodymatter } = slate1[manifestUrn].contents
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "1-1-1")
+            expect(spyFunction).toHaveReturnedWith(bodymatter[1].elementdata.bodymatter[1])
+        })
+        it('Test-3.6--generateWipDataForFigure - figure - in slate - footnote updation', () => {
             const { bodymatter } = slate1[manifestUrn].contents
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
             elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-2-2")
             expect(spyFunction).toHaveReturnedWith(bodymatter[3])
         })
-        it('Test-3.4--generateWipDataForFigure - figure - in Multi Column', () => {
+        it('Test-3.7--generateWipDataForFigure - figure - in Multi Column', () => {
             const { bodymatter } = slate2[manifestUrn2].contents
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
             elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-0")
             expect(spyFunction).toHaveReturnedWith(bodymatter[3].groupeddata.bodymatter[0].groupdata.bodymatter[0])
         })
-        it('Test-3.5--generateWipDataForFigure - figure - in Multi Column - footnote updation', () => {
+        it('Test-3.8--generateWipDataForFigure - figure - in Multi Column - footnote updation', () => {
             const { bodymatter } = slate2[manifestUrn2].contents
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
             elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-0-1")
             expect(spyFunction).toHaveReturnedWith(bodymatter[3].groupeddata.bodymatter[0].groupdata.bodymatter[0])
+        })
+        it('Test-3.9--generateWipDataForFigure - para - in slate - conditional coverage', () => {
+            const { bodymatter } = slate1[manifestUrn].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "0-0-0");
+            expect(spyFunction).toHaveReturnedWith(undefined);
+        })
+        it('Test-3.10--generateWipDataForFigure - element aside with index 4 length - in slate - conditional coverage', () => {
+            const { bodymatter } = slate1[manifestUrn].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "1-0-0-1");
+            expect(spyFunction).toHaveReturnedWith(undefined);
+        })
+        it('Test-3.11--generateWipDataForFigure - multicolumn with index 4 length - in slate - conditional coverage', () => {
+            const { bodymatter } = slate2[manifestUrn2].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-0-1");
+            expect(spyFunction).toHaveReturnedWith(bodymatter[3].groupeddata.bodymatter[0].groupdata.bodymatter[0]);
+        })
+        it('Test-3.12--generateWipDataForFigure - paragraph with index 4 length for case 4 if else else case - in slate - conditional coverage', () => {
+            const { bodymatter } = slate1[manifestUrn].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "0-0-0-1");
+            expect(spyFunction).toHaveReturnedWith(undefined);
+        })
+        it('Test-3.13--generateWipDataForFigure - multicolumn with index 4 length - in slate - case 4 if inside else if conditional coverage', () => {
+            const { bodymatter } = slate2[manifestUrn2].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-1-0");
+            expect(spyFunction).toHaveReturnedWith(bodymatter[3].groupeddata.bodymatter[0].groupdata.bodymatter[1].elementdata.bodymatter[0]);
+        })
+        it('Test-3.14--generateWipDataForFigure - multicolumn with index 4 length - in slate - case 4 if inside else if empty object conditional coverage', () => {
+            const { bodymatter } = slate2[manifestUrn2].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-1-1");
+            expect(spyFunction).toHaveReturnedWith({});
+        })
+        it('Test-3.15--generateWipDataForFigure - multicolumn with index 5 length - in slate', () => {
+            const { bodymatter } = slate2[manifestUrn2].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-2-0-0");
+            expect(spyFunction).toHaveReturnedWith(bodymatter[3].groupeddata.bodymatter[0].groupdata.bodymatter[2].elementdata.bodymatter[0].contents.bodymatter[0]);
+        })
+        it('Test-3.16--generateWipDataForFigure - multicolumn with index 5 length - in slate else case', () => {
+            const { bodymatter } = slate2[manifestUrn2].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-0-0-0");
+            expect(spyFunction).toHaveReturnedWith(bodymatter[3].groupeddata.bodymatter[0].groupdata.bodymatter[0]);
+        })
+        it('Test-3.17--generateWipDataForFigure - Else case of index 5 length - in slate conditional coverage', () => {
+            const { bodymatter } = slate2[manifestUrn2].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "2-0-0-0-0");
+            expect(spyFunction).toHaveReturnedWith(undefined);
+        })
+        it('Test-3.18--generateWipDataForFigure - Else case of index 5 length - in slate empty object conditional coverage', () => {
+            const { bodymatter } = slate2[manifestUrn2].contents;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'generateWipDataForFigure');
+            elementSnapshotUtilityFn.generateWipDataForFigure(bodymatter, "3-0-3-0-0");
+            expect(spyFunction).toHaveReturnedWith({});
         })
     })
 
@@ -446,6 +518,58 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             elementSnapshotUtilityFn.getInteractiveSubtypeData(figuredata, {postertext:"<p>test</p>"})
             expect(spyFunction).toHaveReturnedWith(responsedata)
         })
-      
+        it('Test-4.10--isEmpty - conditional coverage', () => {
+            let mockObj ={
+                itemID:'<p></p>',
+                metadata:'<p>PDF</p>',
+                itemButtonLabel:'<p>test</p>'
+            }  
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'isEmpty');
+            elementSnapshotUtilityFn.isEmpty(mockObj);
+            expect(spyFunction).toHaveReturnedWith(false);
+        })
+    })
+
+    describe('Test-5-function--5 removeCalloutTitle', () => {
+        it('Test-5.1--removeCalloutTitle  with 4 callouts', () => {
+            
+            let elementHTML = `It is a <span title="calloutOne" class="calloutOne" 
+            data-calloutid="callout:3603:1778">long</span> <span title="calloutTwo" class="calloutTwo" 
+            data-calloutid="callout:5626:9100">established</span> <span title="calloutThree" 
+            class="calloutThree" data-calloutid="callout:1935:2706">fact</span> <span title="calloutFour" 
+            class="calloutFour" data-calloutid="callout:8408:4942">that</span>.`
+            
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'removeCalloutTitle');
+            elementSnapshotUtilityFn.removeCalloutTitle(elementHTML);
+            expect(spyFunction).toHaveReturnedWith("It is a <span class=\"calloutOne\" data-calloutid=\"callout:3603:1778\">long</span> <span class=\"calloutTwo\" data-calloutid=\"callout:5626:9100\">established</span> <span class=\"calloutThree\" data-calloutid=\"callout:1935:2706\">fact</span> <span class=\"calloutFour\" data-calloutid=\"callout:8408:4942\">that</span>.")
+        })
+        it('Test-5.2--removeCalloutTitle  without any callout', () => {
+            jest.spyOn(document, 'createElement').mockImplementation((selector) => {
+                return {
+                    querySelectorAll: () => {
+                        return null;
+                    },
+                    style: {
+                        visibility: "test"
+                    },
+                    innerHTML: "test"
+                }
+            });
+            document.body.appendChild = jest.fn();
+            document.body.removeChild = jest.fn();
+            // jest.spyOn(document, 'querySelectorAll').mockImplementation((selector) => {
+            //     switch (selector) {
+            //         case 'span.calloutOne':
+            //         case 'span.calloutTwo':
+            //         case 'span.calloutThree':
+            //         case 'span.calloutFour':
+            //             return null;
+            //     }
+            //   });
+            let elementHTML = null;
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'removeCalloutTitle');
+            elementSnapshotUtilityFn.removeCalloutTitle(elementHTML);
+            expect(spyFunction).toHaveReturnedWith(null)
+        })
     })
 });
