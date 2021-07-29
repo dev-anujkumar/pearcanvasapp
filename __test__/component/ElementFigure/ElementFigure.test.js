@@ -28,8 +28,7 @@ describe('Testing Figure element component', () => {
             launchAlfrescoPopup: true,
             editor: true,
             Permission: false
-        },
-        imgSrc: ''
+        }
     }
     const store = mockStore(initialState);
 
@@ -347,9 +346,12 @@ describe('Testing Figure element component', () => {
                     'height':'33',
                     'uniqueID':'test',
                     'properties': {
-                        "exif:pixelXDimension": '',
-                        "cplg:altText": ''
-                    }
+                        "exif:pixelXDimension": 'pd',
+                        "cplg:altText": 'alt',
+                        'cplg:longDescription': 'long'
+                    },
+                    'nodeRef': 'workspace://SpacesStore/a029cc86-3408-4d88-96e9-351477e57f59',
+
                 }
                 elementFigureInstance.dataFromNewAlfresco(data)
                 elementFigureInstance.forceUpdate();
