@@ -59,7 +59,7 @@ export const onPasteSuccess = async (params) => {
         }
 
         // if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
-        if((cutSnap || asideData?.type === SHOW_HIDE) && responseData.type !=='popup') {
+        if((cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type !=='popup') {
             const tcmDeleteArgs = {
                 deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutcopyParentData)) : newParentData,
                 deleteElemData: { [deleteElm.id]: deleteElm.id },
@@ -130,7 +130,7 @@ export const onPasteSuccess = async (params) => {
     const currentSlateData = newParentData[config.slateManifestURN];
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE) && responseData.type!=='popup') {
+    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type!=='popup') {
         const snapArgs = {
             newParentData,
             currentSlateData,
