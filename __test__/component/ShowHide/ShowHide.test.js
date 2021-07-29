@@ -188,19 +188,4 @@ describe('1. ShowHide test cases', () => {
 		expect(spy).toHaveBeenCalled();
 		spy.mockClear()
     });
-	//it('1.2 Test elementList2Add', () => {
-	//	const compInstance = showhideInstance(props);
-	//	const spy = jest.spyOn(compInstance, 'elementList2Add')
-	//	compInstance.elementList2Add(0,true,"","","show");
-	//	expect(spy).toHaveBeenCalled();
-	//	spy.mockClear()
-    //});
-	//it('1.3 Test addElementInShowHide ', () => {
-	//	config.savingInProgress = false;
-	//	const compInstance = showhideInstance(props);
-	//	const spy = jest.spyOn(compInstance, 'addElementInShowHide')
-	//	compInstance.addElementInShowHide("0-0-0","","show","TEXT");
-	//	expect(spy).toHaveBeenCalled();
-	//	spy.mockClear()
-    //});
 });
