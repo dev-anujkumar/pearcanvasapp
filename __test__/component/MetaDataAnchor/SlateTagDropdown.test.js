@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 const mockStore = configureMockStore(middlewares);
 import config from '../../../src/config/config';
 import { JSDOM } from 'jsdom'
+import PopUp from '../../../src/component/PopUp';
 jest.mock('../../../src/config/config.js', () => ({
     slateType : "section"
 }))
@@ -223,5 +224,107 @@ describe('External LO - Test Rendering of metadaanchor on slate', () => {
         slateTagInstance.toggleLoOptionsDropdown();
         expect(spyFunction).toHaveBeenCalled();
         spyFunction.mockClear();
+    });
+    it('openAssessmentExternalPopup',()=>{
+        let popUpType="add"
+        const spyFunction = jest.spyOn(slateTagInstance, 'openAssessmentExternalPopup');
+        slateTagInstance.openAssessmentExternalPopup(popUpType);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+    it('For cite,puf,learnosity and learning type assessments', () => {
+        let popUpType="add";
+        const spyFunction = jest.spyOn(slateTagInstance, 'openAssessmentExternalPopup');
+        config.slateType="assessment"
+        document.getElementsByClassName = () => {
+            return {
+                length: 1
+            }
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
+            }]
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'cite'
+            }]
+        }
+        slateTagInstance.openAssessmentExternalPopup(popUpType);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+    it('For tdx assessment', () => {
+        let popUpType="add";
+        const spyFunction = jest.spyOn(slateTagInstance, 'openAssessmentExternalPopup');
+        config.slateType="assessment"
+        document.getElementsByClassName = () => {
+            return {
+                length: 1
+            }
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
+            }]
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'tdx'
+            }]
+        }
+        slateTagInstance.openAssessmentExternalPopup(popUpType);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+    it('other Popup Type', () => {
+        let popUpType="view";
+        const spyFunction = jest.spyOn(slateTagInstance, 'openAssessmentExternalPopup');
+        config.slateType="assessment"
+        document.getElementsByClassName = () => {
+            return {
+                length: 1
+            }
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
+            }]
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'cite'
+            }]
+        }
+        slateTagInstance.openAssessmentExternalPopup(popUpType);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+    describe('ExternalLO true',()=>{
+        let props = {
+            slateLockInfo: {
+                isLocked: true,
+                timestamp: "",
+                userId: "c5test01"
+            },
+            projectLearningFrameworks: {
+                externalLF: {
+                    length: 1
+                }
+            },
+            permissions: ["lo_edit_metadata"],
+            closeLODropdown: function () { },
+        }
+        let wrapper = mount(<Provider store={store}><SlateTagDropdown {...props} /> </Provider>)
+        let slateTagInstance = wrapper.find('SlateTagDropdown').instance();
+        it('toggleLoOptionsDropdownAS', () => {
+            slateTagInstance.checkExternalFrameworkAS();
+            wrapper.find('div.learningobjectivedropdown ul li').at(1).simulate('click')
+            const spyFunction = jest.spyOn(slateTagInstance, 'toggleLoOptionsDropdownAS');
+            slateTagInstance.toggleLoOptionsDropdownAS();
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
     })
 });

@@ -535,10 +535,11 @@ class Sidebar extends Component {
                 let activeElement = document.querySelector(`[data-id="${elementId}"]`)
                 let activePoetryNode = activeElement ? activeElement.querySelector(".element-container.pe") : null
                 if (activePoetryNode) {
-                    let isNumbered = activePoetryNode.getAttribute("numbered")
+                    let isNumbered = activePoetryNode.getAttribute("numbered");
+                    let toNumber = parseInt(activePoetryNode.getAttribute("startnumber"));
                     const dataToUpdate = {
                         isNumbered: isNumbered == "true" ? true : false,
-                        startNumber: activePoetryNode.getAttribute("startnumber")
+                        startNumber: toNumber
                     }
                     this.props.updateContainerMetadata(dataToUpdate)
                 }
@@ -754,7 +755,7 @@ class Sidebar extends Component {
                                 <li data-value="print75">75%</li>
                                 <li data-value="print100">100%</li>
                             </ul>
-                            <svg class="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg>
+                            <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg>
                         </div>
                     </div>
                 </div>

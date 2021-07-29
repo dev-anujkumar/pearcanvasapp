@@ -68,6 +68,7 @@ export const tcmButtonHandler = (status, tcmSnapshotData, elementData) => (dispa
             type: LAUNCH_TCM_CANVAS_POPUP,
             payload: tcmObject
         })
+       handleRefreshSlate()
         dispatch(handleSlateRefresh(currentSlateUrn, () => {}))
     }).catch((error) => {
         console.error(error)
@@ -84,4 +85,13 @@ export const closeTcmPopup = () => (dispatch) => {
         type: LAUNCH_TCM_CANVAS_POPUP,
         payload: tcmObject
     })
+}
+
+const handleRefreshSlate = () => {
+    localStorage.removeItem('newElement');
+    config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+    config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
+    config.tempSlateManifestURN = null
+    config.tempSlateEntityURN = null
+    config.isPopupSlate = false
 }
