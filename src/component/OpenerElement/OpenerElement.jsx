@@ -80,34 +80,6 @@ class OpenerElement extends Component {
         hideTocBlocker()
     }
     
-    dataFromAlfresco = (data) => {
-        hideTocBlocker();
-        disableHeader(false);
-        let imageData = data;
-        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-        let imageId = `urn:pearson:alfresco:${uniqID}`;
-        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-        let width = imageData['width'] ? imageData['width'] : "";
-        if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
-            let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-            let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-            this.setState({
-                imgSrc: epsURL,
-                imageId: imageId,
-                updateImageOptions:false,
-                width
-            });
-            if (document.querySelector("[name='alt_text']"))
-                document.querySelector("[name='alt_text']").innerHTML = altText;
-            if (document.querySelector("[name='long_description']"))
-                document.querySelector("[name='long_description']").innerHTML = longDesc;
-        }
-        
-        this.handleBlur({imgSrc: epsURL, imageId});
-        disableHeader(false)
-        hideTocBlocker()
-    }
     handleSiteOptionsDropdown = (alfrescoPath, id) =>{
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;

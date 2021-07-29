@@ -197,7 +197,7 @@ describe('Testing Figure element component', () => {
             },
             stopPropagation() { }
         }
-        const elementFigure = mount(<ElementFigure type={type} model={figureImage50TextElementDefault} index="30" {...props}/>);
+        const elementFigure = mount(<Provider store={store}><ElementFigure type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
         let elementFigureInstance = elementFigure.find('ElementFigure').instance();
         it('onClick-default case', () => {
             const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
@@ -229,7 +229,7 @@ describe('Testing Figure element component', () => {
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
                 ]
             };
-            const elementFigure = mount(<ElementFigure type={type} model={figureImage50TextElementDefault} index="30" {...props}/>);
+            const elementFigure = mount(<Provider store={store}><ElementFigure type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
             let elementFigureInstance = elementFigure.find('ElementFigure').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
             elementFigureInstance.handleC2MediaClick({target : {tagName : 'g'}});
@@ -283,7 +283,7 @@ describe('Testing Figure element component', () => {
             sampleLongDescriptionDiv.innerHTML = "long_Description"
             document.body.appendChild(sampleLongDescriptionDiv)
 
-            const elementFigure = mount(<ElementFigure {...props} />)
+            const elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider>)
             let elementFigureInstance = elementFigure.find('ElementFigure').instance();
             const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromAlfresco')    
             const defaultPath="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";

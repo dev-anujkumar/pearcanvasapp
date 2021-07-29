@@ -178,7 +178,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on element in WE/PE/CG/2C */
-    else if (poetryData || asideData || parentUrn || (showHideObj && Object.keys(showHideObj).length > 0)) {
+    else if (poetryData || asideData || parentUrn || (showHideObj && Object.keys(showHideObj)?.length > 0)) {
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType)
     }
     /* action on PE and CG */
@@ -287,10 +287,25 @@ function parentData4CutCopyASWE_2C(asideData, parentUrn) {
         multiColumnType /* 2C||3C */
     }
 }
-
+/* If element is inside Body of Worked-Example then parentUrn 
+* should contain value of body(Manifest) of WE */
+function setParentUrnData(wipData, item) {
+    let parent = wipData;
+    wipData?.elementdata.bodymatter?.forEach(obj => {
+       if(obj?.type === WE_MANIFEST) {
+            obj?.contents.bodymatter?.forEach(obj_L1 => {
+                if(obj_L1?.id === item?.id) {
+                    parent = obj;
+                }
+            })
+        }
+    })
+    return parent;
+}
 
 const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, operationType=null) => {
     const { asideData, parentUrn } = containerElement || {};
+    const parentObj = setParentUrnData(wipData, item);
     const updatedContainerElement = {
         asideData: {
             contentUrn: wipData.contentUrn,
@@ -300,9 +315,9 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, o
             type: wipData.type
         },
         parentUrn: {
-            contentUrn: wipData.contentUrn,
-            elementType: wipData.type,
-            manifestUrn: wipData.id,
+            contentUrn: parentObj?.contentUrn,
+            elementType: parentObj?.type,
+            manifestUrn: parentObj?.id,
             multiColumnType: parentUrn?.multiColumnType /* 2C||3C */
         }
     }
@@ -370,22 +385,24 @@ const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,item, co
 
 const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn }) => {
     let elementDetails;
-    const typeArray = ['show', 'postertextobject', 'hide']
+    const typeArray = ['show', 'postertextobject', 'hide'];
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     for (const SHType of typeArray) {
         const showhidetag = SHType !== 'postertextobject' ? SHType : 'revel'
         wipData.interactivedata[SHType]?.map((item) => {
-            const showhide = {
-                element: wipData,
-                showHideType: showhidetag
+            if (elementType.indexOf(item?.type) !== -1) { /* Check Element where tcm is not supported */
+                const showhide = {
+                    element: wipData,
+                    showHideType: showhidetag
+                }
+                elementId.childId = item.id;
+                /* if section is RevealAnswer than tag will be "CTA"; ELSE element tag (P/Fig)*/
+                tag.childTag = (SHType === 'postertextobject') ? "CTA" : fetchElementsTag(item);
+                /** @param {String} isHead - If SH is inside the WE/AS */
+                const isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
+                elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
+                prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
             }
-            elementId.childId = item.id;
-            /* if section is RevealAnswer than tag will be "CTA"; ELSE element tag (P/Fig)*/
-            tag.childTag = (SHType === 'postertextobject') ? "CTA" : fetchElementsTag(item);
-            /** @param {String} isHead - If SH is inside the WE/AS */
-            const isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
-            elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
-            prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
         })
     }
 }

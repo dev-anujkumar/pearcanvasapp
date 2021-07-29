@@ -119,8 +119,12 @@ describe('TestS Learning_Tool_ActionS', () => {
             let responseData = { data: disciplines }
             let dispatch = (obj) => {
                 if (obj && obj.type === GET_DISCIPLINE) {
+                    const ReceivedPayload = {
+                        taxonomyType: "disciplines",
+                        options: obj.payload.apiResponseForDis
+                    }
                     expect(obj.payload.showDisFilterValues).toEqual(true);
-                    expect(obj.payload.apiResponseForDis).toEqual(disciplines);
+                    expect(ReceivedPayload).toEqual(disciplines);
                 }
             }
             const spyFunction = jest.spyOn(actions, 'openLTFunction');
@@ -162,8 +166,8 @@ describe('TestS Learning_Tool_ActionS', () => {
             let dispatch = (obj) => {
                 if (obj && obj.type === LT_API_RESULT) {
                     expect(obj.payload.showDisFilterValues).toEqual(true);
-                    expect(obj.payload.apiResponse).toEqual(disciplines);
-                    expect(obj.payload.showLTBody).toEqual(tempFiguresForResults);
+                    expect(obj.payload.apiResponse).toEqual(tempFiguresForResults);
+                    expect(obj.payload.showLTBody).toEqual(true);
                 }
             }
             const spyFunction = jest.spyOn(actions, 'learningToolSearchAction');
@@ -188,7 +192,7 @@ describe('TestS Learning_Tool_ActionS', () => {
             axios.get.mockImplementation(() => Promise.resolve(responseData));
             global.fetch = jest.fn().mockImplementationOnce(() => {
                 return new Promise((resolve, reject) => {
-                    resolve(responseData);
+                    resolve({json: jest.fn(()=> responseData)});
                 });
             });
             expect(spyFunction).toHaveBeenCalled();
