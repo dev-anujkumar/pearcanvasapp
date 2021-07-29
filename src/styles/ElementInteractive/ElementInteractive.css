@@ -67,7 +67,11 @@ img.imageWidgetAccountingtable {
     word-break: break-all;
 }
 .show-hide-component hr.horizontalLine {
-    margin-left: -30px;
+    margin-left: -18px;
+}
+/* Seprator Line in SH:PS */
+.show-hide-component .ps hr.horizontalLine {
+    margin-left: 0px;
 }
 .show-hide-component .dropdown{
     margin-left: -23px;
