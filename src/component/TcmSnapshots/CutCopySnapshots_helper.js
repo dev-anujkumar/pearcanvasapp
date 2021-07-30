@@ -24,7 +24,8 @@ export const preparePayloadData = (pasteParams) => {
         destnSlateEntityURN,
         asideData,
         parentUrn,
-        oldElementId
+        oldElementId,
+        elementNewEntityUrn
     } = pasteParams
     let payload = {
         "elementUrn": elementId,
@@ -39,6 +40,9 @@ export const preparePayloadData = (pasteParams) => {
         "sourceElementIndex": selection?.sourceElementIndex?.toString(),
         "destinationSlateUrn": destnSlateManifestURN,
         "destinationSlateEntityUrn": destnSlateEntityURN
+    }
+    if(selection.operationType === 'copy'){
+        payload.elementEntityUrn = elementNewEntityUrn
     }
     if(oldElementId !== elementId){
         payload["oldElementUrn"] = selection.element.id
@@ -79,8 +83,6 @@ export const preparePayloadData = (pasteParams) => {
         const elementTagPrefix = prepareTagPrefix(tagPrefixParams)
         payload.destinationContainer.elementTagPrefix = elementTagPrefix
     }
-    //This console will be removed in future
-    console.log('from cutcopysnapshots request payload ', payload)
     return JSON.parse(JSON.stringify(payload));
 }
 
@@ -103,7 +105,6 @@ export const prepareTagPrefix = (parentData) => {
             prefixTag = grandParentTag + ":" + prefixTag
         }
     }
-    // console.log('prefixTag',prefixTag)
     return prefixTag
 }
 
@@ -112,7 +113,8 @@ const setParentTag = (element) => {
         case ELEMENT_ASIDE:
             return elementTag[element.subtype === WORKED_EXAMPLE ? WORKED_EXAMPLE : ASIDE];
         case MULTI_COLUMN:
-            return parentUrn.multiColumnType
+            let eleTag = element?.groupproportions === '33-33-33' ? '3C' : '2C'
+            return eleTag
         case POPUP_ELEMENT:
         default:
             return elementTag[element.type];
