@@ -1719,7 +1719,7 @@ class ElementContainer extends Component {
         const inContainer = this.props.parentUrn ? true : false
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
-                {this.renderCopyComponent(this.props, index, inContainer)}
+                {this.renderCopyComponent(this.props, index, inContainer, tcm)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
                     {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
@@ -1812,13 +1812,14 @@ class ElementContainer extends Component {
      * @param {*} index 
      * @param {*} inContainer 
      */
-    renderCopyComponent = (_props, index, inContainer) => {
+    renderCopyComponent = (_props, index, inContainer, tcmFlag) => {
         if (this.state.showCopyPopup) {
             return (
                 <CutCopyDialog
                     userRole={_props.userRole}
                     index={index}
                     inContainer={inContainer}
+                    tcmFlag={tcmFlag}
                     setElementDetails={this.setElementDetails}
                     element={_props.element}
                     toggleCopyMenu={this.toggleCopyMenu}
