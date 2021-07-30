@@ -99,10 +99,10 @@ describe('Testing <SlateWrapper> Component', () => {
             },
             permissions : [],
             openRemovePopUp : true,
-            showSlateLockPopupValue:true
-
+            showSlateLockPopupValue:true,
+            showBlocker : jest.fn()
         };
-        let wrapper = mount(<SlateWrapper store={store} {...props} />);
+        let wrapper = mount(<Provider store={store}><SlateWrapper {...props} /></Provider>);
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
         
         test('renders properly with default slate', () => {
@@ -124,6 +124,7 @@ describe('Testing <SlateWrapper> Component', () => {
             },
             permissions : [],
             openRemovePopUp : true,
+            showBlocker : jest.fn()
         };
         let wrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>);
         test('renders properly', () => {
