@@ -4,11 +4,7 @@ import tcmTestData from '../../../fixtures/tcmSnapshotTestData.js';
 
 /**********************Mock Helper Functions**********************/
 jest.mock("../../../src/component/AssetPopover/AssetPopover_Actions.js", () => {
-    return { 
-        getCurrentlyLinkedImage: () => {
-            return Promise.resolve({id: "1234", title: "test"})
-        }
-    }
+    return { getCurrentlyLinkedImage: jest.fn() }
 })
 jest.mock("../../../src/component/TcmSnapshots/TcmSnapshot_Actions.js", () => {
     return {
@@ -557,15 +553,6 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             });
             document.body.appendChild = jest.fn();
             document.body.removeChild = jest.fn();
-            // jest.spyOn(document, 'querySelectorAll').mockImplementation((selector) => {
-            //     switch (selector) {
-            //         case 'span.calloutOne':
-            //         case 'span.calloutTwo':
-            //         case 'span.calloutThree':
-            //         case 'span.calloutFour':
-            //             return null;
-            //     }
-            //   });
             let elementHTML = null;
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'removeCalloutTitle');
             elementSnapshotUtilityFn.removeCalloutTitle(elementHTML);
