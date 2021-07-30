@@ -1,5 +1,5 @@
 import * as CutCopySnapshots from '../../../src/component/TcmSnapshots/CutCopySnapshots_helper.js';
-
+import config from '../../../src/config/config.js';
 describe('Test-CutCopySnapshots_helper', () => {
     let elementId = "urn:pearson:manifest:60c0f346-75f7-43e7-ada4-22be752ffcb0",
         elementType = 'popup',
@@ -34,6 +34,7 @@ describe('Test-CutCopySnapshots_helper', () => {
         elementNewEntityUrn
     }
     it('Test-1.1-Function--1--preparePayloadData - default -cut and paste on slate', () => {
+        config.tcmStatus = false
         const spyFunction = jest.spyOn(CutCopySnapshots, 'preparePayloadData');
         CutCopySnapshots.preparePayloadData(pasteParams)
         const expectedResult = {
@@ -49,7 +50,8 @@ describe('Test-CutCopySnapshots_helper', () => {
             sourceSlateEntityUrn: "urn:pearson:entity:274fab8a-11c3-4dda-bb0e-ccccd079249a",
             sourceSlateUrn: "urn:pearson:manifest:67ebe5c9-9445-486f-b414-346650ec5179",
             type: "popup",
-            typeOfElement: "container"
+            typeOfElement: "container",
+            status: 'accepted'
         }
         expect(spyFunction).toHaveReturnedWith(expectedResult)
     })
