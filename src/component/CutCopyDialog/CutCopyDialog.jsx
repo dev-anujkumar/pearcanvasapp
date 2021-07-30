@@ -44,7 +44,8 @@ export const performCutCopy = (event, componentProps, type) => {
         },
         operationType: type,
         activeAnimation: true,
-        sourceElementIndex: componentProps.index
+        sourceElementIndex: componentProps.index,
+        tcmFlag: componentProps?.tcmFlag
     }
     componentProps.setElementDetails(elementDetailsToSet)
     componentProps.toggleCopyMenu(false)
