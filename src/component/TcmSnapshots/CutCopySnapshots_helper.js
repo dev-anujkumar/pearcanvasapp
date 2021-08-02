@@ -25,7 +25,8 @@ export const preparePayloadData = (pasteParams) => {
         asideData,
         parentUrn,
         oldElementId,
-        elementNewEntityUrn
+        elementNewEntityUrn,
+        elementStatus
     } = pasteParams
     let payload = {
         "elementUrn": elementId,
@@ -40,7 +41,8 @@ export const preparePayloadData = (pasteParams) => {
         "sourceElementIndex": selection?.sourceElementIndex?.toString(),
         "destinationSlateUrn": destnSlateManifestURN,
         "destinationSlateEntityUrn": destnSlateEntityURN,
-        "status": config?.tcmStatus === true ? "pending" : "accepted"
+        "status": config?.tcmStatus === true ? "pending" : "accepted",
+        "elementVersionStatus": elementStatus 
     }
     if(selection.operationType === 'copy'){
         payload.elementEntityUrn = elementNewEntityUrn
