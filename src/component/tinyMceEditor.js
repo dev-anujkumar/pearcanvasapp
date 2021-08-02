@@ -395,8 +395,12 @@ export class TinyMceEditor extends Component {
                 let parser = new DOMParser();
                 let htmlDoc = parser.parseFromString(selectContent, 'text/html');
                 let dfnTags = htmlDoc.getElementsByTagName('DFN');
-                if ((nodeName && nodeName === 'dfn') || dfnTags.length) {
+                if ((nodeName && nodeName === 'dfn') || dfnTags.length || (nodeName && nodeName === 'code')) {
                     let dfnAttribute = [];
+                    if(nodeName==='code'){
+                        dataURI = node.parentNode.getAttribute('data-uri');
+                        dfnAttribute.push(dataURI)
+                    }
                     if (nodeName && nodeName === 'dfn') {
                         dfnAttribute.push(dataURI);
                     } else {
