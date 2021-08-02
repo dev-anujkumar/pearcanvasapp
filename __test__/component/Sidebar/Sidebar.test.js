@@ -13,6 +13,14 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions', 
 }))
 import config from '../../../src/config/config.js';
 config["elementStatus"] = {}
+
+const getSidebarInstance = (props, storeData) => {
+    const component = mount(<Provider store = { storeData }>
+        <Sidebar {...props} />
+    </Provider>)
+    return component.find('Sidebar').instance();
+}
+
 describe('Test for Sidebar component', () => {
     const mockStore = configureMockStore(middlewares);
     let activeElement = {
@@ -57,7 +65,8 @@ describe('Test for Sidebar component', () => {
     let props = {
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
         activeElement: { elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b" },
-        updateElement: jest.fn()
+        updateElement: jest.fn(),
+        showCanvasBlocker: jest.fn()
     };
 
     let sidebar = mount(<Provider store={sidebarWithData}>
@@ -525,6 +534,92 @@ describe('Test for Sidebar component', () => {
             })
             sidebarInstance.handleBceToggle();
             expect(sidebarInstance.state.bceToggleValue).toBe(true);
+        })
+    })
+
+    describe("2. Test Cases toggleElementDropdown", () => {
+        it("2.1 Test this.state.elementDropdown === elementDropdown ", () => {
+            const event = { target: { dataset: { element: "Primary" }, getAttribute: () => "elementDropdown" }, stopPropagation: jest.fn() }
+            const compInstance = getSidebarInstance(props, sidebarWithData);
+            const spy = jest.spyOn(compInstance, 'toggleElementDropdown');
+            compInstance.setState({elementDropdown: "elementDropdown"})
+            compInstance.toggleElementDropdown(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("2.2 Test Else case of dataset.element !== secondary ", () => {
+            const event = { target: { dataset: { element: "secondary" }, getAttribute: jest.fn() }}
+            const compInstance = getSidebarInstance(props, sidebarWithData);
+            const spy = jest.spyOn(compInstance, 'toggleElementDropdown');
+            compInstance.toggleElementDropdown(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("3. Test Cases primaryOption", () => {
+        it("3.1 Else case of (primaryOptionList.length > 0) ", () => {
+            const compInstance = getSidebarInstance(props, sidebarWithData);
+            const spy = jest.spyOn(compInstance, 'primaryOption');
+            compInstance.setState({activeElementType: "text"})
+            compInstance.primaryOption();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("3.2 if case of (disabledPrimaryOptions.indexOf(activePrimaryOption) > -1) ", () => {
+            const compInstance = getSidebarInstance(props, sidebarWithData);
+            const spy = jest.spyOn(compInstance, 'primaryOption');
+            compInstance.setState({activeElementType: "figure", activePrimaryOption: "primary-mathml-equation"})
+            compInstance.primaryOption();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("4. Test Cases ", () => {
+        it("4.1 handleSyntaxHighlightingToggle - if currentToggleValue ", () => {
+            const compInstance = getSidebarInstance(props, sidebarWithData);
+            const spy = jest.spyOn(compInstance, 'handleSyntaxHighlightingToggle');
+            compInstance.setState({ syntaxHighlightingToggleValue: false });
+            compInstance.handleSyntaxHighlightingToggle();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("4.2 handleBceNumber  - else case regex.test(e.target.value) ", () => {
+            const event = {target:{}};
+            const compInstance = getSidebarInstance(props, sidebarWithData);
+            const spy = jest.spyOn(compInstance, 'handleBceNumber');
+            compInstance.setState({ syntaxHighlightingToggleValue: false });
+            compInstance.handleBceNumber(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("5. Test Cases showModuleName ", () => {
+        it("5.1 Else case - this.props.activeElement.elementId ", () => {
+            const newProps = {...props, activeElement: {}};
+            const compInstance = getSidebarInstance(newProps, sidebarWithData);
+            const spy = jest.spyOn(compInstance, 'showModuleName');
+            compInstance.setState({ syntaxHighlightingToggleValue: false });
+            compInstance.showModuleName();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("5.2 if (children.length > 0) ", () => {
+            const event = {target:{}};
+            const compInstance = getSidebarInstance(props, sidebarWithData);
+            const spy = jest.spyOn(compInstance, 'showModuleName');
+            compInstance.setState({ syntaxHighlightingToggleValue: false });
+            compInstance.showModuleName(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("5.3 (config.elementStatus[this.props.activeElement.elementId] === approved) ", () => {
+            const event = {target:{}};
+            const compInstance = getSidebarInstance(props, sidebarWithData);
+            const spy = jest.spyOn(compInstance, 'showModuleName');
+            compInstance.setState({ syntaxHighlightingToggleValue: false });
+            compInstance.showModuleName(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
         })
     })
 });
