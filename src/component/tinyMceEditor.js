@@ -2717,7 +2717,7 @@ export class TinyMceEditor extends Component {
      */
     componentDidMount() {
         let currentNode = document.getElementById('cypress-' + this.props.index);
-        if (currentNode.getElementsByTagName("IMG").length) {
+        if (currentNode && currentNode.getElementsByTagName("IMG").length) {
             currentNode.innerHTML = this.getNodeContent();
         }
         const { slateLockInfo: { isLocked } } = this.props

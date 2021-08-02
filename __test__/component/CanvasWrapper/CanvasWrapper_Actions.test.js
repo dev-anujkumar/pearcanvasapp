@@ -51,7 +51,8 @@ jest.mock('../../../src/js/getAllSlatesData.js', () => {
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshot_Actions', () => {
     return {
         tcmSnapshot: jest.fn(),
-        handleTCMData: jest.fn()
+        handleTCMData: jest.fn(),
+        sendElementTcmSnapshot: jest.fn()
     }
 });
 jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
@@ -65,6 +66,7 @@ jest.mock('../../../src/constants/utility.js', () => {
         sendDataToIframe: jest.fn(),
         createTitleSubtitleModel: jest.fn(),
         requestConfigURI: jest.fn(),
+        createLabelNumberTitleModel: jest.fn()
     }
 });
 

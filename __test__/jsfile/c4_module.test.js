@@ -3,7 +3,7 @@ import _ from 'lodash';
 var axios = require('axios');
 import * as sinon from 'sinon';
 import { doesNotReject } from 'assert';
-
+window.alert = jest.fn();
 jest.mock('axios', () => ({ get: jest.fn(), post: jest.fn() }));
 
 describe('Testing c4_modules', () => {
