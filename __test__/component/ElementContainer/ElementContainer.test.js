@@ -40,7 +40,9 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     createTitleSubtitleModel:jest.fn(),
     removeBlankTags: jest.fn(),
     removeUnoClass: jest.fn(),
-    createLabelNumberTitleModel: jest.fn()
+    createLabelNumberTitleModel: jest.fn(),
+    getLabelNumberTitleHTML: jest.fn(() => ({'formattedLabel': ''})),
+    getTitleSubtitleModel: jest.fn(()=> '')
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
@@ -100,6 +102,7 @@ if (!global.Element.prototype.hasOwnProperty("innerText")) {
 
 }
 
+window.open = jest.fn();
 beforeEach(() => {
     // Avoid `attachTo: document.body` Warning
     const tempElm = document.createElement('div');
@@ -136,7 +139,10 @@ const store = mockStore({
                 columnIndex: "C2",
                 columnId: "urn:pearson:manifest:73c11fa8-acec-4b8e-b435-0ec6cb3e5922"
             }
-        ]
+        ],
+        usageTypeListData: {
+            usageTypeList: []
+        }
     },
     slateLockReducer: {
         slateLockInfo: {
@@ -216,7 +222,8 @@ const store = mockStore({
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
-    }
+    },
+    assessmentReducer: {}
 });
 
 config["elementStatus"] = {}
