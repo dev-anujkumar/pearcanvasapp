@@ -615,22 +615,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             dispatch(fetchComments(contentUrn, title))
                         }
                     }
-
-                    // Modifying old figures html into new pattern
-                    // ................................XX...........................................
-                    let figureElementsType = ['image', 'table', 'mathImage', 'authoredtext', 'codelisting', 'interactive'];              
-                    for (let element of slateData.data[manifestURN].contents.bodymatter) {
-                        if (element.hasOwnProperty('figuretype') && figureElementsType.includes(element.figuretype) && element.type == 'figure') {
-                            if (element.hasOwnProperty('subtitle')) {
-                                element.html.title = createLabelNumberTitleModel(element.html.title.replace("<p>", '').replace("</p>", ''), '', element.html.subtitle.replace("<p>", '').replace("</p>", ''));
-                            }
-                        } else if ((element.figuretype == 'audio' || element.figuretype == 'video') && element.type == 'figure') {
-                            if (element.hasOwnProperty('title') && element.hasOwnProperty('subtitle')) {
-                                element.html.title = createLabelNumberTitleModel(element.html.title.replace("<p>", '').replace("</p>", ''), '', element.html.subtitle.replace("<p>", '').replace("</p>", ''));
-                            }
-                        }
-                    }
-                    // ................................XX...........................................
                     
                     config.totalPageCount = slateData.data[manifestURN].pageCount;
                     config.pageLimit = slateData.data[manifestURN].pageLimit;
