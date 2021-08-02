@@ -694,7 +694,6 @@ span.calloutFour.DeactivateAsset{
 span.calloutOne, 
 span.calloutOne > ins.diffins, 
 span.calloutOne > ins.diffmod{
-  text-decoration-line: none;
     color: #F56831;
     text-decoration: underline dotted #F56831;
     position: relative;
@@ -704,7 +703,6 @@ span.calloutOne > ins.diffmod{
 span.calloutTwo, 
 span.calloutTwo > ins.diffins, 
 span.calloutTwo > ins.diffmod{
-  text-decoration-line: none;
     color: #F56831;
     text-decoration: underline dotted #F56831;
     position: relative;
@@ -714,7 +712,6 @@ span.calloutTwo > ins.diffmod{
 span.calloutThree, 
 span.calloutThree > ins.diffins, 
 span.calloutThree > ins.diffmod{
-  text-decoration-line: none;
     color: #F56831;
     text-decoration: underline dotted #F56831;
     position: relative;
@@ -724,7 +721,6 @@ span.calloutThree > ins.diffmod{
 span.calloutFour, 
 span.calloutFour > ins.diffins, 
 span.calloutFour > ins.diffmod{
-  text-decoration-line: none;
     color: #F56831;
     text-decoration: underline dotted #F56831;
     position: relative;
