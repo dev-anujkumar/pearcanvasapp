@@ -951,6 +951,7 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},as
         case "image":
         case "mathImage":
         case "table":
+        case "tableasmarkup":
             let oldPath = updateFromC2Flag ? "" : setOldImagePath(getState, activeElement, index)
             dispatch({
                 type: SET_OLD_IMAGE_PATH,

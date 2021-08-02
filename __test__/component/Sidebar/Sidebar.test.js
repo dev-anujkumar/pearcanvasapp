@@ -232,7 +232,7 @@ describe('Test for Sidebar component', () => {
                         return 'secondary-single-assessment-puf';
                     }
                 }
-            }
+            }  
                 sidebarInstance.handleSecondaryOptionChange(target);
                 sidebarInstance.setState({
                     elementDropdown: '',
