@@ -486,7 +486,7 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index, upda
         indexList = index ? index?.toString().split("-") : [];
     }
     /* Get the sectionType using index of element */
-    const sectionType = indexOfSectionType(index);
+    const sectionType = containerElement?.asideData?.sectionType;
     const innerSH_Index = indexList[indexList.length-1]
     // let showhideElement = getShowHideElement(updateBodymatter, indexList.length, indexList)
     let showhideElement = { ...containerElement?.asideData },
@@ -505,7 +505,7 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index, upda
         parentUrn: parentUrn,
         parentElement: asideData,
         showHideObj: {
-            currentElement: innerSH_Element,
+            currentElement: innerSH_Element || {},
             element: showhideElement,
             index: index,
             showHideType: sectionType
@@ -1188,7 +1188,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     */
     if(typeOfElement === SHOWHIDE) {
         containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex, currentSlateData);
-        wipData = containerElement?.showHideObj?.currentElement;
+        wipData = containerElement?.showHideObj?.currentElement || {};
     } else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
     }
@@ -1210,17 +1210,17 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
 
     if (response.id !== updatedId) {
         if (oldData.poetrylines) {
-            oldData.poetrylines = wipData.poetrylines;
+            oldData.poetrylines = wipData?.poetrylines;
         }
         else{
-            if (oldData.type === FIGURE) {
+            if (oldData?.type === FIGURE) {
                 oldData = {
                     ...oldData,
-                    title: wipData.title,
-                    subtitle: wipData.subtitle,
-                    captions: wipData.captions,
-                    credits: wipData.credits,
-                    figuredata: elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0 ? elementUpdateData.figureData : wipData.figuredata
+                    title: wipData?.title,
+                    subtitle: wipData?.subtitle,
+                    captions: wipData?.captions,
+                    credits: wipData?.credits,
+                    figuredata: elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0 ? elementUpdateData.figureData : wipData?.figuredata
                 }
                 if( elementUpdateData && elementUpdateData.figureData && Object.keys(elementUpdateData.figureData).length > 0){
                     dispatch(storeOldAssetForTCM({}))
@@ -1231,12 +1231,12 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     oldData.elementdata = elementUpdateData?.figureData
                     dispatch(storeOldAssetForTCM({}))
                 } else {
-                    oldData.elementdata = wipData.elementdata;
+                    oldData.elementdata = wipData?.elementdata;
                 }
                 
             }
         }
-        oldData.html = wipData.html;
+        oldData.html = wipData?.html;
         let actionStatusVersioning = Object.assign({}, actionStatus);
         actionStatusVersioning.action="create"
         actionStatusVersioning.status ="accepted"
