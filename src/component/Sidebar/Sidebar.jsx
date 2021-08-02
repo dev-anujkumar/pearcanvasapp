@@ -248,10 +248,23 @@ class Sidebar extends Component {
             return null;
         }
         let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-        let assessmentNode = activeElement ? activeElement.querySelector(".pearson-component.assessmentItem") : null;
+        let assessmentNode;
+        if (activeElement) {
+            switch (this.props?.activeElement?.secondaryOption) {
+                case "secondary-single-assessment-puf":
+                   assessmentNode = activeElement.querySelector(".pearson-component.pufItem")
+                    break;
+                case "secondary-single-assessment-cite":
+                 assessmentNode = activeElement.querySelector(".pearson-component.assessmentItem")
+                    break;
+                case "secondary-single-assessment-tdx":
+                  assessmentNode = activeElement.querySelector(".pearson-component.tdxAssessmentItem")
+                    break;
+                default: assessmentNode = null;
+            }
+        }
         let isAssessmentid = assessmentNode?.getAttribute("data-assessment") ?? undefined;
-        console.log("isAssessmentid",isAssessmentid);
-        if (this.props.activeElement.primaryOption === 'primary-single-assessment' && isAssessmentid) {
+        if (this.props?.activeElement?.primaryOption === 'primary-single-assessment' && isAssessmentid) {
             this.setState({
                 updateAssessmentTypePopup: true,
                 secondaryValue: value,
