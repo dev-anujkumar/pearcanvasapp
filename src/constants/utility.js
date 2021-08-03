@@ -234,12 +234,16 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
  export const getLabelNumberTitleHTML = (figureObj) => {
      // Modifying old figures html into new pattern
      // ................................XX...........................................
-     let figureElementsType = ['image', 'table', 'mathImage', 'authoredtext', 'codelisting', 'interactive'];
+     let figureElementsType = ['image', 'table', 'mathImage', 'authoredtext', 'codelisting', 'interactive', 'tableasmarkup'];
      if ((figureObj.figuretype == 'audio' || figureObj.figuretype == 'video') && figureObj.type == 'figure') {
         if (figureObj.hasOwnProperty('title') && figureObj.hasOwnProperty('subtitle')) {
             figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
-            figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
+        } else if (figureObj.hasOwnProperty('title')) {
+            figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', '');
+        } else if (figureObj.hasOwnProperty('subtitle')) {
+            figureObj.html.title = createLabelNumberTitleModel('', '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
         }
+        figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
     } else {
         if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
             figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
