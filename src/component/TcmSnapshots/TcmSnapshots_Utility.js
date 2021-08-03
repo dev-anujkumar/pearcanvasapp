@@ -505,7 +505,7 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index, upda
         parentUrn: parentUrn,
         parentElement: asideData,
         showHideObj: {
-            currentElement: innerSH_Element || {},
+            currentElement: innerSH_Element || wipData || {},
             element: showhideElement,
             index: index,
             showHideType: sectionType
