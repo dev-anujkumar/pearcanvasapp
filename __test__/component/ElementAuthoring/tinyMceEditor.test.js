@@ -6971,7 +6971,11 @@ describe('------------------------------Test2 TINY_MCE_EDITOR-------------------
                         getAttribute: ()=>{
                             return 'glossaryId'
                         }
-                    }]
+                    }],
+                    parentNode:{
+                        getAttribute: ()=>{
+                        return 'glossaryId'
+                    }}
                 }
             }
         }
@@ -7276,7 +7280,11 @@ describe('------------------------------Test2 TINY_MCE_EDITOR-------------------
                         getAttribute: ()=>{
                             return 'glossaryId'
                         }
-                    }]
+                    }],
+                    parentNode:{
+                        getAttribute: ()=>{
+                        return 'glossaryId'
+                    }}
                 }
             }
         }
@@ -7352,7 +7360,11 @@ describe('------------------------------Test2 TINY_MCE_EDITOR-------------------
                         getAttribute: ()=>{
                             return 'glossaryId'
                         }
-                    }]
+                    }],
+                    parentNode:{
+                        getAttribute: ()=>{
+                        return 'glossaryId'
+                    }}
                 }
             }
         }

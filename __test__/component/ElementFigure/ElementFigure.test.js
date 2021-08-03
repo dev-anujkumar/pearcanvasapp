@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import ElementFigure from '../../../src/component/ElementFigure/ElementFigure';
-import { figureImage50TextElementDefault,figureImage50TextElementWithData, mathmlEditorDefault, mathmlEditorWithData,mathImage50TextElementDefault, blockCodeEditorDefault,blockCodeEditorWithData, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,figureTableEditorTextWidthElementDefault } from '../../../fixtures/ElementFigureTestingData.js'
+import { figureImage50TextElementDefault,figureImage50TextElementWithData, mathmlEditorDefault, mathmlEditorWithData,mathImage50TextElementDefault, blockCodeEditorDefault,blockCodeEditorWithData, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,figureTableEditorTextWidthElementDefault,testDataFromNewAlfresco } from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
@@ -304,80 +304,21 @@ describe('Testing Figure element component', () => {
         })
 
         describe('New Alfresco Data Handling', () => {
-            let sampleAltTextDiv = document.createElement('at')
-            sampleAltTextDiv.setAttribute('name', 'alt_text' );
-            sampleAltTextDiv.innerHTML = "alt_text"
-            document.body.appendChild(sampleAltTextDiv)
-           
-            let sampleLongDescriptionDiv = document.createElement('ld')
-            sampleLongDescriptionDiv.setAttribute('name', 'long_description' );
-            sampleLongDescriptionDiv.innerHTML = "long_Description"
-            document.body.appendChild(sampleLongDescriptionDiv)
-
-            const elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider>)
-            let elementFigureInstance = elementFigure.find('ElementFigure').instance();
-            const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco')    
-            const defaultPath="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
-            it('Test- if case workflow', () =>{
-                let data = {
-                    'assetType': "image",
-                    'epsUrl': "",
-                    'alt-text': "",
-                    'longDescription':"longDescription",
-                    'properties': {
-                        "exif:pixelXDimension": '',
-                        "cplg:altText": ''
-                    }
-                }
-                elementFigureInstance.forceUpdate();
+            let data = testDataFromNewAlfresco;
+            it('Test- if case workflow when epsURL given', () => {
                 elementFigureInstance.dataFromNewAlfresco(data)
-                elementFigureInstance.forceUpdate();
-                elementFigure.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                spydataFromAlfresco.mockClear()
+                expect(elementFigureInstance.state.imgSrc).toBe(data.epsUrl)
             })
-            xit('Test- if case workflow-  epsURL given', () =>{
-                let data={
-                    'assetType': "image",
-                    'epsUrl': "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
-                    'alt-text': "ält-text",
-                    'longDescription':"",
-                    'width':'20',
-                    'height':'33',
-                    'uniqueID':'test',
-                    'properties': {
-                        "exif:pixelXDimension": 'pd',
-                        "cplg:altText": 'alt',
-                        'cplg:longDescription': 'long'
-                    },
-                    'nodeRef': 'workspace://SpacesStore/a029cc86-3408-4d88-96e9-351477e57f59',
-
-                }
+            it('Test- else case workflow when epsURL is not given', () => {
+                data["epsUrl"] = ''
+                data['id'] = ''
+                data.properties["exif:pixelXDimension"] = ''
+                data.properties["exif:pixelYDimension"] = ''
+                data.properties["cplg:altText"] = ''
+                data.properties['cplg:longDescription'] = ''
+                let defaultImageSrc = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
                 elementFigureInstance.dataFromNewAlfresco(data)
-                elementFigureInstance.forceUpdate();
-                elementFigure.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                expect(elementFigureInstance.state.imgSrc).toEqual(data.epsUrl)
-                spydataFromAlfresco.mockClear()
-            }) 
-            xit('Test- else case workflow', () =>{
-                let data={
-                    'assetType': "figure",
-                    'epsUrl': "",
-                    'alt-text': "ält-text",
-                    'longDescription':"longDescription",
-                    'properties': {
-                        "exif:pixelXDimension": '',
-                        "cplg:altText": ''
-                    }
-                 }
- 
-                elementFigureInstance.dataFromNewAlfresco(data)
-                elementFigureInstance.forceUpdate();
-                elementFigure.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                expect(elementFigureInstance.state.imgSrc).toBe(defaultPath)
-                spydataFromAlfresco.mockClear()
+                expect(elementFigureInstance.state.imgSrc).toBe(defaultImageSrc)
             })
         })
     })

@@ -20,7 +20,8 @@ describe('Test-CutCopySnapshots_helper', () => {
         destnSlateEntityURN = "urn:pearson:entity:e88fbc35-6c0e-4397-8a46-5fea4654903f",
         elementNewEntityUrn = "urn:pearson:entity:3dac56c9-e0ad-452b-ad8e-213e082adef8",
         asideData = undefined,
-        parentUrn = undefined
+        parentUrn = undefined,
+        elementStatus = "approved"
     let pasteParams = {
         elementId,
         elementType,
@@ -31,7 +32,8 @@ describe('Test-CutCopySnapshots_helper', () => {
         asideData,
         parentUrn,
         oldElementId,
-        elementNewEntityUrn
+        elementNewEntityUrn,
+        elementStatus
     }
     it('Test-1.1-Function--1--preparePayloadData - default -cut and paste on slate', () => {
         config.tcmStatus = false
@@ -51,7 +53,8 @@ describe('Test-CutCopySnapshots_helper', () => {
             sourceSlateUrn: "urn:pearson:manifest:67ebe5c9-9445-486f-b414-346650ec5179",
             type: "popup",
             typeOfElement: "container",
-            status: 'accepted'
+            status: 'accepted',
+            "elementVersionStatus": 'approved'
         }
         expect(spyFunction).toHaveReturnedWith(expectedResult)
     })

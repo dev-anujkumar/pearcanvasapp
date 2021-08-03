@@ -56,7 +56,7 @@ describe('Test for Sidebar component', () => {
     });
     let props = {
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
-        activeElement: { elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b" },
+        activeElement: { elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",secondaryOption:'' },
         updateElement: jest.fn()
     };
 
@@ -121,7 +121,7 @@ describe('Test for Sidebar component', () => {
         expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(1)
         expect(spySetSecondary).toHaveBeenCalled();
     });
-    xdescribe('Test case for Update Embeded AssessmentType Popup',()=>{
+    describe('Test case for Update Embeded AssessmentType Popup',()=>{
          activeElement={
             elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
             elementType: "element-assessment",
@@ -185,9 +185,9 @@ describe('Test for Sidebar component', () => {
                 secondaryValue: "",
                 secondaryLabel: ""
             })
-            expect(sidebarInstance.state.updateAssessmentTypePopup).toBe(false);
             expect(sidebarInstance.state.secondaryValue).toBe("");
             expect(sidebarInstance.state.secondaryLabel).toBe("");
+            expect(sidebarInstance.state.updateAssessmentTypePopup).toBe(false);
         });
         it('Test Case for setUpdatedAssessment',()=>{
             let secondaryValue='secondary-single-assessment-puf';
@@ -195,7 +195,8 @@ describe('Test for Sidebar component', () => {
             let nextprops={
                 activeElement:{
                     elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
-                    elementWipType: "undenied"
+                    elementWipType: "undenied",
+                    secondaryOption:'secondary-single-assessment-puf'
                 },
                 showCanvasBlocker: jest.fn(),
                 showBlocker: jest.fn(),
@@ -228,30 +229,49 @@ describe('Test for Sidebar component', () => {
            let target = {
                 target: {
                     getAttribute: function(dataValue) {
-                        return 'secondary-single-assessment-cite';
+                        return 'secondary-single-assessment-puf';
                     }
                 }
-            }
-            sidebarInstance.handleSecondaryOptionChange(target);
-            sidebarInstance.setState({
-                elementDropdown: '',
-            })
-            expect(sidebarInstance.state.elementDropdown).toBe('');
-            sidebarInstance.setState({
-                activeSecondaryOption: value,
-                activeLabelText: labelText,
-                podOption: false,
-                updateAssessmentTypePopup: true,
-                secondaryValue: value,
-                secondaryLabel: labelText,
-            })
-            expect(sidebarInstance.state.activeSecondaryOption).toBe(value);
-            expect(sidebarInstance.state.activeLabelText).toBe(labelText);
-            expect(sidebarInstance.state.podOption).toBe(false);
-            expect(sidebarInstance.state.updateAssessmentTypePopup).toBe(true);
-            expect(sidebarInstance.state.secondaryLabel).toBe(labelText);
-            expect(sidebarInstance.state.secondaryValue).toBe(value);
-        });
+            }  
+                sidebarInstance.handleSecondaryOptionChange(target);
+                sidebarInstance.setState({
+                    elementDropdown: '',
+                })
+                expect(sidebarInstance.state.elementDropdown).toBe('');
+                sidebarInstance.setState({
+                    activeSecondaryOption: value,
+                    activeLabelText: labelText,
+                    podOption: false,
+                    updateAssessmentTypePopup: true,
+                    secondaryValue: value,
+                    secondaryLabel: labelText,
+                })
+                expect(sidebarInstance.state.activeSecondaryOption).toBe(value);
+                expect(sidebarInstance.state.activeLabelText).toBe(labelText);
+                expect(sidebarInstance.state.podOption).toBe(false);
+                expect(sidebarInstance.state.updateAssessmentTypePopup).toBe(true);
+                expect(sidebarInstance.state.secondaryLabel).toBe(labelText);
+                expect(sidebarInstance.state.secondaryValue).toBe(value);
+            });
+            xit('secondary-single-assessment-puf',()=>{
+                 nextprops={
+                    activeElement:{
+                        secondaryOption:'secondary-single-assessment-puf'
+                    }
+                }
+                let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...nextprops}/></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                let target = {
+                    target: {
+                        getAttribute: function(dataValue) {
+                            return 'secondary-single-assessment-cite';
+                        }
+                    }
+                }
+                sidebarInstance.handleSecondaryOptionChange(target);
+                let secondaryOption="secondary-single-assessment-puf";
+                expect(sidebar.nextprops().activeElement.secondaryOption).toBe(secondaryOption);
+            });      
     })
 
     it('Test Case for Metadata Anchor LO', () => {

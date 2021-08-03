@@ -247,8 +247,10 @@ class Sidebar extends Component {
             })
             return null;
         }
-
-        if (this.props.activeElement.primaryOption === 'primary-single-assessment') {
+        let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+        let assessmentNode= activeElement?.querySelector("div.pearson-component");
+        let isAssessmentid = assessmentNode?.getAttribute("data-assessment") ?? undefined;
+        if (this.props?.activeElement?.primaryOption === 'primary-single-assessment' && isAssessmentid) {
             this.setState({
                 updateAssessmentTypePopup: true,
                 secondaryValue: value,
