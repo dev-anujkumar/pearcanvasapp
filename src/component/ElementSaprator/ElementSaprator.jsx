@@ -355,7 +355,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     })
 }
   
-function typeOfContainerElements(elem, props) {
+export function typeOfContainerElements(elem, props) {
     const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction, sectionType } = props
     let newData = containerTypeArray[elem.buttonType];
     /* Do not show Citation Group option if inside Multicolumn  */
