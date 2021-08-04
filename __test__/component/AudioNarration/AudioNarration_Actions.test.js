@@ -5,7 +5,7 @@ import axios from 'axios';
 import * as actions from '../../../src/component/AudioNarration/AudioNarration_Actions'
 import * as types from '../../../src/constants/Action_Constants'
 import config from '../../../src/config/config'
-import { mockData , mockDatadelete,mockGlossaryData
+import { mockData, mockDatadelete, mockGlossaryData, alfrescoDataTesting
 } from '../../../fixtures/audioNarrationTestingdata'
 import { async } from 'q';
 const middlewares = [thunk];
@@ -112,6 +112,36 @@ describe('actions', () => {
         expect(type).toBe(types.OPEN_AUDIO_GLOSSARY_POPUP);
         expect(store.getActions()).toEqual(expectedActions);
     })
+
+    it('testing------- handleAudioActions  action', () => {
+        store = mockStore(() => initialState);
+        let audioDatatype = {}, audioData = {}
+        const expectedActions = [
+            { type: types.ADD_AUDIO_GLOSSARY_POPUP, payload: audioDatatype },
+            { type: types.HANDLE_GLOSSARY_AUDIO_DATA, payload: audioData },
+        ];
+
+        store.dispatch(actions.handleAudioActions(audioDatatype,audioData))
+        const { type, payload } = store.getActions()[0];
+        expect(type).toBe(types.ADD_AUDIO_GLOSSARY_POPUP);
+        expect(store.getActions()).toEqual(expectedActions);
+    })
+
+    it('testing------- removeAudioActions  action', () => {
+        store = mockStore(() => initialState);
+        let glossaryAudioData = {}, addAudioPopup = {}, openAudioPopup = {}
+        const expectedActions = [
+            { type: types.HANDLE_GLOSSARY_AUDIO_DATA, payload: glossaryAudioData },
+            { type: types.ADD_AUDIO_GLOSSARY_POPUP, payload: addAudioPopup },
+            { type: types.OPEN_AUDIO_GLOSSARY_POPUP, payload: {openAudioGlossaryPopup: openAudioPopup} }
+        ];
+
+        store.dispatch(actions.removeAudioActions(glossaryAudioData,addAudioPopup,openAudioPopup))
+        const { type, payload } = store.getActions()[0];
+        expect(type).toBe(types.HANDLE_GLOSSARY_AUDIO_DATA);
+        expect(store.getActions()).toEqual(expectedActions);
+    })
+
     describe('fetchAudioNarrationForContainer', () => {
         beforeEach(function () {
             moxios.install()
@@ -388,5 +418,19 @@ describe('actions', () => {
             return store.dispatch(actions.fetchAudioNarrationForContainer(slateData))
         });
 
+    });
+
+    describe('saveDataFromAlfresco', () => {
+        let message = alfrescoDataTesting;
+        let dispatch =jest.fn().mockImplementationOnce((cb)=>{cb()});
+        it('saveDataFromAlfresco ===> if figureType is audio', async() => {
+            message.asset["institution-urls"] = [
+                {
+                    'publicationUrl': ""
+                }
+            ]
+            actions.saveDataFromAlfresco(message)(dispatch);
+            expect(dispatch).toHaveBeenCalled()
+        });
     });
 })
