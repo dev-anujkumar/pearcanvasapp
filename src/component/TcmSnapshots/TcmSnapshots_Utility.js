@@ -486,7 +486,7 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index, upda
         indexList = index ? index?.toString().split("-") : [];
     }
     /* Get the sectionType using index of element */
-    const sectionType = containerElement?.asideData?.sectionType;
+    const sectionType = containerElement?.asideData?.sectionType || containerElement?.sectionType;
     const innerSH_Index = indexList[indexList.length-1]
     // let showhideElement = getShowHideElement(updateBodymatter, indexList.length, indexList)
     let showhideElement = { ...containerElement?.asideData },
@@ -505,7 +505,7 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index, upda
         parentUrn: parentUrn,
         parentElement: asideData,
         showHideObj: {
-            currentElement: innerSH_Element || {},
+            currentElement: innerSH_Element || wipData || {},
             element: showhideElement,
             index: index,
             showHideType: sectionType
