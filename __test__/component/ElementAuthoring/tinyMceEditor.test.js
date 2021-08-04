@@ -6192,7 +6192,7 @@ describe('Test function--handleBlankLineArrowKeys', () => {
  })
 
  describe('Testing function--setCalloutToSelection', () => {
-    xit('setCalloutToSelection', () => {
+    it('setCalloutToSelection', () => {
         let nextEditor = {
             on: (temp, cb) => { cb(event) },
             selection: editor.selection,
