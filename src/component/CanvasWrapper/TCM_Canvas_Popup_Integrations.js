@@ -7,11 +7,14 @@ import {handleSlateRefresh} from '../CanvasWrapper/SlateRefresh_Actions'
 /**
 * This function opens TCM w.r.t. current Element
 */
-export const handleTCM = (element, index) => (dispatch) => {
+export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispatch) => {
     const currentProjectUrn = config.projectUrn;
     const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
     let url = `${config.TCM_CANVAS_POPUP_DATA}/proj/${currentProjectUrn}/slate/${currentSlateUrn}`
     if (config.isSavingElement) {
+        return false
+    }
+    if(isPopupOpen && element.id === prevElementId){
         return false
     }
     dispatch({
@@ -35,7 +38,8 @@ export const handleTCM = (element, index) => (dispatch) => {
                 const elemIndex = [{ index, urn: id }]
                 const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
                 const elemEditorName = elemData.latestPendingTransaction?.elementEditor ? elemData.latestPendingTransaction.elementEditor : elemData.latestAcceptedTransaction?.elementEditor
-                const tcmObject = { isTCMCanvasPopup: true, tcmElemData: tcmData.result[0], elemData: eURN, elementEditor: elemEditorName, tcmStatus: elemData.latestAcceptedTransaction ? true : false,spinnerStatus: false}
+                const tcmObject = { isTCMCanvasPopup: true, tcmElemData: tcmData.result[0], elemData: eURN, elementEditor: elemEditorName, tcmStatus: elemData.latestAcceptedTransaction ? true : false,spinnerStatus: false,
+                prevElementPopup: id}
                 dispatch({
                     type: LAUNCH_TCM_CANVAS_POPUP,
                     payload: tcmObject,
