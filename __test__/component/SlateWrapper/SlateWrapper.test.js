@@ -8,7 +8,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-const store = mockStore({
+const store1 = mockStore({
     slateLockReducer: { slateLockInfo: {} },
     appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
     toolbarReducer: { elemBorderToggle: true },
@@ -896,4 +896,136 @@ xdescribe('splihandler function', () => {
 
     })
 
+})
+
+const initialState = {
+    slateLockReducer: { slateLockInfo: {} },
+    appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
+    toolbarReducer: { elemBorderToggle: true },
+    metadataReducer: { currentSlateLOData: [] },
+    audioReducer: {openRemovePopUp: false},
+    searchReducer: {searchTerm: 'searchTerm-123', parentId: 'parentId-123', deeplink: false, scroll: ""},
+    commentSearchReducer: { commentSearchTerm: 'commentSearch-123', parentId: 'commentP-123', scrollTop: "10" },
+    assessmentReducer:{showConfirmationPopup:false},
+    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    }
+}
+const slateWrapInstance = (props, initialSt = initialState) => {
+    const store = mockStore(initialSt);
+    const component = mount(<Provider store={store}><SlateWrapper {...props} /></Provider>);
+    return component.find('SlateWrapper').instance();
+}
+
+describe("SlateWrapper Component", () => {
+    let props = {
+        slateData: emptySlateData,
+        slateLockInfo: {
+            isLocked: false,
+            userId: 'c5Test01'
+        },
+        permissions : [],
+        toggleTocDelete: true,
+        openRemovePopUp : true,
+        loadMorePages:jest.fn(),
+        showSlateLockPopupValue:true,
+        showConfirmationPopup:true,
+        showBlocker:jest.fn(),
+       
+        searchNode: "searchNode",
+        commentSearchParent: "commentSearchParent",
+        commentSearchNode: "commentSearchNode",
+        commentSearchScrollTop: "123" 
+    };
+    it("1.2 Test - componentDidMount ", () => {
+        const elementDiv = document.createElement('div');
+        elementDiv.setAttribute("id", "cypress-0");
+        document.body.appendChild(elementDiv);
+
+        const compInstance = slateWrapInstance(props);
+		const spy = jest.spyOn(compInstance, 'componentDidMount')
+		compInstance.componentDidMount();
+		expect(spy).toHaveBeenCalled();
+		spy.mockClear()
+    })
+    describe("1.3 Test - componentDidUpdate ", () => {
+        it("1.3.1 Test - componentDidUpdate if cases", () => {
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute("data-id", "searchParent");
+            elementDiv.setAttribute("id", "slateWrapper");
+            elementDiv.setAttribute("scrollTop", "5");
+            document.body.appendChild(elementDiv);
+
+            jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+                return { offsetTop: 10 };
+            })
+
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+            compInstance.componentDidUpdate();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.3.2 Test - else cases (searchParent/commentSearchParent !== '')", () => {
+            const newInitialState = {
+                ...initialState,
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false, scroll: ""},
+                commentSearchReducer: { commentSearchTerm: '', parentId: '', scrollTop: "10" }
+            }
+
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+            compInstance.componentDidUpdate();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.3.3 Test - else cases (commentSearchNode/commentSearchScroll/searchNode !== '')", () => {
+            const newInitialState = {
+                ...initialState,
+                searchReducer: {searchTerm: '', parentId: 'parentId-123', deeplink: false, scroll: ""},
+                commentSearchReducer: { commentSearchTerm: '', parentId: 'commentP-123', scrollTop: "", scroll:"10" }
+            }
+
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+            compInstance.componentDidUpdate();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.4 Test - handleScroll ", () => {
+        it("1.4.1 Test - handleScroll case if(config.totalPageCount <= config.page)", () => {
+            config.totalPageCount = 5; config.page = 7;
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'handleScroll')
+            compInstance.handleScroll();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.4.2 Test - handleScroll case (config.totalPageCount > config.page)", () => {
+            config.totalPageCount = 10; config.page = 7;
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            const event = {target: { scrollTop: 100, clientHeight: 100, scrollHeight: 100 }};
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'handleScroll');
+            compInstance.handleScroll(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.4.3 Test - handleScroll Else Cases", () => {
+            config.totalPageCount = 10; config.page = 7;
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc96546622ab";
+            const event = {target: { scrollTop: 10, clientHeight: 100, scrollHeight: 100 }};
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'handleScroll');
+            compInstance.handleScroll(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    });
 })
