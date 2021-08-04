@@ -9,14 +9,13 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120,
-      display: flex
+      minWidth: 120
     }
 }));
 
 const FigureImage = () => {
     const classes = useStyles();
-    const [label, setLabel] = React.useState('');
+    const [label, setLabel] = React.useState('Label');
 
     return (
         <>
@@ -34,10 +33,10 @@ const FigureImage = () => {
             <MenuItem value={10}>Ten</MenuItem>
             <MenuItem value={20}>Twenty</MenuItem>
             <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-            <TextField className='textfield-name' id="name" label="Label Name" />
-            <TextField className='textfield-number' id="number" label="Number" />   
+            </Select>   
         </FormControl>
+        <TextField className='textfield-name' id="name" label="Label Name" />
+        <TextField className='textfield-number' id="number" label="Number" />
         </div>
         </>
     )

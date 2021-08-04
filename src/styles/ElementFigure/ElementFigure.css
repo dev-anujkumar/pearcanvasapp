@@ -516,3 +516,9 @@ th ol li.listItemNumeroUnoNone:before {
     right: -3px;
     border:2px solid #fff;
 }
+
+.image-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
