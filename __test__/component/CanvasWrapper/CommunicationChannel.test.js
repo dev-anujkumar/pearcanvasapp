@@ -225,7 +225,13 @@ describe('Testing communication channel', () => {
             label:{
                 en:'en'
             }
-        }
+        },
+        alfrescoPopup: jest.fn(),
+        saveInlineImageData: jest.fn(),
+        saveSelectedAssetData: jest.fn(),
+        showWrongAudioPopup: jest.fn(),
+        saveImageDataFromAlfresco: jest.fn(),
+        setElmPickerData: jest.fn()
     }
     let wrapper = mount(<Provider store={store}><CanvasWrapper {...props} /></Provider>)
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
@@ -793,7 +799,14 @@ describe('Testing communication channel', () => {
                 message: {
                     label: {
                         en: "Lo"
-                    }
+                    },
+                    LOList: [
+                        {
+                            label: {
+                                en: "Lo"
+                            }
+                        }
+                    ]
                 }
             }
         }
@@ -1180,7 +1193,7 @@ describe('Testing communication channel', () => {
             expect(channelInstance.state.showBlocker).toBe(true)
             spytoggleLockPopup.mockClear()
         })
-        xdescribe('Test for pageLink linking case', () => {
+        describe('Test for pageLink linking case', () => {
             let attr1 = document.createAttribute('class');
             let dataID = document.createAttribute('data-id');
             let elementId = document.createAttribute('id');
@@ -1285,6 +1298,239 @@ describe('Testing communication channel', () => {
                 expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
                 spyhandleIncommingMessages.mockClear()
             })
+        })
+        it('Test for GetActiveSlate case', () => {
+            let event = {
+                data: {
+                    type: "GetActiveSlate",
+                    message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for openInlineAlsfrescoPopup case', () => {
+            let event = {
+                data: {
+                    type: "openInlineAlsfrescoPopup",
+                    message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for saveAlfrescoDataToConfig case', () => {
+            let event = {
+                data: {
+                    type: "saveAlfrescoDataToConfig",
+                    message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for customDimensions case - else block', () => {
+            let event = {
+                data: {
+                    type: "customDimensions",
+                    message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for customDimensions case - if block', () => {
+            window.dataLayer = [];
+            let event = {
+                data: {
+                    type: "customDimensions",
+                    message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for selectedAlfrescoAssetData case - isEditor - if block', () => {
+            let event = {
+                data: {
+                    type: "selectedAlfrescoAssetData",
+                    message: {
+                        isEditor: true
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for selectedAlfrescoAssetData case - NarrativeAudio - if block', () => {
+            let event = {
+                data: {
+                    type: "selectedAlfrescoAssetData",
+                    message: {
+                        calledFrom: "NarrativeAudio",
+                        asset: {
+                            content: {
+                                mimeType: "audio"
+                            },
+                            properties: {
+                                "cm:description": "audio"
+                            }
+                        }
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for selectedAlfrescoAssetData case - NarrativeAudio - handleAudioData - else block', () => {
+            let event = {
+                data: {
+                    type: "selectedAlfrescoAssetData",
+                    message: {
+                        calledFrom: "NarrativeAudio",
+                        asset: {
+                            content: {
+                                mimeType: ""
+                            },
+                            properties: {
+                                "cm:description": ""
+                            }
+                        }
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for selectedAlfrescoAssetData case - GlossaryImage - if block', () => {
+            let event = {
+                data: {
+                    type: "selectedAlfrescoAssetData",
+                    message: {
+                        calledFrom: "GlossaryImage",
+                        asset: {
+                            content: {
+                                mimeType: "image"
+                            },
+                            properties: {}
+                        }
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for selectedAlfrescoAssetData case - GlossaryImage - handleImageData - else block', () => {
+            let event = {
+                data: {
+                    type: "selectedAlfrescoAssetData",
+                    message: {
+                        calledFrom: "GlossaryImage",
+                        asset: {
+                            content: {
+                                mimeType: ""
+                            },
+                            properties: {}
+                        }
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for ToggleElmSPA case - handleElmPickerTransactions - ElmCreateInPlace case', () => {
+            let event = {
+                data: {
+                    type: "ToggleElmSPA",
+                    message: {
+                        dataToSend: {
+                            type: "ElmCreateInPlace"
+                        }
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for ToggleElmSPA case - handleElmPickerTransactions - CloseElmPicker case', () => {
+            let event = {
+                data: {
+                    type: "ToggleElmSPA",
+                    message: {
+                        dataToSend: {
+                            type: "CloseElmPicker"
+                        }
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for ToggleElmSPA case - handleElmPickerTransactions - else block', () => {
+            let event = {
+                data: {
+                    type: "ToggleElmSPA",
+                    message: {}
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for onTOCHamburgerClick case - else block', () => {
+            let event = {
+                data: {
+                    type: "onTOCHamburgerClick",
+                    message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for onTOCHamburgerClick case - if block', () => {
+            const listDropWrapper = document.createElement('div');
+            listDropWrapper.id = 'listDropWrapper';
+            const listDropWrapperChildElement = document.createElement('div');
+            listDropWrapperChildElement.className = "fr-popup";
+            listDropWrapper.appendChild(listDropWrapperChildElement);
+            document.body.appendChild(listDropWrapper);
+            let event = {
+                data: {
+                    type: "onTOCHamburgerClick",
+                    message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
         })
     })
 })
