@@ -69,7 +69,11 @@ jest.mock('../../../src/constants/utility.js', () => {
         createLabelNumberTitleModel: jest.fn()
     }
 });
-
+jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility', () => {
+    return {
+        tcmSnapshotsForCreate: jest.fn()
+    }
+});
 /*********************Declare Common Variables**********************/
 const cb = jest.fn();
 config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
@@ -275,8 +279,18 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(dispatch).not.toHaveBeenCalled();
             spyFunction.mockClear();
         });
+        it('Test-2.3-fetchAuthUser - then - else cases', () => {
+            let dispatch = jest.fn();
+            let responseData = { data: slateTestData.fetchAuthUserResponse2 }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchAuthUser')
+            axios.get = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.fetchAuthUser()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(dispatch).not.toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
     });
-    xdescribe('Test-3- setActiveElement', () => {
+    describe('Test-3- setActiveElement', () => {
         config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
         it('Test-3.1-setActiveElement - Citations', () => {
             let dispatch = (obj) => {
@@ -992,7 +1006,13 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     appStore: {
                         slateLevelData: {"urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670": slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"]},
                         activeElement: {},
-                    }
+                    },
+                    tcmReducer: { tcmSnapshot: [{
+                        "txCnt": 1,
+                        "isPrevAcceptedTxAvailable": false,
+                        "elemURN": "urn:pearson:work:d5dd0c76-5b37-4370-ab84-a4d69b4f5056",
+                        "feedback": null
+                    }]}
                 };
             }
             let popupField = 'formatted-title',
@@ -1021,7 +1041,8 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     appStore: {
                         slateLevelData: {"urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670": slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"]},
                         activeElement: {},
-                    }
+                    },
+                    tcmReducer: { tcmSnapshot: []}
                 };
             }
             let popupField = 'formatted-subtitle',
@@ -1050,7 +1071,8 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     appStore: {
                         slateLevelData: slateTestData.slateData1,
                         activeElement: {},
-                    }
+                    },
+                    tcmReducer: { tcmSnapshot: []}
                 };
             }
             let parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[2],
@@ -1071,7 +1093,8 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     appStore: {
                         slateLevelData: slateTestData.slateData1,
                         activeElement: {},
-                    }
+                    },
+                    tcmReducer: { tcmSnapshot: []}
                 };
             }
             let popupField = 'formatted-title',
@@ -1100,7 +1123,8 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     appStore: {
                         slateLevelData: slateTestData.slateData1,
                         activeElement: {},
-                    }
+                    },
+                    tcmReducer: { tcmSnapshot: []}
                 };
             }
             let popupField = 'formatted-subtitle',
@@ -1113,7 +1137,39 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled()
             spyFunction.mockClear()
         })
+        config.tcmStatus = true;
         it('Test-6.6-createPopupUnit - Popup in WE', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
+                }
+            }
+            let responseData = { data: slateTestData.popupLabelResponse }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    },
+                    tcmReducer: { tcmSnapshot: []}
+                };
+            }
+            let popupField = 'formatted-subtitle',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[9].elementdata.bodymatter[1].contents.bodymatter[4],
+                popupElementIndex = '9-1-4-1',
+                createdFromFootnote = undefined;
+            const spyFunction = jest.spyOn(canvasActions, 'createPopupUnit')
+            axios.post = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.createPopupUnit(popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote)(dispatch, getState)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        // config.tcmStatus = false;
+        xit('Test-6.6-createPopupUnit - Popup in WE', () => {
             document.getElementById = () => {
                 return {
                     innerText: "innerText",
@@ -1263,20 +1319,32 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         expect(result).toEqual(expectedResult);
     })
     describe('Test-9- fetchLearnosityContent', () => {
-        it('Test-9.1-fetchLearnosityContent', () => {
-            let dispatch = jest.fn();
-            let responseData = { data: slateTestData.learnosityData }
+        it('Test-9.1-fetchLearnosityContent - then', () => {
+            let responseData = { data: slateTestData.learnosityData, status: 200 }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe('LEARNOSITY_PROJECT_INFO');
+                expect(obj.payload).toEqual(responseData.data);
+            }
             const spyFunction = jest.spyOn(canvasActions, 'fetchLearnosityContent')
             axios.get = jest.fn(() => Promise.resolve(responseData))
             canvasActions.fetchLearnosityContent()(dispatch);
             expect(spyFunction).toHaveBeenCalled();
-            expect(dispatch).not.toHaveBeenCalled();
             spyFunction.mockClear();
         });
         it('Test-9.2-fetchLearnosityContent - Catch Block', () => {
             let dispatch = jest.fn();
             const spyFunction = jest.spyOn(canvasActions, 'fetchLearnosityContent')
             axios.get = jest.fn(() => Promise.reject({}))
+            canvasActions.fetchLearnosityContent()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(dispatch).not.toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-9.3-fetchLearnosityContent - response status is not 200', () => {
+            let dispatch = jest.fn();
+            let responseData = { data: slateTestData.learnosityData, status: 201 }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchLearnosityContent')
+            axios.get = jest.fn(() => Promise.resolve(responseData))
             canvasActions.fetchLearnosityContent()(dispatch);
             expect(spyFunction).toHaveBeenCalled();
             expect(dispatch).not.toHaveBeenCalled();
@@ -1369,6 +1437,39 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
+        it('Test-10.5-fetchProjectLFs Response status is not 200', () => {
+            let dispatch = jest.fn()
+            let responseData = { data: slateTestData.learningFrameworksApiResponse_CyLF, status: 201 }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchProjectLFs')
+            axios.get = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.fetchProjectLFs()(dispatch);
+            expect(dispatch).not.toHaveBeenCalled();
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-10.6-fetchProjectLFs Only Cypress LF and no External LF', () => {
+            let expectedPayload = {
+                cypressLF: {
+                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
+                    "label": {
+                        "en": "ev_LF_Ext_0"
+                    },
+                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
+                },
+                externalLF: []
+            }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
+                expect(obj.payload).toEqual(expectedPayload);
+            }
+            config.book_title = "ev_LF_Ext_0"
+            let responseData = { data: slateTestData.learningFrameworksApiResponse_CyLF, status: 200 }
+            const spyFunction = jest.spyOn(canvasActions, 'fetchProjectLFs')
+            axios.get = jest.fn(() => Promise.resolve(responseData))
+            canvasActions.fetchProjectLFs()(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
     });
     describe('Test-11- getProjectDetails', () => {
         it('Test-11.1 Get Project Details - then Block', async () => {
@@ -1410,6 +1511,79 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             axios.get.mockImplementation(() => Promise.reject(secondResponseData))
             await canvasActions.getProjectDetails()(dispatch)
             expect(dispatch).not.toHaveBeenCalled();
+        })
+    });
+    describe('Test-12- tcmCosConversionSnapshot ', () => {
+        it('Test-12.1 tcmCosConversionSnapshot  - then Block', async () => {
+            let firstResponseData = {}
+            let dispatch = jest.fn();
+            axios.patch.mockImplementation(() => Promise.resolve(firstResponseData))
+            const spyFunction = jest.spyOn(canvasActions, 'tcmCosConversionSnapshot')
+            await canvasActions.tcmCosConversionSnapshot()(dispatch)
+            expect(dispatch).not.toHaveBeenCalled();
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-12.2 tcmCosConversionSnapshot  - catch Block', async () => {
+            let firstResponseData = {}
+            let dispatch = jest.fn();
+            axios.patch.mockImplementation(() => Promise.reject(firstResponseData))
+            const spyFunction = jest.spyOn(canvasActions, 'tcmCosConversionSnapshot')
+            await canvasActions.tcmCosConversionSnapshot()(dispatch)
+            expect(dispatch).not.toHaveBeenCalled();
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+    });
+    describe('Test-12- fetchSlateAncestorData ', () => {
+        it('Test-12.1 fetchSlateAncestorData', () => {
+            let firstResponseData = {}
+            let dispatch = jest.fn();
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        currentSlateAncestorData: {
+                            ancestor: { title: 'ancestor-title', entityUrn: "urn" },
+                            label: 'module'
+                        }
+                    }
+                };
+            }
+            axios.patch.mockImplementation(() => Promise.resolve(firstResponseData))
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateAncestorData')
+            canvasActions.fetchSlateAncestorData()(dispatch, getState)
+            expect(dispatch).not.toHaveBeenCalled();
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-12.2 fetchSlateAncestorData  - catch Block', () => {
+            let firstResponseData = {}
+            let dispatch = (obj) => {
+                expect(obj.type).toBe('SET_CURRENT_SLATE_DATA');
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        currentSlateAncestorData: {
+                            ancestor: { title: 'ancestor-title', entityUrn: "urn" },
+                            label: 'module'
+                        }
+                    }
+                };
+            }
+            let tocNode = {
+                title: 'toc-title',
+                entityUrn: "urn"
+            }
+            axios.patch.mockImplementation(() => Promise.reject(firstResponseData))
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateAncestorData')
+            canvasActions.fetchSlateAncestorData(tocNode)(dispatch, getState)
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
         })
     });
 });
