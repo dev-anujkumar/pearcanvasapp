@@ -27,7 +27,7 @@ import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsP
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
-import { HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, UPDATE_PROJECT_METADATA } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
@@ -324,6 +324,13 @@ export const getProjectDetails = () => (dispatch, getState) => {
             type: UPDATE_PROJECT_INFO,
             payload: response.data
         })
+        // PCAT-10682 - Passing project metadata response to toc wrapper for updating the sharing context role if required
+        if (response?.data && Object.keys(response.data).length > 0) {
+            sendDataToIframe({
+                'type': UPDATE_PROJECT_METADATA,
+                'message': response.data
+            })
+        }
         const data = JSON.parse(JSON.stringify(response.data))
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {

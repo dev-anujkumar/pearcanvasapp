@@ -68,7 +68,8 @@ let config = {
     VCS_API_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/vcs-api/v1/content/',
     LEARNOSITY_CONTENT_BRIDGE_API: 'https://contentapis-staging.pearsoncms.net/learnositycontentbridge-api/lcb/v1/bank2projapi/',
     ALFRESCO_EDIT_ENDPOINT: "https://usppewip.cms.pearson.com/share/page/document-details?nodeRef=workspace://SpacesStore/",
-    ALFRESCO_EDIT_METADATA:"https://staging.api.pearson.com/content/cmis/uswip-aws/"
+    ALFRESCO_EDIT_METADATA:"https://staging.api.pearson.com/content/cmis/uswip-aws/",
+    PROJECT_SHARING_ROLE: ""
 };
 
 if (process.env.NODE_ENV === "development") {
