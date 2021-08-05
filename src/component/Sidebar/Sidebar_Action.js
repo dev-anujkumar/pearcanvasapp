@@ -676,9 +676,7 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             }
         }
         config.conversionInProcess = false
-        if (currentSlateData.status === 'wip') {
-            config.savingInProgress = false
-        }
+        config.savingInProgress = false
         config.isSavingElement = false
     })
         .catch(err => {
