@@ -14,13 +14,13 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateThreeColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -35,7 +35,6 @@ import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from '
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
-import ElementShowHide from '../ElementShowHide';
 import ElementContainerContext from './ElementContainerContext'
 import { CitationGroupContext } from './ElementCitationContext'
 import CitationGroup from '../CitationGroup'
@@ -62,10 +61,9 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
-import {closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import {closeTcmPopup, handleTCM} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
-import {handleTCM} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 
@@ -829,7 +827,17 @@ class ElementContainer extends Component {
         const oldAssessmentData = JSON.parse(JSON.stringify(this.props.element));
         this.props.storeOldAssetForTCM(oldAssessmentData.elementdata);
         let dataToSend = { ...this.props.element }
-        if (assessmentData.id) {
+        if (assessmentData?.calledFrom == 'updateAssessmentFormat') {
+            dataToSend.elementdata = {
+                schema: "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+                assessmentid: "",
+                assessmenttitle: "",
+                usagetype: assessmentData.usageType,
+                assessmentformat: assessmentData.format
+            }
+            this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + assessmentData.format)
+        }
+        else if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
             dataToSend.elementdata.usagetype = assessmentData.usageType;
             dataToSend.elementdata.assessmentid = assessmentData.id;
@@ -1396,32 +1404,6 @@ class ElementContainer extends Component {
                     />;
                     labelText = 'Pop'
                     break;
-                /* case elementTypeConstant.SHOW_HIDE:
-                     editor = <ElementContainerContext.Provider value={{
-                         onListSelect: this.props.onListSelect,
-                         showHideId: this.props.showHideId,
-                         createShowHideElement: this.props.createShowHideElement,
-                         deleteShowHideUnit: this.props.deleteShowHideUnit,
-                         activeElement: this.props.activeElement,
-                         showBlocker: this.props.showBlocker,
-                         permissions: permissions,
-                         handleFocus: this.handleFocus,
-                         handleBlur: this.handleBlur,
-                         index: index,
-                         element: element,
-                         model: element.html,
-                         slateLockInfo: slateLockInfo,
-                         onClick: this.handleFocus,
-                         glossaryFootnoteValue: this.props.glossaryFootnoteValue,
-                         elementStatus: config.elementStatus,
-                         openAssetPopoverPopUp: this.openAssetPopoverPopUp,
-                         openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
-                         getElementStatus: this.props.getElementStatus
-                     }}><ElementShowHide userRole={this.props.userRole} />
-                     </ElementContainerContext.Provider >;
-                     labelText = 'SH'
-                     break;
-                 */
                 case elementTypeConstant.SHOW_HIDE:
                     editor = <ShowHide
                         onListSelect={this.props.onListSelect}
@@ -1586,9 +1568,10 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
                     } else {
+                        labelText = MULTI_COLUMN_2C.ELEMENT_TAG_NAME
                         editor = <MultiColumnContext.Provider value={{
                             activeElement: this.props.activeElement,
                             showBlocker: this.props.showBlocker,
@@ -1606,9 +1589,8 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultiColumnContainer userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
-                        labelText = '2C'
                     }
                     break;
 
@@ -1623,7 +1605,8 @@ class ElementContainer extends Component {
                         element={element}
                         elementId={element.id}
                         slateLockInfo={slateLockInfo}
-                        // splithandlerfunction={splithandlerfunction}
+                        asideData = { this.props?.asideData }
+                        parentUrn = { this.props?.parentUrn }
                         userRole={this.props.userRole}
                         activeElement={this.props.activeElement}
                         onClickCapture={this.props.onClickCapture}
@@ -1735,11 +1718,11 @@ class ElementContainer extends Component {
         const inContainer = this.props.parentUrn ? true : false
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
-                {this.renderCopyComponent(this.props, index, inContainer)}
+                {this.renderCopyComponent(this.props, index, inContainer, tcm)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
-                    {/* render 3 column labels when labelText is 3C  */}
-                    {labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME && <div> {this.renderMultipleColumnLabels(element)}</div>}
+                    {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
+                    {(labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME || MULTI_COLUMN_2C.ELEMENT_TAG_NAME) && <div>{this.renderMultipleColumnLabels(element)}</div>}
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e, true)} />)
                         : null}
                     {this.renderColorPaletteButton(element, permissions)}
@@ -1798,7 +1781,7 @@ class ElementContainer extends Component {
     // function to render multiple columns for 3 column container based on bodymatter
     renderMultipleColumnLabels = (element) => {
         let activeColumnLabel = "C1"
-        for (let propsElementObject of this.props.threeColumnData) {
+        for (let propsElementObject of this.props.multipleColumnData) {
             if (propsElementObject.containerId === element.id) {
                 activeColumnLabel = propsElementObject.columnIndex;
             }
@@ -1815,11 +1798,11 @@ class ElementContainer extends Component {
 
     updateColumnValues = (index, element) => {
         let objKey = element.id;
-        let threeColumnObjData = {
+        let multipleColumnObjData = {
             containerId: objKey,
             columnIndex: `C${index + 1}`
         }
-        this.props.updateThreeColumnData(threeColumnObjData, objKey);
+        this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
     }
 
     /**
@@ -1828,13 +1811,14 @@ class ElementContainer extends Component {
      * @param {*} index 
      * @param {*} inContainer 
      */
-    renderCopyComponent = (_props, index, inContainer) => {
+    renderCopyComponent = (_props, index, inContainer, tcmFlag) => {
         if (this.state.showCopyPopup) {
             return (
                 <CutCopyDialog
                     userRole={_props.userRole}
                     index={index}
                     inContainer={inContainer}
+                    tcmFlag={tcmFlag}
                     setElementDetails={this.setElementDetails}
                     element={_props.element}
                     toggleCopyMenu={this.toggleCopyMenu}
@@ -2047,8 +2031,9 @@ class ElementContainer extends Component {
     handleTCMLaunch = (event, element) => {
         const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE } = TcmConstants
         const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE]
+        const {prevSelectedElement, isTCMCanvasPopupLaunched} = this.props
             if (element?.type && tcmPopupSupportedElements.includes(element.type)) {
-                this.props.handleTCM(element, this.props.index)
+                this.props.handleTCM(element, this.props.index, isTCMCanvasPopupLaunched, prevSelectedElement)
             } else {
                 if (config.isSavingElement) {
                     return false
@@ -2101,8 +2086,7 @@ ElementContainer.defaultProps = {
 
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
-    element: PropTypes.object,
-    elemBorderToggle: PropTypes.bool
+    element: PropTypes.object
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -2182,14 +2166,14 @@ const mapDispatchToProps = (dispatch) => {
         deleteElementAction: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
             dispatch(deleteElementAction(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
         },
-        updateThreeColumnData: (threeColumnObjData, objKey) => {
-            dispatch(updateThreeColumnData(threeColumnObjData, objKey))
+        updateMultipleColumnData: (multipleColumnObjData, objKey) => {
+            dispatch(updateMultipleColumnData(multipleColumnObjData, objKey))
         },
         storeOldAssetForTCM: (data) => {
             dispatch(storeOldAssetForTCM(data))
         },
-        handleTCM: (element) => {
-            dispatch(handleTCM(element))
+        handleTCM: (element, index, isTCMCanvasPopupLaunched, prevSelectedElement) => {
+            dispatch(handleTCM(element, index, isTCMCanvasPopupLaunched, prevSelectedElement))
         },
     }
 }
@@ -2218,7 +2202,9 @@ const mapStateToProps = (state) => {
         slateLevelData: state.appStore.slateLevelData,
         assessmentReducer: state.assessmentReducer,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
-        threeColumnData: state.appStore.threeColumnData
+        multipleColumnData: state.appStore.multipleColumnData,
+        isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
+        prevSelectedElement: state.tcmReducer.prevElementId
     }
 }
 

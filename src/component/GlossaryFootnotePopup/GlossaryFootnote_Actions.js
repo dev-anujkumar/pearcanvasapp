@@ -43,8 +43,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
         if (showHideElement || asideParent?.type === 'showhide') { /** Glossary-Footnotes inside Show-Hide */
-            let showHideChild = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement, 'glossaryFootnote')
-            glossaryFootElem = showHideChild?.currentElement
+            //let showHideChild = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement, 'glossaryFootnote')
+            //glossaryFootElem = showHideChild?.currentElement
+            /* Get the element where footnote/Glossery is added */
+            glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         }
         else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
@@ -177,7 +179,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
     if(glossaryContentText && glossaryContentText.includes('audio-id')){
         const audioId = glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[1];
         const audioPath =glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[3]
-        const title = audioPath.split("/").pop();
+        const title = audioPath?.split("/")?.pop()?.replace(/%20/g,' ');
         const data = {
             'title':{
                 'en':title
@@ -202,7 +204,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 const classValue = glossaryImageAssets[i]?.attributes?.class?.nodeValue
                 const imageHeight = glossaryImageAssets[i]?.attributes?.height?.nodeValue
                 const imageWidth = glossaryImageAssets[i]?.attributes?.width?.nodeValue
-                const title = imagePath.split("/").pop();
+                const title = imagePath?.split("/")?.pop()?.replace(/%20/g,' ');
                 const Longdescription = glossaryImageAssets[i]?.attributes?.longdescription?.nodeValue
                 const data = {
                         imageid: imageId,
@@ -499,9 +501,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     }
     if(showHideElement ||  asideParent?.type === 'showhide'){
-        let shTypeIndex = innerSH_Index?.length > 3 && elementType == 'figure' ? innerSH_Index[innerSH_Index.length - 3] : innerSH_Index[innerSH_Index.length - 2]
-        let showhideTypeVal = findSectionType(shTypeIndex?.toString())
-        data.sectionType = showhideTypeVal
+        //let shTypeIndex = innerSH_Index?.length > 3 && elementType == 'figure' ? innerSH_Index[innerSH_Index.length - 3] : innerSH_Index[innerSH_Index.length - 2]
+        //let showhideTypeVal = findSectionType(shTypeIndex?.toString())
+        data.sectionType = asideParent?.sectionType; //showhideTypeVal
     }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
 
@@ -528,8 +530,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
             let showhideTypeVal = "", showHideObject = undefined
             if(showHideElement ||  asideParent?.type === 'showhide'){ /** Glossary-Footnotes inside Show-Hide */
-                let shTypeIndex = innerSH_Index?.length > 3 && elementType =='figure' ? innerSH_Index[innerSH_Index.length - 3] :  innerSH_Index[innerSH_Index.length - 2]
-                showhideTypeVal = findSectionType(shTypeIndex?.toString())
+                //let shTypeIndex = innerSH_Index?.length > 3 && elementType =='figure' ? innerSH_Index[innerSH_Index.length - 3] :  innerSH_Index[innerSH_Index.length - 2]
+                showhideTypeVal = asideParent?.sectionType;//findSectionType(shTypeIndex?.toString())
                 let showhideElement = getShowHideElement(tcmBodymatter, innerSH_Index.length, innerSH_Index)
                 let innerSH_Element = showhideTypeVal && showhideElement?.interactivedata[showhideTypeVal][innerSH_Index]
                 showHideObject = {
@@ -570,7 +572,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
 
         if (showHideElement || asideParent?.type === 'showhide') {/** Glossary-Footnotes inside Show-Hide */
-            newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, showHideElement, tempIndex)
+            newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         }
         else if (tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data

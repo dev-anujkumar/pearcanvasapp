@@ -18,7 +18,7 @@ import ElementConstants, {
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 
-const { AUTHORED_TEXT, SHOW_HIDE, FIGURE } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -48,6 +48,8 @@ export const updateNewVersionElementInStore = (paramObj) => {
         asideData.indexes = indexes;
         if (indexes.length === 2 || indexes.length === 3) {
             dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+        } else if (indexes.length === 4 && asideData.parent.type === 'groupedcontent') {
+            dispatch(fetchSlateData(asideData.parent.id, asideData.parent.parentContentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
@@ -449,6 +451,8 @@ function updateShowhideElements(element, updatedData, indexs) {
                     showHideElement.elementdata.text = updatedData.elementdata.text;
                 } else if(showHideElement?.type === FIGURE) { /* For update - FIGURE */
                     showHideElement.figuredata = updatedData?.figuredata;
+                } else if(showHideElement?.type === ELEMENT_DIALOGUE) { /* For update PS  - linenumber */
+                    showHideElement.elementdata = updatedData?.elementdata;
                 }
             }
         })

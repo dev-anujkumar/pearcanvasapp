@@ -5,7 +5,8 @@ import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
     ERROR_POPUP,
-    GET_TCM_RESOURCES
+    GET_TCM_RESOURCES,
+    AUTHORING_ELEMENT_UPDATE,
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -606,4 +607,131 @@ export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
         payload: activeElement
     });
 
+}
+
+export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) => {
+    const parentData = getState().appStore.slateLevelData;
+    const currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    const updateParams = {
+        dataToUpdate,
+        activeElement: getState().appStore.activeElement,
+        currentSlateData
+    }
+    let dataToSend = {
+        numberedline: dataToUpdate.isNumbered
+    }
+    if (dataToUpdate.isNumbered == true) {
+        dataToSend.startlinenumber = dataToUpdate.startNumber
+    }
+    let elementEntityUrn = ""
+    const updatedData = dispatch(updateContainerMetadataInStore(updateParams,""))
+    if(updatedData?.elementEntityUrn){
+        elementEntityUrn = updatedData.elementEntityUrn
+    }
+    let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
+    dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: {[config.slateManifestURN] : updatedSlateLevelData }
+        }
+    })
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+    config.conversionInProcess = true
+    config.isSavingElement = true
+    const url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata`
+    return axios.put(url, dataToSend, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(res => {
+        if (currentSlateData?.status === 'approved') {
+            if (currentSlateData.type === "popup") {
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
+            }
+            else {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            config.conversionInProcess = false
+            if (currentSlateData.status === 'wip') {
+                config.savingInProgress = false
+            }
+            config.isSavingElement = false
+        } else {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            const newParentData = getState().appStore.slateLevelData;
+            const parsedParentData = JSON.parse(JSON.stringify(newParentData));
+            let newSlateData = parsedParentData[config.slateManifestURN];
+            const newParams = {
+                dataToUpdate,
+                activeElement: getState().appStore.activeElement,
+                currentSlateData: newSlateData
+            }
+            const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
+            if(updatedStore.currentSlateData){
+                dispatch({
+                    type: AUTHORING_ELEMENT_UPDATE,
+                    payload: {
+                        slateLevelData: {[config.slateManifestURN] : updatedStore.currentSlateData}
+                    }
+                })
+            }
+        }
+       
+        config.conversionInProcess = false
+        config.savingInProgress = false
+        config.isSavingElement = false
+    })
+        .catch(err => {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            dispatch({ type: ERROR_POPUP, payload: { show: true } })
+            config.conversionInProcess = false
+            config.savingInProgress = false
+            config.isSavingElement = false
+            console.error(" Error >> ", err)
+        })
+
+}
+const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch) => {
+    const {
+        dataToUpdate,
+        activeElement,
+        currentSlateData,
+        versionedElement
+    } = updateParams;
+    const { index } = activeElement;
+    let tmpIndex = typeof index === 'number' ? index : index.split("-")
+    if (typeof tmpIndex === 'number') {
+        const updatedElement = prepareElementToUpdate(dataToUpdate, tmpIndex, activeElement, currentSlateData, versionedElement)
+        elementEntityUrn = updatedElement.contentUrn
+        currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
+    }
+    return {
+        elementEntityUrn, currentSlateData
+    }
+
+}
+
+const prepareElementToUpdate = (dataToUpdate, index, activeElement, currentSlateData, versionedElement) => {
+    let updatedElement = {};
+    if (versionedElement) {
+        return versionedElement
+    } else {
+        if (typeof index === 'number') {
+            const { elementType } = activeElement
+            updatedElement = currentSlateData.contents.bodymatter[index]
+            if (elementType == 'poetry') {
+                updatedElement = {
+                    ...updatedElement,
+                    numberedline: dataToUpdate.isNumbered,
+                    startlinenumber: dataToUpdate.startNumber
+                }
+            }
+        }
+        return updatedElement
+    }
 }

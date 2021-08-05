@@ -395,8 +395,12 @@ export class TinyMceEditor extends Component {
                 let parser = new DOMParser();
                 let htmlDoc = parser.parseFromString(selectContent, 'text/html');
                 let dfnTags = htmlDoc.getElementsByTagName('DFN');
-                if ((nodeName && nodeName === 'dfn') || dfnTags.length) {
+                if ((nodeName && nodeName === 'dfn') || dfnTags.length || (nodeName && nodeName === 'code')) {
                     let dfnAttribute = [];
+                    if(nodeName==='code'){
+                        dataURI = node.parentNode.getAttribute('data-uri');
+                        dfnAttribute.push(dataURI)
+                    }
                     if (nodeName && nodeName === 'dfn') {
                         dfnAttribute.push(dataURI);
                     } else {
@@ -409,7 +413,6 @@ export class TinyMceEditor extends Component {
                     }
                 }
             }
-
         });
     }
 
@@ -1317,6 +1320,7 @@ export class TinyMceEditor extends Component {
             tooltip: "Inline code",
             onAction: function () {
                 // Add the custom formatting
+                let activeElement;
                 if (editor.selection.getNode().nodeName === 'CODE' && self.props.element.type === 'stanza') {
                     let selectedNode = editor.selection.getNode();
                     let innerHTML = selectedNode.innerHTML;
@@ -1324,7 +1328,7 @@ export class TinyMceEditor extends Component {
                 }
                 else {
                     let range = editor.selection.getRng();
-                    let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+                    activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
                     editor.undoManager.transact(() => {
                         editor.formatter.toggle('custom_code');
                         if (activeElement.nodeName == "DIV" && self.props.element.type === 'stanza') {
@@ -1332,6 +1336,32 @@ export class TinyMceEditor extends Component {
                             spanHandlers.handleFormattingTags(editor, self.props.elementId, 'div', divParent, 'poetryLine', range);
                         }
                     });
+                }
+                
+                let node = editor.selection.getNode();
+                let nodeName = node ? node.tagName.toLowerCase() : null;
+                let selectContent = editor.selection.getContent();
+                let parser = new DOMParser();
+                let dataURI = null;
+                let htmlDoc = parser.parseFromString(selectContent, 'text/html');
+                let dfnTags = htmlDoc.getElementsByTagName('DFN');
+                if ((nodeName && nodeName === 'dfn') || dfnTags.length || (nodeName && nodeName === 'em')) {
+                    let dfnAttribute = [];
+                    dataURI = node.getAttribute('data-uri');
+                    if(nodeName==='em'){
+                        dataURI = node.parentNode.getAttribute('data-uri');
+                        dfnAttribute.push(dataURI)
+                    }
+                    if (nodeName && nodeName === 'dfn') {
+                        dfnAttribute.push(dataURI);
+                    } else {
+                        for (let index = 0; index < dfnTags.length; index++) {
+                            dfnAttribute.push(dfnTags[index].getAttribute('data-uri'));
+                        }
+                    }
+                    for (let index = 0; index < dfnAttribute.length; index++) {
+                        self.handleGlossaryForCode(activeElement, dfnAttribute[index]);
+                    }
                 }
             },
             onSetup: function (api) {
@@ -2426,6 +2456,21 @@ export class TinyMceEditor extends Component {
         }
     }
 
+    // Handle Glossary for Code
+    handleGlossaryForCode = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let codeTag = dfn.closest('code');
+        if (codeTag) {
+            dfn.innerHTML = `<code>${dfn.innerHTML}</code>`
+            if (codeTag.textContent === dfn.textContent) {
+                let innerHTML = codeTag.innerHTML;
+                codeTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(codeTag.parentNode, dfn);
+            }
+        }
+    }
+
     /**
      * Called when glossary button is clicked. Responsible for adding glossary
      * @param {*} editor  editor instance 
@@ -2465,6 +2510,7 @@ export class TinyMceEditor extends Component {
             }
             editor.selection.setContent(insertionText);
             this.handleGlossaryForItalic(activeElement, res.data.id);
+            this.handleGlossaryForCode(activeElement, res.data.id);
             this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
         })
@@ -2675,7 +2721,7 @@ export class TinyMceEditor extends Component {
      */
     componentDidMount() {
         let currentNode = document.getElementById('cypress-' + this.props.index);
-        if (currentNode.getElementsByTagName("IMG").length) {
+        if (currentNode && currentNode.getElementsByTagName("IMG").length) {
             currentNode.innerHTML = this.getNodeContent();
         }
         const { slateLockInfo: { isLocked } } = this.props

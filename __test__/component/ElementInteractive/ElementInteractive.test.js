@@ -79,21 +79,6 @@ jest.mock('../../../src/js/toggleLoader', () => ({
     showBlocker: jest.fn(),
     hideToc: jest.fn(),
 }))
-jest.mock("../../../src/js/c2_media_module", () => {
-    return {
-        c2MediaModule: {
-            productLinkOnsaveCallBack: (data, cb) => {
-                cb(data);
-            },
-            AddanAssetCallBack: (data, cb) => {
-                cb(data);
-            },
-            onLaunchAddAnAsset: (cb) => {
-                cb()
-            }
-        }
-    }
-});
 let event = {
     stopPropagation: jest.fn(),
     preventDefault: jest.fn()

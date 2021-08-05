@@ -348,6 +348,7 @@ export const singleAssessmentData = {
     },
     feedback: false,
     figuredata: {
+        id: "",
         elementdata: {
             assessmentformat: "cite",
             assessmentid: undefined,

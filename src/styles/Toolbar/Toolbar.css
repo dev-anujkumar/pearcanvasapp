@@ -126,6 +126,7 @@
 
 .learningobjectivedropdown2{
   display: none;
+  left: 10px
 }
 
 .learningobjectivedropdown li ,.learningobjectivedropdown2 li{    
@@ -566,10 +567,6 @@ margin-left:6px;
 
 .glossary-audiodropdown audio{
   width:100% !important
-}
-
-.learningobjectivedropdown2{
-  left: 10px
 }
 
 @media only screen and (max-width: 1400px) {

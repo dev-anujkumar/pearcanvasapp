@@ -5,7 +5,6 @@ import TinyMceEditor from "../tinyMceEditor"
 
 // IMPORT - Assets //
 import './../../styles/ElementFigure/ElementFigure.css';
-import { c2MediaModule } from './../../js/c2_media_module';
 import {
     DEFAULT_IMAGE_DATA_SOURCE,
     DEFAULT_IMAGE_SOURCE
@@ -154,22 +153,6 @@ class ElementFigure extends Component {
         }
     }
     /**
-     * @description Open C2 module with predefined Alfresco location
-     * @param {*} locationData alfresco locationData
-     */
-    handleC2ExtendedClick = (locationData) => {
-        let alfrescoLocationData = this.state.alfrescoSiteData
-        alfrescoLocationData.currentAsset = locationData.currentAsset;
-        let data_1 = alfrescoLocationData?.nodeRef ? alfrescoLocationData : locationData;
-        let that = this;
-        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                that.dataFromAlfresco(data);
-            })
-        })
-
-    }
-    /**
      * @description function will be called on image src add and fetch resources from Alfresco
      */
     handleC2MediaClick = (e) => {
@@ -238,7 +221,8 @@ class ElementFigure extends Component {
             elementId : this.props.elementId,
             currentProjectId: config.projectUrn,
             slateEntityUrn: config.slateEntityURN,
-            parentEntityUrn: this.props.parentEntityUrn
+            parentEntityUrn: this.props.parentEntityUrn,
+            sectionType: this.props?.asideData?.sectionType || "bodymatter"
         }
         let tableConfig = {
             S3MathImagePath: config.S3MathImagePath ? config.S3MathImagePath : "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/",

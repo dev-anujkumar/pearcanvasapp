@@ -12,4 +12,4 @@ export default class Match {
     get endInNew() {
         return this.startInNew + this.size;
     }
-};
+}

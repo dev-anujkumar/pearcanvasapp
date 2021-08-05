@@ -93,7 +93,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
 }
 
 
-const updateStorePostDelete = (deleteParams) => {
+export const updateStorePostDelete = (deleteParams) => {
     const {
         index,
         newIndex,
@@ -161,14 +161,14 @@ const updateStorePostDelete = (deleteParams) => {
 }
 
 
-const showError = (error, dispatch, errorMessage) => {
+export const showError = (error, dispatch, errorMessage) => {
     dispatch({ type: ERROR_POPUP, payload: { show: true } })
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
     hideBlocker()
     console.error(errorMessage, error)
 }
 
-const prepareDeleteRequestData = (elementType, payloadParams) => {
+export const prepareDeleteRequestData = (elementType, payloadParams) => {
     const {
         elementId,
         parentUrn,

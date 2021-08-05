@@ -537,6 +537,9 @@ overflow: unset;
   .modal-content.tcm-canvas-popup{
     left: -42%;
   }
+  .dialog-window.tcm-canvas-popup{
+    max-height: 270px !important;
+  }
 }
 .tcmIcon{
   padding: 2px !important;
@@ -553,7 +556,6 @@ overflow: unset;
   display: flex;
   width: 54%;
   justify-content: space-between;
-  font-family: 'Open Sans';
   font-size: 12px;
   font-style: italic;
   line-height: 1.67;
@@ -566,7 +568,6 @@ overflow: unset;
   justify-content: space-between;
   padding-right: 20px;
   height: 30px;
-  font-family: 'Open Sans';
   font-size: 12px;
   font-weight: 600;
   color: #333333;
@@ -630,13 +631,6 @@ del{
   color: gray !important;
 }
 
-/* added css for callout, footnotes, asset popover color in the popup */
-.calloutOne ins, .calloutTwo ins, .calloutThree ins, .calloutFour ins {
-  text-decoration-line: none !important;
-  color: #F56831 !important;
-  text-decoration: underline dotted
-} 
-
 a.paragraphNumeroUnoFootnote ins{
   text-decoration-line: line !important;
   color: #F56831 !important;
@@ -648,9 +642,8 @@ a.paragraphNumeroUnoFootnote del{
 } 
 
 .dialog-window.tcm-canvas-popup abbr.Pearson-Component.AssetPopoverTerm ins{
-  text-decoration-line: none !important;
   color: #F56831 !important;
-  text-decoration: underline dotted
+  text-decoration: underline dotted !important
 }
 
 .dialog-window.tcm-canvas-popup strong ins{
@@ -670,4 +663,78 @@ color: transparent !important;
 }
 span.answerLineContent{
   border-bottom: 1px solid #bcbcbc !important;
+}
+ins.mod{
+  background: rgb(251, 188, 72) !important;
+  color: rgb(121, 121, 121);
+}
+
+/* added css for callout, Glossary in tCM after accepted changes */
+
+.modal-content.tcm-canvas-popup dfn.DeactivateTerm{
+  color: #007FA3 !important;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+.modal-content.tcm-canvas-popup dfn.GlossaryTerm .mod{
+    text-decoration-line: underline !important;
+    text-decoration-style: wavy !important;
+    text-decoration-color: #eb6f13 !important;
+    color: #eb6f13;
+    background-color: transparent !important;
+}
+.modal-content.tcm-canvas-popup 
+span.calloutOne.DeactivateAsset, span.calloutTwo.DeactivateAsset, 
+span.calloutThree.DeactivateAsset, 
+span.calloutFour.DeactivateAsset{
+  color: #007FA3 !important;
+    text-decoration: underline dotted #007FA3 !important;
+}
+.modal-content.tcm-canvas-popup 
+span.calloutOne, 
+span.calloutOne > ins.diffins, 
+span.calloutOne > ins.diffmod{
+    color: #F56831;
+    text-decoration: underline dotted #F56831;
+    position: relative;
+    background: rgb(251, 188, 72);
+}
+.modal-content.tcm-canvas-popup 
+span.calloutTwo, 
+span.calloutTwo > ins.diffins, 
+span.calloutTwo > ins.diffmod{
+    color: #F56831;
+    text-decoration: underline dotted #F56831;
+    position: relative;
+    background: rgb(251, 188, 72);
+}
+.modal-content.tcm-canvas-popup 
+span.calloutThree, 
+span.calloutThree > ins.diffins, 
+span.calloutThree > ins.diffmod{
+    color: #F56831;
+    text-decoration: underline dotted #F56831;
+    position: relative;
+    background: rgb(251, 188, 72);
+}
+.modal-content.tcm-canvas-popup 
+span.calloutFour, 
+span.calloutFour > ins.diffins, 
+span.calloutFour > ins.diffmod{
+    color: #F56831;
+    text-decoration: underline dotted #F56831;
+    position: relative;
+    background: rgb(251, 188, 72);
+}
+
+/* added css for list elements */
+li ol, li ul{
+  counter-reset: section !important;
+}
+ol li.listItemNumeroUnoNumber, 
+ol li.listItemNumeroUnoUpperAlpha, 
+ol li.listItemNumeroUnoLowerAlpha, 
+ol li.listItemNumeroUnoUpperRoman, 
+ol li.listItemNumeroUnoLowerRoman {
+  list-style-type: none !important
 }

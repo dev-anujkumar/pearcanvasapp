@@ -51,14 +51,14 @@ export const showWrongAudioPopup = (value) => (dispatch, getState) => {
     })
 }
 
-function handleAudioActions(audioDatatype, audioData) {
+export function handleAudioActions(audioDatatype, audioData) {
     return dispatch => {
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: audioDatatype })
         dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: audioData });
     }
 }
 
-function removeAudioActions(glossaryAudioData,addAudioPopup,openAudioPopup){
+export function removeAudioActions(glossaryAudioData,addAudioPopup,openAudioPopup){
     return dispatch =>{
         dispatch({ type: HANDLE_GLOSSARY_AUDIO_DATA, payload: glossaryAudioData });
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: addAudioPopup })

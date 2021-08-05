@@ -8,7 +8,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-const store = mockStore({
+const store1 = mockStore({
     slateLockReducer: { slateLockInfo: {} },
     appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
     toolbarReducer: { elemBorderToggle: true },
@@ -16,7 +16,15 @@ const store = mockStore({
     audioReducer: {openRemovePopUp: false},
     searchReducer: {searchTerm: '', parentId: '', deeplink: false},
     commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-    assessmentReducer:{showConfirmationPopup:false}
+    assessmentReducer:{showConfirmationPopup:false},
+    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    }
 })
 import config from '../../../src/config/config';
 import { showTocBlocker } from "../../../src/js/toggleLoader";
@@ -91,10 +99,10 @@ describe('Testing <SlateWrapper> Component', () => {
             },
             permissions : [],
             openRemovePopUp : true,
-            showSlateLockPopupValue:true
-
+            showSlateLockPopupValue:true,
+            showBlocker : jest.fn()
         };
-        let wrapper = mount(<SlateWrapper store={store} {...props} />);
+        let wrapper = mount(<Provider store={store}><SlateWrapper {...props} /></Provider>);
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
         
         test('renders properly with default slate', () => {
@@ -116,6 +124,7 @@ describe('Testing <SlateWrapper> Component', () => {
             },
             permissions : [],
             openRemovePopUp : true,
+            showBlocker : jest.fn()
         };
         let wrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>);
         test('renders properly', () => {
@@ -181,7 +190,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -203,7 +220,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -225,7 +250,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             //config.savingInProgress=true
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -328,7 +361,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 showAudioRemovePopup : jest.fn(),
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -350,7 +391,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -381,7 +430,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 withinLockPeriod: true,
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -415,7 +472,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 withinLockPeriod: true,
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } accesDeniedPopup = {true} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -451,7 +516,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -488,7 +561,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -525,7 +606,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -562,7 +651,15 @@ describe('Testing <SlateWrapper> Component', () => {
                 audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
                 searchReducer: {searchTerm: '', parentId: '', deeplink: false},
                 commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false}
+                assessmentReducer:{showConfirmationPopup:false},
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                }
             })
             const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
             let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
@@ -633,7 +730,15 @@ xdescribe('splihandler function', () => {
         audioReducer: {openRemovePopUp: false},
         searchReducer: {searchTerm: '', parentId: '', deeplink: false},
         commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-        assessmentReducer:{showConfirmationPopup:false}
+        assessmentReducer:{showConfirmationPopup:false},
+        alfrescoReducer: {
+            alfrescoAssetData: {},
+            elementId: "urn",
+            alfrescoListOption: [],
+            launchAlfrescoPopup: true,
+            editor: true,
+            Permission: false
+        }
     })
     //config.savingInProgress=true
     const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -720,7 +825,15 @@ xdescribe('splihandler function', () => {
             audioReducer: {openRemovePopUp: false, openWrongAudioPopup : true, openSplitPopUp:false},
             searchReducer: {searchTerm: '', parentId: '', deeplink: false},
             commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-            assessmentReducer:{showConfirmationPopup:false}
+            assessmentReducer:{showConfirmationPopup:false},
+            alfrescoReducer: {
+                alfrescoAssetData: {},
+                elementId: "urn",
+                alfrescoListOption: [],
+                launchAlfrescoPopup: true,
+                editor: true,
+                Permission: false
+            }
         })
         //config.savingInProgress=true
         const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
@@ -758,7 +871,15 @@ xdescribe('splihandler function', () => {
             audioReducer: {openRemovePopUp: false, openWrongAudioPopup : true, openSplitPopUp:false},
             searchReducer: {searchTerm: '', parentId: '', deeplink: false},
             commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-            assessmentReducer:{showConfirmationPopup:false}
+            assessmentReducer:{showConfirmationPopup:false},
+            alfrescoReducer: {
+                alfrescoAssetData: {},
+                elementId: "urn",
+                alfrescoListOption: [],
+                launchAlfrescoPopup: true,
+                editor: true,
+                Permission: false
+            }
         })
         
         //config.savingInProgress=true
@@ -775,4 +896,136 @@ xdescribe('splihandler function', () => {
 
     })
 
+})
+
+const initialState = {
+    slateLockReducer: { slateLockInfo: {} },
+    appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
+    toolbarReducer: { elemBorderToggle: true },
+    metadataReducer: { currentSlateLOData: [] },
+    audioReducer: {openRemovePopUp: false},
+    searchReducer: {searchTerm: 'searchTerm-123', parentId: 'parentId-123', deeplink: false, scroll: ""},
+    commentSearchReducer: { commentSearchTerm: 'commentSearch-123', parentId: 'commentP-123', scrollTop: "10" },
+    assessmentReducer:{showConfirmationPopup:false},
+    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    }
+}
+const slateWrapInstance = (props, initialSt = initialState) => {
+    const store = mockStore(initialSt);
+    const component = mount(<Provider store={store}><SlateWrapper {...props} /></Provider>);
+    return component.find('SlateWrapper').instance();
+}
+
+describe("SlateWrapper Component", () => {
+    let props = {
+        slateData: emptySlateData,
+        slateLockInfo: {
+            isLocked: false,
+            userId: 'c5Test01'
+        },
+        permissions : [],
+        toggleTocDelete: true,
+        openRemovePopUp : true,
+        loadMorePages:jest.fn(),
+        showSlateLockPopupValue:true,
+        showConfirmationPopup:true,
+        showBlocker:jest.fn(),
+       
+        searchNode: "searchNode",
+        commentSearchParent: "commentSearchParent",
+        commentSearchNode: "commentSearchNode",
+        commentSearchScrollTop: "123" 
+    };
+    it("1.2 Test - componentDidMount ", () => {
+        const elementDiv = document.createElement('div');
+        elementDiv.setAttribute("id", "cypress-0");
+        document.body.appendChild(elementDiv);
+
+        const compInstance = slateWrapInstance(props);
+		const spy = jest.spyOn(compInstance, 'componentDidMount')
+		compInstance.componentDidMount();
+		expect(spy).toHaveBeenCalled();
+		spy.mockClear()
+    })
+    describe("1.3 Test - componentDidUpdate ", () => {
+        it("1.3.1 Test - componentDidUpdate if cases", () => {
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute("data-id", "searchParent");
+            elementDiv.setAttribute("id", "slateWrapper");
+            elementDiv.setAttribute("scrollTop", "5");
+            document.body.appendChild(elementDiv);
+
+            jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+                return { offsetTop: 10 };
+            })
+
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+            compInstance.componentDidUpdate();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.3.2 Test - else cases (searchParent/commentSearchParent !== '')", () => {
+            const newInitialState = {
+                ...initialState,
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false, scroll: ""},
+                commentSearchReducer: { commentSearchTerm: '', parentId: '', scrollTop: "10" }
+            }
+
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+            compInstance.componentDidUpdate();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.3.3 Test - else cases (commentSearchNode/commentSearchScroll/searchNode !== '')", () => {
+            const newInitialState = {
+                ...initialState,
+                searchReducer: {searchTerm: '', parentId: 'parentId-123', deeplink: false, scroll: ""},
+                commentSearchReducer: { commentSearchTerm: '', parentId: 'commentP-123', scrollTop: "", scroll:"10" }
+            }
+
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+            compInstance.componentDidUpdate();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.4 Test - handleScroll ", () => {
+        it("1.4.1 Test - handleScroll case if(config.totalPageCount <= config.page)", () => {
+            config.totalPageCount = 5; config.page = 7;
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'handleScroll')
+            compInstance.handleScroll();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.4.2 Test - handleScroll case (config.totalPageCount > config.page)", () => {
+            config.totalPageCount = 10; config.page = 7;
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            const event = {target: { scrollTop: 100, clientHeight: 100, scrollHeight: 100 }};
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'handleScroll');
+            compInstance.handleScroll(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.4.3 Test - handleScroll Else Cases", () => {
+            config.totalPageCount = 10; config.page = 7;
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc96546622ab";
+            const event = {target: { scrollTop: 10, clientHeight: 100, scrollHeight: 100 }};
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'handleScroll');
+            compInstance.handleScroll(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    });
 })

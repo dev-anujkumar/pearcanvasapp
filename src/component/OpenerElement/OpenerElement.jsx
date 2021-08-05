@@ -6,8 +6,6 @@ import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx'
 import '../../styles/OpenerElement/OpenerElement.css'
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility';
 import noImage from '../../images/OpenerElement/no-image.png'
-import { c2MediaModule } from './../../js/c2_media_module';
-
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
@@ -82,44 +80,6 @@ class OpenerElement extends Component {
         hideTocBlocker()
     }
     
-    dataFromAlfresco = (data) => {
-        hideTocBlocker();
-        disableHeader(false);
-        let imageData = data;
-        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-        let imageId = `urn:pearson:alfresco:${uniqID}`;
-        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-        let width = imageData['width'] ? imageData['width'] : "";
-        if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
-            let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-            let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-            this.setState({
-                imgSrc: epsURL,
-                imageId: imageId,
-                updateImageOptions:false,
-                width
-            });
-            if (document.querySelector("[name='alt_text']"))
-                document.querySelector("[name='alt_text']").innerHTML = altText;
-            if (document.querySelector("[name='long_description']"))
-                document.querySelector("[name='long_description']").innerHTML = longDesc;
-        }
-        
-        this.handleBlur({imgSrc: epsURL, imageId});
-        disableHeader(false)
-        hideTocBlocker()
-    }
-    handleC2ExtendedClick = (data_0) => {
-        let data_1 = data_0;
-        let that = this;
-        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                that.dataFromAlfresco(data);
-            })
-        })
-    }
-
     handleSiteOptionsDropdown = (alfrescoPath, id) =>{
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
@@ -176,24 +136,6 @@ class OpenerElement extends Component {
                     citeNodeRef: alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid, 
                     elementId: this.props.elementId }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
-        // if (alfrescoPath.alfresco.nodeRef) {
-        //     if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
-        //     data_1 = alfrescoPath.alfresco;
-        //     /*
-        //         data according to new project api 
-        //     */
-        //     data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
-        //     data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
-        //     data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
-        //     data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
-        //     /*
-        //         data according to old core api and c2media
-        //     */
-        //     data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
-        //     data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
-        //     data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
-        //     data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
-        //     this.handleC2ExtendedClick(data_1)
             }
             else{
                 this.props.accessDenied(true)
@@ -202,57 +144,6 @@ class OpenerElement extends Component {
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
                 this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId)
-
-            //     c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-            //         data_1 = { ...alfrescoData };
-            //         let request = {
-            //             eTag: alfrescoPath.etag,
-            //             projectId: alfrescoPath.id,
-            //             ...alfrescoPath,
-            //             additionalMetadata: { ...alfrescoData },
-            //             alfresco: { ...alfrescoData }
-            //         };
-
-            //         /*
-            //             preparing data according to Project api
-            //         */
-
-            //         request.additionalMetadata['repositoryName'] = data_1['repoName'];
-            //         request.additionalMetadata['repositoryFolder'] = data_1['name'];
-            //         request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
-            //         request.additionalMetadata['visibility'] = data_1['siteVisibility'];
-
-            //         request.alfresco['repositoryName'] = data_1['repoName'];
-            //         request.alfresco['repositoryFolder'] = data_1['name'];
-            //         request.alfresco['repositoryUrl'] = data_1['repoInstance'];
-            //         request.alfresco['visibility'] = data_1['siteVisibility'];
-
-            //         that.handleC2ExtendedClick(data_1)
-            //         /*
-            //             API to set alfresco location on dashboard
-            //         */
-            //         let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
-            //         let SSOToken = request.ssoToken;
-            //         return axios.patch(url, request.alfresco,
-            //             {
-            //                 headers: {
-            //                     'Accept': 'application/json',
-            //                     'ApiKey': config.STRUCTURE_APIKEY,
-            //                     'Content-Type': 'application/json',
-            //                     'PearsonSSOSession': SSOToken,
-            //                     'If-Match': request.eTag
-            //                 }
-            //             })
-            //             .then(function (response) {
-            //                 let tempData = { alfresco: alfrescoData };
-            //                 that.setState({
-            //                     projectMetadata: tempData
-            //                 })
-            //             })
-            //             .catch(function (error) {
-            //                 console.log("error", error)
-            //             });
-            //     })
             }
             else {
                 this.props.accessDenied(true)
@@ -286,7 +177,6 @@ class OpenerElement extends Component {
                     citeNodeRef: globalAlfrescoPath?.nodeRef, 
                     elementId: this.props.elementId }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
-                //this.handleC2ExtendedClick(globalAlfrescoPath)
             }
             else {
                 this.props.accessDenied(true)
@@ -480,6 +370,9 @@ class OpenerElement extends Component {
         element.title.text = `${label} ${number} ${title}`;        
         if(!label){
             element.title.text = element.title.text.trim();
+            if(!title && number){
+                element.title.text =  `${element.title.text} `;
+            }
         }
         element.title.textsemantics = this.createSemantics({label, number});
 
