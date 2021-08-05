@@ -517,8 +517,56 @@ th ol li.listItemNumeroUnoNone:before {
     border:2px solid #fff;
 }
 
+/**CSS for FigureImage.jsx*/
+
 .image-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
+.textfield-container {
+    /* margin-top: 20px; */
+    display: flex;
+    flex-direction: column;
+    /* transition: all .2s ease; */
+  }
+  
+  .textfield-label {
+    display: block;
+    font-size: 12px;
+    transition: all .4s ease;
+    transform: translateY(-18px);
+    color: grey;
+    pointer-events: none;
+  }
+  
+  .textfield-container input {
+    outline: none;
+    border: none;
+    height: 20px;
+  }
+  
+  .textfield-border-bottom {
+    position: relative;
+    width: 100%;
+    height: 1px;
+    margin-top: 2px;
+    border-bottom: 1px solid black;
+    transition: all .1s ease;
+    transform: translateY(-13px);
+  }
+  
+  .textfield-container:focus-within > label ,
+  .textfield-container input:not(:placeholder-shown) + label {
+    transform: translateY(-35px);
+    font-size: 9px;
+    font-weight: 600;
+    color: black;
+  }
+  
+  .textfield-container:focus-within > div, 
+  .textfield-container input:valid > div {
+    margin-top: 3px;
+    border-bottom: 3px solid blue;
+  }
