@@ -216,8 +216,9 @@ describe('Testing communication channel', () => {
         getSlateLockStatus: jest.fn(),
         withinLockPeriod: true,
         updateElement: jest.fn(),
-        currentSlateLOMath:jest.fn(),
         getAllSlatesData:jest.fn(),
+        toggleElemBordersAction:jest.fn(),
+        fetchSlateAncestorData:jest.fn(),
         currentSlateLOData: {
             id: 1,
             loUrn: "123",
@@ -946,20 +947,23 @@ describe('Testing communication channel', () => {
         channelInstance.handleIncommingMessages(event);
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
-    })
+    });
     xtest('Test Case for onTOCHamburgerClick',()=>{
-        let listWrapper=document.querySelector = () => {
+        document.querySelector = () => {
             return {
                 querySelector: () => {
                     return {}
                 }
             }
         }
-        listWrapper.querySelector=()=>{
-            return{
-                
-            }   
-             }
+        document.querySelector = () => {
+            return {
+                classList: {
+                    remove: jest.fn(),
+                    add: jest.fn()
+                }
+            }
+        }
         let event = {
             data: {
                 type: "onTOCHamburgerClick",
@@ -972,18 +976,147 @@ describe('Testing communication channel', () => {
         spyhandleIncommingMessages.mockClear()
 
     })
-    xtest('Test for fetchAllSlateDataFromWrapper case', () => {
+    describe('Test for fetchAllSlateDataFromWrapper case', () => {
+        let message={"parentData":{"frontmatter":[],"bodymatter":[{"entityUrn":"urn:pearson:entity:b8962feb-1bec-4f6e-8d6c-0fc6562f4c24","type":"container","label":"chapter","containerUrn":"urn:pearson:manifest:165ae24d-76e5-42a2-aacb-9997d38c8509"}],"backmatter":[]},"childrenData":{"urn:pearson:entity:b8962feb-1bec-4f6e-8d6c-0fc6562f4c24":{"frontmatter":[{"entityUrn":"urn:pearson:entity:de6c139b-f785-43ec-abba-aa26808f8e42","type":"container","label":"container-introduction","containerUrn":"urn:pearson:manifest:537f0f47-72da-4c6f-a3ba-cc7d7572e8fe"}],"bodymatter":[{"entityUrn":"urn:pearson:entity:fb1a227b-f858-4435-861c-045625c2bf56","type":"container","label":"section","containerUrn":"urn:pearson:manifest:a12fecaa-eeb5-48bd-9b58-4d4ce575774f"}],"backmatter":[]}}}
+        it('fetchAllSlateDataFromWrapper',()=>{
+            let event = {
+                data: {
+                    type: "fetchAllSlateDataFromWrapper",
+                    message: message
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+    });
+    test('Test for pageNumber  case', () => {
         let event = {
             data: {
-                type: "fetchAllSlateDataFromWrapper",
-                message: ""
+                type: "pageNumber"
             }
         }
-        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
         channelInstance.handleIncommingMessages(event);
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
-        spyhandleIncommingMessages.mockClear()
-    })
+        spysendingPermissions.mockClear()
+    });
+    
+    xtest('Test for parentChanging  case', () => {
+        let event = {
+            data: {
+                type: "parentChanging",
+                message:''
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for elementBorder  case', () => {
+        let event = {
+            data: {
+                type: "elementBorder",
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for GetActiveSlate  case', () => {
+        let event = {
+            data: {
+                type: "GetActiveSlate",
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    
+    test('Test for customDimensions  case', () => {
+        let event = {
+            data: {
+                type: "customDimensions"
+            }
+        }
+        window={
+            dataLayer:{
+                push:jest.fn()
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for pageLink  if case', () => {
+        let event = {
+            data: {
+                type: "pageLink",
+                message:{
+                    link:'unlink'
+                }
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    xtest('Test for pageLink  else case', () => {
+        let event = {
+            data: {
+                type: "pageLink",
+                message:{
+                    elementId: "urn:pearson:work:03ffc392-c42b-49cc-b1d5-e62f958bc062",
+                    link: "link",
+                    linkId: "page-link-2-3189",
+                    pageId: "urn:pearson:entity:f401a9a2-5dd6-43a3-83f9-542f0265bf40",
+                    pageName: "Untitled"
+                }
+            }
+        }
+        let elementContainer =document.querySelector = () => {
+            return {
+                classList: {
+                    remove: jest.fn(),
+                    add: jest.fn()
+                }
+            }
+        }
+        elementContainer.querySelectorAll =()=>{
+            return {
+
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    xtest('Test for pageLink  else case updatePageLink', () => {
+        let event = {
+            data: {
+                type: "pageLink",
+                message:{
+                    elementId: "urn:pearson:work:03ffc392-c42b-49cc-b1d5-e62f958bc062",
+                    link: "unlinkToc",
+                    linkId: "page-link-2-3189",
+                    pageId: "urn:pearson:entity:f401a9a2-5dd6-43a3-83f9-542f0265bf40",
+                    pageName: "Untitled"
+                }
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event)
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled();
+        spysendingPermissions.mockClear();
+    });
     describe('Test Other Functions', () => {
         test('Test for redirectDashboard  function', () => {
             const spyredirectDashboard = jest.spyOn(channelInstance, 'redirectDashboard')

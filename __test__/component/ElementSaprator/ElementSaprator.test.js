@@ -37,7 +37,9 @@ let store = mockStore(initialState);
 const METADATA_ANCHOR = 'metadata-anchor',
 ELEMENT_ASIDE = 'element-aside',
 CONTAINER_INTRO = 'container-introduction',
-CITATION_GROUP_ELEMENT = 'citations'
+CITATION_GROUP_ELEMENT = 'citations',
+SINGLE_COLUMN = 'group',
+POETRY = 'poetry'
 let esProps
 
 function splithandlerfunction(type) {
@@ -112,7 +114,8 @@ describe('Testing ElementSaprator rendering', () => {
         let elementType  = 'test';
         let firstOne = false;
         let props = {
-            onClickCapture: jest.fn()
+            onClickCapture: jest.fn(),
+            source: ''
         }
         let Es = mount(<Provider store={store}><ElementSaprator {...props} esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/></Provider>);
     })
@@ -211,11 +214,13 @@ describe('Testing functions', () => {
         
         let samplediv = document.createElement('div');
         let samplediv1 = document.createElement('div');
+        let samplediv2 = document.createElement('div');
         samplediv.setAttribute('class', 'show' );
         samplediv1.setAttribute('class', 'show' );
+        samplediv2.setAttribute('class', 'opacityClassOn');
         document.body.appendChild(samplediv);
         document.body.appendChild(samplediv1);
-
+        document.body.appendChild(samplediv2);
         tempWrapper = mount(<Provider store={store}><ElementSaprator esProps={esProps} {...props}/></Provider>)
         tempWrapper.setProps({
             toggleSplitSlatePopup : true,
@@ -321,6 +326,28 @@ describe('Testing functions', () => {
         separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
     })
 
+    it('Testing renderConditionalButtons function -  element type SINGLE_COLUMN else if condition', () => {
+        let elementType = SINGLE_COLUMN
+        let sectionBreak = ''
+        let closeDropDown = ''
+        config.slateType = 'adsdfsdf'
+        config.parentEntityUrn = 'urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527'
+        esProps.buttonType = 'interactive-elem-button'
+        config.isPopupSlate = true
+        separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
+    })
+
+    it('Testing renderConditionalButtons function -  element type POETRY else if condition', () => {
+        let elementType = POETRY
+        let sectionBreak = ''
+        let closeDropDown = ''
+        config.slateType = 'adsdfsdf'
+        config.parentEntityUrn = 'urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527'
+        esProps.buttonType = 'interactive-elem-button'
+        config.isPopupSlate = true
+        separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
+    })
+
     it('Testing pasteElement function - cut', () => {
         const separatorProps = {
             index: 2,
@@ -350,6 +377,54 @@ describe('Testing functions', () => {
         expect(spyPasteFn).toHaveBeenCalled()
     })
 
+    it('Testing pasteElement function - showhide with index', () => {
+        const separatorProps = {
+            elementType: 'showhide',
+            index: '0-1',
+            firstOne: false,
+            elementSelection: { element: { id: "urn:pearson:work:324234-4252423fds-23423fds3fgr3", type: "element-aside" } },
+            pasteElement : jest.fn(),
+            cloneContainer: jest.fn()
+        },
+        togglePaste = jest.fn(),
+        type = 'copy';
+        const spyPasteFn = jest.spyOn(separatorFunctions, "pasteElement")
+        separatorFunctions.pasteElement(separatorProps, togglePaste, type)
+        expect(spyPasteFn).toHaveBeenCalled()
+    })
+    
+    it('Testing pasteElement function - showhide without index', () => {
+        const separatorProps = {
+            elementType: 'showhide',
+            firstOne: false,
+            elementSelection: { element: { id: "urn:pearson:work:324234-4252423fds-23423fds3fgr3", type: "element-aside" } },
+            pasteElement : jest.fn(),
+            cloneContainer: jest.fn()
+        },
+        togglePaste = jest.fn(),
+        type = 'copy';
+        const spyPasteFn = jest.spyOn(separatorFunctions, "pasteElement")
+        separatorFunctions.pasteElement(separatorProps, togglePaste, type)
+        expect(spyPasteFn).toHaveBeenCalled()
+    })
+
+    it('Testing pasteElement function - pasteFnArgs object creation', () => {
+        const separatorProps = {
+            index: 2,
+            firstOne: true,
+            elementSelection: { element: { id: "urn:pearson:work:324234-4252423fds-23423fds3fgr3" } },
+            pasteElement: jest.fn(),
+            parentUrn: '',
+            asideData: '',
+            poetryData: ''
+        },
+            togglePaste = jest.fn(),
+            type = 'cut';
+        const spyPasteFn = jest.spyOn(separatorFunctions, "pasteElement")
+        separatorFunctions.pasteElement(separatorProps, togglePaste, type)
+        expect(spyPasteFn).toHaveBeenCalled()
+    })
+
     it('Testing pasteElement function - versioning saving call in progress', () => {
         config.savingInProgress = true
         const separatorProps = {
@@ -363,5 +438,60 @@ describe('Testing functions', () => {
         const spyPasteFn = jest.spyOn(separatorFunctions, "pasteElement")
         separatorFunctions.pasteElement(separatorProps, togglePaste, type)
         expect(spyPasteFn).toHaveReturnedWith(false)
+    })
+
+    it('Testing useEffect - if block', () => {
+        let props = {
+            elementSelection: {}
+        };
+        let permissions = ['elements_add_remove']
+        let elementType = 'test';
+        let firstOne = false;
+        let initialState2 = { ...initialState, selectionReducer: { selection: {} } };
+        let store2 = mockStore(initialState2);
+        const map = {}
+        document.addEventListener = jest.fn((event, cb) => {
+            map[event] = cb
+        })
+        mount(<Provider store={store2}><ElementSaprator {...props} esProps={esProps} permissions={permissions} elementType={elementType} firstOne={firstOne} /></Provider>)
+        map.mousedown({ target: document.body })
+    })
+
+    it('Testing renderDropdownButtons function - asideData - groupedcontent', () => {
+        const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
+        const element = {
+            buttonType: 'container-elem-button'
+        }
+        const props = {
+            asideData: {
+                type: "groupedcontent"
+            }
+        }
+        separatorFunctions.typeOfContainerElements(element, props);
+        expect(spyTypeOfContainerElements).toHaveBeenCalled()
+    })
+
+    it('Testing renderDropdownButtons function - asideData - showhide', () => {
+        const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
+        const element = {
+            buttonType: 'container-elem-button'
+        }
+        const props = {
+            asideData: {
+                type: "showhide"
+            }
+        }
+        separatorFunctions.typeOfContainerElements(element, props);
+        expect(spyTypeOfContainerElements).toHaveBeenCalled()
+    })
+
+    it('Testing renderDropdownButtons function - else block', () => {
+        const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
+        const element = {
+            buttonType: ''
+        }
+        const props = {}
+        separatorFunctions.typeOfContainerElements(element, props);
+        expect(spyTypeOfContainerElements).toHaveBeenCalled()
     })
 });

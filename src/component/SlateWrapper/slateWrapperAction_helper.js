@@ -33,10 +33,12 @@ export const onPasteSuccess = async (params) => {
     let operationType = '';
     let sourceElementIndex = "";
     let elmSelection = {};
+    let selectedElem = {};
     if (Object.keys(getState().selectionReducer.selection).length > 0 && 'operationType' in getState().selectionReducer.selection) {
         elmSelection = getState().selectionReducer.selection;
         operationType = elmSelection.operationType;
         sourceElementIndex = elmSelection?.sourceElementIndex;
+        selectedElem = Object.freeze({...elmSelection})
     }
 
     /** Create Snapshot for cut action on different slate */
@@ -49,7 +51,7 @@ export const onPasteSuccess = async (params) => {
         }
     }
 
-    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut' && responseData.type !=='popup') {
+    if ('deleteElm' in getState().selectionReducer.selection && operationType === 'cut') {
         let deleteElm = getState().selectionReducer.selection.deleteElm;
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -59,7 +61,7 @@ export const onPasteSuccess = async (params) => {
         }
 
         // if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
-        if(cutSnap || asideData?.type === SHOW_HIDE) {
+        if((cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type !=='popup') {
             const tcmDeleteArgs = {
                 deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutcopyParentData)) : newParentData,
                 deleteElemData: { [deleteElm.id]: deleteElm.id },
@@ -130,7 +132,7 @@ export const onPasteSuccess = async (params) => {
     const currentSlateData = newParentData[config.slateManifestURN];
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE) && responseData.type!=='popup') {
+    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type!=='popup') {
         const snapArgs = {
             newParentData,
             currentSlateData,
@@ -248,7 +250,7 @@ export const onPasteSuccess = async (params) => {
 
     if (config.tcmStatus) {
         if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
-            await prepareDataForTcmCreate(slateWrapperConstants.checkTCM(responseData), responseData, getState, dispatch);
+            await prepareDataForTcmCreate(slateWrapperConstants.checkTCM(responseData), responseData, getState, dispatch , selectedElem);
         }
     }
 
@@ -359,9 +361,10 @@ export const handleTCMSnapshotsForCreation = async (params, operationType = null
     }
 }
 
-export function prepareDataForTcmCreate(type, createdElementData, getState, dispatch) {
+export function prepareDataForTcmCreate(type, createdElementData, getState, dispatch, selectedElem = {}) {
     let elmUrn = [];
     const tcmData = getState().tcmReducer.tcmSnapshot;
+    const tcmFlag = selectedElem?.operationType === 'cut' ? selectedElem.tcmFlag : true;
 
     switch (type) {
         case slateWrapperConstants.WORKED_EXAMPLE:
@@ -421,9 +424,11 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             }) 
             break; */
         case slateWrapperConstants.POP_UP:
-            elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
-            createdElementData.popupdata.bodymatter.length>0 && elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
-            break;
+            if (tcmFlag === true) {
+                elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
+                createdElementData.popupdata.bodymatter.length > 0 && elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
+            }
+           break;
         case slateWrapperConstants.SHOW_HIDE:
             elmUrn = getShowhideChildUrns(createdElementData)
             break;

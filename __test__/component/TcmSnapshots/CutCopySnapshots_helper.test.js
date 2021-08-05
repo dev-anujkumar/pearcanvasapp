@@ -1,5 +1,5 @@
 import * as CutCopySnapshots from '../../../src/component/TcmSnapshots/CutCopySnapshots_helper.js';
-
+import config from '../../../src/config/config.js';
 describe('Test-CutCopySnapshots_helper', () => {
     let elementId = "urn:pearson:manifest:60c0f346-75f7-43e7-ada4-22be752ffcb0",
         elementType = 'popup',
@@ -18,8 +18,10 @@ describe('Test-CutCopySnapshots_helper', () => {
         oldElementId = "urn:pearson:manifest:60c0f346-75f7-43e7-ada4-22be752ffcb0",
         destnSlateManifestURN = "urn:pearson:manifest:cb9d008b-a705-4dd1-9edb-9a1138b676df",
         destnSlateEntityURN = "urn:pearson:entity:e88fbc35-6c0e-4397-8a46-5fea4654903f",
+        elementNewEntityUrn = "urn:pearson:entity:3dac56c9-e0ad-452b-ad8e-213e082adef8",
         asideData = undefined,
-        parentUrn = undefined
+        parentUrn = undefined,
+        elementStatus = "approved"
     let pasteParams = {
         elementId,
         elementType,
@@ -29,9 +31,12 @@ describe('Test-CutCopySnapshots_helper', () => {
         destnSlateEntityURN,
         asideData,
         parentUrn,
-        oldElementId
+        oldElementId,
+        elementNewEntityUrn,
+        elementStatus
     }
     it('Test-1.1-Function--1--preparePayloadData - default -cut and paste on slate', () => {
+        config.tcmStatus = false
         const spyFunction = jest.spyOn(CutCopySnapshots, 'preparePayloadData');
         CutCopySnapshots.preparePayloadData(pasteParams)
         const expectedResult = {
@@ -47,7 +52,9 @@ describe('Test-CutCopySnapshots_helper', () => {
             sourceSlateEntityUrn: "urn:pearson:entity:274fab8a-11c3-4dda-bb0e-ccccd079249a",
             sourceSlateUrn: "urn:pearson:manifest:67ebe5c9-9445-486f-b414-346650ec5179",
             type: "popup",
-            typeOfElement: "container"
+            typeOfElement: "container",
+            status: 'accepted',
+            "elementVersionStatus": 'approved'
         }
         expect(spyFunction).toHaveReturnedWith(expectedResult)
     })

@@ -370,6 +370,9 @@ class OpenerElement extends Component {
         element.title.text = `${label} ${number} ${title}`;        
         if(!label){
             element.title.text = element.title.text.trim();
+            if(!title && number){
+                element.title.text =  `${element.title.text} `;
+            }
         }
         element.title.textsemantics = this.createSemantics({label, number});
 

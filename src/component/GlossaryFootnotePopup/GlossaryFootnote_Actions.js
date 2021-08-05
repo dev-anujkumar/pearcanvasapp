@@ -501,9 +501,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     }
     if(showHideElement ||  asideParent?.type === 'showhide'){
-        let shTypeIndex = innerSH_Index?.length > 3 && elementType == 'figure' ? innerSH_Index[innerSH_Index.length - 3] : innerSH_Index[innerSH_Index.length - 2]
-        let showhideTypeVal = findSectionType(shTypeIndex?.toString())
-        data.sectionType = showhideTypeVal
+        //let shTypeIndex = innerSH_Index?.length > 3 && elementType == 'figure' ? innerSH_Index[innerSH_Index.length - 3] : innerSH_Index[innerSH_Index.length - 2]
+        //let showhideTypeVal = findSectionType(shTypeIndex?.toString())
+        data.sectionType = asideParent?.sectionType; //showhideTypeVal
     }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
 
@@ -530,8 +530,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
             let showhideTypeVal = "", showHideObject = undefined
             if(showHideElement ||  asideParent?.type === 'showhide'){ /** Glossary-Footnotes inside Show-Hide */
-                let shTypeIndex = innerSH_Index?.length > 3 && elementType =='figure' ? innerSH_Index[innerSH_Index.length - 3] :  innerSH_Index[innerSH_Index.length - 2]
-                showhideTypeVal = findSectionType(shTypeIndex?.toString())
+                //let shTypeIndex = innerSH_Index?.length > 3 && elementType =='figure' ? innerSH_Index[innerSH_Index.length - 3] :  innerSH_Index[innerSH_Index.length - 2]
+                showhideTypeVal = asideParent?.sectionType;//findSectionType(shTypeIndex?.toString())
                 let showhideElement = getShowHideElement(tcmBodymatter, innerSH_Index.length, innerSH_Index)
                 let innerSH_Element = showhideTypeVal && showhideElement?.interactivedata[showhideTypeVal][innerSH_Index]
                 showHideObject = {

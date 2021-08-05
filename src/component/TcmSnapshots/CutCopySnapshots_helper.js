@@ -8,7 +8,7 @@ const {
     ELEMENT_ASIDE,
     MULTI_COLUMN_GROUP
 } = TcmConstants;
-
+import config from '../../config/config.js';
 /**
  * This function is used to prepare request payload for cut-copy-snapshots
  * @param {*} pasteParams 
@@ -24,7 +24,9 @@ export const preparePayloadData = (pasteParams) => {
         destnSlateEntityURN,
         asideData,
         parentUrn,
-        oldElementId
+        oldElementId,
+        elementNewEntityUrn,
+        elementStatus
     } = pasteParams
     let payload = {
         "elementUrn": elementId,
@@ -38,7 +40,12 @@ export const preparePayloadData = (pasteParams) => {
         "typeOfElement": "container",//narrative
         "sourceElementIndex": selection?.sourceElementIndex?.toString(),
         "destinationSlateUrn": destnSlateManifestURN,
-        "destinationSlateEntityUrn": destnSlateEntityURN
+        "destinationSlateEntityUrn": destnSlateEntityURN,
+        "status": config?.tcmStatus === true ? "pending" : "accepted",
+        "elementVersionStatus": elementStatus 
+    }
+    if(selection.operationType === 'copy'){
+        payload.elementEntityUrn = elementNewEntityUrn
     }
     if(oldElementId !== elementId){
         payload["oldElementUrn"] = selection.element.id
@@ -79,8 +86,6 @@ export const preparePayloadData = (pasteParams) => {
         const elementTagPrefix = prepareTagPrefix(tagPrefixParams)
         payload.destinationContainer.elementTagPrefix = elementTagPrefix
     }
-    //This console will be removed in future
-    console.log('from cutcopysnapshots request payload ', payload)
     return JSON.parse(JSON.stringify(payload));
 }
 

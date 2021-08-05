@@ -61,10 +61,9 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
-import {closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import {closeTcmPopup, handleTCM} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
-import {handleTCM} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 
@@ -1719,7 +1718,7 @@ class ElementContainer extends Component {
         const inContainer = this.props.parentUrn ? true : false
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
-                {this.renderCopyComponent(this.props, index, inContainer)}
+                {this.renderCopyComponent(this.props, index, inContainer, tcm)}
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
                     {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
@@ -1812,13 +1811,14 @@ class ElementContainer extends Component {
      * @param {*} index 
      * @param {*} inContainer 
      */
-    renderCopyComponent = (_props, index, inContainer) => {
+    renderCopyComponent = (_props, index, inContainer, tcmFlag) => {
         if (this.state.showCopyPopup) {
             return (
                 <CutCopyDialog
                     userRole={_props.userRole}
                     index={index}
                     inContainer={inContainer}
+                    tcmFlag={tcmFlag}
                     setElementDetails={this.setElementDetails}
                     element={_props.element}
                     toggleCopyMenu={this.toggleCopyMenu}
@@ -2031,8 +2031,9 @@ class ElementContainer extends Component {
     handleTCMLaunch = (event, element) => {
         const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE } = TcmConstants
         const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE]
+        const {prevSelectedElement, isTCMCanvasPopupLaunched} = this.props
             if (element?.type && tcmPopupSupportedElements.includes(element.type)) {
-                this.props.handleTCM(element, this.props.index)
+                this.props.handleTCM(element, this.props.index, isTCMCanvasPopupLaunched, prevSelectedElement)
             } else {
                 if (config.isSavingElement) {
                     return false
@@ -2171,8 +2172,8 @@ const mapDispatchToProps = (dispatch) => {
         storeOldAssetForTCM: (data) => {
             dispatch(storeOldAssetForTCM(data))
         },
-        handleTCM: (element) => {
-            dispatch(handleTCM(element))
+        handleTCM: (element, index, isTCMCanvasPopupLaunched, prevSelectedElement) => {
+            dispatch(handleTCM(element, index, isTCMCanvasPopupLaunched, prevSelectedElement))
         },
     }
 }
@@ -2201,7 +2202,9 @@ const mapStateToProps = (state) => {
         slateLevelData: state.appStore.slateLevelData,
         assessmentReducer: state.assessmentReducer,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
-        multipleColumnData: state.appStore.multipleColumnData
+        multipleColumnData: state.appStore.multipleColumnData,
+        isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
+        prevSelectedElement: state.tcmReducer.prevElementId
     }
 }
 
