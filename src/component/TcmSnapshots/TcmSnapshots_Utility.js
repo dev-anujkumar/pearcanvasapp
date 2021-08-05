@@ -304,7 +304,7 @@ function setParentUrnData(wipData, item) {
 }
 
 const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, operationType=null) => {
-    const { asideData, parentUrn } = containerElement || {};
+    const { asideData, parentUrn, slateManifest } = containerElement || {};
     const parentObj = setParentUrnData(wipData, item);
     const updatedContainerElement = {
         asideData: {
@@ -319,7 +319,8 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, o
             elementType: parentObj?.type,
             manifestUrn: parentObj?.id,
             multiColumnType: parentUrn?.multiColumnType /* 2C||3C */
-        }
+        },
+        slateManifest
     }
     let newContainerElement = {}
     if (containerElement.cutCopyParentUrn) {
