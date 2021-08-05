@@ -6,6 +6,7 @@ import axios from 'axios';
 const middlewares = [thunk];
 import { JSDOM } from 'jsdom'
 const mockStore = configureMockStore(middlewares);
+jest.mock('axios');
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("innerText")) {
     Object.defineProperty(global.Element.prototype, 'innerText', {
