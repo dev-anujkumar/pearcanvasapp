@@ -624,10 +624,11 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         elementEntityUrn = updatedData.elementEntityUrn
     }
     let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
+    currentParentData[config.slateManifestURN] = updatedSlateLevelData
     dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
         payload: {
-            slateLevelData: {[config.slateManifestURN] : updatedSlateLevelData }
+            slateLevelData: currentParentData//{[config.slateManifestURN] : updatedSlateLevelData }
         }
     })
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
@@ -667,17 +668,19 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             }
             const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
             if(updatedStore.currentSlateData){
+                parsedParentData[config.slateManifestURN] = updatedStore.currentSlateData;
                 dispatch({
                     type: AUTHORING_ELEMENT_UPDATE,
                     payload: {
-                        slateLevelData: {[config.slateManifestURN] : updatedStore.currentSlateData}
+                        slateLevelData: parsedParentData//{[config.slateManifestURN] : updatedStore.currentSlateData}
                     }
                 })
             }
         }
-       
         config.conversionInProcess = false
-        config.savingInProgress = false
+        if (currentSlateData.status === 'wip') {
+            config.savingInProgress = false
+        }
         config.isSavingElement = false
     })
         .catch(err => {
@@ -688,7 +691,6 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             config.isSavingElement = false
             console.error(" Error >> ", err)
         })
-
 }
 const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch) => {
     const {
