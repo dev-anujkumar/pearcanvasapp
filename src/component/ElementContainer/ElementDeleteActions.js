@@ -16,9 +16,9 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
     //const { showHideObj } = getState().appStore
     const { cutCopyParentUrn, parentUrn, parentElement, asideData, showHideObj } = containerElements
     // const parentElementUrn = getState().appStore.parentUrn
-    if(type === 'popup'){
-        dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
-    }
+    // if(type === 'popup'){
+    //     dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
+    // }
     const _requestData = prepareDeleteRequestData(type, { elementId, elementIndex, parentElement, parentUrn, activeElement, cutCopyParentUrn })
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
