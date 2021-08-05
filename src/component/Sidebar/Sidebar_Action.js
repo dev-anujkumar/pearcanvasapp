@@ -271,7 +271,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
-        config.savingInProgress = false
+        if (currentSlateData.status === 'wip') {
+            config.savingInProgress = false
+        }
         config.isSavingElement = false
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
         /**------------------------------------------------[BG-2676]------------------------------------------------- */
@@ -650,9 +652,7 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             }
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             config.conversionInProcess = false
-            if (currentSlateData.status === 'wip') {
-                config.savingInProgress = false
-            }
+            config.savingInProgress = false
             config.isSavingElement = false
         } else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
