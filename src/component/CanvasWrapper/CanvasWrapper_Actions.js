@@ -164,7 +164,7 @@ export const findElementType = (element, index) => {
                         break;
                     case "assessment":
                         if(!element.html){
-                            let assessmentTitle=element.figuredata.elementdata.assessmenttitle?element.figuredata.elementdata.assessmenttitle:""
+                            let assessmentTitle = element.figuredata.elementdata.assessmenttitle ?? element?.title?.text ?? ""
                             element.html={
                                 "title":`<p>${assessmentTitle}</p>`
                             }
