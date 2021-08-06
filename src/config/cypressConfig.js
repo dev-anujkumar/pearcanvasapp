@@ -63,7 +63,7 @@ let cypressConfig = {
     TCM_CUT_COPY_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/cut-copy-snapshots` :"http://localhost:5000/cut-copy-snapshots",
     getENVConfig: process.env.NODE_ENV === "development" ? 'https://10.11.1.242:8081/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
     prodUrl : 'https://structuredauthoring.pearson.com',
-    sitePointing : 'dev',
+    sitePointing : 'test',
     conversionInProcess : false,
     savingInProgress: false,
     citationFlag: false,

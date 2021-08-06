@@ -7,18 +7,16 @@
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
+import PopUp from '../../PopUp';
 import { sendDataToIframe, defaultMathImagePath } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
-import PopUp from '../../PopUp';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
-import { getProjectDetails } from '../../CanvasWrapper/CanvasWrapper_Actions.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { showWrongAudioPopup } from '../../AudioNarration/AudioNarration_Actions';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -874,12 +872,6 @@ function CommunicationChannel(WrappedComponent) {
 
             sendDataToIframe({type : 'showTOCDeletePopup', message : newMessage})
         }
-        updateTitleSlate = (messageObj) => {
-            /**
-             * TO BE IMPLEMENTED
-             *  */
-        }
-
         showCanvasBlocker = (bFlag) => {
             this.setState({
                 showBlocker: bFlag
