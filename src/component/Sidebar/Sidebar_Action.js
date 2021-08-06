@@ -82,6 +82,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
              oldElementData.figuredata.preformattedtext = [];
         }
+
+            let figureElementsType = ['image', 'table', 'mathImage', 'audio', 'video', 'interactive', 'codelisting'];
+            if (figureElementsType.includes(oldElementData.figuretype)) {
+                oldElementData.hasOwnProperty('subtitle') ? delete oldElementData.subtitle : oldElementData;  // conversion of old figure to new type at the time of conversion
+            }
+        
     }
 
     let outputSubTypeEnum = outputSubType['enum'],

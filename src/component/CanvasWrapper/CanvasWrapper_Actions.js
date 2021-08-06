@@ -576,11 +576,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index ;
-                    if(typeof versioning.index === "number"){
-                        index = versioning.index;
+                    let showhideIndex = versioning.indexes || versioning.index ;
+                    if(typeof showhideIndex === "number"){
+                        index = showhideIndex;
                     }
-                    else if(typeof versioning.index === "string"){
-                        index = versioning.index.split("-")[0];
+                    else if(typeof showhideIndex === "string"){
+                        index = showhideIndex.split("-")[0];
                     }
                     newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     return dispatch({
@@ -627,22 +628,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             dispatch(fetchComments(contentUrn, title))
                         }
                     }
-
-                    // Modifying old figures html into new pattern
-                    // ................................XX...........................................
-                    let figureElementsType = ['image', 'table', 'mathImage', 'authoredtext', 'codelisting', 'interactive'];              
-                    for (let element of slateData.data[manifestURN].contents.bodymatter) {
-                        if (element.hasOwnProperty('figuretype') && figureElementsType.includes(element.figuretype) && element.type == 'figure') {
-                            if (element.hasOwnProperty('subtitle')) {
-                                element.html.title = createLabelNumberTitleModel(element.html.title.replace("<p>", '').replace("</p>", ''), '', element.html.subtitle.replace("<p>", '').replace("</p>", ''));
-                            }
-                        } else if ((element.figuretype == 'audio' || element.figuretype == 'video') && element.type == 'figure') {
-                            if (element.hasOwnProperty('title') && element.hasOwnProperty('subtitle')) {
-                                element.html.title = createLabelNumberTitleModel(element.html.title.replace("<p>", '').replace("</p>", ''), '', element.html.subtitle.replace("<p>", '').replace("</p>", ''));
-                            }
-                        }
-                    }
-                    // ................................XX...........................................
                     
                     config.totalPageCount = slateData.data[manifestURN].pageCount;
                     config.pageLimit = slateData.data[manifestURN].pageLimit;

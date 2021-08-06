@@ -10,8 +10,6 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists/plugin.min.js";
 import "tinymce/plugins/advlist/plugin.min.js";
 import "tinymce/plugins/paste/plugin.min.js";
-// import "tinymce/icons/default/icons.min.js";
-// IMPORT - Components & Dependencies //
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
@@ -3530,11 +3528,11 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        tinymce.$('span[data-mce-type="bookmark"]').length && tinymce.$('span[data-mce-type="bookmark"]').each(function () {
+        tinymce.$('span[data-mce-type="bookmark"]').each(function () {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })
-        tinymce.$('span.answerLineContent').length && tinymce.$('span.answerLineContent').each(function (){
+        tinymce.$('span.answerLineContent').each(function (){
             this.removeAttribute('data-mce-selected');
         })
         if (!checkCanvasBlocker) {
@@ -3549,7 +3547,7 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
-        tinymce.$('div[data-mce-bogus="all"]').length && tinymce.$('div[data-mce-bogus="all"]').each(function () {
+        tinymce.$('div[data-mce-bogus="all"]').each(function () {
             this.outerHTML = '';
         })
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
@@ -3588,7 +3586,7 @@ export class TinyMceEditor extends Component {
             //spanHandlers.handleExtraTags(this.props.elementId, 'code', 'codeNoHighlightLine')
         }
 
-        tinyMCE.$('.Wirisformula').length && tinyMCE.$('.Wirisformula').each(function () {
+        tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
         })
