@@ -1037,7 +1037,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     tcmSnapshotParams.elementNewEntityUrn = responseData[0]?.contentUrn
                     tcmSnapshotParams.elementStatus = responseData[0]?.status
                     let tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
-                    if (selection.operationType === 'copy' || (selection.operationType === 'cut' && responseData[0]?.status === 'wip')) {
+                    if (selection?.operationType === 'copy' || (selection?.operationType === 'cut' && responseData[0]?.status === 'wip')) {
                         callCutCopySnapshotAPI(tcmSnapshotPayload)
                     }
                 }
