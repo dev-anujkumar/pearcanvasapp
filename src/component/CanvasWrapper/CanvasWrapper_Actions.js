@@ -576,11 +576,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index ;
-                    if(typeof versioning.index === "number"){
-                        index = versioning.index;
+                    let showhideIndex = versioning.indexes || versioning.index ;
+                    if(typeof showhideIndex === "number"){
+                        index = showhideIndex;
                     }
-                    else if(typeof versioning.index === "string"){
-                        index = versioning.index.split("-")[0];
+                    else if(typeof showhideIndex === "string"){
+                        index = showhideIndex.split("-")[0];
                     }
                     newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     return dispatch({
