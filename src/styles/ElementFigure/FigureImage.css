@@ -1,0 +1,626 @@
+.figureElement .cypress-editable {
+    /* margin: 0!important; */
+    padding: 10px!important;
+    width: 100%!important;
+    min-height: 40px!important;
+    border: none;
+    outline: none;
+}
+.figureElement .cypress-editable.place-holder::before{
+    margin-top : 2px !important;
+}
+.figureElement .cypress-editable:not(pre){
+padding:0px;
+}
+/* pre{
+    padding: 10px!important;
+} */
+.code-listing.language-none {
+    border: none!important;
+}
+code.cypress-editable.language-none{
+    padding: 0px!important;
+}
+code .codeNoHighlightLine{
+    display: block;
+    min-height: 22px;
+    color: #000;
+}
+/* .figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing.language-none .cypress-editable{
+    padding: 10px!important;
+    
+} */
+.figureCredit.cypress-editable {
+    min-height: 40px!important;
+    font-size: 9px!important;
+    width:100% !important;
+}
+.figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv{
+    cursor: auto !important;
+    /* max-height: 85px; */
+    /* overflow-y: hidden; */
+}
+.figureCredit , .figureTitle, .figureCaption, .figureLabel, .figureNumber, .mathml .figureElement .figureData {
+    min-height: 40px!important;
+    cursor: auto !important;
+    width:100%!important;
+    max-width: 100% !important;
+    color:black!important;
+}
+h4.figureLabel, h4.figureTitle, h4.figureNumber{
+    margin-bottom: 6px!important;
+}
+.figureCaption{
+    margin-top: 5px!important;
+}
+.figure-header .figureLabel.cypress-editable,.figure-header .figureTitle.cypress-editable, .figure-header .figureNumber.cypress-editable {
+    font-size: 12px!important;
+    font-family: Helvetica, sans-serif!important;
+}
+.figureLabel.cypress-editable  em,.figureLabel.cypress-editable  em strong,.figureLabel.cypress-editable strong span{
+    font-weight: 900 !important;
+    font-family: inherit !important;
+}
+.figureNumber.cypress-editable {
+    font-weight: 800 !important;
+}
+.figure-header{
+    min-height: 86px;
+}
+.mathml .figureElement .figureData,.blockcode .codeSnippet{
+    width:100%!important;
+}
+.paragraphNumeroUno.mathml.figureData.mathmlDiv{
+    font-size:12px!important;
+    padding: 10px!important;
+}
+.blockCodeFigure .blockCodeDiv{
+    padding: 10px 0;
+    width:100%!important;
+    max-width: 100% !important;
+    overflow-x: auto;
+}
+.figureElement .pearson-component.image.figureData:not(.table-figure-data) {
+    /* cursor:copy!important ; */
+    text-align: center;
+    overflow: auto;
+}
+figcaption,.figureCaption{
+    font-size: 10.8px!important;
+    text-align: left !important;
+}
+code{
+    background-color:transparent;
+    padding: 0% !important;
+}
+figure,.element-container{
+    display:block !important;
+}
+
+.pearson-component.image.figureData img{
+    width: 100%;
+    text-align: center;
+    height:178px;
+}
+ 
+.divCodeSnippetFigure.blockCodeFigure .figureCodeSnippet .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing .cypress-editable{
+    line-height: 25px;
+    display: table;
+}
+
+/* figure 25% image*/
+.divImage25Text{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
+}
+.figureImage25Text{
+	background-color: transparent;
+    padding: 0;
+    margin: 0 auto;
+    }
+.heading4Image25TextNumberLabel{   
+    color: #007FA3;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 0.15em auto;
+    padding: 0;
+    font-size: 1.150em;
+    font-weight: 600;
+    line-height: 1.3em;
+    letter-spacing: 0.02em;
+    }
+.heading4Image25TextTitle{
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0em auto 0em auto;
+    padding: 0;
+    font-size: 1.06em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+}
+.figureElement .pearson-component.image .image25Text{
+    display: block;
+    /* cursor:copy!important; */
+    text-align: center;
+    max-width: 170px;
+    width: 25%;
+    margin: 0.60em auto 0.65em auto;
+}
+
+.figcaptionImage25Text{  
+    color: #505759;
+    font-family: Open Sans, Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0.75em auto 0.45em auto;
+    padding: 0;
+    font-size: 0.90em;
+    font-weight: 400;
+    line-height: 1.5em;
+    letter-spacing: 0.01em;
+    word-wrap: break-word;
+}
+.paragraphImage25TextCredit{ 
+    color: #505759;
+    font-family: Open Sans, Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0.45em auto 0 auto;
+    padding: 0;
+    font-size: 0.80em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.02em;
+    word-wrap: break-word;
+}/*end figure 25image*/
+
+/* figure 75% image*/
+.divImage75Text{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
+}
+.figureImage75Text{
+	background-color: transparent;
+    padding: 0;
+    margin: 0 auto;
+    }
+.heading4Image75TextNumberLabel{   
+    color: #007FA3;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 0.15em auto;
+    padding: 0;
+    font-size: 1.150em;
+    font-weight: 600;
+    line-height: 1.3em;
+    letter-spacing: 0.02em;
+    }
+.heading4Image75TextTitle{
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0em auto 0em auto;
+    padding: 0;
+    font-size: 1.06em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+}
+.figureElement .pearson-component.image .image75Text{
+    display: block;
+    /* cursor:copy!important; */
+    text-align: center;
+    /*max-width: 170px;*/
+    width: 75%;
+    margin: 0.60em auto 0.65em auto;
+}
+
+.figcaptionImage75Text{  
+    color: #505759;
+    font-family: Open Sans, Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0.75em auto 0.45em auto;
+    padding: 0;
+    font-size: 0.90em;
+    font-weight: 400;
+    line-height: 1.5em;
+    letter-spacing: 0.01em;
+    word-wrap: break-word;
+}
+.paragraphImage75TextCredit{ 
+    color: #505759;
+    font-family: Open Sans, Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0.45em auto 0 auto;
+    padding: 0;
+    font-size: 0.80em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.02em;
+    word-wrap: break-word;
+}
+/*end of figure 75% image*/
+
+
+.image50Text, .image50TextTableImage, .image50TextMathImage{
+    width: 50% !important;
+    max-width: 340px !important;
+}
+img.imageTextWidth, img.imageTextWidthTableImage, img.imageTextWidthMathImage{
+    max-width: 680px !important;
+}
+img.imageWiderThanText, img.imageWiderThanTextTableImage, img.imageWiderThanTextMathImage{
+    max-width: 1080px !important;
+}
+img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage{
+    max-width: 100% !important;
+}
+.pearson-component.image.figureData.table-figure-data ul li{
+    list-style:inherit !important;
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+.pearson-component.image.figureData.table-figure-data ol li{
+    list-style:inherit !important; 
+}
+.pearson-component.image.figureData.table-figure-data table{
+    width: inherit !important;
+    max-height: 399px;
+}
+.pearson-component.image.figureData.table-figure-data ul{
+    display: block;
+    /* list-style-type: disc; */
+    margin-block-end: 1em !important; 
+    margin-inline-start: 0px !important; 
+    margin-inline-end: 1em !important; 
+    padding-inline-start: 15px !important; 
+}
+.pearson-component.image.figureData.table-figure-data table a{
+    pointer-events:none !important;
+}
+.pearson-component.image.figureData.table-figure-data table tr{
+    height: 40px !important; 
+ }
+ table ul li{
+    margin-bottom: 0px !important;
+ }
+ .mce-item-table caption{
+     border: none !important;
+     outline: none !important;
+ }
+ .mce-item-table th{
+    text-align: center ;
+    font-weight: 400 !important;
+ }
+ /* .pearson-component.image.figureData.table-figure-data table td, .pearson-component.image.figureData.table-figure-data table th {
+     padding: 0px 7px !important; 
+     font: inherit !important; 
+  } */
+
+  th li.listItemNumeroUno,
+th li.listItemNumeroUnoNumber,
+th li.listItemNumeroUnoLowerAlpha,
+th li.listItemNumeroUnoUpperAlpha,
+th li.listItemNumeroUnoUpperRoman,
+th li.listItemNumeroUnoLowerRoman,
+th li.listItemNumeroUnoNone {
+  color: #000;
+  font-family: Palatino, Palatino Linotype, Palatino LT Sth, Georgia, serif;
+  font-size: .95em;
+  font-weight: normal;
+  line-height: 1.65em;
+  letter-spacing: 0.01em;
+  margin-top: 0em;
+  margin-bottom: 0.5em;
+}
+
+th li li.listItemNumeroUno,
+th li li.listItemNumeroUnoNumber,
+th li li.listItemNumeroUnoLowerAlpha,
+th li li.listItemNumeroUnoUpperAlpha,
+th li li.listItemNumeroUnoUpperRoman,
+th li li.listItemNumeroUnoLowerRoman,
+th li li.listItemNumeroUnoNone {
+  font-size: 100%;
+}
+
+
+/* Nested Lists in Tables */
+th ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+
+th ol ul {
+  margin-top: 0.5em;
+  margin-left: 1.0em;
+  margin-bottom: 0em;
+}
+
+
+th ol ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+th ol ol ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+th ul ul:first-child li.listItemNumeroUno {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+th ul ul ul:first-child li.listItemNumeroUno {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+th ul ul ul ul:first-child li.listItemNumeroUno {
+  margin-top: 0.5em;
+  margin-left: 0em;
+  margin-bottom: 0.5em;
+}
+
+th ul ul,
+th ul ul ul,
+th ul ul ul ul {
+  margin-bottom: 0.5em;
+}
+
+
+
+/* Bold list numbering */
+
+th ol, ul {
+ counter-reset: item;
+}
+
+th ol li { 
+ display: block;
+ padding: 0 0 0 0.5em;
+ text-indent: 0em;
+}
+
+
+th ol li:before {
+ counter-increment: item;
+}
+
+/* ----- Counter resets for lists not starting at 1 ----- */
+th ol[start="2"] { counter-reset: item 1; }
+th ol[start="3"] { counter-reset: item 2; }
+th ol[start="4"] { counter-reset: item 3; }
+th ol[start="5"] { counter-reset: item 4; }
+th ol[start="6"] { counter-reset: item 5; }
+th ol[start="7"] { counter-reset: item 6; }
+th ol[start="8"] { counter-reset: item 7; }
+th ol[start="9"] { counter-reset: item 8; }
+th ol[start="10"] { counter-reset: item 9; }
+th ol[start="11"] { counter-reset: item 10; }
+th ol[start="12"] { counter-reset: item 11; }
+th ol[start="13"] { counter-reset: item 12; }
+th ol[start="14"] { counter-reset: item 13; }
+th ol[start="15"] { counter-reset: item 14; }
+th ol[start="16"] { counter-reset: item 15; }
+th ol[start="17"] { counter-reset: item 16; }
+th ol[start="18"] { counter-reset: item 17; }
+th ol[start="19"] { counter-reset: item 18; }
+th ol[start="20"] { counter-reset: item 19; }
+th ol[start="21"] { counter-reset: item 20; }
+th ol[start="22"] { counter-reset: item 21; }
+th ol[start="23"] { counter-reset: item 22; }
+th ol[start="24"] { counter-reset: item 23; }
+th ol[start="25"] { counter-reset: item 24; }
+th ol[start="26"] { counter-reset: item 25; }
+
+
+/* --- Global ol styles --- */
+th ol li.listItemNumeroUno:before,
+th ol li.listItemNumeroUnoNumber:before,
+th ol li.listItemNumeroUnoLowerAlpha:before,
+th ol li.listItemNumeroUnoUpperAlpha:before,
+th ol li.listItemNumeroUnoUpperRoman:before,
+th ol li.listItemNumeroUnoLowerRoman:before,
+th ol li.listItemNumeroUnoNone:before {
+ content: counter(item) ". ";
+ counter-increment: item;
+ color: #000;
+ font-weight: bold;
+ padding-right: 0.1em;      
+ text-align: right;
+ position: relative;
+ width: 4.5em;
+ margin: 0 0 1em -4.90em;
+}
+
+
+th ol li.listItemNumeroUnoUpperAlpha:before {
+    content: counter(item, upper-alpha) ". ";
+}
+
+th ol li.listItemNumeroUnoLowerAlpha:before {
+    content: counter(item, lower-alpha) ". ";
+}
+
+th ol li.listItemNumeroUnoUpperRoman:before {
+    content: counter(item, upper-roman) ". ";
+}
+
+th ol li.listItemNumeroUnoLowerRoman:before {
+    content: counter(item, lower-roman) ". ";
+}
+
+th ol li.listItemNumeroUnoNone:before {
+    content: none;
+}
+
+.pearson-component.image.figureData.table-figure-data {
+    overflow: auto;
+}
+
+.figure-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #000;
+}
+.figure-wrapper  .image-figure{
+    padding-top:3px;
+    display: flex;
+}
+.figure-wrapper  .image-figure-path{
+    padding-top:6px;
+    display: flex;
+}
+.figure-wrapper  .image-info{
+    overflow-wrap: anywhere;
+    width: 100%;
+    margin-top: -3px;
+}
+
+.image-text{
+    width:100px;
+    font-weight: 700;
+    font-size:11px;
+    color:#fff;
+}
+.figure-glossary-icon{
+    position: relative;
+}
+
+.figure-glossary-icon::after{
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    top: -3px;
+    background-color: #005a70;
+    right: -3px;
+    border:2px solid #fff;
+}
+
+/**CSS for FigureImage.jsx*/
+
+.image-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.textfield-container {
+    /* margin-top: 20px; */
+    display: flex;
+    flex-direction: column;
+    /* transition: all .2s ease; */
+  }
+  
+  .textfield-label {
+    display: block;
+    font-size: 12px;
+    transition: all .4s ease;
+    transform: translateY(-18px);
+    color: grey;
+    pointer-events: none;
+  }
+  
+  .textfield-container input {
+    outline: none;
+    border: none;
+    height: 20px;
+  }
+  
+  .textfield-border-bottom {
+    position: relative;
+    width: 100%;
+    height: 1px;
+    margin-top: 2px;
+    border-bottom: 1px solid black;
+    transition: all .1s ease;
+    transform: translateY(-13px);
+  }
+  
+  .textfield-container:focus-within > label ,
+  .textfield-container input:not(:placeholder-shown) + label {
+    transform: translateY(-35px);
+    font-size: 9px;
+    font-weight: 600;
+    color: black;
+  }
+  
+  .textfield-container:focus-within > div, 
+  .textfield-container input:valid > div {
+    margin-top: 3px;
+    border-bottom: 3px solid blue;
+  }
+
+  .figurebutton{
+    width: 150px;
+    height: 36px;
+    margin: 24px auto;
+    padding: 8px 20px;
+    border-radius: 2px;
+    border: solid 1px #dcdcdc;
+    background-color: #fff;
+    text-align: center;
+    justify-content: center;
+    color: #005a70;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+.updatefigurebutton{
+    top:16px;
+    right: 62px;
+    position: absolute;
+    height: 36px;
+    padding: 8px 20px;
+    border-radius: 2px;
+    border: solid 1px #dcdcdc;
+    background-color: #fff;
+    text-align: center;
+    justify-content: center;
+    color: #005a70;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+.figurecont{
+    position: relative;
+}
+.figurecont:hover .figure-wrapper{
+    opacity: 0.8;
+    color: #fff;
+}
+.figure-image-info{
+    left:16px;
+    position: absolute;
+    bottom: 20px;
+}
