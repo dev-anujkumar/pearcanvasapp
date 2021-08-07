@@ -11,9 +11,10 @@ import {
 import config from '../../config/config';
 import { getAlfrescositeResponse,handleAlfrescoSiteUrl } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML } from '../../constants/utility';
+import { hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/FigureImage.css';
-import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
+import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action';
 import { connect } from 'react-redux';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
@@ -42,7 +43,8 @@ class FigureImage extends Component {
         } 
     }
     componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
+        const { alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props;
+        const { elementId } = this.props.figureElementProps;
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.dataFromNewAlfresco(alfrescoAssetData)
         }
@@ -76,7 +78,7 @@ class FigureImage extends Component {
             let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
             let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
     
-            if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
+            if (figureType === "image" || figureType === "table" || figureType === "mathImage") {
     
                 let uniqID = imageData.id ? imageData.id : "";
                 let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
@@ -108,9 +110,9 @@ class FigureImage extends Component {
                 
                 Object.assign(setFigureData, (Object.keys(scaleMarkerData).length > 0) ? { scaleimage: scaleMarkerData } : null);
     
-                this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId,this.props.asideData, () => {
-                    this.props.handleFocus("updateFromC2")
-                    this.props.handleBlur()
+                this.props.figureElementProps.updateFigureData(setFigureData, this.props.figureElementProps.index, this.props.figureElementProps.elementId, this.props.figureElementProps.asideData, () => {
+                    this.props.figureElementProps.handleFocus("updateFromC2");
+                    this.props.figureElementProps.handleBlur();
                 })
                 let alfrescoData = config?.alfrescoMetaData?.alfresco;
                 let alfrescoSiteLocation = this.state.alfrescoSiteData;
@@ -122,14 +124,14 @@ class FigureImage extends Component {
                         siteId: this.props.changedSiteData.id,
                         visibility: this.props.changedSiteData.visibility
                     }
-                    handleAlfrescoSiteUrl(this.props.elementId, changeSiteAlfrescoData)
+                    handleAlfrescoSiteUrl(this.props.figureElementProps.elementId, changeSiteAlfrescoData)
                     this.setState({
                         alfrescoSite: changeSiteAlfrescoData?.repositoryFolder,
                         alfrescoSiteData:changeSiteAlfrescoData
                     })
-                }else{
-                    if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
-                        handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
+                } else {
+                    if ((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')) {
+                        handleAlfrescoSiteUrl(this.props.figureElementProps.elementId, alfrescoData)
                         this.updateAlfrescoSiteUrl()
                     }
                 }
@@ -146,7 +148,7 @@ class FigureImage extends Component {
          * @description function will be called on image src add and fetch resources from Alfresco
          */
         handleC2MediaClick = (e) => {
-            this.props.handleFocus();
+            this.props.figureElementProps.handleFocus();
             if (hasReviewerRole()) {
                 return true
             }
@@ -169,7 +171,7 @@ class FigureImage extends Component {
             var data_1 = false;
             if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
-                if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                if (this.props.figureElementProps.permissions && this.props.figureElementProps.permissions.includes('add_multimedia_via_alfresco')) {
                     let alfrescoLocationData = this.state.alfrescoSiteData
                     let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
                     alfrescoSiteName = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
@@ -179,33 +181,33 @@ class FigureImage extends Component {
                     const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
                     let messageObj = { citeName: locationSiteDataTitle? locationSiteDataTitle : alfrescoSiteName, 
                         citeNodeRef: nodeRefs, 
-                        elementId: this.props.elementId,
+                        elementId: this.props.figureElementProps.elementId,
                         currentAsset
                      }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                 }
                 else {
-                    this.props.accessDenied(true)
+                    this.props.figureElementProps.accessDenied(true)
                 }
     
             }} else {
-                if (this.props.permissions.includes('alfresco_crud_access')) {
-                    this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData)
+                if (this.props.figureElementProps.permissions.includes('alfresco_crud_access')) {
+                    this.handleSiteOptionsDropdown(alfrescoPath, this.props.figureElementProps.elementId, this.state.alfrescoSiteData)
                 } else {
-                    this.props.accessDenied(true)
+                    this.props.figureElementProps.accessDenied(true)
                 }
             }
     
         }
 
         /**
-     * @description function will be called on image src add and fetch resources based on figuretype
+     * @description function will be called on image src add and fetch resources
      */
     addFigureResource = (e) => {
-        if(e){
+        if (e) {
             e.stopPropagation();
         }
-            this.handleC2MediaClick(e);
+        this.handleC2MediaClick(e);
     }
 
     handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{

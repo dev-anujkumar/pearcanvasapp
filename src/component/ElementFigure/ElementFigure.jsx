@@ -413,8 +413,13 @@ class ElementFigure extends Component {
                     glossaryFootnoteValue: this.props.glossaryFootnoteValue,
                     glossaaryFootnotePopup: this.props.glossaaryFootnotePopup,
                     elementId: this.props.elementId,
+                    asideData: this.props.asideData,
                     parentElement: this.props.parentElement,
-                    showHideType: this.props.showHideType
+                    showHideType: this.props.showHideType,
+                    handleFocus: this.props.handleFocus,
+                    handleBlur: this.props.handleBlur,
+                    accessDenied: this.props.accessDenied,
+                    updateFigureData: this.props.updateFigureData
                 };
                 return <FigureImage figureElementProps = {figureElementProps} />
             } else {
