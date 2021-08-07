@@ -281,10 +281,10 @@ class FigureImage extends Component {
                             </header>
                             <div className="figurecont">
 
-                                <div className={`pearson-component image figureData ${figureElementProps.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
+                                <div id = "figure_add_div" className={`pearson-component image figureData ${figureElementProps.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                                     {
                                         figureElementProps.model.figuredata && figureElementProps.model.figuredata.imageid ?
-                                            <img src={this.state.imgSrc}
+                                            <img src= {this.state.imgSrc ? this.state.imgSrc : (figureElementProps.model.figuredata.path && figureElementProps.model.figuredata.path !== "" ? figureElementProps.model.figuredata.path : '')}
                                                 data-src={this.state.imgSrc}
                                                 title=""
                                                 alt=""
