@@ -217,6 +217,8 @@ export class TinyMceEditor extends Component {
                             else {
                                 activeElement.classList.remove('place-holder')
                             }
+                        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Number") {
+                            activeElement.classList.remove('place-holder');
                         }
                         else if (content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath) {
                             if (nodeContent || isContainsMath || isContainsBlankLine) {
@@ -937,6 +939,8 @@ export class TinyMceEditor extends Component {
                 }
                 else if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath || isContainsBlankLine) {
                     activeElement.classList.remove('place-holder')
+                } else if (this.props.element.type === 'figure' && this.props.placeholder === "Number") {
+                    activeElement.classList.remove('place-holder');
                 }
                 else {
                     activeElement.classList.add('place-holder')
@@ -2925,6 +2929,8 @@ export class TinyMceEditor extends Component {
             else {
                 this.placeHolderClass = '';
             }
+        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Number") {
+            this.placeHolderClass = '';
         } else {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model;
@@ -3006,7 +3012,7 @@ export class TinyMceEditor extends Component {
         let toolbar = [];
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Enter Number...") {
+        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Number") {
             toolbar = config.figureNumberToolbar;
         } else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;

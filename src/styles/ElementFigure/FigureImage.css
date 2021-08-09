@@ -676,3 +676,31 @@ th ol li.listItemNumeroUnoNone:before {
 .figure-label-field{
   margin-right: 24px;
 }
+
+/* --------------------------------------------------------------------------- */
+
+.floating-label-group {
+    /* min-height: 40px!important; */
+    cursor: auto !important;
+    width:100%!important;
+    max-width: 150px !important;
+    color:black!important;
+    border-bottom: 2px solid #999;
+}
+.floating-label-group .floating-label {
+    font-size: 13px;
+    color: #404040;
+    position: absolute;
+    pointer-events: none;
+    top: 9px;
+    left: 162px;
+    transition: all 0.1s ease;
+}
+.floating-label-group .figureNumber:focus ~ .floating-label, .floating-label-group .figureNumber:not(:focus):valid ~ .floating-label {
+    top: -15px;
+    bottom: 0px;
+    left: 150px;
+    font-size: 11px;
+    opacity: 1;
+    color: #005a70;
+}
