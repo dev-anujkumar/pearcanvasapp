@@ -27,7 +27,10 @@ class FigureImage extends Component {
             imgSrc: null,
             projectMetadata: false,
             alfrescoSite: '',
-            alfrescoSiteData: {}
+            alfrescoSiteData: {},
+            figureLabelValue: 'No Label',
+            figureLabelData: ['No Label', 'Figure', 'Table', 'Equation', 'Exhibit', 'Map', 'Custom'],
+            figureDropDown: false
         }
     }
 
@@ -238,6 +241,22 @@ class FigureImage extends Component {
             });
     }
 
+    changeFigureLabel = (e, data) => {
+      this.setState({
+        figureLabelValue: data
+      })
+    }
+    handleFigureDropdown = () => {
+      this.setState({
+          figureDropDown: !this.state.figureDropDown
+      })
+    }
+    handleCloseDropDrown = () => {
+        this.setState({
+            figureDropDown: false
+        })
+    }
+
     render() {
         const { figureElementProps } = this.props;
         let elementFigureAlignment = ''
@@ -271,14 +290,39 @@ class FigureImage extends Component {
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
                             <header className="figure-header">
+                                <div className='figure-label-field'>
+                                    <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
+                                    <div className="figure-label" onClick={this.handleFigureDropdown}>
+                                        <span>{this.state.figureLabelValue}</span>
+                                        <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
+                                    </div>
+                                </div>
+                                {this.state.figureDropDown &&
+                                    <div className="figure-dropdown">
+                                        <ul>
+                                            {this.state.figureLabelData.map((label, i) => {
+                                                return (
+                                                    <li key={i} onClick={(e) => {this.changeFigureLabel(e, label); this.handleCloseDropDrown() }}>{label}</li>
+                                                )
 
-                                <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                                            })}
+                                        </ul>
+                                    </div>
+                                }
+                                {
+                                    this.state.figureLabelValue === 'Custom' &&
+                                    <div>
+                                        <label class="floating-label">Label</label>
+                                        <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                                    </div>
+                                }
+
 
                                 <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-1`} placeholder="Enter Number..." tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
 
-                                <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-2`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-
                             </header>
+                            
+                            <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-2`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
                             <div className="figurecont">
 
                                 <div id = "figure_add_div" className={`pearson-component image figureData ${figureElementProps.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >

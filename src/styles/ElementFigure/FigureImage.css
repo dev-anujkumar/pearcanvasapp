@@ -625,3 +625,54 @@ th ol li.listItemNumeroUnoNone:before {
     position: absolute;
     bottom: 20px;
 }
+.figure-label{
+    width: 130px;
+    font-size: 14px;
+    line-height: 1.71;
+    color: #000;
+    border-bottom: 2px solid #999;
+    cursor: pointer;
+    position: relative;
+    padding: 3px 4px;
+}
+.figure-dropdown{
+  width: 130px;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+  background-color: #fff;
+  position: absolute;
+  z-index: 99;
+  top:25px;
+}
+.figure-dropdown ul {
+    padding: 4px 0px;
+    margin: 0px;
+}
+.figure-dropdown ul li{
+  cursor: pointer;
+  padding: 10px;
+  margin: 0;
+  font-size: 14px;
+}
+.figure-dropdown ul li:hover {
+  background-color: #efefef;
+}
+.dropdown-arrow{
+  width: 8px;
+  position: absolute;
+  right: 0;
+  top: 14px;
+}
+.label{
+  font-size: 10px;
+  color: #999;
+}
+.label.active {
+  color: #005a70;
+}
+.figure-header{
+  position: relative;
+  display: flex;
+}
+.figure-label-field{
+  margin-right: 24px;
+}
