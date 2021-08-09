@@ -20,7 +20,8 @@ const mockStore = configureMockStore(middlewares);
 const initialState = {
     appStore: {
         slateLevelData: communicationMockData,
-        permissions: []
+        permissions: [],
+        currentSlateAncestorData: {}
     },
     glossaryFootnoteReducer: {
         glossaryFootnoteValue: GlossaryMockState
@@ -32,13 +33,13 @@ const initialState = {
     slateLockReducer: SlateLockMockState,
     assetPopOverSearch: AssetPopOverMockState,
     metadataReducer: {
-        currentSlateLOData: {
+        currentSlateLOData: [{
             id: 1,
             loUrn: "123",
             label:{
                 en:'en'
             }
-        }
+        }]
     },
     toolbarReducer:{
         pageNumberToggle:false
@@ -169,6 +170,12 @@ jest.mock('../../../src/config/config.js', () => ({
 jest.mock('../../../src/component/CanvasWrapper/TCM_Integration_Actions', () => {
     return { loadTrackChanges: jest.fn() }
 })
+jest.mock('../../../src/component/ElementMetaDataAnchor/ExternalLO_helpers.js', () => {
+    return { 
+        setCurrentSlateLOs: jest.fn(() => [{}]),
+        prepareLODataForUpdate: jest.fn(()=> [{}])
+    }
+})
 describe('Testing communication channel', () => {
     let store = mockStore(initialState);
     let props = {
@@ -231,7 +238,8 @@ describe('Testing communication channel', () => {
         saveSelectedAssetData: jest.fn(),
         showWrongAudioPopup: jest.fn(),
         saveImageDataFromAlfresco: jest.fn(),
-        setElmPickerData: jest.fn()
+        setElmPickerData: jest.fn(),
+        currentSlateLOType: jest.fn()
     }
     let wrapper = mount(<Provider store={store}><CanvasWrapper {...props} /></Provider>)
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
@@ -1525,6 +1533,64 @@ describe('Testing communication channel', () => {
                 data: {
                     type: "onTOCHamburgerClick",
                     message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for statusForExtLOSave case - handleExtLOData - if blocks', () => {
+            const event = {
+                data: {
+                    type: "statusForExtLOSave",
+                    message: {
+                        statusForExtLOSave: true,
+                        loLinked: [{
+                            label: {
+                                en: 'en'
+                            }
+                        }]
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for statusForExtLOSave case - handleExtLOData - else blocks', () => {
+            const event = {
+                data: {
+                    type: "statusForExtLOSave",
+                    message: {
+                        statusForExtLOSave: true,
+                        loLinked: [],
+                        loUnlinked: ['1']
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for parentChanging case - with message', () => {
+            const event = {
+                data: {
+                    type: "parentChanging",
+                    message: {}
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for parentChanging case - without message', () => {
+            const event = {
+                data: {
+                    type: "parentChanging"
                 }
             }
             const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
