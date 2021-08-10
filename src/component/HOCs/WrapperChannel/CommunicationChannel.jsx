@@ -716,6 +716,10 @@ function CommunicationChannel(WrappedComponent) {
         setCurrentSlate = (message) => {
             config.isSlateLockChecked = false;
             let currentSlateObject = {};
+            const projectSubscriptionDetails = {
+                isSubscribed: false,
+                owner: {}
+            }
             if (message['category'] === 'titleChange') {
                 currentSlateObject = {
                     title: message.title,
@@ -752,6 +756,12 @@ function CommunicationChannel(WrappedComponent) {
                 config.tcmslatemanifest= null;
                 config.parentLabel = message.node.nodeParentLabel;
                 config.parentOfParentItem = message.node.parentOfParentItem
+                // checking if selected container is subscribed or not
+                if (message?.node?.isSubscribed) {
+                    projectSubscriptionDetails.isSubscribed = message.node.isSubscribed;
+                }
+                // calling an action to set project subscription details coming from TOC SPA
+                this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,

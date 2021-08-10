@@ -22,7 +22,8 @@ import {
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
     UPDATE_LOB_PERMISSIONS,
-    SET_PROJECT_SHARING_ROLE
+    SET_PROJECT_SHARING_ROLE,
+    SET_PROJECT_SUBSCRIPTION_DETAILS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1381,9 +1382,21 @@ export const fetchProjectLFs = () => dispatch => {
  * project sharing role
  * @param {String} role
  */
- export const setProjectSharingRole = role => (dispatch) => {
-	dispatch({
-		type: SET_PROJECT_SHARING_ROLE,
-		payload: role
-	});
+export const setProjectSharingRole = role => (dispatch) => {
+    dispatch({
+        type: SET_PROJECT_SHARING_ROLE,
+        payload: role
+    });
+}
+
+/**
+ * setProjectSubscriptionDetails is responsible to dispatch an action to 
+ * set project subscription details based on toc container selection
+ * @param {Object} subscriptionDetails 
+ */
+export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch) => {
+    dispatch({
+        type: SET_PROJECT_SUBSCRIPTION_DETAILS,
+        payload: subscriptionDetails
+    });
 }
