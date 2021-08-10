@@ -13,12 +13,12 @@ import config from './config/config';
 import cypressConfig from './config/cypressConfig';
 import { requestConfigURI } from './constants/utility';
 import CanvasWrapper from './component/CanvasWrapper';
-
+import { modifyObjKeys, loadPatternScripts } from './js/appUtils'
 // IMPORT - Assets // 
 import './styles/style.css';
 
 
-console.log("!!!!! ---- canvas-1.28.12 ---- !!!!!")
+console.log("!!!!! ---- canvas-1.28.14.01 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
@@ -38,8 +38,8 @@ class App extends Component {
         }).then((response) => {
             if(response){
                 let uri = response.data.env;
-                cypressConfig.currnetEnv = uri;
-                this.modifyObjKeys(config, response.data)
+                cypressConfig.currentEnv = uri;
+                modifyObjKeys(config, response.data)
                 const search = window.location.search;
                 const params = new URLSearchParams(search);
                 const projectUrn = params.get('projectUrn');
@@ -49,7 +49,7 @@ class App extends Component {
                 const ssoToken = params.get('ssoToken')
                 this.getQueryParameter(projectUrn, projectEntityUrn, slateEntityURN,slateManifestURN,ssoToken);
                 if(response.data.PATTERNS && Object.keys(response.data.PATTERNS).length>0){
-                    this.loadPatternScripts(response.data.PATTERNS)
+                    loadPatternScripts(response.data.PATTERNS)
                 }
             }
             
@@ -58,42 +58,6 @@ class App extends Component {
             console.log("Error in fetching origin:", error)
         })
     }
-    
-    loadPatternScripts = (PATTERNS) => {
-
-        this.appendPatternScripts(PATTERNS['PATTERN_VENDOR'])
-        this.appendPatternScripts(PATTERNS['PATTERN_BROKER'])
-        this.appendPatternScripts(PATTERNS['PATTERN_ADD_ASSET'])
-        this.appendPatternScripts(PATTERNS['PATTERN_PRODUCT_LINK'])
-        this.appendPatternScripts(PATTERNS['PATTERN_SEARCH_SELECT'])
-    }
-
-    appendPatternScripts = (src) => {
-        let script = document.createElement('script');
-        script.type = "text/javascript";
-        script.defer = true;
-        script.async = false;
-        script.src = src;
-        document.getElementsByTagName('head')[0].appendChild(script);
-    }
-    
-    modifyObjKeys = (obj, newObj) => {
-        Object.keys(obj).forEach(function(key) {
-          delete obj[key];
-        });      
-        Object.keys(newObj).forEach(function(key) {
-          obj[key] = newObj[key];
-        });
-        Object.keys(cypressConfig).forEach(function(key) {
-            obj[key] = cypressConfig[key];
-        });
-        console.log("obj >> ", obj);
-        if(process.env.NODE_ENV === 'development'){
-            obj.REACT_APP_API_URL = cypressConfig.CYPRESS_API_ENDPOINT;
-            obj.JAVA_API_URL = cypressConfig.CYPRESS_TOC_JAVA_ENDPOINT;
-        }
-    }
-
     getQueryParameter(projectUrn, projectEntityUrn, slateEntityURN,slateManifestURN,ssoToken) {
         if (projectUrn && projectEntityUrn && slateEntityURN && slateManifestURN && ssoToken) {
             config.projectUrn = projectUrn;
