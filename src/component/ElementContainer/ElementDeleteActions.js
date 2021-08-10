@@ -16,6 +16,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
     //const { showHideObj } = getState().appStore
     const { cutCopyParentUrn, parentUrn, parentElement, asideData, showHideObj } = containerElements
     // const parentElementUrn = getState().appStore.parentUrn
+    //This block was unused, So commented it while writing testcases.
     // if(type === 'popup'){
     //     dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
     // }
