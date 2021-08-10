@@ -9,7 +9,7 @@ import  { getMCQGuidedData}  from '../../../src/component/AssessmentSlateCanvas/
 import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivepdf, InteractiveWeblink,
     InteractivePopupWeblink, InteractiveTable,InteractiveShowHide,InteractivePopWindow,Interactivegraph
     ,Interactivesimulation,Interactivesurvey,Interactivetimeline,Interactivehotspot,Interactiveaccountingtable,
-    Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm, smartLinkType3rdParty, smartLinkTypeWebsite, smartLinkTypeWithBlankData, smartLinkTypeTable, smartLinkTypePdf } from '../../../fixtures/ElementInteractiveTesting.js'
+    Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm } from '../../../fixtures/ElementInteractiveTesting.js'
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
