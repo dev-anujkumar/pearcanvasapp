@@ -1,10 +1,11 @@
-import { UPDATE_PROJECT_INFO, UPDATE_DISCUSSION_ITEMS, UPDATE_USAGE_TYPE, UPDATE_LOB_PERMISSIONS } from "../constants/Action_Constants";
+import { UPDATE_PROJECT_INFO, UPDATE_DISCUSSION_ITEMS, UPDATE_USAGE_TYPE, UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE } from "../constants/Action_Constants";
 
 const initialState = {
   usageType: [],
   discussionItems: [],
   showPlayscript: true,
-  showDiscussion: true
+  showDiscussion: true,
+  projectSharingRole: ''
 }
 
 export const projectInfo = (state = initialState, action={type:'', payload:{}}) => {
@@ -37,6 +38,14 @@ export const projectInfo = (state = initialState, action={type:'', payload:{}}) 
             showDiscussion: action.payload.discussion
           }
         }
+
+        case SET_PROJECT_SHARING_ROLE: {
+          return {
+            ...state,
+            projectSharingRole: action.payload
+          }
+        }
+
         default : {
             return {
                 ...state

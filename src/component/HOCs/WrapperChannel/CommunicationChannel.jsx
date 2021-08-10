@@ -283,9 +283,8 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case PROJECT_SHARING_ROLE:
                     if (message?.sharingContextRole) {
-                        config.PROJECT_SHARING_ROLE = message.sharingContextRole;
+                        this.props.setProjectSharingRole(message.sharingContextRole);
                     }
-                    console.log("Project sharing role - canvas", config.PROJECT_SHARING_ROLE);
                     break;
             }
         }

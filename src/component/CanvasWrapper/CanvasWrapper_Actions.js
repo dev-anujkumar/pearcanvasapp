@@ -21,7 +21,8 @@ import {
     UPDATE_PROJECT_INFO,
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
-    UPDATE_LOB_PERMISSIONS
+    UPDATE_LOB_PERMISSIONS,
+    SET_PROJECT_SHARING_ROLE
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1374,3 +1375,15 @@ export const fetchProjectLFs = () => dispatch => {
     })
 
 };
+
+/**
+ * setProjectSharingRole is responsible to dispatch an action to set 
+ * project sharing role
+ * @param {String} role
+ */
+ export const setProjectSharingRole = role => (dispatch) => {
+	dispatch({
+		type: SET_PROJECT_SHARING_ROLE,
+		payload: role
+	});
+}
