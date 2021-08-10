@@ -203,6 +203,7 @@ export class TinyMceEditor extends Component {
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
                     if (activeElement && activeElement.getAttribute('id') === 'cypress-' + this.props.index) {
+                        let figureFields = ['Number', 'Label Name', 'Title', 'Caption', 'Credit'];
                         let currentNode = document.getElementById('cypress-' + this.props.index)
                         let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
                         let nodeContent = (currentNode && !currentNode.innerText.trim().length) ? true : false
@@ -217,7 +218,7 @@ export class TinyMceEditor extends Component {
                             else {
                                 activeElement.classList.remove('place-holder')
                             }
-                        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Number") {
+                        } else if (this.props.element.type === 'figure' && figureFields.includes(this.props.placeholder)) {
                             activeElement.classList.remove('place-holder');
                         }
                         else if (content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath) {
@@ -916,6 +917,7 @@ export class TinyMceEditor extends Component {
             if (activeElement) {
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
+                let figureFields = ['Number', 'Label Name', 'Title', 'Caption', 'Credit'];
                 if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
@@ -939,7 +941,7 @@ export class TinyMceEditor extends Component {
                 }
                 else if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath || isContainsBlankLine) {
                     activeElement.classList.remove('place-holder')
-                } else if (this.props.element.type === 'figure' && this.props.placeholder === "Number") {
+                } else if (this.props.element.type === 'figure' && figureFields.includes(this.props.placeholder)) {
                     activeElement.classList.remove('place-holder');
                 }
                 else {
@@ -2883,6 +2885,7 @@ export class TinyMceEditor extends Component {
     * Defines initial placeholder
     */
     handlePlaceholder = () => {
+        let figureFields = ['Number', 'Label Name', 'Title', 'Caption', 'Credit'];
         if ((this.props.element && this.props.element.type === "element-list") || (this.props.currentElement && this.props.currentElement.type === 'element-list')) {
             this.placeHolderClass = '';
         }
@@ -2929,7 +2932,7 @@ export class TinyMceEditor extends Component {
             else {
                 this.placeHolderClass = '';
             }
-        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Number") {
+        } else if (this.props.element.type === 'figure' && figureFields.includes(this.props.placeholder)) {
             this.placeHolderClass = '';
         } else {
             let testElem = document.createElement('div');
@@ -3012,8 +3015,17 @@ export class TinyMceEditor extends Component {
         let toolbar = [];
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Number") {
-            toolbar = config.figureNumberToolbar;
+        } else if (this.props.element.type === 'figure' && ['image', 'table', 'mathImage'].includes(this.props.element.figuretype)) {
+            let placeholderValue = this.props.placeholder;
+            switch (placeholderValue) {
+                case "Number":
+                    toolbar = config.figureNumberToolbar;
+                case "Label Name":
+                    toolbar = config.labelToolbar;
+                case "Caption":
+                case "Credit":
+                    toolbar = config.captionToolbar;
+            }
         } else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
         }
