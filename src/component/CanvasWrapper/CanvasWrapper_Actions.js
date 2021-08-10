@@ -468,13 +468,73 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
     } 
-    return axios.get(apiUrl, {
-        headers: {
-            "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
-        }
-    }).then(slateData => {  
+    // return axios.get(apiUrl, {
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //         "PearsonSSOSession": config.ssoToken
+    //     }
+    // }).then(slateData => {  
          /* Slate tag issue */
+          let slateData = {
+                 data: {
+                    "urn:pearson:manifest:716c9195-7923-43f7-84aa-fca8c8c8cc9e": {
+                        "id": "urn:pearson:manifest:716c9195-7923-43f7-84aa-fca8c8c8cc9e",
+                        "type": "manifest",
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                        "versionUrn": "urn:pearson:manifest:716c9195-7923-43f7-84aa-fca8c8c8cc9e",
+                        "contentUrn": "urn:pearson:entity:1ebf79e8-f47f-432b-bcb3-b3b8f7fb2369",
+                        "contents": {
+                            "bodymatter": [{
+                                "id": "urn:pearson:work:082ff329-b56b-4f8f-a4b7-cf77b31b8515",
+                                "type": "figure",
+                                "figuretype": "image",
+                                "subtype": "imageTextWidth",
+                                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                                "titlecontentintitlefield": true,
+                                "alignment": "text-width",
+                                "title": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "captions": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "credits": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "figuredata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                                    "imageid": "",
+                                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                                    "height": "422",
+                                    "width": "680"
+                                },
+                                "html": {
+                                    "title": "<p></p>",
+                                    "captions": "<p></p>",
+                                    "credits": "<p></p>",
+                                    "footnotes": {},
+                                    "assetsPopover": {},
+                                    "glossaryentries": {}
+                                },
+                                "versionUrn": "urn:pearson:work:082ff329-b56b-4f8f-a4b7-cf77b31b8515",
+                                "contentUrn": "urn:pearson:entity:2fa5a4b1-b0a2-4dc0-a255-f67c033f82bb"
+                            }],
+                            "title": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": "nyi nyi slate"
+                            },
+                            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+                        },
+                        "status": "wip",
+                        "pageNo": 0,
+                        "pageCount": 1,
+                        "pageLimit": 25
+                    }
+                }
+             }
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
@@ -718,7 +778,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             let searchTerm = queryStrings.get('searchElement') || '';
             dispatch(getContainerData(searchTerm));
         }
-    });
+    // });
 };
 
 export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => {

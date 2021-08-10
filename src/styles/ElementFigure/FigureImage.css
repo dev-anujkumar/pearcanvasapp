@@ -1,4 +1,4 @@
-.figure-header .image-label .cypress-editable {
+.figure-header .cypress-editable {
     /* margin: 0!important; */
     padding: 10px!important;
     width: 100%!important;
@@ -79,7 +79,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     font-weight: 500;
     height:0;
 }
-.floating-title-group .figureTitle.cypress-editable {
+.floating-title-group .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable {
     font-size: 14px;
     border-bottom: 2px solid #737373;
     margin: 8px 0 !important;
@@ -102,7 +102,9 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 }
 .figure-header .floating-number-group .figureNumber.cypress-editable.mce-edit-focus,
 .figure-header .image-label .figureLabel.cypress-editable.mce-edit-focus, 
-.floating-title-group .figureTitle.cypress-editable.mce-edit-focus
+.floating-title-group .figureTitle.cypress-editable.mce-edit-focus,
+.floating-caption-group .figureCaption.cypress-editable.mce-edit-focus,
+.floating-credit-group .figureCredit.cypress-editable.mce-edit-focus
 {
     border-bottom: 2px solid #005a70;  
 }
@@ -731,10 +733,10 @@ th ol li.listItemNumeroUnoNone:before {
 
 /* --------------------------------------------------------------------------- */
 
-.floating-number-group, .image-label, .floating-title-group {
+.floating-number-group, .image-label, .floating-title-group, .floating-caption-group, .floating-credit-group {
     position: relative;
 }
-.floating-number-group .floating-number, .image-label .floating-label, .floating-title-group .floating-title {
+.floating-number-group .floating-number, .image-label .floating-label, .floating-title-group .floating-title, .floating-caption-group .floating-caption, .floating-credit-group .floating-credit {
     font-size: 14px;
     color: #000;
     position: absolute;
@@ -744,14 +746,16 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .image-label .figureLabel:focus ~ .floating-label, .image-label .figureLabel:not(:focus):valid ~ .floating-label,
 .floating-number-group .figureNumber:focus ~ .floating-number, .floating-number-group .figureNumber:not(:focus):valid ~ .floating-number,
-.floating-title-group .figureTitle:focus ~ .floating-title, .floating-title-group .figureTitle:not(:focus):valid ~ .floating-title {
+.floating-title-group .figureTitle:focus ~ .floating-title, .floating-title-group .figureTitle:not(:focus):valid ~ .floating-title,
+.floating-caption-group .figureCaption:focus ~ .floating-caption, .floating-caption-group .figureCaption:not(:focus):valid ~ .floating-caption,
+.floating-credit-group .figureCredit:focus ~ .floating-credit, .floating-credit-group .figureCredit:not(:focus):valid ~ .floating-credit {
     top: 2px;
     bottom: 0px;
     font-size: 10px;
     opacity: 1;
     color: #005a70;
 }
-.floating-number-group .transition-none, .image-label .transition-none, .floating-title-group .transition-none {
+.floating-number-group .transition-none, .image-label .transition-none, .floating-title-group .transition-none, .floating-caption-group .transition-none {
     transition: none;
     top: 2px;
     bottom: 0px;
