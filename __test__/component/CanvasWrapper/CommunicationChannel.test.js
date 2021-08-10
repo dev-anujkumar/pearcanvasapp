@@ -10,6 +10,7 @@ import {
     AssetPopOverMockState
 } from '../../../fixtures/slateTestingData.js';
 import tinymce from 'tinymce/tinymce';
+import config from '../../../src/config/config';
 let tinyMceEditor = {
     undoManager: { data: [], typing: false, beforeChange: jest.fn(), add: jest.fn(), undo: jest.fn() ,transact: () =>{ }},
     windowManager: { open: jest.fn(), openUrl: jest.fn(), alert: jest.fn(), confirm: jest.fn(), close: jest.fn() }
@@ -173,7 +174,9 @@ jest.mock('../../../src/component/CanvasWrapper/TCM_Integration_Actions', () => 
 jest.mock('../../../src/component/ElementMetaDataAnchor/ExternalLO_helpers.js', () => {
     return { 
         setCurrentSlateLOs: jest.fn(() => [{}]),
-        prepareLODataForUpdate: jest.fn(()=> [{}])
+        prepareLODataForUpdate: jest.fn(()=> [{}]),
+        getSlateMetadataAnchorElem: jest.fn(() => [{ loUrn: '1' }]),
+        prepareLO_WIP_Data: jest.fn(() => ({ 'elementdata': { 'loref': '' } }))
     }
 })
 describe('Testing communication channel', () => {
@@ -1596,6 +1599,141 @@ describe('Testing communication channel', () => {
             const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
             channelInstance.handleIncommingMessages(event);
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - externalLF if block', () => {
+            const event = {
+                data: {
+                    type: "currentSlateLOAfterWarningPopup",
+                    message: {
+                        unlinkStatus: true,
+                        currentSlateLF: "externalLF",
+                        statusForExtLOSave: true,
+                        loLinked: [{
+                            label: {
+                                en: 'en'
+                            }
+                        }]
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - cypressLF if block', () => {
+            const event = {
+                data: {
+                    type: "currentSlateLOAfterWarningPopup",
+                    message: {
+                        unlinkStatus: true,
+                        currentSlateLF: "cypressLF",
+                        statusForSave: true,
+                        loLinked: [{
+                            label: {
+                                en: 'en'
+                            }
+                        }],
+                        unlinkedLOs: ['1'],
+                        loObj: {
+                            id: '1',
+                            loUrn: '1'
+                        }
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - else block', () => {
+            const event = {
+                data: {
+                    type: "currentSlateLOAfterWarningPopup",
+                    message: {
+                        unlinkStatus: true,
+                        unlinkedLOs: []
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for unlinkLOFailForWarningPopup case - handleUnlinkedLOData method - unlinkStatus true', () => {
+            const event = {
+                data: {
+                    type: "unlinkLOFailForWarningPopup",
+                    message: {
+                        unlinkedLOs: ['1'],
+                        unlinkStatus: true,
+                        currentSlateLF: ""
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for unlinkLOFailForWarningPopup case - handleUnlinkedLOData method - unlinkStatus false', () => {
+            const event = {
+                data: {
+                    type: "unlinkLOFailForWarningPopup",
+                    message: {
+                        unlinkedLOs: ['1'],
+                        unlinkStatus: false,
+                        currentSlateLF: ""
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for projectPreview case - savingInProgress true', () => {
+            config.savingInProgress = true;
+            const event = {
+                data: {
+                    type: "projectPreview",
+                    message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        it('Test for getSlateLockStatus case - savingInProgress true', () => {
+            config.savingInProgress = true;
+            const event = {
+                data: {
+                    type: "getSlateLockStatus",
+                    message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
+        test('Test for cancelCEPopup case - slateTagEnabled block', () => {
+            let event = {
+                data: {
+                    type: "cancelCEPopup",
+                    message: {
+                        slateTagEnabled: ''
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            expect(channelInstance.state.showBlocker).toBe(false)
             spyhandleIncommingMessages.mockClear()
         })
     })
