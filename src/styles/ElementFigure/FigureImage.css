@@ -1,8 +1,8 @@
-.figureElement .cypress-editable {
+.figure-header .image-label .cypress-editable {
     /* margin: 0!important; */
     padding: 10px!important;
     width: 100%!important;
-    min-height: 40px!important;
+    min-height: 32px!important;
     border: none;
     outline: none;
 }
@@ -10,7 +10,18 @@
     margin-top : 2px !important;
 }
 .figureElement .cypress-editable:not(pre){
-padding:0px;
+    padding:0px;
+}
+.figureElement{
+    padding: 0 8px;
+}
+.figureElement .figure-title.cypress-editable, .figureElement .figure-credit.cypress-editable, .figureElement .figure-caption.cypress-editable {
+    padding: 10px !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-height: 64px;
+    border-bottom: 2px solid #999;
+    font-size: 14px;
 }
 /* pre{
     padding: 10px!important;
@@ -54,9 +65,46 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 .figureCaption{
     margin-top: 5px!important;
 }
-.figure-header .figureLabel.cypress-editable,.figure-header .figureTitle.cypress-editable, .figure-header .figureNumber.cypress-editable {
+/* .figure-header .figureLabel.cypress-editable,.figure-header .figureTitle.cypress-editable, .figure-header .figureNumber.cypress-editable {
     font-size: 12px!important;
     font-family: Helvetica, sans-serif!important;
+} */
+
+.figure-header .image-label .figureLabel.cypress-editable {
+    font-size: 14px;
+    width:130px !important;
+    border-bottom: 2px solid #737373;
+    margin: 8px 0 !important;
+    padding: 10px 4px !important;
+    font-weight: 500;
+    height:0;
+}
+.floating-title-group .figureTitle.cypress-editable {
+    font-size: 14px;
+    border-bottom: 2px solid #737373;
+    margin: 8px 0 !important;
+    padding: 10px 4px !important;
+    font-weight: 500;
+    height:0;
+}
+.image-label{
+    margin-right:24px;
+}
+
+.figure-header .floating-number-group .figureNumber.cypress-editable {
+    font-size: 14px;
+    width:74px !important;
+    border-bottom: 2px solid #737373;
+    margin: 8px 0 !important;
+    padding: 10px 4px !important;
+    font-weight: 500;
+    height:0;
+}
+.figure-header .floating-number-group .figureNumber.cypress-editable.mce-edit-focus,
+.figure-header .image-label .figureLabel.cypress-editable.mce-edit-focus, 
+.floating-title-group .figureTitle.cypress-editable.mce-edit-focus
+{
+    border-bottom: 2px solid #005a70;  
 }
 .figureLabel.cypress-editable  em,.figureLabel.cypress-editable  em strong,.figureLabel.cypress-editable strong span{
     font-weight: 900 !important;
@@ -597,6 +645,10 @@ th ol li.listItemNumeroUnoNone:before {
     font-size: 14px;
     cursor: pointer;
 }
+.figurebutton:hover{
+    border: solid 1px #005a70;
+    background-color: #def8ff;
+}
 .updatefigurebutton{
     top:16px;
     right: 62px;
@@ -679,28 +731,32 @@ th ol li.listItemNumeroUnoNone:before {
 
 /* --------------------------------------------------------------------------- */
 
-.floating-label-group {
-    /* min-height: 40px!important; */
-    cursor: auto !important;
-    width:100%!important;
-    max-width: 150px !important;
-    color:black!important;
-    border-bottom: 2px solid #999;
+.floating-number-group, .image-label, .floating-title-group {
+    position: relative;
 }
-.floating-label-group .floating-label {
-    font-size: 13px;
-    color: #404040;
+.floating-number-group .floating-number, .image-label .floating-label, .floating-title-group .floating-title {
+    font-size: 14px;
+    color: #000;
     position: absolute;
     pointer-events: none;
-    top: 9px;
-    left: 162px;
+    top: 22px;
     transition: all 0.1s ease;
 }
-.floating-label-group .figureNumber:focus ~ .floating-label, .floating-label-group .figureNumber:not(:focus):valid ~ .floating-label {
-    top: -15px;
+.image-label .figureLabel:focus ~ .floating-label, .image-label .figureLabel:not(:focus):valid ~ .floating-label,
+.floating-number-group .figureNumber:focus ~ .floating-number, .floating-number-group .figureNumber:not(:focus):valid ~ .floating-number,
+.floating-title-group .figureTitle:focus ~ .floating-title, .floating-title-group .figureTitle:not(:focus):valid ~ .floating-title {
+    top: 2px;
     bottom: 0px;
-    left: 150px;
-    font-size: 11px;
+    font-size: 10px;
     opacity: 1;
     color: #005a70;
+}
+.floating-number-group .transition-none, .image-label .transition-none, .floating-title-group .transition-none {
+    transition: none;
+    top: 2px;
+    bottom: 0px;
+    font-size: 10px;
+    opacity: 1;
+    color: #005a70;
+    position: absolute;
 }

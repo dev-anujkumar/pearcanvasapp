@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
-
 // IMPORT - Assets //
 import {
     DEFAULT_IMAGE_DATA_SOURCE,
@@ -10,7 +9,7 @@ import {
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl } from './AlfrescoSiteUrl_helper.js';
-import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML } from '../../constants/utility';
+import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/FigureImage.css';
@@ -313,20 +312,22 @@ class FigureImage extends Component {
                             }
                             {
                                 this.state.figureLabelValue === 'Custom' &&
-                                <div>
-                                    <label class="floating-label">Label</label>
-                                    <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                                <div className='image-label'>
+                                    <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                                    <label className = {checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
                                 </div>
                             }
 
-                            <div className="floating-label-group">
+                            <div className="floating-number-group">
                                 <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                <label class="floating-label">Number</label>
+                                <label className = {checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
                             </div>
                             
                         </header>
-
-                        <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-2`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                        <div className="floating-title-group">
+                            <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-2`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                            <label className = {checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                        </div>
                         <div className="figurecont">
 
                             <div id="figure_add_div" className={`pearson-component image figureData ${figureElementProps.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >

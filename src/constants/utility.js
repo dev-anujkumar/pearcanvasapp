@@ -240,6 +240,16 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
     return data;
 }
 
+export const checkHTMLdataInsideString = (htmlNode) => {
+    let tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlNode;
+    if (tempDiv.firstChild.innerHTML === '<br>' || tempDiv.firstChild.innerHTML === '</br>') {
+        return '';
+    } else { 
+        return tempDiv.firstChild.innerHTML;
+    }
+}
+
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
  *  It is used for mapping special characters in Wiris data 
  */
