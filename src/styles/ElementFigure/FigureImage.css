@@ -42,9 +42,9 @@ code .codeNoHighlightLine{
     outline: none;
 }
 
-.figureCredit.cypress-editable {
+.floating-credit-group .figureCredit.cypress-editable {
     min-height: 40px!important;
-    font-size: 9px!important;
+    font-size: 14px!important;
     width:100% !important;
 }
 .figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv{
@@ -83,9 +83,8 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     font-size: 14px;
     border-bottom: 2px solid #737373;
     margin: 8px 0 !important;
-    padding: 10px 4px !important;
+    padding: 15px 4px 0 4px !important;
     font-weight: 500;
-    height:0;
 }
 .image-label{
     margin-right:24px;
@@ -116,7 +115,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     font-weight: 800 !important;
 }
 .figure-header{
-    min-height: 86px;
+    min-height: 70px;
 }
 .mathml .figureElement .figureData,.blockcode .codeSnippet{
     width:100%!important;
@@ -136,8 +135,8 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     text-align: center;
     overflow: auto;
 }
-figcaption,.figureCaption{
-    font-size: 10.8px!important;
+.floating-caption-group .figureCaption{
+    font-size: 14px!important;
     text-align: left !important;
 }
 code{
@@ -732,35 +731,59 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 /* --------------------------------------------------------------------------- */
-
-.floating-number-group, .image-label, .floating-title-group, .floating-caption-group, .floating-credit-group {
+.floating-caption-group{
+    position: relative;
+    margin-bottom: 25px;
+}
+.floating-number-group, .image-label, .floating-title-group, .floating-credit-group {
     position: relative;
 }
-.floating-number-group .floating-number, .image-label .floating-label, .floating-title-group .floating-title, .floating-caption-group .floating-caption, .floating-credit-group .floating-credit {
+.floating-number-group .floating-number, .image-label .floating-label {
     font-size: 14px;
-    color: #000;
+    color: #737373;
     position: absolute;
     pointer-events: none;
     top: 22px;
     transition: all 0.1s ease;
 }
+.floating-title-group .floating-title, .floating-caption-group .floating-caption, .floating-credit-group .floating-credit {
+    font-size: 14px;
+    color: #737373;
+    position: absolute;
+    pointer-events: none;
+    top: 15px;
+    transition: all 0.1s ease;
+}
 .image-label .figureLabel:focus ~ .floating-label, .image-label .figureLabel:not(:focus):valid ~ .floating-label,
-.floating-number-group .figureNumber:focus ~ .floating-number, .floating-number-group .figureNumber:not(:focus):valid ~ .floating-number,
-.floating-title-group .figureTitle:focus ~ .floating-title, .floating-title-group .figureTitle:not(:focus):valid ~ .floating-title,
-.floating-caption-group .figureCaption:focus ~ .floating-caption, .floating-caption-group .figureCaption:not(:focus):valid ~ .floating-caption,
-.floating-credit-group .figureCredit:focus ~ .floating-credit, .floating-credit-group .figureCredit:not(:focus):valid ~ .floating-credit {
+.floating-number-group .figureNumber:focus ~ .floating-number, .floating-number-group .figureNumber:not(:focus):valid ~ .floating-number {
     top: 2px;
     bottom: 0px;
     font-size: 10px;
     opacity: 1;
     color: #005a70;
 }
-.floating-number-group .transition-none, .image-label .transition-none, .floating-title-group .transition-none, .floating-caption-group .transition-none {
+.floating-title-group .figureTitle:focus ~ .floating-title, .floating-title-group .figureTitle:not(:focus):valid ~ .floating-title,
+.floating-caption-group .figureCaption:focus ~ .floating-caption, .floating-caption-group .figureCaption:not(:focus):valid ~ .floating-caption,
+.floating-credit-group .figureCredit:focus ~ .floating-credit, .floating-credit-group .figureCredit:not(:focus):valid ~ .floating-credit {
+    top: -6px;
+    bottom: 0px;
+    font-size: 10px;
+    opacity: 1;
+    color: #005a70;
+}
+.floating-number-group .transition-none {
     transition: none;
     top: 2px;
     bottom: 0px;
     font-size: 10px;
-    opacity: 1;
+    color: #005a70;
+    position: absolute;
+}
+
+ .floating-title-group .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none {
+    transition: none;
+    top: -6px;
+    font-size: 10px;
     color: #005a70;
     position: absolute;
 }
