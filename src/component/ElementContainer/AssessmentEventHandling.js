@@ -142,7 +142,7 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action
     }
 };
 
-function getInteractivePostMsg(data){
+export function getInteractivePostMsg(data){
     /* get data from post message */
     if (typeof data === "string") {
         const interactives = data?.split("|") ?? [];
@@ -170,7 +170,7 @@ function getInteractivePostMsg(data){
     }  
 }
 /* get assessment items data from post message */
-function getAssessmentItemPostMsg(items){
+export function getAssessmentItemPostMsg(items){
     const itemDataFromMsg = {
         itemid: items[1]?.split("_")[1],
         elementUrn: items[2]?.split("_")[1],
@@ -181,7 +181,7 @@ function getAssessmentItemPostMsg(items){
     store.dispatch(setNewItemFromElm(itemDataFromMsg));
 }
 /* get Assessment data from post message and send to server */
-function getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment){
+export function getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment){
     /* Single Assessment - get data form post messages and update the server */
     let itemsData = items?.splice(1, items.length - 1)
     let assessmentDataMsg = {
