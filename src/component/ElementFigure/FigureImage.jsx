@@ -359,13 +359,13 @@ class FigureImage extends Component {
                         <figcaption >
                             <div className="floating-caption-group">
                                 <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={figureElementProps.model.html.captions} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                <label className = {checkHTMLdataInsideString(figureHtmlData?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
+                                <label className = {checkHTMLdataInsideString(figureElementProps?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
                             </div>
                         </figcaption>
                         <figcredit >
                             <div className="floating-credit-group">
                                 <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={figureElementProps.model.html.credits} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                <label className="floating-credit" >Credit</label>
+                                <label className= {checkHTMLdataInsideString(figureElementProps?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
                             </div>
                         </figcredit>
                     </figure>
