@@ -9,7 +9,7 @@ import  { getMCQGuidedData}  from '../../../src/component/AssessmentSlateCanvas/
 import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivepdf, InteractiveWeblink,
     InteractivePopupWeblink, InteractiveTable,InteractiveShowHide,InteractivePopWindow,Interactivegraph
     ,Interactivesimulation,Interactivesurvey,Interactivetimeline,Interactivehotspot,Interactiveaccountingtable,
-    Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm} from '../../../fixtures/ElementInteractiveTesting.js'
+    Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm, smartLinkType3rdParty, smartLinkTypeWebsite, smartLinkTypeWithBlankData, smartLinkTypeTable, smartLinkTypePdf } from '../../../fixtures/ElementInteractiveTesting.js'
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -696,95 +696,6 @@ describe('Testing Interactive element component', () => {
             const spydataFromAlfresco = jest.spyOn(elementInteractiveInstance, 'dataFromAlfresco')
             it('Test- if case workflow -smartLinkType-3rd Party Interactive', () => {
                 let data = {
-                    "aspectNames":[
-                       "cm:versionable",
-                       "cm:titled",
-                       "cm:auditable",
-                       "crm:customAssocs"
-                    ],
-                    "path":{
-                       "name":"/Company Home/Sites/c5-media-poc/documentLibrary/Integration Testing/Metrodigi with adjusted width-704 height-620 and MF as YES",
-                       "isComplete":true,
-                       "elements":[
-                          {
-                             "id":"d93486b2-a063-485b-94cd-b2908ed4c118",
-                             "name":"Company Home",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "app:uifacets"
-                             ]
-                          },
-                          {
-                             "id":"27697dfe-1d6b-4002-b095-69a6e772fc9d",
-                             "name":"Sites",
-                             "nodeType":"st:sites",
-                             "aspectNames":[
-                                "rule:rules",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "app:uifacets"
-                             ]
-                          },
-                          {
-                             "id":"ebaaf975-a68b-4ca6-9604-3d37111b847a",
-                             "name":"c5-media-poc",
-                             "nodeType":"st:site",
-                             "aspectNames":[
-                                "cm:tagscope",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "ds:regionData",
-                                "pp:publishable"
-                             ]
-                          },
-                          {
-                             "id":"bbcb1d7d-ae62-46fd-af11-a0e371b9a379",
-                             "name":"documentLibrary",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:tagscope",
-                                "st:siteContainer",
-                                "cm:versionable",
-                                "cm:auditable",
-                                "mt:autoRender"
-                             ]
-                          },
-                          {
-                             "id":"b7a553f8-4484-4fb6-96e9-17b53b0dad88",
-                             "name":"Integration Testing",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "mt:autoRender"
-                             ]
-                          },
-                          {
-                             "id":"e11f57a8-8f66-4ea5-8395-d2592a4b132a",
-                             "name":"Metrodigi with adjusted width-704 height-620 and MF as YES",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:auditable",
-                                "mt:autoRender"
-                             ]
-                          }
-                       ]
-                    },
-                    "createdByUser":{
-                       "id":"ALF04",
-                       "displayName":"ALF04"
-                    },
                     "modifiedAt":"2019-03-25T17:36:47.772+0000",
                     "name":"Metrodigi with adjusted width-515 height-455 and MF as YES",
                     "id":"d039c78e-6f36-4c64-9c50-20e0622486b2",
@@ -823,271 +734,17 @@ describe('Testing Interactive element component', () => {
                           "contentAction":true
                        }
                     ],
-                    "publish-history":[
-                       {
-                          "history":[
-                             
-                          ]
-                       }
-                    ],
                     "epsUrl":"https://eps.openclass.com/eps/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml"
-                 }
+                }
                 elementInteractiveInstance.dataFromAlfresco(data)
                 elementInteractiveInstance.forceUpdate();
                 elementInteractive.update();
                 expect(spydataFromAlfresco).toHaveBeenCalled()
                 expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:d039c78e-6f36-4c64-9c50-20e0622486b2")
-                // expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
                 spydataFromAlfresco.mockClear()
             })
-            // it('Test- if case workflow -smartLinkType-3rd Party Interactive(method checking)', () => {
-            //     let data = {
-            //         "aspectNames":[
-            //            "cm:versionable",
-            //            "cm:titled",
-            //            "cm:auditable",
-            //            "crm:customAssocs"
-            //         ],
-            //         "path":{
-            //            "name":"/Company Home/Sites/c5-media-poc/documentLibrary/Integration Testing/Metrodigi with adjusted width-704 height-620 and MF as YES",
-            //            "isComplete":true,
-            //            "elements":[
-            //               {
-            //                  "id":"d93486b2-a063-485b-94cd-b2908ed4c118",
-            //                  "name":"Company Home",
-            //                  "nodeType":"cm:folder",
-            //                  "aspectNames":[
-            //                     "cm:versionable",
-            //                     "cm:titled",
-            //                     "cm:auditable",
-            //                     "pp:containsPublishedContent",
-            //                     "app:uifacets"
-            //                  ]
-            //               },
-            //               {
-            //                  "id":"27697dfe-1d6b-4002-b095-69a6e772fc9d",
-            //                  "name":"Sites",
-            //                  "nodeType":"st:sites",
-            //                  "aspectNames":[
-            //                     "rule:rules",
-            //                     "cm:versionable",
-            //                     "cm:titled",
-            //                     "cm:auditable",
-            //                     "pp:containsPublishedContent",
-            //                     "app:uifacets"
-            //                  ]
-            //               },
-            //               {
-            //                  "id":"ebaaf975-a68b-4ca6-9604-3d37111b847a",
-            //                  "name":"c5-media-poc",
-            //                  "nodeType":"st:site",
-            //                  "aspectNames":[
-            //                     "cm:tagscope",
-            //                     "cm:versionable",
-            //                     "cm:titled",
-            //                     "cm:auditable",
-            //                     "pp:containsPublishedContent",
-            //                     "ds:regionData",
-            //                     "pp:publishable"
-            //                  ]
-            //               },
-            //               {
-            //                  "id":"bbcb1d7d-ae62-46fd-af11-a0e371b9a379",
-            //                  "name":"documentLibrary",
-            //                  "nodeType":"cm:folder",
-            //                  "aspectNames":[
-            //                     "cm:tagscope",
-            //                     "st:siteContainer",
-            //                     "cm:versionable",
-            //                     "cm:auditable",
-            //                     "mt:autoRender"
-            //                  ]
-            //               },
-            //               {
-            //                  "id":"b7a553f8-4484-4fb6-96e9-17b53b0dad88",
-            //                  "name":"Integration Testing",
-            //                  "nodeType":"cm:folder",
-            //                  "aspectNames":[
-            //                     "cm:versionable",
-            //                     "cm:titled",
-            //                     "cm:auditable",
-            //                     "pp:containsPublishedContent",
-            //                     "mt:autoRender"
-            //                  ]
-            //               },
-            //               {
-            //                  "id":"e11f57a8-8f66-4ea5-8395-d2592a4b132a",
-            //                  "name":"Metrodigi with adjusted width-704 height-620 and MF as YES",
-            //                  "nodeType":"cm:folder",
-            //                  "aspectNames":[
-            //                     "cm:versionable",
-            //                     "cm:auditable",
-            //                     "mt:autoRender"
-            //                  ]
-            //               }
-            //            ]
-            //         },
-            //         "createdByUser":{
-            //            "id":"ALF04",
-            //            "displayName":"ALF04"
-            //         },
-            //         "modifiedAt":"2019-03-25T17:36:47.772+0000",
-            //         "name":"Metrodigi with adjusted width-515 height-455 and MF as YES",
-            //         "id":"d039c78e-6f36-4c64-9c50-20e0622486b2",
-            //         "properties":{
-            //            "avs:jsonString":"{\n\"smartLinkThirdPartyVendorVal\":\"Metrodigi\",\n\"smartLinkOptimizedMobileVal\":\"Yes\",\n\"height\":\"455\",\n\"width\":\"515\",\n\"linkLongDesc\":\"\",\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\"\n}",
-            //            "avs:url":"https://eps.openclass.com/eps/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml",
-            //            "cm:versionType":"MINOR",
-            //            "cm:versionLabel":"1.1",
-            //            "cm:description":"{\"smartLinkType\":\"3rd Party Interactive\"}",
-            //            "avs:linkType":"3rd Party Interactive"
-            //         },
-            //         "previewUrl":"https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/s/api/node/workspace/SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2/content/thumbnails/imgpreview?c=queue&ph=true",
-            //         "nodeRef":"workspace://SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2",
-            //         "thumbnailUrl":"https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/s/api/node/workspace/SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2/content/thumbnails/doclib?c=queue&ph=true",
-            //         "epsStatus":false,
-            //         "type":"3rd Party Interactive",
-            //         "institution-urls":[
-            //            {
-            //               "institutionUrl":"https://epspqa.stg-openclass.com/cite-media-stg/",
-            //               "pdosUrl":"",
-            //               "contentVersion":"",
-            //               "instName":"https://epspqa.stg-openclass.com/cite-media-stg",
-            //               "status":"",
-            //               "publicationUrl":"",
-            //               "contentAction":true
-            //            },
-            //            {
-            //               "institutionUrl":"https://epspqa.stg-openclass.com/schoolcontent-stg/",
-            //               "pdosUrl":"",
-            //               "contentVersion":"",
-            //               "instName":"SchoolContent",
-            //               "status":"",
-            //               "publicationUrl":"",
-            //               "contentAction":true
-            //            }
-            //         ],
-            //         "publish-history":[
-            //            {
-            //               "history":[
-                             
-            //               ]
-            //            }
-            //         ],
-            //         "epsUrl":"https://eps.openclass.com/eps/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml"
-            //      }
-            //     elementInteractiveInstance.dataFromAlfresco(data)
-            //     elementInteractiveInstance.forceUpdate();
-            //     elementInteractive.update();
-            //     expect(spydataFromAlfresco).toHaveBeenCalled()
-            //     expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
-            //     expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
-            //     spydataFromAlfresco.mockClear()
-            // })
             it('Test- if case workflow-smartLinkType-website', () => {
-                let data = {
-                    "aspectNames":[
-                       "cm:versionable",
-                       "cm:titled",
-                       "cm:auditable",
-                       "crm:customAssocs"
-                    ],
-                    "path":{
-                       "name":"/Company Home/Sites/c5-media-poc/documentLibrary/AWS integration smartlink data/Smartlink and Test Files - 20th April/External Website Link - 20th April",
-                       "isComplete":true,
-                       "elements":[
-                          {
-                             "id":"d93486b2-a063-485b-94cd-b2908ed4c118",
-                             "name":"Company Home",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "app:uifacets"
-                             ]
-                          },
-                          {
-                             "id":"27697dfe-1d6b-4002-b095-69a6e772fc9d",
-                             "name":"Sites",
-                             "nodeType":"st:sites",
-                             "aspectNames":[
-                                "rule:rules",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "app:uifacets"
-                             ]
-                          },
-                          {
-                             "id":"ebaaf975-a68b-4ca6-9604-3d37111b847a",
-                             "name":"c5-media-poc",
-                             "nodeType":"st:site",
-                             "aspectNames":[
-                                "cm:tagscope",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "ds:regionData",
-                                "pp:publishable"
-                             ]
-                          },
-                          {
-                             "id":"bbcb1d7d-ae62-46fd-af11-a0e371b9a379",
-                             "name":"documentLibrary",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:tagscope",
-                                "st:siteContainer",
-                                "cm:versionable",
-                                "cm:auditable",
-                                "mt:autoRender"
-                             ]
-                          },
-                          {
-                             "id":"5125fb31-3ca1-4885-a217-22d8f1c5ef61",
-                             "name":"AWS integration smartlink data",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "csm:calculateSizeAspect",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "mt:autoRender"
-                             ]
-                          },
-                          {
-                             "id":"8a664778-b9bc-4315-99b7-dce95d9c5eac",
-                             "name":"Smartlink and Test Files - 20th April",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "mt:autoRender"
-                             ]
-                          },
-                          {
-                             "id":"c57ee793-670e-4130-8155-5b2a5070d7da",
-                             "name":"External Website Link - 20th April",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:auditable",
-                                "mt:autoRender"
-                             ]
-                          }
-                       ]
-                    },
-                    "createdByUser":{
-                       "id":"SSO4",
-                       "displayName":"SSO4"
-                    },
+                let data =  {
                     "modifiedAt":"2019-07-03T06:43:33.661+0000",
                     "name":"External Website Link - 20th April",
                     "id":"1b0c09c3-8901-4f09-b8e4-0307e2a04762",
@@ -1124,132 +781,17 @@ describe('Testing Interactive element component', () => {
                           "contentAction":true
                        }
                     ],
-                    "publish-history":[
-                       {
-                          "history":[
-                             
-                          ]
-                       }
-                    ],
                     "epsUrl":"https://www.cdc.gov/datastatistics/"
-                 }
+                }
                 elementInteractiveInstance.dataFromAlfresco(data)
                 elementInteractiveInstance.forceUpdate();
                 elementInteractive.update();
                 expect(spydataFromAlfresco).toHaveBeenCalled()
                 expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:1b0c09c3-8901-4f09-b8e4-0307e2a04762")
-                // expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
                 spydataFromAlfresco.mockClear()
             })
             it('Test- if case workflow-smartLinkType-pdf', () => {
                 let data = {
-                    "aspectNames":[
-                       "cplg:contentAsset",
-                       "cm:versionable",
-                       "cm:titled",
-                       "cm:dublincore",
-                       "cm:auditable",
-                       "cm:author"
-                    ],
-                    "path":{
-                       "name":"/Company Home/Sites/c5-media-poc/documentLibrary/Assets/Smart Links/Pdf sample B",
-                       "isComplete":true,
-                       "elements":[
-                          {
-                             "id":"d93486b2-a063-485b-94cd-b2908ed4c118",
-                             "name":"Company Home",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "app:uifacets"
-                             ]
-                          },
-                          {
-                             "id":"27697dfe-1d6b-4002-b095-69a6e772fc9d",
-                             "name":"Sites",
-                             "nodeType":"st:sites",
-                             "aspectNames":[
-                                "rule:rules",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "app:uifacets"
-                             ]
-                          },
-                          {
-                             "id":"ebaaf975-a68b-4ca6-9604-3d37111b847a",
-                             "name":"c5-media-poc",
-                             "nodeType":"st:site",
-                             "aspectNames":[
-                                "cm:tagscope",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "ds:regionData",
-                                "pp:publishable"
-                             ]
-                          },
-                          {
-                             "id":"bbcb1d7d-ae62-46fd-af11-a0e371b9a379",
-                             "name":"documentLibrary",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:tagscope",
-                                "st:siteContainer",
-                                "cm:versionable",
-                                "cm:auditable",
-                                "mt:autoRender"
-                             ]
-                          },
-                          {
-                             "id":"41a56a51-a732-4554-afda-fc34b7be2281",
-                             "name":"Assets",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cplg:contentAsset",
-                                "csm:calculateSizeAspect",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:ownable",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "mt:autoRender",
-                                "app:uifacets"
-                             ]
-                          },
-                          {
-                             "id":"2fde1181-81c3-430d-b9e7-2f1088933e31",
-                             "name":"Smart Links",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "mt:autoRender"
-                             ]
-                          },
-                          {
-                             "id":"c0ef1fd1-934e-45d7-941e-ab9566be5bb2",
-                             "name":"Pdf sample B",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:auditable",
-                                "mt:autoRender"
-                             ]
-                          }
-                       ]
-                    },
-                    "createdByUser":{
-                       "id":"C5TEST01",
-                       "displayName":"C5TEST01 C5TEST01"
-                    },
                     "modifiedAt":"2020-10-28T06:26:58.485+0000",
                     "name":"Pdf sample B",
                     "id":"fcf19f5f-1c1a-4625-b8b2-10031d84d4f1",
@@ -1288,130 +830,17 @@ describe('Testing Interactive element component', () => {
                           "contentAction":true
                        }
                     ],
-                    "publish-history":[
-                       {
-                          "history":[
-                             
-                          ]
-                       }
-                    ],
                     "epsUrl":"https://www.pearsonhighered.com"
-                 }
+                }
                 elementInteractiveInstance.dataFromAlfresco(data)
                 elementInteractiveInstance.forceUpdate();
                 elementInteractive.update();
                 expect(spydataFromAlfresco).toHaveBeenCalled()
                 expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:fcf19f5f-1c1a-4625-b8b2-10031d84d4f1")
-                // expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
                 spydataFromAlfresco.mockClear()
             })
             it('Test- if case workflow-smartLinkType-table', () => {
-                let data = {
-                    "aspectNames":[
-                       "pp:publicationDetails",
-                       "pp:published",
-                       "cm:versionable",
-                       "cm:titled",
-                       "cm:auditable",
-                       "pp:publishStatus",
-                       "crm:customAssocs"
-                    ],
-                    "path":{
-                       "name":"/Company Home/Sites/c5-media-poc/documentLibrary/Smart Link Folder/Table/Table smartlink eps lock down",
-                       "isComplete":true,
-                       "elements":[
-                          {
-                             "id":"d93486b2-a063-485b-94cd-b2908ed4c118",
-                             "name":"Company Home",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "app:uifacets"
-                             ]
-                          },
-                          {
-                             "id":"27697dfe-1d6b-4002-b095-69a6e772fc9d",
-                             "name":"Sites",
-                             "nodeType":"st:sites",
-                             "aspectNames":[
-                                "rule:rules",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "app:uifacets"
-                             ]
-                          },
-                          {
-                             "id":"ebaaf975-a68b-4ca6-9604-3d37111b847a",
-                             "name":"c5-media-poc",
-                             "nodeType":"st:site",
-                             "aspectNames":[
-                                "cm:tagscope",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "ds:regionData",
-                                "pp:publishable"
-                             ]
-                          },
-                          {
-                             "id":"bbcb1d7d-ae62-46fd-af11-a0e371b9a379",
-                             "name":"documentLibrary",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:tagscope",
-                                "st:siteContainer",
-                                "cm:versionable",
-                                "cm:auditable",
-                                "mt:autoRender"
-                             ]
-                          },
-                          {
-                             "id":"f23effdc-497c-49ec-bb86-c460f4a17318",
-                             "name":"Smart Link Folder",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "csm:calculateSizeAspect",
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "mt:autoRender"
-                             ]
-                          },
-                          {
-                             "id":"80864581-f66d-4343-ba7e-5ddd1753f734",
-                             "name":"Table",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:titled",
-                                "cm:auditable",
-                                "mt:autoRender"
-                             ]
-                          },
-                          {
-                             "id":"3347c104-c87b-4cca-9fb5-e36f1b47cdb0",
-                             "name":"Table smartlink eps lock down",
-                             "nodeType":"cm:folder",
-                             "aspectNames":[
-                                "cm:versionable",
-                                "cm:auditable",
-                                "pp:containsPublishedContent",
-                                "mt:autoRender"
-                             ]
-                          }
-                       ]
-                    },
-                    "createdByUser":{
-                       "id":"ALF04",
-                       "displayName":"ALF04"
-                    },
+                let data =  {
                     "modifiedAt":"2021-01-13T05:16:56.747+0000",
                     "name":"Table smartlink eps lock down",
                     "id":"3e5716a8-68a3-4f07-b5b2-7d02d01cfc94",
@@ -1482,13 +911,12 @@ describe('Testing Interactive element component', () => {
                        }
                     ],
                     "epsUrl":"https://cite-media-stg.pearson.com/legacy_paths/3e5716a8-68a3-4f07-b5b2-7d02d01cfc94/Table%20smartlink%20eps%20lock%20down"
-                 }
+                }
                 elementInteractiveInstance.dataFromAlfresco(data)
                 elementInteractiveInstance.forceUpdate();
                 elementInteractive.update();
                 expect(spydataFromAlfresco).toHaveBeenCalled()
                 expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:3e5716a8-68a3-4f07-b5b2-7d02d01cfc94")
-                // expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
                 spydataFromAlfresco.mockClear()
             })
             it('Test- if case workflow-smartLinkType-"pop-up-web-link"', () => {
@@ -1567,34 +995,14 @@ describe('Testing Interactive element component', () => {
                        }
                     ],
                     "epsUrl":""
-                 }
+                }
                 elementInteractiveInstance.dataFromAlfresco(data)
                 elementInteractiveInstance.forceUpdate();
                 elementInteractive.update();
                 expect(spydataFromAlfresco).toHaveBeenCalled()
                 expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:d5002963-e186-4bb3-b48f-84977e6cc880")
-                // expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
                 spydataFromAlfresco.mockClear()
             })
-            // it('Test- if case workflow-smartLinkType-metrodigi interactive', () => {
-            //     let data = {
-            //         'assetType': "image",
-            //         'EpsUrl': "",
-            //         'width': "",
-            //         'height': "",
-            //         'req': {
-            //             url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
-            //         },
-            //         desc: '{"smartLinkType":"metrodigi interactive"}'
-            //     }
-            //     elementInteractiveInstance.dataFromAlfresco(data)
-            //     elementInteractiveInstance.forceUpdate();
-            //     elementInteractive.update();
-            //     expect(spydataFromAlfresco).toHaveBeenCalled()
-            //     expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
-            //     expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
-            //     spydataFromAlfresco.mockClear()
-            // })
             it('Test- if case workflow-smartLinkType with blank', () => {
                 let data = {
                     'epsURL':undefined,
@@ -1632,7 +1040,6 @@ describe('Testing Interactive element component', () => {
                 elementInteractive.update();
                 expect(spydataFromAlfresco).toHaveBeenCalled()
                 expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:d5002963-e186-4bb3-b48f-84977e6cc880")
-                // expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
                 spydataFromAlfresco.mockClear()
             })
         })
@@ -2194,17 +1601,6 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         expect(func).toHaveBeenCalled();
     })  
     
-    // it('Test-1.2.4-Function--1--getVideoMCQandGuidedThumbnail ', async () => {
-      
-    //     const component = mount(<Provider store={store}><Interactive {...props} /></Provider>)
-    //     expect(component).toHaveLength(1);
-    //     let instance = component.instance(); 
-    //     let id = "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7"
-    //     const spyFunction = jest.spyOn(instance, 'getVideoMCQandGuidedThumbnail');
-    //     await instance.getVideoMCQandGuidedThumbnail(id);
-    //     expect(spyFunction).toHaveBeenCalledWith(id);
-    // })
-
     it('Test - componentDidUpdate if case pufobj', () => {
         let props = {
             slateLockInfo: {
