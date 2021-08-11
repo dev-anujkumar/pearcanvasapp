@@ -12,8 +12,9 @@
 .figureElement .cypress-editable:not(pre){
     padding:0px;
 }
-.figureElement{
+.figureElement .figure-image-wrapper{
     padding: 0 8px;
+    margin: -15px auto 32px auto !important;
 }
 .figureElement .figure-title.cypress-editable, .figureElement .figure-credit.cypress-editable, .figureElement .figure-caption.cypress-editable {
     padding: 10px !important;
@@ -71,12 +72,12 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 } */
 
 .figure-header .image-label .figureLabel.cypress-editable {
-    font-size: 14px;
+    font-size: 14px !important;
     width:130px !important;
     border-bottom: 2px solid #737373;
     margin: 8px 0 !important;
-    padding: 10px 4px !important;
-    font-weight: 500;
+    padding: 15px 4px 4px 4px !important;
+    font-weight: 500 !important;
     height:0;
 }
 .floating-title-group .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable {
@@ -91,12 +92,12 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 }
 
 .figure-header .floating-number-group .figureNumber.cypress-editable {
-    font-size: 14px;
+    font-size: 14px !important;
     width:74px !important;
     border-bottom: 2px solid #737373;
     margin: 8px 0 !important;
-    padding: 10px 4px !important;
-    font-weight: 500;
+    padding: 15px 4px 4px 4px !important;
+    font-weight: 500 !important;
     height:0;
 }
 .figure-header .floating-number-group .figureNumber.cypress-editable.mce-edit-focus,
@@ -788,7 +789,7 @@ th ol li.listItemNumeroUnoNone:before {
     opacity: 1;
     color: #005a70;
 }
-.floating-number-group .transition-none {
+.floating-number-group .transition-none, .image-label .transition-none {
     transition: none;
     top: 2px;
     bottom: 0px;
