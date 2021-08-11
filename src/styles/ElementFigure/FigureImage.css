@@ -548,17 +548,18 @@ th ol li.listItemNumeroUnoNone:before {
     padding-top:6px;
     display: flex;
 }
-.figure-wrapper  .image-info{
+.figure-image-container .figure-wrapper  .image-info{
     overflow-wrap: anywhere;
     width: 100%;
-    margin-top: -3px;
+    margin-top: -2px;
+    font-size: 10px;
 }
 
-.image-text{
-    width:100px;
-    font-weight: 700;
-    font-size:11px;
+.figure-image-container .image-text{
+    width:85px;
+    font-size:10px;
     color:#fff;
+    font-weight: 500;
 }
 .figure-glossary-icon{
     position: relative;
@@ -681,10 +682,11 @@ th ol li.listItemNumeroUnoNone:before {
 .deletefigurebutton img{
     background-color: red;
 }
-.figurecont{
+.figure-image-container{
     position: relative;
+    margin: 25px 0 30px 0;
 }
-.figurecont:hover .figure-wrapper{
+.figure-image-container:hover .figure-wrapper{
     opacity: 0.8;
     color: #fff;
 }
