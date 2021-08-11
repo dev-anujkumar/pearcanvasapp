@@ -14,6 +14,7 @@ import { hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/FigureImage.css';
 import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
+import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 
@@ -35,15 +36,15 @@ class FigureImage extends Component {
     }
 
     componentDidMount() {
-        const figureImageTypes = ["image", "mathImage", "table"];
-        if (figureImageTypes.includes(this.props?.figureElementProps?.model?.figuretype)) {
+        // const figureImageTypes = ["image", "mathImage", "table"];
+        // if (figureImageTypes.includes(this.props?.figureElementProps?.model?.figuretype)) {
             getAlfrescositeResponse(this.props.figureElementProps.elementId, (response) => {
                 this.setState({
                     alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
                     alfrescoSiteData: { ...response }
                 })
             })
-        }
+        // }
     }
     componentDidUpdate(prevProps) {
         const { alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props;
@@ -67,6 +68,27 @@ class FigureImage extends Component {
     }
 
     /**
+* @description delete image from element
+*/
+
+    deleteFigureResource = () => {
+        // store current element figuredata in store
+        this.props.updateFigureImageDataForCompare(this.props.figureElementProps.model.figuredata);
+        let setFigureData = {
+            schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            imageid: "",
+            path: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+            height: "422",
+            width: "680"
+        }
+        this.props.figureElementProps.updateFigureData(setFigureData, this.props.figureElementProps.index, this.props.figureElementProps.elementId, this.props.figureElementProps.asideData, () => {
+            this.props.figureElementProps.handleFocus("updateFromC2");
+            this.props.figureElementProps.handleBlur();
+        })
+    }
+
+
+    /**
 * @description data after selecting an asset from alfresco c2 module
 * @param {*} data selected asset data
 */
@@ -81,71 +103,69 @@ class FigureImage extends Component {
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
 
-        if (figureType === "image" || figureType === "table" || figureType === "mathImage") {
-
-            let uniqID = imageData.id ? imageData.id : "";
-            let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
-            let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
-            if (epsURL !== "") {
-                this.setState({ imgSrc: epsURL })
-            } else {
-                this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
-            }
-
-            let scaleMarkerData = {};
-            Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
-                (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.id || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.name || "The alttext for the scale image" } : null,
-                (data && data.scalemarker && data.scalemarker.epsUrl) ? { "path": data.scalemarker.epsUrl || null } : null,
-                (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ? { "width": data.properties["exif:pixelXDimension"] || null } : null,
-            );
-            let setFigureData = {
-                path: epsURL,
-                height: height,
-                width: width,
-                schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-                imageid: `urn:pearson:alfresco:${uniqID}`,
-                alttext: altText,
-                longdescription: longDesc,
-                type: figureType,
-            }
-
-            Object.assign(setFigureData, (Object.keys(scaleMarkerData).length > 0) ? { scaleimage: scaleMarkerData } : null);
-
-            this.props.figureElementProps.updateFigureData(setFigureData, this.props.figureElementProps.index, this.props.figureElementProps.elementId, this.props.figureElementProps.asideData, () => {
-                this.props.figureElementProps.handleFocus("updateFromC2");
-                this.props.figureElementProps.handleBlur();
-            })
-            let alfrescoData = config?.alfrescoMetaData?.alfresco;
-            let alfrescoSiteLocation = this.state.alfrescoSiteData;
-            if (this.props.isCiteChanged) {
-                let changeSiteAlfrescoData = {
-                    currentAsset: {},
-                    nodeRef: this.props.changedSiteData.guid,
-                    repositoryFolder: this.props.changedSiteData.title,
-                    siteId: this.props.changedSiteData.id,
-                    visibility: this.props.changedSiteData.visibility
-                }
-                handleAlfrescoSiteUrl(this.props.figureElementProps.elementId, changeSiteAlfrescoData)
-                this.setState({
-                    alfrescoSite: changeSiteAlfrescoData?.repositoryFolder,
-                    alfrescoSiteData: changeSiteAlfrescoData
-                })
-            } else {
-                if ((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')) {
-                    handleAlfrescoSiteUrl(this.props.figureElementProps.elementId, alfrescoData)
-                    this.updateAlfrescoSiteUrl()
-                }
-            }
-            // to blank the elementId and asset data after update
-            let payloadObj = {
-                asset: {},
-                id: ''
-            }
-            this.props.saveSelectedAssetData(payloadObj)
-            //this.updateAlfrescoSiteUrl(alfrescoData)
+        let uniqID = imageData.id ? imageData.id : "";
+        let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
+        let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
+        if (epsURL !== "") {
+            this.setState({ imgSrc: epsURL })
+        } else {
+            this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
         }
+
+        let scaleMarkerData = {};
+        Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
+            (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.id || null } : null,
+            (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.name || "The alttext for the scale image" } : null,
+            (data && data.scalemarker && data.scalemarker.epsUrl) ? { "path": data.scalemarker.epsUrl || null } : null,
+            (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
+            (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ? { "width": data.properties["exif:pixelXDimension"] || null } : null,
+        );
+        // store current element figuredata in store
+        this.props.updateFigureImageDataForCompare(this.props.figureElementProps.model.figuredata);
+        let setFigureData = {
+            path: epsURL,
+            height: height,
+            width: width,
+            schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            imageid: `urn:pearson:alfresco:${uniqID}`,
+            alttext: altText,
+            longdescription: longDesc,
+            type: figureType,
+        }
+
+        Object.assign(setFigureData, (Object.keys(scaleMarkerData).length > 0) ? { scaleimage: scaleMarkerData } : null);
+
+        this.props.figureElementProps.updateFigureData(setFigureData, this.props.figureElementProps.index, this.props.figureElementProps.elementId, this.props.figureElementProps.asideData, () => {
+            this.props.figureElementProps.handleFocus("updateFromC2");
+            this.props.figureElementProps.handleBlur();
+        })
+        let alfrescoData = config?.alfrescoMetaData?.alfresco;
+        let alfrescoSiteLocation = this.state.alfrescoSiteData;
+        if (this.props.isCiteChanged) {
+            let changeSiteAlfrescoData = {
+                currentAsset: {},
+                nodeRef: this.props.changedSiteData.guid,
+                repositoryFolder: this.props.changedSiteData.title,
+                siteId: this.props.changedSiteData.id,
+                visibility: this.props.changedSiteData.visibility
+            }
+            handleAlfrescoSiteUrl(this.props.figureElementProps.elementId, changeSiteAlfrescoData)
+            this.setState({
+                alfrescoSite: changeSiteAlfrescoData?.repositoryFolder,
+                alfrescoSiteData: changeSiteAlfrescoData
+            })
+        } else {
+            if ((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')) {
+                handleAlfrescoSiteUrl(this.props.figureElementProps.elementId, alfrescoData)
+                this.updateAlfrescoSiteUrl()
+            }
+        }
+        // to blank the elementId and asset data after update
+        let payloadObj = {
+            asset: {},
+            id: ''
+        }
+        this.props.saveSelectedAssetData(payloadObj)
     }
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
@@ -315,19 +335,19 @@ class FigureImage extends Component {
                                 this.state.figureLabelValue === 'Custom' &&
                                 <div className='image-label'>
                                     <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                    <label className = {checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
+                                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
                                 </div>
                             }
 
                             <div className="floating-number-group">
                                 <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                <label className = {checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
+                                <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
                             </div>
-                            
+
                         </header>
                         <div className="floating-title-group">
                             <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                            <label className = {checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                            <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
                         </div>
                         <div className="figurecont">
 
@@ -352,8 +372,8 @@ class FigureImage extends Component {
                                             <div className='image-figure-path'><p className='image-text'>Image Path: </p> <span className='image-info'> {this.state.imgSrc ? this.state.imgSrc : (figureElementProps.model.figuredata.path && figureElementProps.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? figureElementProps.model.figuredata.path : "")}</span> </div>
                                             <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{figureElementProps.model.figuredata && figureElementProps.model.figuredata.path && figureElementProps.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
                                         </div>
-                                        <div className = 'updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
-                                        <div className = 'deletefigurebutton'><img width="16px" height="16px" src={deleteIcon} /></div>
+                                        <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
+                                        <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="16px" height="16px" src={deleteIcon} /></div>
                                     </div> : ''
                                 }
                             </div>
@@ -361,13 +381,13 @@ class FigureImage extends Component {
                         <figcaption >
                             <div className="floating-caption-group">
                                 <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={figureElementProps.model.html.captions} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                <label className = {checkHTMLdataInsideString(figureElementProps?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
+                                <label className={checkHTMLdataInsideString(figureElementProps?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
                             </div>
                         </figcaption>
                         <figcredit >
                             <div className="floating-credit-group">
                                 <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={figureElementProps.model.html.credits} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                <label className= {checkHTMLdataInsideString(figureElementProps?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
+                                <label className={checkHTMLdataInsideString(figureElementProps?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
                             </div>
                         </figcredit>
                     </figure>
@@ -384,6 +404,9 @@ const mapActionToProps = (dispatch) => {
         },
         saveSelectedAssetData: (payloadObj) => {
             dispatch(saveSelectedAssetData(payloadObj))
+        },
+        updateFigureImageDataForCompare: (oldFigureData) => {
+            dispatch(updateFigureImageDataForCompare(oldFigureData))
         },
     }
 }

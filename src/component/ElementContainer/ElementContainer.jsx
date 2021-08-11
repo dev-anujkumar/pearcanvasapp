@@ -371,11 +371,15 @@ class ElementContainer extends Component {
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`)
             || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
         let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
+        let oldImage = this.props.oldImage;
+        if (previousElementData.figuretype !== 'tableasmarkup') {
+            oldImage = this.props.oldFigureDataForCompare.path;
+        }
 
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            (this.props.oldImage ? this.props.oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+            (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
             || podwidth !== (previousElementData.figuredata.podwidth ?
                 previousElementData.figuredata.podwidth : '') && podwidth !== null
         );
@@ -420,6 +424,7 @@ class ElementContainer extends Component {
         if (previousElementData.html && previousElementData.html.preformattedtext === '<p></p>') {
             previousElementData.html.preformattedtext = '<p><span class="codeNoHighlightLine"></span></p>'
         }
+        
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
@@ -2202,7 +2207,8 @@ const mapStateToProps = (state) => {
         slateLevelData: state.appStore.slateLevelData,
         assessmentReducer: state.assessmentReducer,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
-        multipleColumnData: state.appStore.multipleColumnData
+        multipleColumnData: state.appStore.multipleColumnData,
+        oldFigureDataForCompare: state.appStore.oldFigureDataForCompare
     }
 }
 

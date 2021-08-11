@@ -3020,11 +3020,14 @@ export class TinyMceEditor extends Component {
             switch (placeholderValue) {
                 case "Number":
                     toolbar = config.figureNumberToolbar;
+                    break;
                 case "Label Name":
-                    toolbar = config.labelToolbar;
+                    toolbar = config.poetryStanzaToolbar;
+                    break;
                 case "Caption":
                 case "Credit":
                     toolbar = config.captionToolbar;
+                    break;
             }
         } else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
             toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
