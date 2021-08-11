@@ -282,11 +282,14 @@ describe('Testing communication channel', () => {
                 deletableStatus: true,
                 entityUrn: "urn:pearson:entity:fe283fbd-b9e4-4666-8d65-be2bc9da63b3",
                 label: "section",
-                nodeLabel: "section",
+                nodeLabel: "assessment-slate",
                 nodeParentLabel: "chapter",
                 parentBodyMatterLengthFlag: false,
                 parentEntityUrn: "urn:pearson:entity:b4fab541-891a-4766-ac65-6dc58b68b0b3",
-                type: "container"
+                type: "container",
+                unformattedTitle: {
+                    en: '1'
+                }
             },
             disableNext: false,
             disablePrev: false,
@@ -369,6 +372,7 @@ describe('Testing communication channel', () => {
         spyonSingleContainerDelete.mockClear()
     })
     test('Test for titleChanging case', () => {
+        config.S3MathImagePath = 'test345';
         channelInstance.setState({
             project_urn: 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4'
         })
@@ -664,6 +668,25 @@ describe('Testing communication channel', () => {
                     message: {
                         'tcm':{
                             activated: true
+                        },
+                        'x-prsn-user-id':'c5test01',
+                        'ssoToken':'ssoToken',
+                        'id':'10',
+                        'citeUrn':'citeUrn',
+                        'entityUrn':'entityUrn',
+                        'name':'vetest'
+                    }
+                }
+            }
+            channelInstance.handleIncommingMessages(event);
+        })
+        test('Test projectDetails case - tcm - activated - false', () => {
+            let event = {
+                data: {
+                    type: "projectDetails",
+                    message: {
+                        'tcm':{
+                            activated: false
                         },
                         'x-prsn-user-id':'c5test01',
                         'ssoToken':'ssoToken',
@@ -1648,6 +1671,28 @@ describe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
+        it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - cypressLF if block - without loObj', () => {
+            const event = {
+                data: {
+                    type: "currentSlateLOAfterWarningPopup",
+                    message: {
+                        unlinkStatus: true,
+                        currentSlateLF: "cypressLF",
+                        statusForSave: true,
+                        loLinked: [{
+                            label: {
+                                en: 'en'
+                            }
+                        }],
+                        unlinkedLOs: ['1']
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
         it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - else block', () => {
             const event = {
                 data: {
@@ -1736,5 +1781,154 @@ describe('Testing communication channel', () => {
             expect(channelInstance.state.showBlocker).toBe(false)
             spyhandleIncommingMessages.mockClear()
         })
+    })
+    test('Test for pageLink  if case - updatePageLink - if case', () => {
+        let event = {
+            data: {
+                type: "pageLink",
+                message:{
+                    link:'link',
+                    elementId: '',
+                    pageId: '',
+                    pageName: '',
+                    linkId: ''
+                }
+            }
+        }
+        jest.spyOn(document, 'querySelector').mockImplementation(() => {
+            return {
+                querySelectorAll: jest.fn(() => [])
+            }
+        });
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for pageLink  if case - updatePageLink - else if case - cancel', () => {
+        let event = {
+            data: {
+                type: "pageLink",
+                message:{
+                    link:'cancel',
+                    elementId: '',
+                    linkId: ''
+                }
+            }
+        }
+        jest.spyOn(document, 'querySelector').mockImplementation(() => {
+            return {
+                querySelectorAll: jest.fn(() => [])
+            }
+        });
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for pageLink  if case - updatePageLink - else if case - unlink', () => {
+        let event = {
+            data: {
+                type: "pageLink",
+                message:{
+                    link:'unlink',
+                    elementId: '',
+                    linkId: ''
+                }
+            }
+        }
+        jest.spyOn(document, 'querySelector').mockImplementation(() => {
+            return {
+                querySelectorAll: jest.fn(() => [])
+            }
+        });
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for pageLink  if case - updatePageLink - else if case - unlinkToc', () => {
+        let event = {
+            data: {
+                type: "pageLink",
+                message:{
+                    link:'unlinkToc',
+                    elementId: '',
+                    linkId: ''
+                }
+            }
+        }
+        jest.spyOn(document, 'querySelector').mockImplementation(() => {
+            return {
+                querySelectorAll: jest.fn(() => [])
+            }
+        });
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for refreshSlate case - with tempSlateManifestURN and tempSlateEntityURN', () => {
+        config.tempSlateManifestURN = "urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f6"
+        config.tempSlateEntityURN = "urn:pearson:entity:39dfa171-7d07-4ef6-a361-129036d0c9f7"
+        let event = {
+            data: {
+                type: "refreshSlate",
+                message: ""
+            }
+        }
+        const spyhandleRefreshSlate = jest.spyOn(channelInstance, 'handleRefreshSlate')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleRefreshSlate).toHaveBeenCalled()
+        spyhandleRefreshSlate.mockClear()
+    })
+    const initialState2 = {
+        ...initialState,
+        appStore: {
+            ...initialState.appStore,
+            permissions: [
+                'toc_edit_title',
+                'toc_delete_entry',
+                'toc_rearrange_entry',
+                'toc_add_pages'
+            ]
+        }
+    }
+    let store2 = mockStore(initialState2);
+    let wrapper2 = mount(<Provider store={store2}><CanvasWrapper {...props} /></Provider>)
+    let channelInstance2 = wrapper2.find('CommunicationWrapper').instance();
+    test('Test for getPermissions case - permissions present', () => {
+        let event = {
+            data: {
+                type: "getPermissions",
+                message: ""
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance2, 'sendingPermissions')
+        channelInstance2.handleIncommingMessages(event);
+        expect(channelInstance2.sendingPermissions).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    })
+    test('Test for statusForSave - ', () => {
+        config.slateManifestURN = 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4';
+        config.slateType = 'assessment';
+        let event = {
+            data: {
+                type: "statusForSave",
+                statusForSave: true,
+                message: {
+                    statusForSave: true,
+                    loObj: {
+                        label: {
+                            en: "hello"
+                        }
+                    }
+                }
+            }
+        }
+        const spyhandleLOData = jest.spyOn(channelInstance, 'handleLOData')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleLOData).toHaveBeenCalled()
+        spyhandleLOData.mockClear()
     })
 })
