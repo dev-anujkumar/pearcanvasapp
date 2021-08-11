@@ -897,7 +897,7 @@ const initialState = {
     appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
     toolbarReducer: { elemBorderToggle: true },
     metadataReducer: { currentSlateLOData: [] },
-    audioReducer: {openRemovePopUp: false},
+    audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
     searchReducer: {searchTerm: 'searchTerm-123', parentId: 'parentId-123', deeplink: false, scroll: ""},
     commentSearchReducer: { commentSearchTerm: 'commentSearch-123', parentId: 'commentP-123', scrollTop: "10" },
     assessmentReducer:{showConfirmationPopup:false},
@@ -1280,11 +1280,40 @@ describe("SlateWrapper Component", () => {
         const parentUrn = {id:"123"};
         const asideData = {id:"123"};
 
-        it.each(elementList)('add %s element ',(input) => {
+        xit.each(elementList)('add %s element ',(input) => {
             config.savingInProgress = false;
             const compInstance = slateWrapInstance(props);
             const spy = jest.spyOn(compInstance, 'splithandlerfunction')
             compInstance.splithandlerfunction(input,index, firstOne, parentUrn, asideData, outerAsideIndex, poetryData);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.21.2  Test - if case (config.savingInProgress)', () => {
+            config.savingInProgress = true;
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'splithandlerfunction')
+            compInstance.splithandlerfunction("",index, firstOne, parentUrn, asideData, outerAsideIndex, poetryData);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.21.3  Test - if case (config.savingInProgress)', () => {
+            config.savingInProgress = false;
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'splithandlerfunction')
+            compInstance.splithandlerfunction("",index, false, parentUrn, asideData, outerAsideIndex, poetryData);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.21.4  Test - if case (this.checkLockStatus()) ', () => {
+            const newInitialState = {...initialState, slateLockReducer: { slateLockInfo: {
+                isLocked: true,
+                userId: 'c5Test01'
+            }, withinLockPeriod: true }};
+
+            const compInstance = slateWrapInstance(props, newInitialState);
+            compInstance.checkLockStatus();
+            const spy = jest.spyOn(compInstance, 'splithandlerfunction')
+            compInstance.splithandlerfunction("",index, false, parentUrn, asideData, outerAsideIndex, poetryData);
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
@@ -1362,7 +1391,8 @@ describe("SlateWrapper Component", () => {
     })
     describe("1.29 Test - processRemoveConfirmation ", () => {
         it('1.29.1  Test - if case ', () => {
-            const compInstance = slateWrapInstance(props);
+            const newInitialState = {...initialState, audioReducer: {openRemovePopUp: true, openSplitPopUp: false}};
+            const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'processRemoveConfirmation')
             compInstance.processRemoveConfirmation(true, 1);
             expect(spy).toHaveBeenCalled();
@@ -1372,6 +1402,84 @@ describe("SlateWrapper Component", () => {
             const compInstance = slateWrapInstance(props);
             const spy = jest.spyOn(compInstance, 'processRemoveConfirmation')
             compInstance.processRemoveConfirmation(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.30 Test - renderElement ", () => {
+        it('1.30.1  Test - else case (_elements !== null)', () => {
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'renderElement')
+            compInstance.renderElement(undefined, "", "");
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.30.2  Test - if case (_elements.length === 0 && isPdf_Assess && ', () => {
+            config.slateType = "pdfslate";
+            config.isDefaultElementInProgress = true;
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'renderElement')
+            compInstance.renderElement([], "pdfslate", "");
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.30.3  Test - if case (_elements.length === 0 && _slateType != "assessment") ', () => {
+            config.slateType = "pdfslate";
+            config.isDefaultElementInProgress = false;
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'renderElement')
+            compInstance.renderElement([], "pdfslate", "");
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.31 Test - toggleAudioPopup ", () => {
+        it('1.31.1  Test - if case ', () => {
+            const newInitialState = {...initialState, audioReducer: {openRemovePopUp: true, openSplitPopUp: false}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'toggleAudioPopup')
+            compInstance.toggleAudioPopup(true, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.31.2  Test - else case ', () => {
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'toggleAudioPopup')
+            compInstance.toggleAudioPopup(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.32 Test - toggleWrongAudioPopup ", () => {
+        it('1.32.1  Test - if case ', () => {
+            const newInitialState = {...initialState, appStore: {accesDeniedPopup: true}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'toggleWrongAudioPopup')
+            compInstance.toggleWrongAudioPopup(true, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.32.2  Test - else case ', () => {
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'toggleWrongAudioPopup')
+            compInstance.toggleWrongAudioPopup(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.31 Test - toggleAssessmentPopup ", () => {
+        it('1.31.1  Test - if case ', () => {
+            const newInitialState = {...initialState, assessmentReducer: {showConfirmationPopup: true}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'toggleAssessmentPopup')
+            compInstance.toggleAssessmentPopup(true, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.31.2  Test - else case ', () => {
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'toggleAssessmentPopup')
+            compInstance.toggleAssessmentPopup(false, 1);
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
