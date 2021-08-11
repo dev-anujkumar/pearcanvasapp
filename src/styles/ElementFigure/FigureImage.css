@@ -150,7 +150,6 @@ figure,.element-container{
 .pearson-component.image.figureData img{
     width: 100%;
     text-align: center;
-    height:178px;
 }
  
 .divCodeSnippetFigure.blockCodeFigure .figureCodeSnippet .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing .cypress-editable{
@@ -665,6 +664,22 @@ th ol li.listItemNumeroUnoNone:before {
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
+}
+.deletefigurebutton{
+    top:16px;
+    position: absolute;
+    border: solid 1px #dcdcdc;
+    background-color: #fff;
+    text-align: center;
+    justify-content: center;
+    cursor: pointer;
+    right: 15px;
+    position: absolute;
+    padding: 8px 10px;
+    border-radius: 2px;
+}
+.deletefigurebutton img{
+    background-color: red;
 }
 .figurecont{
     position: relative;
