@@ -309,88 +309,90 @@ class FigureImage extends Component {
         let figureHtmlData = getLabelNumberTitleHTML(figureElementProps.model);
         return (
             <div className="figureElement">
-                <div className={divClass} resource="">
-                    <figure className={figureClass} resource="">
-                        <header className="figure-header">
-                            <div className='figure-label-field'>
-                                <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
-                                <div className="figure-label" onClick={this.handleFigureDropdown}>
-                                    <span>{this.state.figureLabelValue}</span>
-                                    <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
+                <div className='figure-image-wrapper'>
+                    <div className={divClass} resource="">
+                        <figure className={figureClass} resource="">
+                            <header className="figure-header">
+                                <div className='figure-label-field'>
+                                    <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
+                                    <div className="figure-label" onClick={this.handleFigureDropdown}>
+                                        <span>{this.state.figureLabelValue}</span>
+                                        <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
+                                    </div>
                                 </div>
-                            </div>
-                            {this.state.figureDropDown &&
-                                <div className="figure-dropdown">
-                                    <ul>
-                                        {this.state.figureLabelData.map((label, i) => {
-                                            return (
-                                                <li key={i} onClick={(e) => { this.changeFigureLabel(e, label); this.handleCloseDropDrown() }}>{label}</li>
-                                            )
+                                {this.state.figureDropDown &&
+                                    <div className="figure-dropdown">
+                                        <ul>
+                                            {this.state.figureLabelData.map((label, i) => {
+                                                return (
+                                                    <li key={i} onClick={(e) => { this.changeFigureLabel(e, label); this.handleCloseDropDrown() }}>{label}</li>
+                                                )
 
-                                        })}
-                                    </ul>
-                                </div>
-                            }
-                            {
-                                this.state.figureLabelValue === 'Custom' &&
-                                <div className='image-label'>
-                                    <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
-                                </div>
-                            }
-
-                            <div className="floating-number-group">
-                                <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
-                            </div>
-
-                        </header>
-                        <div className="floating-title-group">
-                            <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                            <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
-                        </div>
-                        <div className="figurecont">
-
-                            <div id="figure_add_div" className={`pearson-component image figureData ${figureElementProps.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
+                                            })}
+                                        </ul>
+                                    </div>
+                                }
                                 {
-                                    figureElementProps.model.figuredata && figureElementProps.model.figuredata.imageid ?
-                                        <img src={this.state.imgSrc ? this.state.imgSrc : (figureElementProps.model.figuredata.path && figureElementProps.model.figuredata.path !== "" ? figureElementProps.model.figuredata.path : '')}
-                                            data-src={this.state.imgSrc}
-                                            title=""
-                                            alt=""
-                                            className={imageDimension + ' lazyload'}
-                                            draggable="false" />
-                                        : <div className='figurebutton' onClick={this.addFigureResource}>Select an Image</div>
+                                    this.state.figureLabelValue === 'Custom' &&
+                                    <div className='image-label'>
+                                        <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                                        <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
+                                    </div>
                                 }
 
+                                <div className="floating-number-group">
+                                    <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
+                                </div>
+
+                            </header>
+                            <div className="floating-title-group">
+                                <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                                <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
                             </div>
-                            <div>
-                                {
-                                    figureElementProps.model.figuredata && figureElementProps.model.figuredata.imageid !== "" ? <div className="figure-wrapper">
-                                        <div className="figure-image-info">
-                                            <div className='image-figure'><p className='image-text'>Image ID: </p> <span className='image-info'> {figureElementProps.model.figuredata && figureElementProps.model.figuredata.imageid ? figureElementProps.model.figuredata.imageid : ""} </span> </div>
-                                            <div className='image-figure-path'><p className='image-text'>Image Path: </p> <span className='image-info'> {this.state.imgSrc ? this.state.imgSrc : (figureElementProps.model.figuredata.path && figureElementProps.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? figureElementProps.model.figuredata.path : "")}</span> </div>
-                                            <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{figureElementProps.model.figuredata && figureElementProps.model.figuredata.path && figureElementProps.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
-                                        </div>
-                                        <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
-                                        <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="16px" height="16px" src={deleteIcon} /></div>
-                                    </div> : ''
-                                }
+                            <div className="figure-image-container">
+
+                                <div id="figure_add_div" className={`pearson-component image figureData ${figureElementProps.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
+                                    {
+                                        figureElementProps.model.figuredata && figureElementProps.model.figuredata.imageid ?
+                                            <img src={this.state.imgSrc ? this.state.imgSrc : (figureElementProps.model.figuredata.path && figureElementProps.model.figuredata.path !== "" ? figureElementProps.model.figuredata.path : '')}
+                                                data-src={this.state.imgSrc}
+                                                title=""
+                                                alt=""
+                                                className={imageDimension + ' lazyload'}
+                                                draggable="false" />
+                                            : <div className='figurebutton' onClick={this.addFigureResource}>Select an Image</div>
+                                    }
+
+                                </div>
+                                <div>
+                                    {
+                                        figureElementProps.model.figuredata && figureElementProps.model.figuredata.imageid !== "" ? <div className="figure-wrapper">
+                                            <div className="figure-image-info">
+                                                <div className='image-figure'><p className='image-text'>Image ID: </p> <span className='image-info'> {figureElementProps.model.figuredata && figureElementProps.model.figuredata.imageid ? figureElementProps.model.figuredata.imageid : ""} </span> </div>
+                                                <div className='image-figure-path'><p className='image-text'>Image Path: </p> <span className='image-info'> {this.state.imgSrc ? this.state.imgSrc : (figureElementProps.model.figuredata.path && figureElementProps.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? figureElementProps.model.figuredata.path : "")}</span> </div>
+                                                <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{figureElementProps.model.figuredata && figureElementProps.model.figuredata.path && figureElementProps.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
+                                            </div>
+                                            <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
+                                            <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="16px" height="16px" src={deleteIcon} /></div>
+                                        </div> : ''
+                                    }
+                                </div>
                             </div>
-                        </div>
-                        <figcaption >
-                            <div className="floating-caption-group">
-                                <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={figureElementProps.model.html.captions} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                <label className={checkHTMLdataInsideString(figureElementProps?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
-                            </div>
-                        </figcaption>
-                        <figcredit >
-                            <div className="floating-credit-group">
-                                <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={figureElementProps.model.html.credits} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
-                                <label className={checkHTMLdataInsideString(figureElementProps?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
-                            </div>
-                        </figcredit>
-                    </figure>
+                            <figcaption >
+                                <div className="floating-caption-group">
+                                    <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={figureElementProps.model.html.captions} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                                    <label className={checkHTMLdataInsideString(figureElementProps?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
+                                </div>
+                            </figcaption>
+                            <figcredit >
+                                <div className="floating-credit-group">
+                                    <TinyMceEditor permissions={figureElementProps.permissions} openGlossaryFootnotePopUp={figureElementProps.openGlossaryFootnotePopUp} element={figureElementProps.model} handleEditorFocus={figureElementProps.handleFocus} handleBlur={figureElementProps.handleBlur} index={`${figureElementProps.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={figureElementProps.model.html.credits} slateLockInfo={figureElementProps.slateLockInfo} glossaryFootnoteValue={figureElementProps.glossaryFootnoteValue} glossaaryFootnotePopup={figureElementProps.glossaaryFootnotePopup} elementId={figureElementProps.elementId} parentElement={figureElementProps.parentElement} showHideType={figureElementProps.showHideType} />
+                                    <label className={checkHTMLdataInsideString(figureElementProps?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
+                                </div>
+                            </figcredit>
+                        </figure>
+                    </div>
                 </div>
             </div>
         );
