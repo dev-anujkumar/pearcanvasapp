@@ -278,7 +278,9 @@ const mapStateToProps = state => {
         activeElement: state.appStore.activeElement,
         figureGlossaryData:state.appStore.figureGlossaryData,
         alfrescoEditor: state.alfrescoReducer.editor,
-        imageArgs: state.alfrescoReducer.imageArgs
+        imageArgs: state.alfrescoReducer.imageArgs,
+        projectSharingRole:state?.projectInfo?.projectSharingRole,
+        projectSubscriptionDetails:state.projectInfo.projectSubscriptionDetails.isSubscribed
     };
 };
 
@@ -334,6 +336,6 @@ export default connect(
         saveImageDataFromAlfresco,
         showWrongImagePopup,
         setProjectSharingRole,
-        setProjectSubscriptionDetails
+        setProjectSubscriptionDetails,
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

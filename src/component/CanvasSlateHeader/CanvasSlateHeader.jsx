@@ -22,14 +22,25 @@ import { sendDataToIframe } from '../../constants/utility.js';
             </div>
         )
     }
+
+     renderSubscribedSlate = () => {
+         return (
+             <div className="canvas-header slate-lock-block">
+                 <span className="locked-slate-title">Subscribed Slate (View only)</span><br />
+             </div>
+         )
+     }
     
-    checkSlateLock = (slateLockInfo) => {
+    checkSlateLock = (slateLockInfo,projectSharingRole,projectSubscriptionDetails) => {
         if(slateLockInfo){
             // TK-11991 - fixing test cases console errors
             let lockedUserId = slateLockInfo?.userId?.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
             if(slateLockInfo.isLocked && config.userId !== lockedUserId){
                 sendDataToIframe({ 'type': SlateLockStatus, 'message': { slateLockInfo: slateLockInfo } });
                 return this.renderSlateLockJSX(slateLockInfo.userId) // (`${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`)
+            }
+            else if(projectSharingRole ==='SUBSCRIBER' && projectSubscriptionDetails){
+                return this.renderSubscribedSlate()
             }
             else {
 				sendDataToIframe({ 'type': SlateLockStatus, 'message': { slateLockInfo: slateLockInfo } });
@@ -39,10 +50,10 @@ import { sendDataToIframe } from '../../constants/utility.js';
     }
     
     render() {
-        const { slateLockInfo } = this.props
+        const { slateLockInfo, projectSharingRole, projectSubscriptionDetails } = this.props
         return (
             <div className="slate-title">
-                {this.checkSlateLock(slateLockInfo)}
+                {this.checkSlateLock(slateLockInfo,projectSharingRole,projectSubscriptionDetails)}
             </div>
         )
     }

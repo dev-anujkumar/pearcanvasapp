@@ -179,3 +179,4 @@ export const SPINNER = 'SPINNER';
 /*----------------- Project Subscription ---------------*/
 export const SET_PROJECT_SHARING_ROLE = 'SET_PROJECT_SHARING_ROLE';
 export const SET_PROJECT_SUBSCRIPTION_DETAILS = 'SET_PROJECT_SUBSCRIPTION_DETAILS';
+export const OWNERS_SUBSCRIBED_SLATE= 'OWNERS_SUBSCRIBED_SLATE';

@@ -332,3 +332,7 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
 .pearson-component.image.figureData.table-figure-data table caption {
     margin-top: 2%;
 }
+
+.ownerSlate{
+    background-color: #FCF1E5 !important;
+}

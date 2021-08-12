@@ -21,7 +21,7 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET,OWNER_SLATE_POPUP
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -32,14 +32,10 @@ import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../.
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
-import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
-// import { OPEN_AM } from '../../js/auth_module';
+import { fetchSlateData, setActiveElement,openPopupSlate,setProjectSharingRole,setProjectSubscriptionDetails } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
-import {
-    fetchSlateData
-} from '../CanvasWrapper/CanvasWrapper_Actions';
 import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
@@ -74,7 +70,8 @@ class SlateWrapper extends Component {
             showpocpopup:false,
             pastedindex:null,
             powerPasteData: [],
-            updatedindex:''
+            updatedindex:'',
+            showOwnerSlatePopup: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -222,6 +219,12 @@ class SlateWrapper extends Component {
             }
             return _state;
         }
+        else if(props.projectSharingRole === 'OWNER' || 'SUBSCRIBER' && props.projectSubscriptionDetails){
+            _state={
+                ..._state,
+                showOwnerSlatePopup: true
+            }
+        }
         else {
             return null
         }
@@ -250,10 +253,11 @@ class SlateWrapper extends Component {
      * renderSlateHeader | renders slate title area with its slate type and title
      */
     renderSlateHeader({ slateData: _slateData }) {
+        const { slateLockInfo, projectSharingRole, projectSubscriptionDetails } = this.props
         try {
             if (_slateData !== null && _slateData !== undefined && _slateData[config.slateManifestURN]) {
                 return (
-                    <SlateHeader slateLockInfo={this.props.slateLockInfo} />
+                    <SlateHeader slateLockInfo={slateLockInfo} projectSharingRole={projectSharingRole} projectSubscriptionDetails={projectSubscriptionDetails}/>
                 )
             } else {
                 return (
@@ -289,8 +293,9 @@ class SlateWrapper extends Component {
                     let { bodymatter: _slateBodyMatter } = _slateContent
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
+                    const {projectSharingRole, projectSubscriptionDetails}=this.props
                     return (
-                        <div className={`slate-content ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
+                        <div className={`slate-content ${projectSharingRole ==='OWNER' && projectSubscriptionDetails ? 'ownerSlate' :'' } ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 <Sortable
                                     options={{
@@ -343,7 +348,7 @@ class SlateWrapper extends Component {
                                     {this['cloneCOSlateControlledSource_' + random]}
                                 </Sortable>
                             </div>
-                            <SlateFooter elements={_slateBodyMatter} />
+                            <SlateFooter elements={_slateBodyMatter} projectSharingRole={projectSharingRole} projectSubscriptionDetails={projectSubscriptionDetails}/>
                         </div>
                     )
                 }
@@ -448,13 +453,17 @@ class SlateWrapper extends Component {
     }
 
     checkLockStatus = () => {
-        const { slateLockInfo } = this.props
+        const { slateLockInfo,projectSharingRole,projectSubscriptionDetails } = this.props
         let lockedUserId = slateLockInfo.userId.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
         if (slateLockInfo.isLocked && config.userId !== lockedUserId) {
             this.setState({
                 lockOwner: slateLockInfo.userId,
                 lockOwnerName: `${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`
             })
+            return true
+        }else if(projectSharingRole === 'OWNER' && projectSubscriptionDetails){
+            return true
+        }else if(projectSharingRole === 'SUBSCRIBER' && projectSubscriptionDetails){
             return true
         }
         else {
@@ -518,7 +527,7 @@ class SlateWrapper extends Component {
      * Shows 'slate locked' popup
      */
     showLockPopup = () => {
-
+        const {projectSharingRole,projectSubscriptionDetails}=this.props
         if (this.state.showLockPopup) {
             const { lockOwner } = this.state
             this.props.showBlocker(true)
@@ -536,6 +545,30 @@ class SlateWrapper extends Component {
                     withInputBox={true}
                     addonText={IN_USE_BY}
                     lockForTOC={false}
+                />
+            )
+        } else if (projectSharingRole === 'OWNER' && projectSubscriptionDetails && this.state.showOwnerSlatePopup) {
+            this.props.showBlocker(true)
+            showTocBlocker();
+            return (
+                <PopUp dialogText={OWNER_SLATE_POPUP}
+                    togglePopup={this.togglePopup}
+                    isOwnersSlate={true}
+                    proceed={this.proceed}
+                    warningHeaderText={`Warning`}
+                    lOPopupClass="lo-warning-txt"
+                    withCheckBox={true}
+                />
+            )
+        }
+        else if (projectSharingRole === "SUBSCRIBER" && projectSubscriptionDetails && this.state.showOwnerSlatePopup ) {
+            this.props.showBlocker(true)
+            showTocBlocker();
+            return (
+                <PopUp
+                    togglePopup={this.togglePopup}
+                    isSubscribersSlate={true}
+                    lOPopupClass="lo-warning-txt"
                 />
             )
         }
@@ -562,12 +595,17 @@ class SlateWrapper extends Component {
      */
     togglePopup = (toggleValue, event) => {
         this.setState({
-            showLockPopup: toggleValue
+            showLockPopup: toggleValue,
+            showOwnerSlatePopup: toggleValue
         })
         this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
         hideBlocker()
         this.prohibitPropagation(event)
+    }
+
+    proceed=()=>{ // to be used in future
+
     }
 
     handleCopyPastePopup = (wordPastePopup,index)=>{
@@ -990,6 +1028,8 @@ class SlateWrapper extends Component {
                                         isLOExist={this.props.isLOExist}
                                         splithandlerfunction={this.splithandlerfunction}
                                         pasteElement={this.props.pasteElement}
+                                        projectSharingRole={this.props.projectSharingRole}
+                                        projectSubscriptionDetails={this.props.projectSubscriptionDetails}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -1574,7 +1614,9 @@ const mapStateToProps = state => {
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         alfrescoPath : state.alfrescoReducer.alfrescoPath,
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
-        removeGlossaryImage:state.appStore.removeGlossaryImage
+        removeGlossaryImage:state.appStore.removeGlossaryImage,
+        projectSharingRole:state?.projectInfo?.projectSharingRole,
+        projectSubscriptionDetails:state?.projectInfo?.projectSubscriptionDetails?.isSubscribed
     };
 };
 
@@ -1611,6 +1653,8 @@ export default connect(
         toggleLOWarningPopup,
         showWrongImagePopup,
         alfrescoPopup,
-        showRemoveImageGlossaryPopup
+        showRemoveImageGlossaryPopup,
+        setProjectSharingRole,
+        setProjectSubscriptionDetails
     }
 )(SlateWrapper);

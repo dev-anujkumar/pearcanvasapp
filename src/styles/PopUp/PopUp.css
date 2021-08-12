@@ -176,6 +176,10 @@
   margin-top: 24px;
 }
 
+.subscriberSlate-buttons{
+  height: 36px;
+}
+
 .dialog-buttons.tcm-canvas-popup{
     /* padding: 17px 8px 28px; */
     height: 70px;
@@ -738,3 +742,18 @@ ol li.listItemNumeroUnoUpperRoman,
 ol li.listItemNumeroUnoLowerRoman {
   list-style-type: none !important
 }
+
+.OwnersSlate{
+  display: flex;
+  color: #000;
+  text-align: center;
+  align-items: center;
+}
+
+.OwnersSlateCheckBox{
+    display: flex;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+}
+

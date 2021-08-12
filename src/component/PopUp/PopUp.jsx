@@ -10,7 +10,10 @@ import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader'
 import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
-import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
+import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions';
+import { DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
+import {isOwnersSubscribedSlate} from '../CanvasWrapper/subscription_Actions';
+
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -19,8 +22,10 @@ class PopUp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            wordPasteProceed: false
-        }
+            wordPasteProceed: false,
+            isChecked: false
+        };
+        this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
         this.contentRef = React.createRef();
         this.processGlossaryFootnotes = this.processGlossaryFootnotes.bind(this)
@@ -80,6 +85,12 @@ class PopUp extends React.Component {
     toggleWordPasteProceed = (toggleState) => {
         this.setState({
             wordPasteProceed: toggleState
+        })
+    }
+
+    handleChange = () => {
+        this.setState({
+            isChecked: !this.state.isChecked
         })
     }
 
@@ -168,6 +179,21 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if(props.isOwnersSlate){
+            return (
+                <div className={`dialog-buttons`}>
+                    <span className={`lo-save-button`} onClick={(e) => props.proceed(false, e)}>{props.proceedButton}</span>
+                    <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }else if(props.isSubscribersSlate){
+            return (
+                <div className={`subscriberSlate-buttons`}>
+                    <span className="lo-save-button" onClick={(e) => props.togglePopup(false, e)}>OK</span>
+                </div>
+            )
+        }
+
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -182,7 +208,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -203,6 +229,14 @@ class PopUp extends React.Component {
                     toggleWordPasteProceed={this.toggleWordPasteProceed}
                 />
             )
+        }else if(props.withCheckBox){
+            const {isChecked}=this.state
+            return(
+                <div className="OwnersSlate">
+                    <input className="OwnersSlateCheckBox" type="checkbox"  checked={isChecked} onChange={this.handleChange} />
+                    <p>{DO_NOT_SHOW_TXT}</p>
+                </div>
+            )
         }
         else {
             return (
@@ -217,7 +251,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary  || props.isTCMCanvasPopup || props.AssessmentPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary  || props.isTCMCanvasPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate) {
             return null
         }
         else {
@@ -322,6 +356,21 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if (props.isOwnersSlate) {
+            return (
+                <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br /></div>
+                </>
+            )
+        }
+        else if (props.isSubscribersSlate) {
+            return (
+                <>
+                    <div className={`${props.lOPopupClass}`}>This is a subscribed content and cannot be edited. Please use <strong>Copy Content</strong> feature from TOC to proceed with your edits in this content.</div>
+                </>
+            )
+        }
         else {
             return (
                 <div className={`dialog-window  ${props.isAddComment ? 'add-comment' : ""} ${props.assessmentClass}`} >{props.dialogText}</div>
@@ -331,7 +380,7 @@ class PopUp extends React.Component {
 
 
     renderTcmPopupIcons = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate) {
             return null
         }
         else {
@@ -379,6 +428,7 @@ PopUp.defaultProps = {
     yesButton: "Yes",
     cancelBtnText: "Cancel",
     deleteInstruction: "Are you sure you want to delete, this action cannot be undone?",
+    proceedButton:"Proceed"
 
 }
 
