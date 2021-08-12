@@ -1824,6 +1824,20 @@ export const communicationMockData = {
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:726de1de-e703-4daf-8907-a125ffa3a04b",
                     "contentUrn": "urn:pearson:entity:16b54b0b-438b-7647-9fd3-09aa34f14d2f"
+                },
+                {
+                    "id": "urn:pearson:work:726de1de-e703-4daf-8907-a125ffa3a04c",
+                    "type": "element-aside",
+                    "elementdata": {
+                        "bodymatter": [{
+                            "type": "element-learningobjectivemapping"
+                        }]
+                    },
+                    "html": {},
+                    "comments": false,
+                    "tcm": true,
+                    "versionUrn": "urn:pearson:work:726de1de-e703-4daf-8907-a125ffa3a04g",
+                    "contentUrn": "urn:pearson:entity:16b54b0b-438b-7647-9fd3-09aa34f14d2e"
                 }
             ]
         }

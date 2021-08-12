@@ -173,10 +173,10 @@ jest.mock('../../../src/component/CanvasWrapper/TCM_Integration_Actions', () => 
 })
 jest.mock('../../../src/component/ElementMetaDataAnchor/ExternalLO_helpers.js', () => {
     return { 
-        setCurrentSlateLOs: jest.fn(() => [{}]),
         prepareLODataForUpdate: jest.fn(()=> [{}]),
         getSlateMetadataAnchorElem: jest.fn(() => [{ loUrn: '1' }]),
-        prepareLO_WIP_Data: jest.fn(() => ({ 'elementdata': { 'loref': '' } }))
+        prepareLO_WIP_Data: jest.fn(() => ({ 'elementdata': { 'loref': '' } })),
+        setCurrentSlateLOs: jest.fn(()=>[])
     }
 })
 describe('Testing communication channel', () => {
@@ -1708,6 +1708,21 @@ describe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
+        it('Test for currentSlateLOAfterWarningPopup case - handleLOAfterWarningPopup method - unlinkStatus - false', () => {
+            const event = {
+                data: {
+                    type: "currentSlateLOAfterWarningPopup",
+                    message: {
+                        unlinkStatus: false,
+                        unlinkedLOs: []
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
         it('Test for unlinkLOFailForWarningPopup case - handleUnlinkedLOData method - unlinkStatus true', () => {
             const event = {
                 data: {
@@ -1892,6 +1907,17 @@ describe('Testing communication channel', () => {
                 'toc_rearrange_entry',
                 'toc_add_pages'
             ]
+        },
+        metadataReducer: {
+            currentSlateLOData: {
+                loUrn: "123",
+                label:{
+                    en:'en'
+                }
+            }
+        },
+        slateLockReducer: {
+            withinLockPeriod: true
         }
     }
     let store2 = mockStore(initialState2);
@@ -1926,9 +1952,168 @@ describe('Testing communication channel', () => {
                 }
             }
         }
-        const spyhandleLOData = jest.spyOn(channelInstance, 'handleLOData')
-        channelInstance.handleIncommingMessages(event);
-        expect(channelInstance.handleLOData).toHaveBeenCalled()
+        const spyhandleLOData = jest.spyOn(channelInstance2, 'handleLOData')
+        channelInstance2.handleIncommingMessages(event);
+        expect(channelInstance2.handleLOData).toHaveBeenCalled()
         spyhandleLOData.mockClear()
     })
+    it('Test for statusForExtLOSave case - handleExtLOData - loUnlinked empty', () => {
+        const event = {
+            data: {
+                type: "statusForExtLOSave",
+                message: {
+                    statusForExtLOSave: true,
+                    loLinked: []
+                }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    test('Test for permissionsDetails function - else block', () => {
+        let event = {
+            data: {
+                type: "permissionsDetails",
+                message: {}
+            }
+        }
+        const spyhandlePermissioning = jest.spyOn(channelInstance, 'handlePermissioning')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handlePermissioning).toHaveBeenCalled()
+        spyhandlePermissioning.mockClear()
+    })
+    test('Test for titleChanging case - else blocks', () => {
+        let event = {
+            data: {
+                type: "titleChanging",
+                message: {}
+            }
+        }
+        props.withinLockPeriod = true;
+        const spysetCurrentSlate = jest.spyOn(channelInstance, 'setCurrentSlate')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.setCurrentSlate).toHaveBeenCalled()
+        spysetCurrentSlate.mockClear()
+    })
+    it('Test for statusForExtLOSave case - handleExtLOData - statusForExtLOSave false', () => {
+        const event = {
+            data: {
+                type: "statusForExtLOSave",
+                message: {
+                    statusForExtLOSave: false
+                }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    it('Test for selectedAlfrescoAssetData case - NarrativeAudio - smartLinkType', () => {
+        let event = {
+            data: {
+                type: "selectedAlfrescoAssetData",
+                message: {
+                    calledFrom: "NarrativeAudio",
+                    asset: {
+                        content: {
+                            mimeType: "audio"
+                        },
+                        properties: {
+                            "cm:description": "{\"smartLinkType\":\"smartLinkType\"}"
+                        }
+                    }
+                }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    test('Test for getSlateLockStatus case - else case', () => {
+        config.savingInProgress = false;
+        config.projectUrn = '';
+        let event = {
+            data: {
+                type: "getSlateLockStatus",
+                message: ""
+            }
+        }
+        const spyreleaseLockAndRedirect = jest.spyOn(channelInstance, 'releaseLockAndRedirect')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.releaseLockAndRedirect).toHaveBeenCalled()
+        spyreleaseLockAndRedirect.mockClear()
+    })
+    test('Test for pageLink  if case - updatePageLink - else case', () => {
+        let event = {
+            data: {
+                type: "pageLink",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for titleChanging case - withinLockPeriod true', () => {
+        config.S3MathImagePath = 'test345';
+        channelInstance.setState({
+            project_urn: 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4'
+        })
+        let currentSlate1 = {
+            category: "titleChange",
+            container: "chapter",
+            entityUrn: "urn:pearson:entity:c8240c45-ba81-4a8a-8f9e-32b68108eb4e",
+            id: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29",
+            parentId: 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4',
+            parentType: "chapter",
+            title: "blank",
+            type: "assessment",
+            slateType: "container-introduction",
+            node: {
+                HasBackMatter: false,
+                HasIntroductorySlate: false,
+                ParentContainerUrn: "urn:pearson:manifest:4887bbbf-286e-4b27-81ac-d77f507161dc",
+                ParentEntityUrn: "",
+                containerUrn: "urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4",
+                cursored: false,
+                deletableStatus: true,
+                entityUrn: "urn:pearson:entity:fe283fbd-b9e4-4666-8d65-be2bc9da63b3",
+                label: "section",
+                nodeLabel: "container-introduction",
+                nodeParentLabel: "chapter",
+                parentBodyMatterLengthFlag: false,
+                parentEntityUrn: "",
+                type: "container"
+            }
+        }
+        let event = {
+            data: {
+                type: "titleChanging",
+                message: currentSlate1
+            }
+        }
+        const spysetCurrentSlate = jest.spyOn(channelInstance2, 'setCurrentSlate')
+        channelInstance2.handleIncommingMessages(event);
+        expect(channelInstance2.setCurrentSlate).toHaveBeenCalled()
+        spysetCurrentSlate.mockClear()
+    });
+    test('Test for statusForSave - else case - statusForSave false', () => {
+        let event = {
+            data: {
+                type: "statusForSave",
+                message: {
+                    statusForSave: false
+                }
+            }
+        }
+        const spyhandleLOData = jest.spyOn(channelInstance2, 'handleLOData')
+        channelInstance2.handleIncommingMessages(event);
+        expect(channelInstance2.handleLOData).toHaveBeenCalled()
+        spyhandleLOData.mockClear()
+    });
 })
