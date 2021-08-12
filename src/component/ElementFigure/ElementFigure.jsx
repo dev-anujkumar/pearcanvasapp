@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
-import FigureImage from './FigureImage.jsx';
 
 // IMPORT - Assets //
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -399,32 +398,8 @@ class ElementFigure extends Component {
 
             </div>
         } else {
-            const figureImageTypes = ["image", "mathImage", "table"]
-            if (figureImageTypes.includes(this.props?.model?.figuretype)) {
-                let figureElementProps = {
-                    model: model,
-                    slateLockInfo: slateLockInfo,
-                    permissions: this.props.permissions,
-                    openGlossaryFootnotePopUp: this.props.openGlossaryFootnotePopUp,
-                    model: this.props.model,
-                    handleFocus: this.props.handleFocus,
-                    handleBlur: this.props.handleBlur,
-                    index: this.props.index,
-                    glossaryFootnoteValue: this.props.glossaryFootnoteValue,
-                    glossaaryFootnotePopup: this.props.glossaaryFootnotePopup,
-                    elementId: this.props.elementId,
-                    asideData: this.props.asideData,
-                    parentElement: this.props.parentElement,
-                    showHideType: this.props.showHideType,
-                    handleFocus: this.props.handleFocus,
-                    handleBlur: this.props.handleBlur,
-                    accessDenied: this.props.accessDenied,
-                    updateFigureData: this.props.updateFigureData
-                };
-                return <FigureImage figureElementProps = {figureElementProps} />
-            } else {
             // console.log("model.figuretype model.figuretype", model);
-            /**JSX for Figure Image, Table Image, Math Image, Table Editor*/
+            /**JSX for Table Editor*/
             figureJsx = <div className={divClass} resource="">
                 <figure className={figureClass} resource="">
                     <header className="figure-header">
@@ -464,7 +439,6 @@ class ElementFigure extends Component {
                 </figure>
 
             </div>
-            }
         }
         return figureJsx;
     }

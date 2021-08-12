@@ -5,6 +5,7 @@ import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
+import FigureImage from './../ElementFigure/FigureImage.jsx'
 import ElementInteractive from '../ElementInteractive';
 import ElementAsideContainer from '../ElementAsideContainer';
 import ElementMetaDataAnchor from '../ElementMetaDataAnchor';
@@ -1319,6 +1320,8 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_IMAGE:
                         case elementTypeConstant.FIGURE_TABLE:
                         case elementTypeConstant.FIGURE_MATH_IMAGE:
+                            editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} {...commonProps}/>
+                            break;
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
