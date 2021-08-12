@@ -84,7 +84,9 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
     let multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
-    if(wipData?.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
+    if( containerElement?.sectionType === 'show' && parentUrn?.elementType === MULTI_COLUMN_GROUP) {
+        tag.grandParent = multiColumnType + ":" + parentUrn?.columnName;
+    } else if(wipData?.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = multiColumnType + ":" + parentUrn?.columnName;
@@ -855,9 +857,10 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         }
-        else if (asideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:SH */
+        else if (asideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:SH || 3C:SH */
             const {columnName, manifestUrn, mcId} = parentUrn || {};
-            elementTag = `2C:${columnName}:${elementTag}`;
+            let grandParentTag = tag.grandParent.split(":")[0];
+            elementTag = `${grandParentTag}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
         }
     }
