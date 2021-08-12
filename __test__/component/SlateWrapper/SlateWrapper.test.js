@@ -8,8 +8,6 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-//const axios = require('axios');
-//jest.mock('axios');
 const store1 = mockStore({
     slateLockReducer: { slateLockInfo: {} },
     appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
@@ -908,9 +906,23 @@ const initialState = {
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
-    },
-    ...actionProps
+    }
 }
+const mockFunction = jest.fn().mockImplementation = () => {
+    return { type: 'Fire Action' };
+}
+jest.mock('../../../src/component/SlateWrapper/SlateWrapper_Actions.js', () => ({
+    createElement: mockFunction
+}));
+jest.mock('../../../src/component/CanvasWrapper/SlateLock_Actions.js', () => ({
+    setSlateLock: mockFunction,
+    releaseSlateLock: mockFunction,
+    getSlateLockStatus: mockFunction,
+    releaseSlateLockWithCallback: mockFunction
+}));
+jest.mock('../../../src/component/ElementContainer/AssessmentEventHandling.js', () => ({
+    reloadSlate: jest.fn()
+}));
 const actionProps = {
     setSlateLock: jest.fn(),
     getSlateLockStatus: jest.fn(),
@@ -944,13 +956,12 @@ const actionProps = {
     showRemoveImageGlossaryPopup: jest.fn()
 }
 const slateWrapInstance = (props, initialSt = initialState) => {
-    const store = mockStore(initialSt, actionProps);
+    const store = mockStore(initialSt);
     const component = mount(<Provider store={store}><SlateWrapper {...props} /></Provider>);
     return component.find('SlateWrapper').instance();
 }
 
 describe("SlateWrapper Component", () => {
-    //axios.post.mockImplementation(() => Promise.resolve({res:{data:{}}}))
     config.ssoToken = "1214";
     let props = {
         slateData: slateData,
@@ -1280,7 +1291,7 @@ describe("SlateWrapper Component", () => {
         const parentUrn = {id:"123"};
         const asideData = {id:"123"};
 
-        xit.each(elementList)('add %s element ',(input) => {
+        it.each(elementList)('add %s element ',(input) => {
             config.savingInProgress = false;
             const compInstance = slateWrapInstance(props);
             const spy = jest.spyOn(compInstance, 'splithandlerfunction')
