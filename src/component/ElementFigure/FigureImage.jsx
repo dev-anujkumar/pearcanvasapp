@@ -16,7 +16,7 @@ import './../../styles/ElementFigure/FigureImage.css';
 import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
-import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
+import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg'
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -374,7 +374,7 @@ class FigureImage extends Component {
                                                 <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{figureElementProps.model.figuredata && figureElementProps.model.figuredata.path && figureElementProps.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
                                             </div>
                                             <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
-                                            <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="16px" height="16px" src={deleteIcon} /></div>
+                                            <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                                         </div> : ''
                                     }
                                 </div>
