@@ -734,6 +734,10 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorOnClick = (e) => {
+
+        if (this.props.element.type === 'figure' && config.figureFieldsPlaceholders.includes(this.props.placeholder)) {
+            this.props.onFigureImageFieldFocus(this.props.index);
+        }
         // cbFunc | is for callback delegates //
         let cbFunc = null;
         // alreadyExist | is to check if glossary&footnote tab is open //
@@ -3022,11 +3026,12 @@ export class TinyMceEditor extends Component {
                     toolbar = config.figureNumberToolbar;
                     break;
                 case "Label Name":
-                    toolbar = config.poetryStanzaToolbar;
+                    toolbar = config.figurLabelToolbar;
                     break;
+                case "Title":
                 case "Caption":
                 case "Credit":
-                    toolbar = config.captionToolbar;
+                    toolbar = config.figurImageCommonToolbar;
                     break;
             }
         } else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
@@ -3514,6 +3519,11 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
+
+        if (this.props.element.type === 'figure' && config.figureFieldsPlaceholders.includes(this.props.placeholder)) {
+            this.props.onFigureImageFieldBlur(this.props.index);
+        }
+
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");

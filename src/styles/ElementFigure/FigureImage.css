@@ -805,7 +805,7 @@ th ol li.listItemNumeroUnoNone:before {
     top: 2px;
     bottom: 0px;
     font-size: 10px;
-    color: #005a70;
+    color: #737373;
     position: absolute;
     z-index:1;
 }
@@ -814,6 +814,14 @@ th ol li.listItemNumeroUnoNone:before {
     transition: none;
     top: -6px;
     font-size: 10px;
-    color: #005a70;
+    color: #737373;
     position: absolute;
+}
+
+.hide-field {
+    display: none;
+}
+
+.label-color-change {
+    color: #005a70 !important;
 }
