@@ -63,830 +63,6 @@ jest.mock('../../../src/component/ElementSaprator', () => {
     }
 })
 
-describe('Testing <SlateWrapper> Component', () => {
-    let props = {
-        slateData: emptySlateData,
-        slateLockInfo: {
-            isLocked: false,
-            userId: 'c5Test01'
-        },
-        permissions : [],
-        toggleTocDelete: true,
-        openRemovePopUp : true,
-        loadMorePages:jest.fn(),
-        showSlateLockPopupValue:true,
-        showConfirmationPopup:true,
-        showBlocker:jest.fn()
-    };
-    xtest('renders without crashing', () => {
-        const div = document.createElement('div');
-        ReactDOM.render(<Provider store={store}>
-            <SlateWrapper {...props} slateData={{}} />
-        </Provider>, div);
-        ReactDOM.unmountComponentAtNode(div);
-    })
-
-    xdescribe('With no element', () => {
-        let props = {
-            slateData: emptySlateData,
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            audioReducer : {
-                openRemovePopUp : true,
-                openSplitPopUp : false
-            },
-            permissions : [],
-            openRemovePopUp : true,
-            showSlateLockPopupValue:true,
-            showBlocker : jest.fn()
-        };
-        let wrapper = mount(<Provider store={store}><SlateWrapper {...props} /></Provider>);
-        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-        
-        test('renders properly with default slate', () => {
-            expect(wrapper.find('.element-list').length).toBe(0);
-            expect(wrapper.find('ElementContainer').length).toBe(0);
-            expect(wrapper.find('SlateHeader').length).toBe(0);
-        })
-    })
-    xdescribe('With loading elements', () => {
-        let props = {
-            slateData: {},
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            audioReducer : {
-                openRemovePopUp : true,
-                openSplitPopUp : false
-            },
-            permissions : [],
-            openRemovePopUp : true,
-            showBlocker : jest.fn()
-        };
-        let wrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>);
-        test('renders properly', () => {
-            expect(wrapper.find('.element-list').length).toBe(0);
-            expect(wrapper.find('LargeLoader').length).toBe(7);
-            expect(wrapper.find('SmalllLoader').length).toBe(1);
-        })
-    })
-
-    xdescribe('With elements', () => {
-        let props = {
-            slateData: slateData,
-            slateLockInfo: {
-                isLocked: true,
-                userId: 'c5Test01'
-            },
-            audioReducer : {
-                openRemovePopUp : true,
-                openSplitPopUp : false
-            },
-            permissions : [],
-            openRemovePopUp : true,
-            setSlateLock : ()=>{},
-            showBlocker : ()=>{},
-            modifyState : ()=>{},
-            loadMorePages:jest.fn(),
-            updateTimer :jest.fn(),
-            showSlateLockPopupValue:true,
-            withinLockPeriod:jest.fn(),
-            getSlateLockStatus:jest.fn(),
-        };
-        
-        const slateWrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>)
-        let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-        it('CheckOpener - if block', ()=> {
-            let event = {
-                newDraggableIndex : 0
-            }
-            config.isCO = true
-            let value = slateWrapperInstance.checkOpener(event)
-            expect(value).toBe(true)
-        })
-        it('CheckOpener - else block', ()=> {
-            let event = {
-                newDraggableIndex : 1
-            }
-            config.isCO = false
-            let value = slateWrapperInstance.checkOpener(event)
-            expect(value).toBe(false)
-        })
-        it('checkLockStatus function - if block', () => {
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openRemovePopUp: false},
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            config.userId = "test"
-            let returnValue = slateWrapperInstance.checkLockStatus()
-            expect(returnValue).toBe(true)
-        })
-        it('checkSlateLockStatus function', () => {
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openRemovePopUp: false},
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            config.userId = "test"
-             slateWrapperInstance.checkSlateLockStatus()
-        })
-
-        it('checkSlateLockStatus false function', () => {
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: false,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openRemovePopUp: false},
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            //config.savingInProgress=true
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            config.userId = "test"
-             slateWrapperInstance.checkSlateLockStatus()
-        })
-        it('Simulating prohibitPropagation function', () => {
-            slateWrapperInstance.prohibitPropagation({ preventDefault: () => { }, stopPropagation: () => { } })
-        })
-        it('Simulating elementSepratorProps function', () => {
-            slateWrapperInstance.elementSepratorProps('', '', '', '', '')
-        })
-        xit('Simulating renderDefaultElement with slate data function', () => {
-            slateWrapperInstance.renderDefaultElement()
-        })
-        xit('Simulating renderDefaultElement with slate data function slateType not assessment', () => {
-            config.slateType = "";
-            slateWrapperInstance.renderDefaultElement()
-        })
-        it('Simulating handleSplitSlate with slate data function', () => {
-            slateWrapperInstance.handleSplitSlate()
-        })
-        xit('releaseSlateLock data', () => {
-            const spyReleaseSlate = jest.spyOn(slateWrapperInstance, 'releaseSlateLock')
-            slateWrapperInstance.releaseSlateLock()
-            expect(spyReleaseSlate).toHaveBeenCalled();
-        })
-        xit('setSlateLock data', () => {
-            const spySetSlate = jest.spyOn(slateWrapperInstance, 'setSlateLock')
-            slateWrapperInstance.setSlateLock()
-            expect(spySetSlate).toHaveBeenCalled();
-        })
-        it('open custom popup', () => {
-            const spyOpenPopup= jest.spyOn(slateWrapperInstance, 'openCustomPopup')
-            slateWrapperInstance.openCustomPopup()
-            expect(spyOpenPopup).toHaveBeenCalled();
-        })
-        it('show custom popup', () => {
-            slateWrapperInstance.state.showCustomPopup = true;
-            const spyShowPopup= jest.spyOn(slateWrapperInstance, 'showCustomPopup')
-            slateWrapperInstance.showCustomPopup()
-            expect(spyShowPopup).toHaveBeenCalled();
-        })
-        
-        it('Simulating togglePopup with slate data function', () => {
-            slateWrapperInstance.togglePopup('', '')
-        })
-        it('Simulating handleClickOutside with slate data function', () => {
-            slateWrapperInstance.listDropRef = document.createElement('div');
-            slateWrapperInstance.handleClickOutside({ target: document.createElement('p') })
-        })
-       
-        it("toggleCustomPopup method", () => {
-            slateWrapperInstance.state.showCustomPopup = false;
-            slateWrapperInstance.toggleCustomPopup(true, {
-                preventDefault : () => { return true },
-                stopPropagation: () => { return true }
-            })
-            expect(slateWrapperInstance.state.showCustomPopup).toBe(true)
-        })
-
-        it("handleScroll method else ", () => {
-            
-            let event = {
-                target : {
-                    scrollTop : 0,
-                    clientHeight : 0 ,
-                    scrollHeight:20
-                }
-            }
-            const spyhandleScroll = jest.spyOn(slateWrapperInstance, 'handleScroll')
-            slateWrapperInstance.handleScroll(event)
-            expect(spyhandleScroll).toHaveBeenCalledWith(event);
-        })
-        it("processRemoveConfirmation method - openRemovePopUp", () => {
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openRemovePopUp: true},
-                openRemovePopUp : true,
-                showAudioRemovePopup : jest.fn(),
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            const spyProcessRemoveConfirmation = jest.spyOn(slateWrapperInstance, 'processRemoveConfirmation')
-            slateWrapperInstance.processRemoveConfirmation()
-            expect(spyProcessRemoveConfirmation).toHaveBeenCalled();
-        })
-        it("processRemoveConfirmation method - openSplitPopUp", () => {
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openSplitPopUp: true},
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            const spyProcessRemoveConfirmation = jest.spyOn(slateWrapperInstance, 'processRemoveConfirmation')
-            slateWrapperInstance.processRemoveConfirmation()
-            expect(spyProcessRemoveConfirmation).toHaveBeenCalled();
-        })
-        it("toggleLockReleasePopup", () => {
-            slateWrapperInstance.state.showReleasePopup = false;
-            slateWrapperInstance.toggleLockReleasePopup(true, {
-                preventDefault : () => { return true },
-                stopPropagation: () => { return true }
-            })
-            expect(slateWrapperInstance.state.showReleasePopup).toBe(true)
-        })
-        it("debounceReleaseHandler", () => {
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openRemovePopUp: false},
-                withinLockPeriod: true,
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            let cb = jest.fn()
-            const spyDebounceReleaseHandler = jest.spyOn(slateWrapperInstance, 'debounceReleaseHandler')
-            slateWrapperInstance.debounceReleaseHandler(cb, slateWrapperInstance)
-            expect(spyDebounceReleaseHandler).toHaveBeenCalled()
-        })
-        it("closePopup", ()=> {
-            config.cachedActiveElement = {
-                element : {},
-                index : 0
-            }
-            config.tempSlateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            const spyclosePopup = jest.spyOn(slateWrapperInstance, 'closePopup')
-            slateWrapperInstance.closePopup()
-            expect(spyclosePopup).toHaveBeenCalled()
-        })
-        it("accessDeniedPopup ", () => {
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openRemovePopUp: false},
-                withinLockPeriod: true,
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props } accesDeniedPopup = {true} /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            slateWrapperInstance.accessDeniedPopup()
-            expect(slateWrapper.find('PopUp').length).toBe(0);
-        })
-        it('toggleAudioPopup - if block', () => {
-            let props = {
-                slateData: emptySlateData,
-                slateLockInfo: {
-                    isLocked: false,
-                    userId: 'c5Test01'
-                },
-                audioReducer : {
-                    openRemovePopUp : true,
-                    openSplitPopUp : false
-                },
-                permissions : [],
-                openRemovePopUp : true,
-                showBlocker : jest.fn(),
-                showAudioRemovePopup : jest.fn()
-            };
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openRemovePopUp: true},
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            const spyToggleAudioPopup = jest.spyOn(slateWrapperInstance, 'toggleAudioPopup')
-            slateWrapperInstance.toggleAudioPopup()
-            expect(spyToggleAudioPopup).toHaveBeenCalled()
-        })
-        it('toggleAudioPopup - else if block', () => {
-            let props = {
-                slateData: emptySlateData,
-                slateLockInfo: {
-                    isLocked: false,
-                    userId: 'c5Test01'
-                },
-                audioReducer : {
-                    openRemovePopUp : true,
-                    openSplitPopUp : false
-                },
-                permissions : [],
-                openRemovePopUp : true,
-                showBlocker : jest.fn(),
-                showAudioRemovePopup : jest.fn()
-            };
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            const spyToggleAudioPopup = jest.spyOn(slateWrapperInstance, 'toggleAudioPopup')
-            slateWrapperInstance.toggleAudioPopup()
-            expect(spyToggleAudioPopup).toHaveBeenCalled()
-        })
-        it("toggleWrongAudioPopup - accesDeniedPopup ", () => {
-            let props = {
-                slateData: emptySlateData,
-                slateLockInfo: {
-                    isLocked: false,
-                    userId: 'c5Test01'
-                },
-                audioReducer : {
-                    openRemovePopUp : true,
-                    openSplitPopUp : false
-                },
-                permissions : [],
-                openRemovePopUp : true,
-                showBlocker : jest.fn(),
-                showAudioRemovePopup : jest.fn()
-            };
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {}, accesDeniedPopup: true },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            const spyToggleWrongAudioPopup = jest.spyOn(slateWrapperInstance, 'toggleWrongAudioPopup')
-            slateWrapperInstance.toggleWrongAudioPopup()
-            expect(spyToggleWrongAudioPopup).toHaveBeenCalled()
-        })
-        it("toggleWrongAudioPopup - else ", () => {
-            let props = {
-                slateData: emptySlateData,
-                slateLockInfo: {
-                    isLocked: false,
-                    userId: 'c5Test01'
-                },
-                audioReducer : {
-                    openRemovePopUp : true,
-                    openSplitPopUp : false
-                },
-                permissions : [],
-                openRemovePopUp : true,
-                showBlocker : jest.fn(),
-                showAudioRemovePopup : jest.fn()
-            };
-            const localStore = mockStore({
-                slateLockReducer: { 
-                    slateLockInfo: {
-                        isLocked: true,
-                        userId: 'c5Test01'
-                    } 
-                },
-                appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {}, accesDeniedPopup: false },
-                toolbarReducer: { elemBorderToggle: true },
-                metadataReducer: { currentSlateLOData: [] },
-                audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
-                searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-                commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-                assessmentReducer:{showConfirmationPopup:false},
-                alfrescoReducer: {
-                    alfrescoAssetData: {},
-                    elementId: "urn",
-                    alfrescoListOption: [],
-                    launchAlfrescoPopup: true,
-                    editor: true,
-                    Permission: false
-                }
-            })
-            const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
-            let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-            const spyToggleWrongAudioPopup = jest.spyOn(slateWrapperInstance, 'toggleWrongAudioPopup')
-            slateWrapperInstance.toggleWrongAudioPopup()
-            expect(spyToggleWrongAudioPopup).toHaveBeenCalled()
-        })
-    })
-    xdescribe('With elements and lock status true', () => {
-        let props = {
-            slateData: slateData,
-            slateLockInfo: {
-                isLocked: true,
-                userId: 'c5Test02'
-            },
-            audioReducer : {
-                openRemovePopUp : true,
-                openSplitPopUp : false
-            },
-            permissions : [],
-            openRemovePopUp : true,
-            setSlateLock : ()=>{},
-            showBlocker : ()=>{},
-            modifyState : ()=>{}
-        };
-        const slateWrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>)
-        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-        it('Simulating splithandlerfunction with slate data function for sectionbreak elm', () => {
-            slateWrapper.find('SlateWrapper').instance().state.showLockPopup = true;
-            slateWrapper.find('SlateWrapper').instance().checkLockStatus = () => { return true };
-            slateWrapper.find('SlateWrapper').instance().showLockPopup();
-            slateWrapper.find('SlateWrapper').instance().checkLockStatus();
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('', '', '', {}, { contentUrn: '' }, '');
-            slateWrapper.find('SlateWrapper').instance().checkSlateLockStatus();
-        })
-        it("Simulating setListDropRef", ()=> {
-            let slateWrapperInstance = slateWrapper.find('SlateWrapper').instance()
-            slateWrapperInstance.setListDropRef({})
-        })
-    })
-    
-})
-xdescribe('splihandler function', () => {
-    let props = {
-        slateData,
-        slateLockInfo: {
-            isLocked: false,
-            userId: 'c5Test01'
-        },
-        audioReducer : {
-            openRemovePopUp : true,
-            openSplitPopUp : false
-        },
-        permissions : [],
-        openRemovePopUp : true,
-        showBlocker:jest.fn()
-    };
-    const localStore = mockStore({
-        slateLockReducer: { 
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            } 
-        },
-        appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-        toolbarReducer: { elemBorderToggle: true },
-        metadataReducer: { currentSlateLOData: [] },
-        audioReducer: {openRemovePopUp: false},
-        searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-        commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-        assessmentReducer:{showConfirmationPopup:false},
-        alfrescoReducer: {
-            alfrescoAssetData: {},
-            elementId: "urn",
-            alfrescoListOption: [],
-            launchAlfrescoPopup: true,
-            editor: true,
-            Permission: false
-        }
-    })
-    //config.savingInProgress=true
-    const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
-    let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-    config.userId = "test"
-    it('Simulating splithandlerfunction with slate data function for sectionbreak elm', () => {
-     slateWrapperInstance.splithandlerfunction('section-break-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for text-elem', () => {
-        slateWrapperInstance.splithandlerfunction('text-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for image-elem', () => {
-        slateWrapperInstance.splithandlerfunction('image-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for image-elem', () => {
-        slateWrapperInstance.splithandlerfunction('audio-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for image-elem', () => {
-        slateWrapperInstance.splithandlerfunction('interactive-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for assessment-elem', () => {
-        slateWrapperInstance.splithandlerfunction('assessment-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for container-elem', () => {
-        slateWrapperInstance.splithandlerfunction('container-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for opener-elem', () => {
-        slateWrapperInstance.splithandlerfunction('opener-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for worked-exp-elem', () => {
-        slateWrapperInstance.splithandlerfunction('worked-exp-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for metadata-anchor container-introduction', () => {
-        config.slateType = "container-introduction";
-        slateWrapperInstance.splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for metadata-anchor', () => {
-        config.slateType = "";
-        slateWrapperInstance.splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for poetry element', () => {
-        config.slateType = "";
-        slateWrapperInstance.splithandlerfunction('poetry-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for default', () => {
-        slateWrapperInstance.splithandlerfunction('default', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for citation-elem', () => {
-        slateWrapperInstance.splithandlerfunction('citation-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for citations-group-elem', () => {
-        slateWrapperInstance.splithandlerfunction('citations-group-elem', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('Simulating splithandlerfunction with slate data function for multi-column-group-column-3', () => {
-        slateWrapperInstance.splithandlerfunction('multi-column-group-column-3', '', '', {}, { contentUrn: '' }, '')
-    })
-    it('openWrongAudioPopup', () => {
-        let props = {
-            slateData,
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            audioReducer : {
-                openRemovePopUp : false,
-                openWrongAudioPopup : true
-            },
-            permissions : [],
-            openRemovePopUp : false,
-            openWrongAudioPopup : true,
-            openSplitPopUp:false,
-            showBlocker:jest.fn()
-        };
-        const localStore = mockStore({
-            slateLockReducer: { 
-                slateLockInfo: {
-                    isLocked: false,
-                    userId: 'c5Test01'
-                } 
-            },
-            appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-            toolbarReducer: { elemBorderToggle: true },
-            metadataReducer: { currentSlateLOData: [] },
-            audioReducer: {openRemovePopUp: false, openWrongAudioPopup : true, openSplitPopUp:false},
-            searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-            commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-            assessmentReducer:{showConfirmationPopup:false},
-            alfrescoReducer: {
-                alfrescoAssetData: {},
-                elementId: "urn",
-                alfrescoListOption: [],
-                launchAlfrescoPopup: true,
-                editor: true,
-                Permission: false
-            }
-        })
-        //config.savingInProgress=true
-        const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
-        let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-        config.userId = "test"
-        slateWrapperInstance.showAudioRemoveConfirmationPopup()
-    })
-    it('showLockReleasePopup', () => {
-        let props = {
-            slateData,
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            audioReducer : {
-                openRemovePopUp : false,
-                openWrongAudioPopup : true
-            },
-            permissions : [],
-            openRemovePopUp : false,
-            openWrongAudioPopup : true,
-            openSplitPopUp:false,
-            showBlocker:jest.fn()
-        };
-        const localStore = mockStore({
-            slateLockReducer: { 
-                slateLockInfo: {
-                    isLocked: false,
-                    userId: 'c5Test01'
-                } 
-            },
-            appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-            toolbarReducer: { elemBorderToggle: true },
-            metadataReducer: { currentSlateLOData: [] },
-            audioReducer: {openRemovePopUp: false, openWrongAudioPopup : true, openSplitPopUp:false},
-            searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-            commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-            assessmentReducer:{showConfirmationPopup:false},
-            alfrescoReducer: {
-                alfrescoAssetData: {},
-                elementId: "urn",
-                alfrescoListOption: [],
-                launchAlfrescoPopup: true,
-                editor: true,
-                Permission: false
-            }
-        })
-        
-        //config.savingInProgress=true
-        const slateWrapper = mount(<Provider store={localStore}><SlateWrapper {...props} /> </Provider>)
-        let slateWrapperInstance = slateWrapper.find("SlateWrapper").instance()
-        config.userId = "test"
-        slateWrapperInstance.state.showReleasePopup = true;
-        slateWrapperInstance.showLockReleasePopup()
-        slateWrapperInstance.showAudioRemoveConfirmationPopup()
-    })
-    it('showLockReleasePopup', () => {
-        slateWrapperInstance.showAssessmentConfirmationPopup()
-        slateWrapperInstance.toggleAssessmentPopup()
-
-    })
-
-})
-
 const initialState = {
     slateLockReducer: { slateLockInfo: {
         isLocked: false,
@@ -1478,8 +654,8 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
     })
-    describe("1.31 Test - toggleAssessmentPopup ", () => {
-        it('1.31.1  Test - if case ', () => {
+    describe("1.33 Test - toggleAssessmentPopup ", () => {
+        it('1.33.1  Test - if case ', () => {
             const newInitialState = {...initialState, assessmentReducer: {showConfirmationPopup: true}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'toggleAssessmentPopup')
@@ -1487,10 +663,169 @@ describe("SlateWrapper Component", () => {
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
-        it('1.31.2  Test - else case ', () => {
+        it('1.33.2  Test - else case ', () => {
             const compInstance = slateWrapInstance(props);
             const spy = jest.spyOn(compInstance, 'toggleAssessmentPopup')
             compInstance.toggleAssessmentPopup(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.34 Test - showAudioRemoveConfirmationPopup ", () => {
+        it('1.34.1  Test - if case ', () => {
+            const newInitialState = {...initialState, audioReducer: {openWrongAudioPopup: true}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'showAudioRemoveConfirmationPopup')
+            compInstance.showAudioRemoveConfirmationPopup(true, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.35 Test - showImageGlossaryRemoveConfirmationPopup ", () => {
+        it('1.35.1  Test - if case (this.props.removeGlossaryImage)', () => {
+            const newInitialState = {...initialState, appStore: {removeGlossaryImage: true}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'showImageGlossaryRemoveConfirmationPopup')
+            compInstance.showImageGlossaryRemoveConfirmationPopup(true, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.35.2  Test - else if case (this.props.openWrongImagePopup)', () => {
+            const newInitialState = {...initialState, appStore: {openWrongImagePopup: true}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'showImageGlossaryRemoveConfirmationPopup')
+            compInstance.showImageGlossaryRemoveConfirmationPopup(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.36 Test - toggleImageGlossaryPopup ", () => {
+        it('1.36.1  Test - if case (this.props.removeGlossaryImage)', () => {
+            const newInitialState = {...initialState, appStore: {removeGlossaryImage: true}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'toggleImageGlossaryPopup')
+            compInstance.toggleImageGlossaryPopup(true, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.36.2  Test - else case ', () => {
+            const newInitialState = {...initialState, appStore: {removeGlossaryImage: false}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'toggleImageGlossaryPopup')
+            compInstance.toggleImageGlossaryPopup(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.37 Test - toggleWrongImagePopup ", () => {
+        it('1.37.1  Test - if case (this.props.removeGlossaryImage)', () => {
+            const newInitialState = {...initialState, appStore: {accesDeniedPopup: true}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'toggleWrongImagePopup')
+            compInstance.toggleWrongImagePopup(true, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.37.2  Test - else case ', () => {
+            const newInitialState = {...initialState, appStore: {accesDeniedPopup: false}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'toggleWrongImagePopup')
+            compInstance.toggleWrongImagePopup(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.38 Test - processRemoveImageGlossaryConfirmation ", () => {
+        it('1.38.1  Test - if case (this.props.removeGlossaryImage)', () => {
+            const newInitialState = {...initialState, appStore: {removeGlossaryImage: true}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'processRemoveImageGlossaryConfirmation')
+            compInstance.processRemoveImageGlossaryConfirmation(true, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.38.2  Test - else case ', () => {
+            const newInitialState = {...initialState, appStore: {removeGlossaryImage: false}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'processRemoveImageGlossaryConfirmation')
+            compInstance.processRemoveImageGlossaryConfirmation(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.39 Test - accessDeniedPopup ", () => {
+        xit('1.39.1  Test - if case (this.props.accesDeniedPopup)', () => {
+            const newInitialState = {...initialState, appStore: {accesDeniedPopup: true}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'accessDeniedPopup')
+            compInstance.accessDeniedPopup(true, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.39.2  Test - else case ', () => {
+            const newInitialState = {...initialState, appStore: {accesDeniedPopup: false}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'accessDeniedPopup')
+            compInstance.accessDeniedPopup(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.40 Test - closePopup ", () => {
+        it('1.40.1  Test - if case (config.isSavingElement)', () => {
+            config.isSavingElement = true;
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'closePopup')
+            compInstance.closePopup();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+       
+        it('1.40.2  Test - if case ', () => {
+            config.cachedActiveElement = {element: {id: "1231", status: "approved",index: 1}};
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            config.tempSlateManifestURN = "s-12345";
+            const newProps = {...props};
+            newProps.slateData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"].status = "wip";
+            newProps.slateData["s-12345"] = {status: "approved",id:"id-123"};
+            config.tcmStatus = true;
+            config.isSavingElement = false;
+            const compInstance = slateWrapInstance(newProps);
+            const spy = jest.spyOn(compInstance, 'closePopup')
+            compInstance.closePopup(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.40.3  Test - (config.cachedActiveElement.element.status === "approved" ', () => {
+            config.cachedActiveElement = {element: {id: "1231", status: "approved",index: 1}};
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            config.tempSlateManifestURN = "s-12345";
+            const newProps = {...props};
+            newProps.slateData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"].status = "wip";
+            newProps.slateData["s-12345"] = {status: "approved",id:"id-123"};
+            config.tcmStatus = true;
+            config.isSavingElement = false;
+            jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+                return { offsetTop: 10 };
+            })
+            const compInstance = slateWrapInstance(newProps);
+            const spy = jest.spyOn(compInstance, 'closePopup')
+            compInstance.closePopup(false, 1);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.40.2  Test - else cases ', () => {
+            config.cachedActiveElement = {element: {id: "1231", status: "wip",index: 1}};
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            config.tempSlateManifestURN = "s-12345";
+            const newProps = {...props};
+            newProps.slateData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"].status = "approved";
+            newProps.slateData["s-12345"] = {status: "wip",id:"id-123"};
+            config.tcmStatus = false;
+            config.isSavingElement = false;
+            const compInstance = slateWrapInstance(newProps);
+            const spy = jest.spyOn(compInstance, 'closePopup')
+            compInstance.closePopup(false, 1);
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
