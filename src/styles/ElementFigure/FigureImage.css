@@ -80,9 +80,9 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     width:130px !important;
     border-bottom: 2px solid #737373;
     margin: 8px 0 !important;
-    padding: 15px 4px 4px 4px !important;
+    padding: 15px 4px 6px 4px !important;
     font-weight: 500 !important;
-    height:0;
+    height:40px;
     z-index:2;
     font-family: 'Open Sans', sans-serif !important;
     white-space: nowrap;
@@ -106,9 +106,9 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     width:74px !important;
     border-bottom: 2px solid #737373;
     margin: 8px 0 !important;
-    padding: 15px 4px 4px 4px !important;
+    padding: 15px 4px 6px 4px !important;
     font-weight: 500 !important;
-    height:0;
+    height:40px;
     z-index:2;
     font-family: 'Open Sans', sans-serif !important;
     white-space: nowrap;
