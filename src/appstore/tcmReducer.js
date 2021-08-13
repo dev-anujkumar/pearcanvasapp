@@ -12,7 +12,8 @@ const INITIAL_STATE = {
     elementData:"",
     elementEditor: '',
     tcmStatus: false,
-    spinnerStatus: false
+    spinnerStatus: false,
+    prevElementId : ''
 }
 
 const INITIAL_ACTION = {
@@ -40,7 +41,8 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                     elementData:action.payload.elemData,
                     elementEditor: action.payload.elementEditor,
                     tcmStatus: action.payload.tcmStatus,
-                    spinnerStatus:action.payload.spinnerStatus
+                    spinnerStatus:action.payload.spinnerStatus,
+                    prevElementId: action.payload.prevElementPopup
                 }
             case SPINNER:
                 return{

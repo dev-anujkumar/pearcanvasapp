@@ -62,10 +62,9 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
-import {closeTcmPopup} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import {closeTcmPopup, handleTCM} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
-import {handleTCM} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 
@@ -2040,8 +2039,9 @@ class ElementContainer extends Component {
     handleTCMLaunch = (event, element) => {
         const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE } = TcmConstants
         const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE]
+        const {prevSelectedElement, isTCMCanvasPopupLaunched} = this.props
             if (element?.type && tcmPopupSupportedElements.includes(element.type)) {
-                this.props.handleTCM(element, this.props.index)
+                this.props.handleTCM(element, this.props.index, isTCMCanvasPopupLaunched, prevSelectedElement)
             } else {
                 if (config.isSavingElement) {
                     return false
@@ -2180,8 +2180,8 @@ const mapDispatchToProps = (dispatch) => {
         storeOldAssetForTCM: (data) => {
             dispatch(storeOldAssetForTCM(data))
         },
-        handleTCM: (element) => {
-            dispatch(handleTCM(element))
+        handleTCM: (element, index, isTCMCanvasPopupLaunched, prevSelectedElement) => {
+            dispatch(handleTCM(element, index, isTCMCanvasPopupLaunched, prevSelectedElement))
         },
     }
 }
@@ -2211,7 +2211,9 @@ const mapStateToProps = (state) => {
         assessmentReducer: state.assessmentReducer,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
         multipleColumnData: state.appStore.multipleColumnData,
-        oldFigureDataForCompare: state.appStore.oldFigureDataForCompare
+        oldFigureDataForCompare: state.appStore.oldFigureDataForCompare,
+        isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
+        prevSelectedElement: state.tcmReducer.prevElementId
     }
 }
 
