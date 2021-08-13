@@ -8,7 +8,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-const store = mockStore({
+const store1 = mockStore({
     slateLockReducer: { slateLockInfo: {} },
     appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
     toolbarReducer: { elemBorderToggle: true },
@@ -281,13 +281,6 @@ describe('Testing <SlateWrapper> Component', () => {
         })
         it('Simulating handleSplitSlate with slate data function', () => {
             slateWrapperInstance.handleSplitSlate()
-        })
-        it('swap data', () => {
-            let event={oldDraggableIndex:"",
-            newDraggableIndex:""}
-            const spySwapData = jest.spyOn(slateWrapperInstance, 'prepareSwapData')
-            slateWrapperInstance.prepareSwapData(event)
-            expect(spySwapData).toHaveBeenCalled();
         })
         it('releaseSlateLock data', () => {
             const spyReleaseSlate = jest.spyOn(slateWrapperInstance, 'releaseSlateLock')
@@ -896,4 +889,283 @@ xdescribe('splihandler function', () => {
 
     })
 
+})
+
+const initialState = {
+    slateLockReducer: { slateLockInfo: {
+        isLocked: false,
+        userId: 'c5Test01'
+    }, withinLockPeriod: true },
+    appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
+    toolbarReducer: { elemBorderToggle: true },
+    metadataReducer: { currentSlateLOData: [] },
+    audioReducer: {openRemovePopUp: false},
+    searchReducer: {searchTerm: 'searchTerm-123', parentId: 'parentId-123', deeplink: false, scroll: ""},
+    commentSearchReducer: { commentSearchTerm: 'commentSearch-123', parentId: 'commentP-123', scrollTop: "10" },
+    assessmentReducer:{showConfirmationPopup:false},
+    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    }
+}
+const slateWrapInstance = (props, initialSt = initialState) => {
+    const store = mockStore(initialSt);
+    const component = mount(<Provider store={store}><SlateWrapper {...props} /></Provider>);
+    return component.find('SlateWrapper').instance();
+}
+
+describe("SlateWrapper Component", () => {
+    let props = {
+        slateData: emptySlateData,
+        permissions : [],
+        toggleTocDelete: true,
+        openRemovePopUp : true,
+        loadMorePages:jest.fn(),
+        showSlateLockPopupValue:true,
+        showConfirmationPopup:true,
+        showBlocker:jest.fn(),
+        releaseSlateLock: jest.fn(),
+        commentSearchScrollTop: "123",
+        setSlateLock: jest.fn()
+    };
+    it("1.2 Test - componentDidMount ", () => {
+        const elementDiv = document.createElement('div');
+        elementDiv.setAttribute("id", "cypress-0");
+        document.body.appendChild(elementDiv);
+
+        const compInstance = slateWrapInstance(props);
+		const spy = jest.spyOn(compInstance, 'componentDidMount')
+		compInstance.componentDidMount();
+		expect(spy).toHaveBeenCalled();
+		spy.mockClear()
+    })
+    describe("1.3 Test - componentDidUpdate ", () => {
+        it("1.3.1 Test - componentDidUpdate if cases", () => {
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute("data-id", "searchParent");
+            elementDiv.setAttribute("id", "slateWrapper");
+            elementDiv.setAttribute("scrollTop", "5");
+            document.body.appendChild(elementDiv);
+
+            jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+                return { offsetTop: 10 };
+            })
+
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+            compInstance.componentDidUpdate();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.3.2 Test - else cases (searchParent/commentSearchParent !== '')", () => {
+            const newInitialState = {
+                ...initialState,
+                searchReducer: {searchTerm: '', parentId: '', deeplink: false, scroll: ""},
+                commentSearchReducer: { commentSearchTerm: '', parentId: '', scrollTop: "10" }
+            }
+
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+            compInstance.componentDidUpdate();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.3.3 Test - else cases (commentSearchNode/commentSearchScroll/searchNode !== '')", () => {
+            const newInitialState = {
+                ...initialState,
+                searchReducer: {searchTerm: '', parentId: 'parentId-123', deeplink: false, scroll: ""},
+                commentSearchReducer: { commentSearchTerm: '', parentId: 'commentP-123', scrollTop: "", scroll:"10" }
+            }
+
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+            compInstance.componentDidUpdate();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.4 Test - handleScroll ", () => {
+        it("1.4.1 Test - handleScroll case if(config.totalPageCount <= config.page)", () => {
+            config.totalPageCount = 5; config.page = 7;
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'handleScroll')
+            compInstance.handleScroll();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.4.2 Test - handleScroll case (config.totalPageCount > config.page)", () => {
+            config.totalPageCount = 10; config.page = 7;
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            const event = {target: { scrollTop: 100, clientHeight: 100, scrollHeight: 100 }};
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'handleScroll');
+            compInstance.handleScroll(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.4.3 Test - handleScroll Else Cases", () => {
+            config.totalPageCount = 10; config.page = 7;
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc96546622ab";
+            const event = {target: { scrollTop: 10, clientHeight: 100, scrollHeight: 100 }};
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'handleScroll');
+            compInstance.handleScroll(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    });
+    it("1.4A Test -  setListDropRef ", ()=> {
+        const elementDiv = document.createElement('div');
+        elementDiv.setAttribute("data-id", "12345");
+
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'setListDropRef')
+        compInstance.setListDropRef(elementDiv);
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    describe("1.5 Test - handleClickOutside ", () => {
+        it("1.5.1 Test -  if case - (this.listDropRef) ", () => {
+            const elementDiv = document.createElement('div');
+            const elementSpan = document.createElement('span');
+            elementSpan.setAttribute("class", "fa-list-ol");
+            const event = {target: elementSpan};
+
+            const compInstance = slateWrapInstance(props);
+            compInstance.setListDropRef(elementDiv);
+            const spy = jest.spyOn(compInstance, 'handleClickOutside')
+            compInstance.handleClickOutside(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.5.2 Test -  else case (event.target.classList.contains('fa-list-ol') ", () => {
+            const elementDiv = document.createElement('div');
+            const elementSpan = document.createElement('span');
+            elementSpan.setAttribute("class", "fr-active");
+            const event = {target: elementSpan};
+
+            jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+                return { querySelector: () => { return elementSpan }}
+            });
+            const compInstance = slateWrapInstance(props);
+            compInstance.setListDropRef(elementDiv);
+            const spy = jest.spyOn(compInstance, 'handleClickOutside')
+            compInstance.handleClickOutside(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.5.3 Test -  else case (this.listDropRef) ", () => {
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'handleClickOutside')
+            compInstance.handleClickOutside({});
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    it('1.6 Test - prepareSwapData ', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        const event = { oldDraggableIndex: 1, newDraggableIndex: 0 };
+        const newProps = {...props, slateData: slateData}
+        const compInstance = slateWrapInstance(newProps);
+        const spy = jest.spyOn(compInstance, 'prepareSwapData')
+        compInstance.prepareSwapData(event);
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('1.7.1 Test - checkOpener if Case', () => {
+        config.isCO = "true";
+        const event = { newDraggableIndex: 0 };
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'checkOpener')
+        compInstance.checkOpener(event);
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('1.7.2 Test - checkOpener else case', () => {
+        config.isCO = "";
+        const event = { newDraggableIndex: 0 };
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'checkOpener')
+        compInstance.checkOpener(event);
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('1.8  Test - releaseSlateLock ', () => {
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'releaseSlateLock')
+        compInstance.releaseSlateLock();
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('1.9  Test - debounceReleaseHandler ', () => {
+        const callback = jest.fn();
+        const context = { props: {
+            withinLockPeriod: true,
+            slateData: slateData,
+            setLockPeriodFlag: jest.fn()
+        }};
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'debounceReleaseHandler')
+        compInstance.debounceReleaseHandler(callback, context);
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    describe("1.10 Test - handleClickOutside ", () => {
+        it('1.10.1  Test - if case ', () => {
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'setSlateLock')
+            compInstance.setSlateLock("1234", "4321");
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.10.2  Test - else case ', () => {
+            config.projectUrn = "p-123";
+            const newInitialState = {...initialState, slateLockReducer: { slateLockInfo: {}, withinLockPeriod: false }}
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'setSlateLock')
+            compInstance.setSlateLock("1234", "4321");
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    it('1.11  Test - toggleLockReleasePopup  ', () => {
+        const event = {preventDefault: jest.fn(), stopPropagation: jest.fn()}
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'toggleLockReleasePopup')
+        compInstance.toggleLockReleasePopup(true, event);
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('1.12  Test - prohibitPropagation  ', () => {
+        const event = {preventDefault: jest.fn(), stopPropagation: jest.fn()}
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'prohibitPropagation')
+        compInstance.prohibitPropagation(event);
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    describe("1.10 Test - checkLockStatus ", () => {
+        it('1.10.1  Test - if case ', () => {
+            const newInitialState = {...initialState, slateLockReducer: { slateLockInfo: {
+                isLocked: true,
+                userId: 'c5Test01'
+            }, withinLockPeriod: true }}
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'checkLockStatus')
+            compInstance.checkLockStatus();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.10.2  Test - else case ', () => {
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'checkLockStatus')
+            compInstance.checkLockStatus();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
 })
