@@ -108,6 +108,14 @@ class PopUp extends React.Component {
             )
         } else
             if (props.showDeleteElemPopup) {
+                if(props.isOwnerSlate){
+                    return(
+                        <div className={`dialog-buttons ${props.assessmentClass}`}>
+                        <span className="lo-save-button" onClick={props.deleteElement}>{props.proceedButton}</span>
+                        <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                    </div>
+                    )
+                }
                 return (
                     <div className={`dialog-buttons ${props.assessmentClass}`}>
                         <span className="save-button" onClick={props.deleteElement}>{props.yesButton}</span>
@@ -271,6 +279,14 @@ class PopUp extends React.Component {
             if (props.sectionBreak) {
                 return (
                     <div className="delete-element-text">{SECTION_BREAK_DELETE_TEXT}</div>
+                )
+            }
+            else if (props.isOwnerSlate) {
+                return (
+                    <>
+                        <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                        <div className="delete-element-text">{props.OwnersDeleteDialogText}<br />{'This content will be deleted from those projects as well.'}</div>
+                    </>
                 )
             }
             else {

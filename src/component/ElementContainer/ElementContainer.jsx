@@ -20,7 +20,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -1717,6 +1717,7 @@ class ElementContainer extends Component {
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false;
         const isSubscribersSlate = this.props.projectSharingRole === "SUBSCRIBER" && this.props.projectSubscriptionDetails ? true : false
+        let isOwner=this.props.projectSharingRole ==="OWNER" ? true :false
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.renderCopyComponent(this.props, index, inContainer, tcm)}
@@ -1751,6 +1752,9 @@ class ElementContainer extends Component {
                     saveContent={this.saveNewComment}
                     rows={COMMENTS_POPUP_ROWS}
                     dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+                    isOwnerSlate={isOwner}
+                    warningHeaderText={`Warning`}
+                    OwnersDeleteDialogText={OWNERS_ELM_DELETE_DIALOG_TEXT}
                     showDeleteElemPopup={this.state.showDeleteElemPopup}
                     sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
