@@ -48,6 +48,7 @@ class FigureImage extends Component {
         let figureLabelValue = this.state;
         figureLabelValue = dropdownValueAtIntialize(dropdownData, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
+        this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
     }
 
     componentWillUnmount() {
@@ -277,6 +278,7 @@ class FigureImage extends Component {
         if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
         }
+        this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
     }
 
     onFigureImageFieldBlur = (id) => {
