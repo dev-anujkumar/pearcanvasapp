@@ -36,3 +36,32 @@ export const getAlfrescositeResponse = (elementId, callback) => {
             //console.log("error", error);
         })
 }
+
+
+export const handleSiteOptionsDropdown = (alfrescoPath, id, locationData) => {
+    let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
+        let SSOToken = config.ssoToken;
+        return axios.get(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'ApiKey': config.CMDS_APIKEY,
+                    'Content-Type': 'application/json',
+                    'PearsonSSOSession': SSOToken
+                }
+            })
+            .then(function (response) {
+
+                let payloadObj = {
+                    launchAlfrescoPopup: true,
+                    alfrescoPath: alfrescoPath,
+                    alfrescoListOption: response.data.list.entries,
+                    id,
+                    locationData
+                }
+                return payloadObj;
+            })
+            .catch(function (error) {
+                console.log("Error IN SITE API", error)
+            });
+}

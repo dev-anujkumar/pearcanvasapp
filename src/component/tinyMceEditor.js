@@ -201,7 +201,6 @@ export class TinyMceEditor extends Component {
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
                     if (activeElement && activeElement.getAttribute('id') === 'cypress-' + this.props.index) {
-                        let figureFields = ['Number', 'Label Name', 'Title', 'Caption', 'Credit'];
                         let currentNode = document.getElementById('cypress-' + this.props.index)
                         let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
                         let nodeContent = (currentNode && !currentNode.innerText.trim().length) ? true : false
@@ -216,7 +215,7 @@ export class TinyMceEditor extends Component {
                             else {
                                 activeElement.classList.remove('place-holder')
                             }
-                        } else if (this.props.element.type === 'figure' && figureFields.includes(this.props.placeholder)) {
+                        } else if (this.props.element.type === 'figure' && config.figureFieldsPlaceholders.includes(this.props.placeholder)) {
                             activeElement.classList.remove('place-holder');
                         }
                         else if (content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath) {
@@ -919,7 +918,6 @@ export class TinyMceEditor extends Component {
             if (activeElement) {
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                let figureFields = ['Number', 'Label Name', 'Title', 'Caption', 'Credit'];
                 if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
@@ -943,7 +941,7 @@ export class TinyMceEditor extends Component {
                 }
                 else if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath || isContainsBlankLine) {
                     activeElement.classList.remove('place-holder')
-                } else if (this.props.element.type === 'figure' && figureFields.includes(this.props.placeholder)) {
+                } else if (this.props.element.type === 'figure' && config.figureFieldsPlaceholders.includes(this.props.placeholder)) {
                     activeElement.classList.remove('place-holder');
                 }
                 else {
@@ -2887,7 +2885,6 @@ export class TinyMceEditor extends Component {
     * Defines initial placeholder
     */
     handlePlaceholder = () => {
-        let figureFields = ['Number', 'Label Name', 'Title', 'Caption', 'Credit'];
         if ((this.props.element && this.props.element.type === "element-list") || (this.props.currentElement && this.props.currentElement.type === 'element-list')) {
             this.placeHolderClass = '';
         }
@@ -2934,7 +2931,7 @@ export class TinyMceEditor extends Component {
             else {
                 this.placeHolderClass = '';
             }
-        } else if (this.props.element.type === 'figure' && figureFields.includes(this.props.placeholder)) {
+        } else if (this.props.element.type === 'figure' && config.figureFieldsPlaceholders.includes(this.props.placeholder)) {
             this.placeHolderClass = '';
         } else {
             let testElem = document.createElement('div');

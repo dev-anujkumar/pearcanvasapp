@@ -7,7 +7,7 @@ import {
     DEFAULT_IMAGE_SOURCE
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
-import { getAlfrescositeResponse, handleAlfrescoSiteUrl } from './AlfrescoSiteUrl_helper.js';
+import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import figureData from './figureTypes';
@@ -21,6 +21,7 @@ import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg'
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 
+const dropdownData = ['figure', 'table', 'equation', 'exhibit', 'map'];
 class FigureImage extends Component {
     constructor(props) {
         super(props);
@@ -45,7 +46,6 @@ class FigureImage extends Component {
             })
         })
         let figureHtmlData = getLabelNumberTitleHTML(this.props.model);
-        const dropdownData = ['figure', 'table', 'equation', 'exhibit', 'map'];
         let figureLabelValue = this.state;
         let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
@@ -191,7 +191,7 @@ class FigureImage extends Component {
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
      */
-    handleC2MediaClick = (e) => {
+    handleC2MediaClick = async (e) => {
         this.props.handleFocus();
         if (hasReviewerRole()) {
             return true
@@ -238,12 +238,12 @@ class FigureImage extends Component {
             }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData)
+                let payloadObj = await handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData);
+                this.props.alfrescoPopup(payloadObj);
             } else {
                 this.props.accessDenied(true)
             }
         }
-
     }
 
     /**
@@ -256,44 +256,17 @@ class FigureImage extends Component {
         this.handleC2MediaClick(e);
     }
 
-    handleSiteOptionsDropdown = (alfrescoPath, id, locationData) => {
-        let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        let SSOToken = config.ssoToken;
-        return axios.get(url,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
-                    'PearsonSSOSession': SSOToken
-                }
-            })
-            .then(function (response) {
-
-                let payloadObj = {
-                    launchAlfrescoPopup: true,
-                    alfrescoPath: alfrescoPath,
-                    alfrescoListOption: response.data.list.entries,
-                    id,
-                    locationData
-                }
-                that.props.alfrescoPopup(payloadObj)
-            })
-            .catch(function (error) {
-                console.log("Error IN SITE API", error)
-            });
-    }
-
     changeFigureLabel = (e, data) => {
-        this.setState({ figureLabelValue: data })
-        const dropdownData = ['Figure', 'Table', 'Equation', 'Exhibit', 'Map'];
-        if (dropdownData.includes(data)) {
-            document.getElementById(`cypress-${this.props.index}-0`).innerHTML = `${data}`;
-        } else {
-            document.getElementById(`cypress-${this.props.index}-0`).innerHTML = '';
+        if (!(this.state.figureLabelValue === data)) {
+            this.setState({ figureLabelValue: data });
+            const dropdownOptions = ['Figure', 'Table', 'Equation', 'Exhibit', 'Map'];
+            if (dropdownOptions.includes(data)) {
+                document.getElementById(`cypress-${this.props.index}-0`).innerHTML = `${data}`;
+            } else {
+                document.getElementById(`cypress-${this.props.index}-0`).innerHTML = '';
+            }
+            this.props.handleBlur();
         }
-        this.props.handleBlur();
     }
 
     handleFigureDropdown = () => {
@@ -310,7 +283,7 @@ class FigureImage extends Component {
 
     onFigureImageFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
-        if (labelElement?.nextElementSibling) {
+        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
         }
     }
@@ -349,7 +322,6 @@ class FigureImage extends Component {
             figCreditClass = figureAlignment['figCreditClass'];
 
         let figureHtmlData = getLabelNumberTitleHTML(model);
-        const dropdownData = ['figure', 'table', 'equation', 'exhibit', 'map'];
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
