@@ -558,11 +558,19 @@ export const removeMathmlImageCache = (dataHTML) => {
     for (let index = 0; index < mathMlImages.length; index++) {
         let imgSrc = mathMlImages[index].getAttribute('src');
         if (imgSrc) {
-            imgSrc = imgSrc.replace(/(?:\.png).*?[\"]/g, '.png?' + (new Date()).getTime() + '"');
-            mathMlImages[index].setAttribute('src', imgSrc);
+            mathMlImages[index].setAttribute('src', fetchUpdatedImageUrl(imgSrc));
         }
     }
     let finalDataHTML = hiddenDiv.innerHTML;
     document.body.removeChild(hiddenDiv);
     return finalDataHTML;
+}
+
+/**
+ * This function returns updated url with new time stamp.
+ * @param {string} url
+ */
+export const fetchUpdatedImageUrl = (url) => {
+    // Updated url for .png images.
+    return `${url.split('.png?')[0]}.png?${(new Date()).getTime()}`;
 }
