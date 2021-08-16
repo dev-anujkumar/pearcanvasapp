@@ -1208,6 +1208,30 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
             spyupdateElementInStore.mockClear()
         })
+        it("updateElementInStore - asideData - showhide", () => {
+            let store = mockStore(() => initialState);
+            let args = {
+                updatedData,
+                asideData: { ...asideData, type: 'showhide' },
+                parentUrn: null,
+                elementIndex: '0-1-1',
+                showHideType: null,
+                parentElement,
+                dispatch: store.dispatch,
+                newslateData: slateLevelData.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
         it("updateStore - approved element case", () => {
             const store = mockStore(() => initialState);
             
@@ -1275,6 +1299,74 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateStore).toHaveReturnedWith(false);
             spyupdateStore.mockClear()
         })
+        it("Versioned element - updateNewVersionElementInStore - asideData - groupedcontent condition", () => {
+            let args = { 
+                updatedData: {...updatedData, pageNumberRef: "1"}, 
+                asideData: {...asideData, parent: {type: 'groupedcontent'}},
+                dispatch: jest.fn(),
+                versionedData: {...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b", newParentVersion: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c'},
+                elementIndex: "1-2-2-1",
+                parentElement,
+                fetchSlateData: jest.fn(),
+                newslateData: slateLevelData,
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+            updateHelpers.updateNewVersionElementInStore(args)
+            expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+            spyUpdateNewVersionElementInStore.mockClear()
+        })
+        it("Versioned element - updateNewVersionElementInStore - asideData - newParentVersion", () => {
+            let args = {
+                updatedData: { ...updatedData, pageNumberRef: "1" },
+                asideData: { ...asideData, parent: { type: 'groupedcontent' } },
+                dispatch: jest.fn(),
+                versionedData: { ...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b", newParentVersion: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c' },
+                elementIndex: "1-2-2",
+                parentElement,
+                fetchSlateData: jest.fn(),
+                newslateData: slateLevelData,
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+            updateHelpers.updateNewVersionElementInStore(args)
+            expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+            spyUpdateNewVersionElementInStore.mockClear()
+        })
+        it("Versioned element - updateNewVersionElementInStore - asideData - showhide and groupedcontent", () => {
+            let args = {
+                updatedData: { ...updatedData, pageNumberRef: "1" },
+                asideData: { ...asideData, type: 'showhide', grandParent: {asideData: {type: 'element-aside', parent: {type: 'groupedcontent'}}}},
+                dispatch: jest.fn(),
+                versionedData: { ...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b", newParentVersion: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c' },
+                elementIndex: "1-2-2",
+                parentElement,
+                fetchSlateData: jest.fn(),
+                newslateData: slateLevelData,
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+            updateHelpers.updateNewVersionElementInStore(args)
+            expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+            spyUpdateNewVersionElementInStore.mockClear()
+        })
+        it("Versioned element - updateNewVersionElementInStore - asideData - newParentVersion", () => {
+            let args = {
+                updatedData: { ...updatedData, pageNumberRef: "1", sectionType: "postertextobject", elementParentEntityUrn:'urn:pearson:entity:8a49e877-144a-4750-92d2-81d5188d8e0b'},
+                asideData: null,
+                dispatch: jest.fn(),
+                versionedData: { ...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b", newParentVersion: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c' },
+                elementIndex: "1-2-2",
+                parentElement: {...parentElement, type:'popup'},
+                fetchSlateData: jest.fn(),
+                newslateData: slateLevelData,
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+            updateHelpers.updateNewVersionElementInStore(args)
+            expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+            spyUpdateNewVersionElementInStore.mockClear()
+        })
     })
     describe("TCM helper methods", () => {
         config.isCreateGlossary = false
@@ -1319,6 +1411,73 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyprepareDataForUpdateTcm).toHaveBeenCalled()
             spyprepareDataForUpdateTcm.mockClear()
         }) 
+        it("prepareDataForUpdateTcm - figuretype condition", async () => {
+            let store = mockStore(() => initialState);
+            let args = {
+                updatedDataID: "urn:pearson:work:123",
+                getState: store.getState,
+                dispatch: store.dispatch,
+                updatedData: {...updatedData, figuretype: ''},
+                versionedData: null,
+            }
+
+            const spyprepareDataForUpdateTcm = jest.spyOn(updateHelpers, "prepareDataForUpdateTcm")
+            updateHelpers.prepareDataForUpdateTcm(args)
+            expect(spyprepareDataForUpdateTcm).toHaveBeenCalled()
+            spyprepareDataForUpdateTcm.mockClear()
+        }) 
+        it("collectDataAndPrepareTCMSnapshot - metaDataField", async () => {
+            let store = mockStore(() => initialState);
+            let args = {
+                getState: store.getState,
+                dispatch: store.dispatch,
+                updatedData : {...updatedData, metaDataField: ''},
+                responseData: updatedData,
+                currentSlateData: slateLevelData.slateLevelData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"],
+                asideData,
+                parentUrn: null,
+                poetryData: null,
+                updateBodymatter: slateLevelData.slateLevelData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"].contents.bodymatter,
+                showHideType: undefined,
+                currentParentData: parentElement,
+                elementIndex: null,
+                parentElement: {...parentElement, type: "popup"},
+                fetchSlateData: null,
+                newslateData: slateLevelData,
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            const spycollectDataAndPrepareTCMSnapshot = jest.spyOn(updateHelpers, "collectDataAndPrepareTCMSnapshot")
+            updateHelpers.collectDataAndPrepareTCMSnapshot(args)
+            expect(spycollectDataAndPrepareTCMSnapshot).toHaveBeenCalled()
+            spycollectDataAndPrepareTCMSnapshot.mockClear()
+        })
+        it("collectDataAndPrepareTCMSnapshot - sectionType", async () => {
+            let store = mockStore(() => initialState);
+            let args = {
+                getState: store.getState,
+                dispatch: store.dispatch,
+                updatedData : {...updatedData, sectionType: 'sectionType'},
+                responseData: updatedData,
+                currentSlateData: slateLevelData.slateLevelData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"],
+                asideData,
+                parentUrn: null,
+                poetryData: null,
+                updateBodymatter: slateLevelData.slateLevelData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"].contents.bodymatter,
+                showHideType: undefined,
+                currentParentData: parentElement,
+                elementIndex: null,
+                parentElement: {...parentElement, type: "popup"},
+                fetchSlateData: null,
+                newslateData: slateLevelData,
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            const spycollectDataAndPrepareTCMSnapshot = jest.spyOn(updateHelpers, "collectDataAndPrepareTCMSnapshot")
+            updateHelpers.collectDataAndPrepareTCMSnapshot(args)
+            expect(spycollectDataAndPrepareTCMSnapshot).toHaveBeenCalled()
+            spycollectDataAndPrepareTCMSnapshot.mockClear()
+        })
     })
     describe("Other helper methods", () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"

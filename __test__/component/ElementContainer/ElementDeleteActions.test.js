@@ -1,8 +1,11 @@
 import { deleteElementAction, prepareDeleteRequestData, showError, updateStorePostDelete } from "../../../src/component/ElementContainer/ElementDeleteActions";
 import config from '../../../src/config/config.js';
 
+const axios = require('axios');
+jest.mock('axios');
+
 let elementId = 'elementId';
-let type = 'popup';
+let type = '';
 let eleIndex = '12-34';
 let activeElement = {};
 let containerElements = {};
@@ -20,36 +23,52 @@ let deleteParams = {
 
 describe('deleteElementAction ', () => {
     it('testing------- deleteElementAction ------action-', async () => {
-        await deleteElementAction(elementId, type, eleIndex, activeElement, containerElements, cb)
+        axios.post.mockImplementation(() => Promise.resolve({}))
+        let result = await deleteElementAction(elementId, type, eleIndex, activeElement, containerElements, cb);
+        result(dispatch);
     });
 });
 
 describe('UpdateStorePostDelete all cases', () => {
-    it('testing updateStorePostDelete', () => {
+    it('testing updateStorePostDelete case 1', () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
         updateStorePostDelete(deleteParams)
     })
-    it('testing updateStorePostDelete', () => {
+    it('testing updateStorePostDelete case 2', () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-        updateStorePostDelete({...deleteParams,newIndex:[{},{}]})
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{type:'element-aside',elementdata:{bodymatter:[]}}] } } }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0]})
     })
-    it('testing updateStorePostDelete', () => {
+    it('testing updateStorePostDelete case 3', () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-        updateStorePostDelete({...deleteParams,newIndex:[{},{},{}]})
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{type:'showhide',interactivedata:{'show':[]}}] } } }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,'0',0]})
     })
-    // it('testing updateStorePostDelete', () => {
-    //     config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-    //     let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:'' }} }
-    //     updateStorePostDelete({...deleteParams,...newParentData,newIndex:[{},{},{},{}]})
-    // })
-    // it('testing updateStorePostDelete', () => {
-    //     config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-    //     updateStorePostDelete({...deleteParams,newIndex:'10000'})
-    // })
-    // it('testing updateStorePostDelete', () => {
-    //     config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-    //     updateStorePostDelete({...deleteParams,newIndex:'100000'})
-    // })
+    it('testing updateStorePostDelete case 4', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{elementdata:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}}]}} }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,'0',0]})
+    })
+    it('testing updateStorePostDelete case 5', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{elementdata:{bodymatter:[{contents:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}  }]}}]}} }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0]})
+    })
+    it('testing updateStorePostDelete case 6', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{elementdata:{bodymatter:[{contents:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}  }]}}]}} }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0]})
+    })
+    it('testing updateStorePostDelete case 7', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {elementdata:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]} }  ]}  }]}}]}} }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,0,'0',0]})
+    })
+    it('testing updateStorePostDelete case 8', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {elementdata:{bodymatter: [{contents:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}}]  } }  ]}  }]}}]}} }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,0,0,'0',0]})
+    })
 });
 
 describe('showError testing',() => {
@@ -60,16 +79,27 @@ describe('showError testing',() => {
 
 
 describe('prepareDeleteRequestData testing',() => {
-    let elementType = '';
     let payloadParams = {
         elementId:'123',
         parentUrn:'123',
-        elementIndex:1,
+        elementIndex:['0',0],
         activeElement:{},
-        cutCopyParentUrn:'123',
-        parentElement:'123'
+        cutCopyParentUrn:{contentUrn:'a'},
+        parentElement:{type:'showhide'}
     }
-    it('prepareDeleteRequestData',() => {
-        prepareDeleteRequestData(elementType,payloadParams)
+    it('prepareDeleteRequestData case 1',() => {
+        prepareDeleteRequestData('',payloadParams)
+    })
+    it('prepareDeleteRequestData case 2',() => {
+        prepareDeleteRequestData("element-aside",payloadParams)
+    })
+    it('prepareDeleteRequestData case 3',() => {
+        prepareDeleteRequestData("element-aside",{...payloadParams,cutCopyParentUrn:undefined})
+    })
+    it('prepareDeleteRequestData case 4',() => {
+        prepareDeleteRequestData("element-aside",{...payloadParams,cutCopyParentUrn:undefined,parentUrn:undefined})
+    })
+    it('prepareDeleteRequestData case 5',() => {
+        prepareDeleteRequestData("element-aside",{...payloadParams,elementIndex:[],parentElement:{type:''}})
     })
 })

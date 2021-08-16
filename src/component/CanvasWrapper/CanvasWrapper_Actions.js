@@ -1038,7 +1038,7 @@ export const tcmCosConversionSnapshot = () => dispatch => {
  * @param {*} paramObj 
  * @param {*} responseData 
  */
-const appendCreatedElement = async (paramObj, responseData) => {
+export const appendCreatedElement = async (paramObj, responseData) => {
     let {
         popupElementIndex,
         getState,
