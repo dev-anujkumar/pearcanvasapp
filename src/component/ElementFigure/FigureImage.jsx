@@ -8,7 +8,7 @@ import {
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
-import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString } from '../../constants/utility';
+import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueAtRender } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -16,12 +16,11 @@ import './../../styles/ElementFigure/FigureImage.css';
 import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
-import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg'
+import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
+import { dropdownData, dropdownOptions, figureLabelData } from '../../constants/Element_Constants';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
-
-const dropdownData = ['figure', 'table', 'equation', 'exhibit', 'map'];
 class FigureImage extends Component {
     constructor(props) {
         super(props);
@@ -31,7 +30,7 @@ class FigureImage extends Component {
             alfrescoSite: '',
             alfrescoSiteData: {},
             figureLabelValue: 'No Label',
-            figureLabelData: ['No Label', 'Figure', 'Table', 'Equation', 'Exhibit', 'Map', 'Custom'],
+            figureLabelData: figureLabelData,
             figureDropDown: false
         }
         this.wrapperRef = React.createRef();
@@ -47,15 +46,8 @@ class FigureImage extends Component {
         })
         let figureHtmlData = getLabelNumberTitleHTML(this.props.model);
         let figureLabelValue = this.state;
-        let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
-        if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
-            figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
-        } else if (figureLabelFromApi === '') {
-            figureLabelValue = 'No Label';
-        } else {
-            figureLabelValue = 'Custom';
-        }
-        this.setState({ figureLabelValue: figureLabelValue })
+        figureLabelValue = dropdownValueAtIntialize(dropdownData, figureHtmlData.formattedLabel);
+        this.setState({ figureLabelValue: figureLabelValue });
     }
 
     componentWillUnmount() {
@@ -259,7 +251,6 @@ class FigureImage extends Component {
     changeFigureLabel = (e, data) => {
         if (!(this.state.figureLabelValue === data)) {
             this.setState({ figureLabelValue: data });
-            const dropdownOptions = ['Figure', 'Table', 'Equation', 'Exhibit', 'Map'];
             if (dropdownOptions.includes(data)) {
                 document.getElementById(`cypress-${this.props.index}-0`).innerHTML = `${data}`;
             } else {
@@ -323,14 +314,7 @@ class FigureImage extends Component {
 
         let figureHtmlData = getLabelNumberTitleHTML(model);
         let { figureLabelValue } = this.state;
-        let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
-        if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
-            figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
-        } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
-            figureLabelValue = 'No Label';
-        } else if (figureLabelFromApi !== '' && figureLabelValue === 'Custom') {
-            figureLabelValue = 'Custom';
-        }
+        figureLabelValue = dropdownValueAtRender(dropdownData, figureLabelValue, figureHtmlData.formattedLabel);
 
         return (
             <div className="figureElement">

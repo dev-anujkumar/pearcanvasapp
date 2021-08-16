@@ -160,3 +160,7 @@ export const MULTI_COLUMN_2C = {
     "ELEMENT_NAME" : "primary-multicolumn-2c",
     // "ELEMENT_PROPORTION": "33-33-33"
 }
+
+export const dropdownData = ['figure', 'table', 'equation', 'exhibit', 'map'];
+export const dropdownOptions = ['Figure', 'Table', 'Equation', 'Exhibit', 'Map'];
+export const figureLabelData = ['No Label', 'Figure', 'Table', 'Equation', 'Exhibit', 'Map', 'Custom'];

@@ -142,6 +142,9 @@ const store = mockStore({
         ],
         usageTypeListData: {
             usageTypeList: []
+        },
+        oldFigureDataForCompare: {
+            path: "test"
         }
     },
     slateLockReducer: {
