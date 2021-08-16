@@ -8,7 +8,7 @@ import {
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
-import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueAtRender } from '../../constants/utility';
+import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -314,7 +314,14 @@ class FigureImage extends Component {
 
         let figureHtmlData = getLabelNumberTitleHTML(model);
         let { figureLabelValue } = this.state;
-        figureLabelValue = dropdownValueAtRender(dropdownData, figureLabelValue, figureHtmlData.formattedLabel);
+        let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
+        if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
+            figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
+        } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
+            figureLabelValue = 'No Label';
+        } else if (figureLabelFromApi !== '' && figureLabelValue === 'Custom') {
+            figureLabelValue = 'Custom';
+        }
 
         return (
             <div className="figureElement">

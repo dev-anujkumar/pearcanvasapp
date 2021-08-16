@@ -280,19 +280,6 @@ export const dropdownValueAtIntialize = (dropdownData, formattedLabel) => {
     return figureLabelValue;
 }
 
-export const dropdownValueAtRender = (dropdownData, figureLabelValue, formattedLabel) => {
-    let figureLabelFromApi = checkHTMLdataInsideString(formattedLabel);
-    let figureLabel;
-    if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
-        figureLabel = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
-    } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
-        figureLabel = 'No Label';
-    } else if (figureLabelFromApi !== '' && figureLabelValue === 'Custom') {
-        figureLabel = 'Custom';
-    }
-    return figureLabel;
-}
-
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
  *  It is used for mapping special characters in Wiris data 
  */

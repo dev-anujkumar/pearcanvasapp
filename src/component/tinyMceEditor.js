@@ -3010,25 +3010,30 @@ export class TinyMceEditor extends Component {
         }
     }
 
+    setFigureToolbar = (placeholder) => {
+        let toolbar;
+        switch (placeholder) {
+            case "Number":
+                toolbar = config.figureNumberToolbar;
+                break;
+            case "Label Name":
+                toolbar = config.figurLabelToolbar;
+                break;
+            case "Title":
+            case "Caption":
+            case "Credit":
+                toolbar = config.figurImageCommonToolbar;
+                break;
+        }
+        return toolbar;
+    }
+
     setInstanceToolbar = () => {
         let toolbar = [];
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
         } else if (this.props.element.type === 'figure' && ['image', 'table', 'mathImage'].includes(this.props.element.figuretype)) {
-            let placeholderValue = this.props.placeholder;
-            switch (placeholderValue) {
-                case "Number":
-                    toolbar = config.figureNumberToolbar;
-                    break;
-                case "Label Name":
-                    toolbar = config.figurLabelToolbar;
-                    break;
-                case "Title":
-                case "Caption":
-                case "Credit":
-                    toolbar = config.figurImageCommonToolbar;
-                    break;
-            }
+            toolbar = this.setFigureToolbar(this.props.placeholder);
         } else if (this.props.element.type === 'figure' && this.props.placeholder === "Enter Number...") {
             toolbar = config.figureNumberToolbar;
         }
