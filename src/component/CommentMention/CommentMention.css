@@ -1,0 +1,54 @@
+
+  .mentions--singleLine .mentions__control {
+    display: inline-block;
+  }
+  .mentions--singleLine .mentions__higlighter {
+    padding: 1px;
+    border: 2px inset transparent;
+  }
+  .mentions--singleLine .mentions__input {
+    padding: 5px;
+    border: 2px inset;
+  }
+  
+  .mentions--multiLine .mentions__control {
+    font-size: 14pt;
+    border: 1px solid #007fa3;
+    height: 150px;
+  }
+  .mentions--multiLine .mentions__highlighter {
+    padding: 9px;
+  }
+  .mentions--multiLine .mentions__input {
+    padding: 9px;
+    max-height: 150px;
+    outline: 0;
+    border: 0;
+    overflow-y: auto;
+  }
+  
+  .mentions__suggestions__list {
+    width: 100%;
+    max-height: 261px;
+    padding: 1px 1px 10px;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+    background-color: #fffffe;
+    overflow-y: auto;
+    font-size: 16px;
+  }
+  
+  .mentions__suggestions__item {
+    padding: 10px 10px;
+    color: #007fa3;
+  }
+  
+  .mentions__suggestions__item--focused {
+    background-color: #f0f0f0;
+  }
+  .mentions__mention {
+    color: #007fa3 !important;
+  }
+  .mentions__suggestions{
+    top: 15px !important;
+  }
