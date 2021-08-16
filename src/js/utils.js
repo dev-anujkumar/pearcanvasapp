@@ -572,5 +572,5 @@ export const removeMathmlImageCache = (dataHTML) => {
  */
 export const fetchUpdatedImageUrl = (url) => {
     // Updated url for .png images.
-    return `${url.split('.png?')[0]}.png?${(new Date()).getTime()}`;
+    return `${url.split('.png')[0]}.png?${(new Date()).getTime()}`;
 }
