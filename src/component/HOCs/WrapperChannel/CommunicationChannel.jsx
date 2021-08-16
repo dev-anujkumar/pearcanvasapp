@@ -279,6 +279,13 @@ function CommunicationChannel(WrappedComponent) {
                 case 'openInlineAlsfrescoPopup' :
                     this.props.alfrescoPopup(message);
                     break;
+                case 'releaseLockPopup':
+                    this.setState({
+                        showBlocker: false
+                    });
+                    this.showCanvasBlocker(false);
+                    hideBlocker()
+                    break;
             }
         }
 
