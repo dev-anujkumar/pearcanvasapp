@@ -1,35 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactDOMServer from 'react-dom/server'
 import { Provider } from 'react-redux';
-import { slateData, emptySlateData, slateDataForIntro, slateDataForAssess, slateDataVer } from '../../../fixtures/slateTestingData.js'
+import { slateData } from '../../../fixtures/slateTestingData.js'
 import SlateWrapper from '../../../src/component/SlateWrapper';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-const store1 = mockStore({
-    slateLockReducer: { slateLockInfo: {} },
-    appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-    toolbarReducer: { elemBorderToggle: true },
-    metadataReducer: { currentSlateLOData: [] },
-    audioReducer: {openRemovePopUp: false},
-    searchReducer: {searchTerm: '', parentId: '', deeplink: false},
-    commentSearchReducer: {commentSearchTerm: '', parentId: ''},
-    assessmentReducer:{showConfirmationPopup:false},
-    alfrescoReducer: {
-        alfrescoAssetData: {},
-        elementId: "urn",
-        alfrescoListOption: [],
-        launchAlfrescoPopup: true,
-        editor: true,
-        Permission: false
-    }
-})
+
 import config from '../../../src/config/config';
-import { showTocBlocker } from "../../../src/js/toggleLoader";
 //IMPORT TINYMCE 
-import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/silver';
 import "tinymce/skins/ui/oxide/skin.min.css";
 import "tinymce/skins/ui/oxide/content.min.css";
@@ -70,7 +49,7 @@ const initialState = {
     }, withinLockPeriod: true },
     appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
     toolbarReducer: { elemBorderToggle: true },
-    metadataReducer: { currentSlateLOData: [] },
+    metadataReducer: { currentSlateLOData: [{}] },
     audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
     searchReducer: {searchTerm: 'searchTerm-123', parentId: 'parentId-123', deeplink: false, scroll: ""},
     commentSearchReducer: { commentSearchTerm: 'commentSearch-123', parentId: 'commentP-123', scrollTop: "10" },
@@ -87,6 +66,9 @@ const initialState = {
 const mockFunction = jest.fn().mockImplementation = () => {
     return { type: 'Fire Action' };
 }
+jest.mock('../../../src/component/CanvasWrapper/CanvasWrapper_Actions.js', () => ({
+    fetchSlateData: mockFunction
+}));
 jest.mock('../../../src/component/SlateWrapper/SlateWrapper_Actions.js', () => ({
     createElement: mockFunction
 }));
@@ -829,5 +811,97 @@ describe("SlateWrapper Component", () => {
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
+    })
+    describe("1.41 Test - wirisAltTextPopup ", () => {
+        it('1.41.1  Test - if case (this.props.wirisAltText)', () => {
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            const newInitialState = {...initialState, appStore: {...initialState.appStore, wirisAltText: {showPopup: true, altText: "Hello"}}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'wirisAltTextPopup')
+            compInstance.wirisAltTextPopup();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    it('1.42  Test - closeWirisAltTextPopup ', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        const newInitialState = {...initialState, appStore: {...initialState.appStore, wirisAltText: {showPopup: false}}};
+        const compInstance = slateWrapInstance(props, newInitialState);
+        const spy = jest.spyOn(compInstance, 'closeWirisAltTextPopup')
+        compInstance.closeWirisAltTextPopup();
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    describe("1.43 Test - showLOWarningPopup ", () => {
+        it('1.43.1  Test - if case (this.props.loWarningPopupData?.toggleValue)', () => {
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            const newInitialState = {...initialState, 
+                metadataReducer: {currentSlateLF: slateData, loWarningPopupData: {toggleValue: "Hello"}}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'showLOWarningPopup')
+            compInstance.showLOWarningPopup();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.43.2  Test - Else case (this.props.loWarningPopupData?.toggleValue)', () => {
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            const newInitialState = {...initialState, 
+                metadataReducer: {currentSlateLF: slateData, loWarningPopupData: {}}};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'showLOWarningPopup')
+            compInstance.showLOWarningPopup();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    it('1.44  Test - toggleWarningPopup ', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        const event = {preventDefault: jest.fn(), stopPropagation: jest.fn()}
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'toggleWarningPopup')
+        compInstance.toggleWarningPopup(true, event);
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    describe("1.45 Test - unlinkSlateLOs ", () => {
+        it('1.45.1  Test - if case (this.props.projectLearningFrameworks?.externalLF?.length)', () => {
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            const newInitialState = {...initialState, 
+                metadataReducer: { projectLearningFrameworks: {externalLF: [{urn: "123"}]},
+                    loWarningPopupData: {warningActionIntiator: "Add From Existing or Edit"},
+                    currentSlateLF: slateData }};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'unlinkSlateLOs')
+            compInstance.unlinkSlateLOs();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.45.2  Test - Else case ', () => {
+              const newInitialState = {...initialState, 
+                metadataReducer: { projectLearningFrameworks: {externalLF: []},
+                    loWarningPopupData: {warningActionIntiator: "Add From Existing or Edit"},
+                    currentSlateLF: slateData }};
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'unlinkSlateLOs')
+            compInstance.unlinkSlateLOs();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    it('1.46  Test - showAlfrescoPopup ', () => {
+        const newInitialState = {...initialState, alfrescoReducer: {launchAlfrescoPopup: false}};
+        const compInstance = slateWrapInstance(props, newInitialState);
+        const spy = jest.spyOn(compInstance, 'showAlfrescoPopup')
+        compInstance.showAlfrescoPopup();
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('1.47  Test - componentWillUnmount ', () => {
+        config.totalPageCount  = 5; config.page = 10;
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'componentWillUnmount')
+        compInstance.componentWillUnmount();
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
     })
 })
