@@ -318,6 +318,7 @@ class FigureImage extends Component {
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
+            figureLabelFromApi = figureLabelFromApi.toLowerCase();
             figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
         } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
             figureLabelValue = 'No Label';
