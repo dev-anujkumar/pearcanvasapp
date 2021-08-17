@@ -371,9 +371,9 @@ class SlateWrapper extends Component {
      * Calls release lock API
      */
     releaseSlateLock = (projectUrn, slateId) => {
-        this.setState({
-            showReleasePopup: true
-        })
+        this.props.showBlocker(true)
+        showTocBlocker();
+        sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true } })
         this.props.releaseSlateLock(projectUrn, slateId)
     }
 
