@@ -1036,7 +1036,7 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
 */
 export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails, CurrentSlateStatus) => {
     let elementSnapshot = {};
-    let semanticSnapshots = (element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
+    let semanticSnapshots = (![CITATION_ELEMENT, ELEMENT_TYPE_PDF].includes(element?.type)) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
     /* Element type PDF Slate */
     if (element?.type === ELEMENT_TYPE_PDF) {
         elementSnapshot = preparePDFSlateSnapshot(element);  
