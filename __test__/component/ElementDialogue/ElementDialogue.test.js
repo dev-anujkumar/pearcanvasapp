@@ -129,7 +129,10 @@ describe('1. Dialogue element test cases', () => {
 		elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083181",
 		//
 		setBCEMetadata: jest.fn(),
-		handleFocus: jest.fn() 
+		handleFocus: jest.fn(),
+		context: {
+			getElementById: jest.fn()
+		}
 	};
     it('1.1 Dialogue element render successfully', () => {
 		const store = mockStore(initialState);

@@ -1,16 +1,32 @@
-.figureElement .cypress-editable {
+.figure-header .cypress-editable {
     /* margin: 0!important; */
     padding: 10px!important;
     width: 100%!important;
-    min-height: 40px!important;
+    min-height: 32px!important;
     border: none;
     outline: none;
+}
+
+.figure-image-wrapper h4, .figure-image-wrapper p, .floating-number-group h4 {
+    font-family: 'Open Sans', sans-serif !important;
 }
 .figureElement .cypress-editable.place-holder::before{
     margin-top : 2px !important;
 }
 .figureElement .cypress-editable:not(pre){
-padding:0px;
+    padding:0px;
+}
+.figureElement .figure-image-wrapper{
+    padding: 0 8px;
+    margin: -15px auto 32px auto !important;
+}
+.figureElement .figure-title.cypress-editable, .figureElement .figure-credit.cypress-editable, .figureElement .figure-caption.cypress-editable {
+    padding: 10px !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-height: 64px;
+    border-bottom: 2px solid #999;
+    font-size: 14px;
 }
 /* pre{
     padding: 10px!important;
@@ -26,15 +42,16 @@ code .codeNoHighlightLine{
     min-height: 22px;
     color: #000;
 }
-/* .figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing.language-none .cypress-editable{
-    padding: 10px!important;
-    
-} */
-.figureCredit.cypress-editable {
-    min-height: 40px!important;
-    font-size: 9px!important;
-    width:100% !important;
+#figure_add_div {
+    cursor: auto !important;
+    outline: none;
 }
+
+/* .floating-credit-group .figureCredit.cypress-editable {
+    min-height: 40px!important;
+    font-size: 14px!important;
+    width:100% !important;
+} */
 .figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv{
     cursor: auto !important;
     /* max-height: 85px; */
@@ -53,9 +70,57 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 .figureCaption{
     margin-top: 5px!important;
 }
-.figure-header .figureLabel.cypress-editable,.figure-header .figureTitle.cypress-editable, .figure-header .figureNumber.cypress-editable {
+/* .figure-header .figureLabel.cypress-editable,.figure-header .figureTitle.cypress-editable, .figure-header .figureNumber.cypress-editable {
     font-size: 12px!important;
     font-family: Helvetica, sans-serif!important;
+} */
+
+.figure-header .image-label .figureLabel.cypress-editable {
+    font-size: 14px !important;
+    width:130px !important;
+    border-bottom: 2px solid #737373;
+    margin: 8px 0 !important;
+    padding: 15px 4px 6px 4px !important;
+    font-weight: 500 !important;
+    height:40px;
+    z-index:2;
+    font-family: 'Open Sans', sans-serif !important;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.floating-title-group .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable {
+    font-size: 14px!important;
+    border-bottom: 2px solid #737373;
+    margin: 8px 0 !important;
+    padding: 15px 4px 4px 4px !important;
+    font-weight: 500;
+    line-height: 1.5;
+    color:#000;
+}
+.image-label{
+    margin-right:24px;
+}
+
+.figure-header .floating-number-group .figureNumber.cypress-editable {
+    font-size: 14px !important;
+    width:74px !important;
+    border-bottom: 2px solid #737373;
+    margin: 8px 0 !important;
+    padding: 15px 4px 6px 4px !important;
+    font-weight: 500 !important;
+    height:40px;
+    z-index:2;
+    font-family: 'Open Sans', sans-serif !important;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.figure-header .floating-number-group .figureNumber.cypress-editable.mce-edit-focus,
+.figure-header .image-label .figureLabel.cypress-editable.mce-edit-focus, 
+.floating-title-group .figureTitle.cypress-editable.mce-edit-focus,
+.floating-caption-group .figureCaption.cypress-editable.mce-edit-focus,
+.floating-credit-group .figureCredit.cypress-editable.mce-edit-focus
+{
+    border-bottom: 2px solid #005a70;  
 }
 .figureLabel.cypress-editable  em,.figureLabel.cypress-editable  em strong,.figureLabel.cypress-editable strong span{
     font-weight: 900 !important;
@@ -65,7 +130,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     font-weight: 800 !important;
 }
 .figure-header{
-    min-height: 86px;
+    min-height: 70px;
 }
 .mathml .figureElement .figureData,.blockcode .codeSnippet{
     width:100%!important;
@@ -85,8 +150,8 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     text-align: center;
     overflow: auto;
 }
-figcaption,.figureCaption{
-    font-size: 10.8px!important;
+.floating-caption-group .figureCaption{
+    font-size: 14px!important;
     text-align: left !important;
 }
 code{
@@ -98,7 +163,7 @@ figure,.element-container{
 }
 
 .pearson-component.image.figureData img{
-    max-width: 100%;
+    width: 100%;
     text-align: center;
 }
  
@@ -478,28 +543,39 @@ th ol li.listItemNumeroUnoNone:before {
     overflow: auto;
 }
 
-.figure-wrapper {
-    padding-left: 10px;
-    margin-bottom: 9px;
+.figure-image-container .figure-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #000;
 }
-.figure-wrapper  .image-figure{
+.figure-image-container .figure-wrapper  .image-figure{
     padding-top:3px;
     display: flex;
 }
-.figure-wrapper  .image-figure-path{
-    padding-top:6px;
+.figure-image-container .figure-wrapper  .image-figure-path{
+    padding-top:2px;
     display: flex;
 }
-.figure-wrapper  .image-info{
+.figure-image-container .figure-wrapper  .image-info{
     overflow-wrap: anywhere;
     width: 100%;
-    margin-top: -3px;
+    margin-top: 0px;
+    font-size: 10px;
+    padding-right: 16px;
 }
 
-.image-text{
-    width:100px;
-    font-weight: 700;
-    font-size:11px;
+.figure-image-container .image-text{
+    width:85px;
+    font-size:10px;
+    color:#fff;
+    font-weight: 500;
 }
 .figure-glossary-icon{
     position: relative;
@@ -570,3 +646,182 @@ th ol li.listItemNumeroUnoNone:before {
     margin-top: 3px;
     border-bottom: 3px solid blue;
   }
+
+  .figurebutton{
+    width: 150px;
+    height: 36px;
+    margin: 24px auto;
+    padding: 8px 20px;
+    border-radius: 2px;
+    border: solid 1px #dcdcdc;
+    background-color: #fff;
+    text-align: center;
+    justify-content: center;
+    color: #005a70;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+.figurebutton:hover{
+    border: solid 1px #005a70;
+    background-color: #def8ff;
+}
+.updatefigurebutton{
+    top:16px;
+    right: 62px;
+    position: absolute;
+    height: 36px;
+    padding: 8px 20px;
+    border-radius: 2px;
+    border: solid 1px #dcdcdc;
+    background-color: #fff;
+    text-align: center;
+    justify-content: center;
+    color: #005a70;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+.deletefigurebutton{
+    top:16px;
+    position: absolute;
+    background-color: #fff;
+    text-align: center;
+    justify-content: center;
+    cursor: pointer;
+    right: 16px;
+    position: absolute;
+    padding: 5px 6px 3px 6px;
+    border-radius: 2px;
+}
+.figure-image-container{
+    position: relative;
+    margin: 25px 0 30px 0;
+}
+.figure-image-container:hover .figure-wrapper{
+    opacity: 0.8;
+    color: #fff;
+}
+.figure-image-info{
+    left:16px;
+    position: absolute;
+    bottom: 16px;
+}
+.figure-label{
+    width: 130px;
+    font-size: 14px;
+    line-height: 1.71;
+    color: #000;
+    border-bottom: 2px solid #999;
+    cursor: pointer;
+    position: relative;
+    padding: 3px 4px;
+}
+.figure-dropdown{
+  width: 130px;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+  background-color: #fff;
+  position: absolute;
+  z-index: 99;
+  top:25px;
+}
+.figure-dropdown ul {
+    padding: 4px 0px;
+    margin: 0px;
+}
+.figure-dropdown ul li{
+  cursor: pointer;
+  padding: 10px;
+  margin: 0;
+  font-size: 14px;
+}
+.figure-dropdown ul li:hover {
+  background-color: #efefef;
+}
+.figure-label .dropdown-arrow{
+  width: 8px;
+  position: absolute;
+  right: 0;
+  top: 14px;
+}
+.label{
+  font-size: 10px;
+  color: #999;
+}
+.label.active {
+  color: #005a70;
+}
+.figure-header{
+  position: relative;
+  display: flex;
+}
+.figure-label-field{
+  margin-right: 24px;
+}
+
+/* --------------------------------------------------------------------------- */
+.floating-caption-group{
+    position: relative;
+    margin-bottom: 25px;
+}
+.floating-number-group, .image-label, .floating-title-group, .floating-credit-group {
+    position: relative;
+}
+.floating-number-group .floating-number, .image-label .floating-label {
+    font-size: 14px;
+    color: #737373;
+    position: absolute;
+    pointer-events: none;
+    top: 22px;
+    transition: all 0.1s ease;
+}
+.floating-title-group .floating-title, .floating-caption-group .floating-caption, .floating-credit-group .floating-credit {
+    font-size: 14px;
+    color: #737373;
+    position: absolute;
+    pointer-events: none;
+    top: 15px;
+    transition: all 0.1s ease;
+}
+.image-label .figureLabel:focus ~ .floating-label, .image-label .figureLabel:not(:focus):valid ~ .floating-label,
+.floating-number-group .figureNumber:focus ~ .floating-number, .floating-number-group .figureNumber:not(:focus):valid ~ .floating-number {
+    top: 2px;
+    bottom: 0px;
+    font-size: 10px;
+    opacity: 1;
+    color: #005a70;
+}
+.floating-title-group .figureTitle:focus ~ .floating-title, .floating-title-group .figureTitle:not(:focus):valid ~ .floating-title,
+.floating-caption-group .figureCaption:focus ~ .floating-caption, .floating-caption-group .figureCaption:not(:focus):valid ~ .floating-caption,
+.floating-credit-group .figureCredit:focus ~ .floating-credit, .floating-credit-group .figureCredit:not(:focus):valid ~ .floating-credit {
+    top: -6px;
+    bottom: 0px;
+    font-size: 10px;
+    opacity: 1;
+    color: #005a70;
+}
+.floating-number-group .transition-none, .image-label .transition-none {
+    transition: none;
+    top: 2px;
+    bottom: 0px;
+    font-size: 10px;
+    color: #737373;
+    position: absolute;
+    z-index:1;
+}
+
+ .floating-title-group .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none {
+    transition: none;
+    top: -6px;
+    font-size: 10px;
+    color: #737373;
+    position: absolute;
+}
+
+.hide-field {
+    display: none;
+}
+
+.label-color-change {
+    color: #005a70 !important;
+}
