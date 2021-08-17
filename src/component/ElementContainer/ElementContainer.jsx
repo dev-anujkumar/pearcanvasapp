@@ -5,6 +5,7 @@ import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
+import FigureImage from './../ElementFigure/FigureImage.jsx'
 import ElementInteractive from '../ElementInteractive';
 import ElementAsideContainer from '../ElementAsideContainer';
 import ElementMetaDataAnchor from '../ElementMetaDataAnchor';
@@ -370,11 +371,15 @@ class ElementContainer extends Component {
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`)
             || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
         let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
+        let oldImage = this.props.oldImage;
+        if (previousElementData.figuretype !== 'tableasmarkup') {
+            oldImage = this.props.oldFigureDataForCompare.path;
+        }
 
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            (this.props.oldImage ? this.props.oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+            (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
             || podwidth !== (previousElementData.figuredata.podwidth ?
                 previousElementData.figuredata.podwidth : '') && podwidth !== null
         );
@@ -419,6 +424,7 @@ class ElementContainer extends Component {
         if (previousElementData.html && previousElementData.html.preformattedtext === '<p></p>') {
             previousElementData.html.preformattedtext = '<p><span class="codeNoHighlightLine"></span></p>'
         }
+        
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
@@ -1313,6 +1319,8 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_IMAGE:
                         case elementTypeConstant.FIGURE_TABLE:
                         case elementTypeConstant.FIGURE_MATH_IMAGE:
+                            editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} {...commonProps}/>
+                            break;
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
@@ -2203,6 +2211,7 @@ const mapStateToProps = (state) => {
         assessmentReducer: state.assessmentReducer,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
         multipleColumnData: state.appStore.multipleColumnData,
+        oldFigureDataForCompare: state.appStore.oldFigureDataForCompare,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         prevSelectedElement: state.tcmReducer.prevElementId
     }
