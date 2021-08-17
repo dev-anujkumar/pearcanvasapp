@@ -67,7 +67,10 @@ export default {
         },
         'assessment': {
             type: 'element-assessment',
-        }
+        },
+        "elementPdf": {
+            type: "element-pdf",
+        },
     },
     slate1: {
         "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb": {
