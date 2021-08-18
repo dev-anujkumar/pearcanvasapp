@@ -751,7 +751,7 @@ th ol li.listItemNumeroUnoNone:before {
 .label.active {
   color: #005a70;
 }
-.figure-header{
+.new-figure-image-header {
   position: relative;
   display: flex;
 }
