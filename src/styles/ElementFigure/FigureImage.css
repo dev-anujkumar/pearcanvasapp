@@ -690,7 +690,6 @@ th ol li.listItemNumeroUnoNone:before {
     justify-content: center;
     cursor: pointer;
     right: 16px;
-    position: absolute;
     padding: 5px 6px 3px 6px;
     border-radius: 2px;
 }
