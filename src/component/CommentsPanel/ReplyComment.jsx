@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import config from '../../config/config';
+import sendBlack from '../../images/CommentsPanel/send-black.svg'
 
 class ReplyComment extends React.Component {
     constructor(props) {
@@ -37,8 +38,9 @@ class ReplyComment extends React.Component {
             commentString: text,
             commentOnEntity: elementId
         }
-        this.setState({text:""})
+        this.setState({text:""});
         this.props.updateReplyComment(commentUrn, reply, elementId);
+        this.props.close();
     }
 
     /**
@@ -79,35 +81,41 @@ class ReplyComment extends React.Component {
     */
 
     replyCommentForm = (props) => {
-        if (props.showReplyForm && props.toggleReplyForm) {
+        if (props.showReplyComments) {
             return (
                 <>
-                <div className="reply">
-                    <div>
-                        <textarea className="new-comment textarea-input"
-                            value={this.state.text}
-                            onChange={this.updateCommentText}
-                            rows="7" />
+                    
+                    <div className="reply">
+                        <div>
+                            <span className="Reply-Num">Reply #{props.comment.replyComments.length + 1}</span>
+                            <span className="Username-Copy">{props.comment.commentCreator}</span>
+                        </div>
+                        <div className="wrapper-reply">
+                            <input type="text" placeholder="Type something" className="typeSomething" value={this.state.text}
+                            onChange={this.updateCommentText} />
+                            <a href="#"><img src={sendBlack} className="unique" onClick={this.replyComment} /></a>
+                        </div>
                     </div>
-                    <div className="buttons-wrapper">
-                        <button className="btn btn__initial"
-                            onClick={() => props.close()}>
-                            Cancel
-                    </button>
-                        <button className="btn btn__initial"
-                            onClick={this.replyComment}>
-                            Reply
-                    </button>
-                    </div>
-                </div>
-
-                {props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))}
-            </>
+                    {props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))}
+                    
+                </>
             )
 
         }
         else {
-            return props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))
+            return (
+                <div className="reply">
+                    <div>
+                        <span className="Reply-Num">Reply #{props.comment.replyComments.length + 1}</span>
+                        <span className="Username-Copy">{props.comment.commentCreator}</span>
+                    </div>
+                    <div className="wrapper-reply">
+                        <input type="text" placeholder="Type something" className="typeSomething" value={this.state.text} onChange={this.updateCommentText} />
+                        <a href="#"><img src={sendBlack} className="unique" onClick={this.replyComment} /></a>
+                    </div>
+                </div>
+
+            )
         }
     }
     render() {
@@ -120,10 +128,14 @@ class ReplyComment extends React.Component {
     }
 
 }
-
+    
 ReplyComment.propTypes = {
     /** commet data attached to store and contains complete comment object */
     comment: PropTypes.object.isRequired
 }
 
 export default ReplyComment;
+
+
+
+                    

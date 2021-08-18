@@ -1,6 +1,9 @@
 import React from 'react'
 import UserAssignee from './UserAssignee.jsx';
 import ReplyComment from './ReplyComment.jsx';
+import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
+import sendBlack from '../../images/CommentsPanel/send-black.svg'
+import iconArrow from '../../images/CommentsPanel/icon-arrow.svg'
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
 import PropTypes from 'prop-types';
 import {utils} from '../../js/utils'
@@ -17,7 +20,8 @@ class Comments extends React.Component {
                 status: this.props.comment.commentStatus
             },
             isSelectAssignee: false,
-            showReplyForm: false
+            showReplyForm: true,
+            showReplyComments: false
         }
     }
     componentDidMount() {
@@ -48,6 +52,13 @@ class Comments extends React.Component {
         this.setState({ showActionsMenu: show })
     }
 
+    /**
+    * 
+    *@discription - This function is to toggle between expanded and collapsed state of replies
+    */    
+    setReplyDropdownState = () => {
+        this.setState({ showReplyComments: !this.state.showReplyComments });
+    }
 
    /**
    * 
@@ -178,7 +189,6 @@ class Comments extends React.Component {
 
         return (
             <ul className="comment-action-menu action-menu">
-                {permissions.includes('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
                 {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
                 {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
@@ -308,8 +318,11 @@ class Comments extends React.Component {
                                 <span className="property-value capitalize color-gray-71">{comment.commentStatus.toLowerCase()}</span>
                             </div>
                             <div className="property">
-                                <span className="property-title">Replies</span>
-                                <span className="property-value"> {comment.replyComments && comment.replyComments.length} </span>
+                                    <div onClick={this.setReplyDropdownState}>
+                                    <span className="property-value Replies"> {comment.replyComments.length} </span>
+                                    <span className="property-title Replies">Replies</span>
+                                    <img className="Path" src={iconArrow} />
+                                </div>
                             </div>
 
 
@@ -324,6 +337,7 @@ class Comments extends React.Component {
                         updateReplyComment={updateReplyComment}
                         elementId={elementId}
                         toggleReplyForm={toggleReplyForm}
+                        showReplyComments={this.state.showReplyComments}
                     />
                 </div>
             </div>
