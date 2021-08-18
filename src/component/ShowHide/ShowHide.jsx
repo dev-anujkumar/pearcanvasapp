@@ -65,6 +65,7 @@ class ShowHide extends React.Component {
 					sectionType = {"show"}
 					sepratorIndex = {`${index}-0-0`}
 					onSortUpdate = {this.onSortUpdate}
+					hideElementSeperator={this.props.hideElementSeperator}
 					{...this.props}
 				/>
 				{/* Reveal Answer Component*/}
@@ -75,6 +76,7 @@ class ShowHide extends React.Component {
 					sectionType = {"hide"}
 					sepratorIndex = {`${index}-2-0`}
 					onSortUpdate = {this.onSortUpdate}
+					hideElementSeperator={this.props.hideElementSeperator}
 					{...this.props}
 				/>
 			</div>

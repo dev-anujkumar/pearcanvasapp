@@ -64,7 +64,9 @@ jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
 jest.mock('../../../src/constants/utility.js', () => {
     return {
         sendDataToIframe: jest.fn(),
-        createTitleSubtitleModel: jest.fn(),
+        createTitleSubtitleModel: ()=>{
+            return "<p><label>LABEL&nbsp;</label>TITLE</p>"
+        },
         requestConfigURI: jest.fn(),
         createLabelNumberTitleModel: jest.fn()
     }
@@ -72,6 +74,17 @@ jest.mock('../../../src/constants/utility.js', () => {
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility', () => {
     return {
         tcmSnapshotsForCreate: jest.fn()
+    }
+});
+jest.mock('../../../src/component/AssessmentSlateCanvas/AssessmentActions/assessmentActions', () => {
+    return {
+        fetchAssessmentMetadata: jest.fn(),
+        resetAssessmentStore: jest.fn()
+    }
+});
+jest.mock('../../../src/component/AssessmentSlateCanvas/AssessmentActions/assessmentUtility', () => {
+    return {
+        isElmLearnosityAssessment: ()=>{return true}
     }
 });
 /*********************Declare Common Variables**********************/
@@ -258,6 +271,117 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveReturnedWith('3C');
             spyFunction.mockClear()
         });
+        it('Test-1.18-fetchElementTag - Handwriting', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[12];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 10);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('HS');
+            spyFunction.mockClear()
+        })
+        it('Test-1.19-fetchElementTag - element-learningobjectivemapping', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[13];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 13);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('LO');
+            spyFunction.mockClear()
+        })
+        it('Test-1.20-fetchElementTag - element-generateLOlist', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[14];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 14);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('MA');
+            spyFunction.mockClear()
+        })
+        it('Test-1.21-fetchElementTag - element-learningobjectives', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[15];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 15);
+            expect(spyFunction).toHaveBeenCalled();
+            // expect(spyFunction).toHaveReturnedWith('HS');
+            spyFunction.mockClear()
+        })
+        it('Test-1.22-fetchElementTag - element-dialogue', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[16];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 16);
+            expect(spyFunction).toHaveBeenCalled();
+            // expect(spyFunction).toHaveReturnedWith('HS');
+            spyFunction.mockClear()
+        })
+        it('Test-1.23-fetchElementTag - discussion', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[17];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 17);
+            expect(spyFunction).toHaveBeenCalled();
+            // expect(spyFunction).toHaveReturnedWith('HS');
+            spyFunction.mockClear()
+        })
+        it('Test-1.24-fetchElementTag - designtype != Handwriting', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[18];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 18);
+            expect(spyFunction).toHaveBeenCalled();
+            // expect(spyFunction).toHaveReturnedWith('HS');
+            spyFunction.mockClear()
+        })
+        describe('isLearnosityProjectInfo', () => {
+            beforeEach(()=>{
+                jest.mock('../../../src/appstore/store.js', () => ({
+                    getState: () => {
+                        return {
+                            appStore: {
+                                isLearnosityProjectInfo: [{ "ItemBankName": "elm sandbox" }]
+                            },
+                            tcmReducer: {
+                                tcmSnapshot: [{
+                                    "txCnt": 1,
+                                    "isPrevAcceptedTxAvailable": false,
+                                    "elemURN": "urn:pearson:work:d5dd0c76-5b37-4370-ab84-a4d69b4f5056",
+                                    "feedback": null
+                                }]
+                            }
+                        };
+                    }
+                }));
+            })
+            it('Test-1.35-fetchElementTag - Assessment Element isLearnosityProjectInfo', () => {
+                // const mockData = { "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9": slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"] }
+
+                let activeElement = { type: 'figure', figuretype: 'assessment', html: { text: 'title' }, figuredata: { elementdata: { assessmentformat: 'learnosity', usagetype: "Test" } } };
+                const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+                canvasActions.fetchElementTag(activeElement, 12);
+                expect(spyFunction).toHaveBeenCalled();
+                expect(spyFunction).toHaveReturnedWith('Qu');
+                spyFunction.mockClear();
+            })
+        })
+        it('Test-1.26-fetchElementTag - Poetry V2', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[0];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({...activeElement, numberedline: true, startlinenumber: "2"}, 0);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('PE');
+            spyFunction.mockClear()
+        })
+        it('Test-1.27-fetchElementTag - showhide', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[0];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({type:"showhide",id:"test"}, 0);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('SH');
+            spyFunction.mockClear()
+        })
+        it('Test-1.27-fetchElementTag - element-assessment', () => {
+            let activeElement = { type: 'element-assessment', elementdata: { } };
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 0);
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction).toHaveReturnedWith('P');
+            spyFunction.mockClear()
+        })
     });
     describe('Test-2- fetchAuthUser', () => {
         it('Test-2.1-fetchAuthUser', () => {
@@ -812,8 +936,390 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear()
         })
+        it('Test-3.6-setActiveElement - deafult params', () => {
+            let oldPath = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual({
+                        elementType: 'element-authoredtext',
+                        primaryOption: 'primary-paragraph',
+                        secondaryOption: 'secondary-paragraph',
+                        elementId: undefined,
+                        index: 0,
+                        elementWipType: undefined,
+                        toolbar: ['insertMedia'],
+                        tag: 'P'
+                    }
+                    );
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: oldPath });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[3];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement()(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
     });
+    describe('Test-4.B- fetchSlateData',()=>{
+        it('Test-4.B.1-fetchSlateData - calledFrom - versioning slate', () => {
+            config.cachedActiveElement={}
+            config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c1"
+            config.fromTOC = false
+
+            let responseData = {
+                data: {
+                    "id": "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                    "type": "manifest",
+                    "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                    "versionUrn": "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                    "contentUrn": "urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294",
+                    "contents": {
+                        "bodymatter": []
+                    },
+                    pageNo: "2",pageCount: "1", pageLimit: "25"
+                }
+            }
+            const newSlateData = {
+                "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9": responseData.data
+            }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === FETCH_SLATE_DATA) {
+                    expect(obj.payload).toEqual(newSlateData);
+                }
+                else if (obj && obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual({});
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: newSlateData,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9',
+                entityURN = 'urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294',
+                page = 3,
+                versioning = '',
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.10-fetchSlateData - Popup Slate', () => {
+            const newPopupData = {
+                "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670" : {
+                    ...slateTestData.popupSlate["urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"],
+                    pageNo: "2", pageCount: "1", pageLimit: "25"
+                }
+            }
+            config.slateManifestURN =  "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"
+            let responseData = { data: newPopupData }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(newPopupData);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: newPopupData,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670',
+                entityURN = 'urn:pearson:entity:f23c667b-81ca-48c5-ba58-bc19fa6b9677',
+                page = 1,
+                versioning = false,
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.11-fetchSlateData - Aside versioning if', () => {
+            const newPopupData = {
+                "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670" : {
+                    ...slateTestData.popupSlate["urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"],
+                    pageNo: "2", pageCount: "1", pageLimit: "25"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+            let responseData = { data: slateTestData.slateData1 }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(newPopupData);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                entityURN = "urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294",
+                page = 1,
+                versioning = {
+                    type: "element-aside",
+                    indexes: [11,0,2,1],
+                    parent:{type : 'groupedcontent'}
+                },
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.12-fetchSlateData - Aside versioning else', () => {
+            const newPopupData = {
+                "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670" : {
+                    ...slateTestData.popupSlate["urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"],
+                    pageNo: "2", pageCount: "1", pageLimit: "25"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+            let responseData = { data: slateTestData.slateData1 }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(newPopupData);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                entityURN = "urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294",
+                page = 1,
+                versioning = {
+                    type: "element-aside",
+                    indexes: [8],
+                    parent:{type : 'groupedcontent'}
+                },
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.13-fetchSlateData - showhide versioning if', () => {
+            const newPopupData = {
+                "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670" : {
+                    ...slateTestData.popupSlate["urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"],
+                    pageNo: "2", pageCount: "1", pageLimit: "25"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+            let responseData = { data: slateTestData.slateData1 }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(newPopupData);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                entityURN = "urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294",
+                page = 1,
+                versioning = {
+                    type: "showhide",
+                    indexes: 8
+                },
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.14-fetchSlateData - showhide versioning else', () => {
+            const newPopupData = {
+                "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670" : {
+                    ...slateTestData.popupSlate["urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"],
+                    pageNo: "2", pageCount: "1", pageLimit: "25"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+            let responseData = { data: slateTestData.slateData1 }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(newPopupData);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                entityURN = "urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294",
+                page = 1,
+                versioning = {
+                    type: "showhide",
+                    indexes: [8,1]
+                },
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.14-fetchSlateData - showhide versioning else if', () => {
+            const newPopupData = {
+                "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670" : {
+                    ...slateTestData.popupSlate["urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"],
+                    pageNo: "2", pageCount: "1", pageLimit: "25"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+            let responseData = { data: slateTestData.slateData1 }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(newPopupData);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                entityURN = "urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294",
+                page = 1,
+                versioning = {
+                    type: "showhide",
+                    index: "8-1"
+                },
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+    })
     describe('Test-4- fetchSlateData', () => {
+        it('Test-4.1-fetchSlateData - Assessment Slate', () => {
+            config.slateType ="assessment"
+            let responseData = {
+                data: {
+                    "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9": {
+                        id: "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                        type: "element-assessment",
+                        contents: {
+                            bodymatter: [{
+                                type: "element-assessment", elementdata: { assessmentformat: "puf", assessmentid: "test" }
+                            }]
+                        }
+                    }
+                }
+            }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === FETCH_SLATE_DATA) {
+                    expect(obj.payload).toEqual(slateTestData.slateData1);
+                }
+                else if (obj && obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual({});
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9',
+                entityURN = 'urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294',
+                page = 1,
+                versioning = '',
+                calledFrom = 'SlateRefresh',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        config.slateType = "section"
         it('Test-4.1-fetchSlateData - calledFrom - SlateRefresh', () => {
             let responseData = { data: slateTestData.slateData1 }
             let dispatch = (obj) => {
@@ -913,6 +1419,40 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         })
+        it('Test-4.8-fetchSlateData - Popup Slate - Versioning config.cachedActiveElement', () => {
+            config.cachedActiveElement = {
+                element: {
+                    type: "popup",
+                    id : "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2671"
+            let responseData = { data: { ...slateTestData.popupSlate } }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.popupSlate,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670',
+                entityURN = 'urn:pearson:entity:f23c667b-81ca-48c5-ba58-bc19fa6b9677',
+                page = 0,
+                versioning = slateTestData.popupSlateLabelVersioning,
+                calledFrom = '',
+                versionPopupReload = false
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
         it('Test-4.4-fetchSlateData - Popup Slate', () => {
             let responseData = { data: { ...slateTestData.popupSlate } }
             let dispatch = (obj) => {
@@ -964,6 +1504,115 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                 versioning = slateTestData.popupSlateLabelVersioning,
                 calledFrom = '',
                 versionPopupReload = true
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.6-fetchSlateData - Popup Slate config.cachedActiveElement', () => {
+            config.cachedActiveElement = {
+                element: {
+                    type: "popup",
+                    id : "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"
+                }
+            }
+            document.getElementsByClassName = () => { return {length: 1}}
+            config.slateManifestURN = "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"
+            let responseData = { data: { ...slateTestData.popupSlate } }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(slateTestData.popupSlate);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.popupSlate,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670',
+                entityURN = 'urn:pearson:entity:f23c667b-81ca-48c5-ba58-bc19fa6b9677',
+                page = 0,
+                versioning = false,
+                calledFrom = '',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.7-fetchSlateData - Popup Slate - Versioning config.cachedActiveElement', () => {
+            config.cachedActiveElement = {
+                element: {
+                    type: "popup",
+                    id : "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2671"
+            let responseData = { data: { ...slateTestData.popupSlate } }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.popupSlate,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670',
+                entityURN = 'urn:pearson:entity:f23c667b-81ca-48c5-ba58-bc19fa6b9677',
+                page = 0,
+                versioning = slateTestData.popupSlateLabelVersioning,
+                calledFrom = '',
+                versionPopupReload = true
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        xit('Test-4.10-fetchSlateData - Popup Slate', () => {
+            const newPopupData = {
+                "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670" : {
+                    ...slateTestData.popupSlate["urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"],
+                    pageNo: "2",pageCount: "1", pageLimit: "25"
+                }
+            }
+            config.slateManifestURN =  "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"
+            let responseData = { data: newPopupData }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === OPEN_POPUP_SLATE) {
+                    expect(obj.payload).toEqual(newPopupData);
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: newPopupData,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670',
+                entityURN = 'urn:pearson:entity:f23c667b-81ca-48c5-ba58-bc19fa6b9677',
+                page = 1,
+                versioning = false,
+                calledFrom = '',
+                versionPopupReload = undefined
             const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
             axios.get = jest.fn(() => Promise.resolve(responseData));
             canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
@@ -1584,6 +2233,191 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             canvasActions.fetchSlateAncestorData(tocNode)(dispatch, getState)
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
+        })
+    });
+    describe('Test-13- appendCreatedElement', () => {
+        let slateManifestURN = 'urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9'
+        let dispatch = (obj) => {
+            expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+        }
+        let responseData = { ...slateTestData.popupLabelResponse }
+        let getState = () => {
+            return {
+                appStore: {
+                    slateLevelData: { "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9": slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"] },
+                    activeElement: {},
+                },
+                tcmReducer: {
+                    tcmSnapshot: [{
+                        "txCnt": 1,
+                        "isPrevAcceptedTxAvailable": false,
+                        "elemURN": "urn:pearson:work:d5dd0c76-5b37-4370-ab84-a4d69b4f5056",
+                        "feedback": null
+                    }]
+                }
+            };
+        }
+        document.getElementById = () => {
+            return {
+                innerHTML: "label",
+                innerText: "title"
+            }
+        }
+        it('Test-13.1-appendCreatedElement - popupField - formatted-title', () => {
+            let popupElementIndex = "1"
+
+            let popupField = 'formatted-title',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[1],
+                createdFromFootnote = undefined;
+            let paramObj = {
+                popupElementIndex,
+                getState,
+                slateManifestURN,
+                parentElement,
+                dispatch,
+                cb,
+                popupField,
+                createdFromFootnote
+            }
+            const spyFunction = jest.spyOn(canvasActions, 'appendCreatedElement')
+            canvasActions.appendCreatedElement(paramObj)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-13.2-appendCreatedElement - popupField - formatted-subtitle', () => {
+            let popupElementIndex = "1"
+
+            let popupField = 'formatted-subtitle',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[1],
+                createdFromFootnote = undefined;
+            let paramObj = {
+                popupElementIndex,
+                getState,
+                slateManifestURN,
+                parentElement,
+                dispatch,
+                cb,
+                popupField,
+                createdFromFootnote
+            }
+            document.getElementById = () => {
+                return {
+                    innerHTML: "",
+                    innerText: "title"
+                }
+            }
+            const spyFunction = jest.spyOn(canvasActions, 'appendCreatedElement')
+            canvasActions.appendCreatedElement(paramObj, responseData)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-13.3-appendCreatedElement - Popup in Aside', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
+                }
+            }
+            let responseData2 = { ...slateTestData.popupLabelResponse }
+            let popupField = 'formatted-titletitle',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[8].elementdata.bodymatter[4],
+                popupElementIndex = '8-4-0',
+                createdFromFootnote = undefined;
+            let paramObj = {
+                popupElementIndex,
+                getState,
+                slateManifestURN,
+                parentElement,
+                dispatch,
+                cb,
+                popupField,
+                createdFromFootnote
+            }
+            const spyFunction = jest.spyOn(canvasActions, 'appendCreatedElement')
+            canvasActions.appendCreatedElement(paramObj, responseData2)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-13.4-appendCreatedElement - Popup in WE', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
+                }
+            }
+            let responseData3 = { ...slateTestData.popupLabelResponse }
+            let popupField = 'formatted-title',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[9].elementdata.bodymatter[1].contents.bodymatter[4],
+                popupElementIndex = '9-1-4-1',
+                createdFromFootnote = undefined;
+            let paramObj = {
+                popupElementIndex,
+                getState,
+                slateManifestURN,
+                parentElement,
+                dispatch,
+                cb,
+                popupField,
+                createdFromFootnote
+            }
+            const spyFunction = jest.spyOn(canvasActions, 'appendCreatedElement')
+            canvasActions.appendCreatedElement(paramObj, responseData3)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-13.5-appendCreatedElement - Popup in WE:HEAD in 3C', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
+                }
+            }
+            let responseData2 = { ...slateTestData.popupLabelResponse }
+            let popupField = 'formatted-titletitle',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[11].groupeddata.bodymatter[0].groupdata.bodymatter[2].elementdata.bodymatter[1],
+                popupElementIndex = '11-0-2-1-0',
+                createdFromFootnote = undefined;
+            let paramObj = {
+                popupElementIndex,
+                getState,
+                slateManifestURN,
+                parentElement,
+                dispatch,
+                cb,
+                popupField,
+                createdFromFootnote
+            }
+            const spyFunction = jest.spyOn(canvasActions, 'appendCreatedElement')
+            canvasActions.appendCreatedElement(paramObj, responseData2)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
+        })
+        it('Test-13.6appendCreatedElement - Popup in WE:BODY in 3C', () => {
+            document.getElementById = () => {
+                return {
+                    innerText: "innerText",
+                    innerHTML: "<p>innerHTML</p>"
+                }
+            }
+            let responseData3 = { ...slateTestData.popupLabelResponse }
+            let popupField = 'formatted-title',
+                parentElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[11].groupeddata.bodymatter[0].groupdata.bodymatter[2].elementdata.bodymatter[2].contents.bodymatter[0],
+                popupElementIndex = '11-0-2-2-0-0',
+                createdFromFootnote = undefined;
+            let paramObj = {
+                popupElementIndex,
+                getState,
+                slateManifestURN,
+                parentElement,
+                dispatch,
+                cb,
+                popupField,
+                createdFromFootnote
+            }
+            const spyFunction = jest.spyOn(canvasActions, 'appendCreatedElement')
+            canvasActions.appendCreatedElement(paramObj, responseData3)
+            expect(spyFunction).toHaveBeenCalled()
+            spyFunction.mockClear()
         })
     });
 });

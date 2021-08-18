@@ -1,7 +1,8 @@
 import { OWNERS_SUBSCRIBED_SLATE } from '../../src/constants/Action_Constants';
 
+var isOwnerKeyExist= localStorage.getItem('hasOwnerEdit');
 const INITIAL_STATE = {
-    isOwnersSubscribedSlateChecked: false,
+    isOwnersSubscribedSlateChecked: isOwnerKeyExist ? false : true,
 }
 
 const INITIAL_ACTION = {

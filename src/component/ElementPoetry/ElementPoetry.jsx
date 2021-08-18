@@ -130,6 +130,7 @@ class ElementPoetry extends Component {
                     userRole={this.props.userRole}
                     pasteElement={this.props.pasteElement}
                     source={POETRY_SOURCE}
+                    hideElementSeperator={this.props.hideElementSeperator}
                 />
             </>
         )
@@ -169,6 +170,7 @@ class ElementPoetry extends Component {
                                 userRole={this.props.userRole}
                                 pasteElement={this.props.pasteElement}
                                 source={POETRY_SOURCE}
+                                hideElementSeperator={this.props.hideElementSeperator}
                             />}
                             <ElementContainer
                                 element={element}
@@ -196,6 +198,7 @@ class ElementPoetry extends Component {
                                 userRole={this.props.userRole}
                                 pasteElement={this.props.pasteElement}
                                 source={POETRY_SOURCE}
+                                hideElementSeperator={this.props.hideElementSeperator}
                             />
                         </React.Fragment>
                     )

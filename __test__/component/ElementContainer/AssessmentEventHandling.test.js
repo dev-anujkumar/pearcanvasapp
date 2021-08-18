@@ -1,5 +1,5 @@
 import config from '../../../src/config/config.js';
-import { handleElmPortalEvents, prepareItemMetadata, handlePostMsgOnAddAssess } from '../../../src/component/ElementContainer/AssessmentEventHandling.js';
+import { handleElmPortalEvents, prepareItemMetadata, handlePostMsgOnAddAssess, handleRefreshSlate, getInteractivePostMsg, getAssessmentItemPostMsg, getAssessmentPostMsg } from '../../../src/component/ElementContainer/AssessmentEventHandling.js';
 
 jest.mock('../../../src/js/slateLockUtility', () => ({
     checkSlateLock: () => {
@@ -18,12 +18,7 @@ jest.mock('../../../src/component/CanvasWrapper/SlateLock_Actions', () => {
                 }
             }
         },
-        releaseSlateLockWithCallback: function () {
-            return {
-                type: 'SET_LOCK_FLAG',
-                payload: false
-            }
-        }
+        releaseSlateLockWithCallback: () => Promise.resolve({})
     }
 })
 
@@ -96,6 +91,62 @@ describe('Testing, Elm - AssessmentEventHandling function', () => {
         let obj = { spyEvent: () => { return 'TestEvent' } };
         jest.spyOn(obj, 'spyEvent')
         window.dispatchEvent(event);
+        obj.spyEvent();
+        expect(obj.spyEvent).toHaveBeenCalled()
+    })
+});
+
+
+describe('Testing, handleRefreshSlate function', () => {
+    it('Test- handleRefreshSlate',() => {
+        handleRefreshSlate(jest.fn());
+        const event = new CustomEvent("message", {
+            data: {
+                    action: "assessment_save_success",
+                    source: "elm",
+                    timestamp: 1611237428538,
+                    type: "assessment|wUrn_urn:pearson:work:4979a9fd-6a9e-45eb-877e-eae3d23b8e27|title_Quiz 9.2: Pointer Variables-test|usagetype_practice"
+                },        
+            origin: "https://assessmentauthoring-dev.pearson.com",
+        });
+
+        let obj = { spyEvent: () => { return 'TestEvent' } };
+        jest.spyOn(obj, 'spyEvent')
+        window.dispatchEvent(event);
+        obj.spyEvent();
+        expect(obj.spyEvent).toHaveBeenCalled()
+    })
+});
+
+
+describe('Testing, getInteractivePostMsg function', () => {
+    it('Test- getInteractivePostMsg',() => {
+        getInteractivePostMsg('interactive|wUrn_dummy');
+        getInteractivePostMsg('interactive|elementUrn_dummy');
+        getInteractivePostMsg('interactive|title_dummy');
+        getInteractivePostMsg('interactive|type_dummy');
+        let obj = { spyEvent: () => { return 'TestEvent' } };
+        jest.spyOn(obj, 'spyEvent')
+        obj.spyEvent();
+        expect(obj.spyEvent).toHaveBeenCalled()
+    })
+});
+
+describe('Testing, getAssessmentItemPostMsg function', () => {
+    it('Test- getAssessmentItemPostMsg',() => {
+        getAssessmentItemPostMsg(['interactive','wUrn_dummy']);
+        let obj = { spyEvent: () => { return 'TestEvent' } };
+        jest.spyOn(obj, 'spyEvent')
+        obj.spyEvent();
+        expect(obj.spyEvent).toHaveBeenCalled()
+    })
+});
+
+describe('Testing, getAssessmentPostMsg function', () => {
+    it('Test- getAssessmentPostMsg',() => {
+        getAssessmentPostMsg([], 'usagetype', () =>{}, {}, 'type', 'getMsgafterAddAssessment');
+        let obj = { spyEvent: () => { return 'TestEvent' } };
+        jest.spyOn(obj, 'spyEvent')
         obj.spyEvent();
         expect(obj.spyEvent).toHaveBeenCalled()
     })

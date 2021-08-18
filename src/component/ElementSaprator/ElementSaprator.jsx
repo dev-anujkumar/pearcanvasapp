@@ -174,7 +174,7 @@ export function ElementSaprator(props) {
     /* @hideSplitSlateIcon@ hide split slate icon in following list of elements */
     const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
     return (
-        <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
+        <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${props.hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${props.hideElementSeperator}`}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
                 {permissions && permissions.includes('split_slate') && hideSplitSlateIcon && !config.isPopupSlate && !props.firstOne && !(props.setSlateParent == 'part' && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}

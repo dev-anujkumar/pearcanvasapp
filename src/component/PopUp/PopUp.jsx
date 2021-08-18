@@ -190,7 +190,7 @@ class PopUp extends React.Component {
         if(props.isOwnersSlate){
             return (
                 <div className={`dialog-buttons`}>
-                    <span className={`lo-save-button`} onClick={(e) => props.proceed(false, e)}>{props.proceedButton}</span>
+                    <span className={`lo-save-button`} onClick={(e) => props.proceed(this.state.isChecked, false, e)}>{props.proceedButton}</span>
                     <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
@@ -383,7 +383,7 @@ class PopUp extends React.Component {
         else if (props.isSubscribersSlate) {
             return (
                 <>
-                    <div className={`${props.lOPopupClass}`}>This is a subscribed content and cannot be edited. Please use <strong>Copy Content</strong> feature from TOC to proceed with your edits in this content.</div>
+                    <div className={`${props.lOPopupClass}`}>This is a subscribed content and cannot be edited.<br/><br/>If you wish to edit the content, please use <strong>Copy Content</strong> feature from TOC or go to the owner project. Kindly note that the edits in owner project will be reflected for all the subscribers</div>
                 </>
             )
         }

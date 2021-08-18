@@ -36,6 +36,12 @@
 .elementSapratorContainer:hover{
     opacity: 1;
 }
+
+.elementSapratorContainer.blockToolbar{
+    pointer-events: none;
+    opacity: 0 ;
+}
+
 .elemDiv-split {
     width:5%;
     /* float:left; */

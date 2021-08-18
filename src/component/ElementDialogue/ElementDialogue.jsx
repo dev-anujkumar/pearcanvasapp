@@ -132,6 +132,7 @@ class ElementDialogue extends React.PureComponent {
                             permissions={_props.permissions}
                             onClickCapture={_props.onClickCapture}
                             userRole={_props.userRole}
+                            hideElementSeperator={_props.hideElementSeperator}
                         />
                     </Fragment>
                 )

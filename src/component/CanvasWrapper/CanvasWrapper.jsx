@@ -36,7 +36,8 @@ import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/A
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
-import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
+import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
+import {isOwnersSubscribedSlate} from '../CanvasWrapper/subscription_Actions';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -171,6 +172,7 @@ export class CanvasWrapper extends Component {
         let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : "";
         // Filter search icon for popup
         let popupFilter = '';
+        let isToolBarBlocked = this.props.projectSubscriptionDetails && (this.props.projectSharingRole === "SUBSCRIBER"  || this.props.isOwnersSubscribedSlateChecked && this.props.projectSharingRole === "OWNER" ) ? 'blockToolbar' : ''
         if(config.isPopupSlate) {
             popupFilter = 'popup';
         }
@@ -189,7 +191,7 @@ export class CanvasWrapper extends Component {
                     isElmApiError={this.props.ErrorPopup.isElmApiError}
                 />}
                 {/** Ends of custom error popup */}
-                <div id="editor-toolbar" className={`editor-toolbar ${popupFilter}`}>
+                <div id="editor-toolbar" className={`editor-toolbar ${popupFilter} ${isToolBarBlocked}`}>
                     {/* editor tool goes here */}
                     <Toolbar showCanvasBlocker= {this.props.showCanvasBlocker}/>
                     {/* custom list editor component */}
@@ -213,7 +215,7 @@ export class CanvasWrapper extends Component {
                                     {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink}/>
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
@@ -280,7 +282,8 @@ const mapStateToProps = state => {
         alfrescoEditor: state.alfrescoReducer.editor,
         imageArgs: state.alfrescoReducer.imageArgs,
         projectSharingRole:state?.projectInfo?.projectSharingRole,
-        projectSubscriptionDetails:state.projectInfo.projectSubscriptionDetails.isSubscribed
+        projectSubscriptionDetails:state.projectInfo.projectSubscriptionDetails.isSubscribed,
+        isOwnersSubscribedSlateChecked: state.subscriptionReducer.isOwnersSubscribedSlateChecked
     };
 };
 
@@ -337,5 +340,6 @@ export default connect(
         showWrongImagePopup,
         setProjectSharingRole,
         setProjectSubscriptionDetails,
+        isOwnersSubscribedSlate
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

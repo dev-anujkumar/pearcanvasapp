@@ -29,7 +29,7 @@ import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { guid } from '../../constants/utility.js';
+import { guid, releaseOwnerPopup } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { fetchSlateData, setActiveElement,openPopupSlate,setProjectSharingRole,setProjectSubscriptionDetails } from '../CanvasWrapper/CanvasWrapper_Actions';
@@ -48,7 +48,8 @@ import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/
 import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
 import store from '../../appstore/store';
 import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
-import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
+import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
+import {isOwnersSubscribedSlate} from '../CanvasWrapper/subscription_Actions';
 
 let random = guid();
 
@@ -376,9 +377,9 @@ class SlateWrapper extends Component {
      * Calls release lock API
      */
     releaseSlateLock = (projectUrn, slateId) => {
-        this.setState({
-            showReleasePopup: true
-        })
+        this.props.showBlocker(true)
+        showTocBlocker();
+        sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true } })
         this.props.releaseSlateLock(projectUrn, slateId)
     }
 
@@ -462,7 +463,7 @@ class SlateWrapper extends Component {
             })
             return true
         }else if(projectSharingRole === 'OWNER' && projectSubscriptionDetails){
-            return true
+            return this.props.isOwnersSubscribedSlateChecked
         }else if(projectSharingRole === 'SUBSCRIBER' && projectSubscriptionDetails){
             return true
         }
@@ -527,7 +528,8 @@ class SlateWrapper extends Component {
      * Shows 'slate locked' popup
      */
     showLockPopup = () => {
-        const {projectSharingRole,projectSubscriptionDetails}=this.props
+        const {projectSharingRole,projectSubscriptionDetails}=this.props;
+        var isOwnerKeyExist= localStorage.getItem('hasOwnerEdit');
         if (this.state.showLockPopup) {
             const { lockOwner } = this.state
             this.props.showBlocker(true)
@@ -547,7 +549,7 @@ class SlateWrapper extends Component {
                     lockForTOC={false}
                 />
             )
-        } else if (projectSharingRole === 'OWNER' && projectSubscriptionDetails && this.state.showOwnerSlatePopup) {
+        } else if (projectSharingRole === 'OWNER' && projectSubscriptionDetails && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) {
             this.props.showBlocker(true)
             showTocBlocker();
             return (
@@ -604,8 +606,18 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
-    proceed=()=>{ // to be used in future
-
+    proceed = (isChecked, toggleValue, e) => {
+        this.setState({
+            showOwnerSlatePopup: toggleValue
+        })
+        this.props.showBlocker(toggleValue);
+        this.props.showSlateLockPopup(false);
+        hideBlocker()
+        this.prohibitPropagation(e);
+        if (isChecked) {
+            releaseOwnerPopup(isChecked);
+        }
+        this.props.isOwnersSubscribedSlate(false);
     }
 
     handleCopyPastePopup = (wordPastePopup,index)=>{
@@ -958,6 +970,7 @@ class SlateWrapper extends Component {
                     pasteElement={this.props.pasteElement}
                     source={TEXT_SOURCE}
                     handleCopyPastePopup={this.handleCopyPastePopup}
+                    hideElementSeperator={this.props.hideElementSeperator}
                 />
             </>
         )
@@ -1010,6 +1023,7 @@ class SlateWrapper extends Component {
                                                 pasteElement={this.props.pasteElement}
                                                 source={TEXT_SOURCE}
                                                 handleCopyPastePopup={this.handleCopyPastePopup}
+                                                hideElementSeperator={this.props.hideElementSeperator}
                                                 />
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
@@ -1030,6 +1044,7 @@ class SlateWrapper extends Component {
                                         pasteElement={this.props.pasteElement}
                                         projectSharingRole={this.props.projectSharingRole}
                                         projectSubscriptionDetails={this.props.projectSubscriptionDetails}
+                                        hideElementSeperator={this.props.hideElementSeperator}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -1059,6 +1074,7 @@ class SlateWrapper extends Component {
                                             pasteElement={this.props.pasteElement}
                                             handleCopyPastePopup={this.handleCopyPastePopup}
                                             source={TEXT_SOURCE}
+                                            hideElementSeperator={this.props.hideElementSeperator}
                                         />
                                         : null
                                     }
@@ -1616,7 +1632,8 @@ const mapStateToProps = state => {
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
         removeGlossaryImage:state.appStore.removeGlossaryImage,
         projectSharingRole:state?.projectInfo?.projectSharingRole,
-        projectSubscriptionDetails:state?.projectInfo?.projectSubscriptionDetails?.isSubscribed
+        projectSubscriptionDetails:state?.projectInfo?.projectSubscriptionDetails?.isSubscribed,
+        isOwnersSubscribedSlateChecked: state.subscriptionReducer.isOwnersSubscribedSlateChecked
     };
 };
 
@@ -1655,6 +1672,7 @@ export default connect(
         alfrescoPopup,
         showRemoveImageGlossaryPopup,
         setProjectSharingRole,
-        setProjectSubscriptionDetails
+        setProjectSubscriptionDetails,
+        isOwnersSubscribedSlate
     }
 )(SlateWrapper);

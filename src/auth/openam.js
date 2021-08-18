@@ -47,6 +47,7 @@
 // Some global variables
 var debugEnabled = false;
 var storageExist = ("sessionStorage" in window && window.sessionStorage);
+var localStorageExist = ("localStoage" in window && window.localStorage);
 import { releaseSlateLockWithCallback } from "../component/CanvasWrapper/SlateLock_Actions";
 import { sendDataToIframe } from '../constants/utility.js'
 const configOBJ = require('./../config/config');
@@ -76,18 +77,6 @@ var openWindow = function (url, h) {
         }
     }, 500);
 };
-
-/**
- * Gets the path/dir of the page running the script
- * @function getMyURLDir
- * @returns {String}
- */
-function getMyURLDir() {
-    var loc = window.location.pathname;
-    return window.location.protocol + "//" + window.location.hostname + ":" +
-        window.location.port +
-        loc.substring(0, loc.lastIndexOf('/') + 1);
-}
 
 /**
  * Gets the URL of the page running the script
@@ -243,6 +232,23 @@ function removeLocal(storageKey) {
     }
 }
 
+/*
+ * Removes the value for the storageKey
+ * @function removeLocal
+ * @param {type} storageKey
+ * @returns {undefined}
+ */
+function removeLocalStorage(storageKey) {
+    if (localStorageExist) {
+        try {
+            debug("removeLocal: REMOVING " + storageKey);
+            localStorage.removeItem(storageKey);
+        } catch (err) {
+            // Do nothing
+        }
+    }
+}
+
 /**
  * Removes the whole local session storage
  * @function removeAlllocal
@@ -254,6 +260,7 @@ function removeAllLocal() {
             debug("removeAllLocal: REMOVING ALL");
             removeLocal("validSession");
             removeLocal("attributes");
+            removeLocalStorage("hasOwnerEdit");
         } catch (err) {
             // Do nothing
         }
@@ -915,51 +922,6 @@ openamConfig.prototype.authenticateWithModernOpenAM = function (options) {
     return tokenId;
 };
 
-/*
- *  Authenticates an identity using a one state authentication module.
- *  The version of the AM should support the /json/authenticate endpoint.
- *  The realm, module or service can be specified but only modules and services
- *  with one state and  credentials passed in headers are supported at the moment
- * @param {Object} options - The configuration object to use
- * <pre>
- *  The options object is a JSON object, here an example.
- *  {
- *     module: "DataStore",                                         // optional
- *     service: "ldapService",                                      // optional
- *     headers: myHeaders,
- *     realm: "/",                                                  // optional
- *     gotoURL: "https://app.example.com:8080/mypath",              // optional
- *     gotoOnFail: "https://app.example.com:8080/failed",           // optional
- *  }
- * </pre>
- * @param {String} [options.module=OpenAM realm default] The Authentication module
- *  to use in the left side of the login box.
- * @param {String} [options.service=OpenAM realm default] The Authentication service
- *  chain to use in the left side of the login box. Notice that service takes
- *  precedence over module.
- * @param {String} [options.realm=The one configured in openam.js] Realm where the
- *   authentication will take place
- * @param {Object} options.headers - Object containing the credentials passed as headers
- * @param {String} [options.gotoURL=Current page] The URL to go to after a
- *  successful authentication.
- * @param {String} [options.gotoOnFail=Current page] The URL to go to after an
-  * authentication event has failed.
- */
-//openamConfig.prototype.authenticateSimple = function (options) {
-//    var gotoURL = options.gotoURL || getMyURL();
-//    var gotoOnFail = options.gotoOnFail || getMyURL();
-//    var tokenId = this.authenticateWithModernOpenAM(options);
-//    if (tokenId) {
-//        window.location = gotoURL;
-//    } else {
-//        if (gotoOnFail) {
-//           window.location = gotoOnFail;
-//        } else {
-//            throw("Authentication failed");
-//        }
-//    }
-//};
-
 /**
  *  Authenticates an identity using a one state authentication module by using
  *   the values submitted either in the form containing username and password or
@@ -1257,14 +1219,6 @@ openamConfig.prototype.logout = function (options) {
  */
 openamConfig.prototype.handleSessionExpire = function () {
     let redirectURL = window.parent.location.origin;
-    /*
-    if(process.env.NODE_ENV=='production'){
-         redirectURL = 'https://mycloud.pearson.com/redirect?url='+window.location;                
-    }
-    else {
-         redirectURL = 'https://mycloudtest.pearson.com/redirect?url='+window.location;
-    }
-    */
     let encodedURL = encodeURI(redirectURL);
     sendDataToIframe({
         'type': 'autoLogOut',

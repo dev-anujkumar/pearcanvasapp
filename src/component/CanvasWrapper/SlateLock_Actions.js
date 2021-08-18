@@ -126,12 +126,16 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
  */
 export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
+    let isOwnerKey = localStorage.getItem('hasOwnerEdit');
     let data = {
        projectUrn,
        slateId
     }
     return axios.post(url, data)
        .then((res) => {
+        if (isOwnerKey) {
+            localStorage.removeItem('hasOwnerEdit');
+        }
            store.dispatch({
                type: SET_LOCK_FLAG,
                payload: false
