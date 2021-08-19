@@ -1,5 +1,5 @@
 import React from 'react';
-import {matchHTMLwithRegex,encodeHTMLInWiris} from '../../src/constants/utility.js';
+import {matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize} from '../../src/constants/utility.js';
 
 
 
@@ -49,5 +49,39 @@ describe('Testing Function - encodeHTMLInWiris', () => {
         let returnData = encodeHTMLInWiris(strData);
 
         expect(returnData).toBe(expectedData);
+    })
+})
+
+describe('Testing Function - checkHTMLdataInsideString', () => {
+    it('Case 1', () => {
+        let str = `<p>test string</p>`;
+        let result = checkHTMLdataInsideString(str);
+        expect(result).toBe('test string');
+    })
+    it('Case 2', () => {
+        let str = `<p><br></p>`;
+        let result = checkHTMLdataInsideString(str);
+        expect(result).toBe('');
+    })
+})
+
+describe('Testing Function - dropdownValueAtIntialize', () => {
+    it('Case 1', () => {
+        const dropdownData = ['figure', 'table', 'equation'];
+        let formattedLabel = `<p>figure</p>`;
+        let result = dropdownValueAtIntialize(dropdownData, formattedLabel);
+        expect(result).toBe('Figure');
+    })
+    it('Case 2', () => {
+        const dropdownData = ['figure', 'table', 'equation'];
+        let formattedLabel = `<p></p>`;
+        let result = dropdownValueAtIntialize(dropdownData, formattedLabel);
+        expect(result).toBe('No Label');
+    })
+    it('Case 3', () => {
+        const dropdownData = ['figure', 'table', 'equation'];
+        let formattedLabel = `<p>test String</p>`;
+        let result = dropdownValueAtIntialize(dropdownData, formattedLabel);
+        expect(result).toBe('Custom');
     })
 })
