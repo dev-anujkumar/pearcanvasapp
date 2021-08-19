@@ -32,7 +32,7 @@ import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../.
 import { guid, releaseOwnerPopup } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
-import { fetchSlateData, setActiveElement,openPopupSlate,setProjectSharingRole,setProjectSubscriptionDetails } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { fetchSlateData, setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
@@ -970,7 +970,6 @@ class SlateWrapper extends Component {
                     pasteElement={this.props.pasteElement}
                     source={TEXT_SOURCE}
                     handleCopyPastePopup={this.handleCopyPastePopup}
-                    hideElementSeperator={this.props.hideElementSeperator}
                 />
             </>
         )
@@ -1023,7 +1022,6 @@ class SlateWrapper extends Component {
                                                 pasteElement={this.props.pasteElement}
                                                 source={TEXT_SOURCE}
                                                 handleCopyPastePopup={this.handleCopyPastePopup}
-                                                hideElementSeperator={this.props.hideElementSeperator}
                                                 />
                                             : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                     }
@@ -1074,7 +1072,6 @@ class SlateWrapper extends Component {
                                             pasteElement={this.props.pasteElement}
                                             handleCopyPastePopup={this.handleCopyPastePopup}
                                             source={TEXT_SOURCE}
-                                            hideElementSeperator={this.props.hideElementSeperator}
                                         />
                                         : null
                                     }
@@ -1671,8 +1668,6 @@ export default connect(
         showWrongImagePopup,
         alfrescoPopup,
         showRemoveImageGlossaryPopup,
-        setProjectSharingRole,
-        setProjectSubscriptionDetails,
         isOwnersSubscribedSlate
     }
 )(SlateWrapper);

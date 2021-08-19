@@ -12,7 +12,6 @@ import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions';
 import { DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
-import {isOwnersSubscribedSlate} from '../CanvasWrapper/subscription_Actions';
 
 /**
 * @description - PopUp is a class based component. It is defined simply

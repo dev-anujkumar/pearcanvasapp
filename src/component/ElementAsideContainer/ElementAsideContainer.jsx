@@ -382,7 +382,6 @@ class ElementAsideContainer extends Component {
                             userRole={this.props.userRole}
                             pasteElement={this.props.pasteElement}
                             source={ASIDE_SOURCE}
-                            hideElementSeperator={this.props.hideElementSeperator}
                         />
                     )
                 } else {
@@ -408,7 +407,6 @@ class ElementAsideContainer extends Component {
                                     userRole={this.props.userRole}
                                     pasteElement={this.props.pasteElement}
                                     source={ASIDE_SOURCE}
-                                    hideElementSeperator={this.props.hideElementSeperator}
                                 />
                                 {this.section(element, index)}
                                 </>
@@ -440,7 +438,6 @@ class ElementAsideContainer extends Component {
                                         userRole={this.props.userRole}
                                         pasteElement={this.props.pasteElement}
                                         source={ASIDE_SOURCE}
-                                        hideElementSeperator={this.props.hideElementSeperator}
                                     />
                                     }
                                     <ElementContainer
@@ -475,7 +472,6 @@ class ElementAsideContainer extends Component {
                                         userRole={this.props.userRole}
                                         pasteElement={this.props.pasteElement}
                                         source={ASIDE_SOURCE}
-                                        hideElementSeperator={this.props.hideElementSeperator}
                                     />
                                 </React.Fragment>
                             )

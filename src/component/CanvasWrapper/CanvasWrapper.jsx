@@ -37,7 +37,6 @@ import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Tool
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
-import {isOwnersSubscribedSlate} from '../CanvasWrapper/subscription_Actions';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -340,6 +339,5 @@ export default connect(
         showWrongImagePopup,
         setProjectSharingRole,
         setProjectSubscriptionDetails,
-        isOwnersSubscribedSlate
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

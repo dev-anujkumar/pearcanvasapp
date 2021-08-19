@@ -1380,7 +1380,6 @@ class ElementContainer extends Component {
                         handleAudioPopupLocation={this.handleAudioPopupLocation}
                         parentElement={this.props.parentElement}
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
-                        hideElementSeperator={this.props.hideElementSeperator}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1450,7 +1449,6 @@ class ElementContainer extends Component {
                         parentUrn={this.props?.parentUrn}
                         handleCommentspanel={handleCommentspanel}
                         pasteElement={this.props.pasteElement}
-                        hideElementSeperator={this.props.hideElementSeperator}
                     />;
                     labelText = 'SH'
                     break;
@@ -1472,7 +1470,7 @@ class ElementContainer extends Component {
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
-                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} hideElementSeperator={this.props.hideElementSeperator}
+                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement}
                     />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
@@ -1525,7 +1523,6 @@ class ElementContainer extends Component {
                         elementSepratorProps={elementSepratorProps}
                         pasteElement={this.props.pasteElement}
                         userRole={this.props.userRole}
-                        hideElementSeperator={this.props.hideElementSeperator}
                     />
                     labelText = 'PE'
                     break;
@@ -1579,7 +1576,7 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} hideElementSeperator={this.props.hideElementSeperator} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
                     } else {
                         labelText = MULTI_COLUMN_2C.ELEMENT_TAG_NAME
@@ -1600,7 +1597,7 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} hideElementSeperator={this.props.hideElementSeperator}/>
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
                         </MultiColumnContext.Provider>;
                     }
                     break;

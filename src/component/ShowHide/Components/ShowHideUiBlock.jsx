@@ -68,7 +68,6 @@ const ShowHideUiBlock = (props) => {
 			element = {props?.element}
 			showPlayscript = {showPlayscript}
 			showDiscussion = {showDiscussion}
-			hideElementSeperator={props?.hideElementSeperator}
 		/>
 	}
 
