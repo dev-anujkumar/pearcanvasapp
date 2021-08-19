@@ -40,7 +40,8 @@ import {
     WRONG_IMAGE_POPUP,
     SHOW_REMOVE_GLOSSARY_IMAGE,
     ADD_FIGURE_GLOSSARY_POPUP,
-    SET_FIGURE_GLOSSARY
+    SET_FIGURE_GLOSSARY,
+    UPDATE_OLD_FIGUREIMAGE_INFO
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -67,7 +68,8 @@ const initialState = {
     openWrongImagePopup:false,
     removeGlossaryImage:false,
     addfigureGlossarypopup:false,
-    figureGlossaryData:{}
+    figureGlossaryData:{},
+    oldFigureDataForCompare: {}
 };
 
 const splittedElementIndexValue = "5";
@@ -677,4 +679,14 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
             type: INITIAL_ACTION,
         })).toEqual(output)
     });
+    it('case 44- UPDATE_OLD_FIGUREIMAGE_INFO ', () => {
+        let output = {
+            ...initialState,
+            oldFigureDataForCompare: {}
+        }
+        expect(reducer(initialState, {
+            type: UPDATE_OLD_FIGUREIMAGE_INFO,
+            payload: {}
+        })).toEqual(output);
+    })
 });

@@ -2424,6 +2424,79 @@ export const slateWithCitationElement ={
 }
 }
 
+export const slateWithPopupData = {
+    contents: {
+        bodymatter: [
+            {
+                groupeddata: {
+                    bodymatter: [
+                        {
+                            groupdata: {
+                                bodymatter: [
+                                    {
+                                        elementdata: {
+                                            bodymatter: [
+                                                {
+                                                    popupdata: {
+                                                        'formatted-title': {
+                                                            elementdata: {
+
+                                                            }
+                                                        },
+                                                        'postertextobject': [
+                                                            {
+                                                                elementdata: {}
+                                                            }
+                                                        ]
+                                                    },
+                                                    interactivedata: {
+                                                        'show': [{
+                                                            id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                                                            elementdata: {
+                                                                text: '',
+                                                                html: ''
+                                                            }
+                                                        }]
+                                                    },
+                                                    contents: {
+                                                        bodymatter: [{
+                                                            popupdata: {
+                                                                'postertextobject': [
+                                                                    {
+                                                                        elementdata: {}
+                                                                    }
+                                                                ],
+                                                                'formatted-title': {
+                                                                    elementdata: {
+        
+                                                                    }
+                                                                }
+                                                            },
+                                                            interactivedata: {
+                                                                'show': [{
+                                                                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                                                                    elementdata: {
+                                                                        text: '',
+                                                                        html: ''
+                                                                    }
+                                                                }]
+                                                            }
+                                                        }]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
+
 export const figureDataTCM = {
     figuredata : {
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
