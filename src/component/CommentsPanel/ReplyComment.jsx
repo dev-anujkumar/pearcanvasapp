@@ -14,6 +14,26 @@ class ReplyComment extends React.Component {
 
     /**
     * 
+    *@discription - This function displays the reply box in slate view
+    */
+    showReplyBox = (props) => {
+        return (
+            <div className="reply">
+                <div>
+                    <span className="Reply-Num">Reply #{props.comment.replyComments.length + 1}</span>
+                    <span className="Username-Copy">{props.comment.commentCreator}</span>
+                </div>
+                <div className="wrapper-reply">
+                    <input type="text" placeholder="Type something" className="typeSomething" value={this.state.text}
+                    onChange={this.updateCommentText} />
+                    <a href="#"><img src={sendBlack} className="unique" onClick={this.replyComment} /></a>
+                </div>
+            </div>
+        )
+    }
+
+    /**
+    * 
     *@discription - This function is to update the text of comment
     */
     updateCommentText = (e) => {
@@ -84,37 +104,17 @@ class ReplyComment extends React.Component {
         if (props.showReplyComments) {
             return (
                 <>
-                    
-                    <div className="reply">
-                        <div>
-                            <span className="Reply-Num">Reply #{props.comment.replyComments.length + 1}</span>
-                            <span className="Username-Copy">{props.comment.commentCreator}</span>
-                        </div>
-                        <div className="wrapper-reply">
-                            <input type="text" placeholder="Type something" className="typeSomething" value={this.state.text}
-                            onChange={this.updateCommentText} />
-                            <a href="#"><img src={sendBlack} className="unique" onClick={this.replyComment} /></a>
-                        </div>
-                    </div>
+                    {this.showReplyBox(props)}                    
                     {props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))}
-                    
                 </>
             )
 
         }
         else {
             return (
-                <div className="reply">
-                    <div>
-                        <span className="Reply-Num">Reply #{props.comment.replyComments.length + 1}</span>
-                        <span className="Username-Copy">{props.comment.commentCreator}</span>
-                    </div>
-                    <div className="wrapper-reply">
-                        <input type="text" placeholder="Type something" className="typeSomething" value={this.state.text} onChange={this.updateCommentText} />
-                        <a href="#"><img src={sendBlack} className="unique" onClick={this.replyComment} /></a>
-                    </div>
-                </div>
-
+                <>
+                    {this.showReplyBox(props)}
+                </>
             )
         }
     }
