@@ -48,6 +48,22 @@ class Comments extends React.Component {
         this.setState({ showActionsMenu: show })
     }
 
+    /**
+    * 
+    *@discription - This function is to show the comment in slateview
+    */
+    printComment = () => {
+        const { comment } = this.props;
+        var coloredEnding = comment.commentString.indexOf(")") + 1;
+        var coloredText = comment.commentString.substr(0, coloredEnding);
+        var plainText = comment.commentString.substr(coloredEnding+1, comment.commentString.length-1);
+        return (
+            <div>
+            <span className="taggedPerson" >{coloredText}</span>
+            <span className="plainText">{plainText}</span>
+            </div>
+        )
+    }
 
    /**
    * 
@@ -279,9 +295,9 @@ class Comments extends React.Component {
                         {
                             this.state.mode == "edit" ? this.editForm() 
                             :
-                            <div className="text-medium color-gray-71 mb-4">
+                            <div className="text-medium color-gray-71 mb-4" >
                                 <p className="hyphens">
-                                    {comment.commentString}
+                                    {this.printComment()}
                                 </p>
                             </div>
                         }         
@@ -320,7 +336,7 @@ class Comments extends React.Component {
                     <ReplyComment
                         close={this.toggleReplyForm}
                         comment={comment}
-                        showReplyForm={this.state.showReplyForm}
+                        showReplyForm={this.state.showReplyForm}    
                         updateReplyComment={updateReplyComment}
                         elementId={elementId}
                         toggleReplyForm={toggleReplyForm}
@@ -336,3 +352,11 @@ Comments.propTypes = {
 }
 
 export default Comments;
+
+
+
+
+
+// line 291 
+// {comment.commentString}
+
