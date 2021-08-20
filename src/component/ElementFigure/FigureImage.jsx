@@ -86,6 +86,10 @@ class FigureImage extends Component {
 */
 
     deleteFigureResource = () => {
+        this.props.handleFocus();
+        if (hasReviewerRole()) {
+            return true
+        }
         // store current element figuredata in store
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
         let setFigureData = {
