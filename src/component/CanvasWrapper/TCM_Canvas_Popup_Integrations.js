@@ -28,7 +28,6 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
     }).then((res) => {
         const data = res.data
         const id = element.id
-        let resolved = false;
         data.map((elemData) => {
             let eURN = elemData.elemURN
             // to check the element ids which has manifest + work id
@@ -41,14 +40,11 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
                 const elemEditorName = elemData.latestPendingTransaction?.elementEditor ? elemData.latestPendingTransaction.elementEditor : elemData.latestAcceptedTransaction?.elementEditor
                 const tcmObject = { isTCMCanvasPopup: true, tcmElemData: tcmData.result[0], elemData: eURN, elementEditor: elemEditorName, tcmStatus: elemData.latestAcceptedTransaction ? true : false,spinnerStatus: false,
                 prevElementPopup: id}
-                if(!resolved) {
                 dispatch({
                     type: LAUNCH_TCM_CANVAS_POPUP,
                     payload: {...tcmObject, theme:''},
                     
                 })
-                resolved = true;
-            }
             }
         })
     }).catch((error) => {
