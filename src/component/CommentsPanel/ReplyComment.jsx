@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import config from '../../config/config';
 import sendBlack from '../../images/CommentsPanel/send-black.svg'
+import CommentMention from '../CommentMention/CommentMention.jsx'
 
 class ReplyComment extends React.Component {
     constructor(props) {
@@ -24,9 +25,8 @@ class ReplyComment extends React.Component {
                     <span className="Username-Copy">{props.comment.commentCreator}</span>
                 </div>
                 <div className="wrapper-reply">
-                    <input type="text" placeholder="Type something" className="typeSomething" value={this.state.text}
-                    onChange={this.updateCommentText} />
-                    <a href="#"><img src={sendBlack} className="unique" onClick={this.replyComment} /></a>
+               <CommentMention projectUsers={this.props.users} comment={this.state.text} handleCommentChange={this.updateCommentText}/>
+                   <img src={sendBlack} className="unique" onClick={this.replyComment} />
                 </div>
             </div>
         )
@@ -38,7 +38,7 @@ class ReplyComment extends React.Component {
     */
     updateCommentText = (e) => {
         this.setState({
-            text: e.target.value,
+            text: e,
         })
     }
 
@@ -119,7 +119,6 @@ class ReplyComment extends React.Component {
         }
     }
     render() {
-        // const { reply } = this.props
         return (
             <>
                 {this.replyCommentForm(this.props)}

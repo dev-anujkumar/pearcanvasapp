@@ -1,6 +1,7 @@
 import React  from 'react';
 import { MentionsInput, Mention } from 'react-mentions';
-import './CommentMention.css';
+import defaultStyle from "./defaultStyle.js";
+import replyDefaultStyle from './replyDefaultStyle.js';
 
 const CommentMention = (props) => {
     
@@ -15,15 +16,14 @@ const CommentMention = (props) => {
           value={props.comment}
           onChange={(event) => props.handleCommentChange(event.target.value)}
           placeholder="Type..."
-          className="mentions"
-          markup="@*__display__*"
-          allowSuggestionsAboveCursor={false}
+          markup="@[__display__](__type__:__id__)"
+          allowSuggestionsAboveCursor={props.isAddComment ? false : true}
+          style={props.isAddComment ? defaultStyle : replyDefaultStyle}
         >
           <Mention
             type="user"
             trigger="@"
             data={userMentionData}
-            className="mentions__mention"
             appendSpaceOnAdd={true}
           />
         </MentionsInput>

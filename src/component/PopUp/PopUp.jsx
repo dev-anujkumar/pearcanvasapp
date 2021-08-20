@@ -359,7 +359,7 @@ class PopUp extends React.Component {
                                     {this.renderInputBox(this.props)}
                                 </div>
                                 <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>
-                                 {this.props.isAddComment && <CommentMention projectUsers={this.props.projectUsers} comment={this.props.comment} handleCommentChange={this.props.handleChange}/>}
+                                 {this.props.isAddComment && <CommentMention projectUsers={this.props.projectUsers} comment={this.props.comment} handleCommentChange={this.props.handleChange} isAddComment={this.props.isAddComment}/>}
                                 {this.renderButtons(this.props)}
                             </div>
                         </div>
