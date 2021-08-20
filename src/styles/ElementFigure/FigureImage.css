@@ -653,7 +653,7 @@ th ol li.listItemNumeroUnoNone:before {
     margin: 24px auto;
     padding: 8px 20px;
     border-radius: 2px;
-    border: solid 1px #dcdcdc;
+    border: 1px solid #dcdcdc;
     background-color: #fff;
     text-align: center;
     justify-content: center;
@@ -663,7 +663,10 @@ th ol li.listItemNumeroUnoNone:before {
     cursor: pointer;
 }
 .figurebutton:hover{
-    border: solid 1px #005a70;
+    border: 1px solid #005a70;
+    background-color: #def8ff;
+}
+.deletefigurebutton:hover, .updatefigurebutton:hover {
     background-color: #def8ff;
 }
 .updatefigurebutton{
@@ -673,7 +676,6 @@ th ol li.listItemNumeroUnoNone:before {
     height: 36px;
     padding: 8px 20px;
     border-radius: 2px;
-    border: solid 1px #dcdcdc;
     background-color: #fff;
     text-align: center;
     justify-content: center;
@@ -690,9 +692,9 @@ th ol li.listItemNumeroUnoNone:before {
     justify-content: center;
     cursor: pointer;
     right: 16px;
-    position: absolute;
     padding: 5px 6px 3px 6px;
     border-radius: 2px;
+    height: 36px;
 }
 .figure-image-container{
     position: relative;
@@ -751,7 +753,7 @@ th ol li.listItemNumeroUnoNone:before {
 .label.active {
   color: #005a70;
 }
-.figure-header{
+.new-figure-image-header {
   position: relative;
   display: flex;
 }

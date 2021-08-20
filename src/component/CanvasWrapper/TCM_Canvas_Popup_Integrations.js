@@ -42,7 +42,8 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
                 prevElementPopup: id}
                 dispatch({
                     type: LAUNCH_TCM_CANVAS_POPUP,
-                    payload: tcmObject,
+                    payload: {...tcmObject, theme:''},
+                    
                 })
             }
         })

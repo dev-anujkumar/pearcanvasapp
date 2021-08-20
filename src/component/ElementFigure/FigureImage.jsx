@@ -331,7 +331,7 @@ class FigureImage extends Component {
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
-                            <header className="figure-header">
+                            <header className="figure-header new-figure-image-header">
                                 <div className='figure-label-field'>
                                     <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
                                     <div className="figure-label" onClick={this.handleFigureDropdown}>

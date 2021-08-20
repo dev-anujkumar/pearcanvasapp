@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as updateHelpers from '../../../src/component/ElementContainer/ElementContainerUpdate_helpers';
-import { slateWithCitationElement} from "../../../fixtures/slateTestingData"
+import { slateWithCitationElement, slateWithPopupData} from "../../../fixtures/slateTestingData"
 import { multiColumnContainer } from "../../../fixtures/multiColumnContainer";
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
@@ -18,6 +18,23 @@ jest.mock('../../../src/constants/utility.js', () => ({
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
     tcmSnapshotsForUpdate: jest.fn()
+}))
+jest.mock('../../../src/component/ShowHide/ShowHide_Helper.js', () => ({
+    getShowHideElement: jest.fn(() => {
+        return {
+            interactivedata: {
+                show: [{
+                    id: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a',
+                    type: 'element-authoredtext',
+                    elementdata: {
+                        text: ''
+                    }
+                }]
+            },
+            type: 'showhide'
+        }
+    }),
+    findSectionType: jest.fn(()=> "show")
 }))
 let cb = new stub();
 jest.setTimeout(10000);
@@ -1631,6 +1648,265 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateLOInStore).toHaveBeenCalled()
             spyupdateLOInStore.mockClear()
         })
-         
+        it("Test updateLOInStore function - default case ", async () => {
+            const store = mockStore(() => initialState3);
+            const spyupdateLOInStore = jest.spyOn(updateHelpers, "updateLOInStore")
+            updateHelpers.updateLOInStore({
+                oldLO_Data: {
+                    loIndex: ['0-1-2-3']
+                },
+                newLO_Data: {},
+                getState: store.getState,
+                dispatch: store.dispatch,
+                activeIndex: 0
+            })
+            expect(spyupdateLOInStore).toHaveBeenCalled()
+            spyupdateLOInStore.mockClear()
+        })
+        it("Test updateLOInCanvasStore function - default case ", async () => {
+            const spyupdateLOInStore = jest.spyOn(updateHelpers, "updateLOInCanvasStore")
+            updateHelpers.updateLOInCanvasStore({
+                updatedLO: {
+                    loIndex: ['0-1-2-3']
+                },
+                _slateBodyMatter: [],
+                activeIndex: 0
+            })
+            expect(spyupdateLOInStore).toHaveBeenCalled()
+            spyupdateLOInStore.mockClear()
+        })
+        it("updateElementInStore - parentElement - popup", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    sectionType: "postertextobject"
+                },
+                asideData: {
+                    ...asideData,
+                    parent: {
+                        type: 'groupedcontent'
+                    }
+                },
+                parentUrn: {
+                    elementType: "element-aside"
+                },
+                elementIndex: "0-0-0-0",
+                showHideType: null,
+                parentElement: { type: "popup"},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - parentElement - without sectionType", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f"
+                },
+                asideData: {
+                    ...asideData,
+                    parent: {
+                        type: 'groupedcontent'
+                    }
+                },
+                parentUrn: {
+                    elementType: "element-aside"
+                },
+                elementIndex: "0-0-0-0",
+                showHideType: null,
+                parentElement: { type: "popup"},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - without parentElement", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: ''
+                },
+                asideData: {
+                    ...asideData,
+                    parent: {
+                        type: 'groupedcontent'
+                    }
+                },
+                parentUrn: {
+                    elementType: "element-aside"
+                },
+                elementIndex: "0-0-0-0",
+                showHideType: 'show',
+                parentElement: {
+                    type: 'showhide'
+                },
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - parentUrn - manifest", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: '',
+                    sectionType: 'postertextobject'
+                },
+                asideData: {
+                    ...asideData,
+                    parent: {
+                        type: 'groupedcontent'
+                    }
+                },
+                parentUrn: {
+                    elementType: "manifest"
+                },
+                elementIndex: "0-0-0-0-0",
+                showHideType: 'show',
+                parentElement: {
+                    type: 'popup'
+                },
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - parentUrn - manifest - without sectionType", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: ''
+                },
+                asideData: {
+                    ...asideData,
+                    parent: {
+                        type: 'groupedcontent'
+                    }
+                },
+                parentUrn: {
+                    elementType: "manifest"
+                },
+                elementIndex: "0-0-0-0-0",
+                showHideType: 'show',
+                parentElement: {
+                    type: 'popup'
+                },
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - parentUrn - manifest - parentElement - showhide", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: ''
+                },
+                asideData: {
+                    ...asideData,
+                    parent: {
+                        type: 'groupedcontent'
+                    }
+                },
+                parentUrn: {
+                    elementType: "manifest"
+                },
+                elementIndex: "0-0-0-0-0",
+                showHideType: 'show',
+                parentElement: {
+                    type: 'showhide'
+                },
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - parentUrn - manifest - without parentElement", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: ''
+                },
+                asideData: {
+                    ...asideData,
+                    parent: {
+                        type: 'groupedcontent'
+                    }
+                },
+                parentUrn: {
+                    elementType: "manifest"
+                },
+                elementIndex: "0-0-0-0-0",
+                showHideType: 'show',
+                parentElement: null,
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
     })
 })
