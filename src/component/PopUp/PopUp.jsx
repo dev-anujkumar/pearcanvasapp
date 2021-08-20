@@ -11,6 +11,7 @@ import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
+import CommentMention from '../CommentMention/CommentMention.jsx'
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -182,7 +183,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isAddComment) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -358,6 +359,7 @@ class PopUp extends React.Component {
                                     {this.renderInputBox(this.props)}
                                 </div>
                                 <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>
+                                 {this.props.isAddComment && <CommentMention projectUsers={this.props.projectUsers} comment={this.props.comment} handleCommentChange={this.props.handleChange}/>}
                                 {this.renderButtons(this.props)}
                             </div>
                         </div>

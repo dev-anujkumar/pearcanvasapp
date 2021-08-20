@@ -318,6 +318,7 @@ class FigureImage extends Component {
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
+            figureLabelFromApi = figureLabelFromApi.toLowerCase();
             figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
         } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
             figureLabelValue = 'No Label';
@@ -330,7 +331,7 @@ class FigureImage extends Component {
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
-                            <header className="figure-header">
+                            <header className="figure-header new-figure-image-header">
                                 <div className='figure-label-field'>
                                     <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
                                     <div className="figure-label" onClick={this.handleFigureDropdown}>
