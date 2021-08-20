@@ -17,7 +17,7 @@ import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
-import { dropdownData, dropdownOptions, figureLabelData } from '../../constants/Element_Constants';
+import { dropdownData, dropdownOptions, figureLabelData, labelHtmlData } from '../../constants/Element_Constants';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -277,6 +277,8 @@ class FigureImage extends Component {
         let labelElement = document.getElementById(`cypress-${id}`);
         if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
+            labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
     }
@@ -285,6 +287,18 @@ class FigureImage extends Component {
         let labelElement = document.getElementById(`cypress-${id}`);
         if (labelElement?.nextElementSibling) {
             labelElement?.nextElementSibling?.classList?.remove('label-color-change');
+        }
+        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+        }
+        // BG-5081 fixes
+        if (id === '0-0' && labelElement?.innerHTML) {
+            if (dropdownData.indexOf(labelElement?.innerHTML.toLowerCase()) > -1) {
+                let { figureLabelValue } = this.state;
+                let labelElementText = labelElement?.innerHTML.toLowerCase();
+                figureLabelValue = labelElementText.charAt(0).toUpperCase() + labelElementText.slice(1);
+                this.setState({ figureLabelValue: figureLabelValue });
+            }
         }
     }
 
@@ -344,7 +358,7 @@ class FigureImage extends Component {
                                         <ul>
                                             {this.state.figureLabelData.map((label, i) => {
                                                 return (
-                                                    <li key={i} disabled = {this.state.figureLabelData === label} onClick={(e) => { this.changeFigureLabel(e, label); this.handleCloseDropDrown() }}>{label}</li>
+                                                    <li key={i} onClick={(e) => { this.changeFigureLabel(e, label); this.handleCloseDropDrown() }}>{label}</li>
                                                 )
 
                                             })}
