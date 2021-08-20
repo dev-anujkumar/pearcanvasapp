@@ -344,6 +344,19 @@ class PopUp extends React.Component {
         }
     }
 
+    renderCommentPanelInput = (props) => {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isTCMCanvasPopup) {
+            return null
+        }
+        else {
+            if (props.isAddComment) {
+                return (
+                    <CommentMention projectUsers={props.projectUsers} comment={props.comment} handleCommentChange={props.handleChange} isAddComment={props.isAddComment}/>
+                )
+            }
+        }
+    }
+
     render() {
         const { active, assessmentClass, isGlossary } = this.props;
         return (
@@ -359,7 +372,7 @@ class PopUp extends React.Component {
                                     {this.renderInputBox(this.props)}
                                 </div>
                                 <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>
-                                 {this.props.isAddComment && <CommentMention projectUsers={this.props.projectUsers} comment={this.props.comment} handleCommentChange={this.props.handleChange} isAddComment={this.props.isAddComment}/>}
+                                {this.renderCommentPanelInput(this.props)}
                                 {this.renderButtons(this.props)}
                             </div>
                         </div>
