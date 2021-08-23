@@ -9,9 +9,11 @@ describe('Testing CommentsPanel component with props', () => {
     let props = {
         showReplyForm: true,
         toggleReplyForm: true,
-        comment: commentWithReply
+        comment: commentWithReply,
+        close: jest.fn()
     }
-    let wrapper = mount(< ReplyComment
+
+    let wrapper = shallow(< ReplyComment
         updateReplyComment={updateReplyComment}
         {...props} />)
     const instance = wrapper.instance();
@@ -43,13 +45,9 @@ describe('Testing CommentsPanel component with props', () => {
     })
 
     it('tests the function  updateComment with if condition', () => {
-        let event = {
-            target: {
-                value: "test"
-            }
-        }
+        let event = "test"
         instance.updateCommentText(event);
-        const text = wrapper.state().text;
+        const text = instance.state.text;
         expect(text).toEqual("test");
     })
 
