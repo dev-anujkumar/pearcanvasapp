@@ -38,7 +38,7 @@ class ReplyComment extends React.Component {
     */
     updateCommentText = (e) => {
         this.setState({
-            text: e,
+            text: e
         })
     }
 
@@ -58,7 +58,7 @@ class ReplyComment extends React.Component {
             commentString: text,
             commentOnEntity: elementId
         }
-        this.setState({text:""});
+        this.setState({text:""})
         this.props.updateReplyComment(commentUrn, reply, elementId);
         this.props.close();
     }
@@ -104,8 +104,8 @@ class ReplyComment extends React.Component {
         if (props.showReplyComments) {
             return (
                 <>
-                    {this.showReplyBox(props)}                    
-                    {props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))}
+                {this.showReplyBox(props)}
+                {props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))}
                 </>
             )
 
@@ -113,7 +113,7 @@ class ReplyComment extends React.Component {
         else {
             return (
                 <>
-                    {this.showReplyBox(props)}
+                {this.showReplyBox(props)}
                 </>
             )
         }
@@ -127,14 +127,10 @@ class ReplyComment extends React.Component {
     }
 
 }
-    
+
 ReplyComment.propTypes = {
     /** commet data attached to store and contains complete comment object */
     comment: PropTypes.object.isRequired
 }
 
 export default ReplyComment;
-
-
-
-                    

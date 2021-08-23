@@ -306,9 +306,9 @@ class Comments extends React.Component {
                         {
                             this.state.mode == "edit" ? this.editForm() 
                             :
-                            <div className="text-medium color-gray-71 mb-4" >
+                            <div className="text-medium color-gray-71 mb-4">
                                 <p className="hyphens">
-                                    {this.printComment()}
+                                {this.printComment()}
                                 </p>
                             </div>
                         }         
@@ -335,11 +335,11 @@ class Comments extends React.Component {
                                 <span className="property-value capitalize color-gray-71">{comment.commentStatus.toLowerCase()}</span>
                             </div>
                             <div className="property">
-                                    <div onClick={this.setReplyDropdownState}>
-                                    <span className="property-value Replies"> {comment.replyComments.length} </span>
-                                    <span className="property-title Replies">Replies</span>
-                                    <img className="Path" src={iconArrow} />
-                                </div>
+                            <div onClick={this.setReplyDropdownState}>
+                            <span className="property-value Replies"> {comment.replyComments.length} </span>
+                            <span className="property-title Replies">Replies</span>
+                            <img className="Path" src={iconArrow} />
+                            </div>
                             </div>
 
 
@@ -350,7 +350,7 @@ class Comments extends React.Component {
                     <ReplyComment
                         close={this.toggleReplyForm}
                         comment={comment}
-                        showReplyForm={this.state.showReplyForm}    
+                        showReplyForm={this.state.showReplyForm}
                         updateReplyComment={updateReplyComment}
                         elementId={elementId}
                         toggleReplyForm={toggleReplyForm}
@@ -368,11 +368,3 @@ Comments.propTypes = {
 }
 
 export default Comments;
-
-
-
-
-
-// line 291 
-// {comment.commentString}
-
