@@ -1908,5 +1908,93 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateElementInStore).toHaveBeenCalled()
             spyupdateElementInStore.mockClear()
         })
+        it("updateStore - loData case", () => {
+            const store = mockStore(() => initialState);
+            
+            const args = { 
+                updatedData: {
+                    ...updatedData,
+                    loData: [{
+                        elementdata: {
+                            loref: ''
+                        },
+                        metaDataAnchorID: []
+                    }],
+                    elementVersionType: 'element-generateLOlist'
+                },
+                elementIndex: 0,
+                parentUrn: null,
+                asideData,
+                showHideType: null,
+                parentElement,
+                currentSlateData: slateLevelData.slateLevelData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"],
+                responseData: { ...updatedData, id: "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019", loData: [{
+                    elementdata: {
+                        loref: ''
+                    }
+                }]},
+                fetchSlateData: jest.fn(),
+                getState: store.getState,
+                dispatch: store.dispatch,
+            }
+            const spyupdateStore = jest.spyOn(updateHelpers, "updateStore")
+            updateHelpers.updateStore(args)
+            expect(spyupdateStore).toHaveBeenCalled()
+            expect(spyupdateStore).toHaveReturnedWith(false);
+            spyupdateStore.mockClear()
+        })
+        it("processAndStoreUpdatedResponse method - slateVersionUrn", () => {
+            const store = mockStore(() => initialState);
+            const params = {
+                updatedData: {
+                    id: 'urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019',
+                    slateVersionUrn: 'urn:pearson:manifest:8f33291d-4b57-4fab-b890-68aa46a117bd'
+                },
+                elementIndex: 0,
+                parentUrn: {},
+                asideData: {},
+                showHideType: '',
+                parentElement: {},
+                getState: store.getState,
+                dispatch: store.dispatch,
+                poetryData: {},
+                updateBodymatter: {},
+                responseData: {
+                    id: 'urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34020'
+                },
+                fetchSlateData: {},
+                showHideObj: {}
+            }
+            const spyupdateStore = jest.spyOn(updateHelpers, "processAndStoreUpdatedResponse")
+            updateHelpers.processAndStoreUpdatedResponse (params)
+            expect(spyupdateStore).toHaveBeenCalled()
+            spyupdateStore.mockClear()
+        })
+        it("processAndStoreUpdatedResponse method - without slateVersionUrn", () => {
+            const store = mockStore(() => initialState);
+            const params = {
+                updatedData: {
+                    id: 'urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019'
+                },
+                elementIndex: 0,
+                parentUrn: {},
+                asideData: {},
+                showHideType: '',
+                parentElement: {},
+                getState: store.getState,
+                dispatch: store.dispatch,
+                poetryData: {},
+                updateBodymatter: {},
+                responseData: {
+                    id: 'urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34020'
+                },
+                fetchSlateData: {},
+                showHideObj: {}
+            }
+            const spyupdateStore = jest.spyOn(updateHelpers, "processAndStoreUpdatedResponse")
+            updateHelpers.processAndStoreUpdatedResponse (params)
+            expect(spyupdateStore).toHaveBeenCalled()
+            spyupdateStore.mockClear()
+        })
     })
 })
