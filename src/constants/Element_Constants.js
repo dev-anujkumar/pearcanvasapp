@@ -164,3 +164,4 @@ export const MULTI_COLUMN_2C = {
 export const dropdownData = ['figure', 'table', 'equation'];
 export const dropdownOptions = ['Figure', 'Table', 'Equation'];
 export const figureLabelData = ['No Label', 'Figure', 'Table', 'Equation', 'Custom'];
+export const labelHtmlData = ['', '<br>', '<br/>', '<br data-mce-bogus="1">'];

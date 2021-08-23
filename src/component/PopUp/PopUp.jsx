@@ -239,7 +239,7 @@ class PopUp extends React.Component {
         }else if(props.withCheckBox){
             const {isChecked}=this.state
             return(
-                <div className="OwnersSlate">
+                <div className="OwnersSlateInputLine">
                     <input className="OwnersSlateCheckBox" type="checkbox"  checked={isChecked} onChange={this.handleChange} />
                     <p>{DO_NOT_SHOW_TXT}</p>
                 </div>

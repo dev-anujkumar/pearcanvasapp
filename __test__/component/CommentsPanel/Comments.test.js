@@ -73,7 +73,7 @@ describe('Testing CommentsPanel component with props', () => {
     it('render action menu from correctly', () => {
       let actionMenu = instance.actionsMenu();
       expect(actionMenu.props.className).toEqual('comment-action-menu action-menu');
-      expect(actionMenu.props.children).toHaveLength(5); 
+      expect(actionMenu.props.children).toHaveLength(4); 
     });
 
     it('render remove comment from correctly', () => {

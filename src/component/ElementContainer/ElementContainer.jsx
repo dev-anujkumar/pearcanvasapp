@@ -18,7 +18,7 @@ import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootn
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
-import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
+import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT } from './../../constants/Element_Constants';
@@ -1768,6 +1768,8 @@ class ElementContainer extends Component {
                     sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
                     isAddComment={true}
+                    projectUsers={this.props.projectUsers}
+                    comment={this.state.comment}
                 />}
                 {this.state.isfigurePopup &&
                     <MetaDataPopUp
@@ -1934,6 +1936,7 @@ class ElementContainer extends Component {
             this.props.showBlocker(false)
             hideBlocker();
         }
+        this.props.getProjectUsers();
     }
 
     /**
@@ -1949,8 +1952,9 @@ class ElementContainer extends Component {
      * @param newComment
      */
     handleCommentChange = (newComment) => {
+        const commentAdded = newComment.replace(/[\[\]']+/g,'')
         this.setState({
-            comment: newComment
+            comment: commentAdded
         })
     }
 
@@ -2189,6 +2193,9 @@ const mapDispatchToProps = (dispatch) => {
         handleTCM: (element, index, isTCMCanvasPopupLaunched, prevSelectedElement) => {
             dispatch(handleTCM(element, index, isTCMCanvasPopupLaunched, prevSelectedElement))
         },
+        getProjectUsers: () => {
+            dispatch(getProjectUsers())
+        }
     }
 }
 
@@ -2219,7 +2226,8 @@ const mapStateToProps = (state) => {
         multipleColumnData: state.appStore.multipleColumnData,
         oldFigureDataForCompare: state.appStore.oldFigureDataForCompare,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
-        prevSelectedElement: state.tcmReducer.prevElementId
+        prevSelectedElement: state.tcmReducer.prevElementId,
+        projectUsers: state.commentsPanelReducer.users
     }
 }
 
