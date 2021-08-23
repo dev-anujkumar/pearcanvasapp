@@ -151,7 +151,7 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
         })
     });
     describe('Test-2-Function--2--fetchElementsTag', () => {
-        const { paragraph, heading, list, blockquote, aside, workedexample, stanza, figure, interactive, interactive2, list1, list2, groupedContent, assessment } = tcmTestData.fetchElementTagData
+        const { paragraph, heading, list, blockquote, aside, workedexample, stanza, figure, interactive, interactive2, list1, list2, groupedContent, assessment, elementPdf } = tcmTestData.fetchElementTagData
         it('Test-2.1-Function--2--fetchElementsTag - Paragraph', () => {
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
             elementSnapshotUtilityFn.fetchElementsTag(paragraph)
@@ -231,6 +231,11 @@ describe('-----------------------Test ElementSnapshot_Utility Functions---------
             const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
             elementSnapshotUtilityFn.fetchElementsTag({ type: 'showhide' }, 'show')
             expect(spyFunction).toHaveReturnedWith('P')
+        })
+        it('Test-2.14 Function - fetchElementsTag - element-pdf ', () => {
+            const spyFunction = jest.spyOn(elementSnapshotUtilityFn, 'fetchElementsTag');
+            elementSnapshotUtilityFn.fetchElementsTag({ type: elementPdf.type })
+            expect(spyFunction).toHaveReturnedWith('PDF')
         })
     });
     describe('Test-3-Function--3--generateWipDataForFigure', () => {
