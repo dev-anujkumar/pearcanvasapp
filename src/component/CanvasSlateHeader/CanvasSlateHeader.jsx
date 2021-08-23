@@ -23,6 +23,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
         )
     }
 
+     /**Slate Header method for Subscribed slate */
      renderSubscribedSlate = () => {
          return (
              <div className="canvas-header slate-lock-block">
