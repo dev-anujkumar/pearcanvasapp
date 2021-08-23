@@ -151,7 +151,9 @@ export function ElementSaprator(props) {
     const renderWordPasteButton = (parentElementType, { firstOne, index, userRole, onClickCapture }) => {
         const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN, SHOW_HIDE ]
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
-        if(inContainer.includes(parentElementType) || config.isPopupSlate || !allowedRoles.includes(userRole)) {
+        const hasPasteFromWordPermission = hasProjectPermission("paste_from_word");
+        let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn) {
             return null;
         }
 

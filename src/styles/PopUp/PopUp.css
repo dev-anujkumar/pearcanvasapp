@@ -181,12 +181,14 @@
 }
 
 .dialog-buttons.tcm-canvas-popup{
-    /* padding: 17px 8px 28px; */
     height: 70px;
     margin: 10px -16px -16px -16px;
     box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.14);
     padding: 0px !important;
     width: 263px;
+    position: sticky;
+    bottom: 40px;
+    background: #fff;
 }
 .dialog-buttons.single_assessment{
   width:100%;
@@ -530,20 +532,9 @@ overflow: unset;
   transform: none;
   animation-name: none;
   animation-duration: unset;
-  top: 0;
-  left: -38%;
-  margin-top: 85px; /* Negative half of height. */
-  margin-left: 500px;
-  max-height: 600px;
-}
-
-@media only screen and (max-width: 1300px) {
-  .modal-content.tcm-canvas-popup{
-    left: -42%;
-  }
-  .dialog-window.tcm-canvas-popup{
-    max-height: 270px !important;
-  }
+  top: 80px;
+  position: absolute;
+  left: -30px;
 }
 .tcmIcon{
   padding: 2px !important;
@@ -580,8 +571,8 @@ overflow: unset;
   word-break: break-all;
   padding: 10px 0 10px 0;
   font-size: 12px !important;
-  max-height: 400px;
   overflow-y: auto;
+  max-height: 50vh;
 }
 
 .dialog-window p {
