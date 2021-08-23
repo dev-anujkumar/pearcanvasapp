@@ -35,7 +35,7 @@ export const modifyObjKeys = (obj, newObj) => {
     }
 }
 
-export const timeSince = () => {
+export const timeSince = (countTimer) => {
     let count;
     const intervals = [
         { label: 'year', seconds: 31536000 },
@@ -45,7 +45,7 @@ export const timeSince = () => {
         { label: 'minute', seconds: 60 },
         { label: 'second', seconds: 0 }
     ];
-    let seconds = Math.floor((new Date().getTime() - this.countTimer) / 1000);
+    let seconds = Math.floor((new Date().getTime() - countTimer) / 1000);
     let interval = intervals.find(i => i.seconds <= seconds);
     if (interval && interval.label != 'second') {
         count = Math.floor(seconds / interval.seconds);

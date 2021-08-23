@@ -88,3 +88,19 @@ function handleSiteOptionsDropdown (alfrescoPath, id) {
             console.log("Error IN SITE API", error)
         });
 }
+
+export const checkForDataIdAttribute =(defModel) => {
+    let imageAssetContents = defModel.match(/<(img)\s[^>]*imageid=.*?>/g);
+    let tempimageAssetContents = defModel.match(/<(img)\s[^>]*imageid=.*?>/g);
+    if(imageAssetContents!=null || imageAssetContents!=undefined){
+        for(let index = 0; index < imageAssetContents.length; index++) {
+            if(!imageAssetContents[index].match(/<(img)\s[^>]*data-id=.*?>/g)){
+                const uniqID = imageAssetContents[index].split(' ').find((attribute) => attribute.includes('imageid')).split('alfresco:')[1].replace('"','')
+                const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`;
+                imageAssetContents[index] = imageAssetContents[index].replace('class="imageAssetContent"',`class="imageAssetContent" data-id=${imageID}`)
+                defModel = defModel.replace(tempimageAssetContents[index],imageAssetContents[index]);
+            }
+        }
+    }
+    return defModel;
+}
