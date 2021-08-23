@@ -369,11 +369,11 @@ button[aria-label="insertMedia"].tox-tbtn--select{
   height:32px!important
 }
 
-.editor-toolbar.blockToolbar{
+.editor-toolbar.hideToolbar{
   display: none !important;
 }
 
-.editor-toolbar.popup.blockToolbar{
+.editor-toolbar.popup.hideToolbar{
   display: none !important;
 }
 

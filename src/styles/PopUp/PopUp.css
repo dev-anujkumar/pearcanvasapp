@@ -743,7 +743,7 @@ ol li.listItemNumeroUnoLowerRoman {
   list-style-type: none !important
 }
 
-.OwnersSlate{
+.OwnersSlateInputLine{
   display: flex;
   color: #000;
   text-align: center;

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
@@ -173,7 +173,7 @@ export function ElementSaprator(props) {
     }
     /* @hideSplitSlateIcon@ hide split slate icon in following list of elements */
     const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
-    let hideElementSeperator = props.projectSubscriptionDetails && (props.projectSharingRole === "SUBSCRIBER"  || props.isOwnersSubscribedSlateChecked && props.projectSharingRole === "OWNER" ) ? 'blockToolbar' : ''
+    let hideElementSeperator = isSubscriberRole(props.projectSubscriptionDetails.projectSharingRole,props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) || props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked && isOwnerRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails) ? 'hideToolbar' : ''
     return (
         <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
@@ -420,9 +420,7 @@ const mapStateToProps = (state) => ({
     elementSelection: state.selectionReducer.selection,
     showPlayscript: state.projectInfo.showPlayscript,
     showDiscussion: state.projectInfo.showDiscussion,
-    projectSharingRole:state?.projectInfo?.projectSharingRole,
-    projectSubscriptionDetails:state.projectInfo.projectSubscriptionDetails.isSubscribed,
-    isOwnersSubscribedSlateChecked: state.subscriptionReducer.isOwnersSubscribedSlateChecked
+    projectSubscriptionDetails:state.projectInfo
 })
 
 export default connect(mapStateToProps, { cloneContainer })(ElementSaprator)

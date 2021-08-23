@@ -23,7 +23,8 @@ import {
     UPDATE_DISCUSSION_ITEMS,
     UPDATE_LOB_PERMISSIONS,
     SET_PROJECT_SHARING_ROLE,
-    SET_PROJECT_SUBSCRIPTION_DETAILS
+    SET_PROJECT_SUBSCRIPTION_DETAILS,
+    OWNERS_SUBSCRIBED_SLATE
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1384,4 +1385,16 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
         type: SET_PROJECT_SUBSCRIPTION_DETAILS,
         payload: subscriptionDetails
     });
+
+}
+
+/**
+ * Action Creator
+ * Retrieves the Owner's Slate status
+ */
+ export const isOwnersSubscribedSlate = (showPopup) => (dispatch, getState) => {
+    return dispatch({
+        type: OWNERS_SUBSCRIBED_SLATE,
+        payload: showPopup
+    })
 }

@@ -18,7 +18,6 @@ import assessmentReducer from './assessmentReducer';
 import { selectionReducer } from './copyUrnReducer';
 import alfrescoReducer from './alfrescoReducer';
 import { projectInfo } from './projectInfoReducer';
-import  subscriptionReducer from './subscriptionReducer';
 
 export default combineReducers({
     appStore: appReducer,
@@ -40,6 +39,5 @@ export default combineReducers({
     assessmentReducer,
     selectionReducer,
     alfrescoReducer,
-    projectInfo,
-    subscriptionReducer
+    projectInfo   
 });

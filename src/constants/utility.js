@@ -627,6 +627,9 @@ export const prepareDialogueDom = (model) => {
     return lineModel;
 }
 
+/**sets Owner key in localstorage
+ * @param data - whether the checkout is checked or not
+ */
 export const releaseOwnerPopup=(data)=>{
     if(data){
         localStorage.setItem('hasOwnerEdit', true);
@@ -634,3 +637,26 @@ export const releaseOwnerPopup=(data)=>{
 
 }
 
+/**It checks whether its a owner project or not
+ * @param projectSharingRole - role of a user
+ * @param isSubscribed- whether it is subscribed or not
+ */
+export const isOwnerRole = (projectSharingRole, isSubscribed) => {
+    if (projectSharingRole === "OWNER" && isSubscribed) {
+        return true
+    }else{
+        return false
+    }
+}
+
+/**It checks whether its a Subscriber project or not
+ * @param projectSharingRole - role of a user
+ * @param isSubscribed- whether it is subscribed or not
+ */
+export const isSubscriberRole = (projectSharingRole, isSubscribed) => {
+    if (projectSharingRole === "SUBSCRIBER" && isSubscribed) {
+        return true
+    }else{
+        return false
+    }
+}

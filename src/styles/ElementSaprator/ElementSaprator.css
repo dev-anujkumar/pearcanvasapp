@@ -37,7 +37,7 @@
     opacity: 1;
 }
 
-.elementSapratorContainer.blockToolbar{
+.elementSapratorContainer.hideToolbar{
     pointer-events: none;
     opacity: 0 ;
 }

@@ -12,7 +12,8 @@ import PopUp from '../PopUp';
 import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
-import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
+import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
+import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
@@ -171,7 +172,7 @@ export class CanvasWrapper extends Component {
         let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : "";
         // Filter search icon for popup
         let popupFilter = '';
-        let isToolBarBlocked = this.props.projectSubscriptionDetails && (this.props.projectSharingRole === "SUBSCRIBER"  || this.props.isOwnersSubscribedSlateChecked && this.props.projectSharingRole === "OWNER" ) ? 'blockToolbar' : ''
+        let isToolBarBlocked = isSubscriberRole(this.props.projectSubscriptionDetails.projectSharingRole, this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) || this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked && isOwnerRole(this.props.projectSubscriptionDetails.projectSharingRole, this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) ? 'hideToolbar' : ''
         if(config.isPopupSlate) {
             popupFilter = 'popup';
         }
@@ -280,9 +281,7 @@ const mapStateToProps = state => {
         figureGlossaryData:state.appStore.figureGlossaryData,
         alfrescoEditor: state.alfrescoReducer.editor,
         imageArgs: state.alfrescoReducer.imageArgs,
-        projectSharingRole:state?.projectInfo?.projectSharingRole,
-        projectSubscriptionDetails:state.projectInfo.projectSubscriptionDetails.isSubscribed,
-        isOwnersSubscribedSlateChecked: state.subscriptionReducer.isOwnersSubscribedSlateChecked
+        projectSubscriptionDetails:state?.projectInfo
     };
 };
 

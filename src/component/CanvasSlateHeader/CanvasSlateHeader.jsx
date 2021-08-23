@@ -39,7 +39,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
                 sendDataToIframe({ 'type': SlateLockStatus, 'message': { slateLockInfo: slateLockInfo } });
                 return this.renderSlateLockJSX(slateLockInfo.userId) // (`${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`)
             }
-            else if(projectSharingRole ==='SUBSCRIBER' && projectSubscriptionDetails){
+            else if (isSubscriberRole(projectSharingRole, projectSubscriptionDetails)) {
                 return this.renderSubscribedSlate()
             }
             else {

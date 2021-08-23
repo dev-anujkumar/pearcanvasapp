@@ -67,7 +67,7 @@ class ElementButton extends Component {
                     </span>
                 break;
             case buttonTypes.COMMENT_FLAG:
-                buttonJSX = <span className={`btn-element small flag-icon ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
+                buttonJSX = <span className={`btn-element small flag-icon`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
                     {noteFlag}
                     </span>
                 break;
@@ -75,11 +75,11 @@ class ElementButton extends Component {
                 buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
-                buttonJSX = <span className={`btn-element delete-icon ${isSubscribersSlate ? 'subscriberSlate' :''}`} onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element delete-icon`} onClick={clickHandlerFn}>
                     <img src={deleteIcon} /></span>
                 break;
             case buttonTypes.TCM:
-                buttonJSX = <span className={`btn-element small tcm-icon ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="Track Changes" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small tcm-icon`} title="Track Changes" onClick={clickHandlerFn}>
                     {tcmIcon}
                     </span>
                 break;
@@ -90,10 +90,10 @@ class ElementButton extends Component {
                 buttonJSX = <span className="btn-element split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></span>
                 break;
             case buttonTypes.COLOR_PALETTE:
-                buttonJSX = <span className={`btn-element color-palette ${isSubscribersSlate ? 'subscriberSlate' :''}`} onClick={clickHandlerFn}><img src={colorPalette} /></span>
+                buttonJSX = <span className={`btn-element color-palette`} onClick={clickHandlerFn}><img src={colorPalette} /></span>
                 break;
             case buttonTypes.COLOR_TEXT:
-                buttonJSX = <span className={`btn-element color-text ${isSubscribersSlate ? 'subscriberSlate' :''}`} onClick={clickHandlerFn}><img src={colorText} /></span>
+                buttonJSX = <span className={`btn-element color-text`} onClick={clickHandlerFn}><img src={colorText} /></span>
                 break;
             case buttonTypes.TEXT_ELEMENT:
                 buttonJSX = <span className="btn-element text-elem" onClick={clickHandlerFn}>

@@ -13,7 +13,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType, defaultMathImagePath } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -49,7 +49,7 @@ import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/
 import store from '../../appstore/store';
 import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
-import {isOwnersSubscribedSlate} from '../CanvasWrapper/subscription_Actions';
+import {isOwnersSubscribedSlate} from '../CanvasWrapper/CanvasWrapper_Actions';
 
 let random = guid();
 
@@ -200,7 +200,7 @@ class SlateWrapper extends Component {
         /**
          * This chunk manages slatelock info
          */
-        const { slateLockInfo: { isLocked, userId, userFirstName, userLastName } } = props
+        const { slateLockInfo: { isLocked, userId, userFirstName, userLastName },projectSubscriptionDetails:{projectSharingRole,projectSubscriptionDetails:{isSubscribed}} } = props
         if (!isLocked) {
             _state = {
                 ..._state,
@@ -220,7 +220,7 @@ class SlateWrapper extends Component {
             }
             return _state;
         }
-        else if(props.projectSharingRole === 'OWNER' || 'SUBSCRIBER' && props.projectSubscriptionDetails){
+        else if(isOwnerRole(projectSharingRole,isSubscribed) || isSubscriberRole(projectSharingRole,isSubscribed)){
             _state={
                 ..._state,
                 showOwnerSlatePopup: true
@@ -254,11 +254,11 @@ class SlateWrapper extends Component {
      * renderSlateHeader | renders slate title area with its slate type and title
      */
     renderSlateHeader({ slateData: _slateData }) {
-        const { slateLockInfo, projectSharingRole, projectSubscriptionDetails } = this.props
+        const { slateLockInfo, projectSubscriptionDetails:{projectSharingRole,projectSubscriptionDetails:{isSubscribed}} } = this.props
         try {
             if (_slateData !== null && _slateData !== undefined && _slateData[config.slateManifestURN]) {
                 return (
-                    <SlateHeader slateLockInfo={slateLockInfo} projectSharingRole={projectSharingRole} projectSubscriptionDetails={projectSubscriptionDetails}/>
+                    <SlateHeader slateLockInfo={slateLockInfo} projectSharingRole={projectSharingRole} projectSubscriptionDetails={isSubscribed}/>
                 )
             } else {
                 return (
@@ -294,9 +294,9 @@ class SlateWrapper extends Component {
                     let { bodymatter: _slateBodyMatter } = _slateContent
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
-                    const {projectSharingRole, projectSubscriptionDetails}=this.props
+                    const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
                     return (
-                        <div className={`slate-content ${projectSharingRole ==='OWNER' && projectSubscriptionDetails ? 'ownerSlate' :'' } ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
+                        <div className={`slate-content ${isOwnerRole(projectSharingRole,isSubscribed) ? 'ownerSlateBackGround' :'' } ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 <Sortable
                                     options={{
@@ -349,7 +349,7 @@ class SlateWrapper extends Component {
                                     {this['cloneCOSlateControlledSource_' + random]}
                                 </Sortable>
                             </div>
-                            <SlateFooter elements={_slateBodyMatter} projectSharingRole={projectSharingRole} projectSubscriptionDetails={projectSubscriptionDetails}/>
+                            <SlateFooter elements={_slateBodyMatter} projectSharingRole={projectSharingRole} isSubscribed={isSubscribed}/>
                         </div>
                     )
                 }
@@ -454,7 +454,7 @@ class SlateWrapper extends Component {
     }
 
     checkLockStatus = () => {
-        const { slateLockInfo,projectSharingRole,projectSubscriptionDetails } = this.props
+        const { slateLockInfo,projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}} = this.props
         let lockedUserId = slateLockInfo.userId.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
         if (slateLockInfo.isLocked && config.userId !== lockedUserId) {
             this.setState({
@@ -462,9 +462,9 @@ class SlateWrapper extends Component {
                 lockOwnerName: `${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`
             })
             return true
-        }else if(projectSharingRole === 'OWNER' && projectSubscriptionDetails){
-            return this.props.isOwnersSubscribedSlateChecked
-        }else if(projectSharingRole === 'SUBSCRIBER' && projectSubscriptionDetails){
+        }else if(isOwnerRole(projectSharingRole,isSubscribed)){
+            return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
+        }else if(isSubscriberRole(projectSharingRole,isSubscribed)){
             return true
         }
         else {
@@ -528,7 +528,7 @@ class SlateWrapper extends Component {
      * Shows 'slate locked' popup
      */
     showLockPopup = () => {
-        const {projectSharingRole,projectSubscriptionDetails}=this.props;
+        const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
         var isOwnerKeyExist= localStorage.getItem('hasOwnerEdit');
         if (this.state.showLockPopup) {
             const { lockOwner } = this.state
@@ -549,21 +549,21 @@ class SlateWrapper extends Component {
                     lockForTOC={false}
                 />
             )
-        } else if (projectSharingRole === 'OWNER' && projectSubscriptionDetails && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) {
+        } else if (isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) {
             this.props.showBlocker(true)
             showTocBlocker();
             return (
                 <PopUp dialogText={OWNER_SLATE_POPUP}
                     togglePopup={this.togglePopup}
                     isOwnersSlate={true}
-                    proceed={this.proceed}
+                    proceed={this.proceedButtonHandling}
                     warningHeaderText={`Warning`}
                     lOPopupClass="lo-warning-txt"
                     withCheckBox={true}
                 />
             )
         }
-        else if (projectSharingRole === "SUBSCRIBER" && projectSubscriptionDetails && this.state.showOwnerSlatePopup ) {
+        else if (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup ) {
             this.props.showBlocker(true)
             showTocBlocker();
             return (
@@ -606,7 +606,7 @@ class SlateWrapper extends Component {
         this.prohibitPropagation(event)
     }
 
-    proceed = (isChecked, toggleValue, e) => {
+    proceedButtonHandling = (isChecked, toggleValue, e) => {
         this.setState({
             showOwnerSlatePopup: toggleValue
         })
@@ -1040,8 +1040,8 @@ class SlateWrapper extends Component {
                                         isLOExist={this.props.isLOExist}
                                         splithandlerfunction={this.splithandlerfunction}
                                         pasteElement={this.props.pasteElement}
-                                        projectSharingRole={this.props.projectSharingRole}
-                                        projectSubscriptionDetails={this.props.projectSubscriptionDetails}
+                                        projectSharingRole={this.props.projectSubscriptionDetails.projectSharingRole}
+                                        projectSubscriptionDetails={this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed}
                                         hideElementSeperator={this.props.hideElementSeperator}
                                     >
                                         {
@@ -1628,9 +1628,7 @@ const mapStateToProps = state => {
         alfrescoPath : state.alfrescoReducer.alfrescoPath,
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
         removeGlossaryImage:state.appStore.removeGlossaryImage,
-        projectSharingRole:state?.projectInfo?.projectSharingRole,
-        projectSubscriptionDetails:state?.projectInfo?.projectSubscriptionDetails?.isSubscribed,
-        isOwnersSubscribedSlateChecked: state.subscriptionReducer.isOwnersSubscribedSlateChecked
+        projectSubscriptionDetails:state?.projectInfo
     };
 };
 
