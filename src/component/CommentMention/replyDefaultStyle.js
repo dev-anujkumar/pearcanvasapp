@@ -1,24 +1,21 @@
 export default {
-        "&multiLine": {
           control: {
             fontSize: "8pt",
             lineHeight: 1.2,
-            border: "1px solid #007fa3",
+            paddingRight: '40px',
+            width: '250px',
+            background: '#ffff'
           },
-      
           highlighter: {
-            padding: 9
+            padding: 15
           },
       
           input: {
             padding: 9,
-            maxHeight: 40,
             outline: 0,
             border: 0,
-            overflowY : "auto"
-          }
+            width: '210px'
         },
-      
         suggestions: {
         top: '15px',
           list: {
@@ -31,6 +28,7 @@ export default {
             backgroundColor: '#fffffe',
             overflowY: 'auto',
             fontSize: '12px',
+            color: '#007fa3',
           },
       
           item: {

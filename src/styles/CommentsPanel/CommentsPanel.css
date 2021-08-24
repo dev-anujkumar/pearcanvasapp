@@ -36,11 +36,13 @@ html{
   position: absolute;
   top: 0;
   right: 0;
+  cursor: pointer;
 }
 .wrapper-reply {
   position: relative;
   width: 100%;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 /* ---------------------------------*/
