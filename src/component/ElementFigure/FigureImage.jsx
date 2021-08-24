@@ -253,8 +253,8 @@ class FigureImage extends Component {
         this.handleC2MediaClick(e);
     }
 
-    changeFigureLabel = (e, data) => {
-        if (!(this.state.figureLabelValue === data)) {
+    changeFigureLabel = (figureLabelValue, data) => {
+        if (!(figureLabelValue === data)) {
             this.setState({ figureLabelValue: data });
             if (dropdownOptions.includes(data)) {
                 document.getElementById(`cypress-${this.props.index}-0`).innerHTML = `${data}`;
@@ -362,7 +362,7 @@ class FigureImage extends Component {
                                         <ul>
                                             {this.state.figureLabelData.map((label, i) => {
                                                 return (
-                                                    <li key={i} onClick={(e) => { this.changeFigureLabel(e, label); this.handleCloseDropDrown() }}>{label}</li>
+                                                    <li key={i} onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
                                                 )
 
                                             })}
