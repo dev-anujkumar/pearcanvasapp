@@ -64,13 +64,19 @@ class Comments extends React.Component {
     */
     printComment = () => {
         const { comment } = this.props;
-        var coloredEnding = comment.commentString.indexOf(")") + 1;
-        var coloredText = comment.commentString.substr(0, coloredEnding);
-        var plainText = comment.commentString.substr(coloredEnding+1, comment.commentString.length-1);
+        var string = comment.commentString;
+        var x= string.match(/@(.*?)\)/g)
+        var final ="";
+        var prevIndex=0;
+        for(var i=0;i<x.length;i++){
+            var index = string.indexOf(x[i]);
+            final+="<span style = 'color: #7a797a'>" + string.substring(prevIndex,index) + "</span>";
+            final+="<span style = 'color: #015a70'>"+x[i]+"</span>";
+            prevIndex = index + x[i].length;	
+        }
+        final += "<span>" + string.substring(prevIndex) +  "</span>";
         return (
-            <div>
-            <span className="taggedPerson" >{coloredText}</span>
-            <span className="plainText">{plainText}</span>
+            <div dangerouslySetInnerHTML={{__html: final}}>
             </div>
         )
     }
