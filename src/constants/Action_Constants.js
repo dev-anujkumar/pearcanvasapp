@@ -176,3 +176,6 @@ export const LAUNCH_TCM_CANVAS_POPUP = 'LAUNCH_TCM_CANVAS_POPUP';
 export const UPDATE_MULTIPLE_COLUMN_INFO = 'UPDATE_MULTIPLE_COLUMN_INFO';
 /*---------------- spinner Info ------------------------*/
 export const SPINNER = 'SPINNER';
+
+/*---------------- figure image figuredata object details Info ------------------------*/
+export const UPDATE_OLD_FIGUREIMAGE_INFO = 'UPDATE_OLD_FIGUREIMAGE_INFO'

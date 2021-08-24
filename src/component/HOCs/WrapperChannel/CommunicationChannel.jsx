@@ -87,16 +87,16 @@ function CommunicationChannel(WrappedComponent) {
                     });
                     break;
                 case 'enablePrev':
-                    config.disablePrev = false;//message.enablePrev;
+                    config.disablePrev = false;
                     break;
                 case 'enableNext':
-                    config.disableNext = false;//message.enableNext;
+                    config.disableNext = false;
                     break;
                 case 'disablePrev':
-                    config.disablePrev = true;//message.disablePrev;
+                    config.disablePrev = true;
                     break;
                 case 'disableNext':
-                    config.disableNext = true;//message.disableNext;
+                    config.disableNext = true;
                     break;
                 case 'refreshElementWithTable':
                     {
@@ -278,6 +278,13 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'openInlineAlsfrescoPopup' :
                     this.props.alfrescoPopup(message);
+                    break;
+                case 'releaseLockPopup':
+                    this.setState({
+                        showBlocker: false
+                    });
+                    this.showCanvasBlocker(false);
+                    hideBlocker()
                     break;
             }
         }

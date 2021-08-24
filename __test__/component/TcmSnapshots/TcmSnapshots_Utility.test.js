@@ -933,4 +933,15 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             expect(spyFunction).toHaveReturnedWith(expectedResult);
         });
     })
+    describe('Test-8 - prepareElementSnapshots functions', () => {
+        it('Test - 8.1 - if (element?.type === ELEMENT_TYPE_PDF)', async () => {
+            const element = {id: "123", type: "element-pdf",
+                elementdata: { filetitle: "title", assetid: "ai-1234"}},
+                actionStatus = {action: "update"},
+                index = 0, elementDetails = {}, CurrentSlateStatus = {};
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareElementSnapshots');
+            tcmSnapshotUtility.prepareElementSnapshots(element,actionStatus,index, elementDetails, CurrentSlateStatus);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    })
 })
