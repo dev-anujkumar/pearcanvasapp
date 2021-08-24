@@ -6,6 +6,7 @@ import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.
 import PropTypes from 'prop-types';
 import {utils} from '../../js/utils'
 import config from '../../config/config.js'
+import CommentMention from '../CommentMention/CommentMention.jsx';
 class Comments extends React.Component {
     constructor(props) {
         super(props)
@@ -62,18 +63,24 @@ class Comments extends React.Component {
     * 
     *@discription - This function is to show the comment in slateview
     */
-    printComment = () => {
-        const { comment } = this.props;
-        var coloredEnding = comment.commentString.indexOf(")") + 1;
-        var coloredText = comment.commentString.substr(0, coloredEnding);
-        var plainText = comment.commentString.substr(coloredEnding+1, comment.commentString.length-1);
-        return (
-            <div>
-            <span className="taggedPerson" >{coloredText}</span>
-            <span className="plainText">{plainText}</span>
-            </div>
-        )
-    }
+    // printComment = () => {
+    //     const { comment } = this.props;
+    //     var string = comment.commentString;
+    //     var x= string.match(/@(.*?)\)/g)
+    //     var final ="";
+    //     var prevIndex=0;
+    //     for(var i=0;i<x.length;i++){
+    //         var index = string.indexOf(x[i]);
+    //         final+="<span style = 'color: #7a797a'>" + string.substring(prevIndex,index) + "</span>";
+    //         final+="<span style = 'color: #015a70'>"+x[i]+"</span>";
+    //         prevIndex = index + x[i].length;	
+    //     }
+    //     final += "<span>" + string.substring(prevIndex) +  "</span>";
+    //     return (
+    //         <div dangerouslySetInnerHTML={{__html: final}}>
+    //         </div>
+    //     )
+    // }
 
    /**
    * 
@@ -306,7 +313,7 @@ class Comments extends React.Component {
                             :
                             <div className="text-medium color-gray-71 mb-4">
                                 <p className="hyphens">
-                                {this.printComment()}
+                                    <CommentMention projectUsers={users} readOnly comment={this.props.comment.commentString}/>
                                 </p>
                             </div>
                         }         

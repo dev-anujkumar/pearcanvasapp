@@ -40,6 +40,12 @@ export default {
             backgroundColor: '#f0f0f0'
         }
       }
+    },
+    mention: {
+      color:'#015A70',
+      backgroundColor: 'white',
+      zIndex: 1,
+      position:'relative'
     }
   };
   
