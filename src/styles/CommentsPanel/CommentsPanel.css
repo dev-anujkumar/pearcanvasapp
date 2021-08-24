@@ -34,8 +34,8 @@ html {
 }
 .unique {
   position: absolute;
-  bottom: 0;
-  right: 20px;
+  bottom: 5px;
+  right: 0;
   cursor: pointer;
 }
 .wrapper-reply {

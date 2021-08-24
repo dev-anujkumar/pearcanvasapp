@@ -26,10 +26,6 @@
     font-size: 16px;
   }
   
-  .mentions__suggestions__item {
-    padding: 10px 10px;
-    color: #007fa3;
-  }
   
   .mentions__suggestions__item--focused {
     background-color: #f0f0f0;
@@ -40,12 +36,12 @@
   .mentions__highlighter__substring{
     color: #007fa3 !important;
   }
-  .mentions__suggestions{
+  .comment-mention .mentions__suggestions{
     top: 15px !important;
   }
 
   .mentions.reply-mention .mentions__control{
-      height: 70px;
+      height: 50px;
       padding: 8px 6px 7px 13px;
       background-color: #fffffe;
       border: none;
@@ -53,10 +49,24 @@
 
   .mentions.reply-mention .mentions__input{
     padding-right: 40px;
-    max-height: 70px;
+    max-height: 50px;
     overflow-y: auto;
   }
 
   .mentions.reply-mention .mentions__input:focus {
     border: 1px solid #007fa3;
 }
+.mentions.reply-mention ..mentions__suggestions__list{
+    max-height: 230px;
+  }
+  .mentions__suggestions__item {
+    padding: 10px 10px !important;
+    color: #007fa3 !important;
+  }
+  .mentions__suggestions__item__display{
+    color: #007fa3 !important;
+  }
+  .mentions.reply-mention .mentions__suggestions{
+    background-color: #f8f9fa !important;
+    top: -270px !important
+  }
