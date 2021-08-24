@@ -31,6 +31,10 @@
     background-color: #f0f0f0;
   }
   .mentions__mention {
+    background-color: white;
+    position: relative;
+    margin-left:-4px;
+    z-index: 1;
     color: #007fa3 !important;
   }
   .mentions__highlighter__substring{
@@ -42,10 +46,18 @@
 
   .mentions.reply-mention .mentions__control{
       height: 50px;
-      padding: 8px 6px 7px 13px;
       background-color: #fffffe;
       border: none;
   }
+  .no-border__control > textarea{
+    border:none;
+  } 
+
+.mentions.reply-mention .mentions__control{
+  height: 50px;
+  background-color: #fffffe;
+  border: none;
+}
 
   .mentions.reply-mention .mentions__input{
     padding-right: 40px;
@@ -56,7 +68,7 @@
   .mentions.reply-mention .mentions__input:focus {
     border: 1px solid #007fa3;
 }
-.mentions.reply-mention ..mentions__suggestions__list{
+.mentions.reply-mention .mentions__suggestions__list{
     max-height: 230px;
   }
   .mentions__suggestions__item {

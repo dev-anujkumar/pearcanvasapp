@@ -85,7 +85,8 @@ class ReplyComment extends React.Component {
                 <div className="comment-body">
                     <div className="text-medium color-gray-71 mb-4">
                         <p className="hyphens">
-                            {reply.commentString ? reply.commentString : ''}
+                        {typeof reply.commentString === 'string' ? <CommentMention projectUsers={this.props.users} readOnly comment={reply.commentString} />: null }
+                        
                         </p>
                     </div>
                 </div>

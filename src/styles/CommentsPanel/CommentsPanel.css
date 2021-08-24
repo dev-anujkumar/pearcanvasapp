@@ -39,6 +39,7 @@ html {
   cursor: pointer;
 }
 .wrapper-reply {
+  padding: 8px 6px 7px 13px;
   position: relative;
   width: 100%;
   margin-top: 20px;
@@ -383,7 +384,7 @@ menu li {
 
 .comment-body,
 .comment-body .properties {
-  padding: 16px 0 4px;
+  padding: 8px 0 4px;
   flex-wrap: wrap;
   word-wrap: break-word;
 }
