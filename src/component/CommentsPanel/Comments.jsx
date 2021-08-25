@@ -143,7 +143,7 @@ class Comments extends React.Component {
         this.setState({
             isSelectAssignee: false
         })
-        this.props.getProjectUsers();
+        // this.props.getProjectUsers();
     }
 
     /**
