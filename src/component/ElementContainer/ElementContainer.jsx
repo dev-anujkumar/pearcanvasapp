@@ -1947,9 +1947,9 @@ class ElementContainer extends Component {
      * @param newComment
      */
     handleCommentChange = (newComment) => {
-        const commentAdded = newComment.replace(/[\[\]']+/g,'')
+        // const commentAdded = newComment.replace(/[\[\]']+/g,'')
         this.setState({
-            comment: commentAdded
+            comment: newComment
         })
     }
 
