@@ -1,18 +1,20 @@
- 
+.mentions {
+  margin: 1em 0;
+}
   .mentions--multiLine.comment-mention .mentions__control {
-    font-size: 14pt;
+    font-size: 10pt;
     border: 1px solid #007fa3;
+  }
+  .mentions--multiLine.comment-mention .mentions__highlighter {
+    padding: 9px;
     height: 150px;
   }
-  .mentions--multiLine .mentions__highlighter {
+  .mentions--multiLine.comment-mention .mentions__input {
     padding: 9px;
-  }
-  .mentions--multiLine .mentions__input {
-    padding: 9px;
-    max-height: 150px;
+    height: 150px;
     outline: 0;
     border: 0;
-    overflow-y: auto;
+    overflow-y: auto !important;
   }
   
   .mentions__suggestions__list {
@@ -31,11 +33,8 @@
     background-color: #f0f0f0;
   }
   .mentions__mention {
-    background-color: white;
+    background-color: #d9ecf1 !important;
     position: relative;
-    margin-left:-4px;
-    z-index: 1;
-    color: #007fa3 !important;
   }
   .mentions__highlighter__substring{
     color: #007fa3 !important;
@@ -45,7 +44,6 @@
   }
 
   .mentions.reply-mention .mentions__control{
-      height: 50px;
       background-color: #fffffe;
       border: none;
   }
@@ -54,15 +52,17 @@
   } 
 
 .mentions.reply-mention .mentions__control{
-  height: 50px;
   background-color: #fffffe;
   border: none;
 }
 
   .mentions.reply-mention .mentions__input{
+    padding: 10px;
     padding-right: 40px;
-    max-height: 50px;
-    overflow-y: auto;
+    outline: 0;
+    border: 0;
+    height: 50px !important;
+    overflow-y: auto !important;
   }
 
   .mentions.reply-mention .mentions__input:focus {
@@ -81,4 +81,9 @@
   .mentions.reply-mention .mentions__suggestions{
     background-color: #f8f9fa !important;
     top: -270px !important
+  }
+
+  .mentions--multiLine.reply-mention .mentions__highlighter {
+    padding: 9px;
+    height: 50px;
   }

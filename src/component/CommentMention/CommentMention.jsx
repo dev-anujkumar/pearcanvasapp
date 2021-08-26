@@ -1,13 +1,9 @@
 import React from 'react';
-import { useState } from 'react';
 import { MentionsInput, Mention } from 'react-mentions';
 import './CommentMention.css'
 
 const CommentMention = (props) => {
-  
-  // const [text, changeText] = useState(props.comment);
   const onCommentChange = (event, value) => {
-    // changeText(value);
     if (!props.readOnly) {
       props.handleCommentChange(value);
     }
@@ -44,4 +40,3 @@ const CommentMention = (props) => {
 }
 
 export default CommentMention
-

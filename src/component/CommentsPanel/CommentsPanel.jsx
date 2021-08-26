@@ -39,7 +39,6 @@ class CommentsPanel extends React.Component {
             const isStatusDropdown = event.target.closest('.status-dropdown')
             if (!(isSortDropdown || isStatusDropdown)) this.closeAllDropdown();
         });
-        this.props.getProjectUsers();
     }
 
     componentWillUnmount() {
