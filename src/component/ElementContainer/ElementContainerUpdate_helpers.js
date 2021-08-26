@@ -840,7 +840,10 @@ const getShowhideParent = async (shParentData) => {
     const { asideData, dispatch, parentElementIndex, fetchSlateData } = shParentData;
     let parentToCascade = {}
     if (asideData && asideData.type == 'showhide') {
-        if (asideData?.grandParent?.asideData?.type == 'element-aside') {
+          /* After versioning - Slate in wip but element(3C/2C:SH) is approved; 3C/2C:SH */
+        if (asideData?.grandParent?.asideData?.type == 'groupedcontent') {
+            parentToCascade = asideData?.grandParent?.asideData
+        } else if (asideData?.grandParent?.asideData?.type == 'element-aside') {
             if (asideData?.grandParent?.asideData?.parent?.type == 'groupedcontent') {
                 parentToCascade = asideData?.grandParent?.asideData?.parent
                 parentToCascade.contentUrn = parentToCascade.parentContentUrn

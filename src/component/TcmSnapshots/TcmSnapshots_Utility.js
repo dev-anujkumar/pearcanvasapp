@@ -81,7 +81,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         parentId:  wipData?.id
     }
     /* Add WE/Aside inside 2C */
-    const { asideData, parentUrn } = containerElement;
+    const { asideData, parentUrn, showHideObj } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
     let multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
     /* Set grant parent tag 2C||3C */
@@ -95,7 +95,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
     } else if((figureElementList.includes(type) || actionStatus?.action === "update" ||  actionStatus?.action === "create" ||
         actionStatus?.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
-        gPType === MULTI_COLUMN) {
+        gPType === MULTI_COLUMN && !showHideObj?.showHideType) {
             /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
             if (!multiColumnType) {
                 let multiColumnObj = store?.getState()?.appStore?.slateLevelData[config.slateManifestURN].contents?.bodymatter.find(x => x.id === id);
@@ -483,24 +483,9 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
 */
 export function prepareSnapshots_ShowHide(containerElement, wipData, index, updateBodymatter) {
     const { asideData, parentUrn } =  containerElement?.asideData?.grandParent || {};
-    
-    let indexList = []
-    if(Array.isArray(index)) {
-        indexList = index;
-    } else if(typeof index === "string") {
-        indexList = index ? index?.toString().split("-") : [];
-    }
     /* Get the sectionType using index of element */
     const sectionType = containerElement?.asideData?.sectionType || containerElement?.sectionType;
-    const innerSH_Index = indexList[indexList.length-1]
-    // let showhideElement = getShowHideElement(updateBodymatter, indexList.length, indexList)
-    let showhideElement = { ...containerElement?.asideData },
-        innerSH_Element = wipData;
-    if (showhideElement && sectionType && showhideElement.element) {
-        innerSH_Element = showhideElement?.element?.interactivedata[sectionType][innerSH_Index]
-    } else if (sectionType && showhideElement?.interactivedata) {
-        innerSH_Element = showhideElement?.interactivedata[sectionType][innerSH_Index]
-    }
+    let showhideElement = { ...containerElement?.asideData };
     /* Delete the grandparent data form asideData */
     showhideElement?.grandParent && delete showhideElement.grandParent;
     /* Prepare and return container data for showhide inner element update */
@@ -510,7 +495,7 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index, upda
         parentUrn: parentUrn,
         parentElement: asideData,
         showHideObj: {
-            currentElement: innerSH_Element || wipData || {},
+            currentElement: wipData || {},
             element: showhideElement,
             index: index,
             showHideType: sectionType
@@ -860,9 +845,9 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         }
         else if (asideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:SH || 3C:SH */
-            const {columnName, manifestUrn, mcId} = parentUrn || {};
-            let grandParentTag = tag.grandParent.split(":")[0];
-            elementTag = `${grandParentTag}:${columnName}:${elementTag}`;
+            const {columnName, manifestUrn, mcId} = parentUrn;
+            //let grandParentTag = tag.grandParent.split(":")[0];
+            elementTag = `${parentUrn?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
         }
     }
@@ -1345,6 +1330,13 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
                 parentData.showHideStatus = showHideElem && showHideElem.status ? showHideElem.status : undefined;
                 break;
         }
+        if(asideData?.type === MULTI_COLUMN && showHideObj?.showHideType) {
+            const multiColumnDetails = {
+                ...parentUrn,
+                type: MULTI_COLUMN
+            }
+            prepareParentData(asideData, {...parentUrn, multiColumnDetails });
+        }
         if(parentUrn?.multiColumnDetails?.type === MULTI_COLUMN) prepareParentData(asideData, parentUrn);
         /** When AS/WE in MUlti-Column */
         if(asideData?.parent?.type === MULTI_COLUMN){
@@ -1381,7 +1373,7 @@ function prepareParentData(asideData, parentUrn) {
         const { type, manifestUrn, columnName, contentUrn, mcId } = parentUrn?.multiColumnDetails;
         asideData.parent = {
             type,
-            id: manifestUrn || mcId,
+            id: mcId || manifestUrn,
             columnName,
             parentContentUrn: contentUrn,
             columnContentUrn: ""
@@ -1451,6 +1443,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
             if (updatedMulColParentUrn) {
                 let newMulColManifestUrn = await getLatestVersion(updatedMulColParentUrn);
                 containerElement.asideData.parent.id = newMulColManifestUrn;
+                containerElement.parentUrn.mcId = newMulColManifestUrn;
             }
         }
         if (versionStatus.multiColChildStatus === "approved") {
@@ -1458,6 +1451,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
             if (updatedMulColChildUrn) {
                 let newMulColGroupManifestUrn = await getLatestVersion(updatedMulColChildUrn);
                 containerElement.asideData.parent.columnId = newMulColGroupManifestUrn;
+                containerElement.parentUrn.manifestUrn = newMulColGroupManifestUrn;
             }
         }
     }
@@ -1474,6 +1468,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
         config.tcmslatemanifest = containerElement.popupslateManifest
     }
+    //console.log("containerElement ===========",containerElement)
     return containerElement;
 }
 
