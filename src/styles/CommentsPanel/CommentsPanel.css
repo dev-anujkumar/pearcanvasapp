@@ -500,11 +500,9 @@ menu li {
 }
 .reply {
   padding-bottom: 12px;
-  border-bottom: 1px solid #aba8a8;
   margin-top: 5px;
-}
-.replies-wrapper {
   background: #efefef;
+  margin-bottom: 10px;
 }
 .reply .comment-body p {
   background: white;

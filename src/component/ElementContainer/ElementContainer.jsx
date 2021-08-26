@@ -1925,6 +1925,13 @@ class ElementContainer extends Component {
      */
     handleCommentPopup = (popup, event) => {
         event.stopPropagation();
+        if (popup) {
+            this.props.showBlocker(true);
+            showTocBlocker();
+        } else {
+            this.props.showBlocker(false);
+            hideBlocker();
+        }
         this.setState({
             popup,
             showDeleteElemPopup: false,
@@ -1962,6 +1969,8 @@ class ElementContainer extends Component {
     saveNewComment = (e) => {
         const { comment } = this.state;
         const { id } = this.props.element;
+        this.props.showBlocker(false);
+        hideBlocker();
         if (comment.trim() !== '') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             this.props.addComment(comment, id, this.props.asideData, this.props.parentUrn);
