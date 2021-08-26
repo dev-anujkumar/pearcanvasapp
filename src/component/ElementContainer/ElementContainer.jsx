@@ -2048,7 +2048,7 @@ class ElementContainer extends Component {
         const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE } = TcmConstants
         const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE]
         const {prevSelectedElement, isTCMCanvasPopupLaunched} = this.props
-            if (element?.type && tcmPopupSupportedElements.includes(element.type)) {
+            if (element?.type && tcmPopupSupportedElements.includes(element.type) && !config.isPopupSlate) {
                 this.props.handleTCM(element, this.props.index, isTCMCanvasPopupLaunched, prevSelectedElement)
             } else {
                 if (config.isSavingElement) {
