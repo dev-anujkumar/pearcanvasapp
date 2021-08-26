@@ -224,7 +224,6 @@ class CommentsPanel extends React.Component {
                     toggleReplyForm={this.props.toggleReplyForm}
                     users={this.props.users}
                     permissions={this.props.permissions}
-                    projectUsers={this.props.projectUsers}
                 />)
             })
             return comments;
@@ -408,8 +407,7 @@ const mapStateToProps = state => {
         toggleReplyForm: state.commentsPanelReducer.toggleReplyForm,
         users: state.commentsPanelReducer.users,
         slateTitle: state.commentsPanelReducer.slateTitle,
-        permissions : state.appStore.permissions,
-        projectUsers: state.commentsPanelReducer.sortedUsers,
+        permissions : state.appStore.permissions
     }
 };
 

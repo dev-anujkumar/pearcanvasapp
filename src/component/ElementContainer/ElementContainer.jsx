@@ -2222,7 +2222,7 @@ const mapStateToProps = (state) => {
         oldFigureDataForCompare: state.appStore.oldFigureDataForCompare,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         prevSelectedElement: state.tcmReducer.prevElementId,
-        projectUsers: state.commentsPanelReducer.sortedUsers
+        projectUsers: state.commentsPanelReducer.users
     }
 }
 

@@ -225,7 +225,7 @@ export const getProjectUsers = () => dispatch => {
             (b.lastName < a.lastName ? 1 : -1));
             dispatch({
                 type: GET_PROJECT_USER,
-                payload: {user: response.data, sortedUsers: list}
+                payload: list
             });
         }).catch(error => {
             //console.log("error while getting user", error);

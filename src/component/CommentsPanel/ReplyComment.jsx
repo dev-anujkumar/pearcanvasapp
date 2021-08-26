@@ -25,7 +25,7 @@ class ReplyComment extends React.Component {
                     <span className="Username-Copy">{props.comment.commentCreator}</span>
                 </div>
                 <div className="wrapper-reply">
-               <CommentMention projectUsers={props.projectUsers} comment={this.state.text} handleCommentChange={this.updateCommentText}/>
+               <CommentMention projectUsers={this.props.users} comment={this.state.text} handleCommentChange={this.updateCommentText}/>
                    <img src={sendBlack} className="unique" onClick={this.replyComment} />
                 </div>
             </div>
