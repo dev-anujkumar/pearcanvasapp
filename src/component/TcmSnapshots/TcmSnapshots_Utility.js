@@ -295,7 +295,7 @@ function parentData4CutCopyASWE_2C(asideData, parentUrn) {
 * should contain value of body(Manifest) of WE */
 function setParentUrnData(wipData, item) {
     let parent = wipData;
-    wipData?.elementdata.bodymatter?.forEach(obj => {
+    wipData?.elementdata?.bodymatter?.forEach(obj => {
        if(obj?.type === WE_MANIFEST) {
             obj?.contents.bodymatter?.forEach(obj_L1 => {
                 if(obj_L1?.id === item?.id) {
@@ -307,10 +307,10 @@ function setParentUrnData(wipData, item) {
     return parent;
 }
 
-const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, operationType=null) => {
+const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item,eleIndex,operationType=null) => {
     const { asideData, parentUrn, slateManifest } = containerElement || {};
     const parentObj = setParentUrnData(wipData, item);
-    const updatedContainerElement = {
+    let updatedContainerElement = {
         asideData: {
             contentUrn: wipData.contentUrn,
             element: wipData,
@@ -326,6 +326,16 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, o
         },
         slateManifest
     }
+    if(wipData.type === MULTI_COLUMN && item?.type === SHOWHIDE && !updatedContainerElement?.parentUrn?.multiColumnType) {
+        updatedContainerElement.parentUrn = {
+            ...updatedContainerElement.parentUrn,
+            multiColumnType: wipData?.groupeddata?.bodymatter?.length === 3 ? "3C" : "2C",
+            mcId: wipData?.id,
+            columnName: "C" + (eleIndex + 1),
+            manifestUrn: wipData?.groupeddata?.bodymatter?.[eleIndex]?.id
+        }
+    }
+    
     let newContainerElement = {}
     if (containerElement.cutCopyParentUrn) {
         newContainerElement = {
@@ -515,6 +525,9 @@ const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys,ind
     const { parentUrn } = containerElement
     wipData.groupeddata.bodymatter.map((item, eleIndex) => {
         item.groupdata.bodymatter.map((ele) => {
+            if(ele?.type === SHOWHIDE) {
+               tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType);
+            } else
             if(ele?.type === "element-aside") {
                tcmSnapshotsAsideWE(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType)
             } else {
