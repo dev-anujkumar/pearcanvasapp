@@ -221,9 +221,11 @@ export const getProjectUsers = () => dispatch => {
                 "PearsonSSOSession": config.ssoToken
             }
         }).then(response => {
+            const list = response.data.sort((a, b) =>
+            (b.lastName < a.lastName ? 1 : -1));
             dispatch({
                 type: GET_PROJECT_USER,
-                payload: response.data
+                payload: {user: response.data, sortedUsers: list}
             });
         }).catch(error => {
             //console.log("error while getting user", error);

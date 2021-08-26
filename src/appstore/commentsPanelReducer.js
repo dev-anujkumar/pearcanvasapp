@@ -31,7 +31,8 @@ const initialState = {
     users: [],
     slateTitle: "",
     comments: [],
-    index:null
+    index:null,
+    sortedUsers : []
 }
 
 const INITIAL_ACTION = {
@@ -118,11 +119,12 @@ export default function (state = initialState, action = INITIAL_ACTION) {
                 comments: editComment
             }
         case GET_PROJECT_USER:
-            let users = payload;
+            let users = payload.user
             // users = users.filter(user => user.isMember === true)
             return {
                 ...state,
-                users: users
+                users: users,
+                sortedUsers: payload.sortedUsers
             }
 
         case UPDATE_ASSIGNEE:

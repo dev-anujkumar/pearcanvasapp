@@ -361,6 +361,7 @@ class Comments extends React.Component {
                         toggleReplyForm={toggleReplyForm}
                         showReplyComments={this.state.showReplyComments}
                         users={this.props.users}
+                        projectUsers={this.props.projectUsers}
                     />
                 </div>
             </div>
