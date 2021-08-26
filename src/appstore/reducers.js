@@ -555,7 +555,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
         case FETCH_SLATE_DATA:
             let tempdata = action.payload;
-            tempdata['urn:pearson:manifest:5b952b50-9ada-43b9-86b4-ef05ef6210b4'].contents.bodymatter.push(tempBlockListData)
+            tempdata['urn:pearson:manifest:f36a55ee-36fd-4932-8d54-a77b38a8610a'].contents.bodymatter.push(tempBlockListData)
             return {
                 ...state,
                 // slateLevelData: action.payload

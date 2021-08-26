@@ -67,6 +67,7 @@ import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+import BlockList from '../BlockList/index.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -1260,7 +1261,7 @@ class ElementContainer extends Component {
     }
 
     /**
-     * Render Element function takes current element from bodymatter and render it into currnet slate 
+     * Render Element function takes current element from bodymatter and render it into current slate 
      * @param {element} 
     */
     renderElement = (element = {}) => {
@@ -1678,7 +1679,7 @@ class ElementContainer extends Component {
                     break;
                 
                 case elementTypeConstant.BLOCK_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType}/>;
+                    editor = <BlockList element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} />;
                     labelText = 'BL'
                     break;
 
