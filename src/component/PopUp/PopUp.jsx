@@ -350,8 +350,10 @@ class PopUp extends React.Component {
         }
         else {
             if (props.isAddComment) {
+                const list = props.projectUsers.sort((a, b) =>
+                (b.lastName < a.lastName ? 1 : -1));  
                 return (
-                    <CommentMention projectUsers={props.projectUsers} comment={props.comment} handleCommentChange={props.handleChange} isAddComment={props.isAddComment}/>
+                    <CommentMention projectUsers={list} comment={props.comment} handleCommentChange={props.handleChange} isAddComment={props.isAddComment}/>
                 )
             }
         }
