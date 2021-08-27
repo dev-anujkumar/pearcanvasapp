@@ -70,11 +70,11 @@ class ReplyComment extends React.Component {
     @param {Array} reply - Array of reply  comments
     @return {String} - returns the jsx code of the reply menu
     */
-    reply = (index, reply) => {
+    reply = (index, reply, length) => {
         return (
             <div key={index} className="reply">
                 <div className="selected-corner"></div>
-                <h4>Reply #{index + 1}</h4>
+                <h4>Reply #{length - index}</h4>
                 <div className="comment-header">
                     <div className="comment-info no-padding">
                         <div className="text-medium-semibold mt-4"> {reply.commentCreator} </div>
@@ -85,7 +85,8 @@ class ReplyComment extends React.Component {
                 <div className="comment-body">
                     <div className="text-medium color-gray-71 mb-4">
                         <p className="hyphens">
-                            {reply.commentString ? reply.commentString : ''}
+                        {typeof reply.commentString === 'string' ? <CommentMention projectUsers={this.props.users} readOnly comment={reply.commentString} />: null }
+                        
                         </p>
                     </div>
                 </div>
@@ -105,7 +106,7 @@ class ReplyComment extends React.Component {
             return (
                 <>
                 {this.showReplyBox(props)}
-                {props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))}
+                {props.comment.replyComments.slice(0).reverse().map((reply, index) => this.reply(index, reply, props.comment.replyComments.length))}
                 </>
             )
 

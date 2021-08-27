@@ -174,9 +174,7 @@ class CommentsPanel extends React.Component {
     * 
     * @discription - This function is to get user detail of project
     */
-    getProjectUsers = () => {
-        this.props.getProjectUsers();
-    }
+
 
     /**
     * 
@@ -224,8 +222,8 @@ class CommentsPanel extends React.Component {
                     updateAssignee={this.updateAssignee}
                     toggleReplyForm={this.props.toggleReplyForm}
                     users={this.props.users}
-                    getProjectUsers={this.getProjectUsers}
                     permissions={this.props.permissions}
+                    getProjectUsers={this.props.getProjectUsers}
                 />)
             })
             return comments;
