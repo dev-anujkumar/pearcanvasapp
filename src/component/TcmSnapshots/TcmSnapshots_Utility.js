@@ -1586,7 +1586,7 @@ export const popupWipData = (bodymatter, eleIndex,operationType,wipData) => {
 export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
     /* Convert of Figure inside 2C:AS/WE Only Update Action */
     const { asideData, parentUrn } = store?.getState()?.appStore || {};
-    const { type,  parent } = asideData || {};
+    const { type,  parent, grandParent } = asideData || {};
     const isFigure = (response?.type === FIGURE) && (type === ELEMENT_ASIDE) && (parent?.type === MULTI_COLUMN);
     
     let parentData = {};
@@ -1635,6 +1635,14 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
                     ...parentData,
                     asideData: asideData,
                     parentUrn: parentUrn
+                }
+            }
+            /* 3C:SH:Figure conversion snapshots */
+            if(asideData?.type === SHOWHIDE && grandParent?.asideData?.type === MULTI_COLUMN) {
+                parentData = {
+                    ...parentData,
+                    asideData: grandParent?.asideData,
+                    parentUrn: grandParent?.parentUrn
                 }
             }
         }
