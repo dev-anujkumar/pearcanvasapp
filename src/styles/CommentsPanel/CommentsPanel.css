@@ -53,12 +53,12 @@ html {
 .Reply-Num {
   height: 17px;
   display: block;
-  font-family: OpenSans;
+  font-family: inherit;
   font-weight: bold !important;
   color: black !important;
 }
 .Username-Copy {
-  font-family: OpenSans;
+  font-family: inherit;
   font-size: 12px;
   font-weight: bolder !important;
   color: black !important;
@@ -74,7 +74,7 @@ html {
 }
 .Replies {
   color: #005a70 !important;
-  font-family: OpenSans;
+  font-family: inherit;
   font-size: 12px !important;
   width: 42px !important;
   height: 14px !important;
