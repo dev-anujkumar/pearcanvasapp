@@ -18,7 +18,7 @@ import ElementConstants, {
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 
-const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -470,6 +470,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         asideData,
         parentUrn,
         elementIndex,
+        showHideType = undefined,
         poetryData,
         updateBodymatter,
         currentParentData,
@@ -477,7 +478,8 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
 
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const isPopupOrShowhideElement = allowedParentType.includes(parentElement?.type) && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+    const isPopupOrShowhideElement = (allowedParentType.includes(parentElement?.type) || (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
+        (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     
@@ -489,7 +491,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             showHideObj,
             parentElement: allowedParentType.includes(parentElement?.type) ? parentElement : undefined,
             metaDataField: parentElement && parentElement.type === 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
-            sectionType : allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : undefined,
+            sectionType : allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : showHideType,
             CurrentSlateStatus: currentSlateData.status
         },
         elementUpdateData = {
@@ -549,7 +551,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
         })
     }
 
-    const commonArgs = { updatedData, elementIndex, parentUrn, asideData, parentElement, currentSlateData, getState, dispatch, responseData }
+    const commonArgs = { updatedData, elementIndex, parentUrn, asideData, parentElement, currentSlateData, getState, dispatch, responseData, showHideType }
 
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const snapshotArgs = {
