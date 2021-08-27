@@ -470,6 +470,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         asideData,
         parentUrn,
         elementIndex,
+        showHideType = undefined,
         poetryData,
         updateBodymatter,
         currentParentData,
@@ -490,7 +491,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             showHideObj,
             parentElement: allowedParentType.includes(parentElement?.type) ? parentElement : undefined,
             metaDataField: parentElement && parentElement.type === 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
-            sectionType : allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : undefined,
+            sectionType : allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : showHideType,
             CurrentSlateStatus: currentSlateData.status
         },
         elementUpdateData = {
@@ -550,7 +551,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
         })
     }
 
-    const commonArgs = { updatedData, elementIndex, parentUrn, asideData, parentElement, currentSlateData, getState, dispatch, responseData }
+    const commonArgs = { updatedData, elementIndex, parentUrn, asideData, parentElement, currentSlateData, getState, dispatch, responseData, showHideType }
 
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const snapshotArgs = {
