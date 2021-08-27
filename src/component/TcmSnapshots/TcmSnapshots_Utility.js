@@ -95,8 +95,8 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
     } else if((figureElementList.includes(type) || actionStatus?.action === "update" ||  actionStatus?.action === "create" ||
         actionStatus?.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
-        gPType === MULTI_COLUMN && !showHideObj?.showHideType) {
-            /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
+        gPType === MULTI_COLUMN) {
+           /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
             if (!multiColumnType) {
                 let multiColumnObj = store?.getState()?.appStore?.slateLevelData[config.slateManifestURN].contents?.bodymatter.find(x => x.id === id);
                 multiColumnType = `${multiColumnObj?.groupeddata?.bodymatter.length}C`
@@ -881,9 +881,11 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementId = `${eleId.popID}+${elementId}`;
     }
     /* if WE and Aside inside 2C element - 2C:AS/WE:--- */
-    if (tag.grandParent && eleId.grandParentId) {
-        elementTag = `${tag.grandParent}:${elementTag}`
-        elementId = `${eleId.grandParentId}+${elementId}`
+    if (tag?.grandParent && eleId?.grandParentId) {
+        if(elementTag?.indexOf(tag.grandParent) === -1 ) {
+            elementTag = `${tag.grandParent}:${elementTag}`
+            elementId = `${eleId.grandParentId}+${elementId}`
+        }
         if (tag?.isMultiColumnInPopup) {
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
