@@ -87,15 +87,6 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     font-family: 'Open Sans', sans-serif !important;
     white-space: nowrap;
     overflow: hidden;
-    position: relative !important;
-}
-.image-label h4 code {
-    background-color: transparent;
-    /* padding: 0!important; */
-    position: absolute !important;
-    overflow: auto !important;
-    /* white-space: break-spaces !important; */
-    padding: 0 10px !important
 }
 .floating-title-group .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable {
     font-size: 14px!important;
