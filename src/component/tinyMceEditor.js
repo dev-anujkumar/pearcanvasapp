@@ -1462,40 +1462,43 @@ export class TinyMceEditor extends Component {
             tooltip: "Special Character",
             fetch: function (callback) {
                 var items = [{
-                        type: 'menuitem',
-                        text: 'Insert Special Character',
-                        onAction: function () {
-                            tinymce.activeEditor.execCommand('mceShowCharmap');
-                        }
-                    },
-                    {
-                        type: 'menuitem',
-                        text: 'Insert a Blank',
-                        onAction: function () {
-                                editor.selection.setContent('<span contentEditable="false" id="blankLine" class="answerLineContent"><br></span>');
-                                if(self.props.element && self.props.element.type === "element-list"){
-                                    const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
-                                    if (!listLiText.trim()) {
-                                        const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' span#blankLine');
-                                        tinyMCE.$('#' + tinymce.activeEditor.id + ' li').find('br').remove();
-                                        document.querySelector('#' + tinymce.activeEditor.id + ' li').append(blankLine);
-                                        blankLine.innerHTML = '<br>';
-                                        tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
-                                    }
-                                } else if (self.props.element && self.props.element.type === "element-blockfeature" && self.props.element.elementdata && self.props.element.elementdata.type !=="pullquote") {
-                                        const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' > p > span#blankLine') || document.querySelector('#' + tinymce.activeEditor.id + ' > span#blankLine');
-                                        const blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins') ? document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText : "";
-                                        if (!blockqtText.trim()) {
-                                            tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
-                                            document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(blankLine);
-                                            blankLine.innerHTML = '<br>';
-                                            tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
-                                        }
-                                }
-                             editor.targetElm.classList.remove('place-holder');
-                        }
+                    type: 'menuitem',
+                    text: 'Insert Special Character',
+                    onAction: function () {
+                        tinymce.activeEditor.execCommand('mceShowCharmap');
                     }
+                }
                 ];
+                let blankLineOption = {
+                    type: 'menuitem',
+                    text: 'Insert a Blank',
+                    onAction: function () {
+                        editor.selection.setContent('<span contentEditable="false" id="blankLine" class="answerLineContent"><br></span>');
+                        if (self.props.element && self.props.element.type === "element-list") {
+                            const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
+                            if (!listLiText.trim()) {
+                                const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' span#blankLine');
+                                tinyMCE.$('#' + tinymce.activeEditor.id + ' li').find('br').remove();
+                                document.querySelector('#' + tinymce.activeEditor.id + ' li').append(blankLine);
+                                blankLine.innerHTML = '<br>';
+                                tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
+                            }
+                        } else if (self.props.element && self.props.element.type === "element-blockfeature" && self.props.element.elementdata && self.props.element.elementdata.type !== "pullquote") {
+                            const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' > p > span#blankLine') || document.querySelector('#' + tinymce.activeEditor.id + ' > span#blankLine');
+                            const blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins') ? document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText : "";
+                            if (!blockqtText.trim()) {
+                                tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
+                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(blankLine);
+                                blankLine.innerHTML = '<br>';
+                                tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
+                            }
+                        }
+                        editor.targetElm.classList.remove('place-holder');
+                    }
+                }
+                if (self.props?.element?.type != 'figure') {
+                    items.push(blankLineOption)
+                }
                 callback(items);
             }
         })

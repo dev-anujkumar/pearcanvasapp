@@ -1,35 +1,42 @@
-import React  from 'react';
+import React from 'react';
 import { MentionsInput, Mention } from 'react-mentions';
-import defaultStyle from "./defaultStyle.js";
-import replyDefaultStyle from './replyDefaultStyle.js';
+import './CommentMention.css'
 
 const CommentMention = (props) => {
-    
+  const onCommentChange = (event, value) => {
+    if (!props.readOnly) {
+      props.handleCommentChange(value);
+    }
+
+  }
+
   const userMentionData = props.projectUsers.map(myUser => ({
-      id: myUser.userId,
-      display: `${myUser.firstName} ${myUser.lastName}`
-    }));
+    id: myUser.userId,
+    display: `@${myUser.lastName}, ${myUser.firstName}`
+  }));
+
   
     return (
       <div className="comment-mentions">
         <MentionsInput
+          readOnly={props.readOnly}
           value={props.comment}
-          onChange={(event) => props.handleCommentChange(event.target.value)}
-          placeholder="Type..."
-          markup="@[__display__](__type__:__id__)"
+          onChange={onCommentChange}
+          placeholder="Type something"
+          className={`${props.readOnly ? 'no-border' : 'mentions'} ${props.isAddComment ? 'comment-mention' : 'reply-mention'}`}
+          markup="@__display__(__id__)"
           allowSuggestionsAboveCursor={props.isAddComment ? false : true}
-          style={props.isAddComment ? defaultStyle : replyDefaultStyle}
         >
           <Mention
             type="user"
             trigger="@"
             data={userMentionData}
+            className="mentions__mention"
             appendSpaceOnAdd={true}
           />
         </MentionsInput>
       </div>
     );
-  }
+}
 
 export default CommentMention
-

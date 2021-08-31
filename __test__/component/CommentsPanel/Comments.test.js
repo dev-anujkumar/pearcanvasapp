@@ -143,14 +143,10 @@ describe('Testing CommentsPanel component with props', () => {
 
     });
     it('test update comment test function ', () => {
-      let event = {
-        target: {
-          value: "test"
-        }
-      }
+      let event = "test"
       instance.updateCommentText(event)
       const updatedFields = wrapper.state().updatedFields.text;
-      expect(updatedFields).toEqual("test");
+      expect(updatedFields).toEqual(event);
     });
 
     it('test delete comment  function ', () => {
