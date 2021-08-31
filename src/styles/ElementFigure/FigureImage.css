@@ -698,7 +698,8 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .figure-image-container{
     position: relative;
-    margin: 25px 0 30px 0;
+    margin: 25px 0 25px 0;
+    min-height: 90px;
 }
 .figure-image-container:hover .figure-wrapper{
     opacity: 0.8;
@@ -708,6 +709,7 @@ th ol li.listItemNumeroUnoNone:before {
     left:16px;
     position: absolute;
     bottom: 16px;
+    width:70%;
 }
 .figure-label{
     width: 130px;

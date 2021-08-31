@@ -22,7 +22,7 @@ const CommentMention = (props) => {
           readOnly={props.readOnly}
           value={props.comment}
           onChange={onCommentChange}
-          placeholder="Type..."
+          placeholder="Type something"
           className={`${props.readOnly ? 'no-border' : 'mentions'} ${props.isAddComment ? 'comment-mention' : 'reply-mention'}`}
           markup="@__display__(__id__)"
           allowSuggestionsAboveCursor={props.isAddComment ? false : true}

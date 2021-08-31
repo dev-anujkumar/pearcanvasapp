@@ -143,7 +143,12 @@ class Comments extends React.Component {
         this.setState({
             isSelectAssignee: false
         })
-        // this.props.getProjectUsers();
+
+        // if user came from comments manager
+        // than again initilizing the user list
+        if(this.props.users.length === 0) {
+            this.props.getProjectUsers();
+        }
     }
 
     /**
@@ -178,7 +183,7 @@ class Comments extends React.Component {
         this.setState({
             updatedFields: {
                 ...this.state.updatedFields,
-                text: e.target.value
+                text: e
             }
         })
     }
@@ -228,10 +233,10 @@ class Comments extends React.Component {
         return (
 
             <div>
-                <textarea rows="10"
-                    className="new-comment textarea-input"
-                    defaultValue={this.props.comment.commentString}
-                    onChange={this.updateCommentText}
+                <CommentMention 
+                projectUsers={this.props.users} 
+                comment={this.state.updatedFields.text} 
+                handleCommentChange={this.updateCommentText}
                 />
                 <div className="buttons-wrapper">
                     <button className="btn btn__initial"
