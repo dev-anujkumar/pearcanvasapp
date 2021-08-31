@@ -73,7 +73,7 @@ describe('Testing CommentsPanel component with props', () => {
     it('render action menu from correctly', () => {
       let actionMenu = instance.actionsMenu();
       expect(actionMenu.props.className).toEqual('comment-action-menu action-menu');
-      expect(actionMenu.props.children).toHaveLength(5); 
+      expect(actionMenu.props.children).toHaveLength(4); 
     });
 
     it('render remove comment from correctly', () => {
@@ -143,14 +143,10 @@ describe('Testing CommentsPanel component with props', () => {
 
     });
     it('test update comment test function ', () => {
-      let event = {
-        target: {
-          value: "test"
-        }
-      }
+      let event = "test"
       instance.updateCommentText(event)
       const updatedFields = wrapper.state().updatedFields.text;
-      expect(updatedFields).toEqual("test");
+      expect(updatedFields).toEqual(event);
     });
 
     it('test delete comment  function ', () => {

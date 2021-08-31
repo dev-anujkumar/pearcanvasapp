@@ -1,10 +1,12 @@
 import React from 'react'
 import UserAssignee from './UserAssignee.jsx';
 import ReplyComment from './ReplyComment.jsx';
+import iconArrow from '../../images/CommentsPanel/icon-arrow.svg'
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
 import PropTypes from 'prop-types';
 import {utils} from '../../js/utils'
 import config from '../../config/config.js'
+import CommentMention from '../CommentMention/CommentMention.jsx';
 class Comments extends React.Component {
     constructor(props) {
         super(props)
@@ -17,7 +19,8 @@ class Comments extends React.Component {
                 status: this.props.comment.commentStatus
             },
             isSelectAssignee: false,
-            showReplyForm: false
+            showReplyForm: true,
+            showReplyComments: false
         }
     }
     componentDidMount() {
@@ -48,6 +51,36 @@ class Comments extends React.Component {
         this.setState({ showActionsMenu: show })
     }
 
+    /**
+    * 
+    *@discription - This function is to toggle between expanded and collapsed state of replies
+    */    
+    setReplyDropdownState = () => {
+        this.setState({ showReplyComments: !this.state.showReplyComments });
+    }
+    
+    /**
+    * 
+    *@discription - This function is to show the comment in slateview
+    */
+    // printComment = () => {
+    //     const { comment } = this.props;
+    //     var string = comment.commentString;
+    //     var x= string.match(/@(.*?)\)/g)
+    //     var final ="";
+    //     var prevIndex=0;
+    //     for(var i=0;i<x.length;i++){
+    //         var index = string.indexOf(x[i]);
+    //         final+="<span style = 'color: #7a797a'>" + string.substring(prevIndex,index) + "</span>";
+    //         final+="<span style = 'color: #015a70'>"+x[i]+"</span>";
+    //         prevIndex = index + x[i].length;	
+    //     }
+    //     final += "<span>" + string.substring(prevIndex) +  "</span>";
+    //     return (
+    //         <div dangerouslySetInnerHTML={{__html: final}}>
+    //         </div>
+    //     )
+    // }
 
    /**
    * 
@@ -110,7 +143,12 @@ class Comments extends React.Component {
         this.setState({
             isSelectAssignee: false
         })
-        this.props.getProjectUsers();
+
+        // if user came from comments manager
+        // than again initilizing the user list
+        if(this.props.users.length === 0) {
+            this.props.getProjectUsers();
+        }
     }
 
     /**
@@ -145,7 +183,7 @@ class Comments extends React.Component {
         this.setState({
             updatedFields: {
                 ...this.state.updatedFields,
-                text: e.target.value
+                text: e
             }
         })
     }
@@ -178,7 +216,6 @@ class Comments extends React.Component {
 
         return (
             <ul className="comment-action-menu action-menu">
-                {permissions.includes('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
                 {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
                 {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
@@ -196,10 +233,10 @@ class Comments extends React.Component {
         return (
 
             <div>
-                <textarea rows="10"
-                    className="new-comment textarea-input"
-                    defaultValue={this.props.comment.commentString}
-                    onChange={this.updateCommentText}
+                <CommentMention 
+                projectUsers={this.props.users} 
+                comment={this.state.updatedFields.text} 
+                handleCommentChange={this.updateCommentText}
                 />
                 <div className="buttons-wrapper">
                     <button className="btn btn__initial"
@@ -281,7 +318,7 @@ class Comments extends React.Component {
                             :
                             <div className="text-medium color-gray-71 mb-4">
                                 <p className="hyphens">
-                                    {comment.commentString}
+                                    <CommentMention projectUsers={users} readOnly comment={this.props.comment.commentString}/>
                                 </p>
                             </div>
                         }         
@@ -308,8 +345,11 @@ class Comments extends React.Component {
                                 <span className="property-value capitalize color-gray-71">{comment.commentStatus.toLowerCase()}</span>
                             </div>
                             <div className="property">
-                                <span className="property-title">Replies</span>
-                                <span className="property-value"> {comment.replyComments && comment.replyComments.length} </span>
+                            <div onClick={this.setReplyDropdownState}>
+                            <span className="property-value Replies"> {comment.replyComments.length} </span>
+                            <span className="property-title Replies">Replies</span>
+                            <img className="Path" src={iconArrow} />
+                            </div>
                             </div>
 
 
@@ -324,6 +364,8 @@ class Comments extends React.Component {
                         updateReplyComment={updateReplyComment}
                         elementId={elementId}
                         toggleReplyForm={toggleReplyForm}
+                        showReplyComments={this.state.showReplyComments}
+                        users={this.props.users}
                     />
                 </div>
             </div>

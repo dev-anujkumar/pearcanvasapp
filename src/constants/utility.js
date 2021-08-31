@@ -271,6 +271,7 @@ export const dropdownValueAtIntialize = (dropdownData, formattedLabel) => {
     let figureLabelFromApi = checkHTMLdataInsideString(formattedLabel);
     let figureLabelValue;
     if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
+        figureLabelFromApi = figureLabelFromApi.toLowerCase();
         figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
     } else if (figureLabelFromApi === '') {
         figureLabelValue = 'No Label';

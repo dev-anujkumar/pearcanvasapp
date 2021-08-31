@@ -193,7 +193,7 @@ describe('Testing <CanvasWrapper> Component', () => {
             global.setInterval = jest.fn();
             canvasWrapperInstance.countTimer = 21;
             canvasWrapperInstance.updateTimer();
-            canvasWrapperInstance.timeSince();
+            // canvasWrapperInstance.timeSince();
             expect(canvasWrapperInstance.state.showReleasePopup).toBe(false);
         })
         test('should call handleCommentspanel without crashing', () => {

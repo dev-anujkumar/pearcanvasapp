@@ -18,7 +18,7 @@ import { sendDataToIframe } from '../constants/utility';
     let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
     let figureType = data?.content?.mimeType?.split('/')[0]             
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
-    const imgData = `<img src=${epsURL} data-id="${imageID}" class="imageAssetContent" width="112" height="150" imageid="urn:pearson:alfresco:${uniqID}" alt="${altText}" longdescription="${longDesc}"/>`;
+    const imgData = `<img imageid="urn:pearson:alfresco:${uniqID}" src=${epsURL} height="150" width="112" alt="${altText}" longdescription="${longDesc}" class="imageAssetContent" data-id="${imageID}"/>`;
     const imageTypes = ["image", "table", "mathImage", "authoredtext"];
     if (imageTypes.indexOf(figureType) > -1) {
         if (imageArgs?.id && editor?.targetElm) {
@@ -87,4 +87,20 @@ function handleSiteOptionsDropdown (alfrescoPath, id) {
         .catch(function (error) {
             console.log("Error IN SITE API", error)
         });
+}
+
+export const checkForDataIdAttribute =(defModel) => {
+    let imageAssetContents = defModel.match(/<(img)\s[^>]*imageid=.*?>/g);
+    let tempimageAssetContents = defModel.match(/<(img)\s[^>]*imageid=.*?>/g);
+    if(imageAssetContents!=null || imageAssetContents!=undefined){
+        for(let index = 0; index < imageAssetContents.length; index++) {
+            if(!imageAssetContents[index].match(/<(img)\s[^>]*data-id=.*?>/g)){
+                const uniqID = imageAssetContents[index].split(' ').find((attribute) => attribute.includes('imageid')).split('alfresco:')[1].replace('"','')
+                const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`;
+                imageAssetContents[index] = imageAssetContents[index].replace('class="imageAssetContent"',`class="imageAssetContent" data-id=${imageID}`)
+                defModel = defModel.replace(tempimageAssetContents[index],imageAssetContents[index]);
+            }
+        }
+    }
+    return defModel;
 }

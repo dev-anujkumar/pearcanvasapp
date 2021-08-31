@@ -49,12 +49,12 @@ export default {
    * @param {Number} depth level of nesting
    */
   addOListClasses: function (node, depth) {
-    if (node === null) {
+    if (node === null || node === undefined) {
       return;
     }
 
     if (node.tagName === "OL") {
-      if (depth === 4) {
+      if (depth === 4 || node === undefined) {
         const domParser = new DOMParser()
         let ulNode = domParser.parseFromString(node.innerHTML, "text/html").body
         this.removeExtraNesting(ulNode, "ol")
@@ -127,11 +127,11 @@ export default {
    * @param {Number} depth level of nesting
    */
   addSpecificOListClasses: function (firstNode, node, depth) {
-    if (node === null) {
+    if (node === null || node === undefined) {
       return;
     }
-
-    if (node.tagName === "OL") {
+    
+    if (node?.tagName === "OL") {
       if (depth === 4) {
         const domParser = new DOMParser()
         let ulNode = domParser.parseFromString(node.innerHTML, "text/html").body
@@ -245,12 +245,12 @@ export default {
       }
     }
 
-    this.addSpecificOListClasses(firstNode, node.firstElementChild, depth);
+    this.addSpecificOListClasses(firstNode, node?.firstElementChild, depth);
     if (node.nextElementSibling !== null && node.nextElementSibling?.tagName === "OL") {
       depth = 1;
       this.addSpecificOListClasses(node.nextElementSibling, node.nextElementSibling, depth);
     } else {
-      this.addSpecificOListClasses(firstNode, node.nextElementSibling, depth);
+      this.addSpecificOListClasses(firstNode, node?.nextElementSibling, depth);
     }
 
   },
@@ -285,9 +285,10 @@ export default {
    * @param {Number} depth level of nesting
    */
   addUListClasses: function (node, depth) {
-    if (node === null) {
+    if (node === null || node === undefined) {
       return;
     }
+    
     node.removeAttribute("style");
     if (node.tagName === "UL") {
       node.classList.add("disc");

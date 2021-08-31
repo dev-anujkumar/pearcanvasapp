@@ -169,6 +169,9 @@ export const onPasteSuccess = async (params) => {
                             if(item_5?.type === 'element-aside') {
                                 pasteShowhideInAside(item_5, manifestUrn, responseData, pasteSHIndex);
                             }
+                            if(item_5?.id === manifestUrn) {
+                                pasteInShowhide(item_5, responseData, pasteSHIndex);
+                            }
                         })
                     })
                 }
@@ -392,6 +395,7 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
         case slateWrapperConstants.TEXT:
         case slateWrapperConstants.ASSESSMENT:
         case slateWrapperConstants.ELEMENT_ASSESSMENT:
+        case slateWrapperConstants.ELEMENT_PDF:
         case slateWrapperConstants.ELEMENT_CITATION:
         case slateWrapperConstants.STANZA:
         case slateWrapperConstants.IMAGE:

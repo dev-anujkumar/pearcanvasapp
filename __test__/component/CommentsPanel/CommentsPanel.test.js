@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import CommentsPanel from '../../../src/component/CommentsPanel';
-import { comments, filters ,permissions} from '../../../fixtures/commentPanelData.js'
+import { comments, filters ,permissions, users} from '../../../fixtures/commentPanelData.js'
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
@@ -12,14 +12,15 @@ const store = mockStore({
   commentsPanelReducer: {
     comments: comments,
     togglePanel: true,
-    toggleReplyForm: true
+    toggleReplyForm: true,
+    users: users
   },
   appStore : {
     permissions: permissions
   }
 });
 describe('Testing CommentsPanel component with props', () => {
-  let wrapper = mount(<Provider store={store}>< CommentsPanel comments={comments} /> </Provider>)
+  let wrapper = mount(<Provider store={store}>< CommentsPanel comments={comments} projectUsers={users}/> </Provider>)
   const instance = wrapper.find('CommentsPanel').instance();
   describe('Testing rendering component with props', () => {
     it('should have search component', () => {
@@ -178,9 +179,6 @@ describe('Testing CommentsPanel component with props', () => {
     });
     it('tests update resolves function ', () => {
       instance.updateResolveComment();
-    });
-    it('tests get project users resolves function ', () => {
-      instance.getProjectUsers();
     });
 
     it('tests delete function  function ', () => {

@@ -31,7 +31,7 @@ const {
     MULTI_COLUMN,
     SHOWHIDE,
     interactiveSubtypeConstants,
-    SMARTLINK_LABELS
+    SMARTLINK_LABELS, ELEMENT_TYPE_PDF
 }
     = TcmConstants;
 
@@ -280,7 +280,8 @@ export const fetchElementsTag = (element,metadataField) => {
         case BLOCKFEATURE:
             eleSubType = element.elementdata.type
             break;
-        case ELEMENT_ASSESSMENT: 
+        case ELEMENT_ASSESSMENT:
+        case ELEMENT_TYPE_PDF:
             eleSubType = element.type
             break;
         case FIGURE:
@@ -313,7 +314,7 @@ export const fetchElementsTag = (element,metadataField) => {
  * @returns {Boolean}
 */
 export const isEmpty = (obj) => {
-    if ((Object.keys(obj).length === 0 && obj.constructor === Object)) {
+    if (obj && (Object.keys(obj).length === 0 && obj.constructor === Object)) {
         return true;
     }
     return false;
@@ -516,7 +517,14 @@ const setElementTag = {
     },
     [SHOWHIDE] : {
         parentTag: "SH"
-    }
+    },
+    [ELEMENT_TYPE_PDF]: {
+        subtype: {
+            [ELEMENT_TYPE_PDF] : {
+                parentTag: 'PDF'
+            }
+        }
+    },
 }
 
 const setMetadataType = {

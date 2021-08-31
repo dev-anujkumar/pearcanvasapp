@@ -6,7 +6,7 @@ import { slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
 import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure } from "../../../fixtures/containerActionsTestingData"
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO } from '../../../src/constants/Action_Constants';
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
 import axios from "axios"
@@ -1394,6 +1394,21 @@ describe('Tests ElementContainer Actions', () => {
             store.dispatch(actions.updateMultipleColumnData({}, 'testing'));
             expect(store.getActions().type).toEqual(expectedActions.type);
             spyUpdateMultipleColumnData.mockClear();
+        })
+        it('testing------- updateFigureImageDataForCompare------method', () => {
+            let store = mockStore(() => initialState2);
+            const expectedActions = [
+                { 
+                    type: UPDATE_OLD_FIGUREIMAGE_INFO,
+                    payload: {}
+                }
+              ]
+            const spyUpdateFigureImageDataForCompare  = jest.spyOn(actions, 'updateFigureImageDataForCompare') 
+            actions.updateFigureImageDataForCompare({}, store.dispatch);
+            expect(spyUpdateFigureImageDataForCompare).toHaveBeenCalled();
+            store.dispatch(actions.updateFigureImageDataForCompare({}));
+            expect(store.getActions().type).toEqual(expectedActions.type);
+            spyUpdateFigureImageDataForCompare.mockClear();
         })
     })
 })
