@@ -14,7 +14,8 @@ jest.mock('../../../src/component/TcmSnapshots/ElementSnapshot_Utility.js', () =
         fetchElementsTag: jest.fn(),
         generateWipDataForFigure: jest.fn(),
         getInteractiveSubtypeData: jest.fn(),
-        removeCalloutTitle: jest.fn()
+        removeCalloutTitle: jest.fn(),
+        setSemanticsSnapshots: jest.fn(),
     }
 })
 
@@ -1054,6 +1055,19 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.prepareElementSnapshots(element,actionStatus,index, elementDetails, CurrentSlateStatus);
             expect(spyFunction).toHaveBeenCalled();
         })
+        it('Test - 10.2 - if (element?.type === element-assessment)', async () => {
+            const element = {id: "123", type: "element-assessment",
+                elementdata: {
+                    assessmenttitle:"",
+                    assessmentitemtitle:"",
+                    assessmentid:"",  assessmentitemid: "231", usagetype:"", assessmentformat:""
+                }},
+                actionStatus = {action: "update"},
+                index = 0, elementDetails = {}, CurrentSlateStatus = {};
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareElementSnapshots');
+            await tcmSnapshotUtility.prepareElementSnapshots(element,actionStatus,index, elementDetails, CurrentSlateStatus);
+            expect(spyFunction).toHaveBeenCalled();
+        })
     })
     describe('Test-11 - prepareSnapshots_ShowHide functions', () => {
         it('Test - 11.1 ', () => {
@@ -1120,6 +1134,68 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
         containerElement = {}, index = 0, operationType = null;
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsOnDefaultSlate');
             tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, "groupedcontent",index, "",operationType);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    })
+    describe('Test-13 - tcmSnapshotsOnDefaultSlate functions', () => {
+        it('setElementTypeAndUrn - showhide inside multicol', async () => {
+            config.isPopupSlate = false;
+            const eleId = {
+                parentId: "urn:pearson:manifest:as242342asd3:32sf4314",
+                childId : "urn:pearson:work:as242342asd3:32sf43sdd",
+                grandParentId: "21312"
+            },
+            tag = {
+                parentTag: "3C:C1:SH",
+                childTag : "P",
+                grandParent: "3C:C1",
+                isMultiColumnInPopup: true
+            },
+            isHead = "HEAD",
+            eleIndex = -1,
+            popupInContainer = false,
+            slateManifestVersioning = "",
+            popupSlate = false,
+            parentElement = {
+                element: { type: "showhide" }
+            },
+            containerElement = {
+                asideData : {
+                    type: "groupedcontent",
+                    subtype: "",
+                    id: "urn:pearson:manifest:3525235-324323-4432sfe31"
+                },
+                parentUrn: {multiColumnType: "3C", columnName: "C1", manifestUrn:"m-123", mcId: "mc-123"}
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setElementTypeAndUrn');
+            
+            tcmSnapshotUtility.setElementTypeAndUrn(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+        })
+    }) 
+    describe('Test-14 - setFigureElementContentSnapshot functions', () => {
+        it('14.1 - setFigureElementContentSnapshot if(elementData){ ', () => {
+            const element = { 
+                html: {title: "title"},
+                figuretype: "assessment",
+                figuredata: {elementdata: {
+                    assessmenttitle:"",
+                    assessmentitemtitle:"",
+                    assessmentid:"",  assessmentitemid: "231", usagetype:"", assessmentformat:""
+                }}
+            }, actionStatus={};
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setFigureElementContentSnapshot');
+            tcmSnapshotUtility.setFigureElementContentSnapshot(element, actionStatus);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+        it('14.2 - setFigureElementContentSnapshot else(elementData){ ', () => {
+            const element = { 
+                html: {title: "title"},
+                figuretype: "assessment",
+                figuredata: {}
+            }, actionStatus={};
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setFigureElementContentSnapshot');
+            tcmSnapshotUtility.setFigureElementContentSnapshot(element, actionStatus);
             expect(spyFunction).toHaveBeenCalled();
         })
     })
