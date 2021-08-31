@@ -671,8 +671,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         config.savingInProgress = true
     }
     /* On update the inner elements of SH; add section type */
-    if(asideData?.type === elementTypeConstant.SHOW_HIDE) {
-        dataToReturn.sectionType = indexOfSectionType(index) || "";
+     if(asideData?.type === elementTypeConstant.SHOW_HIDE || elementType === elementTypeConstant.SHOW_HIDE) {
+        dataToReturn.sectionType = showHideType || asideData?.sectionType;
+        if(parentElement?.type === "groupedcontent") {
+            dataToReturn["elementParentEntityUrn"] = containerContext?.props?.element?.contentUrn;
+        }
     }
     return dataToReturn
 }

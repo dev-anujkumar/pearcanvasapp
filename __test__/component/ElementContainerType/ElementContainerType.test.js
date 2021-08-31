@@ -27,7 +27,7 @@ let props = {
         }
     ]
 
-
+    
 }
 
 let wrapper = mount(<ElementContainerType  {...props} />)
@@ -67,5 +67,14 @@ describe('Component renders List according to LOB permissions', () => {
         const texts = wrapper.find('li').map((node) => node.text());
         const includes = texts.includes("Add Discussion");
         expect(includes).toBe(false);
+    })
+})
+
+describe('Component renders list in Multicolumn', () => {
+    it('Add Show/Hide option renders when Element type is 2C || 3C', () => {
+        const wrapper = mount(<ElementContainerType  elementType="group" text="interactive-elem-button" data={interactiveList} />)
+        const texts = wrapper.find('li').map((node) => node.text());
+        const includes = texts.includes("Add Show Hide");
+        expect(includes).toBe(true);
     })
 })
