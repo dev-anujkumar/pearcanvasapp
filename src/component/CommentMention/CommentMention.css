@@ -87,3 +87,7 @@
     padding: 9px;
     height: 50px;
   }
+
+  .mentions.reply-mention .mentions__input::placeholder{
+    font-size: 12px;
+  }

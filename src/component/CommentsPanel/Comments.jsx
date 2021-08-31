@@ -143,7 +143,12 @@ class Comments extends React.Component {
         this.setState({
             isSelectAssignee: false
         })
-        // this.props.getProjectUsers();
+
+        // if user came from comments manager
+        // than again initilizing the user list
+        if(this.props.users.length === 0) {
+            this.props.getProjectUsers();
+        }
     }
 
     /**

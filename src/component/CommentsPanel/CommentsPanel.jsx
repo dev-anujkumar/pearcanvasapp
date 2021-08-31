@@ -39,7 +39,6 @@ class CommentsPanel extends React.Component {
             const isStatusDropdown = event.target.closest('.status-dropdown')
             if (!(isSortDropdown || isStatusDropdown)) this.closeAllDropdown();
         });
-        this.props.getProjectUsers();
     }
 
     componentWillUnmount() {
@@ -224,6 +223,7 @@ class CommentsPanel extends React.Component {
                     toggleReplyForm={this.props.toggleReplyForm}
                     users={this.props.users}
                     permissions={this.props.permissions}
+                    getProjectUsers={this.props.getProjectUsers}
                 />)
             })
             return comments;
