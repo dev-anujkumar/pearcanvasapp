@@ -1055,4 +1055,72 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             expect(spyFunction).toHaveBeenCalled();
         })
     })
+    describe('Test-11 - prepareSnapshots_ShowHide functions', () => {
+        it('Test - 11.1 ', () => {
+           let wipData = {
+                "id":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f",
+                "type":"popup",
+                "contentUrn":"urn:pearson:entity:5e2a5892-b71c-4e6c-83c6-ae3863fae832",
+                "popupdata":{
+                    "bodymatter":[],
+                    "postertextobject":[
+                        {
+                        "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67214",
+                        "status":"wip"
+                        }
+                    ]
+                }
+            },
+            containerElement = { 
+                sectionType: "show",
+                parentElement: {},
+                asideData: { grandParent: { asideData: {}, parentUrn: {}} }
+            }, index = 0;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareSnapshots_ShowHide');
+            tcmSnapshotUtility.prepareSnapshots_ShowHide(containerElement, wipData, index,"");
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    })
+    describe('Test-12 - tcmSnapshotsOnDefaultSlate functions', () => {
+        it('Test - 12.1 tcmSnapshotsMultiColumn  if()', () => {
+           let snapshotsData = {
+            "tag":{ "parentTag":"POP" },
+            "wipData":{
+                "id":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f",
+                "type":"groupedcontent",
+                "contentUrn":"urn:pearson:entity:5e2a5892-b71c-4e6c-83c6-ae3863fae832",
+                "groupeddata":{
+                    "bodymatter":[{ groupdata: {bodymatter: [{
+                        "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67211",
+                        "status":"wip",
+                        type: "showhide",
+                        "postertextobject":[{
+                            "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67214",
+                            "status":"wip"
+                        }]
+                    },{
+                        "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67213",
+                        type: "element-aside",
+                        "elementdata":{ bodymatter: [{
+                            "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67214",
+                            "status":"wip"
+                        }]}
+                    }]}
+                    }]
+                }
+            },
+            "elementId":{ "parentId":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f" },
+            "actionStatus":{
+                "action":"create",
+                "status":"pending",
+                "fromWhere":"create"
+            }
+        },
+        defaultKeys = {action: 'create'},
+        containerElement = {}, index = 0, operationType = null;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsOnDefaultSlate');
+            tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, "groupedcontent",index, "",operationType);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    })
 })
