@@ -21,7 +21,8 @@ import {
     UPDATE_PROJECT_INFO,
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
-    UPDATE_LOB_PERMISSIONS
+    UPDATE_LOB_PERMISSIONS,
+    UPDATE_FIGURE_DROPDOWN_OPTIONS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -309,6 +310,27 @@ export const fetchElementTag = (element, index = 0) => {
     if (Object.keys(element).length > 0) {
         return findElementType(element, index).tag || "";
     }
+}
+
+export const fetchFigureDropdownOptions = () => (dispatch) => {
+    // Api to get Figure dropdown options
+    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type`;
+    return axios.get(figureDropdownOptionsURL, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(response => {
+        let dropdownOptionsArr = response?.data?.list;
+        if (dropdownOptionsArr.length > 0) {
+            dispatch({
+                type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
+                payload: dropdownOptionsArr
+            })
+        }
+    }).catch(error => {
+        console.log("Get figure dropdown options API Failed !!", error)
+    })
 }
 
 export const getProjectDetails = () => (dispatch, getState) => {

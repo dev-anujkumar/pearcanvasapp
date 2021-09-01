@@ -130,6 +130,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.fetchLearnosityContent()
 
                     // call get project api here
+                    this.props.fetchFigureDropdownOptions();
                     this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
