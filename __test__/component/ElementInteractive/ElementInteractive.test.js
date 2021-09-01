@@ -1356,7 +1356,8 @@ describe("Testing methods", () => {
         let citeTdxObj = {
             slateType : "",
             singleAssessmentID : {
-                versionUrn: "123"
+                versionUrn: "123",
+                taxonomicTypes:'123'
             }
         }
         const spyaddCiteTdxAssessment = jest.spyOn(elementInteractiveInstance, 'addCiteTdxAssessment')
@@ -1600,7 +1601,12 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         intInstance.prohibitPropagation(event);
         expect(func).toHaveBeenCalled();
     })  
-    
+    it('Test  getVideoMCQandGuidedThumbnail', () => {
+        const intInstance = interactiveInstance(props); 
+        const func = jest.spyOn(intInstance, 'getVideoMCQandGuidedThumbnail');
+        intInstance.getVideoMCQandGuidedThumbnail('123');
+        expect(func).toHaveBeenCalled();
+    })
     it('Test - componentDidUpdate if case pufobj', () => {
         let props = {
             slateLockInfo: {
