@@ -72,7 +72,9 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
             else if (item.elemURN.includes('+')){
                 const splitArray = item.elemURN.split("+");
                 const lastId = splitArray[splitArray.length-1];
-                elementUrnPlus = lastId;
+                if(lastId === id) {
+                    elementUrnPlus = lastId;
+                }
                 return (lastId === id)
             }
             else {
