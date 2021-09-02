@@ -4,6 +4,8 @@ import Comments from '../../../src/component/CommentsPanel/Comments';
 import { comment, users ,permissions} from '../../../fixtures/commentPanelData.js'
 import { stub } from 'sinon';
 
+jest.mock('../../../src/component/CommentMention/CommentMention', () => () => (<div />))
+
 describe('Testing CommentsPanel component with props', () => {
   const updateElementComment = new stub();
   const updateAssignee = new stub();
@@ -15,7 +17,8 @@ describe('Testing CommentsPanel component with props', () => {
     users: users,
     permissions: permissions
   }
-  let wrapper = mount(< Comments
+  let wrapper = mount(
+    <Comments
     updateElementComment={updateElementComment}
     updateAssignee={updateAssignee}
     updateResolveComment={updateResolveComment}
