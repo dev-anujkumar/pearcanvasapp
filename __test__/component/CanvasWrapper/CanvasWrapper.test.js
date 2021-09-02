@@ -32,6 +32,9 @@ jest.mock('../../../src/constants/utility.js', () => {
         sendDataToIframe: () => {},
         hasReviewerRole: () => {
             return true;
+        },
+        isSubscriberRole:()=>{
+            return true;
         }
     }
 })
@@ -152,7 +155,11 @@ describe('Testing <CanvasWrapper> Component', () => {
         ErrorPopup : {
             show: ()=> {return true}
         },
-
+        projectSubscriptionDetails:{
+            projectSubscriptionDetails:{
+                isSubscribed:true
+            }
+        }
     }
     let wrapper = mount(<Provider store={store}>
         <CanvasWrapper {...props} />
