@@ -81,9 +81,13 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         parentId:  wipData?.id
     }
     /* Add WE/Aside inside 2C */
-    const { asideData, parentUrn } = containerElement;
+    const { asideData, parentUrn, showHideObj } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
     let multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType : asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
+    /* Set grant parent tag 2C||3C */
+    if( (containerElement?.sectionType === 'show' || 'hide') && parentUrn?.elementType === MULTI_COLUMN_GROUP) {
+        tag.grandParent = multiColumnType + ":" + parentUrn?.columnName;
+    }
     if(wipData?.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
@@ -92,7 +96,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     } else if((figureElementList.includes(type) || actionStatus?.action === "update" ||  actionStatus?.action === "create" ||
         actionStatus?.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
-            /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
+           /* Get the values of Multicolumn for snapshots; 2C:ASIDE:Elemnts*/
             if (!multiColumnType) {
                 let multiColumnObj = store?.getState()?.appStore?.slateLevelData[config.slateManifestURN].contents?.bodymatter.find(x => x.id === id);
                 multiColumnType = `${multiColumnObj?.groupeddata?.bodymatter.length}C`
@@ -291,7 +295,7 @@ function parentData4CutCopyASWE_2C(asideData, parentUrn) {
 * should contain value of body(Manifest) of WE */
 function setParentUrnData(wipData, item) {
     let parent = wipData;
-    wipData?.elementdata.bodymatter?.forEach(obj => {
+    wipData?.elementdata?.bodymatter?.forEach(obj => {
        if(obj?.type === WE_MANIFEST) {
             obj?.contents.bodymatter?.forEach(obj_L1 => {
                 if(obj_L1?.id === item?.id) {
@@ -303,10 +307,10 @@ function setParentUrnData(wipData, item) {
     return parent;
 }
 
-const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, operationType=null) => {
+const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item,eleIndex,operationType=null) => {
     const { asideData, parentUrn, slateManifest } = containerElement || {};
     const parentObj = setParentUrnData(wipData, item);
-    const updatedContainerElement = {
+    let updatedContainerElement = {
         asideData: {
             contentUrn: wipData.contentUrn,
             element: wipData,
@@ -322,6 +326,16 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item, o
         },
         slateManifest
     }
+    if(wipData.type === MULTI_COLUMN && item?.type === SHOWHIDE && !updatedContainerElement?.parentUrn?.multiColumnType) {
+        updatedContainerElement.parentUrn = {
+            ...updatedContainerElement.parentUrn,
+            multiColumnType: wipData?.groupeddata?.bodymatter?.length === 3 ? "3C" : "2C",
+            mcId: wipData?.id,
+            columnName: "C" + (eleIndex + 1),
+            manifestUrn: wipData?.groupeddata?.bodymatter?.[eleIndex]?.id
+        }
+    }
+    
     let newContainerElement = {}
     if (containerElement.cutCopyParentUrn) {
         newContainerElement = {
@@ -479,24 +493,9 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
 */
 export function prepareSnapshots_ShowHide(containerElement, wipData, index, updateBodymatter) {
     const { asideData, parentUrn } =  containerElement?.asideData?.grandParent || {};
-    
-    let indexList = []
-    if(Array.isArray(index)) {
-        indexList = index;
-    } else if(typeof index === "string") {
-        indexList = index ? index?.toString().split("-") : [];
-    }
     /* Get the sectionType using index of element */
     const sectionType = containerElement?.asideData?.sectionType || containerElement?.sectionType;
-    const innerSH_Index = indexList[indexList.length-1]
-    // let showhideElement = getShowHideElement(updateBodymatter, indexList.length, indexList)
-    let showhideElement = { ...containerElement?.asideData },
-        innerSH_Element = wipData;
-    if (showhideElement && sectionType && showhideElement.element) {
-        innerSH_Element = showhideElement?.element?.interactivedata[sectionType][innerSH_Index]
-    } else if (sectionType && showhideElement?.interactivedata) {
-        innerSH_Element = showhideElement?.interactivedata[sectionType][innerSH_Index]
-    }
+    let showhideElement = { ...containerElement?.asideData };
     /* Delete the grandparent data form asideData */
     showhideElement?.grandParent && delete showhideElement.grandParent;
     /* Prepare and return container data for showhide inner element update */
@@ -506,7 +505,7 @@ export function prepareSnapshots_ShowHide(containerElement, wipData, index, upda
         parentUrn: parentUrn,
         parentElement: asideData,
         showHideObj: {
-            currentElement: innerSH_Element || wipData || {},
+            currentElement: wipData || {},
             element: showhideElement,
             index: index,
             showHideType: sectionType
@@ -526,6 +525,9 @@ const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys,ind
     const { parentUrn } = containerElement
     wipData.groupeddata.bodymatter.map((item, eleIndex) => {
         item.groupdata.bodymatter.map((ele) => {
+            if(ele?.type === SHOWHIDE) {
+               tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType);
+            } else
             if(ele?.type === "element-aside") {
                tcmSnapshotsAsideWE(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType)
             } else {
@@ -855,9 +857,10 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         }
-        else if (asideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:SH */
-            const {columnName, manifestUrn, mcId} = parentUrn || {};
-            elementTag = `2C:${columnName}:${elementTag}`;
+        else if (asideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:SH || 3C:SH */
+            const {columnName, manifestUrn, mcId} = parentUrn;
+            //let grandParentTag = tag.grandParent.split(":")[0];
+            elementTag = `${parentUrn?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
         }
     }
@@ -878,9 +881,11 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementId = `${eleId.popID}+${elementId}`;
     }
     /* if WE and Aside inside 2C element - 2C:AS/WE:--- */
-    if (tag.grandParent && eleId.grandParentId) {
-        elementTag = `${tag.grandParent}:${elementTag}`
-        elementId = `${eleId.grandParentId}+${elementId}`
+    if (tag?.grandParent && eleId?.grandParentId) {
+        if(elementTag?.indexOf(tag.grandParent) === -1 ) {
+            elementTag = `${tag.grandParent}:${elementTag}`
+            elementId = `${eleId.grandParentId}+${elementId}`
+        }
         if (tag?.isMultiColumnInPopup) {
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
@@ -1340,6 +1345,13 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
                 parentData.showHideStatus = showHideElem && showHideElem.status ? showHideElem.status : undefined;
                 break;
         }
+        if(asideData?.type === MULTI_COLUMN && showHideObj?.showHideType) {
+            const multiColumnDetails = {
+                ...parentUrn,
+                type: MULTI_COLUMN
+            }
+            prepareParentData(asideData, {...parentUrn, multiColumnDetails });
+        }
         if(parentUrn?.multiColumnDetails?.type === MULTI_COLUMN) prepareParentData(asideData, parentUrn);
         /** When AS/WE in MUlti-Column */
         if(asideData?.parent?.type === MULTI_COLUMN){
@@ -1376,7 +1388,7 @@ function prepareParentData(asideData, parentUrn) {
         const { type, manifestUrn, columnName, contentUrn, mcId } = parentUrn?.multiColumnDetails;
         asideData.parent = {
             type,
-            id: manifestUrn || mcId,
+            id: mcId || manifestUrn,
             columnName,
             parentContentUrn: contentUrn,
             columnContentUrn: ""
@@ -1446,6 +1458,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
             if (updatedMulColParentUrn) {
                 let newMulColManifestUrn = await getLatestVersion(updatedMulColParentUrn);
                 containerElement.asideData.parent.id = newMulColManifestUrn;
+                containerElement.parentUrn.mcId = newMulColManifestUrn;
             }
         }
         if (versionStatus.multiColChildStatus === "approved") {
@@ -1453,6 +1466,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
             if (updatedMulColChildUrn) {
                 let newMulColGroupManifestUrn = await getLatestVersion(updatedMulColChildUrn);
                 containerElement.asideData.parent.columnId = newMulColGroupManifestUrn;
+                containerElement.parentUrn.manifestUrn = newMulColGroupManifestUrn;
             }
         }
     }
@@ -1469,6 +1483,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         containerElement.popupslateManifest = newPopupSlateManifest ? newPopupSlateManifest : config.tempSlateManifestURN
         config.tcmslatemanifest = containerElement.popupslateManifest
     }
+    //console.log("containerElement ===========",containerElement)
     return containerElement;
 }
 
@@ -1573,7 +1588,7 @@ export const popupWipData = (bodymatter, eleIndex,operationType,wipData) => {
 export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
     /* Convert of Figure inside 2C:AS/WE Only Update Action */
     const { asideData, parentUrn } = store?.getState()?.appStore || {};
-    const { type,  parent } = asideData || {};
+    const { type,  parent, grandParent } = asideData || {};
     const isFigure = (response?.type === FIGURE) && (type === ELEMENT_ASIDE) && (parent?.type === MULTI_COLUMN);
     
     let parentData = {};
@@ -1622,6 +1637,14 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
                     ...parentData,
                     asideData: asideData,
                     parentUrn: parentUrn
+                }
+            }
+            /* 3C:SH:Figure conversion snapshots */
+            if(asideData?.type === SHOWHIDE && grandParent?.asideData?.type === MULTI_COLUMN) {
+                parentData = {
+                    ...parentData,
+                    asideData: grandParent?.asideData,
+                    parentUrn: grandParent?.parentUrn
                 }
             }
         }

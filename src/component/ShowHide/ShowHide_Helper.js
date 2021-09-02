@@ -182,7 +182,9 @@ const getTextElementInShowHide = (bodymatter, indexes, showHideObj) => {
             showHideElement = bodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]
             break;
         case 5:
-            showHideElement = bodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]
+            showHideElement = bodymatter[indexes[0]].type === ElementConstants.MULTI_COLUMN ? 
+					bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] : /* 2C:SH:Element */
+					bodymatter[indexes[0]]?.elementdata.bodymatter[indexes[1]]?.contents.bodymatter[indexes[2]]; /* WE:Body:SH:Element */
             break;
         case 6:
             showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]

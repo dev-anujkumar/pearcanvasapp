@@ -64,6 +64,12 @@
     height: 50px !important;
     overflow-y: auto !important;
   }
+  .mentions.edit-mode.reply-mention .mentions__input{
+    border: 1px solid #007fa3;
+  }
+  .mentions.edit-mode.reply-mention .mentions__suggestions{
+    top: 35px !important
+  }
 
   .mentions.reply-mention .mentions__input:focus {
     border: 1px solid #007fa3;
@@ -80,7 +86,7 @@
   }
   .mentions.reply-mention .mentions__suggestions{
     background-color: #f8f9fa !important;
-    top: -270px !important
+    top: -243px !important
   }
 
   .mentions--multiLine.reply-mention .mentions__highlighter {

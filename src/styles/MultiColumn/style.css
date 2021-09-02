@@ -381,6 +381,7 @@
 }
 .container-multi-column-group-3c .dropdown {
     cursor: pointer;
+    margin: auto;
 }
 .container-multi-column-group-3c .elemDiv-expand{
     right: 1%;

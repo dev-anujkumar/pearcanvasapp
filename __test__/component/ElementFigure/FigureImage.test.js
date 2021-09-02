@@ -28,6 +28,9 @@ describe('Testing Figure image component', () => {
             editor: true,
             Permission: false
         },
+        appStore: {
+            figureDropdownData: []
+        },
         projectMetadata:{},
     }
     const store = mockStore(initialState);

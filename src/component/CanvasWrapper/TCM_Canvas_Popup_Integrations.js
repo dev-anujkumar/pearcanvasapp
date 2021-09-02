@@ -4,6 +4,42 @@ import FetchAllDataMapper from '../TcmSnapshots/FetchAllDataMapper/FetchAllDataM
 import { LAUNCH_TCM_CANVAS_POPUP, SPINNER } from '../../constants/Action_Constants'
 import {handleSlateRefresh} from '../CanvasWrapper/SlateRefresh_Actions'
 
+
+const getLatestPendingOrAccepted = (snapshot) => {
+    if(snapshot.latestAcceptedTransaction && snapshot.latestPendingTransaction) {
+        if(snapshot.latestAcceptedTransaction.changeTime > snapshot.latestPendingTransaction.changeTime) {
+            return snapshot.latestAcceptedTransaction;
+        }
+        else {
+            return snapshot.latestPendingTransaction;
+        }
+    }
+    else {
+        return snapshot.latestPendingTransaction || snapshot.latestAcceptedTransaction;
+    }
+}
+
+const openTCMPopup = (elemData, index, id, dispatch) => {
+
+    const elemIndex = [{ index, urn: id }]
+    const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
+    let eURN = elemData.elemURN
+    const elemEditorName = elemData.latestPendingTransaction?.elementEditor ? elemData.latestPendingTransaction.elementEditor : elemData.latestAcceptedTransaction?.elementEditor
+    const tcmObject = { 
+         isTCMCanvasPopup: true,
+         tcmElemData: tcmData.result[0], 
+         elemData: eURN,
+         elementEditor: elemEditorName,
+         tcmStatus: elemData.latestAcceptedTransaction ? true : false,
+         spinnerStatus: false,
+         prevElementPopup: id
+        }
+        dispatch({
+            type: LAUNCH_TCM_CANVAS_POPUP,
+            payload: {...tcmObject, theme:''}, 
+            })
+}
+
 /**
 * This function opens TCM w.r.t. current Element
 */
@@ -28,25 +64,41 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
     }).then((res) => {
         const data = res.data
         const id = element.id
-        data.map((elemData) => {
-            let eURN = elemData.elemURN
-            // to check the element ids which has manifest + work id
-            let Check = elemData.elemURN.includes('+')
-            let elementId = Check === true && elemData.elemURN.split('+')
-            elemData.elemURN = Check === true ? elementId[elementId.length - 1] : elemData.elemURN
-            if (elemData.elemURN === id) {
-                const elemIndex = [{ index, urn: id }]
-                const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
-                const elemEditorName = elemData.latestPendingTransaction?.elementEditor ? elemData.latestPendingTransaction.elementEditor : elemData.latestAcceptedTransaction?.elementEditor
-                const tcmObject = { isTCMCanvasPopup: true, tcmElemData: tcmData.result[0], elemData: eURN, elementEditor: elemEditorName, tcmStatus: elemData.latestAcceptedTransaction ? true : false,spinnerStatus: false,
-                prevElementPopup: id}
-                dispatch({
-                    type: LAUNCH_TCM_CANVAS_POPUP,
-                    payload: {...tcmObject, theme:''},
-                    
-                })
+        let elementUrnPlus = "";
+        const elementURNs = data.filter(item => {
+            if(item.elemURN === id) {
+                return true;
+            }
+            else if (item.elemURN.includes('+')){
+                const splitArray = item.elemURN.split("+");
+                const lastId = splitArray[splitArray.length-1];
+                elementUrnPlus = lastId;
+                return (lastId === id)
+            }
+            else {
+                return false;
             }
         })
+        if(elementURNs.length === 1) {
+            // normal case i.e. click on paragraph's tcm icon
+            const elemData = elementURNs[0];
+            elemData.elemURN = elementUrnPlus ? elementUrnPlus : elemData.elemURN;
+            openTCMPopup(elemData, index, id, dispatch);
+        }
+        else if(elementURNs.length > 1) {
+            // cut copy case
+            // in case of cut copy get latest snapshot. 
+             const latestElement = elementURNs.sort((a, b) => {
+                if(getLatestPendingOrAccepted(a).changeTime > getLatestPendingOrAccepted(b).changeTime){
+                return -1
+            }
+            else return 1;
+            });
+            const elemData = latestElement[0];
+            elemData.elemURN = elementUrnPlus ? elementUrnPlus : elemData.elemURN;
+            openTCMPopup(elemData, index, id, dispatch);
+        }
+
     }).catch((error) => {
         console.error(error)
     })

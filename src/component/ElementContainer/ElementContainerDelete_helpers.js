@@ -17,6 +17,7 @@ import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning 
 import tinymce from 'tinymce'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper.js';
+import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 
 export const onDeleteSuccess = (params) => {
@@ -285,10 +286,12 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
         * @description For SHOWHIDE Element - prepare parent element data
         * Update - 2C/Aside/POP:SH:New 
         */
-        //const typeOfElement = containerElement?.asideData?.grandParent?.asideData?.type;
         const typeOfElement = asideData?.type;
         if(typeOfElement === "showhide") {
             containerElement = prepareSnapshots_ShowHide(containerElement, deleteData.wipData, index);
+            if(asideData?.grandParent?.asideData?.type === "groupedcontent" && !isEmpty(cutCopyParentUrn)) {
+                deleteData.wipData = element;
+            }
         }
         tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)
     }
