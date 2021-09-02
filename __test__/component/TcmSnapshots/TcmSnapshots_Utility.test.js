@@ -14,7 +14,8 @@ jest.mock('../../../src/component/TcmSnapshots/ElementSnapshot_Utility.js', () =
         fetchElementsTag: jest.fn(),
         generateWipDataForFigure: jest.fn(),
         getInteractiveSubtypeData: jest.fn(),
-        removeCalloutTitle: jest.fn()
+        removeCalloutTitle: jest.fn(),
+        setSemanticsSnapshots: jest.fn(),
     }
 })
 
@@ -933,14 +934,268 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             expect(spyFunction).toHaveReturnedWith(expectedResult);
         });
     })
-    describe('Test-8 - prepareElementSnapshots functions', () => {
-        it('Test - 8.1 - if (element?.type === ELEMENT_TYPE_PDF)', async () => {
+    describe('Test - 8 tcmSnapshotsInPopupElement ', () => {
+        let snapshotsData = {
+            "tag":{ "parentTag":"POP" },
+            "wipData":{
+                "id":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f",
+                "type":"popup",
+                "contentUrn":"urn:pearson:entity:5e2a5892-b71c-4e6c-83c6-ae3863fae832",
+                "popupdata":{
+                    "bodymatter":[],
+                    "postertextobject":[
+                        {
+                        "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67214",
+                        "status":"wip"
+                        }
+                    ]
+                }
+            },
+            "elementId":{
+                "parentId":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f"
+            },
+            "actionStatus":{
+                "action":"create",
+                "status":"pending",
+                "fromWhere":"create"
+            }
+        },
+        defaultKeys = {action: 'create'},
+        containerElement = { 
+            metaDataField: {},
+            sectionType: "",
+            parentElement: { popupdata: {"formatted-title": "title"} }
+        }, type = 'POP_UP', index = 0, operationType = null;
+        it('Test-8.1- if(metaDataField && parentElement && ', () => {
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInPopupElement');
+            tcmSnapshotUtility.tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, containerElement, type,index,operationType);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+        it('Test-8.2- if(type == POPUP_ELEMENT && operationType===copy', () => {
+            type = 'popup'; operationType = "copy";
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInPopupElement');
+            tcmSnapshotUtility.tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, containerElement, type,index,operationType);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+        it('Test-8.3- else(metaDataField && parentElement && parentElement.popupdata', () => {
+            type = 'popup'; operationType = "copy";  containerElement.metaDataField = false;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInPopupElement');
+            tcmSnapshotUtility.tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, containerElement, type,index,operationType);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+        it('Test-8.4 - else(sectionType && sectionType === POSTER_TEXT_OBJ', () => {
+            defaultKeys = {action: 'update'}; type = ""; containerElement.sectionType = "";
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInPopupElement');
+            tcmSnapshotUtility.tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, containerElement, type,index,operationType);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    });
+    describe('Test - 9 tcmSnapshotsInContainerElements ', () => {
+        let snapshotsData = {
+            "tag":{ "parentTag":"POP" },
+            "wipData":{
+                "id":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f",
+                "type":"popup",
+                "contentUrn":"urn:pearson:entity:5e2a5892-b71c-4e6c-83c6-ae3863fae832",
+                "popupdata":{
+                    "bodymatter":[],
+                    "postertextobject":[
+                        {
+                        "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67214",
+                        "status":"wip"
+                        }
+                    ]
+                }
+            },
+            "elementId":{
+                "parentId":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f"
+            },
+            "actionStatus":{
+                "action":"create",
+                "status":"pending",
+                "fromWhere":"create"
+            }
+        },
+        defaultKeys = {action: 'create'},
+        containerElement = { 
+            metaDataField: {},
+            sectionType: "",
+            parentElement: {},
+            asideData: { figureIn2cAside: { 
+                isExist: true, asideData: { 
+                    type: "element-aside", subtype: "workedexample",
+                    element: {elementdata: {bodymatter:[{ id: "urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f" }]}}
+                }
+            }}
+        }, index = 0, operationType = null;
+        it('Test-9.1- if(isExist) ', () => {
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInContainerElements');
+            tcmSnapshotUtility.tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index,"", operationType);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+        it('Test-9.2- else(asideFigObj?.type === ELEMENT_ASIDE) ', () => {
+            containerElement.asideData = { figureIn2cAside: { 
+                isExist: true, asideData: { 
+                    type: "element-aside", subtype: "sidebar1",
+                    element: {elementdata: {bodymatter:[{ id: "urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f" }]}}
+                }
+            }}
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInContainerElements');
+            tcmSnapshotUtility.tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index,"", operationType);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    });
+    describe('Test-10 - prepareElementSnapshots functions', () => {
+        it('Test - 10.1 - if (element?.type === ELEMENT_TYPE_PDF)', async () => {
             const element = {id: "123", type: "element-pdf",
                 elementdata: { filetitle: "title", assetid: "ai-1234"}},
                 actionStatus = {action: "update"},
                 index = 0, elementDetails = {}, CurrentSlateStatus = {};
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareElementSnapshots');
             tcmSnapshotUtility.prepareElementSnapshots(element,actionStatus,index, elementDetails, CurrentSlateStatus);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+        it('Test - 10.2 - if (element?.type === element-assessment)', async () => {
+            const element = {id: "123", type: "element-assessment",
+                elementdata: {
+                    assessmenttitle:"",
+                    assessmentitemtitle:"",
+                    assessmentid:"",  assessmentitemid: "231", usagetype:"", assessmentformat:""
+                }},
+                actionStatus = {action: "update"},
+                index = 0, elementDetails = {}, CurrentSlateStatus = {};
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareElementSnapshots');
+            await tcmSnapshotUtility.prepareElementSnapshots(element,actionStatus,index, elementDetails, CurrentSlateStatus);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    })
+    describe('Test-11 - prepareSnapshots_ShowHide functions', () => {
+        it('Test - 11.1 ', () => {
+           let wipData = {
+                "id":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f",
+                "type":"popup",
+                "contentUrn":"urn:pearson:entity:5e2a5892-b71c-4e6c-83c6-ae3863fae832",
+                "popupdata":{
+                    "bodymatter":[],
+                    "postertextobject":[
+                        {
+                        "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67214",
+                        "status":"wip"
+                        }
+                    ]
+                }
+            },
+            containerElement = { 
+                sectionType: "show",
+                parentElement: {},
+                asideData: { grandParent: { asideData: {}, parentUrn: {}} }
+            }, index = 0;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareSnapshots_ShowHide');
+            tcmSnapshotUtility.prepareSnapshots_ShowHide(containerElement, wipData, index,"");
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    })
+    describe('Test-12 - tcmSnapshotsOnDefaultSlate functions', () => {
+        it('Test - 12.1 tcmSnapshotsMultiColumn  if()', () => {
+           let snapshotsData = {
+            "tag":{ "parentTag":"POP" },
+            "wipData":{
+                "id":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f",
+                "type":"groupedcontent",
+                "contentUrn":"urn:pearson:entity:5e2a5892-b71c-4e6c-83c6-ae3863fae832",
+                "groupeddata":{
+                    "bodymatter":[{ groupdata: {bodymatter: [{
+                        "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67211",
+                        "status":"wip",
+                        type: "showhide",
+                        "postertextobject":[{
+                            "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67214",
+                            "status":"wip"
+                        }]
+                    },{
+                        "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67213",
+                        type: "element-aside",
+                        "elementdata":{ bodymatter: [{
+                            "id":"urn:pearson:work:cb96c333-af60-47da-98d8-dff609e67214",
+                            "status":"wip"
+                        }]}
+                    }]}
+                    }]
+                }
+            },
+            "elementId":{ "parentId":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f" },
+            "actionStatus":{
+                "action":"create",
+                "status":"pending",
+                "fromWhere":"create"
+            }
+        },
+        defaultKeys = {action: 'create'},
+        containerElement = {}, index = 0, operationType = null;
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsOnDefaultSlate');
+            tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, "groupedcontent",index, "",operationType);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    })
+    describe('Test-13 - tcmSnapshotsOnDefaultSlate functions', () => {
+        it('setElementTypeAndUrn - showhide inside multicol', async () => {
+            config.isPopupSlate = false;
+            const eleId = {
+                parentId: "urn:pearson:manifest:as242342asd3:32sf4314",
+                childId : "urn:pearson:work:as242342asd3:32sf43sdd",
+                grandParentId: "21312"
+            },
+            tag = {
+                parentTag: "3C:C1:SH",
+                childTag : "P",
+                grandParent: "3C:C1",
+                isMultiColumnInPopup: true
+            },
+            isHead = "HEAD",
+            eleIndex = -1,
+            popupInContainer = false,
+            slateManifestVersioning = "",
+            popupSlate = false,
+            parentElement = {
+                element: { type: "showhide" }
+            },
+            containerElement = {
+                asideData : {
+                    type: "groupedcontent",
+                    subtype: "",
+                    id: "urn:pearson:manifest:3525235-324323-4432sfe31"
+                },
+                parentUrn: {multiColumnType: "3C", columnName: "C1", manifestUrn:"m-123", mcId: "mc-123"}
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setElementTypeAndUrn');
+            
+            tcmSnapshotUtility.setElementTypeAndUrn(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+        })
+    }) 
+    describe('Test-14 - setFigureElementContentSnapshot functions', () => {
+        it('14.1 - setFigureElementContentSnapshot if(elementData){ ', () => {
+            const element = { 
+                html: {title: "title"},
+                figuretype: "assessment",
+                figuredata: {elementdata: {
+                    assessmenttitle:"",
+                    assessmentitemtitle:"",
+                    assessmentid:"",  assessmentitemid: "231", usagetype:"", assessmentformat:""
+                }}
+            }, actionStatus={};
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setFigureElementContentSnapshot');
+            tcmSnapshotUtility.setFigureElementContentSnapshot(element, actionStatus);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+        it('14.2 - setFigureElementContentSnapshot else(elementData){ ', () => {
+            const element = { 
+                html: {title: "title"},
+                figuretype: "assessment",
+                figuredata: {}
+            }, actionStatus={};
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setFigureElementContentSnapshot');
+            tcmSnapshotUtility.setFigureElementContentSnapshot(element, actionStatus);
             expect(spyFunction).toHaveBeenCalled();
         })
     })
