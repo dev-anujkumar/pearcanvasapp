@@ -1927,6 +1927,13 @@ class ElementContainer extends Component {
      */
     handleCommentPopup = (popup, event) => {
         event.stopPropagation();
+        if (popup) {
+            this.props.showBlocker(true);
+            showTocBlocker();
+        } else {
+            this.props.showBlocker(false);
+            hideBlocker();
+        }
         this.setState({
             popup,
             showDeleteElemPopup: false,
@@ -1952,9 +1959,9 @@ class ElementContainer extends Component {
      * @param newComment
      */
     handleCommentChange = (newComment) => {
-        const commentAdded = newComment.replace(/[\[\]']+/g,'')
+        // const commentAdded = newComment.replace(/[\[\]']+/g,'')
         this.setState({
-            comment: commentAdded
+            comment: newComment
         })
     }
 
@@ -1964,6 +1971,8 @@ class ElementContainer extends Component {
     saveNewComment = (e) => {
         const { comment } = this.state;
         const { id } = this.props.element;
+        this.props.showBlocker(false);
+        hideBlocker();
         if (comment.trim() !== '') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             this.props.addComment(comment, id, this.props.asideData, this.props.parentUrn);
@@ -2050,7 +2059,7 @@ class ElementContainer extends Component {
         const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE } = TcmConstants
         const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE]
         const {prevSelectedElement, isTCMCanvasPopupLaunched} = this.props
-            if (element?.type && tcmPopupSupportedElements.includes(element.type)) {
+            if (element?.type && tcmPopupSupportedElements.includes(element.type) && !config.isPopupSlate) {
                 this.props.handleTCM(element, this.props.index, isTCMCanvasPopupLaunched, prevSelectedElement)
             } else {
                 if (config.isSavingElement) {
