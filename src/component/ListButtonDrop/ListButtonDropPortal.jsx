@@ -81,9 +81,9 @@ class ListButtonDropPortal extends Component {
                                         isMatched = nestedElement.type === 'element-list'
                                         isMatched && (listElement = nestedElement)
                                     }
-                                    else if(nestedElement.type === "showhide" && this.props.showHideObj && this.props.showHideObj.index){
-                                        let indexes = this.props.showHideObj.index.split("-")
-                                        let targetShowhideElem = nestedElement.interactivedata[this.props.showHideObj.showHideType][indexes[3]]
+                                    else if(nestedElement.type === "showhide" && this.props?.asideData?.type === "showhide"){
+                                        let indexes = activeElement.index.split("-")
+                                        let targetShowhideElem = nestedElement.interactivedata[this.props?.asideData?.sectionType][indexes[3]]
                                         if(targetShowhideElem && targetShowhideElem.id === activeElement.elementId){
                                             isMatched = targetShowhideElem.type === 'element-list'
                                             isMatched && (listElement = targetShowhideElem)
@@ -95,9 +95,9 @@ class ListButtonDropPortal extends Component {
                                                 isMatched = leafElement.type === 'element-list'
                                                 isMatched && (listElement = leafElement)
                                             }
-                                            else if(leafElement.type === "showhide" && this.props.showHideObj && this.props.showHideObj.index){
-                                                let indexes = this.props.showHideObj.index.split("-")
-                                                let targetShowhideElem = leafElement.interactivedata[this.props.showHideObj.showHideType][indexes[4]]
+                                            else if(leafElement.type === "showhide" && this.props?.asideData?.type === "showhide"){
+                                                let indexes = activeElement.index.split("-")
+                                                let targetShowhideElem = leafElement.interactivedata[this.props?.asideData?.sectionType][indexes[4]]
                                                 if(targetShowhideElem && targetShowhideElem.id === activeElement.elementId){
                                                     isMatched = targetShowhideElem.type === 'element-list'
                                                     isMatched && (listElement = targetShowhideElem)
@@ -109,7 +109,7 @@ class ListButtonDropPortal extends Component {
                             )
                           
                         }else if (element.type === "showhide"){
-                            this.props.showHideObj && element.interactivedata[this.props.showHideObj.showHideType].find(
+                            this.props?.asideData?.type === "showhide" && this.props.asideData && element.interactivedata[this.props?.asideData?.sectionType].find(
                                 (nselement) => {
                                     // let isMatched = false
                                     if (nselement.id === activeElement.elementId) {
@@ -167,7 +167,9 @@ ListButtonDropPortal.propTypes = {
 const mapStateToProps = (state) => {
     return {
         activeElement: state.appStore.activeElement,
-        showHideObj:state.appStore.showHideObj
+        showHideObj:state.appStore.showHideObj,
+        asideData:state.appStore.asideData
+
     };
 };
 
