@@ -237,6 +237,7 @@ class Comments extends React.Component {
                 projectUsers={this.props.users} 
                 comment={this.state.updatedFields.text} 
                 handleCommentChange={this.updateCommentText}
+                isEditMode={true}
                 />
                 <div className="buttons-wrapper">
                     <button className="btn btn__initial"
