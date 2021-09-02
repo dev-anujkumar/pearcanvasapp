@@ -27,6 +27,7 @@ const CommentMention = (props) => {
   }
 
   
+  const isEditableMode = `${props.isEditMode ? 'edit-mode reply-mention' : 'reply-mention'}`
     return (
       <div className="comment-mentions">
         <MentionsInput
@@ -35,7 +36,7 @@ const CommentMention = (props) => {
           value={props.comment}
           onChange={onCommentChange}
           placeholder="Type something"
-          className={`${props.readOnly ? 'no-border' : 'mentions'} ${props.isAddComment ? 'comment-mention' : 'reply-mention'}`}
+          className={`${props.readOnly ? 'no-border' : 'mentions'} ${props.isAddComment ? 'comment-mention' : isEditableMode }`}
           markup="@__display__(__id__)"
           allowSuggestionsAboveCursor={props.isAddComment ? false : true}
         >
