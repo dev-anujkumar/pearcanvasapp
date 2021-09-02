@@ -49,10 +49,16 @@ describe('UpdateStorePostDelete all cases', () => {
         let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{elementdata:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}}]}} }
         updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,'0',0]})
     })
-    it('testing updateStorePostDelete case 5', () => {
+    describe('testing updateStorePostDelete case 5', () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{elementdata:{bodymatter:[{contents:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}  }]}}]}} }
-        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0]})
+        it('case in worked example', () => {
+            let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{elementdata:{bodymatter:[{contents:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}  }]}}]}} }
+            updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0]})
+        })
+        it('case in multicolumn', () => {
+            let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}  }]}}]}} }
+            updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0]})
+        })
     })
     it('testing updateStorePostDelete case 6', () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";

@@ -2173,4 +2173,153 @@ describe('Test-Other Functions', () => {
         expect(spyUpdateColumnValues).toHaveBeenCalled();
         spyUpdateColumnValues.mockClear();
       });
+      
+      it('setElementDetails method - without parentUrn', () => {
+        let props3 = {
+            element: wipData.opener,
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+            updateElement: jest.fn()
+        };
+        let elementContainer1 = mount(<Provider store={store}><ElementContainer {...props3} /></Provider>);
+        const elementContainerInstance1 = elementContainer1.find('ElementContainer').instance();
+        const elementDetails = {
+            element: {
+                type: 'element-blockfeature',
+                html: {
+                    text: ''
+                },
+                elementdata: {
+                    type: ''
+                }
+            }
+        }
+        elementContainerInstance1.setElementDetails(elementDetails);
+    });
+
+    it('setElementDetails method - with parentUrn and element type groupedcontent', () => {
+        let props4 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                groupeddata: {
+                    bodymatter: [{}]
+                },
+                type: 'groupedcontent'
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: {
+                contentUrn: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319z'
+            }
+        };
+        let elementContainer2 = mount(<Provider store={store}><ElementContainer {...props4} /></Provider>);
+        const elementContainerInstance2 = elementContainer2.find('ElementContainer').instance();
+        const elementDetails = {
+            element: {
+                type: 'element-list',
+                html: {
+                    text: ''
+                },
+                elementdata: {
+                    type: ''
+                },
+            },
+            operationType: 'cut'
+        }
+        elementContainerInstance2.setElementDetails(elementDetails);
+    });
+
+    it('handleEditButton method - element - figure', () => {
+        let props5 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'image',
+                type: 'figure',
+                figuredata: {
+                    imageid: 'urn:pearson:alfresco:f3fbd8cd-6e1b-464a-8a20-c62d4b9f31r'
+                },
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
+        const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
+        const event = {stopPropagation: jest.fn()};
+        elementContainerInstance3.handleEditButton(event);
+    });
+
+    it('handleTCMLaunch method - if block', () => {
+        config.isPopupSlate = false;
+        let props5 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'image',
+                type: 'figure',
+                figuredata: {
+                    imageid: 'urn:pearson:alfresco:f3fbd8cd-6e1b-464a-8a20-c62d4b9f31r'
+                },
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
+        const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
+        const element = {type: 'element-authoredtext'};
+        elementContainerInstance3.handleTCMLaunch({}, element);
+    });
+
+    it('handleTCMLaunch method - else block', () => {
+        config.isPopupSlate = false;
+        let props5 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
+        const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
+        elementContainerInstance3.handleTCMLaunch({}, {});
+    });
+
+    it('checkTCMStatus method', () => {
+        let props6 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x'
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer4 = mount(<Provider store={store}><ElementContainer {...props6} /></Provider>);
+        const elementContainerInstance4 = elementContainer4.find('ElementContainer').instance();
+        const tcmData = [{
+            elemURN: '',
+            txCnt: 1,
+            feedback: 'feedback'
+        }];
+        const elementId = '';
+        const defaultUrn = '';
+        elementContainerInstance4.checkTCMStatus(tcmData, elementId, defaultUrn);
+    })
 })

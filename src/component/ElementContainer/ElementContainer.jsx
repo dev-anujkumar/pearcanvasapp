@@ -1748,6 +1748,9 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && !isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) && <Button type="add-comment"  btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
                     {permissions && permissions.includes('note_viewer') && anyOpenComment && !isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) && <Button elementId={element.id} onClick={(event) => {
+                        if(this.props.projectUsers.length === 0) {
+                            this.props.getProjectUsers();
+                        }
                         handleCommentspanel(event,element.id, this.props.index)
                         }} type="comment-flag" />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && !isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
