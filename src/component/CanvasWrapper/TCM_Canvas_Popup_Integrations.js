@@ -19,11 +19,10 @@ const getLatestPendingOrAccepted = (snapshot) => {
     }
 }
 
-const openTCMPopup = (elemData, index, id, dispatch) => {
-
+const openTCMPopup = (elemData, index, lastId, id, dispatch) => {
+    const eURN = lastId ? lastId: elemData.elemURN;
     const elemIndex = [{ index, urn: id }]
     const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
-    let eURN = elemData.elemURN
     const elemEditorName = elemData.latestPendingTransaction?.elementEditor ? elemData.latestPendingTransaction.elementEditor : elemData.latestAcceptedTransaction?.elementEditor
     const tcmObject = { 
          isTCMCanvasPopup: true,
@@ -65,6 +64,7 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
         const data = res.data
         const id = element.id
         let elementUrnPlus = "";
+        let lastIdElement = "";
         const elementURNs = data.filter(item => {
             if(item.elemURN === id) {
                 return true;
@@ -73,7 +73,8 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
                 const splitArray = item.elemURN.split("+");
                 const lastId = splitArray[splitArray.length-1];
                 if(lastId === id) {
-                    elementUrnPlus = lastId;
+                    lastIdElement = lastId
+                    elementUrnPlus = item.elemURN;
                 }
                 return (lastId === id)
             }
@@ -84,8 +85,8 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
         if(elementURNs.length === 1) {
             // normal case i.e. click on paragraph's tcm icon
             const elemData = elementURNs[0];
-            elemData.elemURN = elementUrnPlus ? elementUrnPlus : elemData.elemURN;
-            openTCMPopup(elemData, index, id, dispatch);
+            elemData.elemURN = lastIdElement ? lastIdElement : elemData.elemURN;
+            openTCMPopup(elemData, index, elementUrnPlus, id, dispatch);
         }
         else if(elementURNs.length > 1) {
             // cut copy case
@@ -97,8 +98,8 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
             else return 1;
             });
             const elemData = latestElement[0];
-            elemData.elemURN = elementUrnPlus ? elementUrnPlus : elemData.elemURN;
-            openTCMPopup(elemData, index, id, dispatch);
+            elemData.elemURN = lastIdElement ? lastIdElement : elemData.elemURN;
+            openTCMPopup(elemData, index,elementUrnPlus, id, dispatch);
         }
 
     }).catch((error) => {
