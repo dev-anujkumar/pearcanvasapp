@@ -349,7 +349,7 @@ class Comments extends React.Component {
                             <div onClick={this.setReplyDropdownState}>
                             <span className="property-value Replies"> {comment.replyComments.length} </span>
                             <span className="property-title Replies">Replies</span>
-                            <img className="Path" src={iconArrow} />
+                            <img className={`${this.state.showReplyComments ? "Path" : "Path collap" }`} src={iconArrow} />
                             </div>
                             </div>
 

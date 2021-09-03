@@ -613,3 +613,6 @@ menu li {
 #ext_AddAnAsset {
   font-family: sans-serif !important;
 }
+.Path.collap {
+  transform: rotate(180deg);
+ }

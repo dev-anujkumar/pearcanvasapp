@@ -38,7 +38,7 @@ const CommentMention = (props) => {
           placeholder="Type something"
           className={`${props.readOnly ? 'no-border' : 'mentions'} ${props.isAddComment ? 'comment-mention' : isEditableMode }`}
           markup="@__display__(__id__)"
-          allowSuggestionsAboveCursor={props.isAddComment ? false : true}
+          allowSuggestionsAboveCursor={false}
         >
           <Mention
             type="user"
