@@ -2387,7 +2387,9 @@ describe('Test-Other Functions', () => {
         };
         let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
         const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
         elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: '', calledFrom: 'updateAssessmentFormat'});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
     });
 
     it('handleBlurAssessmentSlate method - assessmentData - id', () => {
@@ -2408,7 +2410,9 @@ describe('Test-Other Functions', () => {
         };
         let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
         const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
         elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: '', id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319g'});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
     });
 
     it('handleBlurAssessmentSlate method - assessmentData - format - learningtemplate', () => {
@@ -2429,7 +2433,9 @@ describe('Test-Other Functions', () => {
         };
         let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
         const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
         elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: 'learningtemplate', id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319g'});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
     });
 
     it('handleBlurAssessmentSlate method - else case', () => {
@@ -2450,16 +2456,20 @@ describe('Test-Other Functions', () => {
         };
         let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
         const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
         elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: ''});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
     });
 
     it('saveNewComment  method - without comment', () => {
         elementContainerInstance.setState({
             comment : ''
         })
+        const spySaveNewComment = jest.spyOn(elementContainerInstance, 'saveNewComment')
         elementContainerInstance.forceUpdate();
         elementContainer.update();
         elementContainerInstance.saveNewComment({stopPropagation:()=>{}},true);
+        expect(spySaveNewComment).toHaveBeenCalled();
     })
 
     it("Test - figureDifferenceInteractive - pdf interactive type: difference in content - with DOM elements", () => {
