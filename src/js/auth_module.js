@@ -20,38 +20,12 @@ if ( IDENTITY_URL.indexOf("http") !== 1 ) {
 }
 
 var myOpenam;
-if ( environment !== 'development' ) {
-    // myOpenam = new openamConfig(
-    //     {	
-    //         baseurl: BASE_URL,
-    //         realm: "/",
-    //         cachetime: 3,
-    //         debugenabled: true
-    //     }
-    // );
-    // if (myOpenam.isUserAuthenticated()) {
-    //     session_token = config_object.ssoToken;
-    // } else {
-        if(process.env.NODE_ENV === 'production'){
-            document.cookie = "PearsonSSOSession=; expires=Thu, 01 Jan 1970 00:00:01 GMT ;domain=.pearson.com;path=/";
-            // reload the page
-            sendDataToIframe(  {
-                'type': 'reloadUrl',
-                'message': {}
-            })
-        }
-    // }
+session_token = config_object.ssoToken;
+myOpenam = {
+    handleSessionExpire: function () {
+        let redirectURL = window.location.origin;
+        let encodedURL = encodeURI(redirectURL);
+        window.location = encodedURL;
+    }
 }
-if (environment === 'development') {
-   session_token = config_object.ssoToken;
-    // myOpenam = {
-    //     handleSessionExpire : function(){
-    //         let redirectURL = window.location.origin;
-    //         let encodedURL = encodeURI(redirectURL);
-    //         window.location = encodedURL;
-    //     }
-    // }
-    
-}
-
 export const OPEN_AM = myOpenam || {};
