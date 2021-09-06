@@ -3023,7 +3023,7 @@ export class TinyMceEditor extends Component {
                 toolbar = config.figureNumberToolbar;
                 break;
             case "Label Name":
-                toolbar = config.figurLabelToolbar;
+                toolbar = config.figureImageLabelToolbar;
                 break;
             case "Title":
             case "Caption":

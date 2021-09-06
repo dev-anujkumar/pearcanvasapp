@@ -48,7 +48,8 @@ import {
     WRONG_IMAGE_POPUP,
     UPDATE_MULTIPLE_COLUMN_INFO,
     SHOW_REMOVE_GLOSSARY_IMAGE,
-    UPDATE_OLD_FIGUREIMAGE_INFO
+    UPDATE_OLD_FIGUREIMAGE_INFO,
+    UPDATE_FIGURE_DROPDOWN_OPTIONS
 } from '../constants/Action_Constants';
 
 /**
@@ -87,7 +88,8 @@ const INITIAL_STATE = {
     openWrongImagePopup:false,
     multipleColumnData: [],
     removeGlossaryImage:false,
-    oldFigureDataForCompare: {}
+    oldFigureDataForCompare: {},
+    figureDropdownData: ['No Label', 'Figure', 'Table', 'Equation', 'Custom']
 };
 
 const INITIAL_ACTION = {
@@ -316,6 +318,12 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 oldFigureDataForCompare: action.payload
+            }
+
+        case UPDATE_FIGURE_DROPDOWN_OPTIONS:
+            return {
+                ...state,
+                figureDropdownData: action.payload
             }
 
         default:

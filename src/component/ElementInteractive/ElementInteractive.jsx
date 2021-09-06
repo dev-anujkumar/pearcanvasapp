@@ -658,6 +658,17 @@ class Interactive extends React.Component {
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
         }
+        const figureData = this.props.model.figuredata;
+        let currentAsset = {};
+
+        if (figureData) {
+            const id = figureData.interactiveid;
+            const type = figureData.interactivetype;
+            currentAsset = id ? {
+                id: id.split(':').pop(), // get last
+                type,
+            } : null;
+        }
         var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
@@ -665,7 +676,9 @@ class Interactive extends React.Component {
                     const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder
                     let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
                         citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
-                        elementId: this.props.elementId }
+                        elementId: this.props.elementId,
+                        currentAsset
+                     }
                         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
              }
             else{

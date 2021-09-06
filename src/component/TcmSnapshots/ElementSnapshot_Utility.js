@@ -314,7 +314,7 @@ export const fetchElementsTag = (element,metadataField) => {
  * @returns {Boolean}
 */
 export const isEmpty = (obj) => {
-    if ((Object.keys(obj).length === 0 && obj.constructor === Object)) {
+    if (obj && (Object.keys(obj).length === 0 && obj.constructor === Object)) {
         return true;
     }
     return false;

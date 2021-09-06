@@ -223,6 +223,7 @@ class CommentsPanel extends React.Component {
                     toggleReplyForm={this.props.toggleReplyForm}
                     users={this.props.users}
                     permissions={this.props.permissions}
+                    getProjectUsers={this.props.getProjectUsers}
                 />)
             })
             return comments;

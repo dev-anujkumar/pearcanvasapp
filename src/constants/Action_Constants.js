@@ -178,4 +178,5 @@ export const UPDATE_MULTIPLE_COLUMN_INFO = 'UPDATE_MULTIPLE_COLUMN_INFO';
 export const SPINNER = 'SPINNER';
 
 /*---------------- figure image figuredata object details Info ------------------------*/
-export const UPDATE_OLD_FIGUREIMAGE_INFO = 'UPDATE_OLD_FIGUREIMAGE_INFO'
+export const UPDATE_OLD_FIGUREIMAGE_INFO = 'UPDATE_OLD_FIGUREIMAGE_INFO';
+export const UPDATE_FIGURE_DROPDOWN_OPTIONS = 'UPDATE_FIGURE_DROPDOWN_OPTIONS';

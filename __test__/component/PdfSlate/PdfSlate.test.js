@@ -81,7 +81,7 @@ const pdfSlateInstance = (props, initialSt = initialState) => {
     return component.find('PdfSlate').instance();
 }
 
-xdescribe('1. PDF Slate test cases', () => {
+describe('1. PDF Slate test cases', () => {
     let props = {
 		index:0,
 		permissions: ["elements_add_remove", "add_multimedia_via_alfresco", "alfresco_crud_access"],
@@ -176,7 +176,7 @@ xdescribe('1. PDF Slate test cases', () => {
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});
-		it('1.4.2 Test - Object.keys(alfrescoPath.alfresco).length < 0', () => {
+		xit('1.4.2 Test - Object.keys(alfrescoPath.alfresco).length < 0', () => {
 			config.alfrescoMetaData = { ...alfresco, alfresco:{} };
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
@@ -217,7 +217,7 @@ xdescribe('1. PDF Slate test cases', () => {
 			spy.mockClear();
 		});
 	});
-	it('1.5 Test handleC2ExtendedClick Function', () => {
+	xit('1.5 Test handleC2ExtendedClick Function', () => {
 		const locationData = {
 			currentAsset: {},
 			name: "001_C5 Media POC - AWS US ",
