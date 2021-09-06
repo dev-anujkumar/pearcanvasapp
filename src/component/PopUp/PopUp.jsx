@@ -239,7 +239,7 @@ class PopUp extends React.Component {
         // updating TCM image data to prevent duplicate image tracking
         if (imageAssetContents && imageAssetContents.length > 0) {
             for (let index = 0; index < imageAssetContents.length; index++) {
-                imageAssetContents[index] = imageAssetContents[index].replace(/data-id="(.*?)"/gm, '').replace(/data-mce-src="(.*?)"/gm, '');
+                imageAssetContents[index] = imageAssetContents[index].replace(/data-id="(.*?)"/gm, '').replace(/data-mce-src="(.*?)"/gm, '').replace(/data-id="(.*?)"/gm, '').replace(/data-mce-src="(.*?)"/gm, '').replace(/ alt="(.*?)"/gm, '').replace(/ longdescription="(.*?)"/gm, '');
                 tcmData = tcmData.replace(tempimageAssetContents[index], imageAssetContents[index]);
             }
         }
