@@ -20,12 +20,4 @@ if ( IDENTITY_URL.indexOf("http") !== 1 ) {
 }
 
 var myOpenam;
-session_token = config_object.ssoToken;
-myOpenam = {
-    handleSessionExpire: function () {
-        let redirectURL = window.location.origin;
-        let encodedURL = encodeURI(redirectURL);
-        window.location = encodedURL;
-    }
-}
 export const OPEN_AM = myOpenam || {};
