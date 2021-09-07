@@ -7,18 +7,21 @@ import config from '../../../src/config/config';
 describe('Testing CommentsPanel component with props', () => {
     const updateReplyComment = new stub();
     let props = {
+        showReplyComments: true,
         showReplyForm: true,
         toggleReplyForm: true,
-        comment: commentWithReply
+        comment: commentWithReply,
+        close: jest.fn()
     }
-    let wrapper = mount(< ReplyComment
+
+    let wrapper = shallow(< ReplyComment
         updateReplyComment={updateReplyComment}
         {...props} />)
     const instance = wrapper.instance();
     
     xit('tests the function  replyCommentForm with if condition', () => {
         let replyForm = instance.replyCommentForm(props);
-        expect(wrapper.find(".reply").first()).toHaveLength(1);
+        expect(wrapper.find(".reply").first()).toHaveLength(2);
 
     })
     it('tests the function replyCommentForm with else condition', () => {
@@ -29,7 +32,7 @@ describe('Testing CommentsPanel component with props', () => {
         }
         wrapper.setProps(props);
         instance.replyCommentForm(props);
-        expect(wrapper.find(".reply")).toHaveLength(1);
+        expect(wrapper.find(".reply")).toHaveLength(2);
     })
 
     it('tests the function  replyComment with if condition', () => {
@@ -43,13 +46,9 @@ describe('Testing CommentsPanel component with props', () => {
     })
 
     it('tests the function  updateComment with if condition', () => {
-        let event = {
-            target: {
-                value: "test"
-            }
-        }
+        let event = "test"
         instance.updateCommentText(event);
-        const text = wrapper.state().text;
+        const text = instance.state.text;
         expect(text).toEqual("test");
     })
 

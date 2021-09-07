@@ -66,6 +66,7 @@ export default {
     BLOCK_CODE_EDITOR: "BLOCK_CODE_EDITOR",
     MMI_ELM: "MMI_ELM",
     TEXT: "TEXT",
+    ELEMENT_TYPE_PDF: "element-pdf",
     /*****************Element Type Arrays*******************/
     elementType: ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'],
     containerType : ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY', 'groupedcontent'],

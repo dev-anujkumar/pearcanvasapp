@@ -51,7 +51,7 @@ const {
     SHOWHIDE,
     SHOW_HIDE,
     SMART_LINK, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT,
-    CONTAINER, WE_TYPE
+    CONTAINER, WE_TYPE, ELEMENT_TYPE_PDF
 }
     = TcmConstants;
 
@@ -977,7 +977,16 @@ const getAssessmentStatus = (assessmentId) => {
         }
     }
 }
-
+/* Prepare snapshots for pdf slate element */
+function preparePDFSlateSnapshot(element) {
+    return {
+        pdfSlateTitle: `<p>${element?.elementdata?.filetitle || ''}</p>`,
+        pdfSlateId: `<p>${element?.elementdata?.assetid || ''}</p>`,
+        glossorySnapshot: '[]',
+        footnoteSnapshot: '[]',
+        assetPopOverSnapshot: '[]'
+    }
+}
 const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
     const elementData =element?.elementdata;
     let elementSnapshot = {};
@@ -1027,16 +1036,19 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
 */
 export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails, CurrentSlateStatus) => {
     let elementSnapshot = {};
-    let semanticSnapshots = (element.type !== CITATION_ELEMENT) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
-    if(element.type !== ELEMENT_ASSESSMENT) {
+    let semanticSnapshots = (![CITATION_ELEMENT, ELEMENT_TYPE_PDF].includes(element?.type)) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
+    /* Element type PDF Slate */
+    if (element?.type === ELEMENT_TYPE_PDF) {
+        elementSnapshot = preparePDFSlateSnapshot(element);  
+    } 
+    else if(element.type !== ELEMENT_ASSESSMENT) {
         elementSnapshot = {
             contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
             glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
             footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
             assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
         }
-    }
-    else {
+    } else {
         elementSnapshot = {
             ...prepareStandAloneSlateSnapshot(element, elementDetails),
            

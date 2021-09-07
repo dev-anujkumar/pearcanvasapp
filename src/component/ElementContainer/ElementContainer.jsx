@@ -18,7 +18,7 @@ import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootn
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
-import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
+import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C } from './../../constants/Element_Constants';
@@ -1752,6 +1752,9 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
                     {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
+                        if(this.props.projectUsers.length === 0) {
+                            this.props.getProjectUsers();
+                        }
                         handleCommentspanel(event,element.id, this.props.index)
                         }} type="comment-flag" />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
@@ -1769,6 +1772,8 @@ class ElementContainer extends Component {
                     sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
                     isAddComment={true}
+                    projectUsers={this.props.projectUsers}
+                    comment={this.state.comment}
                 />}
                 {this.state.isfigurePopup &&
                     <MetaDataPopUp
@@ -1935,6 +1940,7 @@ class ElementContainer extends Component {
             this.props.showBlocker(false)
             hideBlocker();
         }
+        this.props.getProjectUsers();
     }
 
     /**
@@ -1950,6 +1956,7 @@ class ElementContainer extends Component {
      * @param newComment
      */
     handleCommentChange = (newComment) => {
+        // const commentAdded = newComment.replace(/[\[\]']+/g,'')
         this.setState({
             comment: newComment
         })
@@ -2047,7 +2054,7 @@ class ElementContainer extends Component {
         const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE } = TcmConstants
         const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE]
         const {prevSelectedElement, isTCMCanvasPopupLaunched} = this.props
-            if (element?.type && tcmPopupSupportedElements.includes(element.type)) {
+            if (element?.type && tcmPopupSupportedElements.includes(element.type) && !config.isPopupSlate) {
                 this.props.handleTCM(element, this.props.index, isTCMCanvasPopupLaunched, prevSelectedElement)
             } else {
                 if (config.isSavingElement) {
@@ -2190,6 +2197,9 @@ const mapDispatchToProps = (dispatch) => {
         handleTCM: (element, index, isTCMCanvasPopupLaunched, prevSelectedElement) => {
             dispatch(handleTCM(element, index, isTCMCanvasPopupLaunched, prevSelectedElement))
         },
+        getProjectUsers: () => {
+            dispatch(getProjectUsers())
+        }
     }
 }
 
@@ -2220,7 +2230,8 @@ const mapStateToProps = (state) => {
         multipleColumnData: state.appStore.multipleColumnData,
         oldFigureDataForCompare: state.appStore.oldFigureDataForCompare,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
-        prevSelectedElement: state.tcmReducer.prevElementId
+        prevSelectedElement: state.tcmReducer.prevElementId,
+        projectUsers: state.commentsPanelReducer.users
     }
 }
 
