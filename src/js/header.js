@@ -54,11 +54,11 @@ export const logout = function () {
     }
 }
 const getMyURL = () => {
-    var host = window.parent.location.hostname;
-    var protocol = window.parent.location.protocol;
-    var port = window.parent.location.port;
-    var path = window.parent.location.pathname;
-    var search = window.parent.location.search;
+    var host = window.parent?.location?.hostname || "";
+    var protocol = window.parent?.location?.protocol || "";
+    var port = window?.parent?.location?.port || "";
+    var path = window?.parent?.location?.pathname || "";
+    var search = window?.parent?.location?.search || "";
     return protocol + "//" + host + ":" + port + path + search;
 }
 const uuidv4 = () => {
@@ -103,11 +103,11 @@ const removeLocal = (storageKey) => {
 }
 
 
-const deleteCookie(name, domainName) = () => {
+const deleteCookie = (name, domainName) => {
     createCookie(name, "", -1, domainName);
 }
 
-const createCookie(name, value, hours, domainName) = () => {
+const createCookie = (name, value, hours, domainName) => {
     var expires;
     var domain;
     if (hours) {
