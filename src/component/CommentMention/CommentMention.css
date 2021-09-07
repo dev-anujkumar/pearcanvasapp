@@ -86,7 +86,7 @@
   }
   .mentions.reply-mention .mentions__suggestions{
     background-color: #f8f9fa !important;
-    top: -243px !important
+    top: 30px !important
   }
 
   .mentions--multiLine.reply-mention .mentions__highlighter {
