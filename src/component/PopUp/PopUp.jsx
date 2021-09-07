@@ -229,24 +229,6 @@ class PopUp extends React.Component {
     }
 
     /**
-     * function to update TCM data
-     * @param {Object} tcmData 
-     * @returns {Object} updated tcmData 
-     */
-     handleTCMData = (tcmData) => {
-        let imageAssetContents = tcmData.match(/<(img)\s[^>]*imageid=.*?>/g);
-        let tempimageAssetContents = tcmData.match(/<(img)\s[^>]*imageid=.*?>/g);
-        // updating TCM image data to prevent duplicate image tracking
-        if (imageAssetContents && imageAssetContents.length > 0) {
-            for (let index = 0; index < imageAssetContents.length; index++) {
-                imageAssetContents[index] = imageAssetContents[index].replace(/data-id="(.*?)"/gm, '').replace(/data-mce-src="(.*?)"/gm, '');
-                tcmData = tcmData.replace(tempimageAssetContents[index], imageAssetContents[index]);
-            }
-        }
-        return tcmData;
-    }
-
-    /**
     * @description - This function is responsible for rendering the Dialog text in the popup.
     * @param {event} 
     */
@@ -330,7 +312,7 @@ class PopUp extends React.Component {
             )
         } else if (props.isTCMCanvasPopup) {
             return (
-                <div ref={this.contentRef} className={`dialog-window ${props.assessmentClass}`} dangerouslySetInnerHTML={{ __html: this.handleTCMData(props.dialogText) }}></div>
+                <div ref={this.contentRef} className={`dialog-window ${props.assessmentClass}`} dangerouslySetInnerHTML={{ __html: props.dialogText }}></div>
             )
         }
         else if (props.AssessmentPopup) {
