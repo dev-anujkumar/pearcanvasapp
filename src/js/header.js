@@ -2,7 +2,7 @@ const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 import {c4PublishObj} from '../js/c4_module.js';
 import { releaseSlateLockWithCallback } from '../component/CanvasWrapper/SlateLock_Actions'
-
+import { sendDataToIframe } from '../constants/utility';
 var current_slate_urn='';
 /**
 * @description - Set current slate URN.
