@@ -725,6 +725,7 @@ export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, ver
             indexes.push(index)
         }
     });
+    // if index is single value
     if (indexes.length == 0 || (versionedData && updatedDataID !== versionedData.id)) {
         tcmData.push({
             "txCnt": 1,
@@ -734,13 +735,18 @@ export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, ver
         })
     }
     else {
-        if(tcmData && tcmData[indexes] && indexes.length > 0 && updatedDataID){
-            tcmData[indexes]["elemURN"] = updatedDataID
-            tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
-            tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
-            tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
-        }
+    // if index is multiple value value (incase of cut paste in show hide)
+    if(Array.isArray(indexes) && indexes.length > 0) {
+        indexes.forEach(indexItem => {
+            if(tcmData && tcmData[indexItem] && updatedDataID){
+                tcmData[indexItem]["elemURN"] = updatedDataID
+                tcmData[indexItem]["txCnt"] = 1
+                tcmData[indexItem]["feedback"] = tcmData[indexItem]["feedback"] !== null ? tcmData[indexItem]["feedback"] : null
+                tcmData[indexItem]["isPrevAcceptedTxAvailable"] = tcmData[indexItem]["isPrevAcceptedTxAvailable"] ? tcmData[indexItem]["isPrevAcceptedTxAvailable"] : false    
+                }
+            })
     }
+}
   
     if (tcmData.length >0) {
         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });

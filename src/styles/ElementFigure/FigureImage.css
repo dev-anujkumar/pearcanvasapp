@@ -83,7 +83,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     padding: 15px 4px 6px 4px !important;
     font-weight: 500 !important;
     height:40px;
-    z-index:2;
+    z-index: 1;
     font-family: 'Open Sans', sans-serif !important;
     white-space: nowrap;
     overflow: hidden;
@@ -109,7 +109,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     padding: 15px 4px 6px 4px !important;
     font-weight: 500 !important;
     height:40px;
-    z-index:2;
+    z-index:1;
     font-family: 'Open Sans', sans-serif !important;
     white-space: nowrap;
     overflow: hidden;
@@ -811,7 +811,7 @@ th ol li.listItemNumeroUnoNone:before {
     font-size: 10px;
     color: #737373;
     position: absolute;
-    z-index:1;
+    z-index:0;
 }
 
  .floating-title-group .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none {

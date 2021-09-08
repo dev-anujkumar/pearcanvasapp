@@ -90,6 +90,9 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
         },
         updateMultipleColumnData : () => {
             return jest.fn()
+        },
+        storeOldAssetForTCM: () => {
+            return jest.fn()
         }
     }
 })
@@ -2321,5 +2324,267 @@ describe('Test-Other Functions', () => {
         const elementId = '';
         const defaultUrn = '';
         elementContainerInstance4.checkTCMStatus(tcmData, elementId, defaultUrn);
+    })
+
+    it('handleAlfrescoMetadataWindow method', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuredata: {
+                    imageid: ''
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
+
+    it("handleContentChange for MML image - with DOM elements", () => {
+        // creating cypress DOM elements for handling getElementById reference 
+        for (let element = 0; element < 6; element++) {
+            let cypress = document.createElement('div')
+            cypress.id = `cypress-0-${element}`;
+            cypress.innerHTML = '<p>cypress</p>';
+            document.body.append(cypress);
+        }
+        const previousElementData = {
+            type: "figure",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "authoredtext",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it('handleBlurAssessmentSlate method - calledFrom - updateAssessmentFormat', () => {
+        let props8 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuredata: {
+                    imageid: ''
+                },
+                elementdata: {}
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
+        const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
+        elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: '', calledFrom: 'updateAssessmentFormat'});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
+    });
+
+    it('handleBlurAssessmentSlate method - assessmentData - id', () => {
+        let props8 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuredata: {
+                    imageid: ''
+                },
+                elementdata: {}
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
+        const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
+        elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: '', id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319g'});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
+    });
+
+    it('handleBlurAssessmentSlate method - assessmentData - format - learningtemplate', () => {
+        let props8 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuredata: {
+                    imageid: ''
+                },
+                elementdata: {}
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
+        const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
+        elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: 'learningtemplate', id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319g'});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
+    });
+
+    it('handleBlurAssessmentSlate method - else case', () => {
+        let props8 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuredata: {
+                    imageid: ''
+                },
+                elementdata: {}
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
+        const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
+        elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: ''});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
+    });
+
+    it('saveNewComment  method - without comment', () => {
+        elementContainerInstance.setState({
+            comment : ''
+        })
+        const spySaveNewComment = jest.spyOn(elementContainerInstance, 'saveNewComment')
+        elementContainerInstance.forceUpdate();
+        elementContainer.update();
+        elementContainerInstance.saveNewComment({stopPropagation:()=>{}},true);
+        expect(spySaveNewComment).toHaveBeenCalled();
+    })
+
+    it("Test - figureDifferenceInteractive - pdf interactive type: difference in content - with DOM elements", () => {
+        const previousElementData = {
+            html: {
+                title: '<p></p>',
+                postertext: "<p>test</p>"
+            },
+            figuredata: {
+                interactivetype: "pdf"
+            }
+        }
+        const spyfigureDifferenceInteractive = jest.spyOn(elementContainerInstance, 'figureDifferenceInteractive')
+        elementContainerInstance.figureDifferenceInteractive(0, previousElementData);
+        expect(spyfigureDifferenceInteractive).toHaveBeenCalled();
+        expect(spyfigureDifferenceInteractive).toHaveReturnedWith(true);
+        spyfigureDifferenceInteractive.mockClear()
+    })
+
+    it("Test - figureDifferenceBlockCode: difference in content - with DOM elements", () => {
+        const previousElementData = {
+            html: {
+                preformattedtext: '<p></p>'
+            },
+            figuredata: {
+                startNumber: 1,
+                numbered: 1,
+                syntaxhighlighting: false
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "startnumber" || attr === "numbered" || attr === "syntaxhighlighting") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'figureDifferenceBlockCode')
+        elementContainerInstance.figureDifferenceBlockCode(0, previousElementData);
+        expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
+        expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
+        spyfigureDifferenceBlockCode.mockClear()
+    })
+
+    it("handleContentChange for figuretype - image - with DOM elements", () => {
+        const previousElementData = {
+            type: "figure",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "image",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for figuretype - video - with DOM elements", () => {
+        const previousElementData = {
+            type: "figure",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "video",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for figuretype - assessment - with DOM elements", () => {
+        const previousElementData = {
+            type: "figure",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "assessment",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for type - element-assessment - with DOM elements", () => {
+        const previousElementData = {
+            type: "element-assessment",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "assessment",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
     })
 })

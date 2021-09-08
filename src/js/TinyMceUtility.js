@@ -18,7 +18,7 @@ import { sendDataToIframe } from '../constants/utility';
     let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
     let figureType = data?.content?.mimeType?.split('/')[0]             
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
-    const imgData = `<img imageid="urn:pearson:alfresco:${uniqID}" src=${epsURL} height="150" width="112" alt="${altText}" longdescription="${longDesc}" class="imageAssetContent" data-id="${imageID}"/>`;
+    const imgData = `<img imageid="urn:pearson:alfresco:${uniqID}" src=${epsURL} height="150" width="112"  class="imageAssetContent" data-id="${imageID}"/>`;
     const imageTypes = ["image", "table", "mathImage", "authoredtext"];
     if (imageTypes.indexOf(figureType) > -1) {
         if (imageArgs?.id && editor?.targetElm) {
