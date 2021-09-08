@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-import { hasReviewerRole, sendDataToIframe, hasProjectPermission } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe, hasProjectPermission, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
@@ -175,8 +175,9 @@ export function ElementSaprator(props) {
     }
     /* @hideSplitSlateIcon@ hide split slate icon in following list of elements */
     const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
+    let hideElementSeperator = isSubscriberRole(props.projectSubscriptionDetails.projectSharingRole,props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) || props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked && isOwnerRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) ? 'hideToolbar' : ''
     return (
-        <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
+        <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
                 {permissions && permissions.includes('split_slate') && hideSplitSlateIcon && !config.isPopupSlate && !props.firstOne && !(props.setSlateParent == 'part' && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
@@ -420,7 +421,8 @@ const mapStateToProps = (state) => ({
     setSlateParent :  state.appStore.setSlateParent,
     elementSelection: state.selectionReducer.selection,
     showPlayscript: state.projectInfo.showPlayscript,
-    showDiscussion: state.projectInfo.showDiscussion
+    showDiscussion: state.projectInfo.showDiscussion,
+    projectSubscriptionDetails:state.projectInfo
 })
 
 export default connect(mapStateToProps, { cloneContainer })(ElementSaprator)

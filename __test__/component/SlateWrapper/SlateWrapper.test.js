@@ -16,6 +16,7 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
+import { isOwnerRole, isSubscriberRole } from '../../../src/constants/utility.js';
 jest.mock('../../../src/config/config.js', () => ({
     scrolling: true,
     totalPageCount:3,
@@ -40,7 +41,28 @@ jest.mock('../../../src/component/ElementSaprator', () => {
     return function () {
         return (<div>null</div>)
     }
-})
+});
+
+jest.mock('../../../src/constants/utility', () => {
+    return { 
+        sendDataToIframe: jest.fn(),
+        defaultMathImagePath: ()=>{
+            return true
+        },
+        guid: ()=>{
+            return "abcd123"
+        },
+        isOwnerRole:()=>{
+            return true
+        },
+        isSubscriberRole:()=>{
+            return true
+        },
+        getSlateType:()=>{
+            return 'slateType'
+        }
+    }
+});
 
 const initialState = {
     slateLockReducer: { slateLockInfo: {
@@ -61,6 +83,15 @@ const initialState = {
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
+    },
+    projectInfo:{
+        projectSubscriptionDetails: {
+            projectSharingRole: "OWNER",
+            isOwnersSubscribedSlateChecked: false,
+            projectSubscriptionDetails: {
+                isSubscribed: true
+            }
+        },
     }
 }
 const mockFunction = jest.fn().mockImplementation = () => {
@@ -111,7 +142,8 @@ const actionProps = {
     toggleLOWarningPopup: jest.fn(),
     showWrongImagePopup: jest.fn(),
     alfrescoPopup: jest.fn(),
-    showRemoveImageGlossaryPopup: jest.fn()
+    showRemoveImageGlossaryPopup: jest.fn(),
+    isOwnersSubscribedSlate: jest.fn()
 }
 const slateWrapInstance = (props, initialSt = initialState) => {
     const store = mockStore(initialSt);
@@ -903,5 +935,83 @@ describe("SlateWrapper Component", () => {
         compInstance.componentWillUnmount();
         expect(spy).toHaveBeenCalled();
         spy.mockClear()
+    });
+    describe('1.48 Test Owner Content',()=>{
+        const initialState1 = {
+            ...initialState,
+            projectInfo: {
+                projectSubscriptionDetails: {
+                    projectSharingRole: "OWNER",
+                    isOwnersSubscribedSlateChecked: false,
+                    projectSubscriptionDetails: {
+                        isSubscribed: true
+                    }
+                },
+            }
+        }
+        const slateWrapInstance = (props, initialSt = initialState1) => {
+            const store1 = mockStore(initialSt);
+            const component = mount(<Provider store={store1}><SlateWrapper {...props} /></Provider>);
+            return component.find('SlateWrapper').instance();
+        }
+        const compInstance = slateWrapInstance(props);
+        it('OwnerSlate Content', () => {
+            const spy = jest.spyOn(compInstance, 'showLockPopup');
+            compInstance.showLockPopup();
+            compInstance.setState({ showOwnerSlatePopup: true });
+            window.localStorage = {
+                getItem: () => { return { "hasOwnerEdit": null }; }
+            }
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear();
+        });
+        it('Owner proceedButton handling',()=>{
+            const spy=jest.spyOn(compInstance,'proceedButtonHandling');
+            compInstance.proceedButtonHandling();
+            compInstance.setState({ showOwnerSlatePopup: false });
+        });
+    });
+
+    describe('subscriber Content',()=>{
+        it('Subscriber Content', () => {
+            jest.mock('../../../src/constants/utility', () => {
+                return {
+                    isOwnerRole: () => {
+                        return false
+                    },
+                    isSubscriberRole: () => {
+                        return true
+                    }
+                }
+            });
+
+            const initialState2 = {
+                ...initialState,
+                projectInfo: {
+                    projectSubscriptionDetails: {
+                        projectSharingRole: "SUBSCRIBER",
+                        isOwnersSubscribedSlateChecked: false,
+                        projectSubscriptionDetails: {
+                            isSubscribed: true
+                        }
+                    }
+                }
+            }
+            
+            const slateWrapInstance = (props, initialSt = initialState2) => {
+                const store2 = mockStore(initialSt);
+                const component = mount(<Provider store={store2}><SlateWrapper {...props} /></Provider>);
+                return component.find('SlateWrapper').instance();
+            }
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'showLockPopup');
+            compInstance.showLockPopup();
+            compInstance.setState({ showOwnerSlatePopup: true });
+            window.localStorage = {
+                getItem: () => { return { "hasOwnerEdit": null }; }
+            }
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear();
+        });
     })
 })

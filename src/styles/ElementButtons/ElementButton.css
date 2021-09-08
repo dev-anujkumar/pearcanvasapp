@@ -232,3 +232,6 @@
     padding: 2px 2px 0 2px;
     width: 19px;
 }
+.subscriberSlate{
+    display: none !important;
+}

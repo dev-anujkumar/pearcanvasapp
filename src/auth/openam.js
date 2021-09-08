@@ -47,6 +47,7 @@
 // Some global variables
 var debugEnabled = false;
 var storageExist = ("sessionStorage" in window && window.sessionStorage);
+var localStorageExist = ("localStoage" in window && window.localStorage);
 import { releaseSlateLockWithCallback } from "../component/CanvasWrapper/SlateLock_Actions";
 import { sendDataToIframe } from '../constants/utility.js'
 const configOBJ = require('./../config/config');
@@ -231,6 +232,23 @@ function removeLocal(storageKey) {
     }
 }
 
+/*
+ * Removes the value for the storageKey
+ * @function removeLocal
+ * @param {type} storageKey
+ * @returns {undefined}
+ */
+function removeLocalStorage(storageKey) {
+    if (localStorageExist) {
+        try {
+            debug("removeLocal: REMOVING " + storageKey);
+            localStorage.removeItem(storageKey);
+        } catch (err) {
+            // Do nothing
+        }
+    }
+}
+
 /**
  * Removes the whole local session storage
  * @function removeAlllocal
@@ -242,6 +260,7 @@ function removeAllLocal() {
             debug("removeAllLocal: REMOVING ALL");
             removeLocal("validSession");
             removeLocal("attributes");
+            removeLocalStorage("hasOwnerEdit");
         } catch (err) {
             // Do nothing
         }

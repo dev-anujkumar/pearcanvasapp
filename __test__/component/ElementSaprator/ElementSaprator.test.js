@@ -28,7 +28,14 @@ let initialState = {
     },
     projectInfo:{
         showPlayscript:true,
-        showDiscussion:true
+        showDiscussion:true,
+        projectSubscriptionDetails: {
+            projectSharingRole: "SUBSCRIBER",
+            isOwnersSubscribedSlateChecked: false,
+            projectSubscriptionDetails: {
+                isSubscribed: true
+            }
+        }
     }
 }
 
@@ -441,8 +448,25 @@ describe('Testing functions', () => {
     })
 
     it('Testing useEffect - if block', () => {
+        jest.mock('../../../src/constants/utility.js', () => {
+            return {
+                isSubscriberRole: () => {
+                    return true
+                },
+                isOwnerRole:()=>{
+                    return false
+                }
+            }
+        })
         let props = {
-            elementSelection: {}
+            elementSelection: {},
+            projectSubscriptionDetails: {
+                projectSharingRole: "SUBSCRIBER",
+                isOwnersSubscribedSlateChecked: false,
+                projectSubscriptionDetails: {
+                    isSubscribed: true
+                }
+            }
         };
         let permissions = ['elements_add_remove']
         let elementType = 'test';

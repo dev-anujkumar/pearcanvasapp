@@ -10,7 +10,7 @@ import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
 import { sendDataToIframe, defaultMathImagePath } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER } from '../../../constants/IFrameMessageTypes';
+import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
@@ -279,6 +279,11 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'openInlineAlsfrescoPopup' :
                     this.props.alfrescoPopup(message);
+                    break;
+                case PROJECT_SHARING_ROLE:
+                    if (message?.sharingContextRole) {
+                        this.props.setProjectSharingRole(message.sharingContextRole);
+                    }
                     break;
                 case 'releaseLockPopup':
                     this.setState({
@@ -717,6 +722,10 @@ function CommunicationChannel(WrappedComponent) {
         setCurrentSlate = (message) => {
             config.isSlateLockChecked = false;
             let currentSlateObject = {};
+            const projectSubscriptionDetails = {
+                isSubscribed: false,
+                owner: {}
+            }
             if (message['category'] === 'titleChange') {
                 currentSlateObject = {
                     title: message.title,
@@ -753,6 +762,12 @@ function CommunicationChannel(WrappedComponent) {
                 config.tcmslatemanifest= null;
                 config.parentLabel = message.node.nodeParentLabel;
                 config.parentOfParentItem = message.node.parentOfParentItem
+                // checking if selected container is subscribed or not
+                if (message?.node?.isSubscribed) {
+                    projectSubscriptionDetails.isSubscribed = message.node.isSubscribed;
+                }
+                // calling an action to set project subscription details coming from TOC SPA
+                this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,
