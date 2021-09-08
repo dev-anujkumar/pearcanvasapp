@@ -1726,7 +1726,8 @@ class ElementContainer extends Component {
         /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false;
-        let isOwner=this.props.projectSharingRole ==="OWNER" ? true :false;
+        let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
+        let isOwner = projectSharingRole ==="OWNER" ? true :false;
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.renderCopyComponent(this.props, index, inContainer, tcm)}
@@ -1734,10 +1735,10 @@ class ElementContainer extends Component {
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
                     {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
                     {(labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME || MULTI_COLUMN_2C.ELEMENT_TAG_NAME) && <div>{this.renderMultipleColumnLabels(element)}</div>}
-                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) && !isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) ? (<Button type="delete-element"  onClick={(e) => this.showDeleteElemPopup(e, true)} />)
+                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) ? (<Button type="delete-element"  onClick={(e) => this.showDeleteElemPopup(e, true)} />)
                         : null}
-                    {!isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) && this.renderColorPaletteButton(element, permissions)}
-                    {!isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails)&& this.renderColorTextButton(element, permissions)}
+                    {!isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && this.renderColorPaletteButton(element, permissions)}
+                    {!isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed)&& this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
                 <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" + labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick={(e) => this.handleFocus("", "", e, labelText)}>
@@ -1746,16 +1747,16 @@ class ElementContainer extends Component {
                     {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true}  />}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    {permissions && permissions.includes('notes_adding') && !isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) && <Button type="add-comment"  btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
-                    {permissions && permissions.includes('note_viewer') && anyOpenComment && !isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) && <Button elementId={element.id} onClick={(event) => {
+                    {permissions && permissions.includes('notes_adding') && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && <Button type="add-comment"  btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                    {permissions && permissions.includes('note_viewer') && anyOpenComment && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && <Button elementId={element.id} onClick={(event) => {
                         if(this.props.projectUsers.length === 0) {
                             this.props.getProjectUsers();
                         }
                         handleCommentspanel(event,element.id, this.props.index)
                         }} type="comment-flag" />}
-                        {permissions && permissions.includes('elements_add_remove') && showEditButton && !isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
-                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && !isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
-                    {feedback && !isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && !isSubscriberRole(this.props.projectSharingRole, this.props.projectSubscriptionDetails) && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
+                        {permissions && permissions.includes('elements_add_remove') && showEditButton && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
+                    {feedback && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={this.handleCommentPopup}
@@ -2239,7 +2240,8 @@ const mapStateToProps = (state) => {
         oldFigureDataForCompare: state.appStore.oldFigureDataForCompare,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         prevSelectedElement: state.tcmReducer.prevElementId,
-        projectUsers: state.commentsPanelReducer.users
+        projectUsers: state.commentsPanelReducer.users,
+        projectInfo: state.projectInfo
     }
 }
 
