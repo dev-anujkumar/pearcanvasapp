@@ -34,7 +34,7 @@ export const publishContent = function (type) {
 
     }
 }
-
+let storageExist = ("sessionStorage" in window && window.sessionStorage);
 /**
 * @description - Logout user's session.
 */
@@ -54,16 +54,16 @@ export const logout = function () {
     }
 }
 const getMyURL = () => {
-    var host = window.parent?.location?.hostname || "";
-    var protocol = window.parent?.location?.protocol || "";
-    var port = window?.parent?.location?.port || "";
-    var path = window?.parent?.location?.pathname || "";
-    var search = window?.parent?.location?.search || "";
+    const host = window?.parent?.location?.hostname || "";
+    const protocol = window?.parent?.location?.protocol || "";
+    const port = window?.parent?.location?.port || "";
+    const path = window?.parent?.location?.pathname || "";
+    const search = window?.parent?.location?.search || "";
     return protocol + "//" + host + ":" + port + path + search;
 }
 const uuidv4 = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
 }
@@ -83,21 +83,23 @@ const logoutWithModernOpenAM = () => {
 const removeAllLocal = () => {
     if (storageExist) {
         try {
-            debug("removeAllLocal: REMOVING ALL");
+            console.log("removeAllLocal: REMOVING ALL");
             removeLocal("validSession");
             removeLocal("attributes");
         } catch (err) {
             // Do nothing
+            console.log("removeAllLocal: Do nothing ");
         }
     }
 }
 const removeLocal = (storageKey) => {
     if (storageExist) {
         try {
-            debug("removeLocal: REMOVING " + storageKey);
+            console.log("removeLocal: REMOVING " + storageKey);
             sessionStorage.removeItem(storageKey);
         } catch (err) {
             // Do nothing
+            console.log("removeLocal: Do nothing ");
         }
     }
 }
