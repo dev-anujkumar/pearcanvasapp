@@ -234,8 +234,9 @@ class Comments extends React.Component {
 
             <div>
                 <CommentMention 
+                urn={this.props.comment.commentUrn}
                 projectUsers={this.props.users} 
-                comment={this.state.updatedFields.text} 
+                comment={this.props.comment.commentString} 
                 handleCommentChange={this.updateCommentText}
                 isEditMode={true}
                 />
@@ -319,7 +320,7 @@ class Comments extends React.Component {
                             :
                             <div className="text-medium color-gray-71 mb-4">
                                 <p className="hyphens">
-                                    <CommentMention projectUsers={users} readOnly comment={this.props.comment.commentString}/>
+                                    <CommentMention projectUsers={users} readOnly urn={this.props.comment.commentUrn} comment={this.props.comment.commentString}/>
                                 </p>
                             </div>
                         }         
