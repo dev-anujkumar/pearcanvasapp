@@ -145,6 +145,9 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
             }
         })
         .catch((err) => {
+            if (isOwnerKey) {
+                localStorage.removeItem('hasOwnerEdit');
+            }
             if(callback){
                 callback(err)
             }
