@@ -79,7 +79,8 @@ class AddImageGlossary extends Component {
                     'Accept': 'application/json',
                     'ApiKey': config.CMDS_APIKEY,
                     'Content-Type': 'application/json',
-                    'PearsonSSOSession': SSOToken
+                    'PearsonSSOSession': SSOToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             })
             .then(function (response) {

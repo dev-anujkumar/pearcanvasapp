@@ -42,7 +42,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
                 "Content-Type": "application/json",
                 ApiKey: config.STRUCTURE_APIKEY,
                 PearsonSSOSession: config.ssoToken,
-
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     )
@@ -97,7 +97,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     )
@@ -184,7 +185,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
+                    "PearsonSSOSession": config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }
         )
@@ -335,7 +337,8 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     ).then(response => {
@@ -420,7 +423,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     ).then( async (createdElemData) => {
