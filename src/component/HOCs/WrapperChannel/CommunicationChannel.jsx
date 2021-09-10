@@ -121,6 +121,7 @@ function CommunicationChannel(WrappedComponent) {
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
                     config.ssoToken = message.ssoToken;
+                    config.myCloudProxySession = message.myCloudProxySession;
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
                     config.projectEntityUrn = message.entityUrn;

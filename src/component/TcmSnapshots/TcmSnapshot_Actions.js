@@ -13,7 +13,8 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     return axios.get(url, {
         headers: {
             PearsonSSOSession: config.ssoToken,
-            withCredentials: true
+            withCredentials: true,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
         if (response && response.data && response.data.elements) {
@@ -66,7 +67,8 @@ export const sendElementTcmSnapshot = async (snapshotData) => {
 const callSnapshotAPI = async (snapshotData) => {
     return axios.post(config.TCM_SNAPSHOT_URL, snapshotData, {
         headers: {
-            PearsonSSOSession: config.ssoToken
+            PearsonSSOSession: config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((res) => {
         console.log("Successs !!!")
@@ -85,7 +87,8 @@ export const getLatestVersion = async (containerUrn) => {
         const response = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
         return response.data[0];
@@ -104,7 +107,8 @@ export const slateLinkDetails = async (containerUrn) => {
         const response = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}`, {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
         return response.data;
@@ -119,7 +123,8 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => {
         let parentData = getState().appStore.slateLevelData;
@@ -157,7 +162,8 @@ export const callCutCopySnapshotAPI = async (snapshotData) => {
     if (snapshotData.operationType === 'copy') {
         return axios.post(url, snapshotData, {
             headers: {
-                PearsonSSOSession: config.ssoToken
+                PearsonSSOSession: config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }).then((res) => {
             console.log("Successs !!!")
@@ -168,7 +174,8 @@ export const callCutCopySnapshotAPI = async (snapshotData) => {
     else{
         return axios.put(url, snapshotData, {
             headers: {
-                PearsonSSOSession: config.ssoToken
+                PearsonSSOSession: config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }).then((res) => {
             console.log("Successs !!!")

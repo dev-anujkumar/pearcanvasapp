@@ -99,7 +99,8 @@ function AlfrescoPopup(props) {
                     'ApiKey': config.STRUCTURE_APIKEY,
                     'Content-Type': 'application/json',
                     'PearsonSSOSession': SSOToken,
-                    'If-Match': request.eTag
+                    'If-Match': request.eTag,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             })
             .then(function (response) {

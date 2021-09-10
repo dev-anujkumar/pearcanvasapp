@@ -66,6 +66,7 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
     return axios.get(url, {
         headers: {
             PearsonSSOSession: config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((res) => {
         const data = res.data
@@ -121,6 +122,7 @@ export const tcmButtonHandler = (status, tcmSnapshotData, elementData) => (dispa
     return axios.patch(url, body, {
         headers: {
             PearsonSSOSession: config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((res) => {
         const tcmObject = { isTCMCanvasPopup: false }
