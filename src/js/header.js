@@ -39,16 +39,19 @@ let storageExist = ("sessionStorage" in window && window.sessionStorage);
 * @description - Logout user's session.
 */
 export const logout = function () {
-
+    console.log("Inside header.js - logout function")
     let { projectUrn, slateManifestURN } = config_object
     let urlToBeRedirected = getMyURL() || '';
     if (projectUrn && slateManifestURN && slateManifestURN != "undefined") {
+        console.log("Inside if");
         releaseSlateLockWithCallback(projectUrn, slateManifestURN, (response) => {
+            console.log("Inside releaseSlateLock callback")
             logoutWithModernOpenAM()
             redirectParent(urlToBeRedirected);
         });
     }
     else {
+        console.log("Inside else");
         logoutWithModernOpenAM()
         redirectParent(urlToBeRedirected);
     }
@@ -76,6 +79,7 @@ const redirectParent = (urlToBeRedirected) => {
     });
 }
 const logoutWithModernOpenAM = () => {
+    console.log("Inside logoutWithModernOpenAM function");
     deleteCookie('PearsonSSOSession', 'pearson.com');
     removeAllLocal();
 };

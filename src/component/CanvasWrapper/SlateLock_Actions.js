@@ -125,6 +125,7 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
  * @param {*} callback Callback method to be executed
  */
 export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
+    console.log("Inside releaseslatelockwithcallback");
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let isOwnerKey = localStorage.getItem('hasOwnerEdit');
     let data = {
@@ -133,6 +134,7 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
     }
     return axios.post(url, data)
        .then((res) => {
+        console.log("response releaseslatelockwithcallback - isOwnerKey", isOwnerKey);
         if (isOwnerKey) {
             localStorage.removeItem('hasOwnerEdit');
         }
@@ -145,6 +147,7 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
             }
         })
         .catch((err) => {
+            console.log("error releaseslatelockwithcallback - isOwnerKey", isOwnerKey);
             if (isOwnerKey) {
                 localStorage.removeItem('hasOwnerEdit');
             }

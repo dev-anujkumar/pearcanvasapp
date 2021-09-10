@@ -2162,7 +2162,7 @@ describe('Test-Other Functions', () => {
         spysetBorderToggle.mockClear()
     })
     
-    it('Render and Update three column test click event', () => {
+    xit('Render and Update three column test click event', () => {
         let props = {
             onClickCapture: jest.fn(),
             element: wipData.threeMulticolumn
