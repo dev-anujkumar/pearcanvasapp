@@ -12,6 +12,7 @@ class Comments extends React.Component {
         super(props)
         this.state = {
             newAssignee: this.props.comment.assignto,
+            newRole: this.props.comment.assignto,
             showActionsMenu: false,
             mode: 'view',
             updatedFields: {
@@ -19,7 +20,7 @@ class Comments extends React.Component {
                 status: this.props.comment.commentStatus
             },
             isSelectAssignee: false,
-            showReplyForm: true,
+            isSelectRole: false,
             showReplyComments: false
         }
     }
@@ -128,11 +129,22 @@ class Comments extends React.Component {
         if (this.state.newAssignee != user) {
             this.setState({
                 newAssignee: user,
+                // newAssignee: user,
                 isSelectAssignee: true
             })
         }
     }
 
+    newRoleUser =(user)=> {
+        if (this.state.newRole != user) {
+            this.setState({
+                newRole: user,
+                // newAssignee: user,
+                isSelectRole: true
+            })
+        }
+    }    
+    
     /**
     * 
     *@discription - This function is to change the assignee
@@ -142,6 +154,21 @@ class Comments extends React.Component {
         this.setMode('assign')
         this.setState({
             isSelectAssignee: false
+        })
+
+        // if user came from comments manager
+        // than again initilizing the user list
+        if(this.props.users.length === 0) {
+            this.props.getProjectUsers();
+        }
+    }
+
+    changeAssignByRole =()=> {
+        this.toggleActionsMenu(false)
+        this.setMode('role')
+        this.setState({
+            // isSelectAssignee: false
+            isSelectRole: false
         })
 
         // if user came from comments manager
@@ -218,6 +245,7 @@ class Comments extends React.Component {
             <ul className="comment-action-menu action-menu">
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
                 {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
+                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignByRole}>Change Role</li>}
                 {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
                 {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
@@ -272,6 +300,13 @@ class Comments extends React.Component {
         })
     }
 
+    removeRolePopup =() =>{
+        this.setMode('view')
+        this.setState({
+            newRole: this.props.comment.assignto
+        })
+    }
+
     /**
     * 
     *@discription - This function is to update the assignee
@@ -280,10 +315,21 @@ class Comments extends React.Component {
         const { commentUrn } = this.props.comment
         const { elementId } = this.props
         const { newAssignee } = this.state
+        // const newAssignee = "totally random"
         this.props.updateAssignee(commentUrn, newAssignee, elementId)
     }
+
+    updateRole = () => {
+        const { commentUrn } = this.props.comment
+        const { elementId } = this.props
+        const { newRole } = this.state
+        // const newAssignee = "totally random"
+        this.props.updateAssignee(commentUrn, newRole, elementId)
+    }
+
     render() {
-        const { comment, elementId, updateReplyComment, toggleReplyForm, users } = this.props
+        const { comment, elementId, updateReplyComment, toggleReplyForm, users, roles } = this.props
+        console.log(comment, "ishant checking");
         let avatarObject = [];
         let avatar = '';
         avatarObject = comment?.commentCreator.split(',');
@@ -331,6 +377,24 @@ class Comments extends React.Component {
                             </div>
                             <div className="property">
                                 <UserAssignee
+                                    name="Assign by role"
+                                    mode={this.state.mode}
+                                    comment={this.props.comment}
+                                    newAssigneeUser={this.newRoleUser}
+                                    isSelectAssignee={this.state.isSelectRole}
+                                    setMode={this.setMode}
+                                    updateAssignee={this.updateRole}
+                                    removeAssigneePopup={this.removeRolePopup}
+                                    users={roles}
+                                    roles={roles}
+                                    show={this.state.mode == "role"}
+                                />
+
+                            </div>
+
+                            <div className="property">
+                                <UserAssignee
+                                    name="Assign to"
                                     mode={this.state.mode}
                                     comment={this.props.comment}
                                     newAssigneeUser={this.newAssigneeUser}
@@ -339,6 +403,8 @@ class Comments extends React.Component {
                                     updateAssignee={this.updateAssignee}
                                     removeAssigneePopup={this.removeAssigneePopup}
                                     users={users}
+                                    roles={roles}
+                                    show={this.state.mode == "assign"}
                                 />
 
                             </div>

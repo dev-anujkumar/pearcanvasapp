@@ -9,17 +9,19 @@ class UserAssignee extends React.Component {
      @param {Array} props - Array of   comments
     @return {String} - returns the jsx code of the assignee menu
     */
+
     assigneeForm = (props) => {
-        const { users } = props
-        if (props.mode === 'assign') {
+        console.log("in assign");
+        const { users, roles, show, mode} = props
+        if (show) {
             return (
                 <div className="assignee-content">
-                    <span className="property-title">Assignee</span>
+                    <span className="property-title">{props.name}</span>
                     <span className="property-value color-gray-71 changeAssignee">getUserName</span>
-                    <CurrentProjectUsers users={users} currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
+                    <CurrentProjectUsers mode={mode} users={users} currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
                     <span className={`set-assignee-button ${(!props.isSelectAssignee ? 'disabled' : "")}`}
                         onClick={() => {
-                            props.setMode('view')
+                            props.setMode(`{mode}`)
                             props.updateAssignee('assignee')
                         }}>
                     </span>
@@ -29,21 +31,72 @@ class UserAssignee extends React.Component {
         } else {
             return (
                 <div>
-                    <span className="property-title">Assignee</span>
+                    <span className="property-title">{props.name}</span>
                     <span className="property-value color-gray-71 defaultAssignee">{props.comment.commentAssignee}</span>
                 </div>
             )
 
         }
     }
-    render() {
-        return (
-            <>
-                {this.assigneeForm(this.props)}
-            </>
-        )
+
+
+    roleForm = (props) => {
+        console.log("in role");
+        const { users, roles, show, mode} = props
+        if (show) {
+            return (
+                <div className="assignee-content">
+                    <span className="property-title">{props.name}</span>
+                    <span className="property-value color-gray-71 changeAssignee">getUserName</span>
+                    <CurrentProjectUsers mode={mode} users={users} currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
+                    <span className={`set-assignee-button ${(!props.isSelectAssignee ? 'disabled' : "")}`}
+                        onClick={() => {
+                            props.setMode(`{mode}`)
+                            props.updateAssignee('assignee')
+                        }}>
+                    </span>
+                    <span className="reject-assignee-button" onClick={props.removeAssigneePopup}></span>
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    <span className="property-title">{props.name}</span>
+                    <span className="property-value color-gray-71 defaultAssignee">{props.comment.commentAssignee}</span>
+                </div>
+            )
+
+        }
     }
+
+    render() {
+
+        if(this.props.mode == "assign") {
+            console.log("assignee ishant");
+            return (
+                <>
+                    {this.assigneeForm(this.props)}
+                </>
+            )
+        } else {
+            console.log("role ishant");
+            return (
+                <>
+                    {this.roleForm(this.props)}
+                </>
+            )
+        }
+
+        // return (
+        //     <>
+        //         {this.assigneeForm(this.props)}
+        //     </>
+        // )
+
+    }
+
 }
+
 UserAssignee.propTypes = {
     /** commet data attached to store and contains complete comment object */
     comment: PropTypes.object.isRequired,
@@ -61,4 +114,5 @@ UserAssignee.propTypes = {
     removeAssigneePopup: PropTypes.func
 
 }
+
 export default UserAssignee;

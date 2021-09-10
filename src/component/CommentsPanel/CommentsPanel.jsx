@@ -49,6 +49,29 @@ class CommentsPanel extends React.Component {
         });
     }
 
+    // ROLE = "Role";j
+
+    getRoleOption = (users) => {
+        let roleOptions = [];
+        const distinctRoles = [];
+        Object.values(users).forEach((item1) => {
+          if (item1.roleId) {
+            if (
+              !roleOptions.some(
+                (e) => e.label === item1.roleId
+              )
+            ) {
+              if(distinctRoles.indexOf(item1.roleId) === -1) {
+              distinctRoles.push(item1.roleId);
+              roleOptions.push({ label: item1.roleId });
+              }
+            }
+          }
+        });
+        // console.log(roleOptions, "ha;halaa;");
+        return roleOptions;
+      };
+
     /**
      * 
      * @discription - This function is for close all dropdown
@@ -207,6 +230,9 @@ class CommentsPanel extends React.Component {
     */
     renderComment = (commentObject) => {
         let { filters } = this.state;
+        let {users} = this.props;
+        // console.log(users, "checking users ishant");
+        let roles = this.getRoleOption(users);
         let finalFilteredComments = this.filterComments(commentObject, filters)
         if (finalFilteredComments && finalFilteredComments.length > 0) {
             let comments = finalFilteredComments.map((comment, index) => {
@@ -221,7 +247,8 @@ class CommentsPanel extends React.Component {
                     toggleReply={this.props.toggleReply}
                     updateAssignee={this.updateAssignee}
                     toggleReplyForm={this.props.toggleReplyForm}
-                    users={this.props.users}
+                    users={users}
+                    roles={roles}
                     permissions={this.props.permissions}
                     getProjectUsers={this.props.getProjectUsers}
                 />)
