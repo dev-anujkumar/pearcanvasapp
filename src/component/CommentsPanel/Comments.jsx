@@ -226,19 +226,6 @@ class Comments extends React.Component {
         this.props.deleteComment(commentUrn, elementId)
     }
 
-    changeAssigneeListStatus = () => {
-        // const { showAssigneeList } = this.state;
-        
-        this.setState({ showAssigneeList: !this.state.showAssigneeList });
-        console.log(this.state.showAssigneeList, "assignee list ishant")
-    }
-
-    changeRoleListStatus = () => {
-        // const { showRoleList } = this.state;
-        this.setState({ showRoleList: !this.state.showRoleList});
-        console.log(this.state.showRoleList, "role list ishant")
-    }
-
     /**
     * 
     *@discription - This function is to return jsx of action menu
@@ -335,28 +322,13 @@ class Comments extends React.Component {
         const { commentUrn } = this.props.comment
         const { elementId } = this.props
         const { newRole } = this.state
-        // const newAssignee = "totally random"
         this.props.updateAssignee(commentUrn, newRole, elementId)
     }
 
-    options1 = Object.values(this.props.users).map(item => {
-        let fullName = ''
-        fullName = item.lastName + ',' + item.firstName
-        return { value: fullName, label: fullName }
-    });
-
-    update = (data) => {
-        console.log("Data is", data);
-        //TODO assignment to be done
-    }
+    
 
     render() {
         const { comment, elementId, updateReplyComment, toggleReplyForm, users, roles, permissions } = this.props
-        // console.log(users, "checking assignee ishant");
-        // console.log(roles, "checking roles ishant")
-        // console.log(comment, "ishant checking");
-        // console.log("ishant users", users);
-        // console.log("ishant permissions", permissions);
         let avatarObject = [];
         let avatar = '';
         avatarObject = comment?.commentCreator.split(',');
