@@ -478,9 +478,11 @@ menu li {
 #comments-panel .property-title {
   flex-flow: column;
   padding: 5px 0px;
-  width: 60px;
+  display: inline-block;
+  width: 85px;
   font-weight: bolder;
   color: #111;
+  /* margin-left: 5px; */
 }
 .assignee-content span {
   float: left;
@@ -489,6 +491,9 @@ menu li {
   font-weight: bold !important;
   font-size: 12px !important;
   color: #717171;
+  width: 100px;
+  display: inline-block;
+  margin-left: 5px;
 }
 .properties .changeAssignee {
   background-color: #dae5f2;
@@ -616,3 +621,4 @@ menu li {
 .Path.collap {
   transform: rotate(180deg);
  }
+

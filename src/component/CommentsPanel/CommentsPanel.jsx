@@ -51,6 +51,27 @@ class CommentsPanel extends React.Component {
 
     // ROLE = "Role";j
 
+    // getRoleOption = (users) => {
+    //     let roleOptions = [];
+    //     const distinctRoles = [];
+    //     Object.values(users).forEach((item1) => {
+    //       if (item1.roleId) {
+    //         if (
+    //           !roleOptions.some(
+    //             (e) => e.label === item1.roleId
+    //           )
+    //         ) {
+    //           if(distinctRoles.indexOf(item1.roleId) === -1) {
+    //           distinctRoles.push(item1.roleId);
+    //           roleOptions.push({ label: item1.roleId });
+    //           }
+    //         }
+    //       }
+    //     });
+    //     // console.log(roleOptions, "ha;halaa;");
+    //     return roleOptions;
+    //   };
+
     getRoleOption = (users) => {
         let roleOptions = [];
         const distinctRoles = [];
@@ -58,19 +79,19 @@ class CommentsPanel extends React.Component {
           if (item1.roleId) {
             if (
               !roleOptions.some(
-                (e) => e.label === item1.roleId
+                (e) => e.value === item1.roleId && e.label === item1.roleId
               )
             ) {
               if(distinctRoles.indexOf(item1.roleId) === -1) {
               distinctRoles.push(item1.roleId);
-              roleOptions.push({ label: item1.roleId });
+              roleOptions.push({ value: {roleId: item1.roleId, filterType: "Role", label: item1.roleId}, label: item1.roleId });
               }
             }
           }
         });
-        // console.log(roleOptions, "ha;halaa;");
         return roleOptions;
-      };
+    };
+
 
     /**
      * 

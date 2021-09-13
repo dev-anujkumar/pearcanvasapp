@@ -11,87 +11,43 @@ class UserAssignee extends React.Component {
     */
 
     assigneeForm = (props) => {
-        console.log("in assign");
+        // console.log("in assign");
         const { users, roles, show, mode} = props
         if (show) {
             return (
                 <div className="assignee-content">
-                    <span className="property-title">{props.name}</span>
-                    <span className="property-value color-gray-71 changeAssignee">getUserName</span>
-                    <CurrentProjectUsers mode={mode} users={users} currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
-                    <span className={`set-assignee-button ${(!props.isSelectAssignee ? 'disabled' : "")}`}
-                        onClick={() => {
-                            props.setMode(`{mode}`)
-                            props.updateAssignee('assignee')
-                        }}>
-                    </span>
-                    <span className="reject-assignee-button" onClick={props.removeAssigneePopup}></span>
+                        <span className="property-title">{props.name}</span>
+                        <span className="property-value color-gray-71 changeAssignee">getUserName</span>
+                        <CurrentProjectUsers mode={mode} users={users} currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
+                        <span className={`set-assignee-button ${(!props.isSelectAssignee ? 'disabled' : "")}`}
+                            onClick={() => {
+                                props.setMode(`{mode}`)
+                                props.updateAssignee('assignee')
+                            }}>
+                        </span>
+                        <span className="reject-assignee-button" onClick={props.removeAssigneePopup}></span>
+                    
                 </div>
             );
         } else {
             return (
                 <div>
                     <span className="property-title">{props.name}</span>
-                    <span className="property-value color-gray-71 defaultAssignee">{props.comment.commentAssignee}</span>
+                    <span className="property-value color-gray-71 defaultAssignee">{props.currentUser}</span>
                 </div>
             )
 
         }
     }
 
-
-    roleForm = (props) => {
-        console.log("in role");
-        const { users, roles, show, mode} = props
-        if (show) {
-            return (
-                <div className="assignee-content">
-                    <span className="property-title">{props.name}</span>
-                    <span className="property-value color-gray-71 changeAssignee">getUserName</span>
-                    <CurrentProjectUsers mode={mode} users={users} currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
-                    <span className={`set-assignee-button ${(!props.isSelectAssignee ? 'disabled' : "")}`}
-                        onClick={() => {
-                            props.setMode(`{mode}`)
-                            props.updateAssignee('assignee')
-                        }}>
-                    </span>
-                    <span className="reject-assignee-button" onClick={props.removeAssigneePopup}></span>
-                </div>
-            );
-        } else {
-            return (
-                <div>
-                    <span className="property-title">{props.name}</span>
-                    <span className="property-value color-gray-71 defaultAssignee">{props.comment.commentAssignee}</span>
-                </div>
-            )
-
-        }
-    }
 
     render() {
 
-        if(this.props.mode == "assign") {
-            console.log("assignee ishant");
-            return (
-                <>
-                    {this.assigneeForm(this.props)}
-                </>
-            )
-        } else {
-            console.log("role ishant");
-            return (
-                <>
-                    {this.roleForm(this.props)}
-                </>
-            )
-        }
-
-        // return (
-        //     <>
-        //         {this.assigneeForm(this.props)}
-        //     </>
-        // )
+        return (
+            <>
+                {this.assigneeForm(this.props)}
+            </>
+        )
 
     }
 
