@@ -1631,7 +1631,6 @@ class ElementContainer extends Component {
                         openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
                         handleAudioPopupLocation={this.handleAudioPopupLocation}
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
-                        hideElementSeperator={this.props.hideElementSeperator}
                     />;
                     labelText = 'PS'
                     break;
