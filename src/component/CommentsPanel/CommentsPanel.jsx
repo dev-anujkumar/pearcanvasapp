@@ -272,6 +272,7 @@ class CommentsPanel extends React.Component {
                     roles={roles}
                     permissions={this.props.permissions}
                     getProjectUsers={this.props.getProjectUsers}
+                    roleId={this.props.roleId}
                 />)
             })
             return comments;
@@ -455,7 +456,8 @@ const mapStateToProps = state => {
         toggleReplyForm: state.commentsPanelReducer.toggleReplyForm,
         users: state.commentsPanelReducer.users,
         slateTitle: state.commentsPanelReducer.slateTitle,
-        permissions : state.appStore.permissions
+        permissions : state.appStore.permissions,
+        roleId: state.appStore.roleId
     }
 };
 

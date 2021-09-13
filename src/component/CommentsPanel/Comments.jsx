@@ -12,7 +12,7 @@ class Comments extends React.Component {
         super(props)
         this.state = {
             newAssignee: this.props.comment.commentAssignee,
-            newRole: "admin",
+            newRole: this.props.roleId,
             showActionsMenu: false,
             mode: 'view',
             updatedFields: {
@@ -294,16 +294,10 @@ class Comments extends React.Component {
     */
     removeAssigneePopup =() =>{
         this.setMode('view')
-        this.setState({
-            newAssignee: this.props.comment.assignto
-        })
     }
 
     removeRolePopup =() =>{
-        this.setMode('role')
-        this.setState({
-            newRole: this.props.comment.assignto
-        })
+        this.setMode('view')
     }
 
     /**
@@ -324,8 +318,6 @@ class Comments extends React.Component {
         const { newRole } = this.state
         this.props.updateAssignee(commentUrn, newRole, elementId)
     }
-
-    
 
     render() {
         const { comment, elementId, updateReplyComment, toggleReplyForm, users, roles, permissions } = this.props
@@ -386,7 +378,6 @@ class Comments extends React.Component {
                                     updateAssignee={this.updateRole}
                                     removeAssigneePopup={this.removeRolePopup}
                                     users={roles}
-                                    roles={roles}
                                     show={this.state.mode == "role"}
                                 />
                             </div>
@@ -402,7 +393,6 @@ class Comments extends React.Component {
                                     updateAssignee={this.updateAssignee}
                                     removeAssigneePopup={this.removeAssigneePopup}
                                     users={users}
-                                    roles={roles}
                                     show={this.state.mode == "assign"}
                                 />
 

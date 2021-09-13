@@ -440,7 +440,7 @@ menu li {
   padding-left: 10px;
 }
 .set-assignee-button.disabled {
-  margin-left: 5px;
+  margin-left: 0.5px;
   background: url(../../images/CommentsPanel/done_disabled.png) no-repeat;
   width: 30px;
   height: 30px;
@@ -458,7 +458,7 @@ menu li {
   color: gray !important
 } */
 .set-assignee-button {
-  margin-left: 5px;
+  margin-left: 0.5px;
   background: url(../../images/CommentsPanel/done_active.png) no-repeat;
   width: 30px;
   height: 30px;
