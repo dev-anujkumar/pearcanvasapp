@@ -1975,3 +1975,53 @@ export const testDataFromNewAlfresco = {
     ],
     "epsUrl":"https://cite-media-stg.pearson.com/legacy_paths/9b39bfd7-b73c-4b0f-b2c5-60e77ed17ce7/Page097a.jpg"
  }
+
+ export const newFigureObj = {
+    "id": "urn:pearson:work:0d9d9296-bb38-438c-a4c5-329ce1882e3c",
+    "type": "figure",
+    "figuretype": "image",
+    "subtype": "imageTextWidth",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield": true,
+    "alignment": "text-width",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "Equation 12 title",
+        "textsemantics": [{
+            "charStart": 0,
+            "charEnd": 8,
+            "type": "label"
+        }, {
+            "charStart": 9,
+            "charEnd": 11,
+            "type": "number"
+        }]
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "ct"
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "cr"
+    },
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:2686bc0b-8ac6-4432-9b2b-8a4676284edc",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2686bc0b-8ac6-4432-9b2b-8a4676284edc/9780134874203_page134.png",
+        "height": "491",
+        "width": "522",
+        "type": "image"
+    },
+    "html": {
+        "title": "<p><label>Equation&nbsp;</label><number>12&nbsp;</number>title</p>",
+        "text": "",
+        "postertext": "",
+        "captions": "<p>ct</p>",
+        "credits": "<p>cr</p>",
+        "footnotes": {},
+        "glossaryentries": {}
+    },
+    "versionUrn": "urn:pearson:work:0d9d9296-bb38-438c-a4c5-329ce1882e3c",
+    "contentUrn": "urn:pearson:entity:d47ed8e5-bf68-49e9-acc5-6d7ac1450f1c"
+}
