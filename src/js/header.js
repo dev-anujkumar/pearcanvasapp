@@ -1,9 +1,8 @@
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 import {c4PublishObj} from '../js/c4_module.js';
-import { OPEN_AM } from './auth_module';
-// import { releaseSlateLockWithCallback } from '../component/CanvasWrapper/SlateLock_Actions'
-
+import { releaseSlateLockWithCallback } from '../component/CanvasWrapper/SlateLock_Actions'
+import { sendDataToIframe } from '../constants/utility';
 var current_slate_urn='';
 /**
 * @description - Set current slate URN.
@@ -35,10 +34,97 @@ export const publishContent = function (type) {
 
     }
 }
-
+let storageExist = ("sessionStorage" in window && window.sessionStorage);
 /**
 * @description - Logout user's session.
 */
 export const logout = function () {
-    OPEN_AM.logout();
+    console.log("Inside header.js - logout function")
+    let { projectUrn, slateManifestURN } = config_object
+    let urlToBeRedirected = getMyURL() || '';
+    if (projectUrn && slateManifestURN && slateManifestURN != "undefined") {
+        console.log("Inside if");
+        releaseSlateLockWithCallback(projectUrn, slateManifestURN, (response) => {
+            console.log("Inside releaseSlateLock callback")
+            logoutWithModernOpenAM()
+            redirectParent(urlToBeRedirected);
+        });
+    }
+    else {
+        console.log("Inside else");
+        logoutWithModernOpenAM()
+        redirectParent(urlToBeRedirected);
+    }
+}
+const getMyURL = () => {
+    const host = window?.parent?.location?.hostname || "";
+    const protocol = window?.parent?.location?.protocol || "";
+    const port = window?.parent?.location?.port || "";
+    const path = window?.parent?.location?.pathname || "";
+    const search = window?.parent?.location?.search || "";
+    return protocol + "//" + host + ":" + port + path + search;
+}
+const uuidv4 = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+const redirectParent = (urlToBeRedirected) => {
+    urlToBeRedirected = urlToBeRedirected + `&_Instance=${uuidv4()}`
+    let encodedURL = encodeURI(urlToBeRedirected);
+    sendDataToIframe({
+        'type': 'autoLogOut',
+        'message': { url: encodedURL }
+    });
+}
+const logoutWithModernOpenAM = () => {
+    console.log("Inside logoutWithModernOpenAM function");
+    deleteCookie('PearsonSSOSession', 'pearson.com');
+    removeAllLocal();
+};
+
+const removeAllLocal = () => {
+    if (storageExist) {
+        try {
+            console.log("removeAllLocal: REMOVING ALL");
+            removeLocal("validSession");
+            removeLocal("attributes");
+        } catch (err) {
+            // Do nothing
+            console.log("removeAllLocal: Do nothing ");
+        }
+    }
+}
+const removeLocal = (storageKey) => {
+    if (storageExist) {
+        try {
+            console.log("removeLocal: REMOVING " + storageKey);
+            sessionStorage.removeItem(storageKey);
+        } catch (err) {
+            // Do nothing
+            console.log("removeLocal: Do nothing ");
+        }
+    }
+}
+
+
+const deleteCookie = (name, domainName) => {
+    createCookie(name, "", -1, domainName);
+}
+
+const createCookie = (name, value, hours, domainName) => {
+    var expires;
+    var domain;
+    if (hours) {
+        var date = new Date();
+        date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+        domain = ";domain=" + domainName;
+    } else {
+        expires = "";
+        domain = ";domain=" + domainName;
+    }
+    document.cookie = escape(name) + "=" + escape(value) + expires + domain + "; path=/";
+    console.log("document.cookie: " + document.cookie);
 }

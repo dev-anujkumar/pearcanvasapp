@@ -42,7 +42,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     removeUnoClass: jest.fn(),
     createLabelNumberTitleModel: jest.fn(),
     getLabelNumberTitleHTML: jest.fn(() => ({'formattedLabel': ''})),
-    getTitleSubtitleModel: jest.fn(()=> '')
+    getTitleSubtitleModel: jest.fn(()=> ''),
+    isSubscriberRole:jest.fn(()=>{return true})
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
@@ -244,7 +245,8 @@ describe('Test for element container component', () => {
             "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
         ],
         showBlocker: jest.fn(),
-        tcmData:[{"id":"222","feedback":"asdsa"}]
+        tcmData:[{"id":"222","feedback":"asdsa"}],
+        projectSharingRole:"OWNER"
     };
 
     let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
@@ -2160,7 +2162,7 @@ describe('Test-Other Functions', () => {
         spysetBorderToggle.mockClear()
     })
     
-    it('Render and Update three column test click event', () => {
+    xit('Render and Update three column test click event', () => {
         let props = {
             onClickCapture: jest.fn(),
             element: wipData.threeMulticolumn

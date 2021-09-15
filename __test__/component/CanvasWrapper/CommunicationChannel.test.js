@@ -47,6 +47,15 @@ const initialState = {
     },
     alfrescoReducer: {
         editor:{}
+    },
+    projectInfo:{
+        projectSubscriptionDetails: {
+            projectSharingRole: "SUBSCRIBER",
+            isOwnersSubscribedSlateChecked: false,
+            projectSubscriptionDetails: {
+                isSubscribed: true
+            }
+        }
     }
 };
 

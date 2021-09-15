@@ -533,6 +533,8 @@ class Interactive extends React.Component {
         let avsStringData =imageData.properties["avs:jsonString"]&& JSON.parse(imageData.properties["avs:jsonString"]);
         let altText = avsStringData?.imageAltText ? avsStringData.imageAltText : "";
         let longDescription = avsStringData?.linkLongDesc ? avsStringData.linkLongDesc : "";
+        if (avsStringData?.width) width = avsStringData?.width;
+        if (avsStringData?.height) height = avsStringData?.height;
         //let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
         //checkFormat = checkFormat && checkFormat[0]
         if (smartLinkType) {

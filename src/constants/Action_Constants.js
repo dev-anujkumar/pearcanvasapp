@@ -176,6 +176,10 @@ export const LAUNCH_TCM_CANVAS_POPUP = 'LAUNCH_TCM_CANVAS_POPUP';
 export const UPDATE_MULTIPLE_COLUMN_INFO = 'UPDATE_MULTIPLE_COLUMN_INFO';
 /*---------------- spinner Info ------------------------*/
 export const SPINNER = 'SPINNER';
+/*----------------- Project Subscription ---------------*/
+export const SET_PROJECT_SHARING_ROLE = 'SET_PROJECT_SHARING_ROLE';
+export const SET_PROJECT_SUBSCRIPTION_DETAILS = 'SET_PROJECT_SUBSCRIPTION_DETAILS';
+export const OWNERS_SUBSCRIBED_SLATE= 'OWNERS_SUBSCRIBED_SLATE';
 
 /*---------------- figure image figuredata object details Info ------------------------*/
 export const UPDATE_OLD_FIGUREIMAGE_INFO = 'UPDATE_OLD_FIGUREIMAGE_INFO';

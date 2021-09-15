@@ -1,11 +1,17 @@
-import { projectInfo }  from "../../src/appstore/projectInfoReducer";
-import { UPDATE_LOB_PERMISSIONS } from "../../src/constants/Action_Constants";
+import { projectInfo } from "../../src/appstore/projectInfoReducer";
+import { UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE } from "../../src/constants/Action_Constants";
 
 const INITIAL_STATE = {
     usageType: [],
     discussionItems: [],
     showPlayscript: true,
-    showDiscussion: true
+    showDiscussion: true,
+    projectSharingRole: '',
+    projectSubscriptionDetails: {
+        isSubscribed: false,
+        owner: {}
+    },
+    isOwnersSubscribedSlateChecked: true,
 }
 
 describe("Testing LOB permissions", () => {
@@ -14,63 +20,60 @@ describe("Testing LOB permissions", () => {
         expect(projectInfo(undefined, {})).toEqual(INITIAL_STATE);
     });
 
-    it('set showPlayscript true', () => {
+    it('UPDATE_LOB_PERMISSIONS', () => {
+        let output = {
+            ...INITIAL_STATE,
+            showPlayscript: true,
+            showDiscussion: true
+        }
         expect(projectInfo(INITIAL_STATE, {
             type: UPDATE_LOB_PERMISSIONS,
             payload: {
                 playscript: true,
                 discussion: true
             }
-        })).toEqual({
-            usageType: [],
-            discussionItems: [],
-            showPlayscript: true,
-            showDiscussion: true
-        })
-    })
+        })).toEqual(output)
+    });
 
-    it('set showPlayscript false', () => {
+    it('SET_PROJECT_SHARING_ROLE', () => {
+        let output = {
+            ...INITIAL_STATE,
+            projectSharingRole: 'OWNER'
+        }
+        let owner = "OWNER";
         expect(projectInfo(INITIAL_STATE, {
-            type: UPDATE_LOB_PERMISSIONS,
-            payload: {
-                playscript: false,
-                discussion: true
+            type: SET_PROJECT_SHARING_ROLE,
+            payload: owner
+        })).toEqual(output)
+    });
+    it('SET_PROJECT_SUBSCRIPTION_DETAILS', () => {
+        let projectSubscriptionDetails = {
+            isSubscribed: true,
+            owner: {}
+        }
+        let output = {
+            ...INITIAL_STATE,
+            projectSubscriptionDetails: {
+                isSubscribed: true,
+                owner: {}
             }
-        })).toEqual({
-            usageType: [],
-            discussionItems: [],
-            showPlayscript: false,
-            showDiscussion: true
-        })
-    })
+        }
+        expect(projectInfo(INITIAL_STATE, {
+            type: SET_PROJECT_SUBSCRIPTION_DETAILS,
+            payload: projectSubscriptionDetails
+        })).toEqual(output)
+    });
+    it('OWNERS_SUBSCRIBED_SLATE', () => {
+        let isOwnersSubscribedSlateChecked = true
+        let output = {
+            ...INITIAL_STATE,
+            isOwnersSubscribedSlateChecked: true
+        }
+        expect(projectInfo(INITIAL_STATE, {
+            type: OWNERS_SUBSCRIBED_SLATE,
+            payload:
+                isOwnersSubscribedSlateChecked
 
-    it('set showDiscussion true', () => {
-        expect(projectInfo(INITIAL_STATE, {
-            type: UPDATE_LOB_PERMISSIONS,
-            payload: {
-                playscript: false,
-                discussion: true
-            }
-        })).toEqual({
-            usageType: [],
-            discussionItems: [],
-            showPlayscript: false,
-            showDiscussion: true
-        })
-    })
-
-    it('set showDiscussion false', () => {
-        expect(projectInfo(INITIAL_STATE, {
-            type: UPDATE_LOB_PERMISSIONS,
-            payload: {
-                playscript: false,
-                discussion: false
-            }
-        })).toEqual({
-            usageType: [],
-            discussionItems: [],
-            showPlayscript: false,
-            showDiscussion: false
-        })
-    })
+        })).toEqual(output)
+    });
 })
