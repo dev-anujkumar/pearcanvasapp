@@ -190,7 +190,7 @@ export default {
         dataType: 'audio',
         captionDivClass: 'figcaptionAudio',
         figCaptionClass: 'figureCaption',
-        figCreditClass: 'paragraphAudioCredit figureCredit',
+        figCreditClass: 'paragraphAudioCredit figureCredit'
     },
     'video': {
         divClass: 'divVideo',
@@ -201,6 +201,6 @@ export default {
         dataType: 'video',
         captionDivClass: 'figcaptionVideo',
         figCaptionClass: 'figureCaption',
-        figCreditClass: 'paragraphVideoCredit figureCredit',
+        figCreditClass: 'paragraphVideoCredit figureCredit'
     }
 };

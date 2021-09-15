@@ -497,7 +497,6 @@ class ElementAudioVideo extends Component {
                 // </div>
                 break;
         }
-        console.log("this state", this.state.imgSrc);
         return <FigureUserInterface assetSrc={this.state.imgSrc} handleC2MediaClick={this.handleC2MediaClick} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
     }
     render() {

@@ -6,6 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import './../../styles/ElementInteractive/ElementInteractive.css';
 import TinyMceEditor from "../tinyMceEditor";
+import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 import { showTocBlocker,hideTocBlocker, disableHeader, showBlocker, hideToc } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { utils } from '../../js/utils';
@@ -272,7 +273,12 @@ class Interactive extends React.Component {
         hyperlinkClass = interactiveData['hyperlinkClass'] ? interactiveData['hyperlinkClass'] : "";
 
         let figureHtmlData = getLabelNumberTitleHTML(element);
-        if(context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
+        let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table']
+        console.log("interactive fileeeeeeeeeeee", context, element);
+        if (smartlinkContexts.includes(context)) {
+            return <FigureUserInterface permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+        }
+        else if (context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
                     <header>

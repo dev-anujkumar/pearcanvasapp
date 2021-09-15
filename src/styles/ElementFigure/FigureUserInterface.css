@@ -826,3 +826,26 @@ th ol li.listItemNumeroUnoNone:before {
 .label-color-change {
     color: #005a70 !important;
 }
+
+.Rectangle-button {
+    width: 400px;
+    height: 38px;
+    margin: 24px 256px 16px 0;
+    padding: 8px 258px 10px 16px;
+    border-radius: 3px;
+    background-color: #005a70;
+    cursor: pointer;
+}
+
+.Enter-Button-Label {
+    width: 126px;
+    height: 20px;
+    font-family: Open Sans,sans-serif!important;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    color: #fff;
+}
