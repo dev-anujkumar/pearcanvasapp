@@ -102,18 +102,25 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
   */
 export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
+    const isOwnerKey = localStorage.getItem('hasOwnerEdit');
     let data = {
        projectUrn,
        slateId
     }
     return axios.post(url, data)
        .then((res) => {
+            if (isOwnerKey) {
+                localStorage.removeItem('hasOwnerEdit');
+            }
             dispatch({
                 type : SET_LOCK_FLAG,
                 payload : false
             })
         })
         .catch((err) => {
+            if (isOwnerKey) {
+                localStorage.removeItem('hasOwnerEdit');
+            }
             console.log("API error from release slate>>>>",err)
         })
 }
