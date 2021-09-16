@@ -162,10 +162,10 @@ figure,.element-container{
     display:block !important;
 }
 
-.pearson-component.image.figureData img{
+/* .pearson-component.image.figureData img{
     width: 100%;
     text-align: center;
-}
+} */
  
 .divCodeSnippetFigure.blockCodeFigure .figureCodeSnippet .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing .cypress-editable{
     line-height: 25px;
@@ -543,13 +543,18 @@ th ol li.listItemNumeroUnoNone:before {
     overflow: auto;
 }
 
-.figure-element-container .figure-wrapper {
-    position: absolute;
+.figure-wrapper{
+    height: 185px;
+    width: 390px;
+}
+.figure-element-container{
+    position: relative;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 100%;
+    height: 188px;
+    margin: 16px 0px;
     width: 100%;
     transition: .5s ease;
     background-color: #000;
@@ -557,11 +562,13 @@ th ol li.listItemNumeroUnoNone:before {
     color: #fff;
 }
 .figure-element-container .figure-wrapper  .image-figure{
-    padding-top:3px;
+    /* padding-top:3px; */
+    /* margin-top: 8px; */
     display: flex;
 }
 .figure-element-container .figure-wrapper  .image-figure-path{
-    padding-top:2px;
+    /* padding-top:2px; */
+    /* margin-top: 8px; */
     display: flex;
 }
 .figure-element-container .figure-wrapper  .image-info{
@@ -581,7 +588,9 @@ th ol li.listItemNumeroUnoNone:before {
 .figure-glossary-icon{
     position: relative;
 }
-
+.image-text{
+    color: #fff;
+}
 .figure-glossary-icon::after{
     content: "";
     position: absolute;
@@ -671,8 +680,8 @@ th ol li.listItemNumeroUnoNone:before {
     background-color: #def8ff;
 }
 .updatefigurebutton{
-    top:16px;
-    right: 62px;
+    top: 80px;
+    left: 60px;
     position: absolute;
     height: 36px;
     padding: 8px 20px;
@@ -686,13 +695,13 @@ th ol li.listItemNumeroUnoNone:before {
     cursor: pointer;
 }
 .deletefigurebutton{
-    top:16px;
+    top:80px;
     position: absolute;
     background-color: #fff;
     text-align: center;
     justify-content: center;
     cursor: pointer;
-    right: 16px;
+    left: 202px;
     padding: 5px 6px 3px 6px;
     border-radius: 2px;
     height: 36px;
@@ -702,7 +711,9 @@ th ol li.listItemNumeroUnoNone:before {
     margin: 25px 0 25px 0;
     min-height: 90px;
 }
+
 .figure-image-info{
+    height: 88px;
     left:16px;
     position: absolute;
     bottom: 16px;
@@ -758,6 +769,70 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .figure-label-field{
   margin-right: 24px;
+}
+.videoIconWrapper{
+    margin-top: 16px;
+    margin-left: 16px;
+    display: flex;
+    height: 40px;
+    width: 100%;
+}
+
+.videoIcon{
+    position: absolute;
+    left: 16px;
+    top: 16px;
+}
+
+.videoReel{
+    position: absolute;
+    width: 246px;
+    height: 164px;
+    right: 12px;
+    top:12px;
+}
+
+.videoTitle{
+    width: 322px;
+    height: 22px;
+    /* margin: 4px 16px 38px 8px; */
+    font-family: OpenSans;
+    margin-left: 33px;
+    font-size: 16px;
+    font-weight: 300;
+    /* font-stretch: normal; */
+    font-style: italic;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #fff;
+}
+.addVideobutton:hover {
+    background-color: #def8ff;
+}
+.addVideobutton{
+    top: 76px;
+    right: 75px;
+    position: absolute;
+    height: 36px;
+    padding: 8px 20px;
+    border-radius: 2px;
+    background-color: #fff;
+    text-align: center;
+    justify-content: center;
+    color: #005a70;
+    font-weight: 600;
+    font-size: 14px;
+    z-index:1;
+    cursor: pointer;
+}
+
+.line{
+    display: flex;
+    width: 366px;
+    height: 1px;
+    margin-top: 24px;
+    opacity: 0.8;
+    border: solid 0.2px #fff;
 }
 
 /* --------------------------------------------------------------------------- */

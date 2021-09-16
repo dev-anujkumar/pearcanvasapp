@@ -77,6 +77,39 @@ export const audioIcon = (function () {
     )
 })();
 
+export const videoIcon = (function () {
+    return (
+        <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" fill-rule="evenodd">
+        <rect fill="#D8D8D8" width="36" height="36" rx="3"/>
+        <path d="M7.902 7.024h21.074v21.074H7.902z"/>
+        <path d="M22.83 16.244V13.17a.88.88 0 0 0-.879-.878H11.415a.88.88 0 0 0-.878.878v8.78a.88.88 0 0 0 .878.878H21.95a.88.88 0 0 0 .878-.878v-3.073l3.512 3.512v-9.658l-3.512 3.512z" fill="#323232" fill-rule="nonzero"/>
+    </g>
+</svg>
+
+    )
+})();
+
+export const figureDeleteIcon = (function () {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+                <g>
+                    <g>
+                        <g>
+                            <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1006.000000, -527.000000) translate(1000.000000, 521.000000) translate(6.000000, 6.000000)" />
+                            <path fill="#AA0100" d="M6.889 18.222c0 .982.796 1.778 1.778 1.778h7.11c.983 0 1.779-.796 1.779-1.778V7.556H6.889v10.666m2.187-6.329l1.253-1.253 1.893 1.884 1.885-1.884 1.253 1.253-1.884 1.885 1.884 1.884-1.253 1.254-1.885-1.885-1.884 1.885-1.254-1.254 1.885-1.884-1.893-1.885m6.257-7.004L14.444 4H10l-.889.889H6v1.778h12.444V4.889h-3.11z" transform="translate(-1006.000000, -527.000000) translate(1000.000000, 521.000000) translate(6.000000, 6.000000)" />
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </svg>
+
+    )
+})();
+
+
+
 export const containerIcon = (function () {
     return (
         <svg id="containerIcon" viewBox="1 0.5 12 13" width="22" height="15" version="1.1" xmlns="http://www.w3.org/2000/svg">

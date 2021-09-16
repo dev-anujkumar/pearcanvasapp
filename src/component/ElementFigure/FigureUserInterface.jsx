@@ -12,7 +12,8 @@ import './../../styles/ElementFigure/FigureUserInterface.css';
 import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
-import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
+import videoReel from '../../images/ElementButtons/videoReel.png';
+import { figureDeleteIcon,videoIcon} from '../../images/ElementButtons/ElementButtons.jsx';
 import { labelHtmlData } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
 import interactiveTypeData from '../ElementInteractive/interactiveTypes.js';
@@ -326,7 +327,7 @@ class FigureUserInterface extends Component {
         return lowercaseOptions;
     }
 
-    renderAssetSection = (element, assetId, assetIdText, assetPath, assetPathText, updateButtonText) => {
+    renderAssetSection = (element, assetId, assetIdText, assetPath, assetPathText, updateButtonText,addVideoText) => {
         let assetJsx;
         switch (element.figuretype) {
             case AUDIO:
@@ -340,21 +341,31 @@ class FigureUserInterface extends Component {
             case VIDEO:
                 assetJsx =
                     assetId && element.figuredata.posterimage.path ?
+                    <div>
                         <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.props.handleC2MediaClick}
                             poster={element.figuredata.posterimage.path}>
                             <source src="" />
                             <track src="" kind="subtitles" srcLang="en" label="English" />
                         </video>
+                        <div className='updatefigurebutton' onClick={this.addFigureResource}>{addVideoText}</div>
+                        <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                        </div>
                         :
                         <div>
                             <div className="figure-wrapper">
-                                <div className="figure-image-info">
-                                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
-                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
-                                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? this.state.alfrescoSite : ""} </span> </div>
+                                <div className='videoIconWrapper'>
+                                <span className='videoIcon' >{videoIcon}</span>
+                                <span className='videoTitle'>Video Title</span>
                                 </div>
-                                <div className='updatefigurebutton' onClick={this.addFigureResource}>{updateButtonText}</div>
-                                <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                                <div className='addVideobutton'>{addVideoText}</div>
+                                <div className='videoReel'><img width="246px" height="164px" src={videoReel} />
+                                </div>
+                                <span className='line'/>
+                                <div className="figure-image-info">
+                                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a1435c08c1435c08c1435c08c1435c08c"} </span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701aurn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a"}</span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? this.state.alfrescoSite : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a"} </span> </div>
+                                </div>
                             </div>
                         </div>
                 break;
@@ -436,7 +447,7 @@ class FigureUserInterface extends Component {
                 break;
         }
         
-        let assetId, addButtonText, assetIdText, assetPathText, updateButtonText, assetPath;
+        let assetId, addButtonText, assetIdText, assetPathText, updateButtonText, assetPath,addVideoText;
         switch (element.figuretype) {
             case AUDIO:
                 assetId = element.figuredata.audioid ? element.figuredata.audioid : '';
@@ -444,6 +455,7 @@ class FigureUserInterface extends Component {
                 assetIdText = "Audio ID:";
                 assetPathText = "Audio Path:";
                 updateButtonText = "Update Audio";
+                addVideoText='Add a Video'
                 assetPath = element.figuredata.audio?.path ? element.figuredata.audio.path : element.figuredata.posterimage.path;
                 break;
             case VIDEO:
@@ -452,6 +464,7 @@ class FigureUserInterface extends Component {
                 assetIdText = "Video ID:";
                 assetPathText = "Video Path:";
                 updateButtonText = "Update Video";
+                addVideoText="Add a Video";
                 assetPath = element.figuredata.videos[0]?.path ? element.figuredata.videos[0]?.path : element.figuredata.posterimage.path;
                 break;
             case INTERACTIVE:
@@ -535,7 +548,7 @@ class FigureUserInterface extends Component {
                                                 draggable="false" />
                                             : <div className='figurebutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
                                     } */}
-                                    {this.renderAssetSection(element, assetId, assetIdText, assetPath, assetPathText, updateButtonText)}
+                                    {this.renderAssetSection(element, assetId, assetIdText, assetPath, assetPathText, updateButtonText, addVideoText)}
                                 </div>
                                 {/* <div>
                                     {
