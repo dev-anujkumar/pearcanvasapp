@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import tinymce from 'tinymce/tinymce';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
 // IMPORT - Assets //
@@ -60,7 +61,8 @@ class FigureUserInterface extends Component {
     componentDidUpdate(prevProps) {
         const { alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup, elementId } = this.props;
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
-            this.dataFromNewAlfresco(alfrescoAssetData)
+            // this.dataFromNewAlfresco(alfrescoAssetData)
+            this.props.dataFromAlfresco(alfrescoAssetData);
         }
     }
 
@@ -107,154 +109,6 @@ class FigureUserInterface extends Component {
         })
     }
 
-
-    /**
-* @description data after selecting an asset from alfresco c2 module
-* @param {*} data selected asset data
-*/
-
-    dataFromNewAlfresco = (data) => {
-        hideTocBlocker();
-        disableHeader(false);
-        let imageData = data;
-        let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
-        let figureType = data?.content?.mimeType?.split('/')[0]
-        //commented lines will be used to update the element data
-        let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
-        let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
-
-        let uniqID = imageData.id ? imageData.id : "";
-        let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
-        let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
-        if (epsURL !== "") {
-            this.setState({ imgSrc: epsURL })
-        } else {
-            this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
-        }
-
-        let scaleMarkerData = {};
-        Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
-            (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.id || null } : null,
-            (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.name || "The alttext for the scale image" } : null,
-            (data && data.scalemarker && data.scalemarker.epsUrl) ? { "path": data.scalemarker.epsUrl || null } : null,
-            (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
-            (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ? { "width": data.properties["exif:pixelXDimension"] || null } : null,
-        );
-        // store current element figuredata in store
-        this.props.updateFigureImageDataForCompare(this.props.element.figuredata);
-        let setFigureData = {
-            path: epsURL,
-            height: height,
-            width: width,
-            schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-            imageid: `urn:pearson:alfresco:${uniqID}`,
-            alttext: altText,
-            longdescription: longDesc,
-            type: figureType,
-        }
-
-        Object.assign(setFigureData, (Object.keys(scaleMarkerData).length > 0) ? { scaleimage: scaleMarkerData } : null);
-
-        this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
-            this.props.handleFocus("updateFromC2");
-            this.props.handleBlur();
-        })
-        let alfrescoData = config?.alfrescoMetaData?.alfresco;
-        let alfrescoSiteLocation = this.state.alfrescoSiteData;
-        if (this.props.isCiteChanged) {
-            let changeSiteAlfrescoData = {
-                currentAsset: {},
-                nodeRef: this.props.changedSiteData.guid,
-                repositoryFolder: this.props.changedSiteData.title,
-                siteId: this.props.changedSiteData.id,
-                visibility: this.props.changedSiteData.visibility
-            }
-            handleAlfrescoSiteUrl(this.props.elementId, changeSiteAlfrescoData)
-            this.setState({
-                alfrescoSite: changeSiteAlfrescoData?.repositoryFolder,
-                alfrescoSiteData: changeSiteAlfrescoData
-            })
-        } else {
-            if ((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')) {
-                handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
-                this.updateAlfrescoSiteUrl()
-            }
-        }
-        // to blank the elementId and asset data after update
-        let payloadObj = {
-            asset: {},
-            id: ''
-        }
-        this.props.saveSelectedAssetData(payloadObj)
-    }
-    /**
-     * @description function will be called on image src add and fetch resources from Alfresco
-     */
-    handleC2MediaClick = async (e) => {
-        this.props.handleFocus();
-        if (hasReviewerRole()) {
-            return true
-        }
-        if (e.target.tagName.toLowerCase() === "p") {
-            e.stopPropagation();
-            return;
-        }
-
-        const figureDataObj = this.props.element.figuredata;
-        const currentAsset = figureDataObj ? {
-            id: figureDataObj.imageid.split(':').pop(), // get last
-            type: figureDataObj.type,
-        } : null;
-
-        let that = this;
-        let alfrescoPath = config.alfrescoMetaData;
-        if (alfrescoPath && this.state.projectMetadata) {
-            alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
-        }
-        var data_1 = false;
-        if (alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0) {
-            if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef) {         //if alfresco location is available
-                if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                    let alfrescoLocationData = this.state.alfrescoSiteData
-                    let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
-                    alfrescoSiteName = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
-                    let nodeRefs = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
-                    const locationSiteDataNodeRef = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData?.guid
-                    nodeRefs = locationSiteDataNodeRef ? locationSiteDataNodeRef : nodeRefs;
-                    const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
-                    let messageObj = {
-                        citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoSiteName,
-                        citeNodeRef: nodeRefs,
-                        elementId: this.props.elementId,
-                        currentAsset
-                    }
-                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
-                }
-                else {
-                    this.props.accessDenied(true)
-                }
-
-            }
-        } else {
-            if (this.props.permissions.includes('alfresco_crud_access')) {
-                let payloadObj = await handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData);
-                this.props.alfrescoPopup(payloadObj);
-            } else {
-                this.props.accessDenied(true)
-            }
-        }
-    }
-
-    /**
- * @description function will be called on image src add and fetch resources
- */
-    addFigureResource = (e) => {
-        if (e) {
-            e.stopPropagation();
-        }
-        this.handleC2MediaClick(e);
-    }
-
     changeFigureLabel = (figureLabelValue, data) => {
         if (!(figureLabelValue === data)) {
             this.setState({ figureLabelValue: data });
@@ -293,6 +147,9 @@ class FigureUserInterface extends Component {
             labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
         this.props.updateFigureImageDataForCompare(this.props.element.figuredata);
+        if (!labelElement?.classList.contains('actionPU')) {
+            this.hideHyperlinkEditable();
+        }
     }
 
     onFigureElementFieldBlur = (id) => {
@@ -313,6 +170,9 @@ class FigureUserInterface extends Component {
                 this.setState({ figureLabelValue: figureLabelValue });
             }
         }
+        if (labelElement?.classList.contains('actionPU')) {
+            this.hideHyperlinkEditable();
+        }
     }
 
     convertOptionsToLowercase = (Options) => {
@@ -327,7 +187,7 @@ class FigureUserInterface extends Component {
         return lowercaseOptions;
     }
 
-    renderAssetSection = (element, assetId, assetIdText, assetPath, assetPathText, updateButtonText,addVideoText) => {
+    renderAssetSection = (element, assetId, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText) => {
         let assetJsx;
         switch (element.figuretype) {
             case AUDIO:
@@ -347,7 +207,7 @@ class FigureUserInterface extends Component {
                             <source src="" />
                             <track src="" kind="subtitles" srcLang="en" label="English" />
                         </video>
-                        <div className='updatefigurebutton' onClick={this.addFigureResource}>{addVideoText}</div>
+                        <div className='updatefigurebutton' onClick={this.addFigureResource}>{addButtonText}</div>
                         <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                         </div>
                         :
@@ -357,7 +217,7 @@ class FigureUserInterface extends Component {
                                 <span className='videoIcon' >{videoIcon}</span>
                                 <span className='videoTitle'>Video Title</span>
                                 </div>
-                                <div className='addVideobutton'>{addVideoText}</div>
+                                <div className='addVideobutton'>{addButtonText}</div>
                                 <div className='videoReel'><img width="246px" height="164px" src={videoReel} />
                                 </div>
                                 <span className='line'/>
@@ -373,33 +233,31 @@ class FigureUserInterface extends Component {
                 assetJsx =
                     assetId ?
                         <div>
-                            <div className="figure-wrapper">
-                                <div className="figure-image-info">
-                                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
-                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
-                                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? this.state.alfrescoSite : ""} </span> </div>
-                                </div>
-                                <div className='updatefigurebutton' onClick={this.addFigureResource}>{updateButtonText}</div>
-                                <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
-                            </div>
+                            <div className='figurebutton' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
+                            <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                         </div>
                         :
-                        <div>OK</div>
+                        <div className='figurebutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
                 break;
         }
         return assetJsx;
     }
 
+    hideHyperlinkEditable = () => {
+        let buttonElementDiv = document.getElementsByClassName(`Rectangle-button`);
+        let hyperlinkTextDiv = document.getElementsByClassName(`actionPUdiv`);
+        buttonElementDiv[0]?.classList?.remove('hide-field');
+        hyperlinkTextDiv[0]?.classList?.add('hide-field');
+    }
+
     showHyperlinkEditable = () => {
-        let hyperLinkInput = document.getElementsByClassName(`actionPU`);
-        let spanElement = document.getElementsByClassName(`Enter-Button-Label`);
-        console.log("jjjjjjjjjjjjjjjjjjjjj", hyperLinkInput, spanElement);
-        spanElement?.classList?.add('hide-field');
-        hyperLinkInput?.classList?.remove('hide-field');
+        let buttonElementDiv = document.getElementsByClassName(`Rectangle-button`);
+        let hyperlinkTextDiv = document.getElementsByClassName(`actionPUdiv`);
+        buttonElementDiv[0]?.classList?.add('hide-field');
+        hyperlinkTextDiv[0]?.classList?.remove('hide-field');
     }
 
     render() {
-        console.log("yha aayaaaaaaaaaaaa");
         const { element, permissions, openGlossaryFootnotePopUp, handleFocus, handleBlur, index, slateLockInfo, glossaryFootnoteValue, glossaaryFootnotePopup, elementId } = this.props;
         let figureHtmlData = getLabelNumberTitleHTML(element);
         let { figureLabelValue } = this.state;
@@ -447,7 +305,7 @@ class FigureUserInterface extends Component {
                 break;
         }
         
-        let assetId, addButtonText, assetIdText, assetPathText, updateButtonText, assetPath,addVideoText;
+        let assetId, addButtonText, assetIdText, assetPathText, updateButtonText, assetPath;
         switch (element.figuretype) {
             case AUDIO:
                 assetId = element.figuredata.audioid ? element.figuredata.audioid : '';
@@ -455,7 +313,6 @@ class FigureUserInterface extends Component {
                 assetIdText = "Audio ID:";
                 assetPathText = "Audio Path:";
                 updateButtonText = "Update Audio";
-                addVideoText='Add a Video'
                 assetPath = element.figuredata.audio?.path ? element.figuredata.audio.path : element.figuredata.posterimage.path;
                 break;
             case VIDEO:
@@ -464,7 +321,6 @@ class FigureUserInterface extends Component {
                 assetIdText = "Video ID:";
                 assetPathText = "Video Path:";
                 updateButtonText = "Update Video";
-                addVideoText="Add a Video";
                 assetPath = element.figuredata.videos[0]?.path ? element.figuredata.videos[0]?.path : element.figuredata.posterimage.path;
                 break;
             case INTERACTIVE:
@@ -529,9 +385,13 @@ class FigureUserInterface extends Component {
 
                                 {
                                     element.figuretype === INTERACTIVE && imageDimension === '' ?
-                                        <div className='Rectangle-button' onClick={this.showHyperlinkEditable} > 
-                                        <span class="Enter-Button-Label">{element.html.postertext && element.html.postertext !== '<p></p>' ? element.html.postertext : "Enter Button Label"}</span>
-                                            <TinyMceEditor permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter Button Label" className={"actionPU hide-field"} tagName={'p'} model={element.html.postertext ? element.html.postertext : ""} handleEditorFocus={handleFocus} handleBlur={handleBlur} slateLockInfo={slateLockInfo} elementId={elementId} element={element} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                        <div>
+                                            <div className='Rectangle-button' onClick={this.showHyperlinkEditable} >
+                                                <span className="Enter-Button-Label">{element.html.postertext && element.html.postertext !== '<p></p>' ? checkHTMLdataInsideString(element.html.postertext).replace(/&nbsp;/g, "") : "Enter Button Label"}</span>
+                                            </div>
+                                            <div className="hide-field actionPUdiv">
+                                                <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter Button Label" className={"actionPU hyperLinkText"} tagName={'p'} model={element.html.postertext ? element.html.postertext : ""} handleEditorFocus={handleFocus} handleBlur={handleBlur} slateLockInfo={slateLockInfo} elementId={elementId} element={element} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                            </div>
                                         </div>
                                         :
                                         null
@@ -548,7 +408,7 @@ class FigureUserInterface extends Component {
                                                 draggable="false" />
                                             : <div className='figurebutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
                                     } */}
-                                    {this.renderAssetSection(element, assetId, assetIdText, assetPath, assetPathText, updateButtonText, addVideoText)}
+                                    {this.renderAssetSection(element, assetId, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText)}
                                 </div>
                                 {/* <div>
                                     {
@@ -600,10 +460,10 @@ const mapActionToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
-        alfrescoElementId: state.alfrescoReducer.elementId,
+        // alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
+        // alfrescoElementId: state.alfrescoReducer.elementId,
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
-        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        // launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isCiteChanged: state.alfrescoReducer.isCiteChanged,
         changedSiteData: state.alfrescoReducer.changedSiteData,
         figureDropdownData: state.appStore.figureDropdownData

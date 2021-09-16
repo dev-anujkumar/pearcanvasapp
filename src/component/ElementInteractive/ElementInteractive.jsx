@@ -276,7 +276,7 @@ class Interactive extends React.Component {
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table']
         console.log("interactive fileeeeeeeeeeee", context, element);
         if (smartlinkContexts.includes(context)) {
-            return <FigureUserInterface permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+            return <FigureUserInterface dataFromAlfresco={(alfrescoAssetData) => this.dataFromAlfresco(alfrescoAssetData)} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
         }
         else if (context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
             jsx = <div className={divImage} resource="">
@@ -365,6 +365,7 @@ class Interactive extends React.Component {
      * @param {event} value
      */
     togglePopup = (e,value)=>{
+        console.log("yha aata hai ki nhi", value);
         if(hasReviewerRole()){
             return true;
         }
