@@ -829,17 +829,17 @@ th ol li.listItemNumeroUnoNone:before {
 
 .Rectangle-button {
     width: 400px;
-    height: 38px;
+    height: 50px;
     margin: 24px 256px 16px 0;
-    padding: 8px 258px 10px 16px;
+    padding: 14px 258px 10px 16px;
     border-radius: 3px;
     background-color: #005a70;
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 .Enter-Button-Label {
-    width: 126px;
-    height: 20px;
+    width: 400px;
+    height: 50px;
     font-family: Open Sans,sans-serif!important;
     font-size: 14px;
     font-weight: normal;
@@ -848,4 +848,19 @@ th ol li.listItemNumeroUnoNone:before {
     line-height: 1.43;
     letter-spacing: normal;
     color: #fff;
+}
+
+.actionPUdiv {
+    width: 400px;
+    height: 50px;
+    margin: 24px 256px 16px 0;
+    padding: 6px;
+    border-radius: 2px;
+    background-color: #005a70;
+}
+
+.hyperLinkText {
+    margin: -1px 84px 0px 0px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    background-color: #fff;
 }
