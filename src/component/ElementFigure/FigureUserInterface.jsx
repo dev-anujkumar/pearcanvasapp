@@ -14,7 +14,9 @@ import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
 import videoReel from '../../images/ElementButtons/videoReel.png';
-import { figureDeleteIcon,videoIcon} from '../../images/ElementButtons/ElementButtons.jsx';
+import updateVideoReel from '../../images/ElementButtons/updateVideoReel.png'
+import {videoIcon} from '../../images/ElementButtons/ElementButtons.jsx';
+import  figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import { labelHtmlData } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
 import interactiveTypeData from '../ElementInteractive/interactiveTypes.js';
@@ -201,14 +203,25 @@ class FigureUserInterface extends Component {
             case VIDEO:
                 assetJsx =
                     assetId && element.figuredata.posterimage.path ?
-                    <div>
-                        <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.props.handleC2MediaClick}
+                    <div className='figure-wrapper'>
+                        <div className='videoIconWrapper'>
+                                <span className='videoIcon' >{videoIcon}</span>
+                                <span className='videoTitle'>{}</span>
+                        </div>
+                        {/* <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.props.handleC2MediaClick}
                             poster={element.figuredata.posterimage.path}>
                             <source src="" />
                             <track src="" kind="subtitles" srcLang="en" label="English" />
-                        </video>
-                        <div className='updatefigurebutton' onClick={this.addFigureResource}>{addButtonText}</div>
+                        </video> */}
+                        <div className='videoReel'><img width="246px" height="164px" src={updateVideoReel} /></div>
+                        <div className='updatefigurebutton' onClick={this.addFigureResource}>{updateButtonText}</div>
                         <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                        <span className='line' />
+                        <div className="figure-image-info">
+                            <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a1435c08c1435c08c1435c08c1435c08c"} </span> </div>
+                            <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701aurn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a"}</span> </div>
+                            <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? this.state.alfrescoSite : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a"} </span> </div>
+                        </div>
                         </div>
                         :
                         <div>

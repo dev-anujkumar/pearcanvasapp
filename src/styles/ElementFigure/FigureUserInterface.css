@@ -544,7 +544,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 .figure-wrapper{
-    height: 185px;
+    height: 227px;
     width: 390px;
 }
 .figure-element-container{
@@ -553,7 +553,8 @@ th ol li.listItemNumeroUnoNone:before {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 188px;
+    min-height: 188px;
+    max-height: 242px;
     margin: 16px 0px;
     width: 100%;
     transition: .5s ease;
@@ -573,7 +574,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .figure-element-container .figure-wrapper  .image-info{
     overflow-wrap: anywhere;
-    width: 100%;
+    width: 288px;
     margin-top: 0px;
     font-size: 10px;
     padding-right: 16px;
@@ -676,12 +677,13 @@ th ol li.listItemNumeroUnoNone:before {
     border: 1px solid #005a70;
     background-color: #def8ff;
 }
-.deletefigurebutton:hover, .updatefigurebutton:hover {
+.deletefigurebutton:hover, .figure-element-container .figure-wrapper .updatefigurebutton:hover {
     background-color: #def8ff;
 }
-.updatefigurebutton{
-    top: 80px;
-    left: 60px;
+.figure-element-container .figure-wrapper .updatefigurebutton{
+    top: 81px !important;
+    left: 60px !important;
+    right: unset;
     position: absolute;
     height: 36px;
     padding: 8px 20px;
@@ -692,16 +694,17 @@ th ol li.listItemNumeroUnoNone:before {
     color: #005a70;
     font-weight: 600;
     font-size: 14px;
-    cursor: pointer;
+    cursor: pointer !important;
 }
-.deletefigurebutton{
-    top:80px;
+.figure-element-container .figure-wrapper .deletefigurebutton{
+    top:81px !important;
     position: absolute;
     background-color: #fff;
     text-align: center;
     justify-content: center;
-    cursor: pointer;
-    left: 202px;
+    cursor: pointer !important;
+    left: 202px !important;
+    right: unset;
     padding: 5px 6px 3px 6px;
     border-radius: 2px;
     height: 36px;
@@ -826,11 +829,11 @@ th ol li.listItemNumeroUnoNone:before {
     cursor: pointer;
 }
 
-.line{
+.figure-element-container .figure-wrapper .line{
     display: flex;
     width: 366px;
     height: 1px;
-    margin-top: 24px;
+    margin-top: 77px;
     opacity: 0.8;
     border: solid 0.2px #fff;
 }
