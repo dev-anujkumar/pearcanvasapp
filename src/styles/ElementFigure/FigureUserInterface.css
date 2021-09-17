@@ -547,6 +547,11 @@ th ol li.listItemNumeroUnoNone:before {
     height: 170px;
     width: 390px;
 }
+
+.figure-wrapper-update{
+    height: 227px;
+    width: 390px;
+}
 .figure-element-container{
     position: relative;
     top: 0;
@@ -562,17 +567,17 @@ th ol li.listItemNumeroUnoNone:before {
     opacity: 0.8;
     color: #fff;
 }
-.figure-element-container .figure-wrapper  .image-figure{
+.figure-element-container .figure-wrapper  .image-figure, .figure-element-container .figure-wrapper-update  .image-figure {
     /* padding-top:3px; */
     /* margin-top: 8px; */
     display: flex;
 }
-.figure-element-container .figure-wrapper  .image-figure-path{
+.figure-element-container .figure-wrapper  .image-figure-path, .figure-element-container .figure-wrapper-update  .image-figure-path{
     /* padding-top:2px; */
     /* margin-top: 8px; */
     display: flex;
 }
-.figure-element-container .figure-wrapper  .image-info{
+.figure-element-container .figure-wrapper  .image-info, .figure-element-container .figure-wrapper-update  .image-info {
     overflow-wrap: anywhere;
     width: 288px;
     margin-top: 0px;
@@ -677,10 +682,10 @@ th ol li.listItemNumeroUnoNone:before {
     border: 1px solid #005a70;
     background-color: #def8ff;
 }
-.deletefigurebutton:hover, .figure-element-container .figure-wrapper .updatefigurebutton:hover {
+.deletefigurebutton:hover, .figure-element-container .figure-wrapper-update .updatefigurebutton:hover {
     background-color: #def8ff;
 }
-.figure-element-container .figure-wrapper .updatefigurebutton{
+.figure-element-container .figure-wrapper-update .updatefigurebutton{
     top: 81px !important;
     left: 60px !important;
     right: unset;
@@ -696,7 +701,7 @@ th ol li.listItemNumeroUnoNone:before {
     font-size: 14px;
     cursor: pointer !important;
 }
-.figure-element-container .figure-wrapper .deletefigurebutton{
+.figure-element-container .figure-wrapper-update .deletefigurebutton{
     top:81px !important;
     position: absolute;
     background-color: #fff;
@@ -721,6 +726,9 @@ th ol li.listItemNumeroUnoNone:before {
     position: absolute;
     bottom: 16px;
     width:65%;
+}
+.figure-wrapper-update .figure-image-info {
+    height: 80px;
 }
 .figure-label{
     width: 130px;
@@ -795,6 +803,10 @@ th ol li.listItemNumeroUnoNone:before {
     top:12px;
 }
 
+.figure-wrapper-update .videoTitle {
+    margin-left: 43px !important;
+}
+
 .videoTitle {
     width: 322px;
     height: 22px;
@@ -829,13 +841,17 @@ th ol li.listItemNumeroUnoNone:before {
     cursor: pointer;
 }
 
-.figure-element-container .figure-wrapper .line {
+.figure-element-container .figure-wrapper .line, .figure-element-container .figure-wrapper-update .line {
     display: flex;
     width: 366px;
     height: 1px;
     margin-top: 24px;
     opacity: 0.8;
     border: solid 0.2px #fff;
+}
+
+.figure-element-container .figure-wrapper-update .line {
+    margin-top: 77px !important;
 }
 
 /* --------------------------------------------------------------------------- */
