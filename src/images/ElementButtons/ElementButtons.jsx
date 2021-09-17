@@ -80,13 +80,24 @@ export const audioIcon = (function () {
 export const videoIcon = (function () {
     return (
         <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-    <g fill="none" fill-rule="evenodd">
-        <rect fill="#D8D8D8" width="36" height="36" rx="3"/>
-        <path d="M7.902 7.024h21.074v21.074H7.902z"/>
-        <path d="M22.83 16.244V13.17a.88.88 0 0 0-.879-.878H11.415a.88.88 0 0 0-.878.878v8.78a.88.88 0 0 0 .878.878H21.95a.88.88 0 0 0 .878-.878v-3.073l3.512 3.512v-9.658l-3.512 3.512z" fill="#323232" fill-rule="nonzero"/>
-    </g>
-</svg>
+            <g fill="none" fill-rule="evenodd">
+                <rect fill="#D8D8D8" width="36" height="36" rx="3" />
+                <path d="M7.902 7.024h21.074v21.074H7.902z" />
+                <path d="M22.83 16.244V13.17a.88.88 0 0 0-.879-.878H11.415a.88.88 0 0 0-.878.878v8.78a.88.88 0 0 0 .878.878H21.95a.88.88 0 0 0 .878-.878v-3.073l3.512 3.512v-9.658l-3.512 3.512z" fill="#323232" fill-rule="nonzero" />
+            </g>
+        </svg>
+    )
+})();
 
+export const smartlinkIcon = (function () {
+    return (
+        <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" fill-rule="evenodd">
+                <rect fill="#D8D8D8" width="36" height="36" rx="3" />
+                <path d="M6 6h24v24H6z" />
+                <path d="M17 27h-1l1-7h-3.5c-.88 0-.33-.75-.31-.78 1.29-2.28 3.23-5.68 5.82-10.22h1l-1 7h3.51c.4 0 .62.19.4.66C18.97 23.55 17 27 17 27z" fill="#323232" fill-rule="nonzero" />
+            </g>
+        </svg>
     )
 })();
 
