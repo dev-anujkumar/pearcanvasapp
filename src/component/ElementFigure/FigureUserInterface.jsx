@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import tinymce from 'tinymce/tinymce';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
 // IMPORT - Assets //
@@ -189,12 +187,12 @@ class FigureUserInterface extends Component {
         return lowercaseOptions;
     }
 
-    generateAddAssetJSX = ( assetIcon, addButtonText, assetBackgroundType, assetIdText, assetPathText) => {
+    generateAddAssetJSX = ( assetIcon, assetTitleText, addButtonText, assetBackgroundType, assetIdText, assetPathText) => {
         return (
             <div className="figure-wrapper">
                 <div className='videoIconWrapper'>
                     <span className='videoIcon' >{assetIcon}</span>
-                    <span className='videoTitle'>Video Title</span>
+                    <span className='videoTitle'>{assetTitleText}</span>
                 </div>
                 <div className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
                 <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} />
@@ -209,7 +207,50 @@ class FigureUserInterface extends Component {
         )
     }
 
-    renderAssetSection = (element, assetId, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText) => {
+    generateUpdateAssetJSX = (element, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite) => {
+        return (
+            <div className='figure-wrapper-update'>
+                <div className='videoIconWrapper'>
+                    <span className='videoIcon' >{assetIcon}</span>
+                    <span className='videoTitle'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "Video Title"}</span>
+                </div>
+                {this.generatePosterImageJSX(element, assetBackgroundType)}
+                <div className='updatefigurebutton' onClick={this.addFigureResource}>{updateButtonText}</div>
+                <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                <span className='line' />
+                <div className="figure-image-info">
+                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
+                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
+                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite : ""} </span> </div>
+                </div>
+            </div>
+        )
+    }
+
+    generatePosterImageJSX = (element, assetBackgroundType) => {
+        let posterJsx;
+        switch (element.figuretype) {
+            case AUDIO:
+                
+                break;
+            case VIDEO:
+                posterJsx = element.figuredata.posterimage.path ?
+                    <video className="videoReel" width="246px" height="164px" controls="none" preload="none"
+                        poster={element.figuredata.posterimage.path}>
+                        <source src="" />
+                        <track src="" kind="subtitles" srcLang="en" label="English" />
+                    </video>
+                    :
+                    <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
+                break;
+            case INTERACTIVE:
+                
+                break;
+        }
+        return posterJsx;
+    }
+
+    renderAssetSection = (element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite) => {
         let assetJsx;
         switch (element.figuretype) {
             case AUDIO:
@@ -222,29 +263,10 @@ class FigureUserInterface extends Component {
                 break;
             case VIDEO:
                 assetJsx =
-                    assetId && element.figuredata.posterimage.path ?
-                    <div className='figure-wrapper'>
-                        <div className='videoIconWrapper'>
-                                <span className='videoIcon' >{videoIcon}</span>
-                                <span className='videoTitle'>Video Title</span>
-                        </div>
-                        {/* <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.props.handleC2MediaClick}
-                            poster={element.figuredata.posterimage.path}>
-                            <source src="" />
-                            <track src="" kind="subtitles" srcLang="en" label="English" />
-                        </video> */}
-                        <div className='videoReel'><img width="246px" height="164px" src={updateVideoReel} /></div>
-                        <div className='updatefigurebutton' onClick={this.addFigureResource}>{updateButtonText}</div>
-                        <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
-                        <span className='line' />
-                        <div className="figure-image-info">
-                            <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a1435c08c1435c08c1435c08c1435c08c"} </span> </div>
-                            <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701aurn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a"}</span> </div>
-                            <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? this.state.alfrescoSite : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a"} </span> </div>
-                        </div>
-                        </div>
+                    assetId ?
+                        this.generateUpdateAssetJSX(element, videoIcon, assetPath, updateVideoReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
                         :
-                            this.generateAddAssetJSX(videoIcon, addButtonText, videoReel, assetIdText, assetPathText)
+                        this.generateAddAssetJSX(videoIcon, assetTitleText, addButtonText, videoReel, assetIdText, assetPathText)
                 break;
             case INTERACTIVE:
                 assetJsx =
@@ -275,7 +297,7 @@ class FigureUserInterface extends Component {
     }
 
     render() {
-        const { element, permissions, openGlossaryFootnotePopUp, handleFocus, handleBlur, index, slateLockInfo, glossaryFootnoteValue, glossaaryFootnotePopup, elementId } = this.props;
+        const { element, permissions, openGlossaryFootnotePopUp, handleFocus, handleBlur, index, slateLockInfo, glossaryFootnoteValue, glossaaryFootnotePopup, elementId, alfrescoSite } = this.props;
         let figureHtmlData = getLabelNumberTitleHTML(element);
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
@@ -322,10 +344,11 @@ class FigureUserInterface extends Component {
                 break;
         }
         
-        let assetId, addButtonText, assetIdText, assetPathText, updateButtonText, assetPath;
+        let assetId, assetTitleText, addButtonText, assetIdText, assetPathText, updateButtonText, assetPath;
         switch (element.figuretype) {
             case AUDIO:
                 assetId = element.figuredata.audioid ? element.figuredata.audioid : '';
+                assetTitleText = element.figuredata.audio?.path ? element.figuredata.audio.path : 'Audio Title';
                 addButtonText = "Select an Audio";
                 assetIdText = "Audio ID:";
                 assetPathText = "Audio Path:";
@@ -334,6 +357,7 @@ class FigureUserInterface extends Component {
                 break;
             case VIDEO:
                 assetId = element.figuredata.videoid ? element.figuredata.videoid : '';
+                assetTitleText = element.figuredata.videos[0]?.path ? element.figuredata.videos[0]?.path : 'Video Title';
                 addButtonText = "Select a Video";
                 assetIdText = "Video ID:";
                 assetPathText = "Video Path:";
@@ -342,6 +366,7 @@ class FigureUserInterface extends Component {
                 break;
             case INTERACTIVE:
                 assetId = element.figuredata.interactiveid ? element.figuredata.interactiveid : '';
+                assetTitleText = element.figuredata.path ? element.figuredata.path : 'Smart link Title';
                 addButtonText = "Add a Smart Link";
                 assetIdText = "Asset ID:";
                 assetPathText = "Asset Path:";
@@ -423,7 +448,7 @@ class FigureUserInterface extends Component {
                                                 draggable="false" />
                                             : <div className='figurebutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
                                     } */}
-                                    {this.renderAssetSection(element, assetId, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText)}
+                                    {this.renderAssetSection(element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite)}
                                 </div>
                                 {/* <div>
                                     {
