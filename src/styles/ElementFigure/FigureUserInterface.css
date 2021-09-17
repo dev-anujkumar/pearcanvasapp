@@ -544,7 +544,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 .figure-wrapper{
-    height: 227px;
+    height: 170px;
     width: 390px;
 }
 .figure-element-container{
@@ -715,8 +715,8 @@ th ol li.listItemNumeroUnoNone:before {
     min-height: 90px;
 }
 
-.figure-image-info{
-    height: 88px;
+.figure-image-info {
+    height: 84px;
     left:16px;
     position: absolute;
     bottom: 16px;
@@ -732,7 +732,7 @@ th ol li.listItemNumeroUnoNone:before {
     position: relative;
     padding: 3px 4px;
 }
-.figure-dropdown{
+.figure-dropdown {
   width: 130px;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
   background-color: #fff;
@@ -770,10 +770,10 @@ th ol li.listItemNumeroUnoNone:before {
   position: relative;
   display: flex;
 }
-.figure-label-field{
+.figure-label-field {
   margin-right: 24px;
 }
-.videoIconWrapper{
+.videoIconWrapper {
     margin-top: 16px;
     margin-left: 16px;
     display: flex;
@@ -781,13 +781,13 @@ th ol li.listItemNumeroUnoNone:before {
     width: 100%;
 }
 
-.videoIcon{
+.videoIcon {
     position: absolute;
     left: 16px;
     top: 16px;
 }
 
-.videoReel{
+.videoReel {
     position: absolute;
     width: 246px;
     height: 164px;
@@ -795,11 +795,11 @@ th ol li.listItemNumeroUnoNone:before {
     top:12px;
 }
 
-.videoTitle{
+.videoTitle {
     width: 322px;
     height: 22px;
     /* margin: 4px 16px 38px 8px; */
-    font-family: OpenSans;
+    font-family: OpenSans sans-serif !important;
     margin-left: 33px;
     font-size: 16px;
     font-weight: 300;
@@ -812,7 +812,7 @@ th ol li.listItemNumeroUnoNone:before {
 .addVideobutton:hover {
     background-color: #def8ff;
 }
-.addVideobutton{
+.addVideobutton {
     top: 76px;
     right: 75px;
     position: absolute;
@@ -829,17 +829,17 @@ th ol li.listItemNumeroUnoNone:before {
     cursor: pointer;
 }
 
-.figure-element-container .figure-wrapper .line{
+.figure-element-container .figure-wrapper .line {
     display: flex;
     width: 366px;
     height: 1px;
-    margin-top: 77px;
+    margin-top: 24px;
     opacity: 0.8;
     border: solid 0.2px #fff;
 }
 
 /* --------------------------------------------------------------------------- */
-.floating-caption-group{
+.floating-caption-group {
     position: relative;
     margin-bottom: 25px;
 }

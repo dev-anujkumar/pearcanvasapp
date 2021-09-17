@@ -189,6 +189,26 @@ class FigureUserInterface extends Component {
         return lowercaseOptions;
     }
 
+    generateAddAssetJSX = ( assetIcon, addButtonText, assetBackgroundType, assetIdText, assetPathText) => {
+        return (
+            <div className="figure-wrapper">
+                <div className='videoIconWrapper'>
+                    <span className='videoIcon' >{assetIcon}</span>
+                    <span className='videoTitle'>Video Title</span>
+                </div>
+                <div className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
+                <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} />
+                </div>
+                <span className='line' />
+                <div className="figure-image-info">
+                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> </span> </div>
+                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> </span> </div>
+                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'> </span> </div>
+                </div>
+            </div>
+        )
+    }
+
     renderAssetSection = (element, assetId, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText) => {
         let assetJsx;
         switch (element.figuretype) {
@@ -206,7 +226,7 @@ class FigureUserInterface extends Component {
                     <div className='figure-wrapper'>
                         <div className='videoIconWrapper'>
                                 <span className='videoIcon' >{videoIcon}</span>
-                                <span className='videoTitle'>{}</span>
+                                <span className='videoTitle'>Video Title</span>
                         </div>
                         {/* <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.props.handleC2MediaClick}
                             poster={element.figuredata.posterimage.path}>
@@ -224,23 +244,7 @@ class FigureUserInterface extends Component {
                         </div>
                         </div>
                         :
-                        <div>
-                            <div className="figure-wrapper">
-                                <div className='videoIconWrapper'>
-                                <span className='videoIcon' >{videoIcon}</span>
-                                <span className='videoTitle'>Video Title</span>
-                                </div>
-                                <div className='addVideobutton'>{addButtonText}</div>
-                                <div className='videoReel'><img width="246px" height="164px" src={videoReel} />
-                                </div>
-                                <span className='line'/>
-                                <div className="figure-image-info">
-                                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a1435c08c1435c08c1435c08c1435c08c"} </span> </div>
-                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701aurn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a"}</span> </div>
-                                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? this.state.alfrescoSite : "urn:pearson:work:1435c08c-0da9-4dc9-a768-0fd60384701a"} </span> </div>
-                                </div>
-                            </div>
-                        </div>
+                            this.generateAddAssetJSX(videoIcon, addButtonText, videoReel, assetIdText, assetPathText)
                 break;
             case INTERACTIVE:
                 assetJsx =
