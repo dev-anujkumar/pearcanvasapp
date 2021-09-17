@@ -12,8 +12,10 @@ import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
 import videoReel from '../../images/ElementButtons/videoReel.png';
-import updateVideoReel from '../../images/ElementButtons/updateVideoReel.png'
-import {videoIcon} from '../../images/ElementButtons/ElementButtons.jsx';
+import updateVideoReel from '../../images/ElementButtons/updateVideoReel.png';
+import pdSLfPosterImage from '../../images/ElementButtons/pdSLfPosterImage.png';
+import slPosterImage from '../../images/ElementButtons/slPosterImage.png'
+import { videoIcon, smartlinkIcon } from '../../images/ElementButtons/ElementButtons.jsx';
 import  figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import { labelHtmlData } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
@@ -23,15 +25,13 @@ import { AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE } from '../../con
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
+const BLANK_PARA_VALUES = ['<p></p>', '<p><br></p>', '<p><br/></p>', '<br data-mce-bogus="1">'];
 
 class FigureUserInterface extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            imgSrc: null,
-            projectMetadata: false,
             alfrescoSite: '',
-            alfrescoSiteData: {},
             figureLabelValue: 'No Label',
             figureLabelData: this.props.figureDropdownData,
             figureDropDown: false
@@ -42,9 +42,9 @@ class FigureUserInterface extends Component {
     componentDidMount() {
         document.addEventListener('mousedown', this.handleClickOutside);
         getAlfrescositeResponse(this.props.elementId, (response) => {
+            console.log("serialyyyyyyyyyyyyyyyyy", response)
             this.setState({
-                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
-                alfrescoSiteData: { ...response }
+                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title
             })
         })
         let figureHtmlData = getLabelNumberTitleHTML(this.props.element);
@@ -215,13 +215,13 @@ class FigureUserInterface extends Component {
                     <span className='videoTitle'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "Video Title"}</span>
                 </div>
                 {this.generatePosterImageJSX(element, assetBackgroundType)}
-                <div className='updatefigurebutton' onClick={this.addFigureResource}>{updateButtonText}</div>
+                <div className='updatefigurebutton' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
                 <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                 <span className='line' />
                 <div className="figure-image-info">
                     <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
                     <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
-                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite : ""} </span> </div>
+                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite && (alfrescoSite !== '' || alfrescoSite !== undefined) ? alfrescoSite: this.state.alfrescoSite : ""} </span> </div>
                 </div>
             </div>
         )
@@ -244,7 +244,7 @@ class FigureUserInterface extends Component {
                     <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
                 break;
             case INTERACTIVE:
-                
+                posterJsx = <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
                 break;
         }
         return posterJsx;
@@ -269,14 +269,20 @@ class FigureUserInterface extends Component {
                         this.generateAddAssetJSX(videoIcon, assetTitleText, addButtonText, videoReel, assetIdText, assetPathText)
                 break;
             case INTERACTIVE:
-                assetJsx =
-                    assetId ?
-                        <div>
-                            <div className='figurebutton' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
-                            <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
-                        </div>
-                        :
-                        <div className='figurebutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
+                assetJsx = element.figuredata.interactivetype !== 'pdf' ?
+                    (
+                        assetId ?
+                            this.generateUpdateAssetJSX(element, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
+                            :
+                            this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, slPosterImage, assetIdText, assetPathText)
+                    )
+                    :
+                    (
+                        assetId ?
+                            this.generateUpdateAssetJSX(element, smartlinkIcon, assetPath, pdSLfPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
+                            :
+                            this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, pdSLfPosterImage, assetIdText, assetPathText)
+                    )
                 break;
         }
         return assetJsx;
@@ -427,7 +433,7 @@ class FigureUserInterface extends Component {
                                     element.figuretype === INTERACTIVE && imageDimension === '' ?
                                         <div>
                                             <div className='Rectangle-button' onClick={this.showHyperlinkEditable} >
-                                                <span className="Enter-Button-Label">{element.html.postertext && element.html.postertext !== '<p></p>' ? checkHTMLdataInsideString(element.html.postertext).replace(/&nbsp;/g, "") : "Enter Button Label"}</span>
+                                                <span className="Enter-Button-Label">{element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/&nbsp;/g, "") : "Enter Button Label"}</span>
                                             </div>
                                             <div className="hide-field actionPUdiv">
                                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter Button Label" className={"actionPU hyperLinkText"} tagName={'p'} model={element.html.postertext ? element.html.postertext : ""} handleEditorFocus={handleFocus} handleBlur={handleBlur} slateLockInfo={slateLockInfo} elementId={elementId} element={element} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
