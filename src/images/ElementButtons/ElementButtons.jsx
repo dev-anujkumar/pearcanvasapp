@@ -90,6 +90,19 @@ export const videoIcon = (function () {
     )
 })();
 
+export const figureAudioIcon = (function () {
+    return (
+        <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" fill-rule="evenodd">
+                <rect fill="#D8D8D8" width="36" height="36" rx="3" />
+                <path d="M6 6h24v24H6z" />
+                <path d="M18 9a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8h-4v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9zm-5 12v4h-2v-4h2zm12 4h-2v-4h2v4z" fill="#323232" fill-rule="nonzero" />
+            </g>
+        </svg>
+
+    )
+})();
+
 export const figureDeleteIcon = (function () {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

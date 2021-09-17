@@ -838,7 +838,7 @@ th ol li.listItemNumeroUnoNone:before {
     font-weight: 600;
     font-size: 14px;
     z-index:1;
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 .figure-element-container .figure-wrapper .line, .figure-element-container .figure-wrapper-update .line {

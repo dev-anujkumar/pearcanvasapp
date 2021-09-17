@@ -12,8 +12,10 @@ import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
 import videoReel from '../../images/ElementButtons/videoReel.png';
-import updateVideoReel from '../../images/ElementButtons/updateVideoReel.png'
-import {videoIcon} from '../../images/ElementButtons/ElementButtons.jsx';
+import audioReel from '../../images/ElementButtons/audioReel.png';
+import updateVideoReel from '../../images/ElementButtons/updateVideoReel.png';
+import updateAudioReel from '../../images/ElementButtons/updateAudioReel.png';
+import {videoIcon ,figureAudioIcon} from '../../images/ElementButtons/ElementButtons.jsx';
 import  figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import { labelHtmlData } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
@@ -231,6 +233,7 @@ class FigureUserInterface extends Component {
         let posterJsx;
         switch (element.figuretype) {
             case AUDIO:
+                posterJsx = <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
                 
                 break;
             case VIDEO:
@@ -255,11 +258,10 @@ class FigureUserInterface extends Component {
         switch (element.figuretype) {
             case AUDIO:
                 assetJsx =
-                    assetId && element.figuredata.posterimage.path ?
-                        <audio controls="none" preload="none" className="audio" >
-                            <source src={element.figuredata.posterimage.path} type="audio/mpeg" />
-                        </audio> :
-                        <div>RAHUL</div>
+                    assetId ?
+                        this.generateUpdateAssetJSX(element, figureAudioIcon, assetPath, updateAudioReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite) 
+                        :
+                        this.generateAddAssetJSX(figureAudioIcon, assetTitleText, addButtonText, audioReel, assetIdText, assetPathText)
                 break;
             case VIDEO:
                 assetJsx =
