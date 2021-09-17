@@ -50,3 +50,5 @@ export const SAVE_ELM_DATA = "SaveElmData"
 /* Project Subscription Message Types*/
 export const PROJECT_SHARING_ROLE = "projectSharingRole"
 export const UPDATE_PROJECT_METADATA = "updateProjectMetadata"
+export const IS_SLATE_SUBSCRIBED = "isSlateSubscribed"
+export const CHECK_SUBSCRIBED_SLATE_STATUS = "checkSubscribedSlateStatus"
