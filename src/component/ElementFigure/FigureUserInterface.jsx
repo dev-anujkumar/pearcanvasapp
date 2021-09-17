@@ -398,9 +398,7 @@ class FigureUserInterface extends Component {
                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass} model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                 <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
                             </div>
-                            <div className="figure-element-container">
-
-                                {
+                            {
                                     element.figuretype === INTERACTIVE && imageDimension === '' ?
                                         <div>
                                             <div className='Rectangle-button' onClick={this.showHyperlinkEditable} >
@@ -412,8 +410,8 @@ class FigureUserInterface extends Component {
                                         </div>
                                         :
                                         null
-                                }
-
+                            }
+                            <div className="figure-element-container">
                                 <div id="figure_add_div" className={`pearson-component image figureData ${element.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                                     {/* {
                                         assetId ?
