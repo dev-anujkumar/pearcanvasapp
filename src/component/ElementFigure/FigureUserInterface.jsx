@@ -11,7 +11,7 @@ import videoReel from '../../images/ElementButtons/videoReel.png';
 import audioReel from '../../images/ElementButtons/audioReel.png';
 import updateVideoReel from '../../images/ElementButtons/updateVideoReel.png';
 import updateAudioReel from '../../images/ElementButtons/updateAudioReel.png';
-import {videoIcon , figureAudioIcon, smartlinkIcon} from '../../images/ElementButtons/ElementButtons.jsx';
+import {videoIcon, figureAudioIcon, smartlinkIcon} from '../../images/ElementButtons/ElementButtons.jsx';
 import pdSLfPosterImage from '../../images/ElementButtons/pdSLfPosterImage.png';
 import slPosterImage from '../../images/ElementButtons/slPosterImage.png'
 import  figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
@@ -23,7 +23,7 @@ import { AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE } from '../../con
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
-const BLANK_PARA_VALUES = ['<p></p>', '<p><br></p>', '<p><br/></p>', '<br data-mce-bogus="1">'];
+const BLANK_PARA_VALUES = ['<p></p>', '<p><br></p>', '<p><br/></p>', '<br data-mce-bogus="1">', '<p><br data-mce-bogus="1"></p>'];
 
 class FigureUserInterface extends Component {
     constructor(props) {
@@ -187,6 +187,7 @@ class FigureUserInterface extends Component {
     }
 
     generateUpdateAssetJSX = (element, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite) => {
+        console.log("element................",element);
         return (
             <div className='figure-wrapper-update'>
                 <div className='videoIconWrapper'>
@@ -195,7 +196,7 @@ class FigureUserInterface extends Component {
                 </div>
                 {this.generatePosterImageJSX(element, assetBackgroundType)}
                 <div className='updatefigurebutton' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
-                <div className='deletefigurebutton' onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                <div className={`deletefigurebutton ${element.figuretype === "interactive" ? 'deleteSL':''}`}  onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                 <span className='line' />
                 <div className="figure-image-info">
                     <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
