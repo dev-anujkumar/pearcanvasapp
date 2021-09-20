@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
@@ -218,6 +218,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
 }
 
 export const updateFigureData = (figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb) => (dispatch, getState) => {
+    console.log("hhhhhhhhh", figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb)
     let parentData = getState().appStore.slateLevelData,
         //element,
         index = elementIndex;
@@ -696,5 +697,12 @@ export const updateFigureImageDataForCompare = (oldFigureData) => (dispatch) => 
     dispatch({
         type: UPDATE_OLD_FIGUREIMAGE_INFO,
         payload: oldFigureData
+    })
+}
+
+export const updateSmartLinkDataForCompare = (oldSmartLinkData) => (dispatch) => {
+    dispatch({
+        type: UPDATE_OLD_SMARTLINK_INFO,
+        payload: oldSmartLinkData
     })
 }

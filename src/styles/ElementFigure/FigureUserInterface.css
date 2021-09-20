@@ -955,7 +955,6 @@ th ol li.listItemNumeroUnoNone:before {
     padding: 6px;
     border-radius: 2px;
     background-color: #005a70;
-    cursor: pointer !important;
 }
 
 .hyperLinkText {

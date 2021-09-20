@@ -32,7 +32,7 @@ class FigureImage extends Component {
             alfrescoSite: '',
             alfrescoSiteData: {},
             figureLabelValue: 'No Label',
-            figureLabelData: this.props.figureDropdownData,
+            figureLabelData: this.props.figureDropdownData.image,
             figureDropDown: false
         }
         this.wrapperRef = React.createRef();
@@ -48,7 +48,7 @@ class FigureImage extends Component {
         })
         let figureHtmlData = getLabelNumberTitleHTML(this.props.model);
         let figureLabelValue = this.state;
-        figureLabelValue = dropdownValueAtIntialize(this.props.figureDropdownData, figureHtmlData.formattedLabel);
+        figureLabelValue = dropdownValueAtIntialize(this.props.figureDropdownData.image, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
     }

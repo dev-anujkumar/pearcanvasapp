@@ -2,20 +2,16 @@ import React, { Component } from 'react';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
 // IMPORT - Assets //
-import config from '../../config/config';
-import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
-import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
-import { hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-// import './../../styles/ElementFigure/ElementFigure.css';
+import { getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js';
+import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
 import './../../styles/ElementFigure/FigureUserInterface.css';
-import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
-import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
+import { updateSmartLinkDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
 import videoReel from '../../images/ElementButtons/videoReel.png';
 import audioReel from '../../images/ElementButtons/audioReel.png';
 import updateVideoReel from '../../images/ElementButtons/updateVideoReel.png';
 import updateAudioReel from '../../images/ElementButtons/updateAudioReel.png';
-import {videoIcon ,figureAudioIcon} from '../../images/ElementButtons/ElementButtons.jsx';
+import {videoIcon , figureAudioIcon, smartlinkIcon} from '../../images/ElementButtons/ElementButtons.jsx';
 import pdSLfPosterImage from '../../images/ElementButtons/pdSLfPosterImage.png';
 import slPosterImage from '../../images/ElementButtons/slPosterImage.png'
 import  figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
@@ -35,7 +31,7 @@ class FigureUserInterface extends Component {
         this.state = {
             alfrescoSite: '',
             figureLabelValue: 'No Label',
-            figureLabelData: this.props.figureDropdownData,
+            figureLabelData: [],
             figureDropDown: false
         }
         this.wrapperRef = React.createRef();
@@ -44,16 +40,33 @@ class FigureUserInterface extends Component {
     componentDidMount() {
         document.addEventListener('mousedown', this.handleClickOutside);
         getAlfrescositeResponse(this.props.elementId, (response) => {
-            console.log("serialyyyyyyyyyyyyyyyyy", response)
             this.setState({
                 alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title
             })
         })
+        let figureLabelData = [];
+        switch (this.props.element.figuretype) {
+            case AUDIO:
+                figureLabelData = this.props.figureDropdownData.audio;
+                break;
+            case VIDEO:
+                figureLabelData = this.props.figureDropdownData.video;
+                break;
+            case INTERACTIVE:
+                figureLabelData = this.props.figureDropdownData.smartlinks;
+                break;
+            default:
+                figureLabelData = [];
+                break;
+        }
+        this.setState({ figureLabelData: figureLabelData });
         let figureHtmlData = getLabelNumberTitleHTML(this.props.element);
         let figureLabelValue = this.state;
-        figureLabelValue = dropdownValueAtIntialize(this.props.figureDropdownData, figureHtmlData.formattedLabel);
+        figureLabelValue = dropdownValueAtIntialize(figureLabelData, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
-        this.props.updateFigureImageDataForCompare(this.props.element.figuredata);
+        if (this.props.element.figuretype === 'interactive') {
+            this.props.updateSmartLinkDataForCompare(this.props.element.figuredata);
+        }
     }
 
     componentWillUnmount() {
@@ -63,7 +76,6 @@ class FigureUserInterface extends Component {
     componentDidUpdate(prevProps) {
         const { alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup, elementId } = this.props;
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
-            // this.dataFromNewAlfresco(alfrescoAssetData)
             this.props.dataFromAlfresco(alfrescoAssetData);
         }
     }
@@ -72,43 +84,6 @@ class FigureUserInterface extends Component {
         if (this.wrapperRef && !this.wrapperRef?.current?.contains(event.target)) {
             this.handleCloseDropDrown();
         }
-    }
-
-    updateAlfrescoSiteUrl = () => {
-        let repositoryData = this.state.alfrescoSiteData
-        if (repositoryData?.repositoryFolder || repositoryData?.title) {
-            this.setState({
-                alfrescoSite: repositoryData?.repositoryFolder || repositoryData?.title
-            })
-        } else {
-            this.setState({
-                alfrescoSite: config.alfrescoMetaData?.alfresco?.repositoryFolder || config.alfrescoMetaData?.alfresco?.title
-            })
-        }
-    }
-
-    /**
-* @description delete image from element
-*/
-
-    deleteFigureResource = () => {
-        this.props.handleFocus();
-        if (hasReviewerRole()) {
-            return true
-        }
-        // store current element figuredata in store
-        this.props.updateFigureImageDataForCompare(this.props.element.figuredata);
-        let setFigureData = {
-            schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-            imageid: "",
-            path: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
-            height: "422",
-            width: "680"
-        }
-        this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
-            this.props.handleFocus("updateFromC2");
-            this.props.handleBlur();
-        })
     }
 
     changeFigureLabel = (figureLabelValue, data) => {
@@ -130,6 +105,7 @@ class FigureUserInterface extends Component {
     }
 
     handleFigureDropdown = () => {
+        this.props.handleFocus();
         this.setState({
             figureDropDown: !this.state.figureDropDown
         })
@@ -148,7 +124,9 @@ class FigureUserInterface extends Component {
         } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
             labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
-        this.props.updateFigureImageDataForCompare(this.props.element.figuredata);
+        if (this.props.element.figuretype === 'interactive') {
+            this.props.updateSmartLinkDataForCompare(this.props.element.figuredata);
+        }
         if (!labelElement?.classList.contains('actionPU')) {
             this.hideHyperlinkEditable();
         }
@@ -162,7 +140,6 @@ class FigureUserInterface extends Component {
         if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.remove('transition-none');
         }
-        // BG-5081 fixes
         if (id === '0-0' && labelElement?.innerHTML) {
             let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
             if (dropdownData.indexOf(labelElement?.innerHTML.toLowerCase()) > -1) {
@@ -218,7 +195,7 @@ class FigureUserInterface extends Component {
                 </div>
                 {this.generatePosterImageJSX(element, assetBackgroundType)}
                 <div className='updatefigurebutton' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
-                <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                <div className='deletefigurebutton' onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                 <span className='line' />
                 <div className="figure-image-info">
                     <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
@@ -355,8 +332,8 @@ class FigureUserInterface extends Component {
         let assetId, assetTitleText, addButtonText, assetIdText, assetPathText, updateButtonText, assetPath;
         switch (element.figuretype) {
             case AUDIO:
-                assetId = element.figuredata.audioid ? element.figuredata.audioid : '';
-                assetTitleText = element.figuredata.audio?.path ? element.figuredata.audio.path : 'Audio Title';
+                assetId = element.figuredata.hasOwnProperty('audioid') && element.figuredata.audioid ? element.figuredata.audioid : '';
+                assetTitleText = assetId ? element.figuredata?.audio?.path : 'Audio Title';
                 addButtonText = "Select an Audio";
                 assetIdText = "Audio ID:";
                 assetPathText = "Audio Path:";
@@ -364,8 +341,8 @@ class FigureUserInterface extends Component {
                 assetPath = element.figuredata.audio?.path ? element.figuredata.audio.path : element.figuredata.posterimage.path;
                 break;
             case VIDEO:
-                assetId = element.figuredata.videoid ? element.figuredata.videoid : '';
-                assetTitleText = element.figuredata.videos[0]?.path ? element.figuredata.videos[0]?.path : 'Video Title';
+                assetId = element.figuredata.hasOwnProperty('videoid') && element.figuredata.videoid ? element.figuredata.videoid : '';
+                assetTitleText = assetId ? element.figuredata?.videos[0]?.path : 'Video Title';
                 addButtonText = "Select a Video";
                 assetIdText = "Video ID:";
                 assetPathText = "Video Path:";
@@ -446,31 +423,8 @@ class FigureUserInterface extends Component {
                             }
                             <div className="figure-element-container">
                                 <div id="figure_add_div" className={`pearson-component image figureData ${element.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
-                                    {/* {
-                                        assetId ?
-                                            <img src={this.state.imgSrc ? this.state.imgSrc : (element.figuredata.posterimage.path && element.figuredata.posterimage.path !== "" ? element.figuredata.posterimage.path : '')}
-                                                data-src={this.state.imgSrc}
-                                                title=""
-                                                alt=""
-                                                className={imageDimension + ' lazyload'}
-                                                draggable="false" />
-                                            : <div className='figurebutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
-                                    } */}
                                     {this.renderAssetSection(element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite)}
                                 </div>
-                                {/* <div>
-                                    {
-                                        (assetId !== "") ? <div className="figure-wrapper">
-                                            <div className="figure-image-info">
-                                                <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
-                                                <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {this.state.imgSrc ? this.state.imgSrc : (assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "")}</span> </div>
-                                                <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? this.state.alfrescoSite : ""} </span> </div>
-                                            </div>
-                                            <div className='updatefigurebutton' onClick={this.addFigureResource}>{updateButtonText}</div>
-                                            <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
-                                        </div> : ''
-                                    }
-                                </div> */}
                             </div>
                             <figcaption className={captionDivClass} >
                                 <div className="floating-caption-group">
@@ -494,26 +448,14 @@ class FigureUserInterface extends Component {
 
 const mapActionToProps = (dispatch) => {
     return {
-        alfrescoPopup: (payloadObj) => {
-            dispatch(alfrescoPopup(payloadObj))
-        },
-        saveSelectedAssetData: (payloadObj) => {
-            dispatch(saveSelectedAssetData(payloadObj))
-        },
-        updateFigureImageDataForCompare: (oldFigureData) => {
-            dispatch(updateFigureImageDataForCompare(oldFigureData))
-        },
+        updateSmartLinkDataForCompare: (oldSmartLinkData) => {
+            dispatch(updateSmartLinkDataForCompare(oldSmartLinkData))
+        }
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        // alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
-        // alfrescoElementId: state.alfrescoReducer.elementId,
-        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
-        // launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
-        isCiteChanged: state.alfrescoReducer.isCiteChanged,
-        changedSiteData: state.alfrescoReducer.changedSiteData,
         figureDropdownData: state.appStore.figureDropdownData
     }
 }

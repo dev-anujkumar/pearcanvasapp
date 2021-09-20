@@ -463,6 +463,13 @@ class ElementContainer extends Component {
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        
+        let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
+        let oldImage = this.props.oldImage;
+        if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
+            oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
+        }
+
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
@@ -474,14 +481,14 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
-                this.props.oldImage !== newInteractiveid
+                oldImage !== newInteractiveid
             );
         }
         else {
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-                this.props.oldImage !== newInteractiveid
+                oldImage !== newInteractiveid
             );
         }
     }
@@ -2240,7 +2247,8 @@ const mapStateToProps = (state) => {
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         prevSelectedElement: state.tcmReducer.prevElementId,
         projectUsers: state.commentsPanelReducer.users,
-        projectInfo: state.projectInfo
+        projectInfo: state.projectInfo,
+        oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare
     }
 }
 

@@ -49,6 +49,7 @@ import {
     UPDATE_MULTIPLE_COLUMN_INFO,
     SHOW_REMOVE_GLOSSARY_IMAGE,
     UPDATE_OLD_FIGUREIMAGE_INFO,
+    UPDATE_OLD_SMARTLINK_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS
 } from '../constants/Action_Constants';
 
@@ -89,7 +90,8 @@ const INITIAL_STATE = {
     multipleColumnData: [],
     removeGlossaryImage:false,
     oldFigureDataForCompare: {},
-    figureDropdownData: ['No Label', 'Figure', 'Table', 'Equation', 'Custom']
+    oldSmartLinkDataForCompare: {},
+    figureDropdownData: {}
 };
 
 const INITIAL_ACTION = {
@@ -318,6 +320,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 oldFigureDataForCompare: action.payload
+            }
+        case UPDATE_OLD_SMARTLINK_INFO:
+            return {
+                ...state,
+                oldSmartLinkDataForCompare: action.payload
             }
 
         case UPDATE_FIGURE_DROPDOWN_OPTIONS:
