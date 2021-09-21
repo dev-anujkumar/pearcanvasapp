@@ -2029,7 +2029,6 @@ class ElementContainer extends Component {
 
     handleAlfrescoMetadataWindow = () => {
         let imageId
-        console.log("element figure..............",this.props.element);
         switch(this.props?.element?.figuretype){
             case IMAGE:
                 imageId=this.props?.element?.figuredata?.imageid

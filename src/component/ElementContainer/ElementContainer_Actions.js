@@ -218,7 +218,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
 }
 
 export const updateFigureData = (figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb) => (dispatch, getState) => {
-    console.log("hhhhhhhhh", figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb)
     let parentData = getState().appStore.slateLevelData,
         //element,
         index = elementIndex;
@@ -693,6 +692,7 @@ export const updateMultipleColumnData = (multipleColumnObjData, objKey) => (disp
     })
 }
 
+// it saves the asset details of figure image element for compare asset changes
 export const updateFigureImageDataForCompare = (oldFigureData) => (dispatch) => {
     dispatch({
         type: UPDATE_OLD_FIGUREIMAGE_INFO,
@@ -700,6 +700,7 @@ export const updateFigureImageDataForCompare = (oldFigureData) => (dispatch) => 
     })
 }
 
+// it saves the asset details of smartlink element for compare asset changes
 export const updateSmartLinkDataForCompare = (oldSmartLinkData) => (dispatch) => {
     dispatch({
         type: UPDATE_OLD_SMARTLINK_INFO,
