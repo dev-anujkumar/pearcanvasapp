@@ -120,7 +120,10 @@ let tempBlockListData = {
                   "text": "This is a test"
                 },
                 "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334jngty",
-                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5jn5eg"
+                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5jn5eg",
+                "html":{
+                  "text": "<p class='paragraphNumeroUno'>This is a test</p>"
+                }
               },
               {
                 "id": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5hjt56",
@@ -131,7 +134,10 @@ let tempBlockListData = {
                   "text": "second line of content"
                 },
                 "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334jngr6",
-                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5hjt56"
+                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5hjt56",
+                "html":{
+                  "text": "<p class='paragraphNumeroUno'>second line of content</p>"
+                }
               },
               {
                 "id": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5juiyt",
@@ -142,7 +148,10 @@ let tempBlockListData = {
                   "text": "third line of #1"
                 },
                 "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334jnfe3",
-                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5juiyt"
+                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5juiyt",
+                "html":{
+                  "text": "<p class='paragraphNumeroUno'>third line of #1</p>"
+                }
               }
             ]
           }
@@ -164,8 +173,12 @@ let tempBlockListData = {
                   "text": "Additional Content"
                 },
                 "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334hge2q",
-                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5uijhb"
-              }
+                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5uijhb",
+                "html":{
+                  "text": "<p class='paragraphNumeroUno'>Additional Content</p>"
+                }
+              },
+              
             ]
           }
         },
@@ -186,7 +199,10 @@ let tempBlockListData = {
                   "text": "More Content"
                 },
                 "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334hnfe4",
-                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5jhrde"
+                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5jhrde",
+                "html":{
+                  "text": "<p class='paragraphNumeroUno'>More Content</p>"
+                }
               },
               {
                 "type": "manifestlist",
@@ -213,7 +229,10 @@ let tempBlockListData = {
                               "text": "More"
                             },
                             "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334nf375",
-                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5he5ck"
+                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5he5ck",
+                            "html":{
+                              "text": "<p class='paragraphNumeroUno'>More</p>"
+                            }
                           },
                           {
                             "id": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5lmg39",
@@ -224,7 +243,10 @@ let tempBlockListData = {
                               "text": "second line of content"
                             },
                             "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334mbd4w",
-                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5lmg39"
+                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5lmg39",
+                            "html":{
+                              "text": "<p class='paragraphNumeroUno'>second line of content</p>"
+                            }
                           },
                           {
                             "id": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5gnsh5",
@@ -235,7 +257,10 @@ let tempBlockListData = {
                               "text": "third line of #1"
                             },
                             "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334knh4e",
-                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5gnsh5"
+                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5gnsh5",
+                            "html":{
+                              "text": "<p class='paragraphNumeroUno'>third line of #1</p>"
+                            }
                           }
                         ]
                       }
@@ -257,55 +282,61 @@ let tempBlockListData = {
                               "text": "More"
                             },
                             "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334ng4w9",
-                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5jng4e"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "manifestlistitem",
-                      "id": "urn:pearson:manifest:b2c0a49d-2b43-42d5-ae51-4527d34jhgvf",
-                      "versionUrn": "urn:pearson:manifest:b2c0a49d-2b43-42d5-ae51-4527d34jhgvf",
-                      "contentUrn": "urn:pearson:entity:b2c0a49d-2b43-42d5-ae51-4527d34ng4s8",
-                      "schema": "http://schemas.pearson.com/wip-authoring/list/1",
-                      "listitemdata": {
-                        "bodymatter": [
-                          {
-                            "id": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5nd5ry",
-                            "contentUrn": "urn:pearson:entity:d47ac94e-e5fa-45aa-811a-f74f6d7ng439",
-                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5nd5ry",
-                            "type": "figure",
-                            "figuretype": "image",
-                            "subtype": "image25Text",
-                            "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-                            "alignment": "quarter-text",
-                            "title": {
-                              "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                              "text": "Figure 3.1"
-                            },
-                            "subtitle": {
-                              "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                              "text": "The content entered in the title field"
-                            },
-                            "captions": {
-                              "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                              "text": "A caption"
-                            },
-                            "credits": {
-                              "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                              "text": "the credits"
-                            },
-                            "figuredata": {
-                              "imageid": "urn:pearson:work:385b007b-ad74-48cc-bb8e-ce9a8b2763ac",
-                              "path": "https://cite-media-stg.pearson.com/legacy_paths/e9966883-0cb5-4c3e-98b0-9f36a745d501/ff_x20_008.jpg",
-                              "height": "3000",
-                              "width": "4000",
-                              "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image"
+                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5jng4e",
+                            "html":{
+                              "text": "<p class='paragraphNumeroUno'>More</p>"
                             }
                           }
                         ]
                       }
-                    }
+                    },
+                    // {
+                    //   "type": "manifestlistitem",
+                    //   "id": "urn:pearson:manifest:b2c0a49d-2b43-42d5-ae51-4527d34jhgvf",
+                    //   "versionUrn": "urn:pearson:manifest:b2c0a49d-2b43-42d5-ae51-4527d34jhgvf",
+                    //   "contentUrn": "urn:pearson:entity:b2c0a49d-2b43-42d5-ae51-4527d34ng4s8",
+                    //   "schema": "http://schemas.pearson.com/wip-authoring/list/1",
+                    //   "listitemdata": {
+                    //     "bodymatter": [
+                    //       {
+                    //         "id": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5nd5ry",
+                    //         "contentUrn": "urn:pearson:entity:d47ac94e-e5fa-45aa-811a-f74f6d7ng439",
+                    //         "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5nd5ry",
+                    //         "type": "figure",
+                    //         "figuretype": "image",
+                    //         "subtype": "image25Text",
+                    //         "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                    //         "alignment": "quarter-text",
+                    //         "title": {
+                    //           "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    //           "text": "Figure 3.1"
+                    //         },
+                    //         "subtitle": {
+                    //           "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    //           "text": "The content entered in the title field"
+                    //         },
+                    //         "captions": {
+                    //           "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    //           "text": "A caption"
+                    //         },
+                    //         "credits": {
+                    //           "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    //           "text": "the credits"
+                    //         },
+                    //         "figuredata": {
+                    //           "imageid": "urn:pearson:work:385b007b-ad74-48cc-bb8e-ce9a8b2763ac",
+                    //           "path": "https://cite-media-stg.pearson.com/legacy_paths/e9966883-0cb5-4c3e-98b0-9f36a745d501/ff_x20_008.jpg",
+                    //           "height": "3000",
+                    //           "width": "4000",
+                    //           "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image"
+                    //         },
+                    //         "html":{
+                    //           "text": "<p class='paragraphNumeroUno'>image25Text</p>"
+                    //         }
+                    //       }
+                    //     ]
+                    //   }
+                    // }
                   ]
                 },
                 "contentUrn": "urn:pearson:entity:836f07e6-a6ac-4639-a6c7-65f4a59jngr5",
@@ -331,7 +362,10 @@ let tempBlockListData = {
                   "text": "#4 content"
                 },
                 "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334mnf6t",
-                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5mjhf5"
+                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5mjhf5",
+                "html":{
+                  "text": "<p class='paragraphNumeroUno'>#4 content</p>"
+                }
               },
               {
                 "type": "manifestlist",
@@ -358,7 +392,10 @@ let tempBlockListData = {
                               "text": "Nested"
                             },
                             "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334mtvs5",
-                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5mjy7g"
+                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5mjy7g",
+                            "html":{
+                              "text": "<p class='paragraphNumeroUno'>Nested</p>"
+                            }
                           },
                           {
                             "type": "manifestlist",
@@ -385,7 +422,10 @@ let tempBlockListData = {
                                           "text": "nested"
                                         },
                                         "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334htyuj",
-                                        "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5kjngt"
+                                        "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5kjngt",
+                                        "html":{
+                                          "text": "<p class='paragraphNumeroUno'>nested</p>"
+                                        }
                                       }
                                     ]
                                   }
@@ -407,7 +447,10 @@ let tempBlockListData = {
                                           "text": "hkjsda"
                                         },
                                         "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334nht53",
-                                        "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5ng47k"
+                                        "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5ng47k",
+                                        "html":{
+                                          "text": "<p class='paragraphNumeroUno'>hkjsda</p>"
+                                        }
                                       }
                                     ]
                                   }
@@ -445,7 +488,10 @@ let tempBlockListData = {
                   "text": "New Content"
                 },
                 "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334nhr78",
-                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5hyted"
+                "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5hyted",
+                "html":{
+                  "text": "<p class='paragraphNumeroUno'>New Content</p>"
+                }
               },
               {
                 "type": "manifestlist",
@@ -471,7 +517,10 @@ let tempBlockListData = {
                               "text": "Bullets"
                             },
                             "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334n652i",
-                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5jngr4"
+                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5jngr4",
+                            "html":{
+                              "text": "<p class='paragraphNumeroUno'>Bullets</p>"
+                            }
                           }
                         ]
                       }
@@ -493,7 +542,10 @@ let tempBlockListData = {
                               "text": "Bullets"
                             },
                             "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334h590h",
-                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5mjg58"
+                            "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5mjg58",
+                            "html":{
+                              "text": "<p class='paragraphNumeroUno'>Bullets</p>"
+                            }
                           },
                           {
                             "type": "manifestlist",
@@ -519,7 +571,10 @@ let tempBlockListData = {
                                           "text": "More"
                                         },
                                         "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334n539u",
-                                        "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5nr3qs"
+                                        "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5nr3qs",
+                                        "html":{
+                                          "text": "<p class='paragraphNumeroUno'>More</p>"
+                                        }
                                       }
                                     ]
                                   }
@@ -555,7 +610,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
         case FETCH_SLATE_DATA:
             let tempdata = action.payload;
-            tempdata['urn:pearson:manifest:f36a55ee-36fd-4932-8d54-a77b38a8610a'].contents.bodymatter.push(tempBlockListData)
+            tempdata['urn:pearson:manifest:8ae7534a-40ff-4ac0-8ece-6ef318a19930'].contents.bodymatter.push(tempBlockListData)
             return {
                 ...state,
                 // slateLevelData: action.payload

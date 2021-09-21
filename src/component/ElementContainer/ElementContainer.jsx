@@ -62,12 +62,12 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
-import {closeTcmPopup, handleTCM} from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
+import { closeTcmPopup, handleTCM } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
-import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
+import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-import BlockList from '../BlockList/index.jsx';
+import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -239,10 +239,10 @@ class ElementContainer extends Component {
         }
         let element = this.props.element,
             index = this.props.index
-            const lastFocusedElementId = config.lastActiveElementId
-            if(element.id !== lastFocusedElementId && element.id !== this.props.tcmSnapshotData?.eURN){
-                this.props.closeTcmPopup()
-            }
+        const lastFocusedElementId = config.lastActiveElementId
+        if (element.id !== lastFocusedElementId && element.id !== this.props.tcmSnapshotData?.eURN) {
+            this.props.closeTcmPopup()
+        }
         if (showHideObj) {
             element = showHideObj.currentElement
             index = showHideObj.index
@@ -426,7 +426,7 @@ class ElementContainer extends Component {
         if (previousElementData.html && previousElementData.html.preformattedtext === '<p></p>') {
             previousElementData.html.preformattedtext = '<p><span class="codeNoHighlightLine"></span></p>'
         }
-        
+
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
@@ -1321,12 +1321,12 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_IMAGE:
                         case elementTypeConstant.FIGURE_TABLE:
                         case elementTypeConstant.FIGURE_MATH_IMAGE:
-                            editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} {...commonProps}/>
+                            editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} {...commonProps} />
                             break;
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData}  updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
+                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
@@ -1346,7 +1346,7 @@ class ElementContainer extends Component {
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType}/>;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType} />;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -1473,7 +1473,7 @@ class ElementContainer extends Component {
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
                     }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement}
-                    />
+                        />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
                     break;
@@ -1615,8 +1615,8 @@ class ElementContainer extends Component {
                         element={element}
                         elementId={element.id}
                         slateLockInfo={slateLockInfo}
-                        asideData = { this.props?.asideData }
-                        parentUrn = { this.props?.parentUrn }
+                        asideData={this.props?.asideData}
+                        parentUrn={this.props?.parentUrn}
                         userRole={this.props.userRole}
                         activeElement={this.props.activeElement}
                         onClickCapture={this.props.onClickCapture}
@@ -1677,9 +1677,9 @@ class ElementContainer extends Component {
                     />;
                     labelText = 'PDF'
                     break;
-                
+
                 case elementTypeConstant.BLOCK_LIST:
-                    editor = <BlockList element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} />;
+                    editor = <BlockListWrapper indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} {...commonProps} />;
                     labelText = 'BL'
                     break;
 
@@ -1732,69 +1732,73 @@ class ElementContainer extends Component {
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false
         return (
-            <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
-                {this.renderCopyComponent(this.props, index, inContainer, tcm)}
-                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
-                    {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
-                    {(labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME || MULTI_COLUMN_2C.ELEMENT_TAG_NAME) && <div>{this.renderMultipleColumnLabels(element)}</div>}
-                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e, true)} />)
-                        : null}
-                    {this.renderColorPaletteButton(element, permissions)}
-                    {this.renderColorTextButton(element, permissions)}
-                </div>
-                    : ''}
-                <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" + labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick={(e) => this.handleFocus("", "", e, labelText)}>
-                    {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
-                    {/* {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>} */}
-                    {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true}  />}
-                </div>
-                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
-                    {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
-                        if(this.props.projectUsers.length === 0) {
-                            this.props.getProjectUsers();
-                        }
-                        handleCommentspanel(event,element.id, this.props.index)
+            this.props.onlyElement ?
+                editor
+                :
+                <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+                    {this.renderCopyComponent(this.props, index, inContainer, tcm)}
+                    {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
+                        <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
+                        {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
+                        {(labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME || MULTI_COLUMN_2C.ELEMENT_TAG_NAME) && <div>{this.renderMultipleColumnLabels(element)}</div>}
+                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e, true)} />)
+                            : null}
+                        {this.renderColorPaletteButton(element, permissions)}
+                        {this.renderColorTextButton(element, permissions)}
+                    </div>
+                        : ''}
+                    <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" + labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick={(e) => this.handleFocus("", "", e, labelText)}>
+                        {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
+                        {/* {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>} */}
+                        {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} />}
+                    </div>
+                    {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
+                        {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                        {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
+                            if (this.props.projectUsers.length === 0) {
+                                this.props.getProjectUsers();
+                            }
+                            handleCommentspanel(event, element.id, this.props.index)
                         }} type="comment-flag" />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
-                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
-                </div> : ''}
-                {this.state.popup && <PopUp
-                    togglePopup={this.handleCommentPopup}
-                    active={this.state.popup}
-                    handleChange={this.handleCommentChange}
-                    saveContent={this.saveNewComment}
-                    rows={COMMENTS_POPUP_ROWS}
-                    dialogText={COMMENTS_POPUP_DIALOG_TEXT}
-                    showDeleteElemPopup={this.state.showDeleteElemPopup}
-                    sectionBreak={this.state.sectionBreak}
-                    deleteElement={this.deleteElement}
-                    isAddComment={true}
-                    projectUsers={this.props.projectUsers}
-                    comment={this.state.comment}
-                />}
-                {this.state.isfigurePopup &&
-                    <MetaDataPopUp
-                        figureUrl={this.state.figureUrl}
-                        togglePopup={this.handleFigurePopup}
-                        imageId={this.state.imageId}
-                        updateFigureData={this.updateFigureData}
-                        handleFocus={this.handleFocus}
-                        handleBlur={this.handleBlur}
-                        element={this.props.element}
-                        index={this.props.index}
-                        asideData={this.props.asideData}
+                        {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
+                    </div> : ''}
+                    {this.state.popup && <PopUp
+                        togglePopup={this.handleCommentPopup}
+                        active={this.state.popup}
+                        handleChange={this.handleCommentChange}
+                        saveContent={this.saveNewComment}
+                        rows={COMMENTS_POPUP_ROWS}
+                        dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+                        showDeleteElemPopup={this.state.showDeleteElemPopup}
+                        sectionBreak={this.state.sectionBreak}
+                        deleteElement={this.deleteElement}
+                        isAddComment={true}
+                        projectUsers={this.props.projectUsers}
+                        comment={this.state.comment}
                     />}
-                {this.props.children &&
-                    <PageNumberContext.Consumer>
-                        {
-                            ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement, this.props.permissions)
-                        }
-                    </PageNumberContext.Consumer>
-                }
-            </div >
+                    {this.state.isfigurePopup &&
+                        <MetaDataPopUp
+                            figureUrl={this.state.figureUrl}
+                            togglePopup={this.handleFigurePopup}
+                            imageId={this.state.imageId}
+                            updateFigureData={this.updateFigureData}
+                            handleFocus={this.handleFocus}
+                            handleBlur={this.handleBlur}
+                            element={this.props.element}
+                            index={this.props.index}
+                            asideData={this.props.asideData}
+                        />}
+                    {this.props.children &&
+                        <PageNumberContext.Consumer>
+                            {
+                                ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement, this.props.permissions)
+                            }
+                        </PageNumberContext.Consumer>
+                    }
+                </div >
+
         );
     }
 
@@ -2053,16 +2057,16 @@ class ElementContainer extends Component {
     handleTCMLaunch = (event, element) => {
         const { AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE } = TcmConstants
         const tcmPopupSupportedElements = [AUTHORED_TEXT, ELEMENT_LIST, CITATION_ELEMENT, POETRY_STANZA, BLOCKFEATURE, LEARNING_OBJECTIVE]
-        const {prevSelectedElement, isTCMCanvasPopupLaunched} = this.props
-            if (element?.type && tcmPopupSupportedElements.includes(element.type) && !config.isPopupSlate) {
-                this.props.handleTCM(element, this.props.index, isTCMCanvasPopupLaunched, prevSelectedElement)
-            } else {
-                if (config.isSavingElement) {
-                    return false
-                }
-                event.stopPropagation();
-                loadTrackChanges(element.id)
+        const { prevSelectedElement, isTCMCanvasPopupLaunched } = this.props
+        if (element?.type && tcmPopupSupportedElements.includes(element.type) && !config.isPopupSlate) {
+            this.props.handleTCM(element, this.props.index, isTCMCanvasPopupLaunched, prevSelectedElement)
+        } else {
+            if (config.isSavingElement) {
+                return false
             }
+            event.stopPropagation();
+            loadTrackChanges(element.id)
+        }
     }
 
     render = () => {
