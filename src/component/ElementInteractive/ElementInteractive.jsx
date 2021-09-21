@@ -567,6 +567,7 @@ class Interactive extends React.Component {
         let avsStringData =imageData.properties["avs:jsonString"]&& JSON.parse(imageData.properties["avs:jsonString"]);
         let altText = avsStringData?.imageAltText ? avsStringData.imageAltText : "";
         let longDescription = avsStringData?.linkLongDesc ? avsStringData.linkLongDesc : "";
+        let smartLinkTitle = imageData?.name ? imageData.name : "";
         if (avsStringData?.width) width = avsStringData?.width;
         if (avsStringData?.height) height = avsStringData?.height;
         //let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
@@ -607,7 +608,7 @@ class Interactive extends React.Component {
                 let vendorName = avsStringData?.smartLinkThirdPartyVendorVal;
                 let mobileready = avsStringData?.smartLinkOptimizedMobileVal === "yes" ? true : false;
 
-                this.setState({ itemID: uniqueIDInteractive, posterImage: epsURL })
+                this.setState({ itemID: uniqueIDInteractive, posterImage: epsURL, interactivetitle: smartLinkTitle })
                 let figuredata = {
                     height: height,
                     width: width,
@@ -616,6 +617,7 @@ class Interactive extends React.Component {
                     interactiveid: uniqueIDInteractive,
                     interactivetype: interactivetype,
                     interactiveformat: INTERACTIVE_EXTERNAL_LINK,
+                    interactivetitle: smartLinkTitle,
                     vendor: vendorName,
                     posterimage: {
                         "imageid": uniqueIDInteractive,
@@ -650,7 +652,6 @@ class Interactive extends React.Component {
             let alfrescoData = config?.alfrescoMetaData?.alfresco;
             let alfrescoSiteLocation = this.state.alfrescoSiteData;
             if(this.props.isCiteChanged){
-                console.log("in iffffffffffffffffffffffffffffff");
                 let changeSiteAlfrescoData={
                     currentAsset: {},
                     nodeRef: this.props.changedSiteData.guid,
@@ -664,7 +665,6 @@ class Interactive extends React.Component {
                     alfrescoSiteData:changeSiteAlfrescoData
                 })
             }else{
-                console.log("in elseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
                     handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
                     this.updateAlfrescoSiteUrl()
