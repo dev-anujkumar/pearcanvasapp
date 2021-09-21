@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
-import { sendDataToIframe, defaultMathImagePath } from '../../../constants/utility.js';
+import { sendDataToIframe, defaultMathImagePath, isOwnerRole} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
@@ -675,6 +675,17 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
 
+        /**
+         * function to set owner project slate popup flag as true
+         */
+        resetOwnerSlatePopupFlag = () => {
+            const { projectSubscriptionDetails } = this.props;
+            const isOwnerKeyExist = localStorage.getItem('hasOwnerEdit');
+            if (isOwnerRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isOwnerKeyExist) {
+                this.props.isOwnersSubscribedSlate(true);
+            }
+        }
+
         handleRefreshSlate = () => {
             const { projectSubscriptionDetails } = this.props;
             localStorage.removeItem('newElement');
@@ -684,6 +695,8 @@ function CommunicationChannel(WrappedComponent) {
             config.tempSlateEntityURN = null
             config.isPopupSlate = false
             let id = config.slateManifestURN;
+            // reset owner slate popup flag on slate refresh
+            this.resetOwnerSlatePopupFlag();
             // get slate subscription details on slate refresh from canvas SPA
             if (projectSubscriptionDetails?.projectSharingRole === 'OWNER') {
                 sendDataToIframe({ 'type': CHECK_SUBSCRIBED_SLATE_STATUS, 'message': { slateManifestURN: config.slateManifestURN } });
@@ -739,6 +752,8 @@ function CommunicationChannel(WrappedComponent) {
                 isSubscribed: false,
                 owner: {}
             }
+            // reset owner slate popup flag on slate change
+            this.resetOwnerSlatePopupFlag();
             if (message['category'] === 'titleChange') {
                 currentSlateObject = {
                     title: message.title,
