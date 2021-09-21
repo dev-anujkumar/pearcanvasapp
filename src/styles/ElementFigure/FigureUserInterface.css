@@ -684,7 +684,7 @@ th ol li.listItemNumeroUnoNone:before {
     background-color: #def8ff;
 }
 .deletefigurebutton:hover, .figure-element-container .figure-wrapper-update .updatefigurebutton:hover {
-    background-color: #def8ff;
+    background-color: #def8ff !important;
 }
 .figure-element-container .figure-wrapper-update .updatefigurebutton{
     top: 81px !important;
@@ -813,6 +813,7 @@ th ol li.listItemNumeroUnoNone:before {
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 322px;
+    height: 17px;
     font-family: OpenSans sans-serif !important;
     margin-left: 33px;
     font-size: 16px;
@@ -823,10 +824,6 @@ th ol li.listItemNumeroUnoNone:before {
     color: #fff;
 }
 
-.videoTitle:hover{
-    overflow: visible; 
-    white-space: normal; 
-}
 
 .addVideobutton:hover {
     background-color: #def8ff;

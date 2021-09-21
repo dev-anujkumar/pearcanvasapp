@@ -19,6 +19,7 @@ import { labelHtmlData } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
 import interactiveTypeData from '../ElementInteractive/interactiveTypes.js';
 import { AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE } from '../../constants/Element_Constants';
+import Tooltip from "@material-ui/core/Tooltip";
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -192,7 +193,9 @@ class FigureUserInterface extends Component {
             <div className='figure-wrapper-update'>
                 <div className='videoIconWrapper'>
                     <span className='videoIcon' >{assetIcon}</span>
-                    <span className='videoTitle'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "Video Title"}</span>
+                    <Tooltip title={assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "Video Title"} placement="bottom">
+                        <span className='videoTitle' >{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "Video Title"}</span>
+                    </Tooltip> 
                 </div>
                 {this.generatePosterImageJSX(element, assetBackgroundType)}
                 <div className='updatefigurebutton' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
