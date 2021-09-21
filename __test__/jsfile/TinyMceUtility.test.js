@@ -109,33 +109,6 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear()
     });
-    xit('Test - handleC2MediaClick - List Element-listLiText exists', () => {
-        document.querySelector = (selector) => {
-            if (selector == '#imageId li') {
-                return { innerText: "Testing" }
-            }
-        }
-        const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
-        tinyMceFn.handleC2MediaClick(permissions, mockEditor);
-        expect(spyFunc).toHaveBeenCalled();
-        spyFunc.mockClear()
-    });
-    xit('Test - handleC2MediaClick - List Element-alfresco mdetata in detail', () => {
-        config.alfrescoMetaData = {
-            alfresco: {
-                'path': 'test',
-                'nodeRef': {},
-                'repoName': 'c5 media',
-                'name': 'alfrecso name',
-                'repoInstance': 'instance1',
-                'siteVisibility': 'yes'
-            }
-        }
-        const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
-        tinyMceFn.handleC2MediaClick(permissions, mockEditor);
-        expect(spyFunc).toHaveBeenCalled();
-        spyFunc.mockClear()
-    });
     it('Test - handleC2MediaClick - List Element-no permissions-add_multimedia_via_alfresco', () => {
         document.querySelector = (selector) => {
             if (selector == '#imageId li') {
@@ -163,19 +136,6 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });
-    xit('Test - handleC2MediaClick - List Element-no alfresco metadata', () => {
-        config.alfrescoMetaData = {}
-        document.querySelector = (selector) => {
-            if (selector == '#imageId li') {
-                return { innerText: "Testing" }
-            }
-        }
-        axios.patch = jest.fn(() => Promise.resolve({ data: { name: "test" } }));
-        const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
-        tinyMceFn.handleC2MediaClick(['alfresco_crud_access'], mockEditor);
-        expect(spyFunc).toHaveBeenCalled();
-        spyFunc.mockClear();
-    });
     it('Test - handleC2MediaClick - List Element-no permission-alfresco_crud_access', () => {
         config.alfrescoMetaData = {}
         document.querySelector = (selector) => {
@@ -189,34 +149,50 @@ describe('Testing TinyMceUtility', () => {
         spyFunc.mockClear();
     });
 })
-xdescribe('Testing TinyMceUtility', () => {
+describe('Testing TinyMceUtility', () => {
 
     config.alfrescoMetaData = {
         alfresco: {
-            'path': 'test',
+            'name': 'test',
             'nodeRef': {},
-            'assetType': "image",
-            'uniqueID': "imageId",
+            'title': "image",
+            'guid': "imageId",
             'EpsUrl': "url",
             'alt-text': "Alt Text",
             'longDescription': "long Description"
         }
     }
-    it('Test - handleC2MediaClick - List Element-with img data', () => {
-        document.querySelector = (selector) => {
-            if (selector == 'img[data-id="${imageArgs.id}"]') {
-                return { outerHTML: "Test" }
-            } else {
-                return { outerHTML: "Data", innerText: "testing" }
+    it('Test - handleC2MediaClick - List Element-with img data',async () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
+        axios.get = await jest.fn().mockImplementationOnce(() => Promise.reject({}));
+        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    });
+    it('Test - handleC2MediaClick - List Element-with img data',async () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
+        axios.get = await jest.fn().mockImplementationOnce(() => Promise.resolve({ data: { list: { entries: [] } } }));
+        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    });
+    it('Test - handleC2MediaClick - List Element-with img data',async () => {
+        config.alfrescoMetaData = {
+            alfresco: {
+                'name': 'test',
+                'title': "image",
+                'guid': "imageId",
+                'modeRef': "url"
             }
         }
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
-        tinyMceFn.handleC2MediaClick(permissions, mockEditor, mockImageArgs);
+        axios.get = await jest.fn().mockImplementationOnce(() => Promise.reject({}));
+        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });
 })
-xdescribe('Testing TinyMceUtility', () => {
+describe('Testing TinyMceUtility', () => {
     config.alfrescoMetaData = {
         alfresco: {
             'path': 'test',
@@ -228,7 +204,7 @@ xdescribe('Testing TinyMceUtility', () => {
             'longDescription': "long Description"
         }
     }
-    it('Test - handleC2MediaClick - no getImgNode', () => {
+    it('Test - dataFromAlfresco  - no data args', () => {
         let mockEditor2 = {
             selection: {
                 setContent: () => { }
@@ -236,8 +212,96 @@ xdescribe('Testing TinyMceUtility', () => {
             insertContent: () => { },
             targetElm: { classList: { remove: () => { } }, querySelector:()=>{return undefined} }
         }
-        const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
-        tinyMceFn.handleC2MediaClick(permissions, mockEditor2, mockImageArgs);
+        let data = {
+            id: "",
+            epsUrl: "",
+            properties: {
+                "cplg:altText": "",
+                'cplg:longDescription': "",
+                content: { mimeType: "image/jpeg" }
+            }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'dataFromAlfresco');
+        tinyMceFn.dataFromAlfresco (data, mockEditor2, mockImageArgs);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    });
+    it('Test - dataFromAlfresco  - no getImgNode', () => {
+        let mockEditor2 = {
+            selection: {
+                setContent: () => { }
+            },
+            insertContent: () => { },
+            targetElm: { classList: { remove: () => { } }, querySelector:()=>{return undefined} }
+        }
+        let data = {
+            epsUrl:"iamge.png",            
+            id: "testid",
+            properties:{
+                "cplg:altText":"Alt Text",
+                'cplg:longDescription':"longDescription"
+            },
+            content:{mimeType: "image/jpeg"}
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'dataFromAlfresco');
+        tinyMceFn.dataFromAlfresco (data, mockEditor2, mockImageArgs);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    });
+    it('Test - dataFromAlfresco  - getImgNode', () => {
+        let mockEditor2 = {
+            selection: {
+                setContent: () => { }
+            },
+            insertContent: () => { },
+            targetElm: { classList: { remove: () => { } }, querySelector:()=>{return {outerHTML:""}} }
+        }
+        let data = {
+            epsUrl:"iamge.png",            
+            id: "testid",
+            properties:{
+                "cplg:altText":"Alt Text",
+                'cplg:longDescription':"longDescription"
+            },
+            content:{mimeType: "image/jpeg"}
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'dataFromAlfresco');
+        tinyMceFn.dataFromAlfresco (data, mockEditor2, mockImageArgs);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    });
+    it('Test - dataFromAlfresco  - no imageArgs', () => {
+        let mockEditor2 = {
+            selection: {
+                setContent: () => { }
+            },
+            insertContent: () => { },
+            targetElm: { classList: { remove: () => { } }, querySelector:()=>{return {outerHTML:""}} }
+        }
+        let data = {
+            epsUrl:"iamge.png",            
+            id: "testid",
+            properties:{
+                "cplg:altText":"Alt Text",
+                'cplg:longDescription':"longDescription"
+            },
+            content:{mimeType: "image/jpeg"}
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'dataFromAlfresco');
+        tinyMceFn.dataFromAlfresco (data, mockEditor2);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    });
+    it('Test - checkForDataIdAttribute', () => {
+        let data = {
+            match: ()=>{
+                return [
+                    `<img class="imageAssetContent"imageid="urn:pearson:alfresco:1234" data-id="urn:pearson:alfresco:1234"/>`,
+                ]
+            }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'checkForDataIdAttribute');
+        tinyMceFn.checkForDataIdAttribute (data);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });

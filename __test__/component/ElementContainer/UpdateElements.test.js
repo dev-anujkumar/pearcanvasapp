@@ -667,7 +667,7 @@ describe('Test for UpdateElements Functions', () => {
         expect(getpodHtmlmatchWithRegex).toBe(false);
     })
 
-    it('Test for ELEMENT-TYPE----->figure---->image/tableImage/mathImage - with DOM reference', () => {
+    xit('Test for ELEMENT-TYPE----->figure---->image/tableImage/mathImage - with DOM reference', () => {
 
         // creating cypress DOM elements for handling getElementById reference 
         for (let element = 0; element < 6; element++) {
@@ -715,7 +715,7 @@ describe('Test for UpdateElements Functions', () => {
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
 
-    it('Test for ELEMENT-TYPE----->figure---->codelisting - with DOM reference', () => {
+    xit('Test for ELEMENT-TYPE----->figure---->codelisting - with DOM reference', () => {
         let type = "figure",
             previousElementData = {
                 figuretype: 'codelisting',
