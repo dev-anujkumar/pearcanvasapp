@@ -302,7 +302,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         editor: true,
         Permission: false
     } });
-    const component = mount(<Provider store={store}> < TinyMceEditor {...props} /> </Provider>, { attachTo: document.body })
+    const component = mount(<Provider store={store}><span class="randomClass"><b><em><u><div class="codeNoHighlightLineOne">TinyMce</div></u></em></b></span> < TinyMceEditor {...props} /> </Provider>, { attachTo: document.body })
     let instance = component.find('TinyMceEditor').instance();
     let tinymceDiv = document.createElement('div');
     tinymceDiv.id = editor.id;
@@ -2446,6 +2446,86 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         instance.saveContent();
         expect(spysaveContent).toHaveBeenCalled();
         spysaveContent.mockClear()
+    });
+    it('Test-Method-#1-makeBqReplace ', () => {
+        let addFootnoteEvent = {
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn(),
+            target: {
+                id: ""
+            }
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(addFootnoteEvent) },
+            selection: editor.selection,
+            setContent: () => { },
+            insertContent: () => {
+                return '<sup><span><div class="codeNoHighlightLineOne">xyz</div></span><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>'
+            },
+        }
+        instance.props = {
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "SPAN",
+            elementId: "work:urn",
+            element: { type: "poetry" },
+            popupField: "formatted-title",
+            currentElement: undefined,
+            poetryField: {},
+            glossaryFootnoteValue: {
+                elementType: "poetry",
+                glossaryfootnoteid: "footnote:id",
+                type: "Footnote",
+                elementSubType: "stanza",
+                glossaryTermText: { replace: () => { } }
+            },
+            createPoetryElements: () => { }
+        }
+        component.update();
+        const spymakeBqReplace  = jest.spyOn(instance, 'makeBqReplace')
+        instance.makeBqReplace();
+        expect(spymakeBqReplace).toHaveBeenCalled();
+        spymakeBqReplace.mockClear()
+    });
+    it('Test-Method-#2-makeReplace', () => {
+        let addFootnoteEvent = {
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn(),
+            target: {
+                id: ""
+            }
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(addFootnoteEvent) },
+            selection: editor.selection,
+            setContent: () => { },
+            insertContent: () => {
+                return '<sup><span><div class="codeNoHighlightLineOne">xyz</div></span><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>'
+            },
+        }
+        instance.props = {
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "SPAN",
+            elementId: "work:urn",
+            element: { type: "poetry" },
+            popupField: "formatted-title",
+            currentElement: undefined,
+            poetryField: {},
+            glossaryFootnoteValue: {
+                elementType: "poetry",
+                glossaryfootnoteid: "footnote:id",
+                type: "Footnote",
+                elementSubType: "stanza",
+                glossaryTermText: { replace: () => { } }
+            },
+            createPoetryElements: () => { }
+        }
+        component.update();
+        const spymakeReplace = jest.spyOn(instance, 'makeReplace')
+        instance.makeReplace();
+        expect(spymakeReplace).toHaveBeenCalled();
+        spymakeReplace.mockClear()
     });
     it('Test-22-Method--20--checkElementIds', () => {
         let editor1 = { ...TinyMceEditor }, editor2 = {};
@@ -9160,3 +9240,4 @@ describe('------------------------------Test TINY_MCE_EDITOR case: Heading 4----
         expect(spyhandleCodeClick).toHaveBeenCalled()
     });
 });
+
