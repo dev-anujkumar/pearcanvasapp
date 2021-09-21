@@ -32,7 +32,7 @@ class FigureImage extends Component {
             alfrescoSite: '',
             alfrescoSiteData: {},
             figureLabelValue: 'No Label',
-            figureLabelData: this.props.figureDropdownData.image,
+            figureLabelData: this.props.figureDropdownData?.image,
             figureDropDown: false
         }
         this.wrapperRef = React.createRef();

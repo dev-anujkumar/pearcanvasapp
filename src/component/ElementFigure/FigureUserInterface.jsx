@@ -33,7 +33,8 @@ class FigureUserInterface extends Component {
             alfrescoSite: '',
             figureLabelValue: 'No Label',
             figureLabelData: [],
-            figureDropDown: false
+            figureDropDown: false,
+            elementType: ''
         }
         this.wrapperRef = React.createRef();
     }
@@ -45,25 +46,10 @@ class FigureUserInterface extends Component {
                 alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title
             })
         })
-        let figureLabelData = [];
-        switch (this.props.element.figuretype) {
-            case AUDIO:
-                figureLabelData = this.props.figureDropdownData.audio;
-                break;
-            case VIDEO:
-                figureLabelData = this.props.figureDropdownData.video;
-                break;
-            case INTERACTIVE:
-                figureLabelData = this.props.figureDropdownData.smartlinks;
-                break;
-            default:
-                figureLabelData = [];
-                break;
-        }
-        this.setState({ figureLabelData: figureLabelData });
+        this.updateDropdownOptions();
         let figureHtmlData = getLabelNumberTitleHTML(this.props.element);
         let figureLabelValue = this.state;
-        figureLabelValue = dropdownValueAtIntialize(figureLabelData, figureHtmlData.formattedLabel);
+        figureLabelValue = dropdownValueAtIntialize(this.state.figureLabelData, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
         if (this.props.element.figuretype === 'interactive') {
             this.props.updateSmartLinkDataForCompare(this.props.element.figuredata);
@@ -79,6 +65,31 @@ class FigureUserInterface extends Component {
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
             this.props.dataFromAlfresco(alfrescoAssetData);
         }
+        if (this.props.element.figuretype !== this.state.elementType) {
+            this.updateDropdownOptions();
+        }
+    }
+
+    updateDropdownOptions = () => {
+        let figureLabelData = [];
+        switch (this.props.element.figuretype) {
+            case AUDIO:
+                figureLabelData = this.props.figureDropdownData.audio;
+                break;
+            case VIDEO:
+                figureLabelData = this.props.figureDropdownData.video;
+                break;
+            case INTERACTIVE:
+                figureLabelData = this.props.figureDropdownData.smartlinks;
+                break;
+            default:
+                figureLabelData = [];
+                break;
+        }
+        this.setState({ 
+            figureLabelData: figureLabelData,
+            elementType: this.props.element.figuretype
+        });
     }
 
     handleClickOutside = (event) => {
@@ -129,7 +140,7 @@ class FigureUserInterface extends Component {
             this.props.updateSmartLinkDataForCompare(this.props.element.figuredata);
         }
         if (!labelElement?.classList.contains('actionPU')) {
-            this.hideHyperlinkEditable();
+            this.toggleHyperlinkEditable('hide');
         }
     }
 
@@ -151,7 +162,7 @@ class FigureUserInterface extends Component {
             }
         }
         if (labelElement?.classList.contains('actionPU')) {
-            this.hideHyperlinkEditable();
+            this.toggleHyperlinkEditable('hide');
         }
     }
 
@@ -187,14 +198,13 @@ class FigureUserInterface extends Component {
         )
     }
 
-    generateUpdateAssetJSX = (element, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite) => {
-        console.log("element................",element);
+    generateUpdateAssetJSX = (element, assetTitleText, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite) => {
         return (
             <div className='figure-wrapper-update'>
                 <div className='videoIconWrapper'>
                     <span className='videoIcon' >{assetIcon}</span>
-                    <Tooltip title={assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "Video Title"} placement="bottom">
-                        <span className='videoTitle' >{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : "Video Title"}</span>
+                    <Tooltip title={assetTitleText} placement="bottom">
+                        <span className='videoTitle' >{assetTitleText}</span>
                     </Tooltip> 
                 </div>
                 {this.generatePosterImageJSX(element, assetBackgroundType)}
@@ -215,12 +225,11 @@ class FigureUserInterface extends Component {
         switch (element.figuretype) {
             case AUDIO:
                 posterJsx = <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
-                
                 break;
             case VIDEO:
-                posterJsx = element.figuredata.posterimage.path ?
+                posterJsx = element.figuredata?.posterimage?.path ?
                     <video className="videoReel" width="246px" height="164px" controls="none" preload="none"
-                        poster={element.figuredata.posterimage.path}>
+                        poster={element?.figuredata?.posterimage?.path}>
                         <source src="" />
                         <track src="" kind="subtitles" srcLang="en" label="English" />
                     </video>
@@ -240,14 +249,14 @@ class FigureUserInterface extends Component {
             case AUDIO:
                 assetJsx =
                     assetId ?
-                        this.generateUpdateAssetJSX(element, figureAudioIcon, assetPath, updateAudioReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite) 
+                        this.generateUpdateAssetJSX(element, assetTitleText, figureAudioIcon, assetPath, updateAudioReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite) 
                         :
                         this.generateAddAssetJSX(figureAudioIcon, assetTitleText, addButtonText, audioReel, assetIdText, assetPathText)
                 break;
             case VIDEO:
                 assetJsx =
                     assetId ?
-                        this.generateUpdateAssetJSX(element, videoIcon, assetPath, updateVideoReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
+                        this.generateUpdateAssetJSX(element, assetTitleText, videoIcon, assetPath, updateVideoReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
                         :
                         this.generateAddAssetJSX(videoIcon, assetTitleText, addButtonText, videoReel, assetIdText, assetPathText)
                 break;
@@ -255,14 +264,14 @@ class FigureUserInterface extends Component {
                 assetJsx = element.figuredata.interactivetype !== 'pdf' ?
                     (
                         assetId ?
-                            this.generateUpdateAssetJSX(element, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
+                            this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
                             :
                             this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, slPosterImage, assetIdText, assetPathText)
                     )
                     :
                     (
                         assetId ?
-                            this.generateUpdateAssetJSX(element, smartlinkIcon, assetPath, pdSLfPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
+                            this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, pdSLfPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
                             :
                             this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, pdSLfPosterImage, assetIdText, assetPathText)
                     )
@@ -271,18 +280,16 @@ class FigureUserInterface extends Component {
         return assetJsx;
     }
 
-    hideHyperlinkEditable = () => {
+    toggleHyperlinkEditable = (value) => {
         let buttonElementDiv = document.getElementsByClassName(`Rectangle-button`);
         let hyperlinkTextDiv = document.getElementsByClassName(`actionPUdiv`);
-        buttonElementDiv[0]?.classList?.remove('hide-field');
-        hyperlinkTextDiv[0]?.classList?.add('hide-field');
-    }
-
-    showHyperlinkEditable = () => {
-        let buttonElementDiv = document.getElementsByClassName(`Rectangle-button`);
-        let hyperlinkTextDiv = document.getElementsByClassName(`actionPUdiv`);
-        buttonElementDiv[0]?.classList?.add('hide-field');
-        hyperlinkTextDiv[0]?.classList?.remove('hide-field');
+        if (value === 'show') {
+            buttonElementDiv[0]?.classList?.add('hide-field');
+            hyperlinkTextDiv[0]?.classList?.remove('hide-field');
+        } else {
+            buttonElementDiv[0]?.classList?.remove('hide-field');
+            hyperlinkTextDiv[0]?.classList?.add('hide-field');
+        }
     }
 
     render() {
@@ -297,7 +304,7 @@ class FigureUserInterface extends Component {
             figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
         } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
             figureLabelValue = 'No Label';
-        } else if (figureLabelFromApi !== '' && figureLabelValue === 'Custom') {
+        } else if ((figureLabelFromApi !== '' && figureLabelValue === 'Custom') || (dropdownData.length === 0 && figureLabelFromApi !== '')) {
             figureLabelValue = 'Custom';
         }
 
@@ -355,7 +362,7 @@ class FigureUserInterface extends Component {
                 break;
             case INTERACTIVE:
                 assetId = element.figuredata.interactiveid ? element.figuredata.interactiveid : '';
-                assetTitleText = element.figuredata.path ? element.figuredata.path : 'Smart link Title';
+                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : element.figuredata?.path ? element.figuredata?.path : 'Smart link Title';
                 addButtonText = "Add a Smart Link";
                 assetIdText = "Asset ID:";
                 assetPathText = "Asset Path:";
@@ -415,8 +422,8 @@ class FigureUserInterface extends Component {
                             {
                                     element.figuretype === INTERACTIVE && imageDimension === '' ?
                                         <div>
-                                            <div className='Rectangle-button' onClick={this.showHyperlinkEditable} >
-                                                <span className="Enter-Button-Label">{element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/&nbsp;/g, "") : "Enter Button Label"}</span>
+                                            <div className='Rectangle-button' onClick={() => this.toggleHyperlinkEditable('show')} >
+                                                <span className="Enter-Button-Label">{element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, "") : "Enter Button Label"}</span>
                                             </div>
                                             <div className="hide-field actionPUdiv">
                                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter Button Label" className={"actionPU hyperLinkText"} tagName={'p'} model={element.html.postertext ? element.html.postertext : ""} handleEditorFocus={handleFocus} handleBlur={handleBlur} slateLockInfo={slateLockInfo} elementId={elementId} element={element} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
