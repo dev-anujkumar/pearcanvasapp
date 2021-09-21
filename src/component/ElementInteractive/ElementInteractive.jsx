@@ -71,7 +71,6 @@ class Interactive extends React.Component {
             })
         }
         getAlfrescositeResponse(this.props.elementId, (response) => {
-            console.log("did mount console...............",response);
             this.setState({
                 alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
                 alfrescoSiteData: { ...response }

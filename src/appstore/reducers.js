@@ -91,7 +91,12 @@ const INITIAL_STATE = {
     removeGlossaryImage:false,
     oldFigureDataForCompare: {},
     oldSmartLinkDataForCompare: {},
-    figureDropdownData: {}
+    figureDropdownData: {
+        audio: ["No Label", "Custom"],
+        image: ["No Label", "Custom"],
+        smartlinks: ["No Label", "Custom"],
+        video: ["No Label", "Custom"]
+    }
 };
 
 const INITIAL_ACTION = {

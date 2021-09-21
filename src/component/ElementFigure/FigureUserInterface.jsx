@@ -32,7 +32,8 @@ class FigureUserInterface extends Component {
             alfrescoSite: '',
             figureLabelValue: 'No Label',
             figureLabelData: [],
-            figureDropDown: false
+            figureDropDown: false,
+            elementType: ''
         }
         this.wrapperRef = React.createRef();
     }
@@ -44,25 +45,10 @@ class FigureUserInterface extends Component {
                 alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title
             })
         })
-        let figureLabelData = [];
-        switch (this.props.element.figuretype) {
-            case AUDIO:
-                figureLabelData = this.props.figureDropdownData.audio;
-                break;
-            case VIDEO:
-                figureLabelData = this.props.figureDropdownData.video;
-                break;
-            case INTERACTIVE:
-                figureLabelData = this.props.figureDropdownData.smartlinks;
-                break;
-            default:
-                figureLabelData = [];
-                break;
-        }
-        this.setState({ figureLabelData: figureLabelData });
+        this.updateDropdownOptions();
         let figureHtmlData = getLabelNumberTitleHTML(this.props.element);
         let figureLabelValue = this.state;
-        figureLabelValue = dropdownValueAtIntialize(figureLabelData, figureHtmlData.formattedLabel);
+        figureLabelValue = dropdownValueAtIntialize(this.state.figureLabelData, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
         if (this.props.element.figuretype === 'interactive') {
             this.props.updateSmartLinkDataForCompare(this.props.element.figuredata);
@@ -78,6 +64,31 @@ class FigureUserInterface extends Component {
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
             this.props.dataFromAlfresco(alfrescoAssetData);
         }
+        if (this.props.element.figuretype !== this.state.elementType) {
+            this.updateDropdownOptions();
+        }
+    }
+
+    updateDropdownOptions = () => {
+        let figureLabelData = [];
+        switch (this.props.element.figuretype) {
+            case AUDIO:
+                figureLabelData = this.props.figureDropdownData.audio;
+                break;
+            case VIDEO:
+                figureLabelData = this.props.figureDropdownData.video;
+                break;
+            case INTERACTIVE:
+                figureLabelData = this.props.figureDropdownData.smartlinks;
+                break;
+            default:
+                figureLabelData = [];
+                break;
+        }
+        this.setState({ 
+            figureLabelData: figureLabelData,
+            elementType: this.props.element.figuretype
+        });
     }
 
     handleClickOutside = (event) => {
@@ -187,7 +198,6 @@ class FigureUserInterface extends Component {
     }
 
     generateUpdateAssetJSX = (element, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite) => {
-        console.log("element................",element);
         return (
             <div className='figure-wrapper-update'>
                 <div className='videoIconWrapper'>
@@ -294,7 +304,7 @@ class FigureUserInterface extends Component {
             figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
         } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
             figureLabelValue = 'No Label';
-        } else if (figureLabelFromApi !== '' && figureLabelValue === 'Custom') {
+        } else if ((figureLabelFromApi !== '' && figureLabelValue === 'Custom') || (dropdownData.length === 0 && figureLabelFromApi !== '')) {
             figureLabelValue = 'Custom';
         }
 
@@ -413,7 +423,7 @@ class FigureUserInterface extends Component {
                                     element.figuretype === INTERACTIVE && imageDimension === '' ?
                                         <div>
                                             <div className='Rectangle-button' onClick={this.showHyperlinkEditable} >
-                                                <span className="Enter-Button-Label">{element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/&nbsp;/g, "") : "Enter Button Label"}</span>
+                                                <span className="Enter-Button-Label">{element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, "") : "Enter Button Label"}</span>
                                             </div>
                                             <div className="hide-field actionPUdiv">
                                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter Button Label" className={"actionPU hyperLinkText"} tagName={'p'} model={element.html.postertext ? element.html.postertext : ""} handleEditorFocus={handleFocus} handleBlur={handleBlur} slateLockInfo={slateLockInfo} elementId={elementId} element={element} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />

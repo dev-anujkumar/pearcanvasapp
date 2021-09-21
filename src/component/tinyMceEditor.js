@@ -3529,10 +3529,6 @@ export class TinyMceEditor extends Component {
      */
     handleBlur = (e, forceupdate) => {
 
-        if (this.props.element.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
-            this.props.onFigureImageFieldBlur(this.props.index);
-        }
-
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
@@ -3569,6 +3565,9 @@ export class TinyMceEditor extends Component {
         if (checkforToolbarClick(relatedTargets)) {
             e.stopPropagation();
             return;
+        }
+        if (this.props.element.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
+            this.props.onFigureImageFieldBlur(this.props.index);
         }
         tinymce.$('span[data-mce-type="bookmark"]').each(function () {
             let innerHtml = this.innerHTML;

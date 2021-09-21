@@ -324,14 +324,7 @@ export const fetchFigureDropdownOptions = () => (dispatch) => {
             "PearsonSSOSession": config.ssoToken
         }
     }).then(response => {
-        let dropdownOptionsObj = response?.data?.list;
-        dropdownOptionsObj = {
-            image: ["No Label", "Figure", "Table", "Equation", "Custom"],
-            audio: ["No Label", "Custom"],
-            video: ["No Label", "Video", "Custom"],
-            smartlinks: ["No Label", "Figure", "Table", "Custom", "Knowdl"]
-        }
-
+        let dropdownOptionsObj = response?.data;
         if (Object.keys(dropdownOptionsObj).length > 0) {
             dispatch({
                 type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
