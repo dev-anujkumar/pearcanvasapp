@@ -556,12 +556,14 @@ class ElementContainer extends Component {
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-        let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "")
+        let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "");
+        let oldImage = this.props.oldImage;
+        oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
         // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            this.props.oldImage !== assetId
+            oldImage !== assetId
             // (defaultImageUrl !== (previousElementData.figuredata.posterimage && previousElementData.figuredata.posterimage.path)) //PCAT-6815  fixes
         );
     }
@@ -2294,7 +2296,8 @@ const mapStateToProps = (state) => {
         prevSelectedElement: state.tcmReducer.prevElementId,
         projectUsers: state.commentsPanelReducer.users,
         projectInfo: state.projectInfo,
-        oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare
+        oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare,
+        oldAudioVideoDataForCompare: state.appStore.oldAudioVideoDataForCompare
     }
 }
 

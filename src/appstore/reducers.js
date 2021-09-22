@@ -50,6 +50,7 @@ import {
     SHOW_REMOVE_GLOSSARY_IMAGE,
     UPDATE_OLD_FIGUREIMAGE_INFO,
     UPDATE_OLD_SMARTLINK_INFO,
+    UPDATE_OLD_AUDIOVIDEO_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS
 } from '../constants/Action_Constants';
 
@@ -91,6 +92,7 @@ const INITIAL_STATE = {
     removeGlossaryImage:false,
     oldFigureDataForCompare: {},
     oldSmartLinkDataForCompare: {},
+    oldAudioVideoDataForCompare: {},
     figureDropdownData: {
         audio: ["No Label", "Custom"],
         image: ["No Label", "Custom"],
@@ -326,6 +328,13 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 oldFigureDataForCompare: action.payload
             }
+
+        case UPDATE_OLD_AUDIOVIDEO_INFO:
+            return {
+                ...state,
+                oldAudioVideoDataForCompare: action.payload
+            }
+
         case UPDATE_OLD_SMARTLINK_INFO:
             return {
                 ...state,
