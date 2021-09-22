@@ -350,12 +350,12 @@ export const getProjectDetails = () => (dispatch, getState) => {
             payload: response.data
         })
         // PCAT-10682 - Passing project metadata response to toc wrapper for updating the sharing context role if required
-        // if (response?.data && Object.keys(response.data).length > 0) {
-        //     sendDataToIframe({
-        //         'type': UPDATE_PROJECT_METADATA,
-        //         'message': response.data
-        //     })
-        // }
+        if (response?.data && Object.keys(response.data).length > 0) {
+            sendDataToIframe({
+                'type': UPDATE_PROJECT_METADATA,
+                'message': response.data
+            })
+        }
         const data = JSON.parse(JSON.stringify(response.data))
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
