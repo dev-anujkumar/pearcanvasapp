@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
@@ -692,9 +692,18 @@ export const updateMultipleColumnData = (multipleColumnObjData, objKey) => (disp
     })
 }
 
+// it saves the asset details of figure image element for compare asset changes
 export const updateFigureImageDataForCompare = (oldFigureData) => (dispatch) => {
     dispatch({
         type: UPDATE_OLD_FIGUREIMAGE_INFO,
         payload: oldFigureData
+    })
+}
+
+// it saves the asset details of smartlink element for compare asset changes
+export const updateSmartLinkDataForCompare = (oldSmartLinkData) => (dispatch) => {
+    dispatch({
+        type: UPDATE_OLD_SMARTLINK_INFO,
+        payload: oldSmartLinkData
     })
 }

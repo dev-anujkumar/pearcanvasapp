@@ -183,4 +183,5 @@ export const OWNERS_SUBSCRIBED_SLATE= 'OWNERS_SUBSCRIBED_SLATE';
 
 /*---------------- figure image figuredata object details Info ------------------------*/
 export const UPDATE_OLD_FIGUREIMAGE_INFO = 'UPDATE_OLD_FIGUREIMAGE_INFO';
+export const UPDATE_OLD_SMARTLINK_INFO = 'UPDATE_OLD_SMARTLINK_INFO';
 export const UPDATE_FIGURE_DROPDOWN_OPTIONS = 'UPDATE_FIGURE_DROPDOWN_OPTIONS';

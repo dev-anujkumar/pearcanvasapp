@@ -324,11 +324,11 @@ export const fetchFigureDropdownOptions = () => (dispatch) => {
             "PearsonSSOSession": config.ssoToken
         }
     }).then(response => {
-        let dropdownOptionsArr = response?.data?.list;
-        if (dropdownOptionsArr.length > 0) {
+        let dropdownOptionsObj = response?.data;
+        if (Object.keys(dropdownOptionsObj).length > 0) {
             dispatch({
                 type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
-                payload: dropdownOptionsArr
+                payload: dropdownOptionsObj
             })
         }
     }).catch(error => {
