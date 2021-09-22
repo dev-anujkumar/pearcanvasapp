@@ -5,7 +5,7 @@ import TinyMceEditor from "../tinyMceEditor";
 import { getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js';
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
 import './../../styles/ElementFigure/FigureUserInterface.css';
-import { updateSmartLinkDataForCompare } from '../ElementContainer/ElementContainer_Actions';
+import { updateSmartLinkDataForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
 import videoReel from '../../images/ElementButtons/videoReel.png';
 import audioReel from '../../images/ElementButtons/audioReel.png';
@@ -53,6 +53,8 @@ class FigureUserInterface extends Component {
         this.setState({ figureLabelValue: figureLabelValue });
         if (this.props.element.figuretype === 'interactive') {
             this.props.updateSmartLinkDataForCompare(this.props.element.figuredata);
+        } else if (this.props.element.figuretype === 'audio' || this.props.element.figuretype === 'video') {
+            this.props.updateAudioVideoDataForCompare(this.props.element.figuredata);
         }
     }
 
@@ -138,6 +140,8 @@ class FigureUserInterface extends Component {
         }
         if (this.props.element.figuretype === 'interactive') {
             this.props.updateSmartLinkDataForCompare(this.props.element.figuredata);
+        } else if (this.props.element.figuretype === 'audio' || this.props.element.figuretype === 'video') {
+            this.props.updateAudioVideoDataForCompare(this.props.element.figuredata);
         }
         if (!labelElement?.classList.contains('actionPU')) {
             this.toggleHyperlinkEditable('hide');
@@ -461,6 +465,9 @@ const mapActionToProps = (dispatch) => {
     return {
         updateSmartLinkDataForCompare: (oldSmartLinkData) => {
             dispatch(updateSmartLinkDataForCompare(oldSmartLinkData))
+        },
+        updateAudioVideoDataForCompare: (oldAudioVideoData) => {
+            dispatch(updateAudioVideoDataForCompare(oldAudioVideoData))
         }
     }
 }
