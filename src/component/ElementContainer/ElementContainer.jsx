@@ -1901,9 +1901,20 @@ class ElementContainer extends Component {
         }
 
         if ('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
-            let elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
-                return commentOnEntity === detailsToSet.element.id;
+            let elmUrn = []
+            let elmComment
+
+            if (element?.elementdata?.bodymatter?.length) {
+             (this.props.allComments).filter(({ commentOnEntity }) => {
+                  if (commentOnEntity === detailsToSet.element.id) { elmUrn.push(detailsToSet.element.id) }
             });
+                elmComment = this.filterElementData(elmUrn, element)
+            } else {
+                elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
+                    return commentOnEntity === detailsToSet.element.id
+                });
+            }
+            
             detailsToSet['elmComment'] = elmComment || [];
 
             let elmFeedback = (this.props.tcmData).filter(({ elemURN }) => {
@@ -1924,6 +1935,26 @@ class ElementContainer extends Component {
         this.props.setSelection(detailsToSet);
     }
 
+    /**
+     * @description - This function is for handling the comments flag in cut/paste
+     * @param {event} element
+     */
+    filterElementData = (elmUrn, element) => {
+        element.elementdata.bodymatter.map((item) => {
+            if (item?.type === "manifest") {
+                item?.contents?.bodymatter?.map((ele) => {
+                    elmUrn.push(ele.id)  /* Ex. -  WE:Body/SectionBreak:P*/
+                })
+            } else {
+                elmUrn.push(item.id) /* Ex. -  Aside/(WE:Head):P*/
+            }
+        })
+        return (this.props.allComments).filter(({ commentOnEntity }) => {
+            return elmUrn.some(function (commentEntity2) {
+                return commentOnEntity === commentEntity2
+            });
+        });
+    }
     /**
      * @description - This function is for handling the closing and opening of popup.
      * @param {event} popup
