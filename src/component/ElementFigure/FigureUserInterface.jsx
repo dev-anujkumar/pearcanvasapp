@@ -203,7 +203,7 @@ class FigureUserInterface extends Component {
             <div className='figure-wrapper-update'>
                 <div className='videoIconWrapper'>
                     <span className='videoIcon' >{assetIcon}</span>
-                    <Tooltip title={assetTitleText} placement="bottom">
+                    <Tooltip title={<h2 style={{ color: "white" }}>{assetTitleText}</h2>} placement="bottom">
                         <span className='videoTitle' >{assetTitleText}</span>
                     </Tooltip> 
                 </div>
