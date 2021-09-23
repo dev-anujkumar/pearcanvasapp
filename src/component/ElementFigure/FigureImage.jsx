@@ -317,7 +317,7 @@ class FigureImage extends Component {
 
     convertOptionsToLowercase = (Options) => {
         let lowercaseOptions = [];
-        if (Options.length > 0) {
+        if (Options?.length > 0) {
             for (let option of Options) {
                 if (!BLANK_LABEL_OPTIONS.includes(option)) {
                     lowercaseOptions.push(option.toLowerCase());

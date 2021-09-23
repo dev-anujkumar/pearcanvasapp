@@ -3038,7 +3038,7 @@ export class TinyMceEditor extends Component {
         let toolbar = [];
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        } else if (this.props.element.type === 'figure' && ['image', 'table', 'mathImage'].includes(this.props.element.figuretype)) {
+        } else if ((this.props.element.type === 'figure' && ['image', 'table', 'mathImage', 'audio', 'video'].includes(this.props.element.figuretype)) || (this.props.element.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype) && this.props.placeholder !== "Enter Button Label")) {
             toolbar = this.setFigureToolbar(this.props.placeholder);
         } else if (this.props.element.type === 'figure' && this.props.placeholder === "Enter Number...") {
             toolbar = config.figureNumberToolbar;
