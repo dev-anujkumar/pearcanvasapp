@@ -135,18 +135,18 @@ export const checkInteractive = (element) => {
     return false;
 }
 
-export const checkFigureMetadata = (element) => {
-    const figureImageTypes = ["image", "mathImage", "table","audio", "video","interactive"];
+export const checkFigureMetadata = (element, buttonType = null) => {
+    const figureImageTypes = ["image", "mathImage", "table"];
     const smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
-    const hasElements=[ELEMENT_FIGURE,AUDIO,VIDEO]
-    let elementAssetId = element?.figuredata?.audioid ?? element?.figuredata?.videoid
-    if (hasElements.includes( element?.type) && figureImageTypes.includes(element?.figuretype) &&
-     element?.figuredata?.path && element?.figuredata?.path !==DEFAULT_IMAGE_SOURCE) {
+    const hasElements = [ELEMENT_FIGURE, AUDIO, VIDEO];
+    let elementAssetId = element?.figuredata?.audioid ?? element?.figuredata?.videoid;
+    if (hasElements.includes(element?.type) && figureImageTypes.includes(element?.figuretype) &&
+        element?.figuredata?.path && element?.figuredata?.path !== DEFAULT_IMAGE_SOURCE) {
         return true;
     }
-    else if(hasElements.includes(element?.figuretype) && elementAssetId !== ''){
+    else if (hasElements.includes(element?.figuretype) && elementAssetId !== '' && buttonType === 'alfrescoExpandButton') {
         return true
-    }else if(hasElements.includes(element?.figuretype) && smartlinkContexts.includes(element?.figuredata?.interactivetype)){
+    } else if (smartlinkContexts.includes(element?.figuredata?.interactivetype) && buttonType === 'alfrescoExpandButton') {
         return true;
     }
     return false;

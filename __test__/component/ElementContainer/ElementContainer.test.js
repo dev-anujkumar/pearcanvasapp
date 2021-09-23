@@ -149,6 +149,12 @@ const store = mockStore({
         },
         oldFigureDataForCompare: {
             path: "test"
+        },
+        oldSmartLinkDataForCompare: {
+            interactiveid: 'test id'
+        },
+        oldAudioVideoDataForCompare: {
+            videoid: 'id'
         }
     },
     slateLockReducer: {
@@ -1865,7 +1871,10 @@ describe('Test-Other Functions', () => {
                     tag: "H1",
                     toolbar: ['bold']
                 },
-                permissions: []
+                permissions: [],
+                oldSmartLinkDataForCompare: {
+                    interactiveid: 'test id'
+                }
             },
             slateLockReducer: {
                 slateLockInfo: {
@@ -1950,7 +1959,7 @@ describe('Test-Other Functions', () => {
                 secondaryOption: "secondary-pullquote",
                 tag: "BQ",
                 toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
-            }
+            },
         };
         let elementContainer = mount(<Provider store={store1}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -2326,12 +2335,15 @@ describe('Test-Other Functions', () => {
         elementContainerInstance4.checkTCMStatus(tcmData, elementId, defaultUrn);
     })
 
-    it('handleAlfrescoMetadataWindow method', () => {
+    it('handleAlfrescoMetadataWindow method for image ', () => {
         let props7 = {
             element: {
                 id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'image',
                 figuredata: {
-                    imageid: ''
+                    imageid: {
+                        replace: jest.fn()
+                    }
                 }
             },
             permissions: [],
@@ -2370,6 +2382,98 @@ describe('Test-Other Functions', () => {
         expect(spyhandleContentChange).toHaveBeenCalled();
         spyhandleContentChange.mockClear()
     })
+
+    it('handleAlfrescoMetadataWindow method for image ', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'image',
+                figuredata: {
+                    imageid: {
+                        replace: jest.fn()
+                    }
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
+
+    it('handleAlfrescoMetadataWindow method for audio ', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'audio',
+                figuredata: {
+                    audioid: {
+                        replace: jest.fn()
+                    }
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
+
+    it('handleAlfrescoMetadataWindow method for video ', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'video',
+                figuredata: {
+                    videoid: {
+                        replace: jest.fn()
+                    }
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
+
+    it('handleAlfrescoMetadataWindow method for smartlinks ', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'interactive',
+                figuredata: {
+                    interactiveid: {
+                        replace: jest.fn()
+                    }
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
 
     it('handleBlurAssessmentSlate method - calledFrom - updateAssessmentFormat', () => {
         let props8 = {
