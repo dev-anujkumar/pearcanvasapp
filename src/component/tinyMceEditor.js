@@ -2190,9 +2190,11 @@ export class TinyMceEditor extends Component {
             remainSpans[0].parentNode.removeChild(remainSpans[0]);
         }
         let positionElement = document.getElementById('BCEposition');
+        if (positionElement) {
         tinymce.activeEditor.selection.setCursorLocation(positionElement, 0);
         positionElement.remove();
         tinymce.activeEditor.undoManager.clear();
+        }
     }
 
     /**

@@ -325,63 +325,6 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         component.find('TinyMceEditor').instance().editorConfig.init_instance_callback(editor);
         expect(callback).toHaveBeenCalled()
     });
-    it('Test-2.1-Tinymce Setup Callback Call --init_instance_callback---', () => {
-        let editor = {
-            originalEvent: {
-                command: "mceInsertContent"
-            },
-            id: 1,
-            on: (temp, cb) => {
-                cb(event)
-            },
-            setContent: () => { },
-            children: ['<p class="paragraphNumeroUno">hello</p>'],
-            classList: { remove: () => { }, setAttribute: () => { } },
-            getContentAreaContainer: () => {
-                return true;
-            },
-            targetElm: {
-                findChildren: () => {
-                    return {
-                        length: 0
-                    };
-                },
-                closest: () => {
-                    return {
-                        getAttribute: () => { }
-                    }
-                },
-                getAttribute: () => {
-                    return {
-                        length: 0
-                    };
-                },
-                setAttribute: () => {
-                    return {
-                        length: 1
-                    }
-                }
-            }
-        }
-        document = {
-            createElement: () => {
-                return { innerHTML: "" }
-            },
-            getElementById: () => {
-                return {
-                    innerHTML: "<div>blockquote</div>"
-                }
-            }
-        }
-        component.setProps({
-            ...props,
-            permissions: ["login", "logout"]
-        })
-        component.update();
-        const callback = jest.spyOn(component.find('TinyMceEditor').instance().editorConfig, 'init_instance_callback');
-        component.find('TinyMceEditor').instance().editorConfig.init_instance_callback(editor);
-        expect(callback).toHaveBeenCalled()
-    });
     describe('Test-3-Method--1--innerTextWithMathMl', () => {
         it('Test-3.1-Method--1--innerTextWithMathMl--childNodes.length == 0', () => {
             component.setProps({
@@ -2558,7 +2501,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             setContent: () => { },
             insertContent: () => {
                 return '<sup><span><div class="codeNoHighlightLineOne">xyz</div></span><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>'
-            },
+            }
         }
         instance.props = {
             ...props,
@@ -2577,6 +2520,43 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 glossaryTermText: { replace: () => { } }
             },
             createPoetryElements: () => { }
+        }
+        tinymce.activeEditor = {
+            id: "work:urn:1",
+            targetElm: {
+                findChildren: () => {
+                    return {
+                        length: 0
+                    };
+                },
+                closest: () => {
+                    return {
+                        getAttribute: () => { }
+                    }
+                },
+                getAttribute: () => {
+                    return {
+                        length: 0
+                    };
+                },
+                setAttribute: () => {
+                    return {
+                        length: 1
+                    }
+                }
+            },
+            selection: tinyMceEditor.selection,
+            dom: domObj,
+            on: (temp, cb) => {
+                cb(event)
+            },
+            setContent: () => { },
+            children: ['<p class="paragraphNumeroUno">hello</p>'],
+            classList: { remove: () => { }, setAttribute: () => { } },
+            getContentAreaContainer: () => {
+                return true;
+            },
+            ...nextEditor
         }
         component.update();
         const spymakeReplace = jest.spyOn(instance, 'makeReplace')
