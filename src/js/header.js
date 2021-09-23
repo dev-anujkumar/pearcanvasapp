@@ -75,6 +75,11 @@ const redirectParent = (urlToBeRedirected) => {
     });
 }
 const logoutWithModernOpenAM = () => {
+    // remove owner slate popup flag from local storage
+    const isOwnerKey = localStorage.getItem('hasOwnerEdit');
+    if (isOwnerKey) {
+        localStorage.removeItem('hasOwnerEdit');
+    }
     deleteCookie('PearsonSSOSession', 'pearson.com');
     removeAllLocal();
 };
