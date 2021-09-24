@@ -12,7 +12,7 @@ const store = mockStore({});
 
 let props = {
     search: true,
-    searchTerm: '',
+    searchTerm: "test",
     onClose: jest.fn(),
     icons: { searchClose, searchUp, searchDown }
 }
