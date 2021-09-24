@@ -144,7 +144,8 @@ class FigureUserInterface extends Component {
             this.props.updateAudioVideoDataForCompare(this.props.element.figuredata);
         }
         if (!labelElement?.classList.contains('actionPU')) {
-            this.toggleHyperlinkEditable('hide');
+            let buttonIndex = this.getIdOfButton(id);
+            this.toggleHyperlinkEditable('hide', buttonIndex);
         }
     }
 
@@ -166,8 +167,22 @@ class FigureUserInterface extends Component {
             }
         }
         if (labelElement?.classList.contains('actionPU')) {
-            this.toggleHyperlinkEditable('hide');
+            let buttonIndex = this.getIdOfButton(id);
+            this.toggleHyperlinkEditable('hide', buttonIndex);
         }
+    }
+
+    getIdOfButton = (index) => {
+        let indexToReturn = '';
+        let indexes = index.split('-');
+        for (let i=0; i<(indexes.length-1); i++) {
+            if (i === 0) {
+                indexToReturn += indexes[0]; 
+            } else {
+                indexToReturn += `-${indexes[i]}`;
+            }
+        }
+        return indexToReturn;
     }
 
     convertOptionsToLowercase = (Options) => {
@@ -289,9 +304,9 @@ class FigureUserInterface extends Component {
         return assetJsx;
     }
 
-    toggleHyperlinkEditable = (value) => {
-        let buttonElementDiv = document.getElementsByClassName(`Rectangle-button`);
-        let hyperlinkTextDiv = document.getElementsByClassName(`actionPUdiv`);
+    toggleHyperlinkEditable = (value, id) => {
+        let buttonElementDiv = document.getElementsByClassName(`Rectangle-button ${id}`);
+        let hyperlinkTextDiv = document.getElementsByClassName(`actionPUdiv ${id}`);
         if (value === 'show') {
             buttonElementDiv[0]?.classList?.add('hide-field');
             hyperlinkTextDiv[0]?.classList?.remove('hide-field');
@@ -431,17 +446,17 @@ class FigureUserInterface extends Component {
                             {
                                     element.figuretype === INTERACTIVE && imageDimension === '' ?
                                         <div>
-                                            <div className='Rectangle-button' onClick={() => this.toggleHyperlinkEditable('show')} >
+                                            <div className={`Rectangle-button ${index}`} onClick={() => this.toggleHyperlinkEditable('show', index)} >
                                                 <span className="Enter-Button-Label">{element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, "") : "Enter Button Label"}</span>
                                             </div>
-                                            <div className="hide-field actionPUdiv">
+                                            <div className={`hide-field actionPUdiv ${index}`} >
                                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter Button Label" className={"actionPU hyperLinkText"} tagName={'p'} model={element.html.postertext ? element.html.postertext : ""} handleEditorFocus={handleFocus} handleBlur={handleBlur} slateLockInfo={slateLockInfo} elementId={elementId} element={element} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                             </div>
                                         </div>
                                         :
                                         null
                             }
-                            <div className="figure-element-container">
+                            <div className="figure-element-container interface-container">
                                 <div id="figure_add_div" className={`pearson-component image figureData ${element.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                                     {this.renderAssetSection(element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite)}
                                 </div>
