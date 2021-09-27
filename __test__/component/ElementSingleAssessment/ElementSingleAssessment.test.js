@@ -771,7 +771,7 @@ describe('Testing Element Single Assessment - ELM ASSESSMENTS - Elm Functions', 
         expect(spycomponentDidUpdate).toHaveBeenCalled()
         spycomponentDidUpdate.mockClear()
     });
-    it('Test-A.2-updateElmAssessment function', async () => {
+    xit('Test-A.2-updateElmAssessment function', async () => {
         const evt = {
             preventDefault: jest.fn()
         }

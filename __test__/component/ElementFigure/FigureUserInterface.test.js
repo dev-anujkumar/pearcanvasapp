@@ -5,20 +5,33 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-import FigureImage from '../../../src/component/ElementFigure/FigureImage';
-import { figureImage50TextElementDefault,figureImage50TextElementWithData,mathImage50TextElementDefault, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,testDataFromNewAlfresco } from '../../../fixtures/ElementFigureTestingData.js'
+import FigureUserInterface from '../../../src/component/ElementFigure/FigureUserInterface';
+import { newVideoObjWithData} from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
-jest.mock('../../../src/component/tinyMceEditor.js',()=>{
+
+jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
         return (<div>null</div>)
     }
 })
-global.fetch = jest.fn().mockImplementation(() => {
-    return new Promise((resolve, reject) => {
-      resolve({json:jest.fn(),id:'urn:pearson134'});
-   });
- });
-describe('Testing Figure image component', () => {
+
+jest.mock('../../../src/constants/utility.js',()=>{
+    return {
+        getLabelNumberTitleHTML: () => {
+            return jest.fn()
+        },
+        hasReviewerRole: () => {
+            return false
+        },
+        sendDataToIframe: () => {
+            return jest.fn()
+        }
+    }
+})
+
+
+
+describe('Testing FigureUserInterface component', () => {
     let initialState = {
         alfrescoReducer: {
             alfrescoAssetData: {},
@@ -37,7 +50,7 @@ describe('Testing Figure image component', () => {
 
     xtest('renders without crashing', () => {
         let props = {
-            model:figureImage50TextElementWithData,
+            model:newVideoObjWithData,
             index:"" ,
             slateLockInfo: {
                 isLocked: false,
@@ -48,18 +61,18 @@ describe('Testing Figure image component', () => {
             permissions: ['add_multimedia_via_alfresco'],
             figureData:{
                 model:{
-                    figuretype:'image'
+                    figuretype:'video'
                 }
             }
         }
-        const component = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
+        const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance(); 
         expect(instance).toBeDefined();
     })
-    describe('Testing alfrescoSiteUrl', () => {
+    xdescribe('Testing alfrescoSiteUrl', () => {
         let props = {
-            model:figureImage50TextElementWithData,
+            model:newVideoObjWithData,
             index:"" ,
             slateLockInfo: {
                 isLocked: false,
@@ -70,8 +83,8 @@ describe('Testing Figure image component', () => {
             permissions: ['add_multimedia_via_alfresco'],
         }
         xtest('Testing updateAlfrescoSiteUrl if condition', () => {
-            let elementFigure = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
-            const elementFigureInstance = elementFigure.find('FigureImage').instance();
+            let elementFigure = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            const elementFigureInstance = elementFigure.find('FigureUserInterface').instance();
             elementFigureInstance.setState({ alfrescoSiteData: {
                 title: 'test'
             }});
@@ -79,8 +92,8 @@ describe('Testing Figure image component', () => {
             expect(elementFigureInstance.state.alfrescoSite).toBe('test')
         })
         xtest('Testing updateAlfrescoSiteUrl else condition', () => {
-            let elementFigure = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
-            const elementFigureInstance = elementFigure.find('FigureImage').instance();
+            let elementFigure = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            const elementFigureInstance = elementFigure.find('FigureUserInterface').instance();
             elementFigureInstance.setState({ alfrescoSiteData: {
                 title: null
             }});
@@ -89,74 +102,9 @@ describe('Testing Figure image component', () => {
             expect(elementFigureInstance.state.alfrescoSite).toBe(defaultSite)
         })
     })
-    xdescribe('Testing figure image element right sidebar options', () => {
-        let props = {
-            model: figureImage50TextElementDefault,
-            index: 1,
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            onClick : ()=>{},
-            handleFocus: function(){},
-            permissions:['add_multimedia_via_alfresco'],
-        };
-        let component = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
-        const instance1 = component.find('FigureImage').instance()
-        const div = document.createElement('div');
-        it('renders properly with default figureImage-50% Text', () => {
-            expect(component.find('.divImage50Text .figureImage50Text .image50Text')).toHaveLength(1)
-        })
-        it('renders  properly with mock data figureImage-50% Text', () => {
-            component.setProps({ model: figureImage50TextElementWithData ,index: 2});
-            expect(component.find('.divImage50Text .figureImage50Text .image50Text')).toHaveLength(1)
-        })
-    });
-    xdescribe('Test table image element', () => {
-        let props = {
-            model: tableImage50TextElementDefault,
-            index: 9,
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            onClick : ()=>{},
-            handleFocus: function(){},
-            permissions: ['add_multimedia_via_alfresco'],
-        };
-        let component = mount(<Provider store={store}><FigureImage {...props} /></Provider>);
-        it('renders properly with default tableImage-50% Text', () => {
-            component.setProps({ model: tableImage50TextElementDefault ,index:9});
-            expect(component.find('.divImage50TextTableImage .figureImage50TextTableImage .image50TextTableImage')).toHaveLength(1)
-        })
-        it('renders  properly with mock data tableImage-50% Text', () => {
-            component.setProps({ model: tableImage50TextElementWithData ,index:10});
-            expect(component.find('.divImage50TextTableImage .figureImage50TextTableImage .image50TextTableImage')).toHaveLength(1)
-        })
-    });
-    xdescribe('Test math image element', () => {
-        let props = {
-            model: mathImage50TextElementDefault,
-            index:17,
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            permissions: ['add_multimedia_via_alfresco'],
-        };
-        let component = mount(<Provider store={store}><FigureImage {...props} /></Provider>);
-        const div = document.createElement('div');
-        it('renders properly with default mathImage-50% Text', () => {
-            component.setProps({ model: mathImage50TextElementDefault,index:17 });
-            expect(component.find('.divImage50TextMathImage .figureImage50TextMathImage .image50TextMathImage')).toHaveLength(1)
-        })
-        it('renders  properly with mock data mathImage-50% Text', () => {
-            component.setProps({ model: mathImage50TextElementWithData,index:18 });
-            expect(component.find('.divImage50TextMathImage .figureImage50TextMathImage .image50TextMathImage')).toHaveLength(1)
-        })
-    });
+
     xdescribe('Testing Element figure - handleC2MediaClick Functions', () => {
-        let type = "figure";
+        let type = "audio";
         let props = {
             slateLockInfo: {
                 isLocked: false,
@@ -206,8 +154,8 @@ describe('Testing Figure image component', () => {
             userCount: 0,
             'x-prsn-user-id': " "
         }
-        const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
-        let elementFigureInstance = elementFigure.find('FigureImage').instance();
+        const elementFigure = mount(<Provider store={store}><FigureUserInterface type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
+        let elementFigureInstance = elementFigure.find('FigureUserInterface').instance();
         it('handleC2MediaClick-default case', () => {
             const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
             let event = {
@@ -262,8 +210,8 @@ describe('Testing Figure image component', () => {
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
                 ]
             };
-            const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
-            let elementFigureInstance = elementFigure.find('FigureImage').instance();
+            const elementFigure = mount(<Provider store={store}><FigureUserInterface type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
+            let elementFigureInstance = elementFigure.find('FigureUserInterface').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
             let event = {
                 target: { tagName: 'b' },
@@ -293,8 +241,8 @@ describe('Testing Figure image component', () => {
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
                 ]
             };
-            const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
-            let elementFigureInstance = elementFigure.find('FigureImage').instance();
+            const elementFigure = mount(<Provider store={store}><FigureUserInterface type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
+            let elementFigureInstance = elementFigure.find('FigureUserInterface').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
             let event = {
                 target: { tagName: 'b' },
@@ -318,86 +266,147 @@ describe('Testing Figure image component', () => {
             expect(spyaddFigureResource).toHaveBeenCalledWith(e)
             spyaddFigureResource.mockClear()
         })
-    })
-    xdescribe('New Alfresco Data Handling', () => {
-        let type = "figure";
+    });
+    xdescribe('Testing dataFromAlfresco function', () => {
+        let alfrescoPath = {
+            alfresco: {
+                repositoryFolder: "001_C5 Media POC - AWS US ",
+                repositoryName: "AWS US",
+                repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
+                visibility: "MODERATED",
+                title:'',
+                name:''
+            },
+            associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
+            authorName: "Krajewski",
+            citeUrn: "urn:pearson:manifestation:191e7b6c-53a3-420f-badd-a90786613ae5",
+            containerUrn: "urn:pearson:manifest:fd254701-5063-43aa-bd24-a2c2175be2b2",
+            currentOrigin: "local",
+            dateApproved: null,
+            dateCreated: "2019-02-28T19:14:32.948Z",
+            eTag: "Vy8xNTc0Mjc4NDkxMDYz",
+            entityUrn: "urn:pearson:entity:f2f656da-c167-4a5f-ab8c-e3dbbd349095",
+            gridId: [],
+            hasVersions: false,
+            id: "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f",
+            name: "ELMTEST_StgEnv_Krajewski Test",
+            roleId: "admin",
+            ssoToken: "qcOerhRD_CT-ocYsh-y2fujsZ0o.*AAJTSQACMDIAAlNLABxnalBuS2VJQi9RUTFMdHVBZDZBMUxyakpUTGM9AAJTMQACMDE.*",
+            status: "wip",
+            tcm: { timeUpdated: 1553707971031, userIp: "10.50.11.104", user: "c5test01", activated: true },
+            url: null,
+            userApprover: null,
+            userApproverFullName: null,
+            userCount: 0,
+            'x-prsn-user-id': " ",
+        }
         let props = {
             slateLockInfo: {
                 isLocked: false,
                 userId: 'c5Test01'
             },
-            onClick : ()=>{},
-            permissions: ['add_multimedia_via_alfresco'],
+            onClick: () => { },
+            handleFocus: function () { },
+            permissions: permissions,
+            model: videoElementTypeSLDefault,
             updateFigureData: jest.fn(),
             handleBlur: jest.fn(),
             handleFocus: jest.fn(),
-            accessDenied: jest.fn()
+            accessDenied: jest.fn(),
+            isCiteChanged:true
         };
-        const e = {
-            target:{
-                tagName: "p"
-            },
-            stopPropagation() { }
-        }
-        const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
-        let elementFigureInstance = elementFigure.find('FigureImage').instance();
-        const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco')
+        let sampleAltTextDiv = document.createElement('at')
+        sampleAltTextDiv.setAttribute('name', 'alt_text');
+        sampleAltTextDiv.innerHTML = "alt_text"
+        document.body.appendChild(sampleAltTextDiv)
 
-        it('Test- if case workflow when epsURL given', () => {
-            elementFigureInstance.dataFromNewAlfresco(testDataFromNewAlfresco)
-            elementFigureInstance.forceUpdate();
-            elementFigure.update();
+        let sampleLongDescriptionDiv = document.createElement('ld')
+        sampleLongDescriptionDiv.setAttribute('name', 'long_description');
+        sampleLongDescriptionDiv.innerHTML = "long_Description"
+        document.body.appendChild(sampleLongDescriptionDiv)
+
+        const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
+        let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+        const spydataFromAlfresco = jest.spyOn(elementAudioVideoInstance, 'dataFromAlfresco')
+        const defaultPath = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
+        it('Test- if case workflow', () => {
+            config.alfrescoMetaData = alfrescoPath
+            elementAudioVideoInstance.dataFromAlfresco(audioData1)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
             expect(spydataFromAlfresco).toHaveBeenCalled()
-            expect(elementFigureInstance.state.imgSrc).toBe(testDataFromNewAlfresco.epsUrl)
+            expect(elementAudioVideoInstance.state.imgSrc).toBe('https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3')
             spydataFromAlfresco.mockClear()
         })
-        xit('Test- if case workflow when scaleMarkerData present', () => {
-            elementFigureInstance.dataFromNewAlfresco(testDatascaleMarker)
-            elementFigureInstance.forceUpdate();
-            elementFigure.update();
+        it('Test- if case workflow-  epsURL given, clipinfo given-English subtitles', () => {
+            let data = newAlfrescoData
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(data)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
             expect(spydataFromAlfresco).toHaveBeenCalled()
-            spydataFromAlfresco.mockClear();
+            spydataFromAlfresco.mockClear()
         })
-        it('Test- else case workflow when epsURL is not given', () => {
-            let data = testDataFromNewAlfresco;
-            data["epsUrl"] = ''
-            data['id'] = ''
-            data.properties["exif:pixelXDimension"] = ''
-            data.properties["exif:pixelYDimension"] = ''
-            data.properties["cplg:altText"] = ''
-            data.properties['cplg:longDescription'] = ''
-            let defaultImageSrc = "https://cite-media-stg.pearson.com/legacy_paths/9b39bfd7-b73c-4b0f-b2c5-60e77ed17ce7/Page097a.jpg"
-            elementFigureInstance.dataFromNewAlfresco(data)
-            expect(elementFigureInstance.state.imgSrc).toBe(defaultImageSrc)
+        it('Test- if case workflow-  no publicationUrl ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(audioData)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear()
         })
-        it('Test componentWillUnmount', () => {
-            jest.spyOn(elementFigureInstance, 'componentWillUnmount')
-            document.removeEventListener = () => {
-                return true
-            }
-            elementFigureInstance.componentWillUnmount();
-            expect(elementFigureInstance.componentWillUnmount).toHaveBeenCalled();
+        it('Test- if case workflow-  with viedo smartLinks ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(videoSmartLinksData)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear()
         })
-        it('Test handleClickOutside', () => {
-            jest.spyOn(elementFigureInstance, 'handleClickOutside')
-            elementFigureInstance.handleClickOutside(e);
+        it('Test- if case workflow-  with viedo avs:jsonString filed else case ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(newVideoData)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementAudioVideoInstance.state.imgSrc).toBe(newVideoData.epsUrl)
+            spydataFromAlfresco.mockClear()
         })
-        it('Test deleteFigureResource', () => {
-            jest.spyOn(elementFigureInstance, 'deleteFigureResource')
-            elementFigureInstance.deleteFigureResource();
+        it('Test- if case workflow-  with smartlink audio ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(smartLinkAudio)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementAudioVideoInstance.state.imgSrc).toBe(smartLinkAudio.epsUrl)
+            spydataFromAlfresco.mockClear()
         })
-        it('Test handleFigureDropdown', () => {
-            jest.spyOn(elementFigureInstance, 'handleFigureDropdown')
-            elementFigureInstance.handleFigureDropdown();
+        it('Test- if case workflow- switch case audio ', () => {
+            let props = {
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions: permissions,
+                model: audioElementTypeSLWithData,
+                updateFigureData: jest.fn(),
+                handleBlur: jest.fn(),
+                handleFocus: jest.fn(),
+                accessDenied: jest.fn(),
+                isCiteChanged:true
+            };
+            const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
+            let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+            const spydataFromAlfresco = jest.spyOn(elementAudioVideoInstance, 'dataFromAlfresco')
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(smartLinkAudio)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementAudioVideoInstance.state.imgSrc).toBe(smartLinkAudio.epsUrl)
+            spydataFromAlfresco.mockClear()
         })
-        it('Test onFigureImageFieldFocus', () => {
-            jest.spyOn(elementFigureInstance, 'onFigureImageFieldFocus')
-            elementFigureInstance.onFigureImageFieldFocus('test');
-        })
-        it('Test onFigureImageFieldBlur', () => {
-            jest.spyOn(elementFigureInstance, 'onFigureImageFieldBlur')
-            elementFigureInstance.onFigureImageFieldBlur("test");
-        })
-    })
-
+    });
 });

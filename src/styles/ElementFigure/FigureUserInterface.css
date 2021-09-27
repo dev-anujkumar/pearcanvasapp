@@ -906,6 +906,7 @@ th ol li.listItemNumeroUnoNone:before {
 .Rectangle-button {
         min-width: 400px;
         max-width: max-content;
+        min-height: 38px;
         font-family: 'Open Sans', sans-serif !important;
         font-size: 14px;
         line-height: 1.43;
@@ -918,9 +919,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 .Enter-Button-Label {
-    width: 400px;
-    height: 50px;
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: 'Open Sans',sans-serif!important;
     font-size: 14px;
     font-weight: normal;
     font-stretch: normal;
@@ -939,10 +938,21 @@ th ol li.listItemNumeroUnoNone:before {
     background-color: #005a70;
 }
 
-.hyperLinkText {
-    margin: -1px 84px 0px 0px;
+.smartlinkAction{
+    display: flex;
+}
+
+.element-container .figureElement .actionPU.hyperLinkText.cypress-editable{
+    min-height: 26px !important;
+    font-size: 14px;
+    max-height: max-content;
+    min-width: 388px !important;
+    max-width: max-content;
+    display: flex;
+    align-items: center;
+    padding: 3px 6px !important;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-    background-color: #fff;
+    background-color:#fff;
 }
 
 .figure-image-wrapper .divAudio {
