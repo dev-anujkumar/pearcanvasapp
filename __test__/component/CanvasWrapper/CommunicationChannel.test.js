@@ -2125,4 +2125,113 @@ describe('Testing communication channel', () => {
         expect(channelInstance2.handleLOData).toHaveBeenCalled()
         spyhandleLOData.mockClear()
     });
+    test('Test for projectSharingRole case - with sharingContextRole', () => {
+        let event = {
+            data: {
+                type: "projectSharingRole",
+                message:{
+                    sharingContextRole: "SUBSCRIBER"
+                }
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for projectSharingRole case - without sharingContextRole', () => {
+        let event = {
+            data: {
+                type: "projectSharingRole",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for isSlateSubscribed case - with isSubscribed', () => {
+        let event = {
+            data: {
+                type: "isSlateSubscribed",
+                message:{
+                    isSubscribed: true
+                }
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for isSlateSubscribed case - without isSubscribed', () => {
+        let event = {
+            data: {
+                type: "isSlateSubscribed",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for releaseLockPopup case', () => {
+        let event = {
+            data: {
+                type: "releaseLockPopup",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for selectedSlate case - node - isSubscribed', () => {
+        config.S3MathImagePath = 'test345';
+        channelInstance.setState({
+            project_urn: 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4'
+        })
+        let currentSlate1 = {
+            category: "titleChange",
+            container: "chapter",
+            entityUrn: "urn:pearson:entity:c8240c45-ba81-4a8a-8f9e-32b68108eb4e",
+            id: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29",
+            parentId: 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4',
+            parentType: "chapter",
+            title: "blank",
+            type: "assessment",
+            slateType: "section",
+            node: {
+                HasBackMatter: false,
+                HasIntroductorySlate: false,
+                ParentContainerUrn: "urn:pearson:manifest:4887bbbf-286e-4b27-81ac-d77f507161dc",
+                ParentEntityUrn: "urn:pearson:entity:b4fab541-891a-4766-ac65-6dc58b68b0b3",
+                containerUrn: "urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4",
+                cursored: false,
+                deletableStatus: true,
+                entityUrn: "urn:pearson:entity:fe283fbd-b9e4-4666-8d65-be2bc9da63b3",
+                label: "section",
+                nodeLabel: "section",
+                nodeParentLabel: "chapter",
+                parentBodyMatterLengthFlag: false,
+                parentEntityUrn: "urn:pearson:entity:b4fab541-891a-4766-ac65-6dc58b68b0b3",
+                type: "container",
+                isSubscribed: true
+            }
+        }
+        let event = {
+            data: {
+                type: "selectedSlate",
+                message: currentSlate1
+            }
+        }
+        props.withinLockPeriod = true;
+        const spysetCurrentSlate = jest.spyOn(channelInstance, 'setCurrentSlate')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.setCurrentSlate).toHaveBeenCalled()
+        spysetCurrentSlate.mockClear()
+    })
 })
