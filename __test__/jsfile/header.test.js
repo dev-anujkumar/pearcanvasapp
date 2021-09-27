@@ -1,11 +1,11 @@
-import { SET_CURRENT_SLATE, GET_CURRENT_SLATE, trackChanges, publishContent, releaseLockAndRedirect, toggleCommentsPanel } from '../../src/js/header.js';
+import { SET_CURRENT_SLATE, GET_CURRENT_SLATE, trackChanges, publishContent, releaseLockAndRedirect, logout } from '../../src/js/header.js';
 jest.mock("../../src/js/auth_module", () => {
     let OPEN_AM = {
         logout: jest.fn()
     }
     return OPEN_AM
 })
-
+import config from '../../src/config/config';
 var current_slate_urn = '';
 
 describe('Header module testing', () => {
@@ -39,7 +39,51 @@ describe('Header module testing', () => {
         publishContent(type)
     })
 
-    xit('Testing trackChanges function', () => {
-        trackChanges()
+    it('Testing logout function', () => {
+        logout()
+    })
+    it('Testing logout function with config', () => {
+        config.projectUrn = "projectid"
+        config.slateManifestURN = "slateid"
+        jest.mock("../../src/component/CanvasWrapper/SlateLock_Actions", () => ({
+            releaseSlateLockWithCallback: (mockValue1, mockValue2, cb) => {
+                cb();
+            }
+        }))
+        logout()
+    })
+    it('Testing logout function mockwindow', () => {
+        config.projectUrn = "projectid"
+        config.slateManifestURN = "slateid"
+        jest.mock("../../src/component/CanvasWrapper/SlateLock_Actions", () => ({
+            releaseSlateLockWithCallback: (mockValue1, mockValue2, cb) => {
+                cb();
+            }
+        }))
+        const originalWindow = { ...window };
+        const windowSpy = jest.spyOn(global, "window", "get");
+        windowSpy.mockImplementation(() => ({
+            ...originalWindow,
+            parent: {},
+            sessionStorage: {removeItem: ()=>{return false}}
+        }));
+        logout()
+    })
+    it('Testing logout function mockwindow', () => {
+        config.projectUrn = "projectid"
+        config.slateManifestURN = "slateid"
+        jest.mock("../../src/component/CanvasWrapper/SlateLock_Actions", () => ({
+            releaseSlateLockWithCallback: (mockValue1, mockValue2, cb) => {
+                cb();
+            }
+        }))
+        const originalWindow = { ...window };
+        const windowSpy = jest.spyOn(global, "window", "get");
+        windowSpy.mockImplementation(() => ({
+            ...originalWindow,
+            parent: {},
+            sessionStorage: false
+        }));
+        logout()
     })
 });

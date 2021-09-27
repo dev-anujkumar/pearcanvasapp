@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import ElementSingleAssessment from '../../../src/component/ElementSingleAssessment/ElementSingleAssessment';
-import {  singleAssessmentCITEDefault, singleAssessmentElmDefault} from '../../../fixtures/ElementSingleAssessmentTestData'
+import {  singleAssessmentCITEDefault, singleAssessmentElmDefault, singleAssessmentElmWithData, singleAssessmentTDXDefault} from '../../../fixtures/ElementSingleAssessmentTestData'
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -91,23 +91,21 @@ let initialState = {
 let store = mockStore(initialState);
 jest.mock('../../../src/js/toggleLoader', () => ({
     hideToc: jest.fn(),
-    // showTocBlocker: jest.fn(),
     disableHeader: jest.fn(),
     hideTocBlocker: jest.fn(),
     ShowCanvasLoader: jest.fn(),
     showTocBlocker: () => {
         return false
-    }
+    },
+    hideBlocker: jest.fn(),
 }))
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: ()=>{ return false}
 }))
-// jest.mock('../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx', () => {
-//     return function () {
-//         return (<div className="elm-wrapper">null</div>)
-//     }
-// })
+jest.mock('../../../src/js/header.js', () => ({
+    logout: jest.fn()
+}))
 jest.mock('../../../src/component/AssessmentSlateCanvas/ElmUpdateButton.jsx', () => {
     return function () {
         return (<div>null</div>)
@@ -474,3 +472,353 @@ describe('Testing Element Single Assessment component', () => {
         })
     });
 });
+describe('Testing Element Single Assessment - ELM ASSESSMENTS - Elm Functions', () => {
+    let newProps2 = {
+        model: singleAssessmentElmDefault,
+        index: "1",
+        usagetype: "Practice",
+        elementId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+        handleFocus: jest.fn(),
+        onClick: jest.fn(),
+        handleBlur: jest.fn(),
+        showBlocker: jest.fn(),
+        openCustomPopup: jest.fn(),
+        permissions: userPermissions,
+        checkEntityUrn: jest.fn(),
+        fetchAssessmentMetadata: jest.fn(),
+        updateAssessmentVersion: jest.fn(),
+        fetchAssessmentLatestVersion: jest.fn(),
+        setNewItemFromElm: jest.fn(),
+        setElmPickerData: jest.fn(),
+        fetchAssessmentVersions: jest.fn().mockImplementationOnce(()=>{return true})
+    };
+    let cb = jest.fn();
+    let assessmentRed3 = {
+        "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464": {
+            activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            assessmentStatus: "final",
+            assessmentTitle: "Quiz: 7.4 Developing Relationships",
+            assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86",
+            latestVersion: {
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+                title: "latestTitle",
+                status: 'wip',
+                latestCleanVersion: true
+
+            },
+            secondLatestVersion: {
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec569",
+                title: "latestTitle"
+            },
+            latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+            items: [
+                {
+                    oldItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                    latestItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                    latestItemTitle: "item-title"
+                }
+            ],
+            showUpdateStatus: false
+        },
+        usageTypeListData: [{usagetype: "homework", label: "Homework"}]
+    }
+    let initialState2 = {
+        citeTdxReducer: {
+            currentAssessmentSelected: {
+                "versionUrn": "dfer",
+                "name": "mmoi"
+            },
+            citeApiData: { assessments: { "dfsarfw": "Sdfa" } },
+            tdxApiData: { assessments: { "dfsarfw": "Sdfa" } },
+            mmiApiData: { assessments: { "dfsarfw": "Sdfa" } },
+            isLoading: false,
+            currentSingleAssessmentSelected: {},
+            citeErrorFlag: "",
+            assessmenterrFlag: false,
+    
+        },
+        appStore: {
+            usageTypeListData: { usageTypeList: ["Quiz", "Concept Check", "Test"] }
+        },
+        assessmentReducer: assessmentRed3
+    };
+
+    it('Test-A.1-addPufAssessment function', () => {
+
+        let pufObj = {
+            elementUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            itemid: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+            title: "ELM Assessment",
+            usagetype: "homework"
+        }
+        let store2 = mockStore(initialState2);
+        let elmAssessment = mount(<Provider store={store2}><ElementSingleAssessment {...newProps2} /></Provider>);
+        const elmAssessmentInstance = elmAssessment.find('ElementSingleAssessment').instance();
+        const spyaddPuffAssessment = jest.spyOn(elmAssessmentInstance, 'addPufAssessment')
+        elmAssessmentInstance.addPufAssessment(pufObj, cb);
+        expect(elmAssessmentInstance.state.elementType).toBe('puf')
+        expect(elmAssessmentInstance.state.assessmentId).toBe(pufObj.id)
+        expect(spyaddPuffAssessment).toHaveBeenCalled()
+        spyaddPuffAssessment.mockClear()
+    });
+    it('Test-A.2-addPufAssessment function', () => {
+
+        let pufObj = {
+            elementUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            itemid: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+            title: "ELM Assessment",
+            usagetype: "homework",
+            calledFrom: "createElm"
+        }
+        let store2 = mockStore(initialState2);
+        let elmAssessment = mount(<Provider store={store2}><ElementSingleAssessment {...newProps2} /></Provider>);
+        const elmAssessmentInstance = elmAssessment.find('ElementSingleAssessment').instance();
+        const spyaddPuffAssessment = jest.spyOn(elmAssessmentInstance, 'addPufAssessment')
+        elmAssessmentInstance.addPufAssessment(pufObj);
+        expect(elmAssessmentInstance.state.elementType).toBe('puf')
+        expect(elmAssessmentInstance.state.assessmentId).toBe(pufObj.id)
+        expect(spyaddPuffAssessment).toHaveBeenCalled()
+        spyaddPuffAssessment.mockClear()
+    });
+    it('Test-A.3-addPufAssessment function', () => {
+
+        let pufObj = {
+            elementUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            itemid: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+            title: "ELM Assessment",
+            usagetype: "homework",
+            calledFrom: "createElm"
+        }
+        newProps2.model = singleAssessmentElmWithData
+        initialState2.assessmentReducer.usageTypeListData = []
+        let store2 = mockStore(initialState2);
+        let elmAssessment = mount(<Provider store={store2}><ElementSingleAssessment {...newProps2} /></Provider>);
+        const elmAssessmentInstance = elmAssessment.find('ElementSingleAssessment').instance();
+        const spyaddPuffAssessment = jest.spyOn(elmAssessmentInstance, 'addPufAssessment')
+        elmAssessmentInstance.addPufAssessment(pufObj);
+        expect(elmAssessmentInstance.state.elementType).toBe('puf')
+        expect(elmAssessmentInstance.state.assessmentId).toBe(pufObj.id)
+        expect(spyaddPuffAssessment).toHaveBeenCalled()
+        spyaddPuffAssessment.mockClear()
+    });
+    it('Test-A.4-updateElmLearnosityOnRefresh function', () => {
+
+        let props = {
+            assessmentReducer: {
+                "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec466": {
+                    activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec466",
+                    assessmentStatus: "final",
+                    assessmentTitle: "Quiz: 7.4 Developing Relationships",
+                    assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86",
+                    latestVersion: {
+                        id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+                        title: "latestTitle",
+                        status: 'wip',
+                        latestCleanVersion: true
+
+                    },
+                    secondLatestVersion: {
+                        id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec569",
+                        title: "latestTitle"
+                    },
+                    latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+                    items: [
+                        {
+                            oldItemId: "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf934",
+                            latestItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                            latestItemTitle: "item-title",
+                            shouldUpdateOnSaveEvent: true
+                        }
+                    ],
+                    showUpdateStatus: false
+
+                },
+                itemUpdateEvent: true
+            }
+        }
+        let store2 = mockStore(initialState2);
+        let elmAssessment = mount(<Provider store={store2}><ElementSingleAssessment {...newProps2} /></Provider>);
+        const elmAssessmentInstance = elmAssessment.find('ElementSingleAssessment').instance();
+        const spyaddPuffAssessment = jest.spyOn(elmAssessmentInstance, 'updateElmLearnosityOnRefresh')
+        elmAssessmentInstance.updateElmLearnosityOnRefresh(props);
+        expect(spyaddPuffAssessment).toHaveBeenCalled()
+        spyaddPuffAssessment.mockClear()
+    });
+    it('Test-A.5-updateElmLearnosityOnRefresh function', () => {
+
+        let props = {
+            assessmentReducer: {
+                "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec466": {
+                    activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec466",
+                    assessmentStatus: "final",
+                    assessmentTitle: "Quiz: 7.4 Developing Relationshipssssssssssss",
+                    assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86",
+                    latestVersion: {
+                        id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+                        title: "latestTitle",
+                        status: 'wip',
+                        latestCleanVersion: true
+
+                    },
+                    secondLatestVersion: {
+                        id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec569",
+                        title: "latestTitle"
+                    },
+                    latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+                    items: [
+                        {
+                            oldItemId: "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf934",
+                            latestItemId: "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf934",
+                            latestItemTitle: "item-title",
+                            shouldUpdateOnSaveEvent: true
+                        }
+                    ],
+                    showUpdateStatus: false
+
+                },
+                itemUpdateEvent: true
+            }
+        }
+        let store2 = mockStore(initialState2);
+        let elmAssessment = mount(<Provider store={store2}><ElementSingleAssessment {...newProps2} /></Provider>);
+        const elmAssessmentInstance = elmAssessment.find('ElementSingleAssessment').instance();
+        const spyaddPuffAssessment = jest.spyOn(elmAssessmentInstance, 'updateElmLearnosityOnRefresh')
+        elmAssessmentInstance.updateElmLearnosityOnRefresh(props);
+        expect(spyaddPuffAssessment).toHaveBeenCalled()
+        spyaddPuffAssessment.mockClear()
+        const spyresetPage = jest.spyOn(elmAssessmentInstance, 'resetPage')
+        elmAssessmentInstance.resetPage(false);
+        expect(spyresetPage).toHaveBeenCalled()
+        spyresetPage.mockClear()
+        const spyhandleAssessmentFocus = jest.spyOn(elmAssessmentInstance, 'handleAssessmentFocus')
+        elmAssessmentInstance.handleAssessmentFocus();
+        expect(spyhandleAssessmentFocus).toHaveBeenCalled()
+        spyhandleAssessmentFocus.mockClear()
+    });
+    it('Test-A.6-componentDidUpdate function', () => {
+        let initialState3 = {
+            ...initialState2,
+            assessmentReducer: {
+                dataFromElm: {
+                    resourceType: "assessmentItem",
+                    elementUrn: "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
+                    type: 'ElmCreateInPlace',
+                    elmUrl: "https://localhost:4000",
+                    usageType: "homework"
+                }
+            }
+        };
+        let store2 = mockStore(initialState3);
+        global.open = jest.fn()
+        let elmAssessment = mount(<Provider store={store2}><ElementSingleAssessment {...newProps2} /></Provider>);
+        const elmAssessmentInstance = elmAssessment.find('ElementSingleAssessment').instance();
+        const spyaddPuffAssessment = jest.spyOn(elmAssessmentInstance, 'componentDidUpdate')
+        elmAssessmentInstance.componentDidUpdate();
+        expect(spyaddPuffAssessment).toHaveBeenCalled()
+        spyaddPuffAssessment.mockClear()
+    });
+    xit('Test-A.7-componentDidUpdate function', () => {
+        let pufObj = {
+            elementUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            itemid: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+            title: "ELM Assessment",
+            usagetype: "homework"
+        }
+        let initialState3 = {
+            ...initialState2,
+            assessmentReducer: {
+                dataFromElm: {
+                    resourceType: "assessmentItem",
+                    elementUrn: "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
+                    type: 'SaveElmData',
+                    usageType: "homework",
+                    pufObj
+                }
+            }
+        };
+        let store2 = mockStore(initialState3);
+        let elmAssessment = mount(<Provider store={store2}><ElementSingleAssessment {...newProps2} /></Provider>);
+        const elmAssessmentInstance = elmAssessment.find('ElementSingleAssessment').instance();
+        const spyaddPuffAssessment = jest.spyOn(elmAssessmentInstance, 'componentDidUpdate')
+        elmAssessmentInstance.addPuffAssessment = jest.fn()
+        elmAssessmentInstance.componentDidUpdate();
+        expect(spyaddPuffAssessment).toHaveBeenCalled()
+        spyaddPuffAssessment.mockClear()
+    });
+    it('Test-A.8-componentDidUpdate function', () => {
+        let initialState3 = {
+            ...initialState2,
+            assessmentReducer: {
+                dataFromElm: {
+                    resourceType: "assessmentItem",
+                    elementUrn: "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
+                    type: 'SaveElmDatas',
+                    elmUrl: "https://localhost:4000",
+                    usageType: "homework"
+                }
+            }
+        };
+        let store2 = mockStore(initialState3);
+        let elmAssessment = mount(<Provider store={store2}><ElementSingleAssessment {...newProps2} /></Provider>);
+        const elmAssessmentInstance = elmAssessment.find('ElementSingleAssessment').instance();
+        elmAssessmentInstance.addPuffAssessment = jest.fn()
+        const spycomponentDidUpdate = jest.spyOn(elmAssessmentInstance, 'componentDidUpdate')
+        elmAssessmentInstance.componentDidUpdate();
+        expect(spycomponentDidUpdate).toHaveBeenCalled()
+        spycomponentDidUpdate.mockClear()
+    });
+    it('Test-A.2-updateElmAssessment function', async () => {
+        const evt = {
+            preventDefault: jest.fn()
+        }
+        let store2 = mockStore({
+            ...initialState2, assessmentReducer: {
+                "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec466": {
+                    activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec466",
+                    assessmentStatus: "final",
+                    assessmentTitle: "Quiz: 7.4 Developing Relationships",
+                    assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86",
+                    latestVersion: {
+                        id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+                        title: "latestTitle",
+                        status: 'wip',
+                        latestCleanVersion: true
+
+                    },
+                    secondLatestVersion: {
+                        id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec569",
+                        title: "latestTitle"
+                    },
+                    latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+                    items: [
+                        {
+                            oldItemId: "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf934",
+                            latestItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                            latestItemTitle: "item-title",
+                            shouldUpdateOnSaveEvent: true
+                        }
+                    ],
+                    showUpdateStatus: false
+
+                },
+                itemUpdateEvent: true
+            }
+        });
+        let elmAssessment = mount(<Provider store={store2}><ElementSingleAssessment {...newProps2} /></Provider>);
+        const elmAssessmentInstance = elmAssessment.find('ElementSingleAssessment').instance();
+        const spyaddPuffAssessment = jest.spyOn(elmAssessmentInstance, 'updateElmAssessment')
+        await elmAssessmentInstance.updateElmAssessment(evt);
+        expect(spyaddPuffAssessment).toHaveBeenCalled()
+        spyaddPuffAssessment.mockClear()
+    });
+    it('renders without crashing', () => {
+        const component = mount(<Provider store={store}><ElementSingleAssessment model={singleAssessmentTDXDefault} index="" /></Provider>)
+        expect(component).toHaveLength(1);
+        let instance = component.instance();
+        expect(instance).toBeDefined();
+    })
+});  

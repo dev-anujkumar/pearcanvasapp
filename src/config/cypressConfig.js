@@ -24,6 +24,7 @@ let cypressConfig = {
     // textcolors:["#ffffff", "#000000"],
     textcolors:["option1", "option2"],
     figureFieldsPlaceholders: ['Number', 'Label Name', 'Title', 'Caption', 'Credit'],
+    smartlinkContexts: ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'],
     isCO : false,
     isLOL:false,
     toolBarList : ['undo', 'redo', 'insertMedia', 'formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],

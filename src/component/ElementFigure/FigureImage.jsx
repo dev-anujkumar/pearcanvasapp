@@ -32,7 +32,7 @@ class FigureImage extends Component {
             alfrescoSite: '',
             alfrescoSiteData: {},
             figureLabelValue: 'No Label',
-            figureLabelData: this.props.figureDropdownData,
+            figureLabelData: this.props.figureDropdownData?.image,
             figureDropDown: false
         }
         this.wrapperRef = React.createRef();
@@ -48,7 +48,7 @@ class FigureImage extends Component {
         })
         let figureHtmlData = getLabelNumberTitleHTML(this.props.model);
         let figureLabelValue = this.state;
-        figureLabelValue = dropdownValueAtIntialize(this.props.figureDropdownData, figureHtmlData.formattedLabel);
+        figureLabelValue = dropdownValueAtIntialize(this.props.figureDropdownData.image, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
     }
@@ -117,7 +117,7 @@ class FigureImage extends Component {
         hideTocBlocker();
         disableHeader(false);
         let imageData = data;
-        let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "" ;
         let figureType = data?.content?.mimeType?.split('/')[0]
         //commented lines will be used to update the element data
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
@@ -317,7 +317,7 @@ class FigureImage extends Component {
 
     convertOptionsToLowercase = (Options) => {
         let lowercaseOptions = [];
-        if (Options.length > 0) {
+        if (Options?.length > 0) {
             for (let option of Options) {
                 if (!BLANK_LABEL_OPTIONS.includes(option)) {
                     lowercaseOptions.push(option.toLowerCase());

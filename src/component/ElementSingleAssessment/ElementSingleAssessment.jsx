@@ -332,7 +332,7 @@ class ElementSingleAssessment extends Component {
     updateElmOnSaveEvent = (props) => {
         const { assessmentReducer } = props;
         let latestTitle = (assessmentReducer[this.state.assessmentId] && assessmentReducer[this.state.assessmentId].assessmentTitle)
-        const latestItem = assessmentReducer[this.state.assessmentId].items.find( itemdata => itemdata.oldItemId == this.state.assessmentItemId)
+        const latestItem = assessmentReducer[this.state.assessmentId]?.items?.find( itemdata => itemdata.oldItemId == this.state.assessmentItemId)
         const latestItemId = latestItem && latestItem.latestItemId;
         const latestItemTitle = latestItem && latestItem.latestItemTitle;
         showTocBlocker();
