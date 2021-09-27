@@ -244,25 +244,25 @@ class FigureUserInterface extends Component {
         let posterJsx;
         switch (element.figuretype) {
             case AUDIO:
-                posterJsx = <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
+                posterJsx = <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} /></div>
                 break;
             case VIDEO:
                 posterJsx = element.figuredata?.posterimage?.path ?
-                    <video className="videoReel" width="246px" height="164px" controls="none" preload="none"
+                    <video className="videoReel" width="100%" height="164px" controls="none" preload="none"
                         poster={element?.figuredata?.posterimage?.path}>
                         <source src="" />
                         <track src="" kind="subtitles" srcLang="en" label="English" />
                     </video>
                     :
-                    <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
+                    <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} /></div>
                 break;
             case INTERACTIVE:
                 posterJsx = element.figuredata?.posterimage?.path ?
                     <div className="videoReel">
-                        <img width="246px" height="164px" src={element.figuredata?.posterimage?.path} />
+                        <img width="100%" height="164px" src={element.figuredata?.posterimage?.path} />
                     </div>
                     :
-                    <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
+                    <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} /></div>
                 break;
         }
         return posterJsx;
