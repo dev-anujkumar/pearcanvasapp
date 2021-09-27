@@ -964,5 +964,5 @@ th ol li.listItemNumeroUnoNone:before {
     margin: 25px 0 25px 0;
 }
 .element-container .sl, .element-container .vid, .element-container .aud {
-    width:92% !important;
+    max-width:91% !important;
 }
