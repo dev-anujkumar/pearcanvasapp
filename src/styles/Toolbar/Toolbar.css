@@ -377,6 +377,14 @@ button[aria-label="insertMedia"].tox-tbtn--select{
   display: none !important;
 }
 
+.audio-block.hideToolbar {
+  display: none!important;
+}
+
+.leaningobjective-block.hideToolbar {
+  display: none!important;
+}
+
 .tox-tbtn{
   cursor:pointer!important;
 }
