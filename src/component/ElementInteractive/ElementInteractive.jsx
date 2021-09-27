@@ -33,6 +33,7 @@ import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
 */
+const SMARTLINK_CONTEXTS = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
 class Interactive extends React.Component {
     constructor(props) {
         super(props);
@@ -301,8 +302,7 @@ class Interactive extends React.Component {
         hyperlinkClass = interactiveData['hyperlinkClass'] ? interactiveData['hyperlinkClass'] : "";
 
         let figureHtmlData = getLabelNumberTitleHTML(element);
-        let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table']
-        if (smartlinkContexts.includes(context)) {
+        if (SMARTLINK_CONTEXTS.includes(context)) {
             return <FigureUserInterface deleteElementAsset={this.deleteElementAsset} alfrescoSite={this.state.alfrescoSite} dataFromAlfresco={(alfrescoAssetData) => this.dataFromAlfresco(alfrescoAssetData)} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
         }
         else if (context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
@@ -877,7 +877,7 @@ class Interactive extends React.Component {
         try {
             return (
                     <>
-                        <div className="interactive-element" onClick = {this.handleClickElement}>
+                        <div className={SMARTLINK_CONTEXTS.includes(model?.figuredata?.interactivetype) ? "figureElement" : "interactive-element"} onClick = {this.handleClickElement}>
                             {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                             {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                             {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}

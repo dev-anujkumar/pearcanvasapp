@@ -323,7 +323,7 @@ describe('Test---Assessment Utility Functions', () => {
         expect(spyFunction).toHaveReturnedWith(true);
         spyFunction.mockClear();
     });
-    it('Test 16---checkFigureMetadata Audio/Video', () => {
+    xit('Test 16---checkFigureMetadata Audio/Video', () => {
         let element = audioElementTypeAlfrescoWithData;
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureMetadata');
         assessment_UtiltyFn.checkFigureMetadata(element);

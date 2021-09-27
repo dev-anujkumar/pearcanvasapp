@@ -1933,7 +1933,7 @@ class ElementContainer extends Component {
             });
             detailsToSet['elmFeedback'] = elmFeedback || [];
         }
-        const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+        const figureTypes = ["image", "mathImage", "table", "video", "audio",'interactive']
         if ((element?.type === "figure") && figureTypes.includes(element?.figuretype)) {
             getAlfrescositeResponse(id, (response) => {
                 detailsToSet['alfrescoSiteData'] = response
