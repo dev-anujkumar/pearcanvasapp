@@ -373,7 +373,7 @@ class FigureUserInterface extends Component {
         switch (element.figuretype) {
             case AUDIO:
                 assetId = element.figuredata.hasOwnProperty('audioid') && element.figuredata.audioid ? element.figuredata.audioid : '';
-                assetTitleText = assetId ? element.figuredata?.audio?.path : 'Audio Title';
+                assetTitleText = 'Audio';
                 addButtonText = "Add an Audio";
                 assetIdText = "Audio ID:";
                 assetPathText = "Audio Path:";
@@ -382,7 +382,7 @@ class FigureUserInterface extends Component {
                 break;
             case VIDEO:
                 assetId = element.figuredata.hasOwnProperty('videoid') && element.figuredata.videoid ? element.figuredata.videoid : '';
-                assetTitleText = assetId ? element.figuredata?.videos[0]?.path : 'Video Title';
+                assetTitleText =  "Video" // assetId ? element.figuredata?.videos[0]?.path : 'Video'; commented for future reference
                 addButtonText = "Add a Video";
                 assetIdText = "Video ID:";
                 assetPathText = "Video Path:";
