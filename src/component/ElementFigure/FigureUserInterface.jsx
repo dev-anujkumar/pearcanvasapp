@@ -403,8 +403,8 @@ class FigureUserInterface extends Component {
             posterText = testTextarea.value;
         }
 
-        let captionsHtml = removeUnoClass(element.html.captions);
-        let creditsHtml = removeUnoClass(element.html.credits);
+        let captionsHtml = removeUnoClass(element.html?.captions);
+        let creditsHtml = removeUnoClass(element.html?.credits);
 
         return (
             <div className="figureElement">
