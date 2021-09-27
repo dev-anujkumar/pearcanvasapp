@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import TinyMceEditor from "../tinyMceEditor";
 // IMPORT - Assets //
 import { getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js';
-import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
+import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, removeUnoClass } from '../../constants/utility';
 import './../../styles/ElementFigure/FigureUserInterface.css';
 import { updateSmartLinkDataForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
@@ -62,10 +62,6 @@ class FigureUserInterface extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup, elementId } = this.props;
-        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
-            this.props.dataFromAlfresco(alfrescoAssetData);
-        }
         if (this.props.element.figuretype !== this.state.elementType) {
             this.updateDropdownOptions();
         }
@@ -399,6 +395,16 @@ class FigureUserInterface extends Component {
                 assetPath = element.figuredata.path ? element.figuredata.path : '';
                 break;
         }
+        let posterText;
+        if (element.figuretype === INTERACTIVE && imageDimension === '') {
+            posterText = element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/&nbsp;/g, "") : '';
+            let testTextarea = document.createElement("textarea");
+            testTextarea.innerHTML = posterText;
+            posterText = testTextarea.value;
+        }
+
+        let captionsHtml = removeUnoClass(element.html?.captions);
+        let creditsHtml = removeUnoClass(element.html?.credits);
 
         return (
             <div className="figureElement">
@@ -452,7 +458,7 @@ class FigureUserInterface extends Component {
                                     element.figuretype === INTERACTIVE && imageDimension === '' ?
                                         <div>
                                             <div className={`Rectangle-button ${index}`} onClick={() => this.toggleHyperlinkEditable('show', index)} >
-                                                <span className="Enter-Button-Label">{element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, "") : "Enter Button Label"}</span>
+                                                <span className="Enter-Button-Label">{posterText ? posterText : "Enter Button Label"}</span>
                                             </div>
                                             <div className={`hide-field actionPUdiv ${index}`} >
                                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter Button Label" className={"actionPU hyperLinkText"} tagName={'p'} model={element.html.postertext ? element.html.postertext : ""} handleEditorFocus={handleFocus} handleBlur={handleBlur} slateLockInfo={slateLockInfo} elementId={elementId} element={element} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
@@ -468,13 +474,13 @@ class FigureUserInterface extends Component {
                             </div>
                             <figcaption className={captionDivClass} >
                                 <div className="floating-caption-group">
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass} model={element.html.captions} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass} model={captionsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                     <label className={checkHTMLdataInsideString(element?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
                                 </div>
                             </figcaption>
                             <figcredit >
                                 <div className="floating-credit-group">
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass} model={element.html.credits} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass} model={creditsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                     <label className={checkHTMLdataInsideString(element?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
                                 </div>
                             </figcredit>

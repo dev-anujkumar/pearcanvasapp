@@ -1931,8 +1931,9 @@ class ElementContainer extends Component {
             });
             detailsToSet['elmFeedback'] = elmFeedback || [];
         }
-        const figureTypes = ["image", "mathImage", "table", "video", "audio",'interactive']
-        if ((element?.type === "figure") && figureTypes.includes(element?.figuretype)) {
+        const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+        const interactiveType = ["3rd-party", "pdf", "web-link", "pop-up-web-link", "table"]
+        if ((element?.type === "figure") && (figureTypes.includes(element?.figuretype)) || interactiveType.includes(element?.figuredata?.interactivetype) ) {
             getAlfrescositeResponse(id, (response) => {
                 detailsToSet['alfrescoSiteData'] = response
             })
