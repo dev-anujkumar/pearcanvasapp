@@ -1011,7 +1011,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             )
             if (createdElemData && createdElemData.status == '200') {
                 let responseData = Object.values(createdElemData.data)
-                const figureTypes = ["image", "mathImage", "table", "video", "audio"]
+                const figureTypes = ["image", "mathImage", "table", "video", "audio", 'interactive']
 
                 // Condition to check whether any conatiner element got copy and paste. Fetch new conatiner data for the same.
                 if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
