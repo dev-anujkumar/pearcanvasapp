@@ -225,7 +225,7 @@ class FigureUserInterface extends Component {
                 <div className='videoIconWrapper'>
                     <div className="update-icon-wrapper">
                         <span className='videoIcon' >{assetIcon}</span>
-                        <p className='videoTitle' >{assetTitleText}</p>
+                        <p className='updateVideoTitle' >{assetTitleText}</p>
                     </div>
                     <div className="media-button-group">
                         <div className='update-figure-button' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
