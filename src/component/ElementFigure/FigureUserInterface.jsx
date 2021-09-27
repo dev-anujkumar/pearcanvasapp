@@ -387,7 +387,7 @@ class FigureUserInterface extends Component {
                 break;
             case INTERACTIVE:
                 assetId = element.figuredata.interactiveid ? element.figuredata.interactiveid : '';
-                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : element.figuredata?.path ? element.figuredata?.path : 'Smart link Title';
+                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : assetId ? 'Smart link' : 'Smart link Title';
                 addButtonText = "Add a Smart Link";
                 assetIdText = "Asset ID:";
                 assetPathText = "Asset Path:";
