@@ -563,8 +563,7 @@ th ol li.listItemNumeroUnoNone:before {
     margin: 16px 0px;
     width: 100%;
     transition: .5s ease;
-    background-color: #000;
-    opacity: 0.8;
+    background-color: #323232;
     color: #fff;
 }
 .figure-element-container .figure-wrapper  .image-figure, .figure-element-container .figure-wrapper-update  .image-figure {
@@ -810,7 +809,14 @@ th ol li.listItemNumeroUnoNone:before {
     color: #fff;
     overflow-wrap: anywhere;
 }
-
+.updateVideoTitle{
+    font-family: 'Open Sans', sans-serif !important;
+    margin-left: 8px;
+    font-size: 16px;
+    font-weight: 300 !important;
+    color: #fff;
+    overflow-wrap: anywhere;
+}
 .addVideobutton:hover {
     background-color: #def8ff;
 }
