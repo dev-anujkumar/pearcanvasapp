@@ -67,6 +67,8 @@ import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
+import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -1913,11 +1915,11 @@ class ElementContainer extends Component {
             let elmUrn = []
             let elmComment
 
-            if (element?.elementdata?.bodymatter?.length) {
+            if (element && element.elementdata?.bodymatter?.length || element.groupeddata?.bodymatter?.length || element.contents?.bodymatter?.length || element.interactivedata) {
              (this.props.allComments).filter(({ commentOnEntity }) => {
                   if (commentOnEntity === detailsToSet.element.id) { elmUrn.push(detailsToSet.element.id) }
             });
-                elmComment = this.filterElementData(elmUrn, element)
+                elmComment = prepareCommentsManagerIcon(slateWrapperConstants.checkTCM(element), element, elmUrn, this.props.allComments);
             } else {
                 elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
                     return commentOnEntity === detailsToSet.element.id
@@ -1945,26 +1947,6 @@ class ElementContainer extends Component {
         this.props.setSelection(detailsToSet);
     }
 
-    /**
-     * @description - This function is for handling the comments flag in cut/paste
-     * @param {event} element
-     */
-    filterElementData = (elmUrn, element) => {
-        element.elementdata.bodymatter.map((item) => {
-            if (item?.type === "manifest") {
-                item?.contents?.bodymatter?.map((ele) => {
-                    elmUrn.push(ele.id)  /* Ex. -  WE:Body/SectionBreak:P*/
-                })
-            } else {
-                elmUrn.push(item.id) /* Ex. -  Aside/(WE:Head):P*/
-            }
-        })
-        return (this.props.allComments).filter(({ commentOnEntity }) => {
-            return elmUrn.some(function (commentEntity2) {
-                return commentOnEntity === commentEntity2
-            });
-        });
-    }
     /**
      * @description - This function is for handling the closing and opening of popup.
      * @param {event} popup
