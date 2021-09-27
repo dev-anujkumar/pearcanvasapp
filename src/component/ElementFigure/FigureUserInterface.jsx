@@ -19,7 +19,6 @@ import { labelHtmlData } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
 import interactiveTypeData from '../ElementInteractive/interactiveTypes.js';
 import { AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE } from '../../constants/Element_Constants';
-import Tooltip from "@material-ui/core/Tooltip";
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -199,19 +198,22 @@ class FigureUserInterface extends Component {
 
     generateAddAssetJSX = ( assetIcon, assetTitleText, addButtonText, assetBackgroundType, assetIdText, assetPathText) => {
         return (
-            <div className="figure-wrapper">
+            <div className="media-wrapper">
                 <div className='videoIconWrapper'>
-                    <span className='videoIcon' >{assetIcon}</span>
-                    <span className='videoTitle'>{assetTitleText}</span>
+                    <div className="icon-wrapper">
+                        <span className='videoIcon' >{assetIcon}</span>
+                        <span className='videoTitle'>{assetTitleText}</span>
+                    </div>
+                    <div className="media-image-info">
+                        <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> </span> </div>
+                        <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> </span> </div>
+                        <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'> </span> </div>
+                    </div>
                 </div>
-                <div className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
-                <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} />
-                </div>
-                <span className='line' />
-                <div className="figure-image-info">
-                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> </span> </div>
-                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> </span> </div>
-                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'> </span> </div>
+                <div className="media-assets">
+                    <div className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
+                    <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} />
+                    </div>
                 </div>
             </div>
         )
@@ -221,19 +223,22 @@ class FigureUserInterface extends Component {
         return (
             <div className='figure-wrapper-update'>
                 <div className='videoIconWrapper'>
-                    <span className='videoIcon' >{assetIcon}</span>
-                    <Tooltip title={<h2 style={{ color: "white" }}>{assetTitleText}</h2>} placement="bottom-start">
-                        <span className='videoTitle' >{assetTitleText}</span>
-                    </Tooltip> 
+                    <div className="update-icon-wrapper">
+                        <span className='videoIcon' >{assetIcon}</span>
+                        <p className='videoTitle' >{assetTitleText}</p>
+                    </div>
+                    <div className="media-button-group">
+                        <div className='update-figure-button' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
+                        <div className={`delete-figure-button ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                    </div>
+                    <div className="media-image-info">
+                        <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
+                        <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
+                        <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite && (alfrescoSite !== '' || alfrescoSite !== undefined) ? alfrescoSite : this.state.alfrescoSite : ""} </span> </div>
+                    </div>
                 </div>
-                {this.generatePosterImageJSX(element, assetBackgroundType)}
-                <div className='updatefigurebutton' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
-                <div className={`deletefigurebutton ${element.figuretype === "interactive" ? 'deleteSL':''}`}  onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
-                <span className='line' />
-                <div className="figure-image-info">
-                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
-                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
-                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite && (alfrescoSite !== '' || alfrescoSite !== undefined) ? alfrescoSite: this.state.alfrescoSite : ""} </span> </div>
+                <div className="media-assets">
+                    {this.generatePosterImageJSX(element, assetBackgroundType)}
                 </div>
             </div>
         )
@@ -369,7 +374,7 @@ class FigureUserInterface extends Component {
             case AUDIO:
                 assetId = element.figuredata.hasOwnProperty('audioid') && element.figuredata.audioid ? element.figuredata.audioid : '';
                 assetTitleText = assetId ? element.figuredata?.audio?.path : 'Audio Title';
-                addButtonText = "Select an Audio";
+                addButtonText = "Add an Audio";
                 assetIdText = "Audio ID:";
                 assetPathText = "Audio Path:";
                 updateButtonText = "Update Audio";
@@ -378,7 +383,7 @@ class FigureUserInterface extends Component {
             case VIDEO:
                 assetId = element.figuredata.hasOwnProperty('videoid') && element.figuredata.videoid ? element.figuredata.videoid : '';
                 assetTitleText = assetId ? element.figuredata?.videos[0]?.path : 'Video Title';
-                addButtonText = "Select a Video";
+                addButtonText = "Add a Video";
                 assetIdText = "Video ID:";
                 assetPathText = "Video Path:";
                 updateButtonText = "Update Video";

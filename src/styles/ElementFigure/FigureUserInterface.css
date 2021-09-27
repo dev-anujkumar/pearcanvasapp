@@ -543,15 +543,14 @@ th ol li.listItemNumeroUnoNone:before {
     overflow: auto;
 }
 
-.figure-wrapper{
-    height: 170px;
-    width: 390px;
+.media-wrapper{
+    height: 188px;
+    display: flex;
 }
 
 .figure-wrapper-update{
-    margin-left: 17px;
     min-height: 257px;
-    width: 390px;
+    display: flex;
 }
 .figure-element-container{
     position: relative;
@@ -581,22 +580,39 @@ th ol li.listItemNumeroUnoNone:before {
 .figure-element-container .figure-wrapper  .image-info, .figure-element-container .figure-wrapper-update  .image-info {
     overflow-wrap: anywhere;
     width: 288px;
-    margin-top: 0px;
+    margin-top: 8px;
     font-size: 10px;
-    padding-right: 16px;
+    color:rgba(255, 255, 255, 0.5);
+    font-family: 'Open Sans', sans-serif !important;
 }
 
-.figure-image-container .image-text{
-    width:85px;
-    font-size:10px;
-    color:#fff;
-    font-weight: 500;
+.media-assets{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:254px;
+    padding: 13px 12px 15px 0;
+}
+.figure-wrapper-update .media-assets {
+    align-items: initial;
 }
 .figure-glossary-icon{
     position: relative;
 }
-.image-text{
+.media-image-info .image-text{
     color: #fff;
+    width: 80px;
+    font-weight: 500;
+    font-size: 10px;
+    margin: 8px 0;
+    opacity: 0.5;
+}
+
+.media-button-group{
+    position: relative;
+    display: flex;
+    padding: 28px 0 20px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
 }
 .figure-glossary-icon::after{
     content: "";
@@ -683,14 +699,10 @@ th ol li.listItemNumeroUnoNone:before {
     border: 1px solid #005a70;
     background-color: #def8ff;
 }
-.deletefigurebutton:hover, .figure-element-container .figure-wrapper-update .updatefigurebutton:hover {
+.media-button-group .delete-figure-button:hover, .media-button-group .update-figure-button:hover {
     background-color: #def8ff !important;
 }
-.figure-element-container .figure-wrapper-update .updatefigurebutton{
-    top: 81px !important;
-    left: 60px !important;
-    right: unset;
-    position: absolute;
+.media-button-group .update-figure-button{
     height: 36px;
     padding: 8px 20px;
     border-radius: 2px;
@@ -701,16 +713,13 @@ th ol li.listItemNumeroUnoNone:before {
     font-weight: 600;
     font-size: 14px;
     cursor: pointer !important;
+    margin: 0 10px 0 45px;
 }
-.figure-element-container .figure-wrapper-update .deletefigurebutton{
-    top:81px !important;
-    position: absolute;
+.media-button-group .delete-figure-button{
     background-color: #fff;
     text-align: center;
     justify-content: center;
     cursor: pointer !important;
-    left: 202px;
-    right: unset;
     padding: 5px 6px 3px 6px;
     border-radius: 2px;
     height: 36px;
@@ -721,20 +730,9 @@ th ol li.listItemNumeroUnoNone:before {
     min-height: 90px;
 }
 
-.figure-image-info {
-    left: 16px;
-    position: absolute;
-    bottom: 16px;
-    width: 65%;
-    height: 80px;
+.media-image-info {
+    font-family: 'Open Sans', sans-serif !important;
 }
-.figure-wrapper-update .figure-image-info {
-    min-height: 84px !important;
-    height: auto;
-    position: static;
-    width: 100% !important;
-    margin: 10px 0;
-} 
 .figure-label{
     width: 130px;
     font-size: 14px;
@@ -787,54 +785,37 @@ th ol li.listItemNumeroUnoNone:before {
   margin-right: 24px;
 }
 .videoIconWrapper {
-    margin-top: 16px;
-    margin-left: 16px;
+    width:398px;
+    padding: 16px;
+}
+.icon-wrapper{
     display: flex;
-    height: 40px;
-    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 20px;
 }
-
-.videoIcon {
-    position: absolute;
-    left: 16px;
-    top: 16px;
+.update-icon-wrapper {
+    display: flex;
 }
-
 .videoReel {
-    position: absolute;
-    width: 246px;
     height: 164px;
-    right: 12px;
-    top:12px;
 }
-
-.figure-wrapper-update .videoTitle {
-    margin-left: 43px !important;
-}
-
 .videoTitle {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 322px;
-    height: 17px;
-    font-family: OpenSans sans-serif !important;
-    margin-left: 33px;
+    font-family: 'Open Sans', sans-serif !important;
+    margin-left: 8px;
     font-size: 16px;
-    font-weight: 300;
+    font-weight: 300 !important;
     font-style: italic;
     line-height: normal;
     letter-spacing: normal;
     color: #fff;
+    overflow-wrap: anywhere;
 }
-
 
 .addVideobutton:hover {
     background-color: #def8ff;
 }
 .addVideobutton {
     top: 76px;
-    right: 75px;
     position: absolute;
     height: 36px;
     padding: 8px 20px;
@@ -848,25 +829,6 @@ th ol li.listItemNumeroUnoNone:before {
     z-index:1;
     cursor: pointer !important;
 }
-
-.figure-element-container .figure-wrapper .line, .figure-element-container .figure-wrapper-update .line {
-    display: flex;
-    width: 366px;
-    height: 1px;
-    margin-top: 24px;
-    margin-left: 6px;
-    opacity: 0.8;
-    border: solid 0.2px #fff;
-}
-
-.figure-element-container .figure-wrapper-update .line {
-    margin-top: 77px !important;
-    margin-left:0px
-}
-
-.figure-wrapper-update .deletefigurebutton.deleteSL{
-    left:236px !important;
-} 
 
 /* --------------------------------------------------------------------------- */
 .floating-caption-group {
@@ -938,7 +900,8 @@ th ol li.listItemNumeroUnoNone:before {
 .Rectangle-button {
         min-width: 400px;
         max-width: max-content;
-        font-family: OpenSans;
+        min-height: 38px;
+        font-family: 'Open Sans', sans-serif !important;
         font-size: 14px;
         line-height: 1.43;
         color: #fff;
@@ -950,9 +913,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 .Enter-Button-Label {
-    width: 400px;
-    height: 50px;
-    font-family: Open Sans,sans-serif!important;
+    font-family: 'Open Sans',sans-serif!important;
     font-size: 14px;
     font-weight: normal;
     font-stretch: normal;
@@ -971,10 +932,21 @@ th ol li.listItemNumeroUnoNone:before {
     background-color: #005a70;
 }
 
-.hyperLinkText {
-    margin: -1px 84px 0px 0px;
+.smartlinkAction{
+    display: flex;
+}
+
+.element-container .figureElement .actionPU.hyperLinkText.cypress-editable{
+    min-height: 26px !important;
+    font-size: 14px;
+    max-height: max-content;
+    min-width: 388px !important;
+    max-width: max-content;
+    display: flex;
+    align-items: center;
+    padding: 3px 6px !important;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-    background-color: #fff;
+    background-color:#fff;
 }
 
 .figure-image-wrapper .divAudio {
@@ -983,4 +955,5 @@ th ol li.listItemNumeroUnoNone:before {
 
 .figure-element-container.interface-container {
     max-height: initial;
+    margin: 25px 0 25px 0;
 }
