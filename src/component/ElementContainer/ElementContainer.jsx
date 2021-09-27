@@ -21,7 +21,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -54,7 +54,7 @@ import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementConta
 import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
@@ -463,6 +463,13 @@ class ElementContainer extends Component {
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        
+        let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
+        let oldImage = this.props.oldImage;
+        if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
+            oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
+        }
+
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
@@ -474,14 +481,14 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
-                this.props.oldImage !== newInteractiveid
+                oldImage !== newInteractiveid
             );
         }
         else {
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-                this.props.oldImage !== newInteractiveid
+                oldImage !== newInteractiveid
             );
         }
     }
@@ -549,12 +556,14 @@ class ElementContainer extends Component {
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-        let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "")
+        let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "");
+        let oldImage = this.props.oldImage;
+        oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
         // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            this.props.oldImage !== assetId
+            oldImage !== assetId
             // (defaultImageUrl !== (previousElementData.figuredata.posterimage && previousElementData.figuredata.posterimage.path)) //PCAT-6815  fixes
         );
     }
@@ -1686,8 +1695,8 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element);
-        let showAlfrescoExpandButton = checkFigureMetadata(element)
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton');
+        let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton')
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1901,9 +1910,20 @@ class ElementContainer extends Component {
         }
 
         if ('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
-            let elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
-                return commentOnEntity === detailsToSet.element.id;
+            let elmUrn = []
+            let elmComment
+
+            if (element?.elementdata?.bodymatter?.length) {
+             (this.props.allComments).filter(({ commentOnEntity }) => {
+                  if (commentOnEntity === detailsToSet.element.id) { elmUrn.push(detailsToSet.element.id) }
             });
+                elmComment = this.filterElementData(elmUrn, element)
+            } else {
+                elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
+                    return commentOnEntity === detailsToSet.element.id
+                });
+            }
+            
             detailsToSet['elmComment'] = elmComment || [];
 
             let elmFeedback = (this.props.tcmData).filter(({ elemURN }) => {
@@ -1924,6 +1944,26 @@ class ElementContainer extends Component {
         this.props.setSelection(detailsToSet);
     }
 
+    /**
+     * @description - This function is for handling the comments flag in cut/paste
+     * @param {event} element
+     */
+    filterElementData = (elmUrn, element) => {
+        element.elementdata.bodymatter.map((item) => {
+            if (item?.type === "manifest") {
+                item?.contents?.bodymatter?.map((ele) => {
+                    elmUrn.push(ele.id)  /* Ex. -  WE:Body/SectionBreak:P*/
+                })
+            } else {
+                elmUrn.push(item.id) /* Ex. -  Aside/(WE:Head):P*/
+            }
+        })
+        return (this.props.allComments).filter(({ commentOnEntity }) => {
+            return elmUrn.some(function (commentEntity2) {
+                return commentOnEntity === commentEntity2
+            });
+        });
+    }
     /**
      * @description - This function is for handling the closing and opening of popup.
      * @param {event} popup
@@ -2021,7 +2061,22 @@ class ElementContainer extends Component {
      */
 
     handleAlfrescoMetadataWindow = () => {
-        let imageId = this.props?.element?.figuredata?.imageid;
+        let imageId
+        switch(this.props?.element?.figuretype){
+            case IMAGE:
+                imageId=this.props?.element?.figuredata?.imageid
+                break;
+            case AUDIO :
+                imageId=this.props?.element?.figuredata?.audioid
+                break;
+            case VIDEO:
+                imageId=this.props?.element?.figuredata?.videoid
+                break;
+            case  INTERACTIVE:
+                imageId=this.props?.element?.figuredata?.interactiveid
+                break;
+            default: imageId=null
+        }
         imageId = imageId.replace('urn:pearson:alfresco:', '');
         const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
         window.open(Url);
@@ -2240,7 +2295,9 @@ const mapStateToProps = (state) => {
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         prevSelectedElement: state.tcmReducer.prevElementId,
         projectUsers: state.commentsPanelReducer.users,
-        projectInfo: state.projectInfo
+        projectInfo: state.projectInfo,
+        oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare,
+        oldAudioVideoDataForCompare: state.appStore.oldAudioVideoDataForCompare
     }
 }
 

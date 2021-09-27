@@ -958,6 +958,15 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
+
+        if(selection.element.type === "element-dialogue") {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "elementdata": selection.element.elementdata
+                }]
+            }
+        }
         
         const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample",'showhide','popup']
         if(acceptedTypes.includes(selection.element.type)) {

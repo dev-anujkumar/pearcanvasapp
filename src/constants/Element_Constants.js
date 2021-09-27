@@ -15,6 +15,7 @@ export const DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_p
 /*---------------Element Audio-Video ----------------------*/ 
 export const AUDIO = "audio"
 export const VIDEO = "video"
+export const INTERACTIVE = "interactive"
 export const DEFAULT_ASSET="Asset data undefined"
 export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
 
@@ -161,4 +162,4 @@ export const MULTI_COLUMN_2C = {
     // "ELEMENT_PROPORTION": "33-33-33"
 }
 
-export const labelHtmlData = ['', '<br>', '<br/>', '<br data-mce-bogus="1">'];
+export const labelHtmlData = ['', '<br>', '<br/>', '<br data-mce-bogus="1">', '<p><br></p>'];

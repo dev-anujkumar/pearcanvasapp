@@ -102,25 +102,18 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
   */
 export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
-    const isOwnerKey = localStorage.getItem('hasOwnerEdit');
     let data = {
        projectUrn,
        slateId
     }
     return axios.post(url, data)
        .then((res) => {
-            if (isOwnerKey) {
-                localStorage.removeItem('hasOwnerEdit');
-            }
             dispatch({
                 type : SET_LOCK_FLAG,
                 payload : false
             })
         })
         .catch((err) => {
-            if (isOwnerKey) {
-                localStorage.removeItem('hasOwnerEdit');
-            }
             console.log("API error from release slate>>>>",err)
         })
 }
@@ -134,17 +127,13 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
 export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
     console.log("Inside releaseslatelockwithcallback");
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
-    let isOwnerKey = localStorage.getItem('hasOwnerEdit');
     let data = {
        projectUrn,
        slateId
     }
     return axios.post(url, data)
        .then((res) => {
-        console.log("response releaseslatelockwithcallback - isOwnerKey", isOwnerKey);
-        if (isOwnerKey) {
-            localStorage.removeItem('hasOwnerEdit');
-        }
+        console.log("response releaseslatelockwithcallback");
            store.dispatch({
                type: SET_LOCK_FLAG,
                payload: false
@@ -154,10 +143,7 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
             }
         })
         .catch((err) => {
-            console.log("error releaseslatelockwithcallback - isOwnerKey", isOwnerKey);
-            if (isOwnerKey) {
-                localStorage.removeItem('hasOwnerEdit');
-            }
+            console.log("error releaseslatelockwithcallback", err);
             if(callback){
                 callback(err)
             }
