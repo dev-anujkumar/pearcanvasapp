@@ -57,7 +57,7 @@ describe('Tests commentsPanel action', () => {
     });
    
     afterEach(() => moxios.uninstall());
- it('testing---Fetch comment action',()=>{
+ xit('testing---Fetch comment action',()=>{
     store = mockStore(() => initialState);
     let contentUrn = "urn:pearson:entity:88187e28-1992-4048-8b03-87c6115dd446",
         title = "slate title"
@@ -81,7 +81,7 @@ describe('Tests commentsPanel action', () => {
     });
  })
 
- it('testing------- replyComment action',()=>{
+ xit('testing------- replyComment action',()=>{
     store = mockStore(() => initialState);
     let commentUrn = "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
     reply = {

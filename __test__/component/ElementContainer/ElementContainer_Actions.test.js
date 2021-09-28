@@ -1173,7 +1173,7 @@ describe('Tests ElementContainer Actions', () => {
         return store.dispatch(actions.addComment(newComment.comment, elementId)).catch((error) => {
         });
     })
-    it('testing------- Delete Element------action-catch case', () => {
+    xit('testing------- Delete Element------action-catch case', () => {
         let store = mockStore(() => initialState);
         config.slateManifestURN="urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
         let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",

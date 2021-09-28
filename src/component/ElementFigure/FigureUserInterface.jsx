@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import TinyMceEditor from "../tinyMceEditor";
 // IMPORT - Assets //
 import { getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js';
-import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
+import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, removeUnoClass } from '../../constants/utility';
 import './../../styles/ElementFigure/FigureUserInterface.css';
 import { updateSmartLinkDataForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
@@ -19,7 +19,6 @@ import { labelHtmlData } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
 import interactiveTypeData from '../ElementInteractive/interactiveTypes.js';
 import { AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE } from '../../constants/Element_Constants';
-import Tooltip from "@material-ui/core/Tooltip";
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -63,10 +62,6 @@ class FigureUserInterface extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup, elementId } = this.props;
-        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
-            this.props.dataFromAlfresco(alfrescoAssetData);
-        }
         if (this.props.element.figuretype !== this.state.elementType) {
             this.updateDropdownOptions();
         }
@@ -144,7 +139,8 @@ class FigureUserInterface extends Component {
             this.props.updateAudioVideoDataForCompare(this.props.element.figuredata);
         }
         if (!labelElement?.classList.contains('actionPU')) {
-            this.toggleHyperlinkEditable('hide');
+            let buttonIndex = this.getIdOfButton(id);
+            this.toggleHyperlinkEditable('hide', buttonIndex);
         }
     }
 
@@ -166,8 +162,22 @@ class FigureUserInterface extends Component {
             }
         }
         if (labelElement?.classList.contains('actionPU')) {
-            this.toggleHyperlinkEditable('hide');
+            let buttonIndex = this.getIdOfButton(id);
+            this.toggleHyperlinkEditable('hide', buttonIndex);
         }
+    }
+
+    getIdOfButton = (index) => {
+        let indexToReturn = '';
+        let indexes = index.split('-');
+        for (let i=0; i<(indexes.length-1); i++) {
+            if (i === 0) {
+                indexToReturn += indexes[0]; 
+            } else {
+                indexToReturn += `-${indexes[i]}`;
+            }
+        }
+        return indexToReturn;
     }
 
     convertOptionsToLowercase = (Options) => {
@@ -184,19 +194,22 @@ class FigureUserInterface extends Component {
 
     generateAddAssetJSX = ( assetIcon, assetTitleText, addButtonText, assetBackgroundType, assetIdText, assetPathText) => {
         return (
-            <div className="figure-wrapper">
+            <div className="media-wrapper">
                 <div className='videoIconWrapper'>
-                    <span className='videoIcon' >{assetIcon}</span>
-                    <span className='videoTitle'>{assetTitleText}</span>
+                    <div className="icon-wrapper">
+                        <span className='videoIcon' >{assetIcon}</span>
+                        <span className='videoTitle'>{assetTitleText}</span>
+                    </div>
+                    <div className="media-image-info">
+                        <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> </span> </div>
+                        <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> </span> </div>
+                        <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'> </span> </div>
+                    </div>
                 </div>
-                <div className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
-                <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} />
-                </div>
-                <span className='line' />
-                <div className="figure-image-info">
-                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> </span> </div>
-                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> </span> </div>
-                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'> </span> </div>
+                <div className="media-assets">
+                    <div className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
+                    <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} />
+                    </div>
                 </div>
             </div>
         )
@@ -206,19 +219,22 @@ class FigureUserInterface extends Component {
         return (
             <div className='figure-wrapper-update'>
                 <div className='videoIconWrapper'>
-                    <span className='videoIcon' >{assetIcon}</span>
-                    <Tooltip title={<h2 style={{ color: "white" }}>{assetTitleText}</h2>} placement="bottom-start">
-                        <span className='videoTitle' >{assetTitleText}</span>
-                    </Tooltip> 
+                    <div className="update-icon-wrapper">
+                        <span className='videoIcon' >{assetIcon}</span>
+                        <p className='updateVideoTitle' >{assetTitleText}</p>
+                    </div>
+                    <div className="media-button-group">
+                        <div className='update-figure-button' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
+                        <div className={`delete-figure-button ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                    </div>
+                    <div className="media-image-info">
+                        <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
+                        <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
+                        <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite && (alfrescoSite !== '' || alfrescoSite !== undefined) ? alfrescoSite : this.state.alfrescoSite : ""} </span> </div>
+                    </div>
                 </div>
-                {this.generatePosterImageJSX(element, assetBackgroundType)}
-                <div className='updatefigurebutton' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
-                <div className={`deletefigurebutton ${element.figuretype === "interactive" ? 'deleteSL':''}`}  onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
-                <span className='line' />
-                <div className="figure-image-info">
-                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
-                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
-                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite && (alfrescoSite !== '' || alfrescoSite !== undefined) ? alfrescoSite: this.state.alfrescoSite : ""} </span> </div>
+                <div className="media-assets">
+                    {this.generatePosterImageJSX(element, assetBackgroundType)}
                 </div>
             </div>
         )
@@ -228,25 +244,25 @@ class FigureUserInterface extends Component {
         let posterJsx;
         switch (element.figuretype) {
             case AUDIO:
-                posterJsx = <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
+                posterJsx = <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} /></div>
                 break;
             case VIDEO:
                 posterJsx = element.figuredata?.posterimage?.path ?
-                    <video className="videoReel" width="246px" height="164px" controls="none" preload="none"
+                    <video className="videoReel" width="100%" height="164px" controls="none" preload="none"
                         poster={element?.figuredata?.posterimage?.path}>
                         <source src="" />
                         <track src="" kind="subtitles" srcLang="en" label="English" />
                     </video>
                     :
-                    <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
+                    <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} /></div>
                 break;
             case INTERACTIVE:
                 posterJsx = element.figuredata?.posterimage?.path ?
                     <div className="videoReel">
-                        <img width="246px" height="164px" src={element.figuredata?.posterimage?.path} />
+                        <img width="100%" height="164px" src={element.figuredata?.posterimage?.path} />
                     </div>
                     :
-                    <div className='videoReel'><img width="246px" height="164px" src={assetBackgroundType} /></div>
+                    <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} /></div>
                 break;
         }
         return posterJsx;
@@ -289,9 +305,9 @@ class FigureUserInterface extends Component {
         return assetJsx;
     }
 
-    toggleHyperlinkEditable = (value) => {
-        let buttonElementDiv = document.getElementsByClassName(`Rectangle-button`);
-        let hyperlinkTextDiv = document.getElementsByClassName(`actionPUdiv`);
+    toggleHyperlinkEditable = (value, id) => {
+        let buttonElementDiv = document.getElementsByClassName(`Rectangle-button ${id}`);
+        let hyperlinkTextDiv = document.getElementsByClassName(`actionPUdiv ${id}`);
         if (value === 'show') {
             buttonElementDiv[0]?.classList?.add('hide-field');
             hyperlinkTextDiv[0]?.classList?.remove('hide-field');
@@ -353,8 +369,8 @@ class FigureUserInterface extends Component {
         switch (element.figuretype) {
             case AUDIO:
                 assetId = element.figuredata.hasOwnProperty('audioid') && element.figuredata.audioid ? element.figuredata.audioid : '';
-                assetTitleText = assetId ? element.figuredata?.audio?.path : 'Audio Title';
-                addButtonText = "Select an Audio";
+                assetTitleText = 'Audio';
+                addButtonText = "Add an Audio";
                 assetIdText = "Audio ID:";
                 assetPathText = "Audio Path:";
                 updateButtonText = "Update Audio";
@@ -362,8 +378,8 @@ class FigureUserInterface extends Component {
                 break;
             case VIDEO:
                 assetId = element.figuredata.hasOwnProperty('videoid') && element.figuredata.videoid ? element.figuredata.videoid : '';
-                assetTitleText = assetId ? element.figuredata?.videos[0]?.path : 'Video Title';
-                addButtonText = "Select a Video";
+                assetTitleText =  "Video" // assetId ? element.figuredata?.videos[0]?.path : 'Video'; commented for future reference
+                addButtonText = "Add a Video";
                 assetIdText = "Video ID:";
                 assetPathText = "Video Path:";
                 updateButtonText = "Update Video";
@@ -371,7 +387,7 @@ class FigureUserInterface extends Component {
                 break;
             case INTERACTIVE:
                 assetId = element.figuredata.interactiveid ? element.figuredata.interactiveid : '';
-                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : element.figuredata?.path ? element.figuredata?.path : 'Smart link Title';
+                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : assetId ? 'Smart link' : 'Smart link Title';
                 addButtonText = "Add a Smart Link";
                 assetIdText = "Asset ID:";
                 assetPathText = "Asset Path:";
@@ -379,6 +395,16 @@ class FigureUserInterface extends Component {
                 assetPath = element.figuredata.path ? element.figuredata.path : '';
                 break;
         }
+        let posterText;
+        if (element.figuretype === INTERACTIVE && imageDimension === '') {
+            posterText = element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/&nbsp;/g, "") : '';
+            let testTextarea = document.createElement("textarea");
+            testTextarea.innerHTML = posterText;
+            posterText = testTextarea.value;
+        }
+
+        let captionsHtml = removeUnoClass(element.html?.captions);
+        let creditsHtml = removeUnoClass(element.html?.credits);
 
         return (
             <div className="figureElement">
@@ -431,30 +457,30 @@ class FigureUserInterface extends Component {
                             {
                                     element.figuretype === INTERACTIVE && imageDimension === '' ?
                                         <div>
-                                            <div className='Rectangle-button' onClick={() => this.toggleHyperlinkEditable('show')} >
-                                                <span className="Enter-Button-Label">{element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, "") : "Enter Button Label"}</span>
+                                            <div className={`Rectangle-button ${index}`} onClick={() => this.toggleHyperlinkEditable('show', index)} >
+                                                <span className="Enter-Button-Label">{posterText ? posterText : "Enter Button Label"}</span>
                                             </div>
-                                            <div className="hide-field actionPUdiv">
+                                            <div className={`hide-field actionPUdiv ${index}`} >
                                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter Button Label" className={"actionPU hyperLinkText"} tagName={'p'} model={element.html.postertext ? element.html.postertext : ""} handleEditorFocus={handleFocus} handleBlur={handleBlur} slateLockInfo={slateLockInfo} elementId={elementId} element={element} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                             </div>
                                         </div>
                                         :
                                         null
                             }
-                            <div className="figure-element-container">
+                            <div className="figure-element-container interface-container">
                                 <div id="figure_add_div" className={`pearson-component image figureData ${element.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                                     {this.renderAssetSection(element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite)}
                                 </div>
                             </div>
                             <figcaption className={captionDivClass} >
                                 <div className="floating-caption-group">
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass} model={element.html.captions} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass} model={captionsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                     <label className={checkHTMLdataInsideString(element?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
                                 </div>
                             </figcaption>
                             <figcredit >
                                 <div className="floating-credit-group">
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass} model={element.html.credits} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass} model={creditsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                     <label className={checkHTMLdataInsideString(element?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
                                 </div>
                             </figcredit>
