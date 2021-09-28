@@ -694,6 +694,10 @@ class SlateWrapper extends Component {
             case 'element-discussion': 
                 this.props.createElement(ELEMENT_DISCUSSION, indexToinsert, parentUrn, asideData, null, null, null, null);
                 break;
+            case 'blocklist-elem':
+                // for now while creating blocklist element we are passing element type as TEXT
+                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null, null);
+                break;
             case 'text-elem':
             default:
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
