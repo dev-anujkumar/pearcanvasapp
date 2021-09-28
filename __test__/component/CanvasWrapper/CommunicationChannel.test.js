@@ -2234,4 +2234,76 @@ describe('Testing communication channel', () => {
         expect(channelInstance.setCurrentSlate).toHaveBeenCalled()
         spysetCurrentSlate.mockClear()
     })
+
+    test('Test - sendDataToIframe method', () => {
+        const spysendDataToIframe = jest.spyOn(channelInstance, 'sendDataToIframe')
+        channelInstance.sendDataToIframe({});
+        expect(channelInstance.sendDataToIframe).toHaveBeenCalled()
+        spysendDataToIframe.mockClear()
+    });
+
+    test('Test - hanndleSplitSlate method', () => {
+        const spyhanndleSplitSlate = jest.spyOn(channelInstance, 'hanndleSplitSlate')
+        channelInstance.hanndleSplitSlate({});
+        expect(channelInstance.hanndleSplitSlate).toHaveBeenCalled()
+        spyhanndleSplitSlate.mockClear()
+    });
+
+    test('Test for prohibitPropagation  function - event - null', () => {
+        const spyprohibitPropagation = jest.spyOn(channelInstance, 'prohibitPropagation')
+        channelInstance.prohibitPropagation(null);
+        expect(channelInstance.prohibitPropagation).toHaveBeenCalled()
+        spyprohibitPropagation.mockClear()
+    })
+
+    const store1 = mockStore({
+        ...initialState,
+        metadataReducer: {
+            currentSlateLOData: []
+        },
+        projectInfo:{
+            projectSubscriptionDetails: {
+                projectSharingRole: "OWNER",
+                isSubscribed: true
+            },
+            sharingContextRole: "OWNER",
+            projectSharingRole: "OWNER"
+        }
+    })
+    const wrapper1 = mount(<Provider store={store1}><CanvasWrapper {...props} /></Provider>)
+    const channelInstance1 = wrapper1.find('CommunicationWrapper').instance();
+
+    test('Test for cancelCEPopup case - empty currentSlateLOData', () => {
+        const event = {
+            data: {
+                type: "cancelCEPopup",
+                message: ""
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance1, 'handleIncommingMessages')
+        channelInstance1.handleIncommingMessages(event);
+        expect(channelInstance1.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+
+    test('Test - resetOwnerSlatePopupFlag method', () => {
+        const spyresetOwnerSlatePopupFlag = jest.spyOn(channelInstance1, 'resetOwnerSlatePopupFlag')
+        channelInstance1.resetOwnerSlatePopupFlag();
+        expect(channelInstance1.resetOwnerSlatePopupFlag).toHaveBeenCalled()
+        spyresetOwnerSlatePopupFlag.mockClear()
+    })
+     
+    test('Test for refreshSlate case - projectSharingRole  - OWNER', () => {
+        let event = {
+            data: {
+                type: "refreshSlate",
+                message: ""
+            }
+        }
+        const spyhandleRefreshSlate = jest.spyOn(channelInstance1, 'handleRefreshSlate')
+        channelInstance1.handleIncommingMessages(event);
+        expect(channelInstance1.handleRefreshSlate).toHaveBeenCalled()
+        spyhandleRefreshSlate.mockClear()
+    })
+    
 })
