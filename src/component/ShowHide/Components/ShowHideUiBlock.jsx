@@ -108,6 +108,7 @@ const ShowHideUiBlock = (props) => {
 			pasteElement = {props.pasteElement}
 			showHideType = {sectionType}
 			handleFocus = {props.handleFocus}
+			elementSepratorProps={props.elementSepratorProps}
 		/>
 	}
 
