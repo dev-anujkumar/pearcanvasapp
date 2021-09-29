@@ -715,7 +715,7 @@ class SlateWrapper extends Component {
                 this.props.createElement(SMARTLINK, indexToinsert, parentUrn, asideData, null, null);
                 break;
             case 'poetry-elem':
-                this.props.createElement(POETRY, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                this.props.createElement(POETRY, indexToinsert, parentUrn,asideData,null,null,null,poetryData);
                 break;
             case 'stanza-elem':
                 this.props.createElement(STANZA, indexToinsert, parentUrn,null,null,null,null,poetryData);
