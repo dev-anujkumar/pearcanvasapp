@@ -33,7 +33,8 @@ jest.mock('../../../src/constants/utility.js',()=>{
         },
         checkHTMLdataInsideString: () => {
             return ({
-                toLowerCase: jest.fn()
+                toLowerCase: jest.fn(),
+                replace: jest.fn()
             })
         },
         removeUnoClass: () => {
@@ -115,17 +116,15 @@ describe('Testing FigureUserInterface component', () => {
         jest.spyOn(FigureUserInterfaceInstance, 'handleClickOutside')
         FigureUserInterfaceInstance.handleClickOutside(e);
     })
-    xit('Test deleteElementAsset', () => {
-        jest.spyOn(FigureUserInterfaceInstance, 'deleteElementAsset')
-        FigureUserInterfaceInstance.deleteElementAsset();
-    })
     it('Test handleFigureDropdown', () => {
         jest.spyOn(FigureUserInterfaceInstance, 'handleFigureDropdown')
         FigureUserInterfaceInstance.handleFigureDropdown();
     })
     xit('Test onFigureImageFieldFocus', () => {
-        jest.spyOn(FigureUserInterfaceInstance, 'onFigureImageFieldFocus')
+        let spyFucntion=jest.spyOn(FigureUserInterfaceInstance, 'onFigureImageFieldFocus')
         FigureUserInterfaceInstance.onFigureImageFieldFocus('test');
+        expect(spyFucntion).toHaveBeenCalledWith("test")
+        spyFucntion.mockClear();
     })
     xit('Test onFigureImageFieldBlur', () => {
         jest.spyOn(FigureUserInterfaceInstance, 'onFigureImageFieldBlur')
@@ -146,7 +145,7 @@ describe('Testing FigureUserInterface component', () => {
             element: {
                 figuretype: 'video',
                 figuredata: {
-                    hasOwnProperty: jest.fn(),
+                    hasOwnProperty: jest.fn(()=> true),
                     videos: [
                         {
                             path: "Test Path"
@@ -208,7 +207,7 @@ describe('Testing FigureUserInterface component', () => {
             element: {
                 figuretype: 'audio',
                 figuredata: {
-                    hasOwnProperty: jest.fn(),
+                    hasOwnProperty: jest.fn(()=> true),
                     audio: 
                         {
                             path: "Test Path"
@@ -268,7 +267,7 @@ describe('Testing FigureUserInterface component', () => {
             element: {
                 figuretype: 'interactive',
                 figuredata: {
-                    hasOwnProperty: jest.fn(),
+                    hasOwnProperty: jest.fn(()=> true),
                     path:'test path',
                     interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
                     interactivetype:'3rd-party',
@@ -336,7 +335,7 @@ describe('Testing FigureUserInterface component', () => {
             let instance = component.instance();
             expect(instance).toBeDefined();
         });
-        xit('Pdf smartLink with Data',()=>{
+        it('Pdf smartLink with Data',()=>{
             let props = {
                 model: smartLinkPdfWithData,
                 index: "",
@@ -350,7 +349,7 @@ describe('Testing FigureUserInterface component', () => {
                 element: {
                     figuretype: 'interactive',
                     figuredata: {
-                        hasOwnProperty: jest.fn(),
+                        hasOwnProperty: jest.fn(()=> true),
                         path:'test path',
                         interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
                         interactivetype:'pdf',
