@@ -8,7 +8,6 @@ const mockStore = configureMockStore(middlewares);
 import FigureUserInterface from '../../../src/component/ElementFigure/FigureUserInterface';
 import { newVideoObjWithData,newAudioObjWithData,newSmartLinkObjWithData,newVideoObjWithoutData,newAudioObjWithoutData,newSmartLinkObjWithoutData,smartLinkPdfWithoutData,smartLinkPdfWithData} from '../../../fixtures/ElementFigureTestingData.js'
 
-
 const dummyData = [
     {title: 'some-tilte-1', body: 'some-1'},
     {title: 'some-tilte-2', body: 'some-2'},
@@ -46,6 +45,14 @@ jest.mock('../../../src/constants/utility.js',()=>{
     }
 })
 
+// jest.mock('../../../src/component/ElementFigure/AlfrescoSiteUrl_helper.js', () => {
+//     return {
+//         getAlfrescositeResponse: () => {
+//             return jest.fn()
+//         }
+//     }
+// })
+
 
 
 describe('Testing FigureUserInterface component', () => {
@@ -78,7 +85,6 @@ describe('Testing FigureUserInterface component', () => {
         },
         onClick: () => { },
         handleFocus: function () { },
-        deleteElementAsset: function (){},
         permissions: ['add_multimedia_via_alfresco'],
         element: {
             figuretype: 'video',
@@ -91,12 +97,26 @@ describe('Testing FigureUserInterface component', () => {
                 ],
                 videoid: 'urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c',
                 posterimage: { imageid: "urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c" }
-            }
+            },
+            html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
         }
     }
     const store = mockStore(initialState);
     const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
     let FigureUserInterfaceInstance = component.find('FigureUserInterface').instance();
+    it('Test componnet Did mount',()=>{
+        jest.spyOn(FigureUserInterfaceInstance, 'componentDidMount')
+        document.addEventListener = () => {
+            return true
+        }
+        FigureUserInterfaceInstance.setState({
+            alfrescoSite:"001_C5 Media POC - AWS US"
+        })
+        FigureUserInterfaceInstance.componentDidMount();
+        expect(FigureUserInterfaceInstance.componentDidMount).toHaveBeenCalled();
+        expect(FigureUserInterfaceInstance.state.alfrescoSite).toBe("001_C5 Media POC - AWS US")
+      
+    })
     it('Test componentWillUnmount', () => {
         
         jest.spyOn(FigureUserInterfaceInstance, 'componentWillUnmount')
@@ -153,7 +173,8 @@ describe('Testing FigureUserInterface component', () => {
                     ],
                     videoid: 'urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c',
                     posterimage: { imageid: "urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c" }
-                }
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
             }
         }
         const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
@@ -162,6 +183,25 @@ describe('Testing FigureUserInterface component', () => {
             expect(component).toHaveLength(1);
             expect(FigureUserInterfaceInstance).toBeDefined();
         });
+        it('handle handleCloseDropDrown',()=>{
+            let FigureUserInterfaceInstance = component.find('FigureUserInterface').instance();
+             const spyFunction = jest.spyOn(FigureUserInterfaceInstance, 'changeFigureLabel');
+            const spyFunction2 = jest.spyOn(FigureUserInterfaceInstance, 'handleCloseDropDrown');
+            FigureUserInterfaceInstance.changeFigureLabel("Video","Video")
+            FigureUserInterfaceInstance.handleCloseDropDrown()
+            FigureUserInterfaceInstance.forceUpdate();
+            component.update();
+            FigureUserInterfaceInstance.setState({
+                figureDropDown: false,
+                figureLabelValue:"Video"
+            })
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction2).toHaveBeenCalled();
+            expect(FigureUserInterfaceInstance.state.figureDropDown).toBe(false);
+            expect(FigureUserInterfaceInstance.state.figureLabelValue).toBe("Video");
+            spyFunction.mockClear();
+            spyFunction2.mockClear();
+        })
         it('video element without alfresco data',()=>{
             let props = {
                 model: newVideoObjWithoutData,
@@ -214,7 +254,8 @@ describe('Testing FigureUserInterface component', () => {
                         },
                     audioid: 'urn:pearson:alfresco:a522bb38-8343-405d-b2cb-30dde04ffcbd',
                     posterimage:{imageid:"urn:pearson:alfresco:a522bb38-8343-405d-b2cb-30dde04ffcbd"}
-                }
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
             }
         }
         it('render audio element',()=>{
@@ -275,14 +316,19 @@ describe('Testing FigureUserInterface component', () => {
                         imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
                         path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
                      },
-                }
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
             }
         }
-        it('render smartlink element',()=>{
+        it('render smartlink element', () => {
             const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            let FigureUserInterfaceInstance = component.find('FigureUserInterface').instance();
             expect(component).toHaveLength(1);
-            let instance = component.instance();
-            expect(instance).toBeDefined();
+            FigureUserInterfaceInstance.setState({
+                figureLabelValue: "TestLabel"
+            })
+            expect(FigureUserInterfaceInstance).toBeDefined();
+            expect(FigureUserInterfaceInstance.state.figureLabelValue).toBe("TestLabel")
         })
         it('render smartLink element without alfresco data',()=>{
             let props = {
@@ -301,6 +347,7 @@ describe('Testing FigureUserInterface component', () => {
                         hasOwnProperty: jest.fn(),
                         interactiveid: '',
                         interactivetype:'3rd-party',
+                        interactivetitle :'AssetName'
                     }
                 }
             }
