@@ -1287,6 +1287,21 @@ export class TinyMceEditor extends Component {
                 e.preventDefault();
                 return false;
             }
+            // TAB key press handling for BlockList element
+            if(key === 9) {
+                e.preventDefault();
+                const { slateLevelData, index } = this.props;
+                console.log("this.props", this.props);
+                const slateData = Object.values(slateLevelData);
+                console.log("Slate Data", slateData);
+                const { contents } = slateData[0];
+                if (contents && contents.bodymatter && contents.bodymatter.length && index && typeof index === 'string' && index.includes('-')) {
+                    const firstIndex = index.split("-")[0];
+                    if ('type' in contents.bodymatter[firstIndex] && contents.bodymatter[firstIndex].type === 'manifestlist') {
+                        console.log("Call create element to create blocklist");
+                    }
+                }
+            }
         });
     }
 
@@ -3858,7 +3873,8 @@ const mapStateToProps = (state) => {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isInlineEditor: state.alfrescoReducer.isInlineEditor,
-        imageArgs: state.alfrescoReducer.imageArgs
+        imageArgs: state.alfrescoReducer.imageArgs,
+        slateLevelData: state.appStore.slateLevelData
     }
 }
 
