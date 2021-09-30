@@ -125,6 +125,11 @@ function CommunicationChannel(WrappedComponent) {
                     config.citeUrn = message.citeUrn;
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
+                    if (message?.alfresco?.repositoryFolder) {
+                        let alfrescoRepository = message.alfresco.repositoryFolder?.split('/')?.[0] || message.alfresco.repositoryFolder
+                        config.alfrescoMetaData.alfresco.repositoryFolder = alfrescoRepository
+                        if (message?.alfresco?.siteId) config.alfrescoMetaData.alfresco.siteId = alfrescoRepository
+                    }
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
                     this.props.fetchLearnosityContent()
