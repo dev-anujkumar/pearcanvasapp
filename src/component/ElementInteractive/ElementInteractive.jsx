@@ -385,6 +385,7 @@ class Interactive extends React.Component {
      */
     handleClickElement = (event) => {
         event.stopPropagation();
+        this.props.handleFocus();
     }
 
     /**
