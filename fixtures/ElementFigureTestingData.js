@@ -2118,3 +2118,231 @@ export const newVideoObjWithData = {
         "credits": "<p><img align=\"middle\" class=\"Wirisformula fr-draggable\" src=\"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/85/6d/856d8534c13cbbd6a93fac447619acf6.png?1632388027981\" data-mathml=\"«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«msqrt»«mn»144«/mn»«/msqrt»«/math»\" width=\"42\" height=\"22\" alt=\"square root of 144\" role=\"math\" style=\"vertical-align: -1px\" draggable=\"false\"> dda dasdas&nbsp;<img align=\"middle\" class=\"Wirisformula fr-draggable\" data-custom-editor=\"chemistry\" src=\"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/61/7d/617d353b4f7962fcd04e6df9e3bb5bab.png?1632388027981\" data-mathml=\"«math xmlns=¨http://www.w3.org/1998/Math/MathML¨ class=¨wrs_chemistry¨»«msubsup»«mi mathvariant=¨normal¨»H«/mi»«mn»2«/mn»«mn»2«/mn»«/msubsup»«/math»\" width=\"20\" height=\"22\" alt=\"straight H subscript 2 superscript 2\" role=\"math\" style=\"vertical-align: -1px\" draggable=\"false\"> sdasd sdasdas <sup><a href=\"#\" data-uri=\"urn:pearson:work:50264f2a-ffc6-47e9-a67a-9510ccf20828\" data-footnoteelementid=\"urn:pearson:work:50264f2a-ffc6-47e9-a67a-9510ccf20828\" class=\"Pearson-Component paragraphNumeroUnoFootnote\">*</a></sup></p>", "footnotes": { "urn:pearson:work:50264f2a-ffc6-47e9-a67a-9510ccf20828": "<p>sasdsad asdsaa sdasdas </p>", "urn:pearson:work:5d26b11a-4960-4524-b1c0-7c582e44c1ed": "<p>test01</p>", "urn:pearson:work:c3cf2216-c1db-4c53-874d-b866accb5cc1": "<p>ssdasd sdcsd dasafvsd ssaf</p>" }, "assetsPopover": {}, "glossaryentries": {}
     }, "versionUrn": "urn:pearson:work:4bf11e1f-f145-44be-ad8b-1b8c2124e7b1", "contentUrn": "urn:pearson:entity:f9edcf30-64e9-4b87-97c2-56ef50896973"
 }
+
+export const newAudioObjWithData={
+    "id":"urn:pearson:work:402e8150-c029-42f6-9960-91425c3f0cfa",
+    "type":"figure",
+    "figuretype":"audio",
+    "subtype":"figureAudioSL",
+    "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield":true,
+    "alignment":"full",
+    "figuredata":{
+        "height":"",
+        "width":"",
+        "srctype":"externallink",
+        "figuretype":"audio",
+        "audioid":"urn:pearson:alfresco:a522bb38-8343-405d-b2cb-30dde04ffcbd",
+        "posterimage":{"imageid":"urn:pearson:alfresco:a522bb38-8343-405d-b2cb-30dde04ffcbd"},
+        "audio":{
+            "format":"audio/mpeg",
+            "path":"https://cite-media-stg.pearson.com/legacy_paths/a522bb38-8343-405d-b2cb-30dde04ffcbd/media61517432c4e2b.mp3"
+        },
+        "schema":"http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio"
+    },
+    "html":{"captions":"<p></p>","credits":"<p></p>","footnotes":{},"glossaryentries":{},"title":"<p></p>","postertext":"","text":""},
+    "versionUrn":"urn:pearson:work:402e8150-c029-42f6-9960-91425c3f0cfa",
+    "contentUrn":"urn:pearson:entity:35c0caf7-b6bc-416b-8b4e-48be5dc27fee",
+    "index":"0",
+    "title":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":""},
+    "captions":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"","footnotes":[]},
+    "credits":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"","footnotes":[]},
+    "inputType":"AUDIO",
+    "inputSubType":"EXTERNAL_LINK",
+    "slateVersionUrn":"urn:pearson:manifest:9a685bc7-2835-4d2d-9fc6-b9639e490eca",
+    "elementParentEntityUrn":"urn:pearson:entity:125aeb8c-860c-4688-ac88-9a40d3f4a427",
+    "projectUrn":"urn:pearson:distributable:8fa5bd48-3912-4c96-a902-5edc2fa7f457",
+    "elementdata":{"text":null},
+    "tcm":false
+}
+
+export const newSmartLinkObjWithData={
+   "id":"urn:pearson:work:bbba9d9a-831d-4dff-8574-5793fdb27e6b",
+   "type":"figure",
+   "figuretype":"interactive",
+   "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+   "titlecontentintitlefield":true,
+   "title":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":""},
+   "captions":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"","footnotes":[]},
+   "credits":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"","footnotes":[]},
+   "figuredata":{
+       "height":"600",
+       "width":"400",
+       "mobileready":false,
+       "schema":"http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+       "interactiveid":"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+       "interactivetype":"3rd-party",
+       "interactiveformat":"external-link",
+       "interactivetitle":"MapMaster SmartLink",
+       "vendor":"MapMaster",
+       "posterimage":{
+           "imageid":"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+           "path":"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+        },
+        "path":"https://media.pearsoncmg.com/ph/bp/bp_interactivemodels/GeoDemo/Yared_MT16.1_sa2.html",
+        "alttext":"","longdescription":""
+    },
+    "html":{"captions":"<p></p>","credits":"<p></p>","title":"<p></p>","footnotes":{},"glossaryentries":{},"postertext":"","tableasHTML":"","text":""},
+    "versionUrn":"urn:pearson:work:bbba9d9a-831d-4dff-8574-5793fdb27e6b",
+    "contentUrn":"urn:pearson:entity:de6ebaa1-163a-424f-a600-27029e0ccfa8",
+    "status":"wip",
+    "index":"0",
+    "inputType":"EXTERNAL_LINK",
+    "inputSubType":"THIRD_PARTY",
+    "slateVersionUrn":"urn:pearson:manifest:9a685bc7-2835-4d2d-9fc6-b9639e490eca",
+    "elementParentEntityUrn":"urn:pearson:entity:125aeb8c-860c-4688-ac88-9a40d3f4a427",
+    "projectUrn":"urn:pearson:distributable:8fa5bd48-3912-4c96-a902-5edc2fa7f457",
+    "elementdata":{"text":null},
+    "tcm":false 
+}
+
+export const newVideoObjWithoutData={
+    "id":"urn:pearson:work:5bef8a50-a71f-4f7e-9d78-bc098b4afa70",
+    "type":"figure",
+    "figuretype":"video",
+    "subtype":"figureVideo",
+    "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield":true,
+    "figuredata":{
+        "schema":"http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+        "height":"399",
+        "width":"600",
+        "videoid":"",
+        "posterimage":{
+            "path":"https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png",
+            "imageid":""
+        },
+        "videos":[{"path":"","charAt":0}]
+    },
+    "html":{"title":"<p class=\"paragraphNumeroUno\"><br></p>","text":"","postertext":"","captions":"<p class=\"paragraphNumeroUno\"><br></p>","credits":"<p class=\"paragraphNumeroUno\"><br></p>"},
+    "versionUrn":"urn:pearson:work:5bef8a50-a71f-4f7e-9d78-bc098b4afa70",
+    "contentUrn":"urn:pearson:entity:69952a2d-3bec-4e61-bccc-dddb4c6d79b2",
+    "status":"wip"
+}
+
+export const newAudioObjWithoutData={
+   "id":"urn:pearson:work:89dca07d-9331-4919-822b-28fe39822fc3",
+   "type":"figure",
+   "figuretype":"interactive",
+   "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+   "titlecontentintitlefield":true,
+   "title":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"sdsfdfsdf"},
+   "captions":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"test caption","footnotes":[]},
+   "credits":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"test credit","footnotes":[]},
+   "figuredata":{
+       "height":"",
+       "width":"",
+       "mobileready":false,
+       "schema":"http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+       "interactiveid":"urn:pearson:alfresco:970d766b-12c2-42ac-8275-1b21c059939d",
+       "interactivetype":"pdf",
+       "interactiveformat":"external-link",
+       "interactivetitle":"Ext website link",
+       "posterimage":{
+           "imageid":"urn:pearson:alfresco:970d766b-12c2-42ac-8275-1b21c059939d",
+           "path":"https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        },
+        "path":"https://www.google.com/",
+        "longdescription":"Click here to navigate to search engine",
+        "postertext":{
+            "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text":"ssds dsd  sasa sas dada",
+            "textsemantics":[]
+        }
+    },
+    "html":{"captions":"<p>test caption</p>","credits":"<p>test credit</p>","title":"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>","footnotes":{},"glossaryentries":{},"postertext":"<p>ssds dsd&nbsp; sasa sas dada</p>","tableasHTML":"","text":""},
+    "versionUrn":"urn:pearson:work:89dca07d-9331-4919-822b-28fe39822fc3",
+    "contentUrn":"urn:pearson:entity:bc595832-ec80-43b3-8d69-e5a02a824ac5",
+    "index":"0",
+    "inputType":"EXTERNAL_LINK",
+    "inputSubType":"WEB_LINK",
+    "slateVersionUrn":"urn:pearson:manifest:9a685bc7-2835-4d2d-9fc6-b9639e490eca",
+    "elementParentEntityUrn":"urn:pearson:entity:125aeb8c-860c-4688-ac88-9a40d3f4a427",
+    "projectUrn":"urn:pearson:distributable:8fa5bd48-3912-4c96-a902-5edc2fa7f457",
+    "elementdata":{"text":null},
+    "tcm":false
+}
+
+export const newSmartLinkObjWithoutData={
+    "id":"urn:pearson:work:89dca07d-9331-4919-822b-28fe39822fc3",
+    "type":"figure",
+    "figuretype":"interactive",
+    "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield":true,
+    "title":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},
+    "captions":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},
+    "credits":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},
+    "figuredata":{
+        "schema":"http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid":"",
+        "interactivetype":"3rd-party",
+        "interactiveformat":"external-link"
+    },
+    "html":{"title":"<p class=\"paragraphNumeroUno\"><br></p>","text":"","postertext":"","captions":"<p class=\"paragraphNumeroUno\"><br></p>","credits":"<p class=\"paragraphNumeroUno\"><br></p>"},
+    "versionUrn":"urn:pearson:work:89dca07d-9331-4919-822b-28fe39822fc3",
+    "contentUrn":"urn:pearson:entity:bc595832-ec80-43b3-8d69-e5a02a824ac5",
+    "status":"wip"
+}
+
+export const smartLinkPdfWithoutData={
+    "id":"urn:pearson:work:89dca07d-9331-4919-822b-28fe39822fc3",
+    "type":"figure",
+    "figuretype":"interactive",
+    "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield":true,
+    "title":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},
+    "captions":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},
+    "credits":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},
+    "figuredata":{
+        "schema":"http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid":"",
+        "interactivetype":"pdf",
+        "interactiveformat":"external-link",
+        "posterimage":{"path":"https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"},
+        "postertext":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":"","textsemantics":[],"mathml":[]}
+    },
+        "html":{"title":"<p class=\"paragraphNumeroUno\"><br></p>","postertext":"","captions":"<p class=\"paragraphNumeroUno\"><br></p>",
+        "credits":"<p class=\"paragraphNumeroUno\"><br></p>","footnotes":{},"assetsPopover":{},"glossaryentries":{}},
+        "versionUrn":"urn:pearson:work:89dca07d-9331-4919-822b-28fe39822fc3",
+        "contentUrn":"urn:pearson:entity:bc595832-ec80-43b3-8d69-e5a02a824ac5"
+}
+
+export const smartLinkPdfWithData={
+    "id":"urn:pearson:work:bbba9d9a-831d-4dff-8574-5793fdb27e6b",
+    "type":"figure",
+    "figuretype":"interactive",
+    "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield":true,
+    "title":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":""},
+    "captions":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"","footnotes":[]},
+    "credits":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"","footnotes":[]},
+    "figuredata":{
+        "height":"600",
+        "width":"400",
+        "mobileready":false,
+        "schema":"http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid":"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+        "interactivetype":"pdf",
+        "interactiveformat":"external-link",
+        "interactivetitle":"MapMaster SmartLink",
+        "vendor":"MapMaster",
+        "posterimage":{
+            "imageid":"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+            "path":"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+         },
+         "path":"https://media.pearsoncmg.com/ph/bp/bp_interactivemodels/GeoDemo/Yared_MT16.1_sa2.html",
+         "alttext":"","longdescription":""
+     },
+     "html":{"captions":"<p></p>","credits":"<p></p>","title":"<p></p>","footnotes":{},"glossaryentries":{},"postertext":"","tableasHTML":"","text":""},
+     "versionUrn":"urn:pearson:work:bbba9d9a-831d-4dff-8574-5793fdb27e6b",
+     "contentUrn":"urn:pearson:entity:de6ebaa1-163a-424f-a600-27029e0ccfa8",
+     "status":"wip",
+     "index":"0",
+     "inputType":"EXTERNAL_LINK",
+     "inputSubType":"THIRD_PARTY",
+     "slateVersionUrn":"urn:pearson:manifest:9a685bc7-2835-4d2d-9fc6-b9639e490eca",
+     "elementParentEntityUrn":"urn:pearson:entity:125aeb8c-860c-4688-ac88-9a40d3f4a427",
+     "projectUrn":"urn:pearson:distributable:8fa5bd48-3912-4c96-a902-5edc2fa7f457",
+     "elementdata":{"text":null},
+     "tcm":false 
+ }
