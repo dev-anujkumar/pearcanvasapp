@@ -75,44 +75,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         }
     ).then(async createdElemData => {
-        // Updating create element response for creating the BlockList element
-        createdElemData.data = {
-            "type": "manifestlist",
-            "id": "urn:pearson:manifest:b2c0a49d-2b43-42d5-ae51-4527d348ju67",
-            "schema": "http://schemas.pearson.com/wip-authoring/list/1",
-            "listtype": "ordered",
-            "subtype": "decimal",
-            "listdata": {
-                "bodymatter": [
-                    {
-                        "type": "manifestlistitem",
-                        "id": "urn:pearson:manifest:b2c0a49d-2b43-42d5-ae51-4527d34n6y8k",
-                        "versionUrn": "urn:pearson:manifest:b2c0a49d-2b43-42d5-ae51-4527d34n6y8k",
-                        "contentUrn": "urn:pearson:entity:b2c0a49d-2b43-42d5-ae51-4527d34nh5t7",
-                        "schema": "http://schemas.pearson.com/wip-authoring/list/1",
-                        "listitemdata": {
-                            "bodymatter": [
-                                {
-                                    "id": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5hjt56",
-                                    "type": "element-authoredtext",
-                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                                    "elementdata": {
-                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                                        "text": "second line of content"
-                                    },
-                                    "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334jngr6",
-                                    "versionUrn": "urn:pearson:work:69e92e56-c9a0-4d84-ba83-1d3d4d5hjt56",
-                                    "html": {
-                                        "text": ""
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-            
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
