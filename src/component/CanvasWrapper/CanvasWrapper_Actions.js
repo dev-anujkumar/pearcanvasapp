@@ -21,13 +21,17 @@ import {
     UPDATE_PROJECT_INFO,
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
-    UPDATE_LOB_PERMISSIONS
+    UPDATE_LOB_PERMISSIONS,
+    SET_PROJECT_SHARING_ROLE,
+    SET_PROJECT_SUBSCRIPTION_DETAILS,
+    OWNERS_SUBSCRIBED_SLATE,
+    UPDATE_FIGURE_DROPDOWN_OPTIONS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
-import { HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, UPDATE_PROJECT_METADATA } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
@@ -311,6 +315,27 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 
+export const fetchFigureDropdownOptions = () => (dispatch) => {
+    // Api to get Figure dropdown options
+    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type`;
+    return axios.get(figureDropdownOptionsURL, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(response => {
+        let dropdownOptionsObj = response?.data;
+        if (Object.keys(dropdownOptionsObj).length > 0) {
+            dispatch({
+                type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
+                payload: dropdownOptionsObj
+            })
+        }
+    }).catch(error => {
+        console.log("Get figure dropdown options API Failed !!", error)
+    })
+}
+
 export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
     console.log("the lob url is " + lobURL)
@@ -324,6 +349,13 @@ export const getProjectDetails = () => (dispatch, getState) => {
             type: UPDATE_PROJECT_INFO,
             payload: response.data
         })
+        // PCAT-10682 - Passing project metadata response to toc wrapper for updating the sharing context role if required
+        if (response?.data && Object.keys(response.data).length > 0) {
+            sendDataToIframe({
+                'type': UPDATE_PROJECT_METADATA,
+                'message': response.data
+            })
+        }
         const data = JSON.parse(JSON.stringify(response.data))
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
@@ -1353,3 +1385,39 @@ export const fetchProjectLFs = () => dispatch => {
     })
 
 };
+
+/**
+ * setProjectSharingRole is responsible to dispatch an action to set 
+ * project sharing role
+ * @param {String} role
+ */
+export const setProjectSharingRole = role => (dispatch) => {
+    dispatch({
+        type: SET_PROJECT_SHARING_ROLE,
+        payload: role
+    });
+}
+
+/**
+ * setProjectSubscriptionDetails is responsible to dispatch an action to 
+ * set project subscription details based on toc container selection
+ * @param {Object} subscriptionDetails 
+ */
+export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch) => {
+    dispatch({
+        type: SET_PROJECT_SUBSCRIPTION_DETAILS,
+        payload: subscriptionDetails
+    });
+
+}
+
+/**
+ * Action Creator
+ * Retrieves the Owner's Slate status
+ */
+ export const isOwnersSubscribedSlate = (showPopup) => (dispatch, getState) => {
+    return dispatch({
+        type: OWNERS_SUBSCRIBED_SLATE,
+        payload: showPopup
+    })
+}

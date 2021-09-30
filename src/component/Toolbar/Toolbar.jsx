@@ -15,6 +15,7 @@ import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
 import SearchComponent from './Search/Search.jsx';
 
 const _Toolbar = props => {
+    const { isToolBarBlocked } = props;
     const [lodropdown, setLODropdown] = useState(false);
     const [addDropDown, setValueAdd] = useState(false);
     const [openDropDown, setValueOpen] = useState(false);
@@ -119,7 +120,7 @@ const _Toolbar = props => {
                 <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
-                    <div className="leaningobjective-block">
+                    <div className={`leaningobjective-block ${isToolBarBlocked}`}>
                         <div className="learningobjectiveicon">
                             <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
@@ -134,7 +135,7 @@ const _Toolbar = props => {
                 {/* ***********************Audio Narration in toolbar******************************************** */}
                 {   /* Add Audio if there is no audio exists in slate */
                     (props.addAudio && (!hasReviewerRole())) &&
-                    <div className={"audio-block" + accessToolbar}>
+                    <div className={`audio-block  ${accessToolbar} ${isToolBarBlocked}`}>
                         <div className="audioicon">
                             <div className="audio audioicon" title="Audio Tag" onClick={() => {
                                 if (checkSlateLock(props.slateLockInfo)) {

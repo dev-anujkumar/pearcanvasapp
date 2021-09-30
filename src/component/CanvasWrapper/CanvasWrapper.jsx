@@ -12,14 +12,14 @@ import PopUp from '../PopUp';
 import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
-import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
+import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs } from './CanvasWrapper_Actions';
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent } from '../SlateWrapper/SlateWrapper_Actions'
@@ -37,7 +37,7 @@ import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/A
 import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
-import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js'
+import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -134,6 +134,7 @@ export class CanvasWrapper extends Component {
         let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : "";
         // Filter search icon for popup
         let popupFilter = '';
+        let isToolBarBlocked = isSubscriberRole(this.props.projectSubscriptionDetails.projectSharingRole, this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) || this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked && isOwnerRole(this.props.projectSubscriptionDetails.projectSharingRole, this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) ? 'hideToolbar' : ''
         if(config.isPopupSlate) {
             popupFilter = 'popup';
         }
@@ -154,7 +155,7 @@ export class CanvasWrapper extends Component {
                 {/** Ends of custom error popup */}
                 <div id="editor-toolbar" className={`editor-toolbar ${popupFilter}`}>
                     {/* editor tool goes here */}
-                    <Toolbar showCanvasBlocker= {this.props.showCanvasBlocker}/>
+                    <Toolbar showCanvasBlocker= {this.props.showCanvasBlocker} isToolBarBlocked={isToolBarBlocked}/>
                     {/* custom list editor component */}
                 </div>
 
@@ -176,7 +177,7 @@ export class CanvasWrapper extends Component {
                                     {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink}/>
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
@@ -241,7 +242,8 @@ const mapStateToProps = state => {
         activeElement: state.appStore.activeElement,
         figureGlossaryData:state.appStore.figureGlossaryData,
         alfrescoEditor: state.alfrescoReducer.editor,
-        imageArgs: state.alfrescoReducer.imageArgs
+        imageArgs: state.alfrescoReducer.imageArgs,
+        projectSubscriptionDetails:state?.projectInfo
     };
 };
 
@@ -295,6 +297,10 @@ export default connect(
         saveDataFromAlfresco,
         showWrongAudioPopup,
         saveImageDataFromAlfresco,
-        showWrongImagePopup
+        showWrongImagePopup,
+        setProjectSharingRole,
+        setProjectSubscriptionDetails,
+        fetchFigureDropdownOptions,
+        isOwnersSubscribedSlate
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

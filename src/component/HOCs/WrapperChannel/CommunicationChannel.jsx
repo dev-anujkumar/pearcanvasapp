@@ -8,9 +8,9 @@ import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
-import { sendDataToIframe, defaultMathImagePath } from '../../../constants/utility.js';
+import { sendDataToIframe, defaultMathImagePath, isOwnerRole} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER } from '../../../constants/IFrameMessageTypes';
+import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
@@ -130,6 +130,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.fetchLearnosityContent()
 
                     // call get project api here
+                    this.props.fetchFigureDropdownOptions();
                     this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
@@ -279,6 +280,11 @@ function CommunicationChannel(WrappedComponent) {
                 case 'openInlineAlsfrescoPopup' :
                     this.props.alfrescoPopup(message);
                     break;
+                case PROJECT_SHARING_ROLE:
+                    if (message?.sharingContextRole) {
+                        this.props.setProjectSharingRole(message.sharingContextRole);
+                    }
+                    break;
                 case 'releaseLockPopup':
                     this.setState({
                         showBlocker: false
@@ -286,6 +292,14 @@ function CommunicationChannel(WrappedComponent) {
                     this.showCanvasBlocker(false);
                     hideBlocker()
                     break;
+                case IS_SLATE_SUBSCRIBED:
+                    if (message && Object.keys(message).length && 'isSubscribed' in message) {
+                        const projectSubscriptionDetails = {
+                            isSubscribed: message.isSubscribed,
+                            owner: {}
+                        }
+                        this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
+                    }
             }
         }
 
@@ -661,7 +675,19 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
 
+        /**
+         * function to set owner project slate popup flag as true
+         */
+        resetOwnerSlatePopupFlag = () => {
+            const { projectSubscriptionDetails } = this.props;
+            const isOwnerKeyExist = localStorage.getItem('hasOwnerEdit');
+            if (isOwnerRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isOwnerKeyExist) {
+                this.props.isOwnersSubscribedSlate(true);
+            }
+        }
+
         handleRefreshSlate = () => {
+            const { projectSubscriptionDetails } = this.props;
             localStorage.removeItem('newElement');
             config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
@@ -669,6 +695,12 @@ function CommunicationChannel(WrappedComponent) {
             config.tempSlateEntityURN = null
             config.isPopupSlate = false
             let id = config.slateManifestURN;
+            // reset owner slate popup flag on slate refresh
+            this.resetOwnerSlatePopupFlag();
+            // get slate subscription details on slate refresh from canvas SPA
+            if (projectSubscriptionDetails?.projectSharingRole === 'OWNER') {
+                sendDataToIframe({ 'type': CHECK_SUBSCRIBED_SLATE_STATUS, 'message': { slateManifestURN: config.slateManifestURN } });
+            }
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, (response) => {
                 config.page = 0;
                 config.scrolling = true;
@@ -716,6 +748,12 @@ function CommunicationChannel(WrappedComponent) {
         setCurrentSlate = (message) => {
             config.isSlateLockChecked = false;
             let currentSlateObject = {};
+            const projectSubscriptionDetails = {
+                isSubscribed: false,
+                owner: {}
+            }
+            // reset owner slate popup flag on slate change
+            this.resetOwnerSlatePopupFlag();
             if (message['category'] === 'titleChange') {
                 currentSlateObject = {
                     title: message.title,
@@ -752,6 +790,12 @@ function CommunicationChannel(WrappedComponent) {
                 config.tcmslatemanifest= null;
                 config.parentLabel = message.node.nodeParentLabel;
                 config.parentOfParentItem = message.node.parentOfParentItem
+                // checking if selected container is subscribed or not
+                if (message?.node?.isSubscribed) {
+                    projectSubscriptionDetails.isSubscribed = message.node.isSubscribed;
+                }
+                // calling an action to set project subscription details coming from TOC SPA
+                this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,

@@ -1058,7 +1058,7 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             expect(result.payload).toEqual({});
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
-        });
+        }); 
         it('Test-7.2---assessmentConfirmationPopup', () => {
             const spyFunction = jest.spyOn(assessment_Actions, 'assessmentConfirmationPopup');
             let result = assessment_Actions.assessmentConfirmationPopup(true);
@@ -1095,11 +1095,19 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
-        it('Test-7.4---setItemUpdateEvent', () => {
+        it('Test-7.5---setItemUpdateEvent', () => {
             const spyFunction = jest.spyOn(assessment_Actions, 'setItemUpdateEvent');
             let result = assessment_Actions.setItemUpdateEvent(true);
             expect(result.type).toEqual('SET_ITEM_UPDATE_EVENT');
             expect(result.payload).toEqual(true);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-7.6---setElmPickerData', () => {
+            const spyFunction = jest.spyOn(assessment_Actions, 'setElmPickerData');
+            let result = assessment_Actions.setElmPickerData({data:"test"});
+            expect(result.type).toEqual('SET_ELM_PICKER_MSG');
+            expect(result.payload).toEqual({data:"test"});
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
@@ -1119,4 +1127,48 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             spyFunction.mockClear();
         });
     })
+    describe('Test-9----------------- fetchAssessmentItems-----------------', () => {
+        let itemEntityUrn= "xyz", 
+        apiParams= {
+            assessmentData: {
+                activeWorkUrn: "workid"
+            }
+        }
+        it('Test-9.1---fetchAssessmentItems-Then- with res.data', () => {
+            let responseData = {
+                data: {
+                    items: [{id:"items",entityUrn:itemEntityUrn}]
+                }
+            }
+            let dispatch = (obj) => {
+               }
+            const spyFunction = jest.spyOn(assessment_Actions, 'fetchAssessmentItems');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            assessment_Actions.fetchAssessmentItems(itemEntityUrn,apiParams)(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-9.2---fetchAssessmentItems-Then- without res.data', () => {
+            let responseData = {
+                data: {}
+            }
+            let dispatch = (obj) => {
+             }
+            const spyFunction = jest.spyOn(assessment_Actions, 'fetchAssessmentItems');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            assessment_Actions.fetchAssessmentItems(itemEntityUrn,apiParams)(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+
+        });
+        it('Test-9.3---fetchAssessmentItems-Catch', () => {
+            let dispatch = (obj) => {
+               }
+            const spyFunction = jest.spyOn(assessment_Actions, 'fetchAssessmentItems');
+            axios.get = jest.fn(() => Promise.reject({}));
+            assessment_Actions.fetchAssessmentItems(itemEntityUrn,apiParams)(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+    });
 })

@@ -30,6 +30,11 @@ jest.mock('../../../src/component/AudioNarration/AddAudioBook', () => {
         return (<div>null</div>)
     }
 })
+jest.mock('../../../src/component/ElementFigure/AddImageGlossary', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
 
 const initialState ={
     glossaryFootnoteReducer: {
@@ -52,7 +57,7 @@ describe('Testing GlossaryFootnote component with props', () => {
         glossaryFootnoteValue:{"type":"","popUpStatus":false} ,
         closePopup:jest.fn(),
         saveContent:jest.fn(),
-        glossaryFootNoteCurrentValue:{},
+        glossaryFootNoteCurrentValue:{footnoteContentText:['imageAssetContent']},
         audioGlossaryPopup:jest.fn()
 
     }
@@ -71,26 +76,48 @@ describe('Testing GlossaryFootnote component with props', () => {
         }
         let wrapper = mount(<Provider store={store}>< GlossaryFootnotePopup {...props} glossaryFootnoteValue={glossaryValue} /></Provider>)
         let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
+        GlossaryFootnotePopupInstance.onFocus = jest.fn()
+        GlossaryFootnotePopupInstance.onBlur = jest.fn()
+        wrapper.find('#glossary-editor').simulate('focus', (null, 'remove'))
+        wrapper.find('#glossary-editor').simulate('blur', (null, 'remove'))
+        wrapper.find('#glossary-editor-attacher').simulate('focus', (null, 'remove'))
+        wrapper.find('#glossary-editor-attacher').simulate('blur', (null, 'remove'))
         expect(wrapper).toHaveLength(1);
         expect(GlossaryFootnotePopupInstance).toBeDefined();
     })
-    it('Test-toolbarHandling function -case2', () => {
+
+    describe('Testing toolbarHandling Function', () => {
         let wrapper = mount(<Provider store={store}>< GlossaryFootnotePopup {...props} /></Provider>, { attachTo: document.body })
         let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
-        let event={
+        jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+            return selector == 'div#toolbarGlossaryFootnote .tox-toolbar'
+        });
+        const spytoolbarHandling = jest.spyOn(GlossaryFootnotePopupInstance, 'toolbarHandling')
+        it('Test-toolbarHandling function -case1', () => {
+            let event={
+                type: "blur",
+                relatedTarget:{
+                    classList:["tox-toolbar"]
+                },
+                stopPropagation: jest.fn()
+            }
+            GlossaryFootnotePopupInstance.toolbarHandling(event, "add")
+            expect(spytoolbarHandling).toHaveBeenCalled()
+            spytoolbarHandling.mockClear()
+        })
+        it('Test-toolbarHandling function -case2', () => {
+            let event={
+            type: "blur",
             relatedTarget:{
                 classList:["tox-toolbar"]
             },
             stopPropagation: jest.fn()
         }
-        let element = document.getElementById("toolbarGlossaryFootnote");
-        element.innerHTML += "<div className= 'tox-toolbar'>B</div>";
-        const spytoolbarHandling = jest.spyOn(GlossaryFootnotePopupInstance, 'toolbarHandling')
-        GlossaryFootnotePopupInstance.toolbarHandling(event,"add")
-        expect(spytoolbarHandling).toHaveBeenCalled() 
+            GlossaryFootnotePopupInstance.toolbarHandling(event, "remove")
+        expect(spytoolbarHandling).toHaveBeenCalled()
         spytoolbarHandling.mockClear()
     })
-    
+    })
     it('Test-componentWillUnmount', () => {
         const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
         GlossaryFootnotePopupInstance.componentWillUnmount()
@@ -108,4 +135,13 @@ describe('Testing GlossaryFootnote component with props', () => {
         expect(GlossaryFootnotePopupInstance.state.audioToggle).toBe(false)
     })
 
+    it('testcase for AddImageGlossary',()=>{
+        GlossaryFootnotePopupInstance.handleFigureToggle();
+       expect(GlossaryFootnotePopupInstance.state.figureToggle).toBe(true)
+    })
+
+    it('testcase for AddImageGlossary',()=>{
+        GlossaryFootnotePopupInstance.closeFigurePopup();
+       expect(GlossaryFootnotePopupInstance.state.figureToggle).toBe(false)
+    })
 })

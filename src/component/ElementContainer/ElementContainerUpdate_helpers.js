@@ -18,7 +18,7 @@ import ElementConstants, {
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 
-const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -470,6 +470,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         asideData,
         parentUrn,
         elementIndex,
+        showHideType = undefined,
         poetryData,
         updateBodymatter,
         currentParentData,
@@ -477,7 +478,8 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
 
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const isPopupOrShowhideElement = allowedParentType.includes(parentElement?.type) && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+    const isPopupOrShowhideElement = (allowedParentType.includes(parentElement?.type) || (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
+        (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     
@@ -489,7 +491,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             showHideObj,
             parentElement: allowedParentType.includes(parentElement?.type) ? parentElement : undefined,
             metaDataField: parentElement && parentElement.type === 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
-            sectionType : allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : undefined,
+            sectionType : allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : showHideType,
             CurrentSlateStatus: currentSlateData.status
         },
         elementUpdateData = {
@@ -549,7 +551,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
         })
     }
 
-    const commonArgs = { updatedData, elementIndex, parentUrn, asideData, parentElement, currentSlateData, getState, dispatch, responseData }
+    const commonArgs = { updatedData, elementIndex, parentUrn, asideData, parentElement, currentSlateData, getState, dispatch, responseData, showHideType }
 
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const snapshotArgs = {
@@ -723,6 +725,7 @@ export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, ver
             indexes.push(index)
         }
     });
+    // if index is single value
     if (indexes.length == 0 || (versionedData && updatedDataID !== versionedData.id)) {
         tcmData.push({
             "txCnt": 1,
@@ -732,13 +735,18 @@ export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, ver
         })
     }
     else {
-        if(tcmData && tcmData[indexes] && indexes.length > 0 && updatedDataID){
-            tcmData[indexes]["elemURN"] = updatedDataID
-            tcmData[indexes]["txCnt"] = tcmData[indexes]["txCnt"] !== 0 ? tcmData[indexes]["txCnt"] : 1
-            tcmData[indexes]["feedback"] = tcmData[indexes]["feedback"] !== null ? tcmData[indexes]["feedback"] : null
-            tcmData[indexes]["isPrevAcceptedTxAvailable"] = tcmData[indexes]["isPrevAcceptedTxAvailable"] ? tcmData[indexes]["isPrevAcceptedTxAvailable"] : false
-        }
+    // if index is multiple value value (incase of cut paste in show hide)
+    if(Array.isArray(indexes) && indexes.length > 0) {
+        indexes.forEach(indexItem => {
+            if(tcmData && tcmData[indexItem] && updatedDataID){
+                tcmData[indexItem]["elemURN"] = updatedDataID
+                tcmData[indexItem]["txCnt"] = 1
+                tcmData[indexItem]["feedback"] = tcmData[indexItem]["feedback"] !== null ? tcmData[indexItem]["feedback"] : null
+                tcmData[indexItem]["isPrevAcceptedTxAvailable"] = tcmData[indexItem]["isPrevAcceptedTxAvailable"] ? tcmData[indexItem]["isPrevAcceptedTxAvailable"] : false    
+                }
+            })
     }
+}
   
     if (tcmData.length >0) {
         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
@@ -840,7 +848,10 @@ const getShowhideParent = async (shParentData) => {
     const { asideData, dispatch, parentElementIndex, fetchSlateData } = shParentData;
     let parentToCascade = {}
     if (asideData && asideData.type == 'showhide') {
-        if (asideData?.grandParent?.asideData?.type == 'element-aside') {
+          /* After versioning - Slate in wip but element(3C/2C:SH) is approved; 3C/2C:SH */
+        if (asideData?.grandParent?.asideData?.type == 'groupedcontent') {
+            parentToCascade = asideData?.grandParent?.asideData
+        } else if (asideData?.grandParent?.asideData?.type == 'element-aside') {
             if (asideData?.grandParent?.asideData?.parent?.type == 'groupedcontent') {
                 parentToCascade = asideData?.grandParent?.asideData?.parent
                 parentToCascade.contentUrn = parentToCascade.parentContentUrn

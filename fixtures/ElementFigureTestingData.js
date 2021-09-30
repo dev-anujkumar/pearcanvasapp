@@ -1975,3 +1975,146 @@ export const testDataFromNewAlfresco = {
     ],
     "epsUrl":"https://cite-media-stg.pearson.com/legacy_paths/9b39bfd7-b73c-4b0f-b2c5-60e77ed17ce7/Page097a.jpg"
  }
+
+ export const newFigureObj = {
+    "id": "urn:pearson:work:0d9d9296-bb38-438c-a4c5-329ce1882e3c",
+    "type": "figure",
+    "figuretype": "image",
+    "subtype": "imageTextWidth",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield": true,
+    "alignment": "text-width",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "Equation 12 title",
+        "textsemantics": [{
+            "charStart": 0,
+            "charEnd": 8,
+            "type": "label"
+        }, {
+            "charStart": 9,
+            "charEnd": 11,
+            "type": "number"
+        }]
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "ct"
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "cr"
+    },
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:2686bc0b-8ac6-4432-9b2b-8a4676284edc",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2686bc0b-8ac6-4432-9b2b-8a4676284edc/9780134874203_page134.png",
+        "height": "491",
+        "width": "522",
+        "type": "image"
+    },
+    "html": {
+        "title": "<p><label>Equation&nbsp;</label><number>12&nbsp;</number>title</p>",
+        "text": "",
+        "postertext": "",
+        "captions": "<p>ct</p>",
+        "credits": "<p>cr</p>",
+        "footnotes": {},
+        "glossaryentries": {}
+    },
+    "versionUrn": "urn:pearson:work:0d9d9296-bb38-438c-a4c5-329ce1882e3c",
+    "contentUrn": "urn:pearson:entity:d47ed8e5-bf68-49e9-acc5-6d7ac1450f1c"
+}
+
+export const newVideoObjWithData = {
+    "id": "urn:pearson:work:4bf11e1f-f145-44be-ad8b-1b8c2124e7b1",
+    "type": "figure",
+    "figuretype": "video",
+    "subtype": "figureVideo",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield": true,
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "dasas dasda da dasdsdas   sd sdsf casa saas ddasda sdas dad sasaz sdas",
+        "textsemantics": [{ "charStart": 0, "charEnd": 14, "type": "label" }, { "charStart": 15, "charEnd": 23, "type": "number" }],
+        "footnotes": [{
+            "charAt": 24, "footnoteid": "urn:pearson:work:c3cf2216-c1db-4c53-874d-b866accb5cc1",
+            "footnotecontent": [{
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "id": "urn:pearson:work:c3cf2216-c1db-4c53-874d-b866accb5cc1",
+                "type": "element-authoredtext",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "ssdasd sdcsd dasafvsd ssaf"
+                }
+            }]
+        }]
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sds sdasd as sdsds sds  dasdas sdasda dsdas sds",
+        "textsemantics": [{ "charStart": 4, "charEnd": 8, "type": "strong" }, { "charStart": 13, "charEnd": 21, "type": "inlinecode" },
+        { "charStart": 44, "charEnd": 46, "type": "emphasis" }],
+        "footnotes": [{
+            "charAt": 31, "footnoteid": "urn:pearson:work:5d26b11a-4960-4524-b1c0-7c582e44c1ed",
+            "footnotecontent": [{ "schema": "http://schemas.pearson.com/wip-authoring/element/1", "id": "urn:pearson:work:5d26b11a-4960-4524-b1c0-7c582e44c1ed", "type": "element-authoredtext", "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "test01" } }]
+        }]
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": " dda dasdas  sdasd sdasdas ",
+        "mathml": [
+            {
+                "charAt": 0, "xml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\" altimg=\"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/85/6d/856d8534c13cbbd6a93fac447619acf6.png\" altimg-width=\"42\" altimg-height=\"22\" altText=\"square root of 144\"><msqrt><mn>144</mn></msqrt></math>",
+                "fallbackimage": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "urn:pearson:alfresco:abcd123",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/85/6d/856d8534c13cbbd6a93fac447619acf6.png",
+                    "height": "22",
+                    "width": "42",
+                    "alttext": "square root of 144"
+                }
+            },
+            {
+                "charAt": 12,
+                "xml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" class=\"wrs_chemistry\" display=\"inline\" altimg=\"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/61/7d/617d353b4f7962fcd04e6df9e3bb5bab.png\" altimg-width=\"20\" altimg-height=\"22\" altText=\"straight H subscript 2 superscript 2\"><msubsup><mi mathvariant=\"normal\">H</mi><mn>2</mn><mn>2</mn></msubsup></math>",
+                "fallbackimage": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "urn:pearson:alfresco:abcd123",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/61/7d/617d353b4f7962fcd04e6df9e3bb5bab.png",
+                    "height": "22",
+                    "width": "20",
+                    "alttext": "straight H subscript 2 superscript 2"
+                }
+            }],
+        "footnotes": [
+            {
+                "charAt": 27,
+                "footnoteid": "urn:pearson:work:50264f2a-ffc6-47e9-a67a-9510ccf20828",
+                "footnotecontent": [{
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1", "id": "urn:pearson:work:50264f2a-ffc6-47e9-a67a-9510ccf20828",
+                    "type": "element-authoredtext",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "sasdsad asdsaa sdasdas "
+                    }
+                }]
+            }]
+    },
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+        "videoid": "urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c",
+        "posterimage": { "imageid": "urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c" },
+        "videos": [{
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/c778faed-76e1-4523-a402-2fbbaf16036c/AL1273283_Mpeg4_H264.mp4",
+            "format": "video/mp4", "charAt": 0
+        }]
+    },
+    "html": {
+        "title": "<p><label>dasas dasda da&nbsp;</label><number>dasdsdas&nbsp;</number><sup><a href=\"#\" data-uri=\"urn:pearson:work:c3cf2216-c1db-4c53-874d-b866accb5cc1\" data-footnoteelementid=\"urn:pearson:work:c3cf2216-c1db-4c53-874d-b866accb5cc1\" class=\"Pearson-Component paragraphNumeroUnoFootnote\">*</a></sup>&nbsp; sd sdsf casa saas ddasda sdas dad sasaz sdas</p>",
+        "text": "",
+        "postertext": "",
+        "captions": "<p>sds <strong>sdasd</strong> as <code>sdsds sds</code>&nbsp; dasdas <sup><a href=\"#\" data-uri=\"urn:pearson:work:5d26b11a-4960-4524-b1c0-7c582e44c1ed\" data-footnoteelementid=\"urn:pearson:work:5d26b11a-4960-4524-b1c0-7c582e44c1ed\" class=\"Pearson-Component paragraphNumeroUnoFootnote\">*</a></sup>sdasda dsdas <em>sds</em></p>",
+        "credits": "<p><img align=\"middle\" class=\"Wirisformula fr-draggable\" src=\"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/85/6d/856d8534c13cbbd6a93fac447619acf6.png?1632388027981\" data-mathml=\"«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«msqrt»«mn»144«/mn»«/msqrt»«/math»\" width=\"42\" height=\"22\" alt=\"square root of 144\" role=\"math\" style=\"vertical-align: -1px\" draggable=\"false\"> dda dasdas&nbsp;<img align=\"middle\" class=\"Wirisformula fr-draggable\" data-custom-editor=\"chemistry\" src=\"https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/61/7d/617d353b4f7962fcd04e6df9e3bb5bab.png?1632388027981\" data-mathml=\"«math xmlns=¨http://www.w3.org/1998/Math/MathML¨ class=¨wrs_chemistry¨»«msubsup»«mi mathvariant=¨normal¨»H«/mi»«mn»2«/mn»«mn»2«/mn»«/msubsup»«/math»\" width=\"20\" height=\"22\" alt=\"straight H subscript 2 superscript 2\" role=\"math\" style=\"vertical-align: -1px\" draggable=\"false\"> sdasd sdasdas <sup><a href=\"#\" data-uri=\"urn:pearson:work:50264f2a-ffc6-47e9-a67a-9510ccf20828\" data-footnoteelementid=\"urn:pearson:work:50264f2a-ffc6-47e9-a67a-9510ccf20828\" class=\"Pearson-Component paragraphNumeroUnoFootnote\">*</a></sup></p>", "footnotes": { "urn:pearson:work:50264f2a-ffc6-47e9-a67a-9510ccf20828": "<p>sasdsad asdsaa sdasdas </p>", "urn:pearson:work:5d26b11a-4960-4524-b1c0-7c582e44c1ed": "<p>test01</p>", "urn:pearson:work:c3cf2216-c1db-4c53-874d-b866accb5cc1": "<p>ssdasd sdcsd dasafvsd ssaf</p>" }, "assetsPopover": {}, "glossaryentries": {}
+    }, "versionUrn": "urn:pearson:work:4bf11e1f-f145-44be-ad8b-1b8c2124e7b1", "contentUrn": "urn:pearson:entity:f9edcf30-64e9-4b87-97c2-56ef50896973"
+}

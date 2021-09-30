@@ -180,15 +180,15 @@ describe('Testing CommentsPanel component with props', () => {
     it('tests update resolves function ', () => {
       instance.updateResolveComment();
     });
-    it('tests get project users resolves function ', () => {
-      instance.getProjectUsers();
-    });
 
     it('tests delete function  function ', () => {
       instance.deleteComment();
     });
     it('tests update assigneee function  function ', () => {
       instance.updateAssignee();
+    });
+    it('tests toggle panel function ', () => {
+      instance.togglePanel();
     });
   })
 

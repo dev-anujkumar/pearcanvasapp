@@ -124,10 +124,12 @@ export const updateStorePostDelete = (deleteParams) => {
                 newBodymatter[newIndex[0]]?.elementdata?.bodymatter[newIndex[1]]?.interactivedata[showHideType[newIndex[2]]].splice(index, 1)
             }
             break;
-        case 5: // we:body:sh:show:p
-            elementToUpdate = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]?.contents.bodymatter[newIndex[2]]
+        case 5: // we:body:sh:show:p | 2c:c1:sh:show:p
+            let inWorkedExample = newBodymatter[newIndex[0]]?.elementdata?.bodymatter[newIndex[1]]?.contents?.bodymatter[newIndex[2]]
+            let inMultiColumn = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]
+            elementToUpdate = inMultiColumn || inWorkedExample
             if (elementToUpdate?.type == 'showhide') {
-                newBodymatter[newIndex[0]]?.elementdata?.bodymatter[newIndex[1]]?.contents?.bodymatter[newIndex[2]]?.interactivedata[showHideType[newIndex[3]]].splice(index, 1)
+                elementToUpdate?.interactivedata[showHideType[newIndex[3]]].splice(index, 1)
             }
             break;
         case 6: // 2c:c1:we:head:sh:show:p | 2c:c1:as:sh:show:p

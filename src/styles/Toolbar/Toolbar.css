@@ -368,6 +368,23 @@ button[aria-label="insertMedia"].tox-tbtn--select{
   cursor:default!important;
   height:32px!important
 }
+
+.editor-toolbar.hideToolbar{
+  display: none !important;
+}
+
+.editor-toolbar.popup.hideToolbar{
+  display: none !important;
+}
+
+.audio-block.hideToolbar {
+  display: none!important;
+}
+
+.leaningobjective-block.hideToolbar {
+  display: none!important;
+}
+
 .tox-tbtn{
   cursor:pointer!important;
 }

@@ -41,7 +41,7 @@ export class CitationGroup extends Component {
                     onClickCapture={_context.onClickCapture}
                     userRole={this.props.userRole}
                     pasteElement={this.props.pasteElement}
-                    source={CITATION_SOURCE}   
+                    source={CITATION_SOURCE}
                 />
             </> 
         )
@@ -80,7 +80,7 @@ export class CitationGroup extends Component {
                                         onClickCapture={this.context.onClickCapture}
                                         userRole={this.props.userRole}
                                         pasteElement={this.props.pasteElement}
-                                        source={CITATION_SOURCE} 
+                                        source={CITATION_SOURCE}
                                     />}
                                 <ElementContainer
                                     element={element}
@@ -107,7 +107,7 @@ export class CitationGroup extends Component {
                                         onClickCapture={this.context.onClickCapture}
                                         userRole={this.props.userRole}
                                         pasteElement={this.props.pasteElement}
-                                        source={CITATION_SOURCE}                                      
+                                        source={CITATION_SOURCE}
                                     />
                                 }
                               

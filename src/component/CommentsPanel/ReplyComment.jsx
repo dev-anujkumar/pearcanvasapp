@@ -18,11 +18,12 @@ class ReplyComment extends React.Component {
     *@discription - This function displays the reply box in slate view
     */
     showReplyBox = (props) => {
+        const commentCreatorName = config.fullName
         return (
             <div className="reply">
                 <div>
                     <span className="Reply-Num">Reply #{props.comment.replyComments.length + 1}</span>
-                    <span className="Username-Copy">{props.comment.commentCreator}</span>
+                    <span className="Username-Copy">{commentCreatorName}</span>
                 </div>
                 <div className="wrapper-reply">
                <CommentMention projectUsers={this.props.users} comment={this.state.text} handleCommentChange={this.updateCommentText}/>
@@ -85,7 +86,7 @@ class ReplyComment extends React.Component {
                 <div className="comment-body">
                     <div className="text-medium color-gray-71 mb-4">
                         <p className="hyphens">
-                        {typeof reply.commentString === 'string' ? <CommentMention projectUsers={this.props.users} readOnly comment={reply.commentString} />: null }
+                        {typeof reply.commentString === 'string' ? <CommentMention urn={reply.commentUrn} projectUsers={this.props.users} readOnly comment={reply.commentString} />: null }
                         
                         </p>
                     </div>

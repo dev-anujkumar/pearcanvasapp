@@ -23,7 +23,7 @@ const DialogueSeprator = (props) => {
     const updatedIndex = firstOne ?  index : index+1;
     return (
         <div
-            className="elementSapratorContainer"
+            className={`elementSapratorContainer ${props.hideElementSeperator}`}
             style={{ display: 'flex', flexDirection: 'row' }}>
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />

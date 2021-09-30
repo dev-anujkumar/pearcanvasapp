@@ -17,10 +17,12 @@ import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
-import { dropdownData, dropdownOptions, figureLabelData, labelHtmlData } from '../../constants/Element_Constants';
+import { labelHtmlData } from '../../constants/Element_Constants';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
+const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
+
 class FigureImage extends Component {
     constructor(props) {
         super(props);
@@ -30,7 +32,7 @@ class FigureImage extends Component {
             alfrescoSite: '',
             alfrescoSiteData: {},
             figureLabelValue: 'No Label',
-            figureLabelData: figureLabelData,
+            figureLabelData: this.props.figureDropdownData?.image,
             figureDropDown: false
         }
         this.wrapperRef = React.createRef();
@@ -46,7 +48,7 @@ class FigureImage extends Component {
         })
         let figureHtmlData = getLabelNumberTitleHTML(this.props.model);
         let figureLabelValue = this.state;
-        figureLabelValue = dropdownValueAtIntialize(dropdownData, figureHtmlData.formattedLabel);
+        figureLabelValue = dropdownValueAtIntialize(this.props.figureDropdownData.image, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
     }
@@ -115,7 +117,7 @@ class FigureImage extends Component {
         hideTocBlocker();
         disableHeader(false);
         let imageData = data;
-        let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "" ;
         let figureType = data?.content?.mimeType?.split('/')[0]
         //commented lines will be used to update the element data
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
@@ -256,6 +258,12 @@ class FigureImage extends Component {
     changeFigureLabel = (figureLabelValue, data) => {
         if (!(figureLabelValue === data)) {
             this.setState({ figureLabelValue: data });
+            let dropdownOptions = [];
+            for (let option of this.state.figureLabelData) {
+                if (!BLANK_LABEL_OPTIONS.includes(option)) {
+                    dropdownOptions.push(option);
+                }
+            }
             if (dropdownOptions.includes(data)) {
                 document.getElementById(`cypress-${this.props.index}-0`).innerHTML = `${data}`;
             } else {
@@ -297,6 +305,7 @@ class FigureImage extends Component {
         }
         // BG-5081 fixes
         if (id === '0-0' && labelElement?.innerHTML) {
+            let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
             if (dropdownData.indexOf(labelElement?.innerHTML.toLowerCase()) > -1) {
                 let { figureLabelValue } = this.state;
                 let labelElementText = labelElement?.innerHTML.toLowerCase();
@@ -304,6 +313,18 @@ class FigureImage extends Component {
                 this.setState({ figureLabelValue: figureLabelValue });
             }
         }
+    }
+
+    convertOptionsToLowercase = (Options) => {
+        let lowercaseOptions = [];
+        if (Options?.length > 0) {
+            for (let option of Options) {
+                if (!BLANK_LABEL_OPTIONS.includes(option)) {
+                    lowercaseOptions.push(option.toLowerCase());
+                }
+            }
+        }
+        return lowercaseOptions;
     }
 
     render() {
@@ -335,6 +356,8 @@ class FigureImage extends Component {
         let figureHtmlData = getLabelNumberTitleHTML(model);
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
+        let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
+        
         if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
             figureLabelFromApi = figureLabelFromApi.toLowerCase();
             figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
@@ -462,7 +485,8 @@ const mapStateToProps = (state) => {
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isCiteChanged: state.alfrescoReducer.isCiteChanged,
-        changedSiteData: state.alfrescoReducer.changedSiteData
+        changedSiteData: state.alfrescoReducer.changedSiteData,
+        figureDropdownData: state.appStore.figureDropdownData
     }
 }
 

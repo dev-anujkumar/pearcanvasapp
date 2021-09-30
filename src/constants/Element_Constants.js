@@ -15,6 +15,7 @@ export const DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_p
 /*---------------Element Audio-Video ----------------------*/ 
 export const AUDIO = "audio"
 export const VIDEO = "video"
+export const INTERACTIVE = "interactive"
 export const DEFAULT_ASSET="Asset data undefined"
 export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
 
@@ -38,9 +39,9 @@ export const DEFAULT_ASSESSMENT_DATA_SOURCE = "https://cite-media-stg.pearson.co
 export const COMMENTS_POPUP_DIALOG_TEXT="Please enter a comment:"
 export const COMMENTS_POPUP_ROWS='10'
 
-/*---------------Section Break PopUp----------------------*/ 
+/*---------------Delete PopUp----------------------*/ 
 export const SECTION_BREAK_DELETE_TEXT="Are you sure you want to delete the section break, elements beneath it will also get deleted?"
-
+export const OWNERS_ELM_DELETE_DIALOG_TEXT="You are trying to delete a container that is subscribed to in other projects. Are you sure you want to continue?"
 export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";
 
 /*---------------- List type constants -----------------*/
@@ -119,9 +120,9 @@ export const SOURCE_MAP = {
     [CITATION_SOURCE]: { 'support': ['ELEMENT_CITATION'], 'notSupport': [] },
     [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN'] },
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
-    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','SHOW_HIDE','POP_UP'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
+    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['POETRY', 'STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','POP_UP'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
     [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] },
-    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK'], 'notSupport': [] }
+    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE'], 'notSupport': [] }
 };
 
 export const getPasteValidated = (sourceType, selectionType) => {
@@ -161,7 +162,4 @@ export const MULTI_COLUMN_2C = {
     // "ELEMENT_PROPORTION": "33-33-33"
 }
 
-export const dropdownData = ['figure', 'table', 'equation'];
-export const dropdownOptions = ['Figure', 'Table', 'Equation'];
-export const figureLabelData = ['No Label', 'Figure', 'Table', 'Equation', 'Custom'];
-export const labelHtmlData = ['', '<br>', '<br/>', '<br data-mce-bogus="1">'];
+export const labelHtmlData = ['', '<br>', '<br/>', '<br data-mce-bogus="1">', '<p><br></p>'];

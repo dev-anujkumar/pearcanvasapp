@@ -732,7 +732,7 @@ export class TinyMceEditor extends Component {
      */
     editorOnClick = (e) => {
 
-        if (this.props.element.type === 'figure' && config.figureFieldsPlaceholders.includes(this.props.placeholder)) {
+        if (this.props.element.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
             this.props.onFigureImageFieldFocus(this.props.index);
         }
         // cbFunc | is for callback delegates //
@@ -1462,40 +1462,43 @@ export class TinyMceEditor extends Component {
             tooltip: "Special Character",
             fetch: function (callback) {
                 var items = [{
-                        type: 'menuitem',
-                        text: 'Insert Special Character',
-                        onAction: function () {
-                            tinymce.activeEditor.execCommand('mceShowCharmap');
-                        }
-                    },
-                    {
-                        type: 'menuitem',
-                        text: 'Insert a Blank',
-                        onAction: function () {
-                                editor.selection.setContent('<span contentEditable="false" id="blankLine" class="answerLineContent"><br></span>');
-                                if(self.props.element && self.props.element.type === "element-list"){
-                                    const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
-                                    if (!listLiText.trim()) {
-                                        const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' span#blankLine');
-                                        tinyMCE.$('#' + tinymce.activeEditor.id + ' li').find('br').remove();
-                                        document.querySelector('#' + tinymce.activeEditor.id + ' li').append(blankLine);
-                                        blankLine.innerHTML = '<br>';
-                                        tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
-                                    }
-                                } else if (self.props.element && self.props.element.type === "element-blockfeature" && self.props.element.elementdata && self.props.element.elementdata.type !=="pullquote") {
-                                        const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' > p > span#blankLine') || document.querySelector('#' + tinymce.activeEditor.id + ' > span#blankLine');
-                                        const blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins') ? document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText : "";
-                                        if (!blockqtText.trim()) {
-                                            tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
-                                            document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(blankLine);
-                                            blankLine.innerHTML = '<br>';
-                                            tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
-                                        }
-                                }
-                             editor.targetElm.classList.remove('place-holder');
-                        }
+                    type: 'menuitem',
+                    text: 'Insert Special Character',
+                    onAction: function () {
+                        tinymce.activeEditor.execCommand('mceShowCharmap');
                     }
+                }
                 ];
+                let blankLineOption = {
+                    type: 'menuitem',
+                    text: 'Insert a Blank',
+                    onAction: function () {
+                        editor.selection.setContent('<span contentEditable="false" id="blankLine" class="answerLineContent"><br></span>');
+                        if (self.props.element && self.props.element.type === "element-list") {
+                            const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
+                            if (!listLiText.trim()) {
+                                const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' span#blankLine');
+                                tinyMCE.$('#' + tinymce.activeEditor.id + ' li').find('br').remove();
+                                document.querySelector('#' + tinymce.activeEditor.id + ' li').append(blankLine);
+                                blankLine.innerHTML = '<br>';
+                                tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
+                            }
+                        } else if (self.props.element && self.props.element.type === "element-blockfeature" && self.props.element.elementdata && self.props.element.elementdata.type !== "pullquote") {
+                            const blankLine = document.querySelector('#' + tinymce.activeEditor.id + ' > p > span#blankLine') || document.querySelector('#' + tinymce.activeEditor.id + ' > span#blankLine');
+                            const blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins') ? document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText : "";
+                            if (!blockqtText.trim()) {
+                                tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
+                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(blankLine);
+                                blankLine.innerHTML = '<br>';
+                                tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML = removeBOM(tinyMCE.$('#' + tinymce.activeEditor.id)[0].innerHTML);
+                            }
+                        }
+                        editor.targetElm.classList.remove('place-holder');
+                    }
+                }
+                if (self.props?.element?.type != 'figure') {
+                    items.push(blankLineOption)
+                }
                 callback(items);
             }
         })
@@ -2187,9 +2190,11 @@ export class TinyMceEditor extends Component {
             remainSpans[0].parentNode.removeChild(remainSpans[0]);
         }
         let positionElement = document.getElementById('BCEposition');
+        if (positionElement) {
         tinymce.activeEditor.selection.setCursorLocation(positionElement, 0);
         positionElement.remove();
         tinymce.activeEditor.undoManager.clear();
+        }
     }
 
     /**
@@ -3020,7 +3025,7 @@ export class TinyMceEditor extends Component {
                 toolbar = config.figureNumberToolbar;
                 break;
             case "Label Name":
-                toolbar = config.figurLabelToolbar;
+                toolbar = config.figureImageLabelToolbar;
                 break;
             case "Title":
             case "Caption":
@@ -3035,13 +3040,13 @@ export class TinyMceEditor extends Component {
         let toolbar = [];
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        } else if (this.props.element.type === 'figure' && ['image', 'table', 'mathImage'].includes(this.props.element.figuretype)) {
+        } else if ((this.props.element.type === 'figure' && ['image', 'table', 'mathImage', 'audio', 'video'].includes(this.props.element.figuretype)) || (this.props.element.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype) && this.props.placeholder !== "Enter Button Label")) {
             toolbar = this.setFigureToolbar(this.props.placeholder);
         } else if (this.props.element.type === 'figure' && this.props.placeholder === "Enter Number...") {
             toolbar = config.figureNumberToolbar;
         }
-        else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...')) ? config.poetryLabelToolbar : config.labelToolbar;
+        else if (["Enter Label...", "Enter call to action...", "Enter Button Label"].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
+            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...' || this.props.placeholder === "Enter Button Label")) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
                 toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
@@ -3526,10 +3531,6 @@ export class TinyMceEditor extends Component {
      */
     handleBlur = (e, forceupdate) => {
 
-        if (this.props.element.type === 'figure' && config.figureFieldsPlaceholders.includes(this.props.placeholder)) {
-            this.props.onFigureImageFieldBlur(this.props.index);
-        }
-
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
@@ -3566,6 +3567,9 @@ export class TinyMceEditor extends Component {
         if (checkforToolbarClick(relatedTargets)) {
             e.stopPropagation();
             return;
+        }
+        if (this.props.element.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
+            this.props.onFigureImageFieldBlur(this.props.index);
         }
         tinymce.$('span[data-mce-type="bookmark"]').each(function () {
             let innerHtml = this.innerHTML;
