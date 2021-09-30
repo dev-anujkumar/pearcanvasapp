@@ -966,3 +966,8 @@ th ol li.listItemNumeroUnoNone:before {
 .element-container .sl, .element-container .vid, .element-container .aud {
     width:92px !important;
 }
+.element-container.multi-column .element-container.as .element-container.sh .figure-wrapper-update .videoIconWrapper,
+.element-container.multi-column .element-container.we .element-container.sh .figure-wrapper-update .videoIconWrapper {
+  width:350px;
+}
+
