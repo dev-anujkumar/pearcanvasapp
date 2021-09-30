@@ -129,6 +129,9 @@
     overflow-x: unset !important;
     overflow-y: unset !important;
 }
+.manifest-list-li{
+    margin-top: '10px';
+}
 /* .element-container{
     padding: 1px 8px !important; 
 } */

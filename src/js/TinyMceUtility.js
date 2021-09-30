@@ -5,6 +5,7 @@
 import axios from 'axios';
 import config from '../config/config';
 import { sendDataToIframe } from '../constants/utility';
+import { MANIFEST_LIST } from '../constants/Element_Constants';
 /**
   * @description data after selecting an asset from alfresco c2 module
   * @param {*} data selected asset data
@@ -103,4 +104,23 @@ export const checkForDataIdAttribute =(defModel) => {
         }
     }
     return defModel;
+}
+
+/**
+ * function to check if selected editor is inside Block List container or not
+ * @param {Object} data 
+ * @returns {Boolean}
+ */
+export const isBlockListElement = (data) => {
+    const { slateLevelData, index } = data;
+    if (slateLevelData && Object.values(slateLevelData).length && index) {
+        const { contents } = Object.values(slateLevelData)[0];
+        if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
+            const elementFirstIndex = index.split("-")[0];
+            if ('type' in contents.bodymatter[elementFirstIndex] && contents.bodymatter[elementFirstIndex].type === MANIFEST_LIST) {
+                return true;
+            }
+        }
+    }
+    return false;
 }

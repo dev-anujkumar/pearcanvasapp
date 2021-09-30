@@ -30,7 +30,7 @@ import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, isBlockListElement }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
@@ -1288,18 +1288,10 @@ export class TinyMceEditor extends Component {
                 return false;
             }
             // TAB key press handling for BlockList element
-            if(key === 9) {
+            if (key === 9) {
                 e.preventDefault();
-                const { slateLevelData, index } = this.props;
-                console.log("this.props", this.props);
-                const slateData = Object.values(slateLevelData);
-                console.log("Slate Data", slateData);
-                const { contents } = slateData[0];
-                if (contents && contents.bodymatter && contents.bodymatter.length && index && typeof index === 'string' && index.includes('-')) {
-                    const firstIndex = index.split("-")[0];
-                    if ('type' in contents.bodymatter[firstIndex] && contents.bodymatter[firstIndex].type === 'manifestlist') {
-                        console.log("Call create element to create blocklist");
-                    }
+                if(isBlockListElement(this.props)){
+                    console.log("TAB pressed for block list element");
                 }
             }
         });

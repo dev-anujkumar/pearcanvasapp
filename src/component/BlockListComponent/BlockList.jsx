@@ -7,7 +7,7 @@ const BlockList = (props) => {
 
     const fetchLi = (subtype) => {
         return manifestList.map((item, index) => {
-            return (<li style={{'marginTop': '10px'}} className={fetchLiClassName(subtype)}>
+            return (<li className={`${fetchLiClassName(subtype)} manifest-list-li`}>
                 {renderElement(index)}
             </li>)
         })
