@@ -10,6 +10,7 @@ import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
 import Toolbar from '../Toolbar';
 import PopUp from '../PopUp';
 import config from './../../config/config';
+import PrintIndexPopup from '../PrintIndexPopup/PrintIndexPopup';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
@@ -204,8 +205,12 @@ export class CanvasWrapper extends Component {
                             <RootContext.Consumer>
                                 {
                                     () => {
-                                        if (this.props.glossaryFootnoteValue.popUpStatus) {
+                                        if (this.props.glossaryFootnoteValue.popUpStatus && !this.props.printIndexValue.popUpStatus) {
                                             return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData} />)
+                                        }
+                                        
+                                        if(this.props.printIndexValue.popUpStatus){
+                                            return <PrintIndexPopup />
                                         }
                                         else {
                                             return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
@@ -243,7 +248,8 @@ const mapStateToProps = state => {
         figureGlossaryData:state.appStore.figureGlossaryData,
         alfrescoEditor: state.alfrescoReducer.editor,
         imageArgs: state.alfrescoReducer.imageArgs,
-        projectSubscriptionDetails:state?.projectInfo
+        projectSubscriptionDetails:state?.projectInfo,
+        printIndexValue: state.printIndexValue
     };
 };
 

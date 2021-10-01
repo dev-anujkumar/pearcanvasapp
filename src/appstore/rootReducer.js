@@ -18,6 +18,7 @@ import assessmentReducer from './assessmentReducer';
 import { selectionReducer } from './copyUrnReducer';
 import alfrescoReducer from './alfrescoReducer';
 import { projectInfo } from './projectInfoReducer';
+import printIndexReducer from './printIndexReducer';
 
 export default combineReducers({
     appStore: appReducer,
@@ -39,5 +40,6 @@ export default combineReducers({
     assessmentReducer,
     selectionReducer,
     alfrescoReducer,
-    projectInfo   
+    projectInfo,
+    printIndexValue: printIndexReducer   
 });

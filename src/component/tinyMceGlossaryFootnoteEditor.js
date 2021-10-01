@@ -10,6 +10,8 @@ import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import { getWirisAltText } from '../js/utils';
 import { setFormattingToolbar } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
+import { printIndexPopup } from '../component/PrintIndexPopup/PrintIndex_Action';
+
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -440,7 +442,9 @@ export class ReactEditor extends React.Component {
   }
 
   render() {
-    let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue 
+    let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue;
+    let {printIndexIcon, printIndexPopup} = this.props;
+
     // && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
     let glossaryFootNoteCurrentValue;
     try{
@@ -452,8 +456,9 @@ export class ReactEditor extends React.Component {
     glossaryFootNoteCurrentValue = glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     
     return (
-      <div>
+      <div className="glossary-toolbar">
         <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
+        {printIndexIcon ? <span dangerouslySetInnerHTML={{__html: printIndexIcon}} onClick={ () => { printIndexPopup(true)}}></span>: null}
       </div>
     )
   }
@@ -461,6 +466,6 @@ export class ReactEditor extends React.Component {
 
 export default connect(
   null,
-  { wirisAltTextPopup }
+  { wirisAltTextPopup, printIndexPopup }
 )(ReactEditor);
 
