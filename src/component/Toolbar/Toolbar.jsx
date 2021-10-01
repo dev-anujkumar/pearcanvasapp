@@ -120,7 +120,7 @@ const _Toolbar = props => {
                 <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
-                    <div className={`leaningobjective-block ${isToolBarBlocked}`}>
+                    <div className={`leaningobjective-block`}>
                         <div className="learningobjectiveicon">
                             <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
