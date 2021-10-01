@@ -2420,4 +2420,38 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             spyFunction.mockClear()
         })
     });
+    describe('Test-14- fetchFigureDropdownOptions', () => {
+        it('Test-14.1 fetchFigureDropdownOptions - then Block', async () => {
+            let firstResponseData = {
+                "data": {
+                    audio: ["No Label", "Custom"],
+                    image: ["No Label", "Custom"],
+                    smartlinks: ["No Label", "Custom"],
+                    video: ["No Label", "Custom"]
+                }
+            }
+            let dispatch = jest.fn();
+            axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
+            await canvasActions.fetchFigureDropdownOptions()(dispatch)
+            expect(dispatch).toHaveBeenCalled();
+        })
+
+        it('Test-14.2 fetchFigureDropdownOptions - then Block with empty obj', async () => {
+            let firstResponseData = {
+                "data": {}
+            }
+            let dispatch = jest.fn();
+            axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
+            await canvasActions.fetchFigureDropdownOptions()(dispatch)
+            expect(dispatch).not.toHaveBeenCalled();
+        })
+
+        it('Test-14.3 fetchFigureDropdownOptions - catch Block', async () => {
+            let firstResponseData = { }
+            let dispatch = jest.fn();
+            axios.get.mockImplementation(() => Promise.reject(firstResponseData))
+            await canvasActions.fetchFigureDropdownOptions()(dispatch)
+            expect(dispatch).not.toHaveBeenCalled();
+        })
+    });
 });

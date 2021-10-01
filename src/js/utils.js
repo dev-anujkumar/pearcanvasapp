@@ -543,8 +543,6 @@ export const getWirisAltText = ({target}) =>{
 export const removeBOM = (nodeHTML) => nodeHTML && nodeHTML.replace(/﻿/g, "");
 export const removeImageCache = (nodeHTML) => nodeHTML && nodeHTML.replace(/(?:\.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
 
-export const showCustomAlert = (msg) => alert(msg);
-
 /**
  * This function handles the img-src for Wiris content
  * @param {*} dataHTML html content

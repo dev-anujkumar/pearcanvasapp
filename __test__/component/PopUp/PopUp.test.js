@@ -120,5 +120,49 @@ describe('Testing PopUp component', () => {
         wrapper.find('#close-container').simulate('click');
         const component = mount(<PopUp {...props}/>);
         expect(component.instance().props.showDeleteElemPopup).toEqual(true);
+    });
+    it('showDeleteElemPopup for OwnersSlate',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            showDeleteElemPopup:true,
+            isOwnerSlate:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('#close-container').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.showDeleteElemPopup).toEqual(true);
+        expect(component.instance().props.isOwnerSlate).toEqual(true);
+    });
+    it('testCase for OwnersSlate',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            proceed:jest.fn(),
+            isOwnersSlate:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.lo-save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.isOwnersSlate).toEqual(true);
+    });
+    it('testCase for isSubscribersSlate',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            isSubscribersSlate:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.lo-save-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.isSubscribersSlate).toEqual(true);
+    });
+    it('testCase for withCheckBox',() => {
+        let props = {
+            withCheckBox:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.OwnersSlateCheckBox').simulate('change');
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.withCheckBox).toEqual(true);
     })
 })

@@ -1,13 +1,23 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { MentionsInput, Mention } from 'react-mentions';
 import { useDispatch } from 'react-redux';
 import { getProjectUsers } from '../CommentsPanel/CommentsPanel_Action';
 import './CommentMention.css'
 
 const CommentMention = (props) => {
+
+  const [commentText, setCommentText] = useState(props.comment);
+
+  useEffect(() => {
+    setCommentText(props.comment);
+  },[props.urn, props.comment])
+
   const dispatch = useDispatch();
   const onCommentChange = (event, value) => {
     if (!props.readOnly) {
+      setCommentText(value);
       props.handleCommentChange(value);
     }
 
@@ -33,12 +43,12 @@ const CommentMention = (props) => {
         <MentionsInput
           onFocus={getUsers}
           readOnly={props.readOnly}
-          value={props.comment}
+          value={commentText}
           onChange={onCommentChange}
           placeholder="Type something"
           className={`${props.readOnly ? 'no-border' : 'mentions'} ${props.isAddComment ? 'comment-mention' : isEditableMode }`}
           markup="@__display__(__id__)"
-          allowSuggestionsAboveCursor={props.isAddComment ? false : true}
+          allowSuggestionsAboveCursor={false}
         >
           <Mention
             type="user"
