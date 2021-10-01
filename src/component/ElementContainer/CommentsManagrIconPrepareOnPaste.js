@@ -9,6 +9,7 @@ const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN } = ElementConstants;
 */
 function showCommentsManagerAsideIcon(element, elmUrn) {
     if(element?.type === ELEMENT_ASIDE) {
+        elmUrn.push(element.id)
         element?.elementdata?.bodymatter?.map((item) => {
             if(item?.type === SHOW_HIDE) {
                 showCommentsManagerIconInSH(item, elmUrn);
@@ -16,6 +17,7 @@ function showCommentsManagerAsideIcon(element, elmUrn) {
             if (item?.type === "manifest") {
                 item?.contents?.bodymatter?.map((ele) => {
                     if(ele?.type === SHOW_HIDE) { /* Ex. -  WE:Body/SectionBreak:SH:P*/
+                     elmUrn.push(ele.id)
                         showCommentsManagerIconInSH(ele, elmUrn);
                     } 
                     else { elmUrn.push(ele.id) } /* Ex. -  WE:Body/SectionBreak:P*/
@@ -97,6 +99,10 @@ export function prepareCommentsManagerIcon(type, createdElementData, elmUrn, all
         case slateWrapperConstants.SHOW_HIDE:
             const urns = getShowhideChildUrns(createdElementData)
             elmUrn.push(...urns)
+            break;
+        case slateWrapperConstants.POP_UP:
+                elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
+                createdElementData.popupdata.bodymatter.length > 0 && elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
             break;
     }
     return (allComments).filter(({ commentOnEntity }) => {
