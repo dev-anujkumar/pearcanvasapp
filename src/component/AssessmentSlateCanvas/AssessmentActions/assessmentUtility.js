@@ -146,7 +146,7 @@ export const checkFigureMetadata = (element, buttonType = null) => {
     }
     else if (hasElements.includes(element?.figuretype) && elementAssetId !== '' && buttonType === 'alfrescoExpandButton') {
         return true
-    } else if (smartlinkContexts.includes(element?.figuredata?.interactivetype) && buttonType === 'alfrescoExpandButton') {
+    } else if (smartlinkContexts.includes(element?.figuredata?.interactivetype) && element?.figuredata?.interactiveid && element?.figuredata?.interactiveid !== '' && buttonType === 'alfrescoExpandButton') {
         return true;
     }
     return false;
