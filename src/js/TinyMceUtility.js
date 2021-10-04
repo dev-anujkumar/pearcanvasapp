@@ -5,7 +5,7 @@
 import axios from 'axios';
 import config from '../config/config';
 import { sendDataToIframe } from '../constants/utility';
-import { MANIFEST_LIST } from '../constants/Element_Constants';
+import { MANIFEST_LIST, MANIFEST_LIST_ITEM } from '../constants/Element_Constants';
 /**
   * @description data after selecting an asset from alfresco c2 module
   * @param {*} data selected asset data
@@ -107,20 +107,43 @@ export const checkForDataIdAttribute =(defModel) => {
 }
 
 /**
- * function to check if selected editor is inside Block List container or not
+ * function to get selected block list immediate parent container details 
+ * @param {Object} bodymatter 
+ * @param {Number} start 
+ * @param {Number} end 
+ * @param {Array} indexes 
+ * @returns {Object}
+ */
+const getBLParentContainer = (bodymatter, start, end, indexes) => {
+    if (end === 0) return bodymatter;
+    if (end && bodymatter && Object.keys(bodymatter).length) {
+        if (bodymatter.type === MANIFEST_LIST && bodymatter.listdata && bodymatter.listdata.bodymatter.length) {
+            return getBLParentContainer(bodymatter.listdata.bodymatter[Number(indexes[start])], start + 1, end - 1, indexes);
+        }
+        if (bodymatter.type === MANIFEST_LIST_ITEM && bodymatter.listitemdata && bodymatter.listitemdata.bodymatter.length) {
+            return getBLParentContainer(bodymatter.listitemdata.bodymatter[Number(indexes[start])], start + 1, end - 1, indexes);
+        }
+    }
+}
+
+/**
+ * function to check if selected container is inside block list and get its parent container details 
  * @param {Object} data 
  * @returns {Boolean}
  */
-export const isBlockListElement = (data) => {
+export const checkBlockListElement = (data) => {
     const { slateLevelData, index } = data;
     if (slateLevelData && Object.values(slateLevelData).length && index) {
         const { contents } = Object.values(slateLevelData)[0];
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
-            const elementFirstIndex = index.split("-")[0];
-            if ('type' in contents.bodymatter[elementFirstIndex] && contents.bodymatter[elementFirstIndex].type === MANIFEST_LIST) {
-                return true;
+            const indexes = index.split("-");
+            if (indexes && indexes.length && 'type' in contents.bodymatter[indexes[0]] && contents.bodymatter[indexes[0]].type === MANIFEST_LIST) {
+                return {
+                    indexToinsert: Number(indexes[indexes.length - 1]) + 1,
+                    parentData: getBLParentContainer(contents.bodymatter[indexes[0]], 1, indexes.length - 2, indexes)
+                }
             }
         }
     }
-    return false;
+    return {};
 }
