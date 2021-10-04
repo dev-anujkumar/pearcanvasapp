@@ -12,6 +12,7 @@ function showCommentsManagerAsideIcon(element, elmUrn) {
         elmUrn.push(element.id)
         element?.elementdata?.bodymatter?.map((item) => {
             if(item?.type === SHOW_HIDE) {
+                elmUrn.push(item.id)
                 showCommentsManagerIconInSH(item, elmUrn);
             } else
             if (item?.type === "manifest") {
