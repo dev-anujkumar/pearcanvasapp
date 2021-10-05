@@ -440,7 +440,7 @@ export const updateElementInStore = (paramsObj) => {
 *  @param {Object} element - showhide object data 
 *  @param {Object} updatedData - updated data of inner elements 
 *  @param {Array}  indexs - indexs of element heirarchy */
-function updateShowhideElements(element, updatedData, indexs) {
+export function updateShowhideElements(element, updatedData, indexs) {
     if(element?.type === SHOW_HIDE) {
         /* Get the section type of showhide; Index of section (indexs?.length - 2) */
         const section = findSectionType(indexs[indexs?.length - 2]);

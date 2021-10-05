@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as updateHelpers from '../../../src/component/ElementContainer/ElementContainerUpdate_helpers';
-import { slateWithCitationElement, slateWithPopupData} from "../../../fixtures/slateTestingData"
+import { slateWithCitationElement, slateWithCitationElement2, slateWithPopupData} from "../../../fixtures/slateTestingData"
 import { multiColumnContainer } from "../../../fixtures/multiColumnContainer";
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
@@ -85,6 +85,41 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         slateLevelData: slateWithCitationElement,
         appStore: {
             slateLevelData: slateWithCitationElement.slateLevelData,
+            oldFiguredata: null
+        },
+        learningToolReducer: {
+            shouldHitApi: false,
+            learningToolTypeValue: '',
+            apiResponse: [],
+            showErrorMsg: true, //should be false
+            showLTBody: false,
+            learningTypeSelected: false,
+            showDisFilterValues: false,
+            selectedResultFormApi: '',
+            resultIsSelected: false,
+            toggleLT: false,
+            linkButtonDisable: true,
+            apiResponseForDis: [],
+            learningToolDisValue: '',
+            numberOfRows: 25,
+        },
+        glossaryFootnoteReducer: {
+            glossaryFootnoteValue: { elementWorkId: "4343653" },
+            glossaryFootNoteCurrentValue: "",
+            elementIndex: ""
+        },
+        tcmReducer:{
+            tcmSnapshot:[{
+                elemURN : "urn:pearson:work:123"
+            }]
+        },
+        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" }
+    };
+
+    let initialState3 = {
+        slateLevelData: slateWithCitationElement2,
+        appStore: {
+            slateLevelData: slateWithCitationElement2.slateLevelData,
             oldFiguredata: null
         },
         learningToolReducer: {
@@ -631,6 +666,52 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 type: AUTHORING_ELEMENT_UPDATE,
                 payload: {
                     slateLevelData: slateWithCitationElement.slateLevelData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore2 - citation element ", () => {
+            let store = mockStore(() => initialState3);
+            let args = { 
+                updatedData: {
+                    "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                    "type": "element-citation",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                        "textsemantics":
+                        [
+                            {
+                                "type": "strong",
+                                "charStart": 81,
+                                "charEnd": 105
+                            }
+                        ]
+                    },
+                    "html" : {
+                        "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                    },
+                    "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                    "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                    "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                },
+                asideData,
+                parentUrn: null,
+                elementIndex: '0-1',
+                showHideType: null,
+                parentElement: { "type": "citations" },
+                dispatch: store.dispatch,
+                newslateData: slateWithCitationElement2.slateLevelData,
+            }
+            const expectedAction = {
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: slateWithCitationElement2.slateLevelData
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -1383,6 +1464,218 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             updateHelpers.updateNewVersionElementInStore(args)
             expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
             spyUpdateNewVersionElementInStore.mockClear()
+        })
+    })
+    describe('updateShowhideElements testCases',()=>{
+        it('updateShowhideElements for authoredText',()=>{
+            let sh_Obj = {
+                "id": "urn:pearson:manifest:f8153499-14c4-4d0e-a9ef-aadf2aaacc13",
+                "type": "showhide",
+                "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                "versionUrn": "urn:pearson:manifest:f8153499-14c4-4d0e-a9ef-aadf2aaacc13",
+                "contentUrn": "urn:pearson:entity:62b5f97b-0ed8-42e4-9536-cccab389c5da",
+                "status": "wip",
+                "interactivedata": {
+                    "postertextobject": [{
+                        "id": "urn:pearson:work:81b1eeef-78a3-4e9a-afac-82825bc84a80", "type": "element-authoredtext", "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "Reveal Answer:" },
+                        "html": { "text": "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>", "footnotes": {}, "assetsPopover": {}, "glossaryentries": {} },
+                        "versionUrn": "urn:pearson:work:81b1eeef-78a3-4e9a-afac-82825bc84a80", "contentUrn": "urn:pearson:entity:49d2396e-84fb-4c1a-986b-b4a829c69c27"
+                    }],
+                    "show": [{
+                        "id": "urn:pearson:work:a62e2118-7274-4863-b6aa-5c6fabae19ee", "type": "element-authoredtext", "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "dxgcfg" },
+                        "html": { "text": "<p class=\"paragraphNumeroUno\">dxgcfg</p>", "footnotes": {}, "glossaryentries": {} },
+                        "versionUrn": "urn:pearson:work:a62e2118-7274-4863-b6aa-5c6fabae19ee", "contentUrn": "urn:pearson:entity:b9bf93da-8b21-4e43-9f70-1f6d21a210ef"
+                    }],
+                    "hide": [{
+                        "id": "urn:pearson:work:b7e1c697-cdfc-48b0-a596-0239f7960e51",
+                        "type": "element-authoredtext",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                        "html": { "text": "<p class=\"paragraphNumeroUno\"><br></p>", "footnotes": {}, "assetsPopover": {}, "glossaryentries": {} }, "versionUrn": "urn:pearson:work:b7e1c697-cdfc-48b0-a596-0239f7960e51", "contentUrn": "urn:pearson:entity:16aec971-0d02-49c3-b1af-596c1148e163"
+                    }]
+                },
+                "index": "0-0-1-2-0"
+            }
+            let updatedData={
+                "id":"urn:pearson:work:b7e1c697-cdfc-48b0-a596-0239f7960e51",
+                "type":"element-authoredtext",
+                "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata":{"text":"cxhcg"},
+                "html":{"text":"<p class=\"paragraphNumeroUno\">cxhcg</p>","footnotes":{},"glossaryentries":{}},
+                "versionUrn":"urn:pearson:work:b7e1c697-cdfc-48b0-a596-0239f7960e51",
+                "contentUrn":"urn:pearson:entity:16aec971-0d02-49c3-b1af-596c1148e163",
+                "inputType":"AUTHORED_TEXT",
+                "inputSubType":"NA",
+                "sectionType":"hide",
+                "elementParentEntityUrn":"urn:pearson:entity:62b5f97b-0ed8-42e4-9536-cccab389c5da",
+                "slateVersionUrn":"urn:pearson:manifest:9314e1bb-0cf9-45af-9529-adec388b8639",
+                "index":"0",
+                "projectUrn":"urn:pearson:distributable:e6b375b3-c74e-4dd2-9cfb-d7cf36b2f4c1"
+            }
+            let iList=["0","0","1","2","0"]
+            const spyupdateShowhideElements = jest.spyOn(updateHelpers, "updateShowhideElements")
+            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList)
+            expect(spyupdateShowhideElements).toHaveBeenCalled()
+            spyupdateShowhideElements.mockClear()  
+        });
+        it('updateShowhideElements for FigureElement',()=>{
+            let sh_Obj={
+                "id":"urn:pearson:manifest:f8153499-14c4-4d0e-a9ef-aadf2aaacc13",
+                "type":"showhide",
+                "schema":"http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                "versionUrn":"urn:pearson:manifest:f8153499-14c4-4d0e-a9ef-aadf2aaacc13",
+                "contentUrn":"urn:pearson:entity:62b5f97b-0ed8-42e4-9536-cccab389c5da",
+                "status":"wip",
+                "interactivedata":{
+                    "postertextobject":[
+                        {
+                            "id":"urn:pearson:work:81b1eeef-78a3-4e9a-afac-82825bc84a80",
+                            "type":"element-authoredtext",
+                            "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":"Reveal Answer:"},
+                            "html":{"text":"<p class=\"paragraphNumeroUno\">Reveal Answer:</p>","footnotes":{},"assetsPopover":{},"glossaryentries":{}},
+                            "versionUrn":"urn:pearson:work:81b1eeef-78a3-4e9a-afac-82825bc84a80",
+                            "contentUrn":"urn:pearson:entity:49d2396e-84fb-4c1a-986b-b4a829c69c27"
+                        }]
+                        ,"show":[{
+                            "id":"urn:pearson:work:beedefeb-a595-4e16-8f19-dd0bc4a9e7d6",
+                            "type":"figure","figuretype":"image",
+                            "subtype":"imageTextWidth",
+                            "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+                            "titlecontentintitlefield":true,
+                            "alignment":"text-width",
+                            "title":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},
+                            "captions":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},
+                            "credits":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},
+                            "figuredata":{"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                            "imageid":"",
+                            "path":"https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                            "height":"422",
+                            "width":"680",
+                            "podwidth":""},
+                            "html":{"title":"<p><br></p>","captions":"<p><br></p>","credits":"<p><br></p>","footnotes":{},"assetsPopover":{},"glossaryentries":{}},
+                            "versionUrn":"urn:pearson:work:beedefeb-a595-4e16-8f19-dd0bc4a9e7d6",
+                            "contentUrn":"urn:pearson:entity:626380ce-c43c-49a5-ac13-425209c6ebe6"
+                        }],
+                        "hide":[{
+                            "id":"urn:pearson:work:b7e1c697-cdfc-48b0-a596-0239f7960e51",
+                            "type":"element-authoredtext",
+                            "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":"cxhcg"},
+                            "html":{"text":"<p class=\"paragraphNumeroUno\">cxhcg</p>","footnotes":{},"assetsPopover":{},"glossaryentries":{}},
+                            "versionUrn":"urn:pearson:work:b7e1c697-cdfc-48b0-a596-0239f7960e51",
+                            "contentUrn":"urn:pearson:entity:16aec971-0d02-49c3-b1af-596c1148e163"}]
+                        },
+                "index":"0-0-1-0-0"
+            }
+            let updatedData={
+                "id":"urn:pearson:work:beedefeb-a595-4e16-8f19-dd0bc4a9e7d6",
+                "type":"figure",
+                "figuretype":"image",
+                "subtype":"imageTextWidth",
+                "schema":"http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield":true,
+                "alignment":"text-width",
+                "title":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":""},
+                "captions":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"","footnotes":[]},
+                "credits":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","textsemantics":[],"mathml":[],"text":"","footnotes":[]},
+                "figuredata":{"schema":"http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imageid":"",
+                "path":"https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                "height":"422","width":"680","podwidth":""},
+                "html":{"captions":"<p></p>","credits":"<p></p>","footnotes":{},"glossaryentries":{},"title":"<p>sasfsfaw</p>","postertext":"","text":""},
+                "versionUrn":"urn:pearson:work:beedefeb-a595-4e16-8f19-dd0bc4a9e7d6",
+                "contentUrn":"urn:pearson:entity:626380ce-c43c-49a5-ac13-425209c6ebe6",
+                "inputType":"IMAGE",
+                "inputSubType":"IMAGE_TEXT_WIDTH",
+                "slateVersionUrn":"urn:pearson:manifest:9314e1bb-0cf9-45af-9529-adec388b8639",
+                "index":"0",
+                "elementParentEntityUrn":"urn:pearson:entity:62b5f97b-0ed8-42e4-9536-cccab389c5da",
+                "sectionType":"show",
+                "projectUrn":"urn:pearson:distributable:e6b375b3-c74e-4dd2-9cfb-d7cf36b2f4c1"
+            }
+            let iList=["0","0","1","0","0"]
+            const spyupdateShowhideElements = jest.spyOn(updateHelpers, "updateShowhideElements")
+            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList)
+            expect(spyupdateShowhideElements).toHaveBeenCalled()
+            spyupdateShowhideElements.mockClear()  
+        });
+        it('updateShowhideElements for dailogue',()=>{
+            let sh_Obj = {
+                "id": "urn:pearson:manifest:f8153499-14c4-4d0e-a9ef-aadf2aaacc13",
+                "type": "showhide",
+                "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                "versionUrn": "urn:pearson:manifest:f8153499-14c4-4d0e-a9ef-aadf2aaacc13",
+                "contentUrn": "urn:pearson:entity:62b5f97b-0ed8-42e4-9536-cccab389c5da",
+                "status": "wip",
+                "interactivedata": {
+                    "postertextobject": [{
+                        "id": "urn:pearson:work:81b1eeef-78a3-4e9a-afac-82825bc84a80", "type": "element-authoredtext", "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "Reveal Answer:" },
+                        "html": { "text": "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>", "footnotes": {}, "assetsPopover": {}, "glossaryentries": {} },
+                        "versionUrn": "urn:pearson:work:81b1eeef-78a3-4e9a-afac-82825bc84a80",
+                        "contentUrn": "urn:pearson:entity:49d2396e-84fb-4c1a-986b-b4a829c69c27"
+                    }],
+                    "show": [{
+                        "id": "urn:pearson:work:e14964f1-4be5-406d-9812-7ce8cc624d7c", "type": "element-dialogue", "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": {
+                            "startNumber": "1", "numberedlines": false, "acttitle": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                            "scenetitle": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                            "dialoguecontents": [{ "type": "stagedirection", "stagedirection": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" } },
+                            {
+                                "type": "lines", "speaker": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                                "lines": [{ "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" }]
+                            }]
+                        },
+                        "credits": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                        "html": {
+                            "actTitle": "<p>rft</p>", "sceneTitle": "<p>xfdhgf</p>",
+                            "dialogueContent": [{ "type": "stagedirection", "text": "<p></p>" },
+                            { "type": "lines", "characterName": "<p></p>", "text": "<p><span class=\"dialogueLine\"><br></span></p>" }],
+                            "credits": "<p></p>", "footnotes": {}, "assetsPopover": {}, "glossaryentries": {}
+                        },
+                        "versionUrn": "urn:pearson:work:e14964f1-4be5-406d-9812-7ce8cc624d7c",
+                        "contentUrn": "urn:pearson:entity:757424d8-b98f-4988-b9d8-590f0a0f64c1"
+                    }],
+                    "hide": [{
+                        "id": "urn:pearson:work:b7e1c697-cdfc-48b0-a596-0239f7960e51",
+                        "type": "element-authoredtext",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "cxhcg" },
+                        "html": { "text": "<p class=\"paragraphNumeroUno\">cxhcg</p>", "footnotes": {}, "assetsPopover": {}, "glossaryentries": {} },
+                        "versionUrn": "urn:pearson:work:b7e1c697-cdfc-48b0-a596-0239f7960e51",
+                        "contentUrn": "urn:pearson:entity:16aec971-0d02-49c3-b1af-596c1148e163"
+                    }]
+                }
+            }
+            let updatedData = {
+                "id": "urn:pearson:work:e14964f1-4be5-406d-9812-7ce8cc624d7c",
+                "type": "element-dialogue",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "startNumber": "1",
+                    "numberedlines": false,
+                    "acttitle": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                    "scenetitle": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                    "dialoguecontents": [{ "type": "stagedirection", "stagedirection": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" } },
+                    {
+                        "type": "lines", "speaker": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                        "lines": [{ "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" }]
+                    }]
+                }, "credits": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" }, "html": { "actTitle": "<p>rft</p>", "sceneTitle": "<p>xfdhgf</p>", "dialogueContent": [{ "type": "stagedirection", "text": "<p>xfdgfhtyhn rdgd gd</p>" }, { "type": "lines", "characterName": "<p></p>", "text": "<p><span class=\"dialogueLine\"><br></span></p>" }], "credits": "<p></p>", "footnotes": {}, "assetsPopover": {}, "glossaryentries": {} }, "versionUrn": "urn:pearson:work:e14964f1-4be5-406d-9812-7ce8cc624d7c", "contentUrn": "urn:pearson:entity:757424d8-b98f-4988-b9d8-590f0a0f64c1", "slateVersionUrn": "urn:pearson:manifest:9314e1bb-0cf9-45af-9529-adec388b8639",
+                "elementParentEntityUrn": "urn:pearson:entity:62b5f97b-0ed8-42e4-9536-cccab389c5da",
+                "inputType": "ELEMENT_DIALOGUE",
+                "inputSubType": "NA",
+                "index": "0",
+                "projectUrn": "urn:pearson:distributable:e6b375b3-c74e-4dd2-9cfb-d7cf36b2f4c1"
+            }
+            let iList=["0","0","1","0","0"]
+            const spyupdateShowhideElements = jest.spyOn(updateHelpers, "updateShowhideElements")
+            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList)
+            expect(spyupdateShowhideElements).toHaveBeenCalled()
+            spyupdateShowhideElements.mockClear()  
         })
     })
     describe("TCM helper methods", () => {
