@@ -5,7 +5,7 @@
 import axios from 'axios';
 import config from '../config/config';
 import { sendDataToIframe } from '../constants/utility';
-import { MANIFEST_LIST, MANIFEST_LIST_ITEM } from '../constants/Element_Constants';
+import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } from '../constants/Element_Constants';
 /**
   * @description data after selecting an asset from alfresco c2 module
   * @param {*} data selected asset data
@@ -129,18 +129,19 @@ const getBLParentContainer = (bodymatter, start, end, indexes) => {
 /**
  * function to check if selected container is inside block list and get its parent container details 
  * @param {Object} data 
+ * @param {String} keypressed
  * @returns {Boolean}
  */
-export const checkBlockListElement = (data) => {
+export const checkBlockListElement = (data, keypressed) => {
     const { slateLevelData, index } = data;
-    if (slateLevelData && Object.values(slateLevelData).length && index) {
+    if (slateLevelData && Object.values(slateLevelData).length && index && keypressed) {
         const { contents } = Object.values(slateLevelData)[0];
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
             const indexes = index.split("-");
             if (indexes && indexes.length && 'type' in contents.bodymatter[indexes[0]] && contents.bodymatter[indexes[0]].type === MANIFEST_LIST) {
                 return {
                     indexToinsert: Number(indexes[indexes.length - 1]) + 1,
-                    parentData: getBLParentContainer(contents.bodymatter[indexes[0]], 1, indexes.length - 2, indexes)
+                    parentData: getBLParentContainer(contents.bodymatter[indexes[0]], 1, indexes.length - BLOCK_LIST_ELEMENT_EVENT_MAPPING[keypressed], indexes)
                 }
             }
         }

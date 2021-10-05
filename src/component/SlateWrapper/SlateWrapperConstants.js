@@ -29,6 +29,7 @@ export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have acces
 export const ELEMENT_DIALOGUE = "ELEMENT_DIALOGUE";
 export const ELEMENT_DISCUSSION = 'DISCUSSION';
 export const MANIFEST_LIST = 'MANIFEST_LIST';
+export const MANIFEST_LIST_ITEM = 'MANIFEST_LIST_ITEM';
 
 /* PDF Slate */
 export const ELEMENT_PDF = "ELEMENT_PDF";

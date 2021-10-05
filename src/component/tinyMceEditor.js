@@ -24,7 +24,7 @@ import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessage
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
-import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST } from '../component/SlateWrapper/SlateWrapperConstants.js';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
@@ -1125,6 +1125,7 @@ export class TinyMceEditor extends Component {
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
+            let blockListData = checkBlockListElement(this.props, 'ENTER');
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;
             }
@@ -1176,7 +1177,7 @@ export class TinyMceEditor extends Component {
                 isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
                 isContainsBlankLine = activeElement.innerHTML.match(/<span/) ? activeElement.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
             }
-            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza" && this.props.element.type !== "element-dialogue") {
+            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza" && this.props.element.type !== "element-dialogue" && (blockListData && Object.keys(blockListData).length === 0)) {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
                 if ('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
                     activeEditor.blur();
@@ -1290,10 +1291,18 @@ export class TinyMceEditor extends Component {
             // TAB key press handling for BlockList element
             if (key === 9) {
                 e.preventDefault();
-                const blockListData = checkBlockListElement(this.props);
+                blockListData = checkBlockListElement(this.props, "TAB");
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
                     this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null);
+                }
+            }
+            // ENTER key press handling for BlockList element
+            if (key === 13) {
+                e.preventDefault();
+                if (blockListData && Object.keys(blockListData).length) {
+                    const { parentData, indexToinsert } = blockListData;
+                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null);
                 }
             }
         });

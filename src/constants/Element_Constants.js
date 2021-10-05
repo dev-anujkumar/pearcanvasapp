@@ -167,3 +167,7 @@ export const labelHtmlData = ['', '<br>', '<br/>', '<br data-mce-bogus="1">', '<
 /** Block List constants */
 export const MANIFEST_LIST = 'manifestlist';
 export const MANIFEST_LIST_ITEM = 'manifestlistitem';
+export const BLOCK_LIST_ELEMENT_EVENT_MAPPING = {
+    "TAB": 2,
+    "ENTER": 3
+}
