@@ -29,6 +29,7 @@ import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } f
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action';
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper';
+import { updateSmartLinkDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -264,7 +265,8 @@ class Interactive extends React.Component {
         if (hasReviewerRole()) {
             return true
         }
-        
+
+        this.props.updateSmartLinkDataForCompare(element.figuredata);
         let setFigureData = {
             "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
             "interactiveid": "",
@@ -914,17 +916,22 @@ Interactive.propTypes = {
     /** itemId coming from c2module */
     itemId: PropTypes.string
 }
-const mapActionToProps = {
-    setCurrentCiteTdx: setCurrentCiteTdx,
-    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-    assessmentSorting:assessmentSorting,
-    setNewItemFromElm: setNewItemFromElm,
-    fetchAssessmentMetadata: fetchAssessmentMetadata,
-    fetchAssessmentVersions: fetchAssessmentVersions,
-    updateAssessmentVersion: updateAssessmentVersion,
-    setElmPickerData: setElmPickerData,
-    alfrescoPopup: alfrescoPopup,
-    saveSelectedAssetData: saveSelectedAssetData
+const mapActionToProps = (dispatch) => {
+    return {
+        setCurrentCiteTdx: setCurrentCiteTdx,
+        setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
+        assessmentSorting: assessmentSorting,
+        setNewItemFromElm: setNewItemFromElm,
+        fetchAssessmentMetadata: fetchAssessmentMetadata,
+        fetchAssessmentVersions: fetchAssessmentVersions,
+        updateAssessmentVersion: updateAssessmentVersion,
+        setElmPickerData: setElmPickerData,
+        alfrescoPopup: alfrescoPopup,
+        saveSelectedAssetData: saveSelectedAssetData,
+        updateSmartLinkDataForCompare: (oldSmartLinkData) => {
+            dispatch(updateSmartLinkDataForCompare(oldSmartLinkData))
+        }
+    }
 }
 
 const mapStateToProps = (state) => {

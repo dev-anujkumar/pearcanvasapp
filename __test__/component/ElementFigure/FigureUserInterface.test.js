@@ -45,15 +45,6 @@ jest.mock('../../../src/constants/utility.js',()=>{
     }
 })
 
-// jest.mock('../../../src/component/ElementFigure/AlfrescoSiteUrl_helper.js', () => {
-//     return {
-//         getAlfrescositeResponse: () => {
-//             return jest.fn()
-//         }
-//     }
-// })
-
-
 
 describe('Testing FigureUserInterface component', () => {
     let initialState = {
@@ -70,8 +61,8 @@ describe('Testing FigureUserInterface component', () => {
             figureDropdownData: {
                 audio: ["No Label", "Custom"],
                 image: ["No Label", "Custom"],
-                smartlinks: ["No Label", "Custom"],
-                video: ["No Label", "Custom"]
+                smartlinks: ["No Label", "Custom", "Figure"],
+                video: ["No Label", "Video", "Custom"]
             }
         },
         projectMetadata:{},
@@ -96,9 +87,9 @@ describe('Testing FigureUserInterface component', () => {
                     }
                 ],
                 videoid: 'urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c',
-                posterimage: { imageid: "urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c" }
+                posterimage: { path: "urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c" }
             },
-            html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+            html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>video</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
         }
     }
     const store = mockStore(initialState);
@@ -140,15 +131,153 @@ describe('Testing FigureUserInterface component', () => {
         jest.spyOn(FigureUserInterfaceInstance, 'handleFigureDropdown')
         FigureUserInterfaceInstance.handleFigureDropdown();
     })
-    xit('Test onFigureImageFieldFocus', () => {
-        let spyFucntion=jest.spyOn(FigureUserInterfaceInstance, 'onFigureImageFieldFocus')
-        FigureUserInterfaceInstance.onFigureImageFieldFocus('test');
-        expect(spyFucntion).toHaveBeenCalledWith("test")
+    it('Test onFigureElementFieldFocus 1st if condition', () => {
+        document.getElementById = () => {
+            return {
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => true),
+                        add: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldFocus')
+        FigureUserInterfaceInstance.onFigureElementFieldFocus('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
         spyFucntion.mockClear();
     })
-    xit('Test onFigureImageFieldBlur', () => {
-        jest.spyOn(FigureUserInterfaceInstance, 'onFigureImageFieldBlur')
-        FigureUserInterfaceInstance.onFigureImageFieldBlur("test");
+    it('Test onFigureElementFieldFocus 1st if-elseif condition', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: 'test text',
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => false),
+                        add: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => false)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldFocus')
+        FigureUserInterfaceInstance.onFigureElementFieldFocus('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldFocus 1st if-elseif-else condition', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: '<br>',
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => false),
+                        add: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => false)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldFocus')
+        FigureUserInterfaceInstance.onFigureElementFieldFocus('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldFocus 2nd if-elseif-else condition', () => {
+        props = {
+            ...props,
+            element: {
+                ...props.element,
+                figuretype: ''
+            }
+        }
+        document.getElementById = () => {
+            return {
+                classList: {
+                    contains: jest.fn(() => false)
+                }
+            }
+        }
+        const store = mockStore(initialState);
+        const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+        let FigureUserInterfaceInstance = component.find('FigureUserInterface').instance();
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldFocus')
+        FigureUserInterfaceInstance.onFigureElementFieldFocus('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    
+    it('Test onFigureElementFieldBlur 1st if condition', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: "<br>",
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => true),
+                        remove: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldBlur')
+        FigureUserInterfaceInstance.onFigureElementFieldBlur('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldBlur 1st if-else condition', () => {
+        document.getElementById = () => {
+            return {
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldBlur')
+        FigureUserInterfaceInstance.onFigureElementFieldBlur('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldBlur 3rd if condition', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: {
+                    toLowerCase: jest.fn(() => 'video')
+                },
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldBlur')
+        FigureUserInterfaceInstance.onFigureElementFieldBlur('0-0');
+        expect(spyFucntion).toHaveBeenCalledWith('0-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldBlur 3rd if-else condition', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: {
+                    toLowerCase: jest.fn(() => 'test')
+                },
+                classList: {
+                    contains: jest.fn(() => false)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldBlur')
+        FigureUserInterfaceInstance.onFigureElementFieldBlur('0-0');
+        expect(spyFucntion).toHaveBeenCalledWith('0-0')
+        spyFucntion.mockClear();
     })
 
     describe('video element', () => {
@@ -413,6 +542,125 @@ describe('Testing FigureUserInterface component', () => {
             let instance = component.instance();
             expect(instance).toBeDefined();
         })
+        it('changeFigureLabel case else', () => {
+            document.getElementById = () => {
+                return {
+                    innerHTML: 'test'
+                }
+            }
+            let props = {
+                model: newSmartLinkObjWithData,
+                index: 1,
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                handleBlur: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'interactive',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(()=> true),
+                        path:'test path',
+                        interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                        interactivetype:'3rd-party',
+                        posterimage:{
+                            imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                            path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                         },
+                    },
+                    html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+                }
+            }
+            const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            const FigureUserInterfaceInstance = elementFigureUserInterface.find('FigureUserInterface').instance();
+            FigureUserInterfaceInstance.changeFigureLabel('Figure', 'Table');
+            let instance = elementFigureUserInterface.instance();
+            expect(instance).toBeDefined();
+          });
+          it('changeFigureLabel case if', () => {
+            document.getElementById = () => {
+                return {
+                    innerHTML: 'test'
+                }
+            }
+            let props = {
+                model: newSmartLinkObjWithData,
+                index: 1,
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                handleBlur: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'interactive',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(()=> true),
+                        path:'test path',
+                        interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                        interactivetype:'3rd-party',
+                        posterimage:{
+                            imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                            path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                         },
+                    },
+                    html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+                }
+            }
+            const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            const FigureUserInterfaceInstance = elementFigureUserInterface.find('FigureUserInterface').instance();
+            FigureUserInterfaceInstance.changeFigureLabel('Table', 'Figure');
+            let instance = elementFigureUserInterface.instance();
+            expect(instance).toBeDefined();
+          });
+
+          it('toggleHyperlinkEditable case if', () => {
+            const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            const FigureUserInterfaceInstance = elementFigureUserInterface.find('FigureUserInterface').instance();
+            FigureUserInterfaceInstance.toggleHyperlinkEditable('show', '1-0');
+            let instance = elementFigureUserInterface.instance();
+            expect(instance).toBeDefined();
+          });
+
+          it('without data element for conditional coverage', () => {
+            let props = {
+                model: newSmartLinkObjWithData,
+                index: 1,
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                handleBlur: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'video',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(()=> true),
+                        path:'test path',
+                        videoid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                        videos: [
+                            {
+                                path: 'test'
+                            }
+                        ],
+                        posterimage:{
+                            path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                         },
+                    },
+                    html:{footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+                }
+            }
+            const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            let instance = elementFigureUserInterface.instance();
+            expect(instance).toBeDefined();
+          });
     })
 
 });
