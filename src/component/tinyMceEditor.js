@@ -24,7 +24,7 @@ import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessage
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
-import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
@@ -1288,21 +1288,30 @@ export class TinyMceEditor extends Component {
                 e.preventDefault();
                 return false;
             }
-            // TAB key press handling for BlockList element
-            if (key === 9) {
+            // SHIFT + ENTER key press handling for BlockList element
+            if (key === 13 && e.shiftKey) {
                 e.preventDefault();
                 blockListData = checkBlockListElement(this.props, "TAB");
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
-                    this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null);
+                    this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null);
                 }
-            }
-            // ENTER key press handling for BlockList element
-            if (key === 13) {
+            } else if (key === 13) {
+                // ENTER key press handling for BlockList element
                 e.preventDefault();
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
                     this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null);
+                }
+            } else {
+                // TAB key press handling for BlockList element
+                if (key === 9) {
+                    e.preventDefault();
+                    blockListData = checkBlockListElement(this.props, "TAB");
+                    if (blockListData && Object.keys(blockListData).length) {
+                        const { parentData, indexToinsert } = blockListData;
+                        this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null);
+                    }
                 }
             }
         });
