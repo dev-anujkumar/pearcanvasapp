@@ -187,6 +187,9 @@ describe('Testing CommentsPanel component with props', () => {
     it('tests update assigneee function  function ', () => {
       instance.updateAssignee();
     });
+    it('tests toggle panel function ', () => {
+      instance.togglePanel();
+    });
   })
 
 

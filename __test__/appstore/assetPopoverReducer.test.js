@@ -247,6 +247,14 @@ describe('testing Asset Popover Reducer cases -->', () => {
             }
         })).toEqual(expectedState6);
     })
+    it('Test #- ASSET_ID_SNAPSHOT', () => {
+        reducer(INITIAL_STATE, {
+            type: 'ASSET_ID_SNAPSHOT',
+            payload: {
+                assetID: 1
+            }
+        })
+    })
     it('Test 7- REMOVE_ASSET_LINK', () => {
         expect(reducer(initialState7, {
             type: 'REMOVE_ASSET_LINK',
