@@ -360,11 +360,7 @@ class PopUp extends React.Component {
             )
         } else if (props.isTCMCanvasPopup) {
             return (
-<<<<<<< HEAD
                  <div ref={this.contentRef} className={`dialog-window ${props.assessmentClass}`} dangerouslySetInnerHTML={{ __html: this.handleTCMData(props.dialogText) }}></div>
-=======
-                <div ref={this.contentRef} className={`dialog-window ${props.assessmentClass}`} dangerouslySetInnerHTML={{ __html: props.dialogText }}></div>
->>>>>>> 248d2ff1691dca94265593d6a91e071676d6a108
             )
         }
         else if (props.AssessmentPopup) {
