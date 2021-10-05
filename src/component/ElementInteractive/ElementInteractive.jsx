@@ -929,7 +929,9 @@ const mapActionToProps = (dispatch) => {
         updateAssessmentVersion: updateAssessmentVersion,
         setElmPickerData: setElmPickerData,
         alfrescoPopup: alfrescoPopup,
-        saveSelectedAssetData: saveSelectedAssetData,
+        saveSelectedAssetData: (payloadObj) => {
+            dispatch(saveSelectedAssetData(payloadObj))
+        },
         updateSmartLinkDataForCompare: (oldSmartLinkData) => {
             dispatch(updateSmartLinkDataForCompare(oldSmartLinkData))
         }
