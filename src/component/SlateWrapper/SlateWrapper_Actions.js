@@ -41,7 +41,7 @@ Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData,indexOrder) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
@@ -201,7 +201,36 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     column?.groupdata?.bodymatter?.splice(index, 0, createdElementData)
                 }
             })
-        } else {
+        } 
+        /*  Local store update for block list and Text inside block list for multiple levels. */
+        else if(type==='MANIFEST_LIST' || type==='TEXT' && indexOrder){
+           const indexes = indexOrder.split('-');
+           let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter;
+           if(indexes.length===3){ // Block list on 1 level nesting
+            initialdata.splice(index, 0, createdElementData)
+           }
+           else if(indexes.length===5){ // Block list on 2 level nesting
+            initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+           }
+           else{ // Block list on 3 level nesting
+            initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+           }
+        } 
+        /*  Local store update for manifest list item inside block list for multiple levels. */
+        else if(type==='MANIFEST_LIST_ITEM' && indexOrder){
+            const indexes = indexOrder.split('-');
+            let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
+            if(indexes.length===3){ // Manifest List Item on 1 level nesting
+             initialdata.splice(index, 0, createdElementData)
+            }
+            else if(indexes.length===5){ // Manifest List Item on 2 level nesting
+             initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
+            }
+            else{ // Manifest List Item on 3 level nesting
+             initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+            }
+         } 
+        else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
