@@ -2152,6 +2152,28 @@ export const NotSectionBreakMockSlateData2 = {
     }
 }
 
+export const NotSectionBreakMockSlateData3 = {
+    "urn:pearson:manifest:4b90dfbd-8993-41f7-a474-e95aa64bd21d":{
+        "id":"urn:pearson:manifest:4b90dfbd-8993-41f7-a474-e95aa64bd21d",
+        "type":"manifest",
+        "schema":"http://schemas.pearson.com/wip-authoring/manifest/1",
+        "versionUrn":"urn:pearson:manifest:4b90dfbd-8993-41f7-a474-e95aa64bd21d",
+        "contentUrn":"urn:pearson:entity:9a928422-e337-4f6e-b3a6-7badb89a556b",
+        "contents":{
+            "bodymatter":[],
+            "title":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":"Slate2_2"
+            },
+            "schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+        },
+        "status":"wip",
+        "pageNo":0,
+        "pageCount":1,
+        "pageLimit":10
+    }
+}
+
 export const GlossaryMockState = {
     "type": "Glossary",
     "popUpStatus": false

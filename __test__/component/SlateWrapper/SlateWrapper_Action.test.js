@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import axios from 'axios';
 import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
-import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure, slateMockData, sectionBreakMockSlateData, NotSectionBreakMockSlateData, NotSectionBreakMockSlateData2 } from "../../../fixtures/slateTestingData"
+import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure, slateMockData, sectionBreakMockSlateData, NotSectionBreakMockSlateData, NotSectionBreakMockSlateData2, NotSectionBreakMockSlateData3 } from "../../../fixtures/slateTestingData"
 import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE,SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED,SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
 import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, asideDataType3 } from '../../../fixtures/elementAsideData';
@@ -1254,7 +1254,6 @@ describe('Tests Slate Wrapper Actions', () => {
     });
 
     it('createElement action - poetryData --- testing 1', async () => {
-        console.log('My Test Started 1')
         initialState3 = {
             appStore: {
                 slateLevelData: {
@@ -1301,7 +1300,6 @@ describe('Tests Slate Wrapper Actions', () => {
     });
 
     it('createElement action - poetryData --- testing 2', async () => {
-        console.log('My Test Started 2')
         initialState3 = {
             appStore: {
                 slateLevelData: {
@@ -1495,6 +1493,25 @@ describe('Tests Slate Wrapper Actions', () => {
         axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
         await store3.dispatch(actions.createElement('LO', 0, {manifestUrn: config.projectUrn}, asideDataMock, 0, "loref"));
     });
+
+    it('createElement action - ELSE', async () => {
+        let initialState0 = {
+            appStore: {
+              slateLevelData: NotSectionBreakMockSlateData3,
+              popupSlateData: {
+                type: ""
+              },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        let store0 = mockStore(() => initialState0);
+        config.slateManifestURN = "urn:pearson:manifest:4b90dfbd-8993-41f7-a474-e95aa64bd21d"
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({"data":{"id":"urn:pearson:work:f3822f12-2b78-4b48-a498-d60ab264e096","type":"element-authoredtext","status":"wip"},"status":200}));
+        await store0.dispatch(actions.createElement('TEXT', 0));
+        const { type } = store0.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    })
 
     it('pasteElement  action - with poetryData', async () => {
         initialState3 = {
