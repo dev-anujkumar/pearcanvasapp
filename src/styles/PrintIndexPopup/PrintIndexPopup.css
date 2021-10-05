@@ -7,3 +7,23 @@
 .indexCloseIcon{
     float: left;
 }
+
+.printIndx-cancel-button{
+    padding: 5px 10px;
+    background: #fff;
+    color: #717272;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    border: 1px solid #d9d9d9;
+  }
+  .printIndex-save-button{
+    padding: 5px 15px;
+    background: #007ea3;
+    color: #fff;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+}
