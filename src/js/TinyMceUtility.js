@@ -140,7 +140,7 @@ export const checkBlockListElement = (data, keypressed) => {
             const indexes = index.split("-");
             if (indexes && indexes.length && 'type' in contents.bodymatter[indexes[0]] && contents.bodymatter[indexes[0]].type === MANIFEST_LIST) {
                 return {
-                    indexToinsert: Number(indexes[indexes.length - 1]) + 1,
+                    indexToinsert: keypressed === 'SHIFT+TAB' ? Number(indexes[indexes.length - 4]) + 1 : Number(indexes[indexes.length - 1]) + 1,
                     parentData: getBLParentContainer(contents.bodymatter[indexes[0]], 1, indexes.length - BLOCK_LIST_ELEMENT_EVENT_MAPPING[keypressed], indexes)
                 }
             }

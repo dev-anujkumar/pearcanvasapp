@@ -169,5 +169,6 @@ export const MANIFEST_LIST = 'manifestlist';
 export const MANIFEST_LIST_ITEM = 'manifestlistitem';
 export const BLOCK_LIST_ELEMENT_EVENT_MAPPING = {
     "TAB": 2,
-    "ENTER": 3
+    "ENTER": 3,
+    "SHIFT+TAB": 5
 }

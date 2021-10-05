@@ -1302,6 +1302,14 @@ export class TinyMceEditor extends Component {
                     const { parentData, indexToinsert } = blockListData;
                     this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,this.props.index);
                 }
+            } else if (key === 9 && e.shiftKey) {
+                // SHIFT + TAB key press handling for BlockList element
+                e.preventDefault();
+                blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
+                if (blockListData && Object.keys(blockListData).length) {
+                    const { parentData, indexToinsert } = blockListData;
+                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, this.props.index);
+                }
             } else {
                 // TAB key press handling for BlockList element
                 if (key === 9) {
