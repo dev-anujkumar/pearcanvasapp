@@ -203,7 +203,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             })
         } 
         /*  Local store update for block list and Text inside block list for multiple levels. */
-        else if(type==='MANIFEST_LIST' || type==='TEXT' && indexOrder){
+        else if((type==='MANIFEST_LIST' || type==='TEXT') && indexOrder!==null){
            const indexes = indexOrder.split('-');
            let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter;
            if(indexes.length===3){ // Block list on 1 level nesting
@@ -217,7 +217,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
            }
         } 
         /*  Local store update for manifest list item inside block list for multiple levels. */
-        else if(type==='MANIFEST_LIST_ITEM' && indexOrder){
+        else if(type==='MANIFEST_LIST_ITEM' && indexOrder!==null){
             const indexes = indexOrder.split('-');
             let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
             if(indexes.length===3){ // Manifest List Item on 1 level nesting
