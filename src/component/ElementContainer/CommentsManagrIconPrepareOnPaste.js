@@ -12,6 +12,7 @@ function showCommentsManagerAsideIcon(element, elmUrn) {
         elmUrn.push(element.id)
         element?.elementdata?.bodymatter?.map((item) => {
             if(item?.type === SHOW_HIDE) {
+                elmUrn.push(item.id)
                 showCommentsManagerIconInSH(item, elmUrn);
             } else
             if (item?.type === "manifest") {
@@ -40,7 +41,12 @@ function showCommentsManagerMultiColIcon(element, elmUrn) {
             grpItem?.groupdata?.bodymatter?.map(item => {
                 if(item?.type === ELEMENT_ASIDE) { /* Show Icon in 2C:Aside:Element */
                     showCommentsManagerAsideIcon(item, elmUrn);
-                } else {
+                }
+                else if(item?.type === SHOW_HIDE) { /* Show Icon in 2C:Aside:Element */
+                    elmUrn.push(item.id)
+                    showCommentsManagerIconInSH(item, elmUrn);
+                }
+                 else {
                     elmUrn.push(item.id); /* Show Icon in 2C:Element */
                 }
             })
