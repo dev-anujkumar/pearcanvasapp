@@ -124,13 +124,16 @@
     min-height: 64px;
 }
 .bl .cypress-editable{
-    padding: 0!important;
-    min-height: 0 !important;
-    overflow-x: unset !important;
-    overflow-y: unset !important;
+    min-height: 30px !important;
+}
+.bl .cypress-editable p {
+    margin-top: -10px !important;
 }
 .manifest-list-li{
-    margin-top: '10px';
+    margin-top: 10px !important;
+}
+.bl .cypress-editable.place-holder::before {
+    margin-top: -10px !important;
 }
 /* .element-container{
     padding: 1px 8px !important; 
