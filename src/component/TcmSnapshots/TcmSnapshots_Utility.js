@@ -1082,7 +1082,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
 
     switch (element.figuretype) {
         case "video":
-            snapshotData["metadata"] = element.figuredata.videoid.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.figuredata?.videoid?.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
             break;
         case "audio":
             snapshotData["metadata"] = element.figuredata.audioid.trim().length ? `<p>${element.figuredata.audioid}</p>` : "<p><br></p>"

@@ -175,7 +175,7 @@ export function ElementSaprator(props) {
     }
     /* @hideSplitSlateIcon@ hide split slate icon in following list of elements */
     const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
-    let hideElementSeperator = isSubscriberRole(props.projectSubscriptionDetails.projectSharingRole,props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) || props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked && isOwnerRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed) ? 'hideToolbar' : ''
+    let hideElementSeperator = isSubscriberRole(props?.projectSubscriptionDetails?.projectSharingRole,props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? 'hideToolbar' : ''
     return (
         <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>

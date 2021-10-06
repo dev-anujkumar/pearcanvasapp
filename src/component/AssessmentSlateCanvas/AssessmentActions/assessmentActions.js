@@ -31,7 +31,8 @@ const {
     assessmentVersionUpdateHandler,
     interactiveMetadataHandler,
     interactiveVersionHandler,
-    interactiveVersionUpdateHandler
+    interactiveVersionUpdateHandler,
+    latestAssessmentItemHandler
 } = assessmentApiHandlers;
 
 /**
@@ -130,6 +131,28 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
         }
     }).catch((error) => {
         assessmentErrorHandler(`${type}: Assessment Versions API Error:${error}`);
+    })
+}
+/**
+ * This action creator is used to fetch list of all assessment-items wrt an assessment
+ */
+export const fetchAssessmentItems = (itemEntityUrn, apiParams) => dispatch => {
+    const { assessmentData: { activeWorkUrn } } = apiParams;
+    let url = `${config.REACT_APP_API_URL}v1/slate/assessment/${activeWorkUrn}/items`;
+    return axios.get(url, {
+        headers: {
+            PearsonSSOSession: config.ssoToken
+        }
+    }).then(async (res) => {
+        if (res?.data?.items?.length > 0) {
+            const latestItem = res.data.items.find(item => item.entityUrn === itemEntityUrn)
+            await latestAssessmentItemHandler(latestItem, apiParams, dispatch)
+        } else {
+            latestAssessmentItemHandler({}, apiParams, dispatch)
+        }
+    }).catch((error) => {
+        latestAssessmentItemHandler({}, apiParams, dispatch)
+        console.error('Unable to get assessment items list>>>', error)
     })
 }
 /**

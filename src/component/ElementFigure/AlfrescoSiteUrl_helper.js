@@ -3,8 +3,10 @@ import axios from 'axios';
 
 export const handleAlfrescoSiteUrl = (elementId, data) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/platformMetadata/alfresco`
+    let repositoryFolder = data?.repositoryFolder?.split('/')?.[0] || data?.repositoryFolder
     let req = {
         ...data,
+        repositoryFolder:repositoryFolder,
         currentAsset:{}
     };
 

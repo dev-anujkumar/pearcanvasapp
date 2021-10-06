@@ -8,15 +8,16 @@ import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
-import { sendDataToIframe, defaultMathImagePath } from '../../../constants/utility.js';
+import { sendDataToIframe, defaultMathImagePath, isOwnerRole} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE } from '../../../constants/IFrameMessageTypes';
+import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -126,6 +127,12 @@ function CommunicationChannel(WrappedComponent) {
                     config.citeUrn = message.citeUrn;
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
+                    if (message?.alfresco?.repositoryFolder) {
+                        let alfrescoRepository = message.alfresco.repositoryFolder?.split('/')?.[0] || message.alfresco.repositoryFolder
+                        config.alfrescoMetaData.alfresco.repositoryFolder = alfrescoRepository
+                        if (message?.alfresco?.siteId) config.alfrescoMetaData.alfresco.siteId = alfrescoRepository
+                        fetchAlfrescoSiteDropdownList('projectAlfrescoSettings')
+                    }
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
                     this.props.fetchLearnosityContent()
@@ -293,6 +300,14 @@ function CommunicationChannel(WrappedComponent) {
                     this.showCanvasBlocker(false);
                     hideBlocker()
                     break;
+                case IS_SLATE_SUBSCRIBED:
+                    if (message && Object.keys(message).length && 'isSubscribed' in message) {
+                        const projectSubscriptionDetails = {
+                            isSubscribed: message.isSubscribed,
+                            owner: {}
+                        }
+                        this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
+                    }
             }
         }
 
@@ -668,7 +683,19 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
 
+        /**
+         * function to set owner project slate popup flag as true
+         */
+        resetOwnerSlatePopupFlag = () => {
+            const { projectSubscriptionDetails } = this.props;
+            const isOwnerKeyExist = localStorage.getItem('hasOwnerEdit');
+            if (isOwnerRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isOwnerKeyExist) {
+                this.props.isOwnersSubscribedSlate(true);
+            }
+        }
+
         handleRefreshSlate = () => {
+            const { projectSubscriptionDetails } = this.props;
             localStorage.removeItem('newElement');
             config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
@@ -676,6 +703,12 @@ function CommunicationChannel(WrappedComponent) {
             config.tempSlateEntityURN = null
             config.isPopupSlate = false
             let id = config.slateManifestURN;
+            // reset owner slate popup flag on slate refresh
+            this.resetOwnerSlatePopupFlag();
+            // get slate subscription details on slate refresh from canvas SPA
+            if (projectSubscriptionDetails?.projectSharingRole === 'OWNER') {
+                sendDataToIframe({ 'type': CHECK_SUBSCRIBED_SLATE_STATUS, 'message': { slateManifestURN: config.slateManifestURN } });
+            }
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, (response) => {
                 config.page = 0;
                 config.scrolling = true;
@@ -727,6 +760,8 @@ function CommunicationChannel(WrappedComponent) {
                 isSubscribed: false,
                 owner: {}
             }
+            // reset owner slate popup flag on slate change
+            this.resetOwnerSlatePopupFlag();
             if (message['category'] === 'titleChange') {
                 currentSlateObject = {
                     title: message.title,
