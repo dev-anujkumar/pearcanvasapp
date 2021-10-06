@@ -1293,14 +1293,14 @@ export class TinyMceEditor extends Component {
                 blockListData = checkBlockListElement(this.props, "TAB");
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
-                    this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,this.props.index);
+                    this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
                 }
             } else if (key === 13) {
                 // ENTER key press handling for BlockList element
                 e.preventDefault();
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
-                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,this.props.index);
+                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"ENTER"});
                 }
             } else if (key === 9 && e.shiftKey) {
                 // SHIFT + TAB key press handling for BlockList element
@@ -1308,7 +1308,7 @@ export class TinyMceEditor extends Component {
                 blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
-                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, this.props.index);
+                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, {indexOrder:this.props.index,eventType:"SHIFT+TAB"});
                 }
             } else {
                 // TAB key press handling for BlockList element
@@ -1317,7 +1317,7 @@ export class TinyMceEditor extends Component {
                     blockListData = checkBlockListElement(this.props, "TAB");
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
-                        this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,this.props.index);
+                        this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
                     }
                 }
             }
