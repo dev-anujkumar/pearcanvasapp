@@ -39,6 +39,7 @@ import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Tool
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
+import {printIndexPopup} from '../PrintIndexPopup/PrintIndex_Action.js'
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -205,12 +206,12 @@ export class CanvasWrapper extends Component {
                             <RootContext.Consumer>
                                 {
                                     () => {
-                                        if (this.props.glossaryFootnoteValue.popUpStatus && !this.props.printIndexValue.popUpStatus) {
+                                        if (this.props.glossaryFootnoteValue.popUpStatus && !this.props.markedIndexValue.popUpStatus) {
                                             return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData} />)
                                         }
                                         
-                                        if(this.props.printIndexValue.popUpStatus){
-                                            return <PrintIndexPopup />
+                                        if(this.props.markedIndexValue.popUpStatus){
+                                            return <PrintIndexPopup showPrintIndexPopup = {this.props.printIndexPopup} />
                                         }
                                         else {
                                             return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
@@ -249,7 +250,8 @@ const mapStateToProps = state => {
         alfrescoEditor: state.alfrescoReducer.editor,
         imageArgs: state.alfrescoReducer.imageArgs,
         projectSubscriptionDetails:state?.projectInfo,
-        printIndexValue: state.printIndexValue
+        markedIndexCurrentValue: state.printIndexReducer.markedIndexCurrentValue,
+        markedIndexValue: state.printIndexReducer.markedIndexValue
     };
 };
 
@@ -307,6 +309,7 @@ export default connect(
         setProjectSharingRole,
         setProjectSubscriptionDetails,
         fetchFigureDropdownOptions,
-        isOwnersSubscribedSlate
+        isOwnersSubscribedSlate,
+        printIndexPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

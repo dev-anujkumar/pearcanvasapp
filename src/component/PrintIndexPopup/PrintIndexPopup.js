@@ -6,23 +6,23 @@ import { Divider,
          styled
          } from '@material-ui/core';
 import {Close, ErrorOutline} from '@material-ui/icons'
-import { useSelector, useDispatch} from 'react-redux';
-import { printIndexPopup } from './PrintIndex_Action';
+// import { useSelector, useDispatch} from 'react-redux';
+// import { printIndexPopup } from './PrintIndex_Action';
 import '../../styles/PrintIndexPopup/PrintIndexPopup.css';
 import TextField from '@material-ui/core/TextField';
 // import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 
 
-export default function PrintIndexPopup(){
+export default function PrintIndexPopup(props){
   const [indexEntry, setIndexEntry] = useState('');
   const [subEntry, setSubEntry] = useState('');
 
-  const state = useSelector(state => state.printIndexValue);
-  const dispatch = useDispatch();
+  // const state = useSelector(state => state.printIndexValue);
+  // const dispatch = useDispatch();
 
-  const handleDrawerClose = value => {
-    dispatch(printIndexPopup(value));
-  };
+  // const handleDrawerClose = value => {
+  //   props.showPrintIndexPopup(value);
+  // };
 
   const changeIndexEntry = e => {
     setIndexEntry(e.target.value);
@@ -36,7 +36,7 @@ export default function PrintIndexPopup(){
       <div className='index-container'>
         <div className="index-setting">
           <span className="printIndex-label">Index Settings</span>
-          <span><Close onClick={() => handleDrawerClose(false)} /></span>
+          <span><Close onClick={() => props.showPrintIndexPopup(false)} /></span>
         </div>
         <div className="index-body">
           <div className="index-text">
@@ -70,7 +70,7 @@ export default function PrintIndexPopup(){
             />
           </div>
           <div className="button-group">
-            <span className="printIndx-cancel-button" onClick={() => { }}>Cancel</span>
+            <span className="printIndx-cancel-button" onClick={() => props.showPrintIndexPopup(false,'')}>Cancel</span>
             <span className="printIndex-save-button" disabled={false} onClick={() => { }}>Save</span>
           </div>
         </div>

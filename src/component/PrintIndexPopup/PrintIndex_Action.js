@@ -24,16 +24,16 @@ import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY
 import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
-export const printIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
+export const printIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, indexEntryText, typeWithPopup, poetryField) => async (dispatch) => {
 
-    let glossaaryFootnoteValue = {
+    let markedIndexValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
         elementWorkId,
         elementType,
         glossaryfootnoteid,
         elementSubType,
-        glossaryTermText,
+        indexEntryText,
         typeWithPopup : typeWithPopup ? typeWithPopup : undefined,
         poetryField : poetryField ? poetryField : undefined
     }
@@ -237,8 +237,8 @@ export const printIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, e
     return await dispatch({
         type: OPEN_PRINT_INDEX,
         payload: {
-            glossaaryFootnoteValue: glossaaryFootnoteValue,
-            glossaryFootNoteCurrentValue: {
+            markedIndexValue: markedIndexValue,
+            markedIndexCurrentValue: {
                 footnoteContentText,
                 glossaryContentText,
             },

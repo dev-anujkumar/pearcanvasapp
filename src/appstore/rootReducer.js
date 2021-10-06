@@ -41,5 +41,5 @@ export default combineReducers({
     selectionReducer,
     alfrescoReducer,
     projectInfo,
-    printIndexValue: printIndexReducer   
+    printIndexReducer   
 });
