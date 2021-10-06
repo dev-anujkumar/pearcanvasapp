@@ -1312,7 +1312,7 @@ export class TinyMceEditor extends Component {
                 }
             } else {
                 // TAB key press handling for BlockList element
-                if (key === 9) {
+                if (key === 9 && typeof this.props.index === 'string' && this.props.index.includes('-') && this.props.index.split("-").length<9) {
                     e.preventDefault();
                     blockListData = checkBlockListElement(this.props, "TAB");
                     if (blockListData && Object.keys(blockListData).length) {
