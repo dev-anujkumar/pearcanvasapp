@@ -1293,6 +1293,7 @@ export class TinyMceEditor extends Component {
                 blockListData = checkBlockListElement(this.props, "TAB");
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
                     this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
                 }
             } else if (key === 13) {
@@ -1300,6 +1301,7 @@ export class TinyMceEditor extends Component {
                 e.preventDefault();
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"ENTER"});
                 }
             } else if (key === 9 && e.shiftKey) {
@@ -1308,6 +1310,7 @@ export class TinyMceEditor extends Component {
                 blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, {indexOrder:this.props.index,eventType:"SHIFT+TAB"});
                 }
             } else {
@@ -1317,6 +1320,7 @@ export class TinyMceEditor extends Component {
                     blockListData = checkBlockListElement(this.props, "TAB");
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                         this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
                     }
                 }
