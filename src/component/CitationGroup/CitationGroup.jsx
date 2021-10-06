@@ -54,12 +54,14 @@ export class CitationGroup extends Component {
      * @param {string} parentIndex - Index of parent container element
      */
     renderElement = (_elements, parentUrn, parentIndex) => {
+        const { id, type, contentUrn } = this.context?.parentElement || {};
         let asideData = {
             type: "citations",
             id: this.context.element.id,
             contentUrn: this.context.element.contentUrn,
             element : this.context.element
         };
+        asideData = (type === "showhide") ? {...asideData, parent: { id, type, contentUrn, showHideType: this.context?.showHideType }} : asideData;
         try {
             if (_elements !== null && _elements !== undefined) {
                 if (_elements.length === 0) {

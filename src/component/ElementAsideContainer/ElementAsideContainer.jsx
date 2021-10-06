@@ -361,6 +361,8 @@ class ElementAsideContainer extends Component {
         const multiColumnType = groupeddata?.bodymatter?.length ? `${groupeddata?.bodymatter?.length}C` : undefined;
         /* Adding parent id and type to update redux store while creating new element inside 2c->Aside->New */
         asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : asideData;
+        /* Adding parent id, type and contentUrn update redux store while creating new element inside S/H->Aside->New */
+        asideData = (type === "showhide") ? {...asideData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType }} : asideData;
         try {
             if (_elements !== undefined) {
                 if (_elements.length == 0) {

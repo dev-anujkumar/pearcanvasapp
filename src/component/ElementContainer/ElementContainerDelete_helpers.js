@@ -135,12 +135,10 @@ export const deleteFromStore = (params) => {
             /* delete the element inside showhide on cut from sh */
             sh_Object?.interactivedata[sectionType]?.splice(cCIndex, 1);
         }
-    } else
-    if (parentUrn && parentUrn.elementType == "group") {
+    } else if (parentUrn && parentUrn.elementType == "group") {
         const elIndex = index.toString().split('-') 
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
     } else {
-        
         bodymatter.forEach((element, key) => {
             if (element.id === elmId) {
                 bodymatter.splice(key, 1);
@@ -151,6 +149,28 @@ export const deleteFromStore = (params) => {
                             element.elementdata.bodymatter.splice(indexInner, 1);
                         }
                     })
+                    /* Delete element inside S/H:AS:ELEMENTS */
+                } else if (asideData?.parent?.type === 'showhide' && asideData?.type === 'element-aside') {
+                    if (element.id === asideData?.parent?.id) {
+                        element.interactivedata.show && element.interactivedata.show.map((elem) => {
+                            if (elem.id === asideData?.id) {
+                                elem.elementdata.bodymatter.forEach((innerElem, indexInner) => {
+                                    if (innerElem.id === elmId) {
+                                        elem.elementdata.bodymatter.splice(indexInner, 1);
+                                    }
+                                })
+                            }
+                        })
+                        element.interactivedata.hide && element.interactivedata.show.map((elem) => {
+                            if (elem.id === asideData?.id) {
+                                elem.elementdata.bodymatter.forEach((innerElem, indexInner) => {
+                                    if (innerElem.id === elmId) {
+                                        elem.elementdata.bodymatter.splice(indexInner, 1);
+                                    }
+                                })
+                            }
+                        })
+                    }
                 } else {
                     /* Delete inside 2C:WE/AS:ELEMETNS */
                     element?.groupeddata?.bodymatter?.map(item => {

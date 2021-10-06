@@ -1392,6 +1392,7 @@ class ElementContainer extends Component {
                         handleAudioPopupLocation={this.handleAudioPopupLocation}
                         parentElement={this.props.parentElement}
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
+                        showHideType = {this.props.showHideType}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1479,6 +1480,8 @@ class ElementContainer extends Component {
                         onClickCapture: this.props.onClickCapture,
                         elementSeparatorProps: elementSepratorProps,
                         setActiveElement: this.props.setActiveElement,
+                        parentElement: this.props.parentElement,
+                        showHideType: this.props.showHideType,
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
@@ -1494,6 +1497,7 @@ class ElementContainer extends Component {
                         permissions={permissions}
                         index={index}
                         element={this.props.parentElement}
+                        showHideType={this.props.showHideType}
                         model={element.html}
                         slateLockInfo={slateLockInfo}
                         updatePageNumber={this.props.updatePageNumber}

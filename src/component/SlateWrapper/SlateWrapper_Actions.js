@@ -146,6 +146,10 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                             ele.contents.bodymatter.splice(index, 0, createdElementData)
                         }
                     })
+                /* To update redux store while creating new element inside S/H->Aside->New */
+                } else if (asideData?.parent?.type === "showhide" && item.id == asideData?.parent?.id) {
+                    appendElementInsideShowhide(item, 'show', asideData, 'elementdata', index, createdElementData);
+                    appendElementInsideShowhide(item, 'hide', asideData, 'elementdata', index, createdElementData);
                 /* To update redux store while creating new element inside 2C->Aside->New */
                 } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
                     item?.groupeddata?.bodymatter?.map((ele) => {
@@ -166,7 +170,16 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }else if (popupSlateData && popupSlateData.type == "popup"){
             newPopupSlateData.popupdata.bodymatter.splice(index, 0, createdElementData);
         }
-        else if(asideData && asideData.type == 'citations'){
+        /* Citation element inside S/H */
+        else if (asideData && asideData?.type == 'citations' && asideData?.parent?.type === "showhide") {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == asideData?.parent?.id) {
+                    appendElementInsideShowhide(item, 'show', asideData, 'contents', index, createdElementData);
+                    appendElementInsideShowhide(item, 'hide', asideData, 'contents', index, createdElementData);
+                }
+            })
+            /* Citation element inside Slate */
+        } else if(asideData && asideData.type == 'citations' && asideData?.parent?.type !== "showhide") {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.contents.bodymatter.splice(index, 0, createdElementData)
@@ -242,6 +255,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         console.log("create Api fail", error);
         if (cb) {
             cb();
+        }
+    })
+}
+
+export const appendElementInsideShowhide = (shObj, key, asideData, innerkey, index, createdElementData) => {
+    shObj.interactivedata[key] && shObj.interactivedata[key].map((element) => {
+        if (element.id === asideData.id) {
+            element[innerkey].bodymatter.splice(index, 0, createdElementData);
         }
     })
 }
