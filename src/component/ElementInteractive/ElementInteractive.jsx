@@ -29,6 +29,7 @@ import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } f
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action';
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper';
+import { updateSmartLinkDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -264,7 +265,8 @@ class Interactive extends React.Component {
         if (hasReviewerRole()) {
             return true
         }
-        
+
+        this.props.updateSmartLinkDataForCompare(element.figuredata);
         let setFigureData = {
             "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
             "interactiveid": "",
@@ -303,7 +305,7 @@ class Interactive extends React.Component {
 
         let figureHtmlData = getLabelNumberTitleHTML(element);
         if (SMARTLINK_CONTEXTS.includes(context)) {
-            return <FigureUserInterface deleteElementAsset={this.deleteElementAsset} alfrescoSite={this.state.alfrescoSite} dataFromAlfresco={(alfrescoAssetData) => this.dataFromAlfresco(alfrescoAssetData)} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+            return <FigureUserInterface deleteElementAsset={this.deleteElementAsset} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
         }
         else if (context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
             jsx = <div className={divImage} resource="">
@@ -385,6 +387,7 @@ class Interactive extends React.Component {
      */
     handleClickElement = (event) => {
         event.stopPropagation();
+        this.props.handleFocus();
     }
 
     /**
@@ -746,7 +749,9 @@ class Interactive extends React.Component {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
                     const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder
-                    let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
+                    const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
+                    const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                    let messageObj = { citeName: citeName, 
                         citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
                         elementId: this.props.elementId,
                         currentAsset
@@ -913,17 +918,22 @@ Interactive.propTypes = {
     /** itemId coming from c2module */
     itemId: PropTypes.string
 }
-const mapActionToProps = {
-    setCurrentCiteTdx: setCurrentCiteTdx,
-    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-    assessmentSorting:assessmentSorting,
-    setNewItemFromElm: setNewItemFromElm,
-    fetchAssessmentMetadata: fetchAssessmentMetadata,
-    fetchAssessmentVersions: fetchAssessmentVersions,
-    updateAssessmentVersion: updateAssessmentVersion,
-    setElmPickerData: setElmPickerData,
-    alfrescoPopup: alfrescoPopup,
-    saveSelectedAssetData: saveSelectedAssetData
+const mapActionToProps = (dispatch) => {
+    return {
+        setCurrentCiteTdx: setCurrentCiteTdx,
+        setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
+        assessmentSorting: assessmentSorting,
+        setNewItemFromElm: setNewItemFromElm,
+        fetchAssessmentMetadata: fetchAssessmentMetadata,
+        fetchAssessmentVersions: fetchAssessmentVersions,
+        updateAssessmentVersion: updateAssessmentVersion,
+        setElmPickerData: setElmPickerData,
+        alfrescoPopup: alfrescoPopup,
+        saveSelectedAssetData: saveSelectedAssetData,
+        updateSmartLinkDataForCompare: (oldSmartLinkData) => {
+            dispatch(updateSmartLinkDataForCompare(oldSmartLinkData))
+        }
+    }
 }
 
 const mapStateToProps = (state) => {

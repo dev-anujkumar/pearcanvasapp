@@ -19,9 +19,10 @@ export const handleC2MediaClick = (props) => {
     if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
             if (props.permissions && props.permissions.includes('add_multimedia_via_alfresco')) {
-
-                const alfrescoCiteName = alfrescoPath?.alfresco.repositoryFolder ? alfrescoPath.alfresco.repositoryFolder : alfrescoPath.alfresco.name
-                let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoCiteName  , 
+                const alfrescoSiteName = alfrescoPath?.alfresco.repositoryFolder ? alfrescoPath.alfresco.repositoryFolder : alfrescoPath.alfresco.name
+                const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
+                const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                let messageObj = { citeName: citeName, 
                     citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
                     elementId: props.element.id }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })

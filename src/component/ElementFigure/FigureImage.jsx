@@ -222,8 +222,10 @@ class FigureImage extends Component {
                     const locationSiteDataNodeRef = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData?.guid
                     nodeRefs = locationSiteDataNodeRef ? locationSiteDataNodeRef : nodeRefs;
                     const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
+                    const alfrescoSite = locationSiteDataTitle ? locationSiteDataTitle : alfrescoSiteName
+                    const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     let messageObj = {
-                        citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoSiteName,
+                        citeName: citeName,
                         citeNodeRef: nodeRefs,
                         elementId: this.props.elementId,
                         currentAsset

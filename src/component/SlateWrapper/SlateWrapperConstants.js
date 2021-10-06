@@ -86,6 +86,7 @@ export const checkTCM = element => {
         case "workedexample" : return WORKED_EXAMPLE;
         case "popup" : return POP_UP;
         case "discussion" : return ELEMENT_DISCUSSION;
+        case "element-dialogue" : return ELEMENT_DIALOGUE;
         default: return TEXT;
     }
 }
