@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Divider,
          Box,
          Drawer,
-         TextField,
+        //  TextField,
          styled
          } from '@material-ui/core';
 import {Close, ErrorOutline} from '@material-ui/icons'
 import { useSelector, useDispatch} from 'react-redux';
 import { printIndexPopup } from './PrintIndex_Action';
 import '../../styles/PrintIndexPopup/PrintIndexPopup.css';
+import TextField from '@material-ui/core/TextField';
 // import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 
 
@@ -44,15 +45,16 @@ export default function PrintIndexPopup(){
           </div>
           <div>
             <TextField
-              id="filled-size-normal"
+              // id="filled-size-normal"
               label="Index Entry"
               defaultValue="1234"
               variant="filled"
-              margin="normal"
+              // margin="normal"
               // size="normal"
               value={indexEntry}
               onChange={changeIndexEntry}
-              fullWidth multiline={true}
+              fullWidth 
+              multiline={true}
               autoComplete="off"
             />
             <TextField
@@ -64,9 +66,10 @@ export default function PrintIndexPopup(){
               size="normal"
               value={subEntry}
               onChange={changeSubEntry}
+              fullWidth
             />
           </div>
-          <div>
+          <div className="button-group">
             <span className="printIndx-cancel-button" onClick={() => { }}>Cancel</span>
             <span className="printIndex-save-button" disabled={false} onClick={() => { }}>Save</span>
           </div>
