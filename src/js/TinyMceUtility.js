@@ -134,17 +134,21 @@ const getBLParentContainer = (bodymatter, start, end, indexes) => {
  */
 export const checkBlockListElement = (data, keypressed) => {
     const { slateLevelData, index } = data;
+    let elementData = {};
     if (slateLevelData && Object.values(slateLevelData).length && index && keypressed) {
         const { contents } = Object.values(slateLevelData)[0];
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
             const indexes = index.split("-");
             if (indexes && indexes.length && 'type' in contents.bodymatter[indexes[0]] && contents.bodymatter[indexes[0]].type === MANIFEST_LIST) {
-                return {
-                    indexToinsert: keypressed === 'SHIFT+TAB' ? Number(indexes[indexes.length - 4]) + 1 : Number(indexes[indexes.length - 1]) + 1,
+                elementData = {
+                    indexToinsert: Number(indexes[indexes.length - 1]) + 1,
                     parentData: getBLParentContainer(contents.bodymatter[indexes[0]], 1, indexes.length - BLOCK_LIST_ELEMENT_EVENT_MAPPING[keypressed], indexes)
                 }
+                if(keypressed === 'SHIFT+TAB') elementData.indexToinsert = Number(indexes[indexes.length - 4]) + 1
+                if(keypressed === 'ENTER') elementData.indexToinsert = Number(indexes[indexes.length - 2]) + 1
+                return elementData;
             }
         }
     }
-    return {};
+    return elementData;
 }
