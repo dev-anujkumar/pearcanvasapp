@@ -7,9 +7,10 @@ import {
     DEFAULT_IMAGE_SOURCE
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
+//import { showTocBlocker, hideToc } from '../../js/toggleLoader';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
-import { hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
@@ -18,6 +19,7 @@ import { updateFigureImageDataForCompare } from '../ElementContainer/ElementCont
 import { connect } from 'react-redux';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import { labelHtmlData } from '../../constants/Element_Constants';
+import PopUp from '../PopUp';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -32,8 +34,9 @@ class FigureImage extends Component {
             alfrescoSite: '',
             alfrescoSiteData: {},
             figureLabelValue: 'No Label',
-            figureLabelData: this.props.figureDropdownData?.image,
-            figureDropDown: false
+            figureLabelData: this.props.figureDropdownData,
+            figureDropDown: false,
+            deleteassetPopup: false
         }
         this.wrapperRef = React.createRef();
     }
@@ -105,6 +108,54 @@ class FigureImage extends Component {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
         })
+    }
+    
+    /*** @description This function is used to handle Canvas Blocker on Update */
+    showCanvasBlocker = (value) => {
+        if (value == true) {
+            showTocBlocker();
+            hideToc();
+        } else {
+            hideTocBlocker(value);
+        }
+        disableHeader(value);
+        this.props.showBlocker(value);
+    }
+    /**
+     * @description This function is used to toggle delete popup
+     * @param {*} toggleValue Boolean value
+     * @param {*} event event object
+     */
+     toggledeletePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            deleteassetPopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue);
+    }
+
+    /*** @description This function is used to render delete Popup */
+    showdeleteassetPopup = () => {
+        if (this.state.deleteassetPopup) {
+            this.showCanvasBlocker(true)
+            return (
+                <PopUp
+                    dialogText="Are you sure you want to delete?"
+                    active={true}
+                    togglePopup={this.toggledeletePopup}
+                    isdeleteassetPopup={true}
+                    deleteasset={this.deleteFigureResource}
+                    isInputDisabled={true}
+                    isdeleteassetClass="elm-update"
+                    
+                />
+            )
+        }
+        else {
+            return null
+        }
     }
 
 
@@ -371,6 +422,7 @@ class FigureImage extends Component {
 
         return (
             <div className="figureElement">
+                {this.state.deleteassetPopup && this.showdeleteassetPopup()}
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
@@ -441,7 +493,7 @@ class FigureImage extends Component {
                                                 <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{this.props.model.figuredata && this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
                                             </div>
                                             <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
-                                            <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                                            <div className='deletefigurebutton' onClick={() => this.toggledeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                                         </div> : ''
                                     }
                                 </div>
@@ -460,6 +512,7 @@ class FigureImage extends Component {
                             </figcredit>
                         </figure>
                     </div>
+                    
                 </div>
             </div>
         );
