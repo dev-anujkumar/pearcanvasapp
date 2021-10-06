@@ -15,7 +15,7 @@ import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon, indexEntry
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
@@ -100,6 +100,8 @@ export class TinyMceEditor extends Component {
                 this.addFootnoteIcon(editor);
                 this.setGlossaryIcon(editor);
                 this.addGlossaryIcon(editor);
+                this.setIndexEntryIcon(editor);
+                this.addIndexEntryIcon(editor);
                 this.setInlineIcon(editor);
                 this.addInlineCodeIcon(editor);
                 this.editorClick(editor);
@@ -1417,6 +1419,23 @@ export class TinyMceEditor extends Component {
         });
     }
 
+       /**
+     * Adds IndexEntry button to the toolbar
+     * @param {*} editor  editor instance
+     */
+        addIndexEntryIcon = (editor) => {
+            editor.ui.registry.addButton('IndexEntry', {
+                id: 'buttonId',
+                classes: 'buttonClas',
+                icon: "indexEntry",
+                tooltip: "Open Print-Index",
+                onAction: () => this.addMarkedIndex(editor),
+                onSetup: (btnRef) => {
+                    this.glossaryBtnInstance = btnRef;
+                }
+            });
+        }
+
     /**
      * Adds footnote button to the toolbar
      * @param {*} editor  editor instance
@@ -1756,6 +1775,17 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addIcon(
             "Glossary",
             Glossary
+        );
+    }
+
+     /**
+     * Add IndexEntry Icon Icon icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+      setIndexEntryIcon = editor => {
+        editor.ui.registry.addIcon(
+            "IndexEntry",
+            indexEntry
         );
     }
 
@@ -2480,6 +2510,37 @@ export class TinyMceEditor extends Component {
                 spanHandlers.splitOnTag(codeTag.parentNode, dfn);
             }
         }
+    }
+
+    /**
+     * Called when glossary button is clicked. Responsible for adding glossary
+     * @param {*} editor  editor instance 
+     */
+     addMarkedIndex = (editor) => {
+        let elementId = this.props.elementId;
+        let sText = editor.selection.getContent();
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(sText, 'text/html');
+        let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+        let selectedText = window.getSelection().toString()
+        selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        this.glossaryTermText = selectedText;
+        if (selectedText.trim() === "") {
+            return false
+        }
+        config.isCreateGlossary = true
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        getGlossaryFootnoteId(elementId, "MARKEDINDEX", res => {
+            let insertionText = ""
+            if (res.data && res.data.id) {
+                insertionText = `<span data-versionUrn=${res.data.id} class="markedForIndex" tabindex="0">${selectedText}</span>`
+            }
+            editor.selection.setContent(insertionText);
+            // this.handleGlossaryForItalic(activeElement, res.data.id);
+            // this.handleGlossaryForCode(activeElement, res.data.id);
+            this.toggleMarkedIndexPopup(true, "MARKEDINDEX", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
+            this.saveContent()
+        })
     }
 
     /**
@@ -3669,6 +3730,18 @@ export class TinyMceEditor extends Component {
         else {
             this.fromtinyInitBlur = false;
         }
+    }
+
+    toggleMarkedIndexPopup = (status, popupType, markedindexid, callback) => {
+        if (config.savingInProgress) return false
+
+        let typeWithPopup = this.props.element ? this.props.element.type : "";
+        let elementId = this.props.currentElement ? this.props.currentElement.id : this.props.element ? this.props.element.id : "";
+        let elementType = this.props.currentElement ? this.props.currentElement.type : this.props.element ? this.props.element.type : "";
+        let index = this.props.index;
+        let elementSubType = this.props.element ? this.props.element.figuretype : '';
+        let glossaryTermText = this.glossaryTermText;
+        this.props.openMarkedIndexPopUp && this.props.openMarkedIndexPopUp(status, popupType, markedindexid, elementId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, this.props.poetryField);
     }
 
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback) => {

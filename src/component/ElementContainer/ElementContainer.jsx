@@ -15,6 +15,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
+import {printIndexPopup } from './../PrintIndexPopup/PrintIndex_Action.js'
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
@@ -1304,7 +1305,8 @@ class ElementContainer extends Component {
             openAssetPopoverPopUp: this.openAssetPopoverPopUp,
             openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
             handleAudioPopupLocation: this.handleAudioPopupLocation,
-            handleAssetsPopupLocation: this.handleAssetsPopupLocation
+            handleAssetsPopupLocation: this.handleAssetsPopupLocation,
+            openMarkedIndexPopUp: this.openMarkedIndexPopUp
         }
         if (labelText) {
             switch (element.type) {
@@ -2016,6 +2018,15 @@ class ElementContainer extends Component {
     }
 
     /**
+     * @description - This function is for Open Glossarypopup.
+     * @param {} 
+     * @param 
+     */
+     openMarkedIndexPopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
+        this.props.printIndexPopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField);
+    }
+
+    /**
      * @description - This function is for open assest popover.
      */
     openAssetPopoverPopUp = (toggleApoPopup) => {
@@ -2173,6 +2184,13 @@ const mapDispatchToProps = (dispatch) => {
         },
         glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
             dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField)).then(() => {
+                if (callback) {
+                    callback();
+                }
+            })
+        },
+        printIndexPopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
+            dispatch(printIndexPopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField)).then(() => {
                 if (callback) {
                     callback();
                 }

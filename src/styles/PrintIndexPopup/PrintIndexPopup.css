@@ -7,6 +7,26 @@
 .indexCloseIcon{
     float: left;
 }
+.index-container{
+    width:240px;
+    height: 100%;
+}
+.index-setting{
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 8px;
+    border-top: 2px solid #005a70;
+    box-shadow: 1px 2px 3px #cccccc;
+}
+.index-body{
+   padding: 5px 12px;
+}
+.index-text{
+    display: flex;
+}
+.index-text span{
+    padding-left: 5px;
+}
 
 .printIndx-cancel-button{
     padding: 5px 10px;

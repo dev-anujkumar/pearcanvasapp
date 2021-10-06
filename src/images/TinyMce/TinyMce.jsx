@@ -42,6 +42,10 @@ export const Glossary = (function () {
   return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M16.286 4H7.714c-.943 0-1.705.8-1.705 1.778L6 20l6-2.667L18 20V5.778C18 4.8 17.229 4 16.286 4zM16 17l-4-1.845L8 17V6h8v11z"/></g></svg>')
 })();
 
+export const indexEntry = (function () {
+  return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M16.286 4H7.714c-.943 0-1.705.8-1.705 1.778L6 20l6-2.667L18 20V5.778C18 4.8 17.229 4 16.286 4zM16 17l-4-1.845L8 17V6h8v11z"/></g></svg>')
+})();
+
 export const bold = (function () {
   return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M13.429 17.143h-4v-3.429h4c.946 0 1.714.768 1.714 1.715 0 .946-.768 1.714-1.714 1.714m-4-10.286h3.428c.947 0 1.714.768 1.714 1.714 0 .947-.767 1.715-1.714 1.715H9.43V6.857zm6.4 4.903c1.108-.777 1.885-2.046 1.885-3.189 0-2.582-2-4.571-4.571-4.571H6v16h8.046c2.4 0 4.24-1.943 4.24-4.331 0-1.738-.983-3.223-2.457-3.909z"/></g></svg>')
 })();

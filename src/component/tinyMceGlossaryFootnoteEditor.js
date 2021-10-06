@@ -458,7 +458,7 @@ export class ReactEditor extends React.Component {
     return (
       <div className="glossary-toolbar">
         <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
-        {printIndexIcon ? <span dangerouslySetInnerHTML={{__html: printIndexIcon}} onClick={ () => { printIndexPopup(true)}}></span>: null}
+        {printIndexIcon ? <span dangerouslySetInnerHTML={{__html: printIndexIcon}} onClick={ () => { printIndexPopup(true,'','')}}></span>: null}
       </div>
     )
   }
