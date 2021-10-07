@@ -42,8 +42,8 @@ export const Glossary = (function () {
   return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M16.286 4H7.714c-.943 0-1.705.8-1.705 1.778L6 20l6-2.667L18 20V5.778C18 4.8 17.229 4 16.286 4zM16 17l-4-1.845L8 17V6h8v11z"/></g></svg>')
 })();
 
-export const indexEntry = (function () {
-  return ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z"/><path fill="#000" fill-opacity=".87" fill-rule="nonzero" d="M16.286 4H7.714c-.943 0-1.705.8-1.705 1.778L6 20l6-2.667L18 20V5.778C18 4.8 17.229 4 16.286 4zM16 17l-4-1.845L8 17V6h8v11z"/></g></svg>')
+export const markedIndex = (function () {
+  return ('<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"/><path d="M4 20.47c0 .293.237.53.53.53h12.823c.079 0 .166-.02.237-.056l2.117-1.059a.53.53 0 0 0 .293-.473V4.588a.53.53 0 0 0-.293-.473l-2.117-1.06A.531.531 0 0 0 17.353 3H4.529A.53.53 0 0 0 4 3.53v16.94zm14.941-1.385-1.059.529v-2.522l1.06-.53v2.523zm0-3.706-1.059.53V13.385l1.06-.53v2.523zm0-3.706-1.059.53V9.68l1.06-.53v2.523zM5.06 4.059h12.169l1.713.856v3.052l-1.825.912a.53.53 0 0 0-.292.474V19.94H5.059V4.06z" fill="#000" fill-rule="nonzero"/><path d="m9.384 15.335.438-1.302h2.334l.408 1.302H14L11.756 9h-1.495L8 15.335h1.384zm2.403-2.394h-1.608l.817-2.493.79 2.493z" fill="#000" fill-rule="nonzero"/></g></svg>')
 })();
 
 export const bold = (function () {

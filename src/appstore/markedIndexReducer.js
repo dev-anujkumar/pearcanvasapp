@@ -1,5 +1,5 @@
 
-import {OPEN_PRINT_INDEX} from  '../constants/Action_Constants';
+import {OPEN_MARKED_INDEX} from  '../constants/Action_Constants';
 
 const INITIAL_STATE = {
     markedIndexValue: { "type": "", "popUpStatus": false },
@@ -13,7 +13,7 @@ const INITIAL_ACTION = {
 }
 
 export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
-    if (action.type === OPEN_PRINT_INDEX) {
+    if (action.type === OPEN_MARKED_INDEX) {
         return {
             ...state,
             markedIndexValue: action.payload.markedIndexValue,

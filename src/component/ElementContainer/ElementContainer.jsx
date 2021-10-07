@@ -15,7 +15,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import {printIndexPopup } from './../PrintIndexPopup/PrintIndex_Action.js'
+import {markedIndexPopup } from './../PrintIndexPopup/PrintIndex_Action.js'
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
@@ -2025,7 +2025,7 @@ class ElementContainer extends Component {
      * @param 
      */
      openMarkedIndexPopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
-        this.props.printIndexPopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField);
+        this.props.markedIndexPopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField);
     }
 
     /**
@@ -2191,8 +2191,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        printIndexPopup: (popUpStatus, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField) => {
-            dispatch(printIndexPopup(popUpStatus, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField)).then(() => {
+        markedIndexPopup: (popUpStatus, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField) => {
+            dispatch(markedIndexPopup(popUpStatus, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField)).then(() => {
                 if (callback) {
                     callback();
                 }
@@ -2301,8 +2301,8 @@ const mapStateToProps = (state) => {
         projectInfo: state.projectInfo,
         oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare,
         oldAudioVideoDataForCompare: state.appStore.oldAudioVideoDataForCompare,
-        markedIndexCurrentValue: state.printIndexReducer.markedIndexCurrentValue,
-        markedIndexValue: state.printIndexReducer.markedIndexValue
+        markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
+        markedIndexValue: state.markedIndexReducer.markedIndexValue
     }
 }
 

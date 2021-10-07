@@ -1,8 +1,8 @@
-import {OPEN_PRINT_INDEX} from '../../constants/Action_Constants';
+import {OPEN_MARKED_INDEX} from '../../constants/Action_Constants';
 
 // export const printIndexPopup = (value) => (dispatch) => {
 //     dispatch({
-//         type: OPEN_PRINT_INDEX,
+//         type: OPEN_MARKED_INDEX,
 //         payload: value
 //     });
 // };
@@ -24,7 +24,7 @@ import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY
 import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
-export const printIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, indexEntryText, typeWithPopup, poetryField) => async (dispatch) => {
+export const markedIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField) => async (dispatch) => {
     let markedIndexValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
@@ -32,7 +32,7 @@ export const printIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, e
         elementType,
         glossaryfootnoteid,
         elementSubType,
-        indexEntryText,
+        markIndexText,
         typeWithPopup : typeWithPopup ? typeWithPopup : undefined,
         poetryField : poetryField ? poetryField : undefined
     }
@@ -234,7 +234,7 @@ export const printIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, e
     // }
 
     return await dispatch({
-        type: OPEN_PRINT_INDEX,
+        type: OPEN_MARKED_INDEX,
         payload: {
             markedIndexValue: markedIndexValue,
             markedIndexCurrentValue: {

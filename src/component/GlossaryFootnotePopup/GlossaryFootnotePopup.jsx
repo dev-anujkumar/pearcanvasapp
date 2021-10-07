@@ -14,7 +14,7 @@ import AudioTinyMceGlossary from '../AudioTinyMceGlossary';
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import FigureTinyMceGlossary from '../ElementFigure/FigureTinyMceGlosaary.jsx'
 import AddImageGlossary from '../ElementFigure/AddImageGlossary.jsx';
-import { strikethrough } from '../../images/TinyMce/TinyMce.jsx';
+import { markedIndex } from '../../images/TinyMce/TinyMce.jsx';
 
 class GlossaryFootnotePopup extends Component {
     constructor() {
@@ -115,7 +115,7 @@ class GlossaryFootnotePopup extends Component {
                         <div className="glossary-word-header">
                             <div className="glossary-word-title">Term:</div>
                             <div className="glossary-word-name glossary-word-description" id='glossary-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                                <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {glossaryFootNoteCurrentValue.glossaryContentText} printIndexIcon={strikethrough} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
+                                <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {glossaryFootNoteCurrentValue.glossaryContentText} markedIndexIcon={markedIndex} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
                             </div>
                         </div>
                     }

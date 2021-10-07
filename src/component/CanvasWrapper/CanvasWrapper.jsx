@@ -39,7 +39,7 @@ import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Tool
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
-import {printIndexPopup} from '../PrintIndexPopup/PrintIndex_Action.js'
+import {markedIndexPopup} from '../PrintIndexPopup/PrintIndex_Action.js'
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -211,7 +211,7 @@ export class CanvasWrapper extends Component {
                                         }
                                         
                                         if(this.props.markedIndexValue.popUpStatus){
-                                            return <PrintIndexPopup showPrintIndexPopup = {this.props.printIndexPopup} />
+                                            return <PrintIndexPopup showMarkedIndexPopup = {this.props.markedIndexPopup} markIndexvalue={this.props.markedIndexValue}/>
                                         }
                                         else {
                                             return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
@@ -250,8 +250,8 @@ const mapStateToProps = state => {
         alfrescoEditor: state.alfrescoReducer.editor,
         imageArgs: state.alfrescoReducer.imageArgs,
         projectSubscriptionDetails:state?.projectInfo,
-        markedIndexCurrentValue: state.printIndexReducer.markedIndexCurrentValue,
-        markedIndexValue: state.printIndexReducer.markedIndexValue
+        markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
+        markedIndexValue: state.markedIndexReducer.markedIndexValue
     };
 };
 
@@ -310,6 +310,6 @@ export default connect(
         setProjectSubscriptionDetails,
         fetchFigureDropdownOptions,
         isOwnersSubscribedSlate,
-        printIndexPopup
+        markedIndexPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

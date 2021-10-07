@@ -15,7 +15,7 @@ import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon, indexEntry
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon, markedIndex
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
@@ -101,7 +101,7 @@ export class TinyMceEditor extends Component {
                 this.addFootnoteIcon(editor);
                 this.setGlossaryIcon(editor);
                 this.addGlossaryIcon(editor);
-                this.setIndexEntryIcon(editor);
+                this.setMarkedIndexIcon(editor);
                 this.addIndexEntryIcon(editor);
                 this.setInlineIcon(editor);
                 this.addInlineCodeIcon(editor);
@@ -845,13 +845,13 @@ export class TinyMceEditor extends Component {
             this.markedIndexBtnInstance.setDisabled(true)
             if (isMarkedIndexExist) {
                 cbFunc = () => {
-                    this.toggleMarkIndexIcon(true);
+                    this.toggleMarkedIndexIcon(true);
                     this.toggleMarkedIndexPopup(true, uri);
                 }
                 this.toggleMarkedIndexPopup(false, uri, cbFunc);
             }
             else {
-                this.toggleMarkedIndexPopup(true, uri, () => { this.toggleMarkIndexIcon(true); });
+                this.toggleMarkedIndexPopup(true, uri, () => { this.toggleMarkedIndexIcon(true); });
             }
         }
         /**
@@ -1819,10 +1819,10 @@ export class TinyMceEditor extends Component {
      * Add IndexEntry Icon Icon icon to the toolbar.
      * @param {*} editor  editor instance
      */
-      setIndexEntryIcon = editor => {
+      setMarkedIndexIcon = editor => {
         editor.ui.registry.addIcon(
             "IndexEntry",
-            indexEntry
+            markedIndex
         );
     }
 
