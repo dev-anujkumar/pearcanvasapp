@@ -467,13 +467,17 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`)
+            || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+        let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
         let oldImage = this.props.oldImage;
         if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
             oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
         }
 
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
-            previousElementData.figuredata.interactivetype === "web-link") {
+            previousElementData.figuredata.interactivetype === "web-link" || previousElementData.figuredata.interactivetype === '3rd-party' || 
+            previousElementData.figuredata.interactivetype === 'table') {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
             posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
@@ -483,7 +487,8 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
-                oldImage !== newInteractiveid
+                oldImage !== newInteractiveid || 
+                podwidth !== (previousElementData.figuredata.posterimage.podwidth ? previousElementData.figuredata.posterimage.podwidth : '') && podwidth !== null
             );
         }
         else {
