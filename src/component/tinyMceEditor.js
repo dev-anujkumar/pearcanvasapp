@@ -902,6 +902,10 @@ export class TinyMceEditor extends Component {
         this.footnoteBtnInstance && this.footnoteBtnInstance.setDisabled(flag)
     }
 
+    toggleMarkedIndexIcon = (flag) => {
+        this.markedIndexBtnInstance && this.markedIndexBtnInstance.setDisabled(flag)
+    }
+
 
     /**
      * This method is called on keyUp.
@@ -1431,7 +1435,7 @@ export class TinyMceEditor extends Component {
                 tooltip: "Open Print-Index",
                 onAction: () => this.addMarkedIndex(editor),
                 onSetup: (btnRef) => {
-                    this.glossaryBtnInstance = btnRef;
+                    this.markedIndexBtnInstance = btnRef;
                 }
             });
         }
@@ -2533,13 +2537,13 @@ export class TinyMceEditor extends Component {
         getGlossaryFootnoteId(elementId, "MARKEDINDEX", res => {
             let insertionText = ""
             if (res.data && res.data.id) {
-                insertionText = `<span data-versionUrn=${res.data.id} class="markedForIndex" tabindex="0">${selectedText}</span>`
+                insertionText = `<span data-uri=${res.data.id} class="markedForIndex" tabindex="0">${selectedText}</span>`
             }
             editor.selection.setContent(insertionText);
             // this.handleGlossaryForItalic(activeElement, res.data.id);
             // this.handleGlossaryForCode(activeElement, res.data.id);
-            this.toggleMarkedIndexPopup(true, "MARKEDINDEX", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
-            this.saveContent()
+            this.toggleMarkedIndexPopup(true, "Markedindex", res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); });
+            this.saveMarkedIndexContent()
         })
     }
 
@@ -2610,6 +2614,31 @@ export class TinyMceEditor extends Component {
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
         //this.handleBlur(null, true);
     }
+
+
+     /**
+     * Saves MarkedIndexContent on creation
+     */
+      saveMarkedIndexContent = () => {
+        const { markedIndexValue, poetryField } = this.props;
+        let { elementType, glossaryfootnoteid, type, elementSubType, indexEntryText } = markedIndexValue;
+        let typeWithPopup = this.props.element ? this.props.element.type : "";
+        let firstLevelEntry = null;
+        let secondLevelEntry = null;
+        let firstLevelEntryText = indexEntryText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
+        // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
+        firstLevelEntry = `<p>${firstLevelEntryText}</p>` || "<p></p>"
+        secondLevelEntry = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
+        firstLevelEntry = firstLevelEntry.replace(/<br data-mce-bogus="1">/g, "")
+        secondLevelEntry = secondLevelEntry.replace(/<br data-mce-bogus="1">/g, "")
+        customEvent.subscribe('markedIndexSave', (elementWorkId) => {
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, firstLevelEntry, secondLevelEntry, elementSubType, typeWithPopup, poetryField)
+            customEvent.unsubscribe('markedIndexSave');
+        })
+        this.handleBlur(null, true); //element saving before creating G/F (as per java team)
+        //this.handleBlur(null, true);
+    }
+
 
     /**
      * Called when page link option is clicked. Responsible for adding page link

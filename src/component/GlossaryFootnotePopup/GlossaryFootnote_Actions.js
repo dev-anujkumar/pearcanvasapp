@@ -301,6 +301,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     if(!glossaryfootnoteid) return false
     let glossaryEntry = Object.create({})
     let footnoteEntry = Object.create({})
+    let indexEntry = Object.create({})
     let semanticType = type.toUpperCase()
     let data = {}, figureDataObj
     var index = store.getState().glossaryFootnoteReducer.elementIndex;
@@ -489,6 +490,30 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 elementParentEntityUrn: parentEntityUrn
             }
             break;
+
+            case "MARKEDINDEX":   
+            indexEntry[glossaryfootnoteid] = JSON.stringify({
+                firstLevelEntry: term,
+                secondLevelEntry: definition
+                })
+                data = {
+                    id: elementWorkId,
+                    type: elementType,
+                    versionUrn: null,
+                    contentUrn: null,
+                    feedback: tcmFeedback,
+                    html: {
+                        ...figureDataObj,
+                        glossaryentries:{},
+                        indexEntries: indexEntry,
+                        footnotes: {},
+                        assetspopover: {}
+                    },
+                    projectUrn : config.projectUrn,
+                    slateEntity : config.slateEntityURN,
+                    elementParentEntityUrn: parentEntityUrn
+                }
+                break;
     }
 
     if (typeWithPopup === 'popup') {

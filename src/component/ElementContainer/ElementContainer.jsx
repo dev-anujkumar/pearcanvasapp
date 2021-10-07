@@ -1306,7 +1306,9 @@ class ElementContainer extends Component {
             openGlossaryFootnotePopUp: this.openGlossaryFootnotePopUp,
             handleAudioPopupLocation: this.handleAudioPopupLocation,
             handleAssetsPopupLocation: this.handleAssetsPopupLocation,
-            openMarkedIndexPopUp: this.openMarkedIndexPopUp
+            openMarkedIndexPopUp: this.openMarkedIndexPopUp,
+            markedIndexValue: this.props.markedIndexValue
+
         }
         if (labelText) {
             switch (element.type) {
@@ -2298,7 +2300,9 @@ const mapStateToProps = (state) => {
         projectUsers: state.commentsPanelReducer.users,
         projectInfo: state.projectInfo,
         oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare,
-        oldAudioVideoDataForCompare: state.appStore.oldAudioVideoDataForCompare
+        oldAudioVideoDataForCompare: state.appStore.oldAudioVideoDataForCompare,
+        markedIndexCurrentValue: state.printIndexReducer.markedIndexCurrentValue,
+        markedIndexValue: state.printIndexReducer.markedIndexValue
     }
 }
 
