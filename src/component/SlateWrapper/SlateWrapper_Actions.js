@@ -190,6 +190,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item?.elementdata?.bodymatter?.map((ele) => {
                             if (ele?.id === parentUrn.manifestUrn) {
                                 ele?.contents?.bodymatter?.splice(outerAsideIndex, 0, createdElementData);
+                            } else if (ele?.contents?.bodymatter) {
+                                ele.contents.bodymatter.map((ele2) => {
+                                    if (ele2?.id === parentUrn.manifestUrn) {
+                                        ele2?.contents?.bodymatter?.splice(outerAsideIndex, 0, createdElementData);
+                                    }
+                                })
                             }
                     })
                 }
