@@ -1513,7 +1513,13 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
         eleIndex =  index.split("-");
         switch (type) {
             case POETRY_STANZA:                      /** Inside Poetry */
+            if (eleIndex.length == 3) {          /** Inside WE-HEAD | Aside */
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
+            } else if (eleIndex.length == 5 && !([MULTI_COLUMN, SHOWHIDE].includes(bodymatter[eleIndex[0]].type))) {   /** Inside WE-BODY */
+                wipData = bodymatter[eleIndex[0]]?.elementdata?.bodymatter[eleIndex[2]]?.contents?.bodymatter[eleIndex[4]]
+            } else if (eleIndex.length == 4 && !([MULTI_COLUMN, SHOWHIDE].includes(bodymatter[eleIndex[0]].type))) {   /** Inside WE-BODY */
+                wipData = bodymatter[eleIndex[0]]?.elementdata?.bodymatter[eleIndex[1]]?.contents?.bodymatter[eleIndex[3]]
+            }
                 break;
             case CITATION_ELEMENT:                   /** Inside Citations */
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];

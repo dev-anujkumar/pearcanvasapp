@@ -166,6 +166,18 @@ export const deleteFromStore = (params) => {
                             element.contents.bodymatter.splice(indexInner, 1);
                         }
                     })
+                } else if (element.type == 'element-aside' && element.id === poetryData?.parent?.id) {
+                    element.elementdata.bodymatter.forEach((ele, indexInner) => {
+                        if (ele.type == "poetry" && ele.id == poetryData.parentUrn) {
+                            ele.contents.bodymatter.splice(indexInner, 1);
+                        } else if (ele.type == "manifest") {
+                            ele.contents?.bodymatter.forEach((ele1) => {
+                                if (ele1.id === poetryData.parentUrn) {
+                                    ele1.contents.bodymatter.splice(indexInner, 1);
+                                }
+                            })
+                        }
+                    })
                 }
             }
             else if (parentUrn && parentUrn.elementType == "manifest") {
