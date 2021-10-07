@@ -15,6 +15,7 @@ const {
  * @param {*} callback callback method
  */
 export const getGlossaryFootnoteId = (elementId, enumType, callback) => {
+    console.log("========== indside API call : eumType: ", enumType);
 	let url = `${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/${elementId}/createWorkId/${enumType}`
     axios.post(url, null, { 
         headers: {

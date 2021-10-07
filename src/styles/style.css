@@ -371,7 +371,19 @@ table:not([cellpadding]) td, table:not([cellpadding]) th {
     border: none !important;
 }
 
-
+/*  Marked index Content Design  */
+span[class="markedForIndex"]:not(.sup):not(.sub)::after{
+    content: url('./../images/MarkedIndex/markedIndex.svg');
+    height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    padding: 0 2px;
+    position: relative;
+    text-decoration: underline dotted;
+    border-bottom: 1.1px dotted #007FA3;
+}
 
 /*  Callout Content Design  */
 
@@ -438,6 +450,22 @@ span[title="calloutFour"] sup::after {
     border-bottom: 1.1px dotted #007FA3;
 }
 
+ /*  Marked Index Terms */
+
+ span.markedForIndex {
+    color: #007FA3;
+    font-family: inherit;
+    font-weight: Bold;
+    font-style: normal;
+    border-bottom: 1px dotted #000;
+    
+  }
+  
+span.markedForIndex:hover {
+    color: #9E007E;
+    cursor: pointer;
+    border-bottom: none;
+}
 
 .calloutOne{
     color:#007FA3;

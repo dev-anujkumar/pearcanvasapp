@@ -25,7 +25,6 @@ import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessIn
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const printIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, indexEntryText, typeWithPopup, poetryField) => async (dispatch) => {
-
     let markedIndexValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,

@@ -50,6 +50,7 @@ export class TinyMceEditor extends Component {
         this.mathMlMenuButton = null;
         this.assetPopoverButtonState = null;
         this.glossaryTermText = '';
+        this.markIndexText = '';
         this.copyContent = '';
         this.lastContent = '';
         this.clearFormateText = '';
@@ -741,11 +742,19 @@ export class TinyMceEditor extends Component {
         let cbFunc = null;
         // alreadyExist | is to check if glossary&footnote tab is open //
         let alreadyExist = false;
+        let isMarkedIndexExist = false;
         /**
          * Case - If Glossary&Footnote is already open then first unmount existing one
          */
         if (document.getElementsByClassName('glossary-toolbar-wrapper').length) {
             alreadyExist = true;
+        }
+
+        /**
+         * Case - If Marked index is already open then first unmount existing one
+         */
+        if (document.getElementsByClassName('index-container').length) {
+            isMarkedIndexExist = true;
         }
         /**
          * Case - clicking over Footnote text
@@ -819,6 +828,30 @@ export class TinyMceEditor extends Component {
                     // this.props.handleAudioPopupLocation(true, audioPopupPosition);
                     this.props.handleAssetsPopupLocation(true, audioPopupPosition);
                 }
+            }
+        }
+        /**
+         * Case - clicking over mark index text
+         */
+        else if (e.target.nodeName == "SPAN" || e.target.closest("span")) {
+            let uri = e.target.dataset.uri;
+            let span = e.target.closest("span");
+
+            if (e.target.nodeName == "SPAN") {
+                uri = e.target.dataset.uri;
+            } else {
+                uri = span.getAttribute('data-uri');
+            }
+            this.markedIndexBtnInstance.setDisabled(true)
+            if (isMarkedIndexExist) {
+                cbFunc = () => {
+                    this.toggleMarkIndexIcon(true);
+                    this.toggleMarkedIndexPopup(true, uri);
+                }
+                this.toggleMarkedIndexPopup(false, uri, cbFunc);
+            }
+            else {
+                this.toggleMarkedIndexPopup(true, uri, () => { this.toggleMarkIndexIcon(true); });
             }
         }
         /**
@@ -2521,6 +2554,7 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance 
      */
      addMarkedIndex = (editor) => {
+         console.log("===========> inside add mark index")
         let elementId = this.props.elementId;
         let sText = editor.selection.getContent();
         let parser = new DOMParser();
@@ -2528,7 +2562,7 @@ export class TinyMceEditor extends Component {
         let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
         let selectedText = window.getSelection().toString()
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        this.glossaryTermText = selectedText;
+        this.markIndexText = selectedText;
         if (selectedText.trim() === "") {
             return false
         }
@@ -2542,7 +2576,7 @@ export class TinyMceEditor extends Component {
             editor.selection.setContent(insertionText);
             // this.handleGlossaryForItalic(activeElement, res.data.id);
             // this.handleGlossaryForCode(activeElement, res.data.id);
-            this.toggleMarkedIndexPopup(true, "Markedindex", res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); });
+            this.toggleMarkedIndexPopup(true, /*"Markedindex",*/ res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); });
             this.saveMarkedIndexContent()
         })
     }
@@ -3761,7 +3795,7 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    toggleMarkedIndexPopup = (status, popupType, markedindexid, callback) => {
+    toggleMarkedIndexPopup = (status, markIndexid, callback) => {
         if (config.savingInProgress) return false
 
         let typeWithPopup = this.props.element ? this.props.element.type : "";
@@ -3769,8 +3803,8 @@ export class TinyMceEditor extends Component {
         let elementType = this.props.currentElement ? this.props.currentElement.type : this.props.element ? this.props.element.type : "";
         let index = this.props.index;
         let elementSubType = this.props.element ? this.props.element.figuretype : '';
-        let glossaryTermText = this.glossaryTermText;
-        this.props.openMarkedIndexPopUp && this.props.openMarkedIndexPopUp(status, popupType, markedindexid, elementId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, this.props.poetryField);
+        let markIndexText = this.markIndexText;
+        this.props.openMarkedIndexPopUp && this.props.openMarkedIndexPopUp(status, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, this.props.poetryField);
     }
 
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback) => {

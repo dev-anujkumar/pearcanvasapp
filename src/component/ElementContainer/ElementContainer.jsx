@@ -2191,8 +2191,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        printIndexPopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
-            dispatch(printIndexPopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField)).then(() => {
+        printIndexPopup: (popUpStatus, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField) => {
+            dispatch(printIndexPopup(popUpStatus, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField)).then(() => {
                 if (callback) {
                     callback();
                 }
