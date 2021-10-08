@@ -24,13 +24,13 @@ import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY
 import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
-export const markedIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField) => async (dispatch) => {
+    export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField) => async (dispatch) => {
     let markedIndexValue = {
-        "type": glossaaryFootnote,
-        "popUpStatus": status,
+        type: popupType,
+        popUpStatus: status,
         elementWorkId,
         elementType,
-        glossaryfootnoteid,
+        markIndexid,
         elementSubType,
         markIndexText,
         typeWithPopup : typeWithPopup ? typeWithPopup : undefined,
@@ -38,44 +38,23 @@ export const markedIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, 
     }
 
     if (status === true) {
-        let semanticType = glossaaryFootnote.toUpperCase();
         const slateId = config.slateManifestURN;
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
-        let currentSlateData = newParentData[config.slateManifestURN];
+        let currentSlateData = newParentData[slateId];
         const showHideElement = store.getState().appStore?.showHideObj;
+
         if(currentSlateData.type==="popup" && currentSlateData.status === "approved" && (config.isCreateFootnote || config.isCreateGlossary)){
             return false;
         }
-        let newBodymatter = newParentData[slateId].contents.bodymatter;
-        var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
+        let newBodymatter = currentSlateData.contents.bodymatter;
+        var markedIndexText, markedIndexElem = {}, tempMarkedIndexContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
-        // if (showHideElement || asideParent?.type === 'showhide') { /** Glossary-Footnotes inside Show-Hide */
-        //     //let showHideChild = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement, 'glossaryFootnote')
-        //     //glossaryFootElem = showHideChild?.currentElement
-        //     /* Get the element where footnote/Glossery is added */
-        //     glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
-        // }
-        // else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
-        //     glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
-        // }else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent"){ //Figure inside Multi-Column
-        //     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]]
-        // }
-        // else if(tempIndex.length == 3 && elementType == 'figure'){
-        //     glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
-        // }
-        // else if (tempIndex.length == 5 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
-        //     glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]];
-        // }
-        // else if (tempIndex.length == 6 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
-        //     glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]]?.contents?.bodymatter[tempIndex[4]];
-        // }
-        // else if (elementType === "figure") {
-        //     let tempUpdatedIndex = index.split('-');
-        //     let updatedIndex = tempUpdatedIndex[0];
-        //     glossaryFootElem = newBodymatter[updatedIndex]
-        // }
+        if (showHideElement || asideParent?.type === 'showhide') { /** markedIndex inside Show-Hide */
+
+            markedIndexElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
+        }
         // else if (typeWithPopup && typeWithPopup === "popup" ){
         //     // let tempIndex = index.split('-');
         //     let indexesLen = tempIndex.length;
@@ -140,12 +119,12 @@ export const markedIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, 
         // } else if (elementType === "element-dialogue") {
         //     glossaryFootElem = newBodymatter[tempIndex[0]];
         // }
-        // else {
-        //     if (typeof (index) == 'number') {
-        //         if (newBodymatter[index].versionUrn == elementWorkId) {
-        //             glossaryFootElem = newBodymatter[index]
-        //         }
-        //     } else {
+        else {
+            if (typeof (index) == 'number') {
+                if (newBodymatter[index].versionUrn == elementWorkId) {
+                    markedIndexElem = newBodymatter[index]
+                }
+            } //else {
         //         let indexes = index.split('-');
         //         let indexesLen = indexes.length, condition;
         //         if (indexesLen == 2) {
@@ -174,73 +153,25 @@ export const markedIndexPopup = (status, glossaaryFootnote, glossaryfootnoteid, 
         //         }
 
         //     }
-        // }
+        }
         // switch (semanticType) {
         //     case 'FOOTNOTE':
-        //         footnoteContentText = glossaryFootElem && glossaryFootElem.html['footnotes'] && glossaryFootElem.html['footnotes'][glossaryfootnoteid]
         //         break;
         //     case 'GLOSSARY':
-        //         tempGlossaryContentText = glossaryFootElem && glossaryFootElem.html['glossaryentries'] && glossaryFootElem.html['glossaryentries'][glossaryfootnoteid]
+        //         tempGlossaryContentText = glossaryFootElem && glossaryFootElem.html['glossaryentries'] && glossaryFootElem.html['glossaryentries'][markIndexid]
         //         footnoteContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).definition
         //         glossaryContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).term || glossaryTermText
         // }
     }
-    // if(glossaryContentText && glossaryContentText.includes('audio-id')){
-    //     const audioId = glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[1];
-    //     const audioPath =glossaryContentText.slice(glossaryContentText.indexOf('audio-id')).split("\"")[3]
-    //     const title = audioPath?.split("/")?.pop()?.replace(/%20/g,' ');
-    //     const data = {
-    //         'title':{
-    //             'en':title
-    //         },
-    //         'narrativeAudioUrn': audioId,
-    //         'location':audioPath
-    //     }
-    //    store.dispatch(handleGlossaryActions(true,data));
-    // } else {
-    //    store.dispatch( handleGlossaryActions(false,{}))
-    // }
 
-    // if(footnoteContentText && footnoteContentText.includes('imageAssetContent')) {
-    //     let div = document.createElement('div');
-    //     div.innerHTML = footnoteContentText
-    //     let glossaryImageAssets = div.getElementsByTagName('img');
-    //     for (let i = 0; i < glossaryImageAssets.length; i++) {
-    //         if(glossaryImageAssets[i]?.attributes?.class?.nodeValue ==='imageAssetContent'){
-    //             const imagePath = glossaryImageAssets[i]?.attributes?.src?.nodeValue
-    //             const imageId = glossaryImageAssets[i]?.attributes?.imageid?.nodeValue
-    //             const altText = glossaryImageAssets[i]?.attributes?.alt?.nodeValue
-    //             const classValue = glossaryImageAssets[i]?.attributes?.class?.nodeValue
-    //             const imageHeight = glossaryImageAssets[i]?.attributes?.height?.nodeValue
-    //             const imageWidth = glossaryImageAssets[i]?.attributes?.width?.nodeValue
-    //             const title = imagePath?.split("/")?.pop()?.replace(/%20/g,' ');
-    //             const Longdescription = glossaryImageAssets[i]?.attributes?.longdescription?.nodeValue
-    //             const data = {
-    //                     imageid: imageId,
-    //                     path:imagePath,
-    //                     alttext:altText,
-    //                     height:imageHeight,
-    //                     width:imageWidth,
-    //                     class:classValue,
-    //                     title:title,
-    //                     longdescription:Longdescription
-    //                 }
-    //             store.dispatch(handleFigureGlossaryActions(true, data));
-    //         }
-    //     }
-    // }
-    //  else {
-    //    store.dispatch(handleFigureGlossaryActions(false,{}))
-    // }
+    tempMarkedIndexContentText = markedIndexElem && markedIndexElem.html['indexEntries'] && markedIndexElem.html['indexEntries'][markIndexid];
+    markedIndexText = tempMarkedIndexContentText && JSON.parse(tempMarkedIndexContentText);
 
     return await dispatch({
         type: OPEN_MARKED_INDEX,
         payload: {
             markedIndexValue: markedIndexValue,
-            markedIndexCurrentValue: {
-                footnoteContentText,
-                glossaryContentText,
-            },
+            markedIndexCurrentValue: markedIndexText,
             elementIndex: index
         }
     });

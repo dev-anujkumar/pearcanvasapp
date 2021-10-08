@@ -2024,8 +2024,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-     openMarkedIndexPopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
-        this.props.markedIndexPopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField);
+     openMarkedIndexPopUp = (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField) => {
+        this.props.markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField);
     }
 
     /**
@@ -2191,8 +2191,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        markedIndexPopup: (popUpStatus, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField) => {
-            dispatch(markedIndexPopup(popUpStatus, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField)).then(() => {
+        markedIndexPopup: (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField) => {
+            dispatch(markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField)).then(() => {
                 if (callback) {
                     callback();
                 }

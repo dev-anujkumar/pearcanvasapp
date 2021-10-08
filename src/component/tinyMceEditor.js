@@ -846,12 +846,12 @@ export class TinyMceEditor extends Component {
             if (isMarkedIndexExist) {
                 cbFunc = () => {
                     this.toggleMarkedIndexIcon(true);
-                    this.toggleMarkedIndexPopup(true, uri);
+                    this.toggleMarkedIndexPopup(true, 'Markedindex', uri);
                 }
-                this.toggleMarkedIndexPopup(false, uri, cbFunc);
+                this.toggleMarkedIndexPopup(false, 'Markedindex', uri, cbFunc);
             }
             else {
-                this.toggleMarkedIndexPopup(true, uri, () => { this.toggleMarkedIndexIcon(true); });
+                this.toggleMarkedIndexPopup(true, 'Markedindex', uri, () => { this.toggleMarkedIndexIcon(true); });
             }
         }
         /**
@@ -2559,9 +2559,9 @@ export class TinyMceEditor extends Component {
         let sText = editor.selection.getContent();
         let parser = new DOMParser();
         let htmlDoc = parser.parseFromString(sText, 'text/html');
-        let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
         let selectedText = window.getSelection().toString()
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        console.log("==========> selectedText: ", selectedText)
         this.markIndexText = selectedText;
         if (selectedText.trim() === "") {
             return false
@@ -2574,9 +2574,7 @@ export class TinyMceEditor extends Component {
                 insertionText = `<span data-uri=${res.data.id} class="markedForIndex" tabindex="0">${selectedText}</span>`
             }
             editor.selection.setContent(insertionText);
-            // this.handleGlossaryForItalic(activeElement, res.data.id);
-            // this.handleGlossaryForCode(activeElement, res.data.id);
-            this.toggleMarkedIndexPopup(true, /*"Markedindex",*/ res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); });
+            this.toggleMarkedIndexPopup(true, 'Markedindex', res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); });
             this.saveMarkedIndexContent()
         })
     }
@@ -2655,18 +2653,18 @@ export class TinyMceEditor extends Component {
      */
       saveMarkedIndexContent = () => {
         const { markedIndexValue, poetryField } = this.props;
-        let { elementType, glossaryfootnoteid, type, elementSubType, indexEntryText } = markedIndexValue;
+        let { elementType, markIndexid, type, elementSubType, markIndexText } = markedIndexValue;
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let firstLevelEntry = null;
         let secondLevelEntry = null;
-        let firstLevelEntryText = indexEntryText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
+        let firstLevelEntryText = markIndexText;//.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
         // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
         firstLevelEntry = `<p>${firstLevelEntryText}</p>` || "<p></p>"
         secondLevelEntry = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         firstLevelEntry = firstLevelEntry.replace(/<br data-mce-bogus="1">/g, "")
         secondLevelEntry = secondLevelEntry.replace(/<br data-mce-bogus="1">/g, "")
         customEvent.subscribe('markedIndexSave', (elementWorkId) => {
-            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, firstLevelEntry, secondLevelEntry, elementSubType, typeWithPopup, poetryField)
+            saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevelEntry, secondLevelEntry, elementSubType, typeWithPopup, poetryField)
             customEvent.unsubscribe('markedIndexSave');
         })
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
@@ -3795,7 +3793,7 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    toggleMarkedIndexPopup = (status, markIndexid, callback) => {
+    toggleMarkedIndexPopup = (status, popupType, markIndexid, callback) => {
         if (config.savingInProgress) return false
 
         let typeWithPopup = this.props.element ? this.props.element.type : "";
@@ -3804,7 +3802,7 @@ export class TinyMceEditor extends Component {
         let index = this.props.index;
         let elementSubType = this.props.element ? this.props.element.figuretype : '';
         let markIndexText = this.markIndexText;
-        this.props.openMarkedIndexPopUp && this.props.openMarkedIndexPopUp(status, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, this.props.poetryField);
+        this.props.openMarkedIndexPopUp && this.props.openMarkedIndexPopUp(status, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, this.props.poetryField);
     }
 
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback) => {
