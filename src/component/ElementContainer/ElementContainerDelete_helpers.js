@@ -167,16 +167,37 @@ export const deleteFromStore = (params) => {
                         }
                     })
                 } else if (element.type == 'element-aside' && element.id === poetryData?.parent?.id) {
-                    element.elementdata.bodymatter.forEach((ele, indexInner) => {
+                    element.elementdata.bodymatter.forEach((ele) => {
                         if (ele.type == "poetry" && ele.id == poetryData.parentUrn) {
-                            ele.contents.bodymatter.splice(indexInner, 1);
+                            ele.contents.bodymatter.forEach((ele1, indexInner) => {
+                                if (ele1.id === elmId) {
+                                    ele.contents.bodymatter.splice(indexInner, 1);
+                                }
+                            })
                         } else if (ele.type == "manifest") {
                             ele.contents?.bodymatter.forEach((ele1) => {
-                                if (ele1.id === poetryData.parentUrn) {
-                                    ele1.contents.bodymatter.splice(indexInner, 1);
+                                if (ele1.type == "poetry" && ele1.id == poetryData.parentUrn) {
+                                    ele1.contents.bodymatter.forEach((ele2, indexInner) => {
+                                        if (ele2.id === elmId) {
+                                            ele1.contents.bodymatter.splice(indexInner, 1);
+                                        }
+                                    })
                                 }
                             })
                         }
+                    })
+                } else if (element.type == "groupedcontent" && element.id === poetryData?.parent?.id) {
+                    element.groupeddata.bodymatter.forEach((ele) => {
+                        ele.groupdata.bodymatter.forEach((ele1) =>{
+                            if (ele1.type == "poetry" && ele1.id == poetryData.parentUrn) {
+                                ele1.contents.bodymatter.forEach((ele2, innerIndex) => {
+                                    if (ele2.id === elmId) {
+                                        ele1.contents.bodymatter.splice(innerIndex, 1);
+                                    }
+                                })
+                            }
+                        })
+                      
                     })
                 }
             }
