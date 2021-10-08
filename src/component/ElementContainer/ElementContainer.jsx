@@ -1690,7 +1690,7 @@ class ElementContainer extends Component {
                     break;
 
                 case elementTypeConstant.BLOCK_LIST:
-                    editor = <BlockListWrapper indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} {...commonProps} />;
+                    editor = <BlockListWrapper indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} {...commonProps} />;
                     labelText = 'BL'
                     break;
 

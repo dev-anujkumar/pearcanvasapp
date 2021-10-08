@@ -199,6 +199,12 @@ export const deleteFromStore = (params) => {
                 }
             }
         })
+
+        // handling block list delete local store updation
+        if (bodymatter && bodymatter.length && iList.length) {
+            const slateLevelElement = bodymatter[Number(iList[0])];
+            deleteBlockListElement(elmId, slateLevelElement)
+        }
     }
 
     dispatch({
@@ -208,6 +214,28 @@ export const deleteFromStore = (params) => {
         }
     })
 }
+
+/**
+ * function to find selected block list element inside block list data 
+ * to delete 
+ * @param {String} elementId 
+ * @param {Object} elementData 
+ */
+const deleteBlockListElement = (elementId, elementData) => {
+    if (elementData?.listdata?.bodymatter) {
+        elementData.listdata?.bodymatter.forEach((listData) => deleteBlockListElement(elementId, listData))
+    }
+    if (elementData?.listitemdata?.bodymatter) {
+        elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
+            if (listItemData.id === elementId) {
+                elementData.listitemdata.bodymatter.splice(index, 1);
+                return;
+            }
+            deleteBlockListElement(elementId, listItemData);
+        });
+    }
+}
+
 /* Delete Element inside WE and aside */
 const delInsideWE = (item, asideData, parentUrn, elmId) => {
     /* Delete elements inside 2C:WE/AS */
