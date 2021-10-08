@@ -152,3 +152,11 @@ export const checkBlockListElement = (data, keypressed) => {
     }
     return elementData;
 }
+
+export const isNestingLimitReached = (index) => {
+    const BLOCK_LIST_NESTING_LIMIT = 4  // This is default block list nesting limit.
+    if(typeof index === 'string' && index.includes('-') && index.split("-").length< BLOCK_LIST_NESTING_LIMIT * 2){
+        return false;
+    }
+    return true;
+}

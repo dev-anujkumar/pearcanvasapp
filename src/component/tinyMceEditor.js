@@ -30,7 +30,7 @@ import { wirisAltTextPopup, createElement } from './SlateWrapper/SlateWrapper_Ac
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
@@ -1315,7 +1315,7 @@ export class TinyMceEditor extends Component {
                 }
             } else {
                 // TAB key press handling for BlockList element
-                if (key === 9 && typeof this.props.index === 'string' && this.props.index.includes('-') && this.props.index.split("-").length<9) {
+                if (key === 9 && !isNestingLimitReached(this.props.index)) {
                     e.preventDefault();
                     blockListData = checkBlockListElement(this.props, "TAB");
                     if (blockListData && Object.keys(blockListData).length) {
