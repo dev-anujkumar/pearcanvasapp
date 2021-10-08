@@ -29,7 +29,12 @@ describe('Testing Figure image component', () => {
             Permission: false
         },
         appStore: {
-            figureDropdownData: []
+            figureDropdownData: {
+                audio: ["No Label", "Custom"],
+                image: ["No Label", "Custom"],
+                smartlinks: ["No Label", "Custom"],
+                video: ["No Label", "Custom"]
+            }
         },
         projectMetadata:{},
     }
@@ -366,7 +371,7 @@ describe('Testing Figure image component', () => {
             data.properties["exif:pixelYDimension"] = ''
             data.properties["cplg:altText"] = ''
             data.properties['cplg:longDescription'] = ''
-            let defaultImageSrc = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            let defaultImageSrc = "https://cite-media-stg.pearson.com/legacy_paths/9b39bfd7-b73c-4b0f-b2c5-60e77ed17ce7/Page097a.jpg"
             elementFigureInstance.dataFromNewAlfresco(data)
             expect(elementFigureInstance.state.imgSrc).toBe(defaultImageSrc)
         })

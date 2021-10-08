@@ -176,6 +176,10 @@
   margin-top: 24px;
 }
 
+.subscriberSlate-buttons{
+  height: 36px;
+}
+
 .dialog-buttons.tcm-canvas-popup{
     height: 70px;
     margin: 10px -16px -16px -16px;
@@ -690,6 +694,22 @@ span.calloutOne > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
+span.calloutOne:hover::after {
+  content: 'CalloutOne';
+  width: 70px;
+  background-color: rgb(139, 139, 139);
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 1;
+  top: 110%;
+  margin-left: -50px;
+  /* left: 50%; */
+  opacity: 1;
+  transition: opacity 0.3s;
+  font-size: 10px;
+}
 .modal-content.tcm-canvas-popup 
 span.calloutTwo, 
 span.calloutTwo > ins.diffins, 
@@ -698,6 +718,21 @@ span.calloutTwo > ins.diffmod{
     text-decoration: underline dotted #F56831;
     position: relative;
     background: rgb(251, 188, 72);
+}
+span.calloutTwo:hover::after {
+  content: 'CalloutTwo';
+  width: 70px;
+  background-color: rgb(139, 139, 139);
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 1;
+  top: 110%;
+  margin-left: -50px;
+  opacity: 1;
+  transition: opacity 0.3s;
+  font-size: 10px;
 }
 .modal-content.tcm-canvas-popup 
 span.calloutThree, 
@@ -708,6 +743,21 @@ span.calloutThree > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
+span.calloutThree:hover::after {
+  content: 'CalloutThree';
+  width: 70px;
+  background-color: rgb(139, 139, 139);
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 1;
+  top: 110%;
+  margin-left: -50px;
+  opacity: 1;
+  transition: opacity 0.3s;
+  font-size: 10px;
+}
 .modal-content.tcm-canvas-popup 
 span.calloutFour, 
 span.calloutFour > ins.diffins, 
@@ -716,6 +766,21 @@ span.calloutFour > ins.diffmod{
     text-decoration: underline dotted #F56831;
     position: relative;
     background: rgb(251, 188, 72);
+}
+span.calloutFour:hover::after {
+  content: 'CalloutFour';
+  width: 70px;
+  background-color: rgb(139, 139, 139);
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 1;
+  top: 110%;
+  margin-left: -50px;
+  opacity: 1;
+  transition: opacity 0.3s;
+  font-size: 10px;
 }
 
 /* added css for list elements */
@@ -729,3 +794,18 @@ ol li.listItemNumeroUnoUpperRoman,
 ol li.listItemNumeroUnoLowerRoman {
   list-style-type: none !important
 }
+
+.OwnersSlateInputLine{
+  display: flex;
+  color: #000;
+  text-align: center;
+  align-items: center;
+}
+
+.OwnersSlateCheckBox{
+    display: flex;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+}
+

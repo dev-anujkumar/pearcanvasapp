@@ -2,6 +2,9 @@
 import React from 'react';
 /**************************Import Modules**************************/
 import * as assessment_UtiltyFn from '../../../../src/component/AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { newFigureObj } from '../../../../fixtures/ElementFigureTestingData';
+import { audioElementTypeAlfrescoWithData } from '../../../../fixtures/ElementAudioVideoTestingData';
+import { Interactive3party, interactiveElm } from '../../../../fixtures/ElementInteractiveTesting';
 
 describe('Test---Assessment Utility Functions', () => {
     describe('Test 1---setAssessmentTitle Function', () => {
@@ -311,6 +314,41 @@ describe('Test---Assessment Utility Functions', () => {
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentElement');
         assessment_UtiltyFn.setAssessmentElement(model);
         expect(spyFunction).toHaveReturnedWith({ "assessmentId": "43208", "itemId": "", "title": "9001 - myvirtual-x/myvirtual-child" })
+        spyFunction.mockClear();
+    });
+    it('Test 15---checkFigureMetadata Image', () => {
+        let element = newFigureObj;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureMetadata');
+        assessment_UtiltyFn.checkFigureMetadata(element);
+        expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+    xit('Test 16---checkFigureMetadata Audio/Video', () => {
+        let element = audioElementTypeAlfrescoWithData;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureMetadata');
+        assessment_UtiltyFn.checkFigureMetadata(element);
+        expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+    it('Test 17---checkFigureMetadata interactive', () => {
+        let element = Interactive3party;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureMetadata');
+        assessment_UtiltyFn.checkFigureMetadata(element);
+        expect(spyFunction).toHaveReturnedWith(false);
+        spyFunction.mockClear();
+    });
+    it('Test 17---checkInteractive', () => {
+        let element = interactiveElm;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
+        assessment_UtiltyFn.checkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+    it('Test 17---checkInteractive', () => {
+        let element = {};
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
+        assessment_UtiltyFn.checkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(false);
         spyFunction.mockClear();
     });
 });

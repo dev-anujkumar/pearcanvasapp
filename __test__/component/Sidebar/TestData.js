@@ -2795,8 +2795,255 @@ export default {
 			},
 			"showHideType":"show"
 		}
-	}
+	},
+	testcase18: {
+		initState: {
+			appStore:{
+				dataToUpdate: {
+					isNumbered: true,
+					startNumber: 1
+				},
+				activeElement: {elementType: "poetry",index: 0, primaryOption: "primary-poetry", secondaryOption: "secondary-poetry", numbered: false, startNumber: "1",tag: "PE"},
+				slateLevelData:{
+					"urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333":{
+						id: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333",
+						contents:{
+							bodymatter: [
+								{
+									contentUrn: "urn:pearson:entity:636eb51a-70a9-4cb8-81e2-b0ae0247ba76",
+									contents: {
+										bodymatter: []
+									},
+									id: "urn:pearson:manifest:43014725-efad-4056-ab61-a7b2e5ad6b2e",
+									index: 0,
+									numberedline: false,
+									schema: "http://schemas.pearson.com/wip-authoring/poetry/1",
+								}
+							],
+							schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+							title: {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "Slate intro"}
+						},
+						pageCount: 0,
+						pageLimit: 25,
+						pageNo: 0,
+						schema: "http://schemas.pearson.com/wip-authoring/intro/1",
+						status: "wip",
+						type: "chapterintro",
+						contentUrn: "urn:pearson:entity:4657ec09-bde4-42e0-bebf-acba344829c5",
+						versionUrn: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333"
+					}
+				}
+			}
+		},
+		store: {},
+		dataToUpdate: {
+			"isNumbered": true,
+			"startNumber": 1
+		},
+		activeElement: {
+			elementId: "urn:pearson:manifest:43014725-efad-4056-ab61-a7b2e5ad6b2e",
+			elementType: "poetry",
+			elementWipType: "poetry",
+			index: 0,
+			numbered: true,
+			primaryOption: "primary-poetry",
+			secondaryOption: "secondary-poetry",
+			startNumber: "1",
+			tag: "PE",
+		},
+		currentSlateData: {
+			id: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333",
+			contents:{
+				bodymatter: [
+					{
+						contentUrn: "urn:pearson:entity:636eb51a-70a9-4cb8-81e2-b0ae0247ba76",
+						contents: {
+							bodymatter: []
+						},
+						id: "urn:pearson:manifest:43014725-efad-4056-ab61-a7b2e5ad6b2e",
+						index: 0,
+						numberedline: false,
+						schema: "http://schemas.pearson.com/wip-authoring/poetry/1",
+					},
+				],
+				schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+				title: {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "Slate intro"}
+			},
+			pageCount: 0,
+			pageLimit: 25,
+			pageNo: 0,
+			schema: "http://schemas.pearson.com/wip-authoring/intro/1",
+			status: "wip",
+			type: "chapterintro",
+			contentUrn: "urn:pearson:entity:4657ec09-bde4-42e0-bebf-acba344829c5",
+			versionUrn: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333"
+		},
+	},
+	testcase19: {
+		initState: {
+			appStore:{
+				dataToUpdate: {
+					isNumbered: true,
+					startNumber: 1
+				},
+				activeElement: {elementType: "poetry",index: 0, primaryOption: "primary-poetry", secondaryOption: "secondary-poetry", numbered: false, startNumber: "1",tag: "PE"},
+				slateLevelData:{
+					"urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333":{
+						id: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333",
+						contents:{
+							bodymatter: [
+								{
+									contentUrn: "urn:pearson:entity:636eb51a-70a9-4cb8-81e2-b0ae0247ba76",
+									contents: {
+										bodymatter: []
+									},
+									id: "urn:pearson:manifest:43014725-efad-4056-ab61-a7b2e5ad6b2e",
+									index: 0,
+									numberedline: false,
+									schema: "http://schemas.pearson.com/wip-authoring/poetry/1",
+								}
+							],
+							schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+							title: {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "Slate intro"}
+						},
+						pageCount: 0,
+						pageLimit: 25,
+						pageNo: 0,
+						schema: "http://schemas.pearson.com/wip-authoring/intro/1",
+						status: "approved",
+						type: "popup",
+						contentUrn: "urn:pearson:entity:4657ec09-bde4-42e0-bebf-acba344829c5",
+						versionUrn: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333"
+					}
+				}
+			}
+		},
+		store: {},
+		dataToUpdate: {
+			"isNumbered": true,
+			"startNumber": 1
+		},
+		activeElement: {
+			elementId: "urn:pearson:manifest:43014725-efad-4056-ab61-a7b2e5ad6b2e",
+			elementType: "poetry",
+			elementWipType: "poetry",
+			index: 0,
+			numbered: true,
+			primaryOption: "primary-poetry",
+			secondaryOption: "secondary-poetry",
+			startNumber: "1",
+			tag: "PE",
+		},
+		currentSlateData: {
+			id: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333",
+			contents:{
+				bodymatter: [
+					{
+						contentUrn: "urn:pearson:entity:636eb51a-70a9-4cb8-81e2-b0ae0247ba76",
+						contents: {
+							bodymatter: []
+						},
+						id: "urn:pearson:manifest:43014725-efad-4056-ab61-a7b2e5ad6b2e",
+						index: 0,
+						numberedline: false,
+						schema: "http://schemas.pearson.com/wip-authoring/poetry/1",
+					},
+				],
+				schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+				title: {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "Slate intro"}
+			},
+			pageCount: 0,
+			pageLimit: 25,
+			pageNo: 0,
+			schema: "http://schemas.pearson.com/wip-authoring/intro/1",
+			status: "approved",
+			type: "popup",
+			contentUrn: "urn:pearson:entity:4657ec09-bde4-42e0-bebf-acba344829c5",
+			versionUrn: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333"
+		},
+	},
+	testcase20: {
+		initState: {
+			appStore:{
+				dataToUpdate: {
+					isNumbered: true,
+					startNumber: 1
+				},
+				activeElement: {elementType: "poetry",index: 0, primaryOption: "primary-poetry", secondaryOption: "secondary-poetry", numbered: false, startNumber: "1",tag: "PE"},
+				slateLevelData:{
+					"urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333":{
+						id: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333",
+						contents:{
+							bodymatter: [
+								{
+									contentUrn: "urn:pearson:entity:636eb51a-70a9-4cb8-81e2-b0ae0247ba76",
+									contents: {
+										bodymatter: []
+									},
+									id: "urn:pearson:manifest:43014725-efad-4056-ab61-a7b2e5ad6b2e",
+									index: 0,
+									numberedline: false,
+									schema: "http://schemas.pearson.com/wip-authoring/poetry/1",
+								}
+							],
+							schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+							title: {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "Slate intro"}
+						},
+						pageCount: 0,
+						pageLimit: 25,
+						pageNo: 0,
+						schema: "http://schemas.pearson.com/wip-authoring/intro/1",
+						status: "approved",
+						type: "chapterintro",
+						contentUrn: "urn:pearson:entity:4657ec09-bde4-42e0-bebf-acba344829c5",
+						versionUrn: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333"
+					}
+				}
+			}
+		},
+		store: {},
+		dataToUpdate: {
+			"isNumbered": true,
+			"startNumber": 1
+		},
+		activeElement: {
+			elementId: "urn:pearson:manifest:43014725-efad-4056-ab61-a7b2e5ad6b2e",
+			elementType: "poetry",
+			elementWipType: "poetry",
+			index: 0,
+			numbered: true,
+			primaryOption: "primary-poetry",
+			secondaryOption: "secondary-poetry",
+			startNumber: "1",
+			tag: "PE",
+		},
+		currentSlateData: {
+			id: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333",
+			contents:{
+				bodymatter: [
+					{
+						contentUrn: "urn:pearson:entity:636eb51a-70a9-4cb8-81e2-b0ae0247ba76",
+						contents: {
+							bodymatter: []
+						},
+						id: "urn:pearson:manifest:43014725-efad-4056-ab61-a7b2e5ad6b2e",
+						index: 0,
+						numberedline: false,
+						schema: "http://schemas.pearson.com/wip-authoring/poetry/1",
+					},
+				],
+				schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+				title: {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "Slate intro"}
+			},
+			pageCount: 0,
+			pageLimit: 25,
+			pageNo: 0,
+			schema: "http://schemas.pearson.com/wip-authoring/intro/1",
+			status: "approved",
+			type: "chapterintro",
+			contentUrn: "urn:pearson:entity:4657ec09-bde4-42e0-bebf-acba344829c5",
+			versionUrn: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333"
+		},
+	},
 }
-
-
 

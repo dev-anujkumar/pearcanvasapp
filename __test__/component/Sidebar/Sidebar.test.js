@@ -235,8 +235,7 @@ describe('Test for Sidebar component', () => {
                         return 'secondary-single-assessment-puf';
                     }
                 }
-            }
-            
+            }     
                 sidebarInstance.handleSecondaryOptionChange(target);
                 document.querySelector= ()=>{
                     return {
@@ -249,10 +248,6 @@ describe('Test for Sidebar component', () => {
                         }
                     }
                 }
-                // sidebarInstance.setState({
-                //     elementDropdown: '',
-                // })
-                // expect(sidebarInstance.state.elementDropdown).toBe('');
                 sidebarInstance.setState({
                     activeSecondaryOption: value,
                     activeLabelText: labelText,

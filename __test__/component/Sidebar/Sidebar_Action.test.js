@@ -1505,3 +1505,54 @@ describe('4 Test tcmSnapshotsForConversion  ', () => {
         spyconversionElement.mockClear()
     });
 });
+describe('5 Test updateContainerMetadata ', () => {
+    it('5.1 Test Case for API resolve updateContainerMetadata and status is wip', () => {
+        let responseData = {}
+        const {initState,dataToUpdate} = testData?.testcase18;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateContainerMetadata');
+        axios.put = jest.fn(() => Promise.resolve(responseData));
+        sidebarAction.updateContainerMetadata(dataToUpdate);
+        storeMock.dispatch(sidebarAction.updateContainerMetadata(dataToUpdate)); 
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    });
+    it('5.2 Test Case for API resolve updateContainerMetadata and status is approved', () => {
+        let responseData = {}
+        const {initState,dataToUpdate} = testData?.testcase19;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateContainerMetadata');
+        axios.put = jest.fn(() => Promise.resolve(responseData));
+        sidebarAction.updateContainerMetadata(dataToUpdate);
+        storeMock.dispatch(sidebarAction.updateContainerMetadata(dataToUpdate)); 
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    });
+    it('5.3 Test Case for updateContainerMetadata and status is approved type is not popup', () => {
+        let responseData = {}
+        const {initState,dataToUpdate} = testData?.testcase20;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateContainerMetadata');
+        axios.put = jest.fn(() => Promise.resolve(responseData));
+        sidebarAction.updateContainerMetadata(dataToUpdate);
+        storeMock.dispatch(sidebarAction.updateContainerMetadata(dataToUpdate)); 
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    });
+    it('5.4 Test Case for API reject updateContainerMetadata', () => {
+        let responseData = {}
+        const {initState,dataToUpdate} = testData?.testcase18;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateContainerMetadata');
+        axios.put = jest.fn(() => Promise.reject(responseData));
+        sidebarAction.updateContainerMetadata(dataToUpdate);
+        storeMock.dispatch(sidebarAction.updateContainerMetadata(dataToUpdate)); 
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    });
+});
+

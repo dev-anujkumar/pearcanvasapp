@@ -21,9 +21,9 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -54,7 +54,7 @@ import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementConta
 import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
@@ -67,6 +67,8 @@ import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
+import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -463,8 +465,19 @@ class ElementContainer extends Component {
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        
+        let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`)
+            || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+        let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
+        let oldImage = this.props.oldImage;
+        if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
+            oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
+        }
+
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
-            previousElementData.figuredata.interactivetype === "web-link") {
+            previousElementData.figuredata.interactivetype === "web-link" || previousElementData.figuredata.interactivetype === '3rd-party' || 
+            previousElementData.figuredata.interactivetype === 'table') {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
             posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
@@ -474,14 +487,15 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
-                this.props.oldImage !== newInteractiveid
+                oldImage !== newInteractiveid || 
+                podwidth !== (previousElementData.figuredata.posterimage.podwidth ? previousElementData.figuredata.posterimage.podwidth : '') && podwidth !== null
             );
         }
         else {
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-                this.props.oldImage !== newInteractiveid
+                oldImage !== newInteractiveid
             );
         }
     }
@@ -549,12 +563,14 @@ class ElementContainer extends Component {
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-        let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "")
+        let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "");
+        let oldImage = this.props.oldImage;
+        oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
         // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            this.props.oldImage !== assetId
+            oldImage !== assetId
             // (defaultImageUrl !== (previousElementData.figuredata.posterimage && previousElementData.figuredata.posterimage.path)) //PCAT-6815  fixes
         );
     }
@@ -921,12 +937,12 @@ class ElementContainer extends Component {
      * Renders color-palette button for opener element 
      * @param {e} event
      */
-    renderColorPaletteButton = (element, permissions) => {
+    renderColorPaletteButton = (element, permissions,isSubscribersSlate) => {
         const isPermitted = permissions.includes('elements_add_remove')
         if (element.type === elementTypeConstant.OPENER && isPermitted) {
             return (
                 <>
-                    <Button onClick={this.toggleColorPaletteList} type="color-palette" />
+                    <Button isSubscribersSlate={isSubscribersSlate} onClick={this.toggleColorPaletteList} type="color-palette" />
                     <ul className="color-palette-list">{this.renderPaletteList()}</ul>
                 </>
             )
@@ -972,12 +988,12 @@ class ElementContainer extends Component {
      * Renders color-text button for opener element 
      * @param {e} event
      */
-    renderColorTextButton = (element, permissions) => {
+    renderColorTextButton = (element, permissions,isSubscribersSlate) => {
         const isPermitted = permissions.includes('elements_add_remove')
         if (element.type === elementTypeConstant.OPENER && isPermitted) {
             return (
                 <>
-                    <Button onClick={this.toggleColorTextList} type="color-text" />
+                    <Button isSubscribersSlate={isSubscribersSlate} onClick={this.toggleColorTextList} type="color-text" />
                     <ul className="color-text-list">{this.renderTextColorList()}</ul>
                 </>
             )
@@ -1686,8 +1702,8 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element);
-        let showAlfrescoExpandButton = checkFigureMetadata(element)
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton');
+        let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton')
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -1724,7 +1740,9 @@ class ElementContainer extends Component {
 
         /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
-        const inContainer = this.props.parentUrn ? true : false
+        const inContainer = this.props.parentUrn ? true : false;
+        let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
+        let isOwner = projectSharingRole ==="OWNER" ? true :false;
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.renderCopyComponent(this.props, index, inContainer, tcm)}
@@ -1732,10 +1750,10 @@ class ElementContainer extends Component {
                     <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
                     {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
                     {(labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME || MULTI_COLUMN_2C.ELEMENT_TAG_NAME) && <div>{this.renderMultipleColumnLabels(element)}</div>}
-                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e, true)} />)
+                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) ? (<Button type="delete-element"  onClick={(e) => this.showDeleteElemPopup(e, true)} />)
                         : null}
-                    {this.renderColorPaletteButton(element, permissions)}
-                    {this.renderColorTextButton(element, permissions)}
+                    {!isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && this.renderColorPaletteButton(element, permissions)}
+                    {!isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed)&& this.renderColorTextButton(element, permissions)}
                 </div>
                     : ''}
                 <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" + labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick={(e) => this.handleFocus("", "", e, labelText)}>
@@ -1744,16 +1762,16 @@ class ElementContainer extends Component {
                     {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true}  />}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
-                    {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
+                    {permissions && permissions.includes('notes_adding') && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && <Button type="add-comment"  btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                    {permissions && permissions.includes('note_viewer') && anyOpenComment && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && <Button elementId={element.id} onClick={(event) => {
                         if(this.props.projectUsers.length === 0) {
                             this.props.getProjectUsers();
                         }
                         handleCommentspanel(event,element.id, this.props.index)
                         }} type="comment-flag" />}
-                        {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
-                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
-                    {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
+                        {permissions && permissions.includes('elements_add_remove') && showEditButton && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
+                    {feedback && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && !isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed) && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={this.handleCommentPopup}
@@ -1762,6 +1780,9 @@ class ElementContainer extends Component {
                     saveContent={this.saveNewComment}
                     rows={COMMENTS_POPUP_ROWS}
                     dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+                    isOwnerSlate={isOwner}
+                    warningHeaderText={`Warning`}
+                    OwnersDeleteDialogText={OWNERS_ELM_DELETE_DIALOG_TEXT}
                     showDeleteElemPopup={this.state.showDeleteElemPopup}
                     sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
@@ -1896,9 +1917,20 @@ class ElementContainer extends Component {
         }
 
         if ('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
-            let elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
-                return commentOnEntity === detailsToSet.element.id;
+            let elmUrn = []
+            let elmComment
+
+            if (element && element.elementdata?.bodymatter?.length || element.groupeddata?.bodymatter?.length || element.contents?.bodymatter?.length || element.interactivedata || element.popupdata) {
+             (this.props.allComments).filter(({ commentOnEntity }) => {
+                  if (commentOnEntity === detailsToSet.element.id) { elmUrn.push(detailsToSet.element.id) }
             });
+                elmComment = prepareCommentsManagerIcon(slateWrapperConstants.checkTCM(element), element, elmUrn, this.props.allComments);
+            } else {
+                elmComment = (this.props.allComments).filter(({ commentOnEntity }) => {
+                    return commentOnEntity === detailsToSet.element.id
+                });
+            }
+            
             detailsToSet['elmComment'] = elmComment || [];
 
             let elmFeedback = (this.props.tcmData).filter(({ elemURN }) => {
@@ -1907,7 +1939,8 @@ class ElementContainer extends Component {
             detailsToSet['elmFeedback'] = elmFeedback || [];
         }
         const figureTypes = ["image", "mathImage", "table", "video", "audio"]
-        if ((element?.type === "figure") && figureTypes.includes(element?.figuretype)) {
+        const interactiveType = ["3rd-party", "pdf", "web-link", "pop-up-web-link", "table"]
+        if ((element?.type === "figure") && (figureTypes.includes(element?.figuretype)) || interactiveType.includes(element?.figuredata?.interactivetype) ) {
             getAlfrescositeResponse(id, (response) => {
                 detailsToSet['alfrescoSiteData'] = response
             })
@@ -2016,7 +2049,22 @@ class ElementContainer extends Component {
      */
 
     handleAlfrescoMetadataWindow = () => {
-        let imageId = this.props?.element?.figuredata?.imageid;
+        let imageId
+        switch(this.props?.element?.figuretype){
+            case IMAGE:
+                imageId=this.props?.element?.figuredata?.imageid
+                break;
+            case AUDIO :
+                imageId=this.props?.element?.figuredata?.audioid
+                break;
+            case VIDEO:
+                imageId=this.props?.element?.figuredata?.videoid
+                break;
+            case  INTERACTIVE:
+                imageId=this.props?.element?.figuredata?.interactiveid
+                break;
+            default: imageId=null
+        }
         imageId = imageId.replace('urn:pearson:alfresco:', '');
         const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
         window.open(Url);
@@ -2234,7 +2282,10 @@ const mapStateToProps = (state) => {
         oldFigureDataForCompare: state.appStore.oldFigureDataForCompare,
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         prevSelectedElement: state.tcmReducer.prevElementId,
-        projectUsers: state.commentsPanelReducer.users
+        projectUsers: state.commentsPanelReducer.users,
+        projectInfo: state.projectInfo,
+        oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare,
+        oldAudioVideoDataForCompare: state.appStore.oldAudioVideoDataForCompare
     }
 }
 

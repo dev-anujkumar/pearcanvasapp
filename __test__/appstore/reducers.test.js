@@ -41,7 +41,10 @@ import {
     SHOW_REMOVE_GLOSSARY_IMAGE,
     ADD_FIGURE_GLOSSARY_POPUP,
     SET_FIGURE_GLOSSARY,
-    UPDATE_OLD_FIGUREIMAGE_INFO
+    UPDATE_OLD_FIGUREIMAGE_INFO,
+    UPDATE_OLD_AUDIOVIDEO_INFO,
+    UPDATE_OLD_SMARTLINK_INFO,
+    UPDATE_FIGURE_DROPDOWN_OPTIONS
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -69,7 +72,15 @@ const initialState = {
     removeGlossaryImage:false,
     addfigureGlossarypopup:false,
     figureGlossaryData:{},
-    oldFigureDataForCompare: {}
+    oldFigureDataForCompare: {},
+    oldAudioVideoDataForCompare: {},
+    oldSmartLinkDataForCompare: {},
+    figureDropdownData: {
+        audio: ["No Label", "Custom"],
+        image: ["No Label", "Custom"],
+        smartlinks: ["No Label", "Custom"],
+        video: ["No Label", "Custom"]
+    }
 };
 
 const splittedElementIndexValue = "5";
@@ -686,6 +697,36 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         }
         expect(reducer(initialState, {
             type: UPDATE_OLD_FIGUREIMAGE_INFO,
+            payload: {}
+        })).toEqual(output);
+    })
+    it('case 45- UPDATE_OLD_AUDIOVIDEO_INFO ', () => {
+        let output = {
+            ...initialState,
+            oldAudioVideoDataForCompare: {}
+        }
+        expect(reducer(initialState, {
+            type: UPDATE_OLD_AUDIOVIDEO_INFO,
+            payload: {}
+        })).toEqual(output);
+    })
+    it('case 46- UPDATE_OLD_SMARTLINK_INFO ', () => {
+        let output = {
+            ...initialState,
+            oldSmartLinkDataForCompare: {}
+        }
+        expect(reducer(initialState, {
+            type: UPDATE_OLD_SMARTLINK_INFO,
+            payload: {}
+        })).toEqual(output);
+    })
+    it('case 47- UPDATE_FIGURE_DROPDOWN_OPTIONS ', () => {
+        let output = {
+            ...initialState,
+            figureDropdownData: {}
+        }
+        expect(reducer(initialState, {
+            type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
             payload: {}
         })).toEqual(output);
     })
