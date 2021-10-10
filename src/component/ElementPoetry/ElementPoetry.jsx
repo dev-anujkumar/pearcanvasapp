@@ -168,6 +168,13 @@ class ElementPoetry extends Component {
                     return this.renderBlankContainer(this.props, parentUrn, parentIndex, poetryData)
                 }
                 return stanzas.map((element, index) => {
+                    const elementLineage = {
+                        ...this.props.element,
+                       grandParent: {
+                           asideData: this.props.asideData,
+                       },
+                       stanzaIndex : index
+                   }
                     return (
                         <React.Fragment key={element.id}>                                   
                             {index === 0 && <ElementSaprator
@@ -189,6 +196,7 @@ class ElementPoetry extends Component {
                                 parentUrn={parentUrn}
                                 showBlocker={this.props.showBlocker}
                                 poetryData={poetryData}
+                                asideData={elementLineage}
                                 permissions={this.props.permissions}
                                 handleCommentspanel={this.props.handleCommentspanel}
                                 isBlockerActive={this.props.isBlockerActive}

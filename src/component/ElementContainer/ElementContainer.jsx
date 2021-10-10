@@ -703,8 +703,12 @@ class ElementContainer extends Component {
                         const elementLineage = {
                             ...this.props.element, grandParent: { asideData, parentUrn }
                         }
+                        
+    console.log("Poetry Update Snapshot 0",dataToSend, showHideType, elementLineage);
                         this.props.updateElement(dataToSend, elemIndex, parentUrn, elementLineage, showHideType, parentElement, poetryData);
                     } else {
+
+    console.log("Poetry Update Snapshot -1",dataToSend, showHideType, asideData);
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                     }
                 }
@@ -1510,6 +1514,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.POETRY_ELEMENT:
                     editor = <ElementPoetry index={index}
+                        asideData={this.props.asideData}
                         accessDenied={this.props.accessDenied}
                         handleCommentspanel={handleCommentspanel}
                         updateFigureData={this.updateFigureData}
