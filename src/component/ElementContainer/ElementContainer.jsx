@@ -704,11 +704,11 @@ class ElementContainer extends Component {
                             ...this.props.element, grandParent: { asideData, parentUrn }
                         }
                         
-    console.log("Poetry Update Snapshot 0",dataToSend, showHideType, elementLineage);
+    console.log("Poetry snapshot update 0",dataToSend, showHideType, elementLineage);
                         this.props.updateElement(dataToSend, elemIndex, parentUrn, elementLineage, showHideType, parentElement, poetryData);
                     } else {
 
-    console.log("Poetry Update Snapshot -1",dataToSend, showHideType, asideData);
+    console.log("Poetry snapshot update -1",dataToSend, showHideType, asideData, parentUrn, parentElement, poetryData);
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                     }
                 }
@@ -1545,6 +1545,7 @@ class ElementContainer extends Component {
                         elementSepratorProps={elementSepratorProps}
                         pasteElement={this.props.pasteElement}
                         userRole={this.props.userRole}
+                        parentUrn={this.props?.parentUrn}
                         parentElement={this.props.parentElement}
                     />
                     labelText = 'PE'
