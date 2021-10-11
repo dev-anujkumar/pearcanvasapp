@@ -308,7 +308,6 @@ class Comments extends React.Component {
         const { commentUrn } = this.props.comment
         const { elementId } = this.props
         const { newAssignee } = this.state
-        // const newAssignee = "totally random"
         this.props.updateAssignee(commentUrn, newAssignee, elementId)
     }
 
@@ -316,7 +315,7 @@ class Comments extends React.Component {
         const { commentUrn } = this.props.comment
         const { elementId } = this.props
         const { newRole } = this.state
-        this.props.updateAssignee(commentUrn, newRole, elementId)
+        this.props.updateRole(commentUrn, newRole, elementId)
     }
 
     render() {

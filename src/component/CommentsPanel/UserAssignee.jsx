@@ -11,7 +11,6 @@ class UserAssignee extends React.Component {
     */
 
     assigneeForm = (props) => {
-        // console.log("in assign");
         const { users, roles, show, mode} = props
         if (show) {
             return (

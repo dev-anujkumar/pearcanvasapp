@@ -8,7 +8,7 @@ import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
 import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
 import { utils } from '../../js/utils'
-import { replyComment, resolveComment, toggleReply, toggleCommentsPanel, updateComment, getProjectUsers, updateAssignee, deleteComment } from './CommentsPanel_Action';
+import { replyComment, resolveComment, toggleReply, toggleCommentsPanel, updateComment, getProjectUsers, updateAssignee, deleteComment , updateRole} from './CommentsPanel_Action';
 
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -73,24 +73,26 @@ class CommentsPanel extends React.Component {
     //   };
 
     getRoleOption = (users) => {
+        console.log("data",users)
         let roleOptions = [];
         const distinctRoles = [];
         Object.values(users).forEach((item1) => {
-          if (item1.roleId) {
+          if (item1.roleName) {
             if (
               !roleOptions.some(
-                (e) => e.value === item1.roleId && e.label === item1.roleId
+                (e) => e.value === item1.roleName && e.label === item1.roleName
               )
             ) {
-              if(distinctRoles.indexOf(item1.roleId) === -1) {
-              distinctRoles.push(item1.roleId);
-              roleOptions.push({ value: {roleId: item1.roleId, filterType: "Role", label: item1.roleId}, label: item1.roleId });
+              if(distinctRoles.indexOf(item1.roleName) === -1) {
+              distinctRoles.push(item1.roleName);
+              roleOptions.push({ value: {roleName: item1.roleName, filterType: "Role", label: item1.roleName}, label: item1.roleName });
               }
             }
           }
         });
+        roleOptions.sort((a,b) => (b.label.toLowerCase() < a.label.toLowerCase() ? 1 : -1));
         return roleOptions;
-    };
+      };
 
 
     /**
@@ -232,6 +234,10 @@ class CommentsPanel extends React.Component {
         this.props.updateAssignee(commentUrn, newAssignee, elementId);
     }
 
+    updateRole= (commentUrn, newRole, elementId)=>{
+        this.props.updateRole(commentUrn, newRole, elementId);
+    }
+
     /**
     * 
     * @discription - This function is to delete the comment
@@ -267,6 +273,7 @@ class CommentsPanel extends React.Component {
                     deleteComment={this.deleteComment}
                     toggleReply={this.props.toggleReply}
                     updateAssignee={this.updateAssignee}
+                    updateRole={this.updateRole}
                     toggleReplyForm={this.props.toggleReplyForm}
                     users={users}
                     roles={roles}
@@ -444,7 +451,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         deleteComment: (commentUrn, elementId) => {
             dispatch(deleteComment(commentUrn, elementId))
-        }
+        },
+        updateRole: (commentUrn, newRole, elementId) => {
+            dispatch(updateRole(commentUrn, newRole, elementId))
+        },
     }
 }
 
