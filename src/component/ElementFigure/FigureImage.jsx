@@ -110,7 +110,7 @@ class FigureImage extends Component {
         })
     }
     
-    /*** @description This function is used to handle Canvas Blocker on Update */
+    /*** @description This function is used to handle Canvas Blocker on delete */
     showCanvasBlocker = (value) => {
         if (value == true) {
             showTocBlocker();
@@ -142,7 +142,7 @@ class FigureImage extends Component {
             this.showCanvasBlocker(true)
             return (
                 <PopUp
-                    dialogText="Are you sure you want to delete?"
+                    dialogText="Are you sure you want to delete, this action cannot be undone?"
                     active={true}
                     togglePopup={this.toggledeletePopup}
                     isdeleteassetPopup={true}

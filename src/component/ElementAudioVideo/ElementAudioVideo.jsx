@@ -27,9 +27,48 @@ class ElementAudioVideo extends Component {
             elementType: this.props.model.figuretype || "",
             projectMetadata: false,
             alfrescoSite: '',
-            alfrescoSiteData: {}
+            alfrescoSiteData: {},
+            deleteassetPopup: false
         }
     }
+    /**
+     * @description This function is used to toggle delete popup
+     * @param {*} toggleValue Boolean value
+     * @param {*} event event object
+     */
+     toggledeletePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            deleteassetPopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue);
+    }
+
+    /*** @description This function is used to render delete Popup */
+    showdeleteassetPopup = () => {
+        if (this.state.deleteassetPopup) {
+            this.showCanvasBlocker(true)
+            return (
+                <PopUp
+                    dialogText="Are you sure you want to delete, this action cannot be undone?"
+                    active={true}
+                    togglePopup={this.toggledeletePopup}
+                    isdeleteassetPopup={true}
+                    deleteasset={this.deleteFigureResource}
+                    isInputDisabled={true}
+                    isdeleteassetClass="elm-update"
+                    
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+
+    
     /**
      * @description data after selecting an asset from alfresco c2 module
      * @param {*} data selected asset data
@@ -462,7 +501,8 @@ class ElementAudioVideo extends Component {
       
             return (
                 <div className="figureElement">
-                    <FigureUserInterface deleteElementAsset={this.deleteElementAsset} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={this.handleC2MediaClick} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                {this.state.deleteassetPopup && this.showdeleteassetPopup()}
+                <FigureUserInterface deleteElementAsset={this.deleteElementAsset} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={this.handleC2MediaClick} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                 </div>         
             );
         }
