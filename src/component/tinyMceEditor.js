@@ -30,7 +30,7 @@ import { wirisAltTextPopup, createElement } from './SlateWrapper/SlateWrapper_Ac
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, getSelectedElement }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
@@ -1325,6 +1325,10 @@ export class TinyMceEditor extends Component {
                     }
                 }
             }
+
+            console.log("New element", newElement);
+            console.log("Props", this.props);
+            console.log("selected element",getSelectedElement(this.props));
         });
     }
 

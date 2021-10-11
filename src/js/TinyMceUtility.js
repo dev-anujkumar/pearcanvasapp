@@ -160,3 +160,27 @@ export const isNestingLimitReached = (index) => {
     }
     return true;
 }
+
+const getSelectedElementChildrens = (elementId, bodymatter, start, indexes) => {
+    if (bodymatter?.id === elementId) return bodymatter;
+    if (start < indexes.length && bodymatter && Object.keys(bodymatter).length) {
+        if (bodymatter.type === MANIFEST_LIST && bodymatter.listdata && bodymatter.listdata.bodymatter.length) {
+            return getSelectedElementChildrens(elementId, bodymatter.listdata.bodymatter[Number(indexes[start])], start + 1, indexes);
+        }
+        if (bodymatter.type === MANIFEST_LIST_ITEM && bodymatter.listitemdata && bodymatter.listitemdata.bodymatter.length) {
+            return getSelectedElementChildrens(elementId, bodymatter.listitemdata.bodymatter[Number(indexes[start])], start + 1, indexes);
+        }
+    }
+}
+
+
+export const getSelectedElement = (data) => {
+    const { slateLevelData, index, elementId } = data;
+    if (slateLevelData && Object.values(slateLevelData).length && index) {
+        const { contents } = Object.values(slateLevelData)[0];
+        if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
+            const indexes = index.split("-");
+            return getSelectedElementChildrens(elementId, contents.bodymatter[indexes[0]], 0, indexes);
+        }
+    }
+}
