@@ -48,7 +48,7 @@ const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockf
             return false;
         }
         let newBodymatter = currentSlateData.contents.bodymatter;
-        var markedIndexText, markedIndexElem = {}, tempMarkedIndexContentText;
+        var markedIndexTextFirstLvl, markedIndexTextSecondLvl, markedIndexElem = {}, tempMarkedIndexContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
         if (showHideElement || asideParent?.type === 'showhide') { /** markedIndex inside Show-Hide */
@@ -165,13 +165,17 @@ const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockf
     }
 
     tempMarkedIndexContentText = markedIndexElem && markedIndexElem.html['indexEntries'] && markedIndexElem.html['indexEntries'][markIndexid];
-    markedIndexText = tempMarkedIndexContentText && JSON.parse(tempMarkedIndexContentText);
+    markedIndexTextFirstLvl = tempMarkedIndexContentText && JSON.parse(tempMarkedIndexContentText).firstLevelEntry || markIndexText;
+    markedIndexTextSecondLvl = tempMarkedIndexContentText && JSON.parse(tempMarkedIndexContentText).secondLevelEntry ;
 
     return await dispatch({
         type: OPEN_MARKED_INDEX,
         payload: {
             markedIndexValue: markedIndexValue,
-            markedIndexCurrentValue: markedIndexText,
+            markedIndexCurrentValue: {
+                firstLevel: markedIndexTextFirstLvl,
+                secondLevel: markedIndexTextSecondLvl
+            },
             elementIndex: index
         }
     });

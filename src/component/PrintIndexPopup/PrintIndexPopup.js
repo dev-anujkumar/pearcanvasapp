@@ -5,8 +5,12 @@ import TextField from '@material-ui/core/TextField';
 
 
 export default function PrintIndexPopup(props){
-  const [indexEntry, setIndexEntry] = useState(props.markIndexvalue.markIndexText || '');
-  const [subEntry, setSubEntry] = useState('');
+  let propMarkIndexvalue = props.markIndexvalue;
+  let firstLevel = (propMarkIndexvalue.firstLevel && tinyMCE.$(propMarkIndexvalue.firstLevel.trim()).length) ? (tinyMCE.$(propMarkIndexvalue.firstLevel))[0].innerHTML : propMarkIndexvalue.firstLevel;
+  let secondLevel = (propMarkIndexvalue.secondLevel && tinyMCE.$(propMarkIndexvalue.secondLevel.trim()).length) ? (tinyMCE.$(propMarkIndexvalue.secondLevel))[0].innerHTML : propMarkIndexvalue.secondLevel;
+
+  const [indexEntry, setIndexEntry] = useState(firstLevel || '');
+  const [subEntry, setSubEntry] = useState(secondLevel || '');
 
   // const handleDrawerClose = value => {
   //   props.showPrintIndexPopup(value);
