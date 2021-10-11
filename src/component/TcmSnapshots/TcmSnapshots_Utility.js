@@ -917,6 +917,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //SH inside WE - head/body
             elementTag = `WE:${isHead ? `${isHead}:` : ""}${elementTag}`
             elementId = `${asideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
+            console.log("Poetry Snapshot update SH 12.2", isHead, elementId, elementTag, parentElement, containerElement);
         }
         if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
             elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
@@ -934,16 +935,18 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
     }
     else if (parentElement?.element?.type === POETRY_ELEMENT) {  
-        console.log("Poetry Snapshot update 12.2 Parent Mil gaya", parentElement, tag)
-
-        if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
+        console.log("Poetry Snapshot update 12.2 Parent Mil gaya", parentElement, tag, elementTag)
+        elementTag = `${tag.parentTag}:${tag.childTag}`;
+        if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //block poetry inside Aside
             elementTag = `AS:${elementTag}`
             elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
         }
-        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //SH inside WE - head/body
+        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //block poetry inside WE - head/body
             elementTag = `WE:${isHead ? `${isHead}:` : ""}${elementTag}`
             elementId = `${asideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
         }
+        console.log("Poetry Snapshot update SH 12.2", isHead, elementId, elementTag, parentElement, containerElement);
+        
      }
 
     else if ((popupInContainer && config.isPopupSlate) || (popupInContainer && popupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
@@ -974,12 +977,12 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
     }
 
-    console.log("Poetry Snapshot update 12.3", parentElement);
+    // console.log("Poetry Snapshot update 12.3",elementData, parentElement);
     elementData = {
         elementUrn: elementId,
         elementType: elementTag
     }
-
+    console.log("Poetry Snapshot update 12.3",elementData, parentElement);
     return elementData
 }
 
