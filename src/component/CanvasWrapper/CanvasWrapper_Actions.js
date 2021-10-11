@@ -1079,7 +1079,8 @@ export const appendCreatedElement = async (paramObj, responseData) => {
         dispatch,
         cb,
         popupField,
-        createdFromFootnote
+        createdFromFootnote,
+        cgTitleFieldData
     } = paramObj
 
     let elemIndex = `cypress-${popupElementIndex}`
@@ -1133,13 +1134,28 @@ export const appendCreatedElement = async (paramObj, responseData) => {
             }
         }
     }
-    else if(parentElement.type === "citations"){
-        let targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]]
-        if(targetCG){
-            targetCG.contents["formatted-title"] = responseData
-            targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("",elemNode.innerHTML)
-            targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG
+    else if (parentElement.type === "citations") {
+        let targetCG;
+        // Check if CG is created inside S/H
+        if (popupElementIndex.length === 4) {
+            let sectionType = cgTitleFieldData?.asideData?.parent?.showHideType;
+            if (sectionType) {
+                targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]].interactivedata[sectionType][popupElementIndex[2]];
+            }
+            if (targetCG) {
+                targetCG.contents["formatted-title"] = responseData;
+                targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
+                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText;
+                _slateObject.contents.bodymatter[popupElementIndex[0]].interactivedata[sectionType][popupElementIndex[2]] = targetCG;
+            }
+        } else {
+            targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]];
+            if (targetCG) {
+                targetCG.contents["formatted-title"] = responseData;
+                targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
+                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText;
+                _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG;
+            }
         }
     }
     dispatch({
@@ -1203,7 +1219,7 @@ const getRequestData = (parentElement) => {
     }
     return dataToSend
 }
-export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote) => (dispatch, getState) => {
+export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote, cgTitleFieldData = {}) => (dispatch, getState) => {
     let _requestData =  getRequestData(parentElement)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
@@ -1223,7 +1239,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             dispatch,
             cb,
             popupField,
-            createdFromFootnote
+            createdFromFootnote,
+            cgTitleFieldData
         }
         if (parentElement && parentElement.type == 'popup') {
             const parentData = getState().appStore.slateLevelData;

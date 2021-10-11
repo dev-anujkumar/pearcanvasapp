@@ -142,35 +142,13 @@ export const deleteFromStore = (params) => {
         bodymatter.forEach((element, key) => {
             if (element.id === elmId) {
                 bodymatter.splice(key, 1);
-            } else if (parentUrn && parentUrn.elementType == "element-aside") {
+            } else if (parentUrn && parentUrn.elementType == "element-aside" && asideData?.parent?.type !== 'showhide') {
                 if (element.id === parentUrn.manifestUrn) {
                     element.elementdata.bodymatter.forEach((ele, indexInner) => {
                         if (ele.id === elmId) {
                             element.elementdata.bodymatter.splice(indexInner, 1);
                         }
                     })
-                    /* Delete element inside S/H:AS:ELEMENTS */
-                } else if (asideData?.parent?.type === 'showhide' && asideData?.type === 'element-aside') {
-                    if (element.id === asideData?.parent?.id) {
-                        element.interactivedata.show && element.interactivedata.show.map((elem) => {
-                            if (elem.id === asideData?.id) {
-                                elem.elementdata.bodymatter.forEach((innerElem, indexInner) => {
-                                    if (innerElem.id === elmId) {
-                                        elem.elementdata.bodymatter.splice(indexInner, 1);
-                                    }
-                                })
-                            }
-                        })
-                        element.interactivedata.hide && element.interactivedata.show.map((elem) => {
-                            if (elem.id === asideData?.id) {
-                                elem.elementdata.bodymatter.forEach((innerElem, indexInner) => {
-                                    if (innerElem.id === elmId) {
-                                        elem.elementdata.bodymatter.splice(indexInner, 1);
-                                    }
-                                })
-                            }
-                        })
-                    }
                 } else {
                     /* Delete inside 2C:WE/AS:ELEMETNS */
                     element?.groupeddata?.bodymatter?.map(item => {
@@ -179,7 +157,11 @@ export const deleteFromStore = (params) => {
                         })
                     })
                 }
-            } else if(poetryData && poetryData.type == 'poetry') {
+          /* Delete element inside S/H:AS/WE:ELEMENTS */
+        } else if (asideData?.parent?.type === 'showhide' && asideData?.type === 'element-aside' && element.id === asideData?.parent?.id) {
+            let section = asideData?.parent?.showHideType;
+            delInsideWE(element.interactivedata[section][iList[2]], asideData, parentUrn, elmId);
+        } else if (poetryData && poetryData.type == 'poetry') {
                 if (element.id === poetryData.parentUrn) {
                     element.contents.bodymatter.forEach((ele, indexInner) => {
                         if (ele.id === elmId) {
@@ -212,9 +194,14 @@ export const deleteFromStore = (params) => {
                 } else {
                     delInsideWE(element, asideData, parentUrn, elmId);
                 }
-            } else if (parentUrn && parentUrn.elementType == "citations"){
+            } else if (parentUrn && parentUrn.elementType == "citations") {
+                const innerIndex = index.split("-");
+                /* Check if CG is contained by S/H */
+                if (asideData?.parent?.type === SHOWHIDE && element.id === asideData?.parent?.id && innerIndex.length === 4) {
+                    let section = asideData?.parent?.showHideType;
+                    element.interactivedata[section][iList[2]].contents.bodymatter.splice([iList[3] - 1], 1);
+                }
                 if (element.id === parentUrn.manifestUrn) {
-                    const innerIndex = index.split("-")
                     element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
                 }
             }
@@ -228,6 +215,7 @@ export const deleteFromStore = (params) => {
         }
     })
 }
+
 /* Delete Element inside WE and aside */
 const delInsideWE = (item, asideData, parentUrn, elmId) => {
     /* Delete elements inside 2C:WE/AS */

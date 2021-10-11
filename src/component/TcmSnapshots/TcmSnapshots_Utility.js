@@ -1223,7 +1223,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex, currentSlateData);
         wipData = containerElement?.showHideObj?.currentElement || {};
     } else {
-        wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
+        wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action, containerElement)
     }
     
     let versionStatus = fetchManifestStatus(updateBodymatter, containerElement, response.type);
@@ -1511,7 +1511,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
  * @param {String} entityUrn - entityUrn
  * @returns {Object} WipData for element 
 */
-export const fetchElementWipData = (bodymatter, index, type, entityUrn, operationType) => {
+export const fetchElementWipData = (bodymatter, index, type, entityUrn, operationType, containerElement) => {
     let eleIndex, wipData = {};
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
@@ -1531,7 +1531,12 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
                 break;
             case CITATION_ELEMENT:                   /** Inside Citations */
-                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
+                if (eleIndex?.length === 4) {
+                    let sectionType = containerElement?.asideData?.parent?.showHideType;
+                    wipData = sectionType ? bodymatter[eleIndex[0]].interactivedata[sectionType][eleIndex[2]].contents.bodymatter[eleIndex[3] - 1] : {};
+                } else {
+                    wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
+                }
                 break;
             case ELEMENT_LIST:
             case BLOCKFEATURE:

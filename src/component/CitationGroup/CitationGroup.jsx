@@ -95,6 +95,7 @@ export class CitationGroup extends Component {
                                     onClickCapture={this.context.onClickCapture}
                                     parentElement = {this.context.element}
                                     userRole={this.props.userRole}
+                                    asideData={asideData}
                                 >
                                 </ElementContainer>
                                 {
@@ -228,10 +229,12 @@ export class CitationGroup extends Component {
      * @param {object} context - component's context object
      */
     renderCitationGroupContainer = (context) => {
+        const {id, type, contentUrn} = context?.parentElement || {};
+        let asideData = (type === "showhide") ? { parent: { id, type, contentUrn, showHideType: context?.showHideType }} : {};
         return (
             <>
                 <header>
-                    <CGTinyMCE createPopupUnit = {this.props.createPopupUnit} />
+                    <CGTinyMCE createPopupUnit = {this.props.createPopupUnit} asideData = {asideData} parentElement = {this.context.element} />
                 </header>
                 <div >
                     {this.renderCitationElementContainer(context)}

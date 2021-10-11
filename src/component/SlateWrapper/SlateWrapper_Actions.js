@@ -148,8 +148,22 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     })
                 /* To update redux store while creating new element inside S/H->Aside->New */
                 } else if (asideData?.parent?.type === "showhide" && item.id == asideData?.parent?.id) {
-                    appendElementInsideShowhide(item, 'show', asideData, 'elementdata', index, createdElementData);
-                    appendElementInsideShowhide(item, 'hide', asideData, 'elementdata', index, createdElementData);
+                    let sectionType = asideData?.parent?.showHideType;
+                    if (sectionType) {
+                        if (asideData.subtype === 'workedexample' && parentUrn.elementType === 'manifest') {
+                            item.interactivedata[sectionType] && item.interactivedata[sectionType].map((element) => {
+                                if (element.id === asideData.id) {
+                                    element.elementdata.bodymatter && element.elementdata.bodymatter.map((ele) => {
+                                        if (ele.id === parentUrn.manifestUrn) {
+                                            ele.contents.bodymatter.splice(index, 0, createdElementData)
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+                            appendElementInsideShowhide(item, sectionType, asideData, 'elementdata', index, createdElementData);
+                        }
+                    }
                 /* To update redux store while creating new element inside 2C->Aside->New */
                 } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
                     item?.groupeddata?.bodymatter?.map((ele) => {
@@ -415,10 +429,16 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 else if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
                     const indexs = elementIndex?.split('-') || [];
+                    let sectionType = parentElement?.showHideType;
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
                         let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]];
                         if (asid.contentUrn == currentSlateEntityUrn) {
                             asid?.elementdata?.bodymatter?.move(oldIndex, newIndex);
+                        }
+                    } else if (parentElement?.type === SHOW_HIDE && sectionType && indexs?.length === 3) { /* S/H:AS: Swap Elements */
+                        let asId = newBodymatter[indexs[0]]?.interactivedata[sectionType][indexs[2]];
+                        if (asId.contentUrn == currentSlateEntityUrn) {
+                            asId?.elementdata?.bodymatter?.move(oldIndex, newIndex);
                         }
                     } else {
                         for (let i in newBodymatter) {
@@ -429,10 +449,17 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     }
                 } else if (containerTypeElem && containerTypeElem == 'section') {
                     const indexs = elementIndex?.split('-') || [];
+                    let sectionType = parentElement?.showHideType;
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:WE:BODY:SECTION-BREAK: Swap Elements */
                         newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.map(item => {
                             if (item.contentUrn == currentSlateEntityUrn) {
                                 item?.contents?.bodymatter?.move(oldIndex, newIndex);
+                            }
+                        })
+                    } else if (parentElement?.type === SHOW_HIDE && sectionType && indexs?.length === 3) { /* S/H:WE:BODY:SECTION-BREAK: Swap Elements */
+                        let asId = newBodymatter[indexs[0]]?.interactivedata[sectionType][indexs[2]]?.elementdata?.bodymatter?.map(item => {
+                            if (asId.contentUrn == currentSlateEntityUrn) {
+                                asId?.elementdata?.bodymatter?.move(oldIndex, newIndex);
                             }
                         })
                     } else {
