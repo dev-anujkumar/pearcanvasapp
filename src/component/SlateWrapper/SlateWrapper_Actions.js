@@ -96,7 +96,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
             }
             else {
-                console.log("Poetry Snapshot create 1", slateData, containerElement);
                 tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
             }
         }

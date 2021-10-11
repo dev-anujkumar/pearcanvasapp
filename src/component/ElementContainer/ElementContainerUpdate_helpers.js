@@ -476,7 +476,6 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         currentParentData,
         showHideObj
     } = params
-
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
     const isPopupOrShowhideElement = (allowedParentType.includes(parentElement?.type) || (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
