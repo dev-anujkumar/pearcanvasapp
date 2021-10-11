@@ -424,7 +424,7 @@ const tcmSnapshotsPoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { a
     const isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
     const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn });
     console.log("Poetry Snapshot update 13", elementDetails, isHead);
-    const stanzaData = {}
+    const stanzaData = {html: {text:'<p class="paragraphNumeroUno"><br></p>'}};
     prepareAndSendTcmData(elementDetails, stanzaData, defaultKeys, actionStatus, index);
 }
 
@@ -897,7 +897,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
         }
     }
 
-    console.log("Poetry Snapshot update 14", currentSnapshot);
+    console.log("Poetry Snapshot update 22", currentSnapshot);
     await sendElementTcmSnapshot(currentSnapshot)
 }
 
@@ -1172,6 +1172,8 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
            
         }
     }
+
+    console.log("Poetry Snapshot 18 the element is ", elementSnapshot)
     return elementSnapshot;
 }
 
@@ -1252,6 +1254,7 @@ const prepareMetablock = (element, actionStatus) => {
 
 export const setContentSnapshot = (element, elementDetails, actionStatus, CurrentSlateStatus) => {
     let snapshotData = "";
+    console.log("Poetry Snapshot 15 the element is ", element, elementDetails)
     if (element.type === MULTI_COLUMN_GROUP && (element.groupdata && element.groupdata.bodymatter && element.groupdata.bodymatter[0].html.text)) {
         snapshotData = element.groupdata.bodymatter[0].html.text
     } else if (element.type === BLOCKFEATURE && element.elementdata && element.elementdata.type && element.elementdata.type == 'blockquote') {
@@ -1265,10 +1268,13 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
     }*/
     else {
         snapshotData = element.html && element.html.text ? element.html.text : "";
+        console.log("Poetry Snapshot 16 the element is ", snapshotData)
     }
     snapshotData = handleBlankLineDom(snapshotData,'BlankLine');
     snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'');
     snapshotData = snapshotData && removeCalloutTitle(snapshotData)
+
+    console.log("Poetry Snapshot 17 the element is ", snapshotData)
     return snapshotData
 }
 /**
