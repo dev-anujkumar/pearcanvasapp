@@ -96,6 +96,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
             }
             else {
+                console.log("Poetry Snapshot create 1", slateData, containerElement);
                 tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
             }
         }
@@ -189,11 +190,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else if(poetryData?.parent?.type === "element-aside" && item.id === poetryData?.parent?.id){
                     item?.elementdata?.bodymatter?.map((ele) => {
                             if (ele?.id === parentUrn.manifestUrn) {
-                                ele?.contents?.bodymatter?.splice(outerAsideIndex, 0, createdElementData);
+                                ele?.contents?.bodymatter?.splice(index, 0, createdElementData);
                             } else if (ele?.contents?.bodymatter) {
                                 ele.contents.bodymatter.map((ele2) => {
                                     if (ele2?.id === parentUrn.manifestUrn) {
-                                        ele2?.contents?.bodymatter?.splice(outerAsideIndex, 0, createdElementData);
+                                        ele2?.contents?.bodymatter?.splice(index, 0, createdElementData);
                                     }
                                 })
                             }
