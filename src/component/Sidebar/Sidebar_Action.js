@@ -610,6 +610,7 @@ export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
 }
 
 export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) => {
+    console.log("updateContainerMetadata ",dataToUpdate)
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
@@ -619,7 +620,13 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         currentSlateData
     }
     let dataToSend = {
-        numberedline: dataToUpdate.isNumbered
+        listtype: "ordered",
+        subtype: "decimal",
+        columnnumber: 1,
+        startNumber: "1",
+    }
+    if(dataToUpdate.elementType && dataToUpdate.elementType == "manifestlist" && dataToUpdate.primaryOption){
+        dataToSend.columnnumber = dataToUpdate.primaryOption.substring(dataToUpdate.primaryOption.length-1,dataToUpdate.primaryOption.length)
     }
     if (dataToUpdate.isNumbered == true) {
         dataToSend.startlinenumber = dataToUpdate.startNumber
@@ -628,6 +635,9 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
     const updatedData = dispatch(updateContainerMetadataInStore(updateParams,""))
     if(updatedData?.elementEntityUrn){
         elementEntityUrn = updatedData.elementEntityUrn
+    }
+    if(dataToUpdate.contentUrn){
+        elementEntityUrn = dataToUpdate.contentUrn;
     }
     let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
     currentParentData[config.slateManifestURN] = updatedSlateLevelData
@@ -680,6 +690,22 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                     }
                 })
             }
+            let activeElementObject = {
+                elementId: dataToUpdate.elementId,
+               index: dataToUpdate.index,
+                elementType: dataToUpdate.elementType,
+                primaryOption: dataToUpdate.primaryOption,
+                secondaryOption: dataToUpdate.secondaryOption,
+                //tag: newElementData.labelText,
+                toolbar: dataToUpdate.toolbar,
+                elementWipType: dataToUpdate.elementWipType,
+                //altText,
+                //longDesc
+            };
+            dispatch({
+                type: SET_ACTIVE_ELEMENT,
+                payload: activeElementObject
+            });
         }
         config.conversionInProcess = false
         config.savingInProgress = false
