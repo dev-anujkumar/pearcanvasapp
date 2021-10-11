@@ -86,7 +86,7 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'ApiKey': config.AUDIO_API_KEY,
-                    'PearsonSSOSession': config.ssoToken,
+                    // 'PearsonSSOSession': config.ssoToken,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             });
@@ -132,7 +132,7 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'ApiKey': config.AUDIO_API_KEY,
-                    'PearsonSSOSession': config.ssoToken,
+                    // 'PearsonSSOSession': config.ssoToken,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             });
@@ -199,7 +199,7 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'ApiKey': config.AUDIO_API_KEY,
-                    'PearsonSSOSession': config.ssoToken,
+                    // 'PearsonSSOSession': config.ssoToken,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             });

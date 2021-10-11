@@ -71,7 +71,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken,
+                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -280,7 +280,7 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
         const response = await axios.post(url, JSON.stringify(_requestData), {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken,
+                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })
@@ -363,7 +363,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken,
+                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })
@@ -526,7 +526,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken,
+                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }

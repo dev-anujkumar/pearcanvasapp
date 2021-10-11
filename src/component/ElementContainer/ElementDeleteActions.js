@@ -27,7 +27,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken,
+                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }

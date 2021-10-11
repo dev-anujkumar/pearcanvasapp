@@ -41,7 +41,7 @@ class MetaDataPopUp extends React.Component {
 		axios.get(url, {
 			headers: {
 				"Content-Type": "application/json",
-				"PearsonSSOSession": config.ssoToken,
+				// "PearsonSSOSession": config.ssoToken,
 				"apikey": config.CMDS_APIKEY,
 				'myCloudProxySession': config.myCloudProxySession
 			}
@@ -70,7 +70,7 @@ class MetaDataPopUp extends React.Component {
 		axios.put(url, body, {
 			headers: {
 				"Content-Type": "application/json",
-				"PearsonSSOSession": config.ssoToken,
+				// "PearsonSSOSession": config.ssoToken,
 				"apikey": config.CMDS_APIKEY,
 				'myCloudProxySession': config.myCloudProxySession
 			}

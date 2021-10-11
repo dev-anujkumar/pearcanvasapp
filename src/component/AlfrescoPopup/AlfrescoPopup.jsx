@@ -98,7 +98,7 @@ function AlfrescoPopup(props) {
                     'Accept': 'application/json',
                     'ApiKey': config.STRUCTURE_APIKEY,
                     'Content-Type': 'application/json',
-                    'PearsonSSOSession': SSOToken,
+                    // 'PearsonSSOSession': SSOToken,
                     'If-Match': request.eTag,
                     'myCloudProxySession': config.myCloudProxySession
                 }

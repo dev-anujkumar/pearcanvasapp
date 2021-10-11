@@ -15,7 +15,7 @@ export const getContainerData = (searchTerm, deeplink = false) => {
     const axiosObject = axios.create({
         headers: {
             'Content-Type': 'application/json',
-            'PearsonSSOSession': config.ssoToken,
+            // 'PearsonSSOSession': config.ssoToken,
             'myCloudProxySession': config.myCloudProxySession
         }
     });
@@ -88,7 +88,7 @@ export const getCommentElements = (q) => {
     const axiosObject = axios.create({
         headers: {
             'Content-Type': 'application/json',
-            'PearsonSSOSession': config.ssoToken,
+            // 'PearsonSSOSession': config.ssoToken,
             'myCloudProxySession': config.myCloudProxySession
         }
     });
