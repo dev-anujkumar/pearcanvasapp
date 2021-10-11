@@ -14,6 +14,7 @@ import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Action
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
 import { indexOfSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
+import { MULTI_COLUMN_2C } from '../../constants/Element_Constants.js';
 
 
 let operType = "";
@@ -91,6 +92,12 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         tag.grandParent = multiColumnType + ":" + parentUrn?.columnName;
     }
     if(wipData?.type === ELEMENT_ASIDE && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
+        /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
+        const gId = asideData?.id || parentUrn?.mcId;
+        tag.grandParent = multiColumnType + ":" + parentUrn?.columnName;
+        elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
+    }
+    if(wipData?.type === POETRY_ELEMENT && (parentUrn?.elementType === MULTI_COLUMN_GROUP)) {
         /* 2C-WE -> mcId; 2C-Aside -> asideData.id */
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = multiColumnType + ":" + parentUrn?.columnName;
@@ -520,6 +527,13 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
             /* Check head or body of WE */
             isHead = sectionOfWE?.id ? "HEAD" : "BODY";
         }
+        if(asideFigObj?.type === MULTI_COLUMN_GROUP) {
+            const sectionOfWE = asideFigObj?.element?.elementdata?.bodymatter?.find(item => {
+                return (item?.id === wipData?.id);
+            })
+            /* Check head or body of WE */
+            isHead = sectionOfWE?.id ? "HEAD" : "BODY";
+        }
     } else{
         isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn?.manifestUrn == asideData?.id ? "HEAD" : "BODY" : "";
     }
@@ -941,7 +955,19 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementTag = `AS:${elementTag}`
             elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
         }
-        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //block poetry inside WE - head/body
+        else if (asideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:BP || 3C:BP */
+            const {columnName, manifestUrn, mcId} = parentUrn;
+            //let grandParentTag = tag.grandParent.split(":")[0];
+            elementTag = `${parentUrn?.multiColumnType}:${columnName}:${elementTag}`;
+            elementId = `${mcId}+${manifestUrn}+${elementId}`;
+        }
+    }
+    else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //block poetry inside WE - head/body
+        if((tag.parentTag === "2C" || tag.parentTag === "3C") && eleIndex > -1){
+            elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : (eleIndex == 1) ? ':C2' : ':C3'}${elementTag}`   ; 
+            elementId =  `${asideData.id}+${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
+        }
+        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //SH inside WE - head/body
             elementTag = `WE:${isHead ? `${isHead}:` : ""}${elementTag}`
             elementId = `${asideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
         }
