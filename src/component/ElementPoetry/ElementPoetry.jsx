@@ -172,9 +172,12 @@ class ElementPoetry extends Component {
                         ...this.props.element,
                        grandParent: {
                            asideData: this.props.asideData,
+                           parentUrn: this.props.parentUrn
                        },
                        stanzaIndex : index
                    }
+
+                    console.log("Poetry snapshot update data is -2", elementLineage)
                     return (
                         <React.Fragment key={element.id}>                                   
                             {index === 0 && <ElementSaprator
