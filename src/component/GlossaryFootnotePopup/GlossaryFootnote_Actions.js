@@ -158,10 +158,21 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 }
            
                 else if (indexesLen == 4) {  // to support glossary in text elements inside WE/AS of MultiColumn
+                    if (elementType === 'stanza') {
+                        glossaryFootElem = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[3]]
+                    } else {
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
-                    
+                    }
                 } else if (indexesLen == 5) { // to support glossary in section break inside WE of MultiColumn
+                    if(elementType==='stanza'){
+                        if(newBodymatter[indexes[0]].type == "element-aside"){
+                            glossaryFootElem =  newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[4]]
+                        } else if (newBodymatter[indexes[0]].type == "groupedcontent"){
+                            glossaryFootElem =  newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].contents.bodymatter[indexes[4]]
+                        }
+                    } else {
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
+                }
                 }
 
             }
@@ -804,12 +815,25 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
                 else if (indexesLen == 4) {
                     // aside inside multi column
+                    if(elementType==='stanza'){
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[3]]= res.data;
+                    } else {
                     newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                    }
                    
                 }
                 else if (indexesLen == 5) {
                     // element inside popup inside multi column
+                    if(elementType==='stanza'){
+                        if(newBodymatter[indexes[0]].type == "element-aside"){
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[4]] = res.data
+                        } else if (newBodymatter[indexes[0]].type == "groupedcontent"){
+                            newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].contents.bodymatter[indexes[4]] = res.data
+                        }
+
+                    } else {
                     newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data
+                    }
                 }
             }
         }
