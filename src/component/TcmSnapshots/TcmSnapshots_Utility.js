@@ -411,12 +411,12 @@ const tcmSnapshotsPoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { a
         element: wipData
     }
     console.log("Poetry Snapshot right 6.2", elementId, snapshotsData, index);       
-    console.log("Poetry Snapshot 7", snapshotsData);
+    console.log("Poetry Snapshot 7", snapshotsData, asideData);
     tag.childTag = 'ST'
     elementId.childId = wipData.contents.bodymatter.find((item, i) => i===0).id;
     const isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
     const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn });
-    console.log("Poetry Snapshot 8", elementDetails);
+    console.log("Poetry Snapshot 8", elementDetails, isHead);
     const stanzaData = {}
     prepareAndSendTcmData(elementDetails, stanzaData, defaultKeys, actionStatus, index);
 }
@@ -432,6 +432,8 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
     let elementDetails;
     const typeArray = ['show', 'postertextobject', 'hide'];
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
+      
+    console.log("Poetry Snapshot 7 wrong", snapshotsData, asideData);
     for (const SHType of typeArray) {
         const showhidetag = SHType !== 'postertextobject' ? SHType : 'revel'
         wipData.interactivedata[SHType]?.map((item) => {
@@ -445,8 +447,9 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
                 tag.childTag = (SHType === 'postertextobject') ? "CTA" : fetchElementsTag(item);
                 /** @param {String} isHead - If SH is inside the WE/AS */
                 const isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
-                console.log("Poetry Snapshot wrong 6.2", snapshotsData, item, elementId, tag);
+                console.log("Poetry Snapshot wrong 7.01", snapshotsData, item, elementId, tag);
                 elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
+                console.log("Poetry Snapshot 8 wrong", elementDetails);
                 prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
             }
         })
@@ -928,11 +931,15 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
     }
     else if (parentElement?.element?.type === POETRY_ELEMENT) {  
-        console.log("Poetry Snapshot 10001 Parent Mil gaya", parentElement, tag)
+        console.log("Poetry Snapshot 7.2 Parent Mil gaya", parentElement, tag)
 
         if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
             elementTag = `AS:${elementTag}`
             elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
+        }
+        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //SH inside WE - head/body
+            elementTag = `WE:${isHead ? `${isHead}:` : ""}${elementTag}`
+            elementId = `${asideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
         }
      }
 
@@ -964,11 +971,12 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
     }
 
-    console.log("Poetry Snapshot 10", parentElement);
+    console.log("Poetry Snapshot 7.3", parentElement);
     elementData = {
         elementUrn: elementId,
         elementType: elementTag
     }
+
     return elementData
 }
 
