@@ -45,10 +45,10 @@ describe('Testing CommentsPanel component with props', () => {
         expect(wrapper.find('.comment-body')).toHaveLength(1)
       })
     it('Should have  check property', () => {
-      expect(wrapper.find('.property')).toHaveLength(4)
+      expect(wrapper.find('.property')).toHaveLength(5)
     })
     it('Should have user assignee component', () => {
-      expect(wrapper.find('UserAssignee')).toHaveLength(1)
+      expect(wrapper.find('UserAssignee')).toHaveLength(2)
     })
     it('Should have  Reply component', () => {
       expect(wrapper.find('ReplyComment')).toHaveLength(1)
@@ -90,7 +90,7 @@ describe('Testing CommentsPanel component with props', () => {
     it('render action menu from correctly', () => {
       let actionMenu = instance.actionsMenu();
       expect(actionMenu.props.className).toEqual('comment-action-menu action-menu');
-      expect(actionMenu.props.children).toHaveLength(4);
+      expect(actionMenu.props.children).toHaveLength(5);
     });
 
     it('render remove comment from correctly', () => {
