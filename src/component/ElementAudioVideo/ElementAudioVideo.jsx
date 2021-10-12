@@ -10,12 +10,13 @@ import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
-import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+//import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import { hasReviewerRole, getLabelNumberTitleHTML, sendDataToIframe } from '../../constants/utility.js'
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
-
+import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
+import PopUp from '../PopUp';
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
 class ElementAudioVideo extends Component {
@@ -28,37 +29,49 @@ class ElementAudioVideo extends Component {
             projectMetadata: false,
             alfrescoSite: '',
             alfrescoSiteData: {},
-            deleteassetPopup: false
+            deleteAssetPopup: false
         }
+    }
+    
+    /*** @description This function is used to handle Canvas Blocker on Update */
+    showCanvasBlocker = (value) => {
+        if (value == true) {
+            showTocBlocker();
+            hideToc();
+        } else {
+            hideTocBlocker(value);
+        }
+        disableHeader(value);
+        this.props.showBlocker(value);
     }
     /**
      * @description This function is used to toggle delete popup
      * @param {*} toggleValue Boolean value
      * @param {*} event event object
      */
-     toggledeletePopup = (toggleValue, event) => {
+     toggleDeletePopup = (toggleValue, event) => {
         if (event) {
             event.preventDefault();
         }
         this.setState({
-            deleteassetPopup: toggleValue
+            deleteAssetPopup: toggleValue
         })
         this.showCanvasBlocker(toggleValue);
     }
 
     /*** @description This function is used to render delete Popup */
-    showdeleteassetPopup = () => {
-        if (this.state.deleteassetPopup) {
+    showDeleteAssetPopup = () => {
+        if (this.state.deleteAssetPopup) {
             this.showCanvasBlocker(true)
             return (
                 <PopUp
-                    dialogText="Are you sure you want to delete, this action cannot be undone?"
+                    dialogText={DELETE_DIALOG_TEXT}
                     active={true}
-                    togglePopup={this.toggledeletePopup}
-                    isdeleteassetPopup={true}
-                    deleteasset={this.deleteFigureResource}
+                    togglePopup={this.toggleDeletePopup}
+                    isDeleteAssetPopup={true}
+                    deleteAsset={this.deleteFigureResource}
                     isInputDisabled={true}
-                    isdeleteassetClass="elm-update"
+                    isDeleteAssetClass="delete-element-text"
                     
                 />
             )
@@ -460,6 +473,7 @@ class ElementAudioVideo extends Component {
         if (hasReviewerRole()) {
             return true
         }
+        this.toggleDeletePopup(false)
         
         let setFigureData = {
             "schema": `http://schemas.pearson.com/wip-authoring/${element.figuretype}/1#/definitions/${element.figuretype}`,
@@ -501,8 +515,8 @@ class ElementAudioVideo extends Component {
       
             return (
                 <div className="figureElement">
-                {this.state.deleteassetPopup && this.showdeleteassetPopup()}
-                <FigureUserInterface deleteElementAsset={this.deleteElementAsset} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={this.handleC2MediaClick} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
+                <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={this.handleC2MediaClick} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                 </div>         
             );
         }
