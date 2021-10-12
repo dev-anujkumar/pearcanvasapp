@@ -12,7 +12,7 @@ class Comments extends React.Component {
         super(props)
         this.state = {
             newAssignee: this.props.comment.commentAssignee,
-            newRole: this.props.roleId,
+            newRole: this.props.comment.role,
             showActionsMenu: false,
             mode: 'view',
             updatedFields: {
