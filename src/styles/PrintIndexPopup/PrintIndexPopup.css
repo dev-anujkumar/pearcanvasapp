@@ -65,3 +65,54 @@
     right: 12px;
     bottom: 15%;
 }
+
+.markedindex-word-header{
+    border-top: 1px solid #ccc;
+    background-color: #eee;
+}
+
+.index-container .markedindex-word-title{
+    padding: 10px 10px 5px;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.index-container .markedindex-word-name{
+    border-bottom: 2px solid #0080ff;
+    color: #000;
+    font-size: 14px;
+    line-height: 28px;
+    font-family: 'Open Sans', sans-serif;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.definition-editor {
+    background-color: #eee;
+    width: 90%;
+    border: none;
+    outline: none;
+    margin: 0 11px 1px;
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.80em;
+    letter-spacing: 0.01em;
+    cursor:text;
+}
+
+.markedindex-secondlevel-header{
+    background-color: #eee;
+    margin-top: 20px;
+    padding: 0 0 14px;
+}
+
+.index-container .markedindex-secondlevel-label{
+    padding: 10px 10px 5px;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.index-editor .markedindex-secondlevel-description{
+    padding-bottom: 1px;
+    padding-top: 2px;
+}

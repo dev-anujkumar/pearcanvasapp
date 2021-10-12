@@ -1307,7 +1307,8 @@ class ElementContainer extends Component {
             handleAudioPopupLocation: this.handleAudioPopupLocation,
             handleAssetsPopupLocation: this.handleAssetsPopupLocation,
             openMarkedIndexPopUp: this.openMarkedIndexPopUp,
-            markedIndexValue: this.props.markedIndexValue
+            markedIndexValue: this.props.markedIndexValue,
+            markedIndexPopup:this.props.markedIndexPopup
 
         }
         if (labelText) {
@@ -1396,6 +1397,8 @@ class ElementContainer extends Component {
                         handleAudioPopupLocation={this.handleAudioPopupLocation}
                         parentElement={this.props.parentElement}
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
+                        markedIndexValue= {this.props.markedIndexValue}
+                        markedIndexPopup= {this.props.markedIndexPopup}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:

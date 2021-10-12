@@ -848,7 +848,7 @@ export class TinyMceEditor extends Component {
                     this.toggleMarkedIndexIcon(true);
                     this.toggleMarkedIndexPopup(true, 'Markedindex', uri);
                 }
-                this.toggleMarkedIndexPopup(false, 'Markedindex', uri, cbFunc);
+                this.toggleMarkedIndexPopup(false, null, uri, cbFunc);
             }
             else {
                 this.toggleMarkedIndexPopup(true, 'Markedindex', uri, () => { this.toggleMarkedIndexIcon(true); });
@@ -891,6 +891,10 @@ export class TinyMceEditor extends Component {
                 this.toggleGlossaryandFootnoteIcon(false);
             }
             this.toggleGlossaryandFootnotePopup(false, null, null, cbFunc);
+            cbFunc = () =>{
+                this.toggleMarkedIndexIcon(false)
+            }
+            this.toggleMarkedIndexPopup(false,null,null,cbFunc)
         }
 
         if (this.props.activeShowHide) {
@@ -2571,7 +2575,7 @@ export class TinyMceEditor extends Component {
         getGlossaryFootnoteId(elementId, "MARKEDINDEX", res => {
             let insertionText = ""
             if (res.data && res.data.id) {
-                insertionText = `<span data-uri=${res.data.id} class="markedForIndex" tabindex="0">${selectedText}</span>`
+                insertionText = `<span data-uri=${res.data.id} class="markedForIndex">${selectedText}</span>`
             }
             editor.selection.setContent(insertionText);
             this.toggleMarkedIndexPopup(true, 'Markedindex', res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); });
@@ -2660,7 +2664,7 @@ export class TinyMceEditor extends Component {
         let firstLevelEntryText = markIndexText;//.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
         // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
         firstLevelEntry = `<p>${firstLevelEntryText}</p>` || "<p></p>"
-        secondLevelEntry = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
+        secondLevelEntry = document.querySelector('#index-secondlevel-attacher > div > p') && `<p>${document.querySelector('#index-secondlevel-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         firstLevelEntry = firstLevelEntry.replace(/<br data-mce-bogus="1">/g, "")
         secondLevelEntry = secondLevelEntry.replace(/<br data-mce-bogus="1">/g, "")
         customEvent.subscribe('markedIndexSave', (elementWorkId) => {

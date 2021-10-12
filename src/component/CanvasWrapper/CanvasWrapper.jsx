@@ -211,7 +211,7 @@ export class CanvasWrapper extends Component {
                                         }
                                         
                                         if(this.props.markedIndexValue.popUpStatus){
-                                            return <PrintIndexPopup showMarkedIndexPopup = {this.props.markedIndexPopup} markIndexvalue={this.props.markedIndexCurrentValue}/>
+                                            return <PrintIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue}/>
                                         }
                                         else {
                                             return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
