@@ -30,7 +30,7 @@ import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHan
 import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action';
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper';
 import { updateSmartLinkDataForCompare } from '../ElementContainer/ElementContainer_Actions';
-
+import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -194,9 +194,8 @@ class Interactive extends React.Component {
             hideTocBlocker();
             disableHeader(false);
         }
-        this.props.showBlocker(value);
         disableHeader(value);
-        showBlocker(value);
+        this.props.showBlocker(value);
     }
       /*** @description This function is used to render Version update Popup */
     showCustomPopup = () => {
@@ -263,15 +262,13 @@ class Interactive extends React.Component {
         hideTocBlocker(false);
     }
 
-    deleteElementAsset = (element) => {
+    deleteElementAsset = () => {
+        const element = this.props.model
         this.props.handleFocus();
         if (hasReviewerRole()) {
             return true
         }
         this.toggleDeletePopup(false)
-    
-        
-
         this.props.updateSmartLinkDataForCompare(element.figuredata);
         let setFigureData = {
             "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
@@ -287,23 +284,12 @@ class Interactive extends React.Component {
         
     }
     
-        /*** @description This function is used to handle Canvas Blocker on delete */
-        showCanvasBlocker = (value) => {
-            if (value == true) {
-                showTocBlocker();
-                hideToc();
-            } else {
-                hideTocBlocker(value);
-            }
-            disableHeader(value);
-            this.props.showBlocker(value);
-        }
         /**
          * @description This function is used to toggle delete popup
          * @param {*} toggleValue Boolean value
          * @param {*} event event object
          */
-         D = (toggleValue, event) => {
+         toggleDeletePopup = (toggleValue, event) => {
             if (event) {
                 event.preventDefault();
             }
@@ -321,12 +307,11 @@ class Interactive extends React.Component {
                     <PopUp
                         dialogText={DELETE_DIALOG_TEXT}
                         active={true}
-                        togglePopup={this.D}
+                        togglePopup={this.toggleDeletePopup}
                         isDeleteAssetPopup={true}
-                        deleteAsset={this.deleteFigureResource}
+                        deleteAssetHandler={this.deleteElementAsset}
                         isInputDisabled={true}
                         isDeleteAssetClass="delete-element-text"
-                        
                     />
                 )
             }
@@ -360,7 +345,7 @@ class Interactive extends React.Component {
 
         let figureHtmlData = getLabelNumberTitleHTML(element);
         if (SMARTLINK_CONTEXTS.includes(context)) {
-            return <FigureUserInterface deleteElementAsset={this.deleteElementAsset} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+            return <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
         }
         else if (context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
             jsx = <div className={divImage} resource="">

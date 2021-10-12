@@ -156,8 +156,8 @@ class PopUp extends React.Component {
         }
         if (props.isDeleteAssetPopup) {
             return (
-                <div className={`dialog-buttons ${props.isDeleteAssetPopupClass}`}>
-                    <span className={`save-button `} onClick={(e) => props.deleteasset(e)}>Yes</span>
+                <div className={`dialog-buttons ${props.isDeleteAssetClass}`}>
+                    <span className={`save-button `} onClick={(e) => props.deleteAssetHandler(e)}>Yes</span>
                     <span className={`cancel-button `} id='close-container' onClick={(e) => props.togglePopup(false, e)}>No</span>
                 </div>
             )
@@ -346,7 +346,7 @@ class PopUp extends React.Component {
         }
         else if (props.isDeleteAssetPopup) {
             return (
-            <div className={`dialog-window ${props.isdeleteassetClass}`} >{props.dialogText}</div>
+            <div className={`dialog-window ${props.isDeleteAssetClass}`} >{props.dialogText}</div>
             )
         }
         else if (props.altText) {

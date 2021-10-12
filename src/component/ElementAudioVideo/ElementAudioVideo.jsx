@@ -1,6 +1,6 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
-import PropTypes, { element } from 'prop-types'
+import PropTypes from 'prop-types'
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
 import config from '../../config/config';
@@ -17,6 +17,7 @@ import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Ac
 import { connect } from 'react-redux';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import PopUp from '../PopUp';
+import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
 class ElementAudioVideo extends Component {
@@ -69,10 +70,9 @@ class ElementAudioVideo extends Component {
                     active={true}
                     togglePopup={this.toggleDeletePopup}
                     isDeleteAssetPopup={true}
-                    deleteAsset={this.deleteFigureResource}
+                    deleteAssetHandler={this.deleteElementAsset}
                     isInputDisabled={true}
-                    isDeleteAssetClass="delete-element-text"
-                    
+                    isDeleteAssetClass="delete-element-text"    
                 />
             )
         }
@@ -468,7 +468,8 @@ class ElementAudioVideo extends Component {
         return null;
     }
 
-    deleteElementAsset = (element) => {
+    deleteElementAsset = () => {
+        const element = this.props.model
         this.props.handleFocus();
         if (hasReviewerRole()) {
             return true

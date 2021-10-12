@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import { labelHtmlData } from '../../constants/Element_Constants';
 import PopUp from '../PopUp';
-
+import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
@@ -128,7 +128,7 @@ class FigureImage extends Component {
      * @param {*} toggleValue Boolean value
      * @param {*} event event object
      */
-     D = (toggleValue, event) => {
+     toggleDeletePopup = (toggleValue, event) => {
         if (event) {
             event.preventDefault();
         }
@@ -146,9 +146,9 @@ class FigureImage extends Component {
                 <PopUp
                     dialogText={DELETE_DIALOG_TEXT}
                     active={true}
-                    togglePopup={this.D}
+                    togglePopup={this.toggleDeletePopup}
                     isDeleteAssetPopup={true}
-                    isDeleteAssetPopup={this.deleteFigureResource}
+                    deleteAssetHandler={this.deleteFigureResource}
                     isInputDisabled={true}
                     isDeleteAssetClass="delete-element-text"
                     
@@ -495,7 +495,7 @@ class FigureImage extends Component {
                                                 <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{this.props.model.figuredata && this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
                                             </div>
                                             <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
-                                            <div className='deletefigurebutton' onClick={() => this.D(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                                            <div className='deletefigurebutton' onClick={() => this.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                                         </div> : ''
                                     }
                                 </div>
