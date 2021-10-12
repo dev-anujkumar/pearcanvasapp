@@ -417,7 +417,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 }
                 else if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
-                    const indexs = elementIndex?.split('-') || [];
+                    const indexs = elementIndex?.toString().split('-') || [];
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
                         let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]];
                         if (asid.contentUrn == currentSlateEntityUrn) {
@@ -431,7 +431,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                         }
                     }
                 } else if (containerTypeElem && containerTypeElem == 'section') {
-                    const indexs = elementIndex?.split('-') || [];
+                    const indexs = elementIndex?.toString().split('-') || [];
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:WE:BODY:SECTION-BREAK: Swap Elements */
                         newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.map(item => {
                             if (item.contentUrn == currentSlateEntityUrn) {
