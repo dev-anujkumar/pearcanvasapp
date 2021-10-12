@@ -9,7 +9,7 @@ import {
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import { checkSlateLock } from '../../js/slateLockUtility.js'
-import { getTitleSubtitleModel } from "../../constants/utility.js"
+import { getTitleSubtitleModel, isSubscriberRole } from "../../constants/utility.js"
 import { findKey } from "lodash";
 
 /**
@@ -26,7 +26,9 @@ class ElementPopup extends React.Component {
         this.popupBorderRef = React.createRef()
     }
     componentDidMount = () => {
-        this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick)
+        const { projectSharingRole, projectSubscriptionDetails } = this?.props?.projectSubscriptionDetails;
+        let subscriberContent = isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed)
+        if (!subscriberContent) this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick);
     }
     componentWillUnmount = () => {
         this.popupBorderRef.current.removeEventListener('click', this.handlepopupSlateClick);
@@ -177,7 +179,8 @@ ElementPopup.displayName = "ElementPopup"
 
 const mapStatetoProps = (state) => {
     return {
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        projectSubscriptionDetails: state.projectInfo
     }
 }
 
