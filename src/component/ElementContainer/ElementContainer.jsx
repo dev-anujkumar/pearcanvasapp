@@ -702,11 +702,9 @@ class ElementContainer extends Component {
                         /* Contains the data of parent elemens Ex.- 2C/Aside/POP||AgainContainer:SH */
                         const elementLineage = {
                             ...this.props.element, grandParent: { asideData, parentUrn }
-                        }
-                        
+                        }   
                         this.props.updateElement(dataToSend, elemIndex, parentUrn, elementLineage, showHideType, parentElement, poetryData);
                     } else {
-
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                     }
                 }
