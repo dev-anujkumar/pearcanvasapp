@@ -462,6 +462,27 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     newBodymatter.forEach(element => {
                         if (element.id == poetryId) {
                             element.contents.bodymatter.move(oldIndex, newIndex);
+                        } else if (element?.type === 'element-aside') {  /** ----------Swapping block poetry elements inside Aside/WE Element----------------- */
+                            element.elementdata?.bodymatter.forEach((ele) => {
+                                if (ele?.type === "poetry" && ele?.id === poetryId) {
+                                    ele.contents.bodymatter.move(oldIndex, newIndex);
+                                } else if (ele.type === "manifest") {
+                                    ele.contents.bodymatter.forEach(ele1 => {
+                                        if (ele1.id === poetryId) {
+                                            ele1.contents.bodymatter.move(oldIndex, newIndex);
+                                        }
+                                    })
+                                }
+                            })
+                        } else if(element?.type === "groupedcontent"){  /** ----------Swapping block poetry elements inside Multicolumn Element----------------- */
+                            element.groupeddata?.bodymatter.forEach((groupElem)=> {
+                                groupElem.groupdata?.bodymatter.forEach((groupElem1)=>{
+                                    if(groupElem1?.type ==="poetry" && groupElem1?.id === poetryId){
+                                        groupElem1.contents.bodymatter.move(oldIndex, newIndex);
+                                    }
+                                })
+
+                            })
                         }
                     });
                 }
