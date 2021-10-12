@@ -816,9 +816,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     }
                 }
                 else if (indexesLen == 4) {
-                    // Block Poetry Inside WE/Aside before section break
                     if(elementType && elementType==='stanza'){
-                        newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[3]]= res.data;
+                    // Block Poetry Inside WE/Aside before section break
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[3]]= res.data;
                     } else {
                     // aside inside multi column
                     newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
@@ -828,9 +828,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 else if (indexesLen == 5) {
                     // Block Poetry Inside WE after section break or in MultiColumn
                     if(elementType && elementType==='stanza'){
-                        if(newBodymatter[indexes[0]]?.type == "element-aside"){
-                            newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[4]] = res.data
-                        } else if (newBodymatter[indexes[0]].type == "groupedcontent"){
+                        if(newBodymatter[indexes[0]] && newBodymatter[indexes[0]].type == "element-aside"){
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[4]] = res.data
+                        } else if (newBodymatter[indexes[0]] && newBodymatter[indexes[0]].type == "groupedcontent"){
                             newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].contents.bodymatter[indexes[4]] = res.data
                         }
 
