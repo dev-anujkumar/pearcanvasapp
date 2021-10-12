@@ -50,7 +50,6 @@ const ShowHideUiBlock = (props) => {
 			},
 			sectionType
 		}
-
 		return <ElementSaprator
 			index = {i}
 			parentUrn = {newParentUrn}

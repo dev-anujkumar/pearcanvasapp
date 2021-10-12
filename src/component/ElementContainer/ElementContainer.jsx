@@ -1541,6 +1541,7 @@ class ElementContainer extends Component {
                         elementSepratorProps={elementSepratorProps}
                         pasteElement={this.props.pasteElement}
                         userRole={this.props.userRole}
+                        parentUrn={this.props?.parentUrn}
                         parentElement={this.props.parentElement}
                     />
                     labelText = 'PE'
