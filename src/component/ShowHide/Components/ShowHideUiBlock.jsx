@@ -51,7 +51,6 @@ const ShowHideUiBlock = (props) => {
 			sectionType
 		}
 
-		console.log("Poetry snapshot update data is showhide -2", elementLineage)
 		return <ElementSaprator
 			index = {i}
 			parentUrn = {newParentUrn}

@@ -704,11 +704,9 @@ class ElementContainer extends Component {
                             ...this.props.element, grandParent: { asideData, parentUrn }
                         }
                         
-    console.log("Poetry Update Snapshot 0",dataToSend, showHideType, elementLineage);
                         this.props.updateElement(dataToSend, elemIndex, parentUrn, elementLineage, showHideType, parentElement, poetryData);
                     } else {
 
-    console.log("Poetry Update Snapshot -1",dataToSend, showHideType, asideData);
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
                     }
                 }
