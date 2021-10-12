@@ -971,16 +971,34 @@ Interactive.propTypes = {
 }
 const mapActionToProps = (dispatch) => {
     return {
-        setCurrentCiteTdx: setCurrentCiteTdx,
-        setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-        assessmentSorting: assessmentSorting,
-        setNewItemFromElm: setNewItemFromElm,
-        fetchAssessmentMetadata: fetchAssessmentMetadata,
-        fetchAssessmentVersions: fetchAssessmentVersions,
+        setCurrentCiteTdx: (currentAssessmentSelected, openedFrom) => {
+            dispatch(setCurrentCiteTdx(currentAssessmentSelected, openedFrom))
+        },
+        setCurrentInnerCiteTdx: (currentAssessmentSelected, openedFrom) => {
+            dispatch(setCurrentInnerCiteTdx(currentAssessmentSelected, openedFrom))
+        },
+        assessmentSorting: (sortBy,sortOrder) => {
+            dispatch(assessmentSorting(sortBy,sortOrder))
+        },
+        setNewItemFromElm: (payloadObj) => {
+            dispatch(setNewItemFromElm(payloadObj))
+        },
+        fetchAssessmentMetadata: (type, calledFrom, assessmentData, assessmentItemData) => {
+            dispatch(fetchAssessmentMetadata(type, calledFrom, assessmentData, assessmentItemData))
+        },
+        fetchAssessmentVersions: (entityUrn, type, createdDate, assessmentData, assessmentItemData) => {
+            dispatch(fetchAssessmentVersions(entityUrn, type, createdDate, assessmentData, assessmentItemData))
+        },
         updateAssessmentVersion: updateAssessmentVersion,
-        setElmPickerData: setElmPickerData,
-        alfrescoPopup: alfrescoPopup,
-        saveSelectedAssetData: saveSelectedAssetData,
+        setElmPickerData: (payloadObj) => {
+            dispatch(setElmPickerData(payloadObj))
+        },
+        alfrescoPopup: (payloadObj) => {
+            dispatch(alfrescoPopup(payloadObj))
+        },
+        saveSelectedAssetData: (payloadObj) => {
+            dispatch(saveSelectedAssetData(payloadObj))
+        },
         updateSmartLinkDataForCompare: (oldSmartLinkData) => {
             dispatch(updateSmartLinkDataForCompare(oldSmartLinkData))
         }
