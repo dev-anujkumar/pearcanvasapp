@@ -1628,7 +1628,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
             }
         }
         else {
-            const { parentElement, multiColumnData } = setParentUrn(bodymatter, tempIndex, isFigure);
+            const { parentElement, multiColumnData } = setParentUrn(bodymatter, tempIndex, isFigure, asideData);
             parentData.parentUrn = {
                 manifestUrn: parentElement?.id,
                 contentUrn: parentElement?.contentUrn,
@@ -1679,7 +1679,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
  * @param {String/Number} tempIndex - index of element converted
  * @returns {Object} ParentData fo given element
 */
-const setParentUrn = (bodymatter, tempIndex, isFigure) => {
+const setParentUrn = (bodymatter, tempIndex, isFigure, asideData = {}) => {
     let parentElement = {}, multiColumnData = {};
     if (tempIndex.length == 2) {
         parentElement = bodymatter[tempIndex[0]]
@@ -1714,6 +1714,12 @@ const setParentUrn = (bodymatter, tempIndex, isFigure) => {
         else if (bodymatter[tempIndex[0]].type === ELEMENT_ASIDE) {
             parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
             parentElement = parentElement.type === SHOWHIDE ? bodymatter[tempIndex[0]] : parentElement;
+        }
+        /**Aside/WE inside S/H */
+        else if (bodymatter[tempIndex[0]].type === SHOWHIDE && asideData?.parent?.showHideType) {
+            let sectionType = asideData?.parent?.showHideType;
+            parentElement = bodymatter[tempIndex[0]].interactivedata[sectionType][tempIndex[2]];
+            parentElement = parentElement.type === ELEMENT_ASIDE ? bodymatter[tempIndex[0]] : parentElement;
         }
         else {
             parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]

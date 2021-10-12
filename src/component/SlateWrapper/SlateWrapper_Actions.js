@@ -457,9 +457,9 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                             }
                         })
                     } else if (parentElement?.type === SHOW_HIDE && sectionType && indexs?.length === 3) { /* S/H:WE:BODY:SECTION-BREAK: Swap Elements */
-                        let asId = newBodymatter[indexs[0]]?.interactivedata[sectionType][indexs[2]]?.elementdata?.bodymatter?.map(item => {
-                            if (asId.contentUrn == currentSlateEntityUrn) {
-                                asId?.elementdata?.bodymatter?.move(oldIndex, newIndex);
+                        newBodymatter[indexs[0]]?.interactivedata[sectionType][indexs[2]]?.elementdata?.bodymatter?.map(item => {
+                            if (item.contentUrn == currentSlateEntityUrn) {
+                                item?.contents?.bodymatter?.move(oldIndex, newIndex);
                             }
                         })
                     } else {
@@ -476,9 +476,18 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 } 
                 /** ----------Swapping elements inside Citations Group Element----------------- */
                 else if (containerTypeElem && containerTypeElem == 'cg') {
-                    for (let i in newBodymatter) {
-                        if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
-                            newBodymatter[i].contents.bodymatter.move(oldIndex, newIndex);
+                    const indexs = elementIndex?.split('-') || [];
+                    let sectionType = parentElement?.showHideType;
+                    if (parentElement?.type === SHOW_HIDE && sectionType && indexs?.length === 3) { /* S/H:CG: Swap Elements */
+                        let cgId = newBodymatter[indexs[0]]?.interactivedata[sectionType][indexs[2]];
+                        if (cgId.contentUrn == currentSlateEntityUrn) {
+                            cgId?.contents?.bodymatter?.move(oldIndex, newIndex);
+                        }
+                    } else {
+                        for (let i in newBodymatter) {
+                            if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
+                                newBodymatter[i].contents.bodymatter.move(oldIndex, newIndex);
+                            }
                         }
                     }
                 }

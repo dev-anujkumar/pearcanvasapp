@@ -147,6 +147,8 @@ export class CitationGroup extends Component {
             swappedElementData: swappedElementData,
             currentSlateEntityUrn: parentUrn.contentUrn,
             containerTypeElem: 'cg',
+            elementIndex: this.context?.index,
+            parentElement: { type: this.context?.parentElement?.type, showHideType: this.context?.showHideType }
         }
         return dataObj
     }
