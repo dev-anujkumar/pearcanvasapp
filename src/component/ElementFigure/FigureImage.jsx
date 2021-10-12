@@ -36,7 +36,7 @@ class FigureImage extends Component {
             figureLabelValue: 'No Label',
             figureLabelData: this.props.figureDropdownData,
             figureDropDown: false,
-            deleteassetPopup: false
+            deleteAssetPopup: false
         }
         this.wrapperRef = React.createRef();
     }
@@ -95,6 +95,8 @@ class FigureImage extends Component {
         if (hasReviewerRole()) {
             return true
         }
+        this.toggleDeletePopup(false)
+    
         // store current element figuredata in store
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
         let setFigureData = {
@@ -126,29 +128,29 @@ class FigureImage extends Component {
      * @param {*} toggleValue Boolean value
      * @param {*} event event object
      */
-     toggledeletePopup = (toggleValue, event) => {
+     D = (toggleValue, event) => {
         if (event) {
             event.preventDefault();
         }
         this.setState({
-            deleteassetPopup: toggleValue
+            deleteAssetPopup: toggleValue
         })
         this.showCanvasBlocker(toggleValue);
     }
 
     /*** @description This function is used to render delete Popup */
-    showdeleteassetPopup = () => {
-        if (this.state.deleteassetPopup) {
+    showDeleteAssetPopup = () => {
+        if (this.state.deleteAssetPopup) {
             this.showCanvasBlocker(true)
             return (
                 <PopUp
-                    dialogText="Are you sure you want to delete, this action cannot be undone?"
+                    dialogText={DELETE_DIALOG_TEXT}
                     active={true}
-                    togglePopup={this.toggledeletePopup}
-                    isdeleteassetPopup={true}
-                    deleteasset={this.deleteFigureResource}
+                    togglePopup={this.D}
+                    isDeleteAssetPopup={true}
+                    isDeleteAssetPopup={this.deleteFigureResource}
                     isInputDisabled={true}
-                    isdeleteassetClass="elm-update"
+                    isDeleteAssetClass="delete-element-text"
                     
                 />
             )
@@ -422,7 +424,7 @@ class FigureImage extends Component {
 
         return (
             <div className="figureElement">
-                {this.state.deleteassetPopup && this.showdeleteassetPopup()}
+                {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
@@ -493,7 +495,7 @@ class FigureImage extends Component {
                                                 <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{this.props.model.figuredata && this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
                                             </div>
                                             <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
-                                            <div className='deletefigurebutton' onClick={() => this.toggledeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                                            <div className='deletefigurebutton' onClick={() => this.D(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                                         </div> : ''
                                     }
                                 </div>

@@ -30,6 +30,8 @@ import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHan
 import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action';
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper';
 import { updateSmartLinkDataForCompare } from '../ElementContainer/ElementContainer_Actions';
+
+
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -58,7 +60,7 @@ class Interactive extends React.Component {
             showUpdatePopup:false,
             alfrescoSite: '',
             alfrescoSiteData: {},
-            deleteassetPopup: false
+            deleteAssetPopup: false
            };
 
     }
@@ -266,6 +268,24 @@ class Interactive extends React.Component {
         if (hasReviewerRole()) {
             return true
         }
+        this.toggleDeletePopup(false)
+    
+        
+
+        this.props.updateSmartLinkDataForCompare(element.figuredata);
+        let setFigureData = {
+            "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+            "interactiveid": "",
+            "interactivetype": element.figuredata.interactivetype,
+            "interactiveformat": element.figuredata.interactiveformat
+        }
+
+        this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
+            this.props.handleFocus("updateFromC2");
+            this.props.handleBlur();
+        })
+        
+    }
     
         /*** @description This function is used to handle Canvas Blocker on delete */
         showCanvasBlocker = (value) => {
@@ -283,29 +303,29 @@ class Interactive extends React.Component {
          * @param {*} toggleValue Boolean value
          * @param {*} event event object
          */
-         toggledeletePopup = (toggleValue, event) => {
+         D = (toggleValue, event) => {
             if (event) {
                 event.preventDefault();
             }
             this.setState({
-                deleteassetPopup: toggleValue
+                deleteAssetPopup: toggleValue
             })
             this.showCanvasBlocker(toggleValue);
         }
     
         /*** @description This function is used to render delete Popup */
-        showdeleteassetPopup = () => {
-            if (this.state.deleteassetPopup) {
+        showDeleteAssetPopup = () => {
+            if (this.state.deleteAssetPopup) {
                 this.showCanvasBlocker(true)
                 return (
                     <PopUp
-                        dialogText="Are you sure you want to delete, this action cannot be undone?"
+                        dialogText={DELETE_DIALOG_TEXT}
                         active={true}
-                        togglePopup={this.toggledeletePopup}
-                        isdeleteassetPopup={true}
-                        deleteasset={this.deleteFigureResource}
+                        togglePopup={this.D}
+                        isDeleteAssetPopup={true}
+                        deleteAsset={this.deleteFigureResource}
                         isInputDisabled={true}
-                        isdeleteassetClass="elm-update"
+                        isDeleteAssetClass="delete-element-text"
                         
                     />
                 )
@@ -314,21 +334,6 @@ class Interactive extends React.Component {
                 return null
             }
         }
-        
-
-        this.props.updateSmartLinkDataForCompare(element.figuredata);
-        let setFigureData = {
-            "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
-            "interactiveid": "",
-            "interactivetype": element.figuredata.interactivetype,
-            "interactiveformat": element.figuredata.interactiveformat
-        }
-
-        this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
-            this.props.handleFocus("updateFromC2");
-            this.props.handleBlur();
-        })
-    }
 
     /**
      * @description - This function is for rendering the Jsx Part of different Interactive Elements.
@@ -933,7 +938,7 @@ class Interactive extends React.Component {
             return (
                     <>
                         <div className={SMARTLINK_CONTEXTS.includes(model?.figuredata?.interactivetype) ? "figureElement" : "interactive-element"} onClick = {this.handleClickElement}>
-                            {this.state.deleteassetPopup && this.showdeleteassetPopup()}
+                            {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                             {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                             {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                             {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
