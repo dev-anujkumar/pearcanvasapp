@@ -174,7 +174,7 @@ export default function (state = initialState, action = INITIAL_ACTION) {
             updateCommentRole.forEach((comment, index) => {
                 if (comment.commentUrn === payload.commentUrn) {
                     if(comment.role){
-                        comment.commentAssignee = payload.newRole
+                        comment.role = payload.newRole
                     }
                     else{
                         comment = Object.assign(comment, {role : payload.newRole});
