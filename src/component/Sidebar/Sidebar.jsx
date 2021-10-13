@@ -109,15 +109,22 @@ class Sidebar extends Component {
       if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
         if (this.props.activeElement.elementWipType == "manifestlist") {
           this.props.updateContainerMetadata({
-            contentUrn : this.props.activeElement.contentUrn,
-            elementId: this.props.activeElement.elementId,
+            blockListData: {
+                id:this.props.activeElement.elementId,
+                contentUrn:this.props.activeElement.contentUrn
+            },
             elementType: this.state.activeElementType,
             primaryOption: value,
             secondaryOption: secondaryFirstOption,
             elementWipType: this.props.activeElement.elementWipType,
             index: this.props.activeElement.index,
             labelText,
+            blockListElement:true,
             toolbar: elementList[this.state.activeElementType][value].toolbar,
+            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-")[0],
+            dataToSend:{
+                columnnumber : value.split('-')[value.split('-').length-1]
+            }
           });
         } else {
           this.props.conversionElement({

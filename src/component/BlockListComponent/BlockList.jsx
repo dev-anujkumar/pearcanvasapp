@@ -25,21 +25,33 @@ const BlockList = (props) => {
                     onClickCapture={props?.onClickCapture}
                     showBlocker={props?.showBlocker}
                     borderToggle={props?.borderToggle}
+                    onListSelect={props.onListSelect}
                 />
-                // <ElementAuthoring index={index} element={item} model={item.html} onListSelect={()=>{}} elementId={item.id} {...commonProps}/>
             )
         })
 
     }
 
     if (props?.element?.listtype === 'ordered') {
-        return (
-            <ol class="decimal">
-                {
-                    fetchLi(props?.element?.subtype)
-                }
-            </ol>
-        )
+        if(props?.element?.startNumber>1){
+            return (
+                <ol class="decimal" style={{'counterIncrement': `section ${props?.element?.startNumber}`}}>
+                    {
+                        fetchLi(props?.element?.subtype)
+                    }
+                </ol>
+            )
+        }
+        else{
+            return (
+                <ol class="decimal">
+                    {
+                        fetchLi(props?.element?.subtype)
+                    }
+                </ol>
+            )
+        }
+       
     }
     else {
         return (

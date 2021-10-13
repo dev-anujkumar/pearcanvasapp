@@ -6,8 +6,12 @@ const fetchLiClassName = (subtype) => {
             return 'listItemNumeroUnoLowerAlpha'
         case 'lower-roman':
             return 'listItemNumeroUnoLowerRoman'
+        case 'upper-alpha':
+            return 'listItemNumeroUnoUpperAlpha'
+        case 'upper-roman':
+            return 'listItemNumeroUnoUpperRoman'
         case 'unordered':
-            return 'reset listItemNumeroUnoBullet listItemNumeroUnoDisc'
+            return 'listItemNumeroUnoBullet'
         default:
             return 'listItemNumeroUnoNumber'
     }

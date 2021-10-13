@@ -48,17 +48,17 @@ import ElementConstants from "../ElementContainer/ElementConstants.js"
 const { SHOW_HIDE } = ElementConstants;
 
 export const findElementType = (element, index) => {
-    console.log("hello");
+    // console.log("hello");
     let elementType = {};
     elementType['tag'] = '';
     let altText = "";
     let longDesc = "";
     let podwidth = POD_DEFAULT_VALUE
     try {
-        if(element.type ==="manifestlist") console.log("They are equal");
+        // if(element.type ==="manifestlist") console.log("They are equal");
         switch (element.type) {
             case "manifestlist":
-                console.log("Coming..............",element)
+                // console.log("Coming..............",element)
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
                     //primaryOption : "primary-column-1",

@@ -619,25 +619,22 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         activeElement: getState().appStore.activeElement,
         currentSlateData
     }
-    let dataToSend = {
-        listtype: "ordered",
-        subtype: "decimal",
-        columnnumber: 1,
-        startNumber: "1",
-    }
-    if(dataToUpdate.elementType && dataToUpdate.elementType == "manifestlist" && dataToUpdate.primaryOption){
-        dataToSend.columnnumber = dataToUpdate.primaryOption.substring(dataToUpdate.primaryOption.length-1,dataToUpdate.primaryOption.length)
-    }
+    let dataToSend = {}
+    let elementEntityUrn = ""
+    // if(dataToUpdate.elementType && dataToUpdate.elementType == "manifestlist" && dataToUpdate.primaryOption){
+    //     dataToSend.columnnumber = dataToUpdate.primaryOption.split('-')[dataToUpdate.primaryOption.split('-').length-1]
+    //     elementEntityUrn = dataToUpdate.contentUrn;
+    // }
     if (dataToUpdate.isNumbered == true) {
         dataToSend.startlinenumber = dataToUpdate.startNumber
     }
-    let elementEntityUrn = ""
     const updatedData = dispatch(updateContainerMetadataInStore(updateParams,""))
     if(updatedData?.elementEntityUrn){
         elementEntityUrn = updatedData.elementEntityUrn
     }
-    if(dataToUpdate.contentUrn){
-        elementEntityUrn = dataToUpdate.contentUrn;
+    if(dataToUpdate.blockListElement){
+        elementEntityUrn = dataToUpdate.blockListData.contentUrn;
+        dataToSend= dataToUpdate.dataToSend
     }
     let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
     currentParentData[config.slateManifestURN] = updatedSlateLevelData
@@ -681,6 +678,9 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                 currentSlateData: newSlateData
             }
             const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
+            if(dataToUpdate.blockListElement){
+                updateBlockListMetaData(dataToUpdate.blockListData.id, parsedParentData[config.slateManifestURN].contents.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
+            }
             if(updatedStore.currentSlateData){
                 parsedParentData[config.slateManifestURN] = updatedStore.currentSlateData;
                 dispatch({
@@ -720,6 +720,42 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             console.error(" Error >> ", err)
         })
 }
+
+const updateBlockListMetaData = (elementId, elementData, metaData) => {
+    if(elementData.id === elementId){
+        if(metaData.subtype){
+            elementData.subtype = metaData.subtype;
+            elementData.listtype = metaData.listtype;
+            elementData.startNumber = metaData.startNumber;
+        }
+        if(metaData.columnnumber){
+            elementData.columnnumber = metaData.columnnumber;
+        }
+    }
+    else{
+        if (elementData?.listdata?.bodymatter) {
+            elementData.listdata?.bodymatter.forEach((listData) => updateBlockListMetaData(elementId, listData,metaData))
+        }
+        if (elementData?.listitemdata?.bodymatter) {
+            elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
+                if (listItemData.id === elementId) {
+                    if(metaData.subtype){
+                        elementData.listitemdata.bodymatter[index].subtype = metaData.subtype;
+                        elementData.listitemdata.bodymatter[index].listtype = metaData.listtype;
+                        elementData.listitemdata.bodymatter[index].startNumber = metaData.startNumber;
+                    }
+                    if(metaData.columnnumber){
+                        elementData.listitemdata.bodymatter[index].columnnumber = metaData.columnnumber;
+                    }
+                    return;
+                }
+                updateBlockListMetaData(elementId, listItemData,metaData);
+            });
+        }
+    }
+}
+
+
 const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch) => {
     const {
         dataToUpdate,
