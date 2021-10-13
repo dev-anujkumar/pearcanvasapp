@@ -1,6 +1,6 @@
 import React from 'react';
 import ElementContainer from '../ElementContainer';
-import { fetchLiClassName } from './BlockListHelperFucntions';
+import { fetchLiClassName } from './BlockListHelperFunctions';
 
 const BlockList = (props) => {
     let manifestList = props?.manifestList;
@@ -26,6 +26,8 @@ const BlockList = (props) => {
                     showBlocker={props?.showBlocker}
                     borderToggle={props?.borderToggle}
                     onListSelect={props.onListSelect}
+                    model={props?.element.html}
+                    {...props}
                 />
             )
         })
