@@ -29,13 +29,18 @@ describe('Testing Figure image component', () => {
             Permission: false
         },
         appStore: {
-            figureDropdownData: []
+            figureDropdownData: {
+                audio: ["No Label", "Custom"],
+                image: ["No Label", "Custom"],
+                smartlinks: ["No Label", "Custom"],
+                video: ["No Label", "Custom"]
+            }
         },
         projectMetadata:{},
     }
     const store = mockStore(initialState);
 
-    xtest('renders without crashing', () => {
+    test('renders without crashing', () => {
         let props = {
             model:figureImage50TextElementWithData,
             index:"" ,
@@ -69,7 +74,7 @@ describe('Testing Figure image component', () => {
             handleFocus: function(){},
             permissions: ['add_multimedia_via_alfresco'],
         }
-        xtest('Testing updateAlfrescoSiteUrl if condition', () => {
+        test('Testing updateAlfrescoSiteUrl if condition', () => {
             let elementFigure = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
             const elementFigureInstance = elementFigure.find('FigureImage').instance();
             elementFigureInstance.setState({ alfrescoSiteData: {
@@ -78,7 +83,7 @@ describe('Testing Figure image component', () => {
             elementFigureInstance.updateAlfrescoSiteUrl();
             expect(elementFigureInstance.state.alfrescoSite).toBe('test')
         })
-        xtest('Testing updateAlfrescoSiteUrl else condition', () => {
+        test('Testing updateAlfrescoSiteUrl else condition', () => {
             let elementFigure = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
             const elementFigureInstance = elementFigure.find('FigureImage').instance();
             elementFigureInstance.setState({ alfrescoSiteData: {
@@ -89,7 +94,7 @@ describe('Testing Figure image component', () => {
             expect(elementFigureInstance.state.alfrescoSite).toBe(defaultSite)
         })
     })
-    xdescribe('Testing figure image element right sidebar options', () => {
+    describe('Testing figure image element right sidebar options', () => {
         let props = {
             model: figureImage50TextElementDefault,
             index: 1,
@@ -112,7 +117,7 @@ describe('Testing Figure image component', () => {
             expect(component.find('.divImage50Text .figureImage50Text .image50Text')).toHaveLength(1)
         })
     });
-    xdescribe('Test table image element', () => {
+    describe('Test table image element', () => {
         let props = {
             model: tableImage50TextElementDefault,
             index: 9,
@@ -134,7 +139,7 @@ describe('Testing Figure image component', () => {
             expect(component.find('.divImage50TextTableImage .figureImage50TextTableImage .image50TextTableImage')).toHaveLength(1)
         })
     });
-    xdescribe('Test math image element', () => {
+    describe('Test math image element', () => {
         let props = {
             model: mathImage50TextElementDefault,
             index:17,
@@ -155,7 +160,7 @@ describe('Testing Figure image component', () => {
             expect(component.find('.divImage50TextMathImage .figureImage50TextMathImage .image50TextMathImage')).toHaveLength(1)
         })
     });
-    xdescribe('Testing Element figure - handleC2MediaClick Functions', () => {
+    describe('Testing Element figure - handleC2MediaClick Functions', () => {
         let type = "figure";
         let props = {
             slateLockInfo: {
@@ -319,7 +324,7 @@ describe('Testing Figure image component', () => {
             spyaddFigureResource.mockClear()
         })
     })
-    xdescribe('New Alfresco Data Handling', () => {
+    describe('New Alfresco Data Handling', () => {
         let type = "figure";
         let props = {
             slateLockInfo: {
@@ -331,7 +336,8 @@ describe('Testing Figure image component', () => {
             updateFigureData: jest.fn(),
             handleBlur: jest.fn(),
             handleFocus: jest.fn(),
-            accessDenied: jest.fn()
+            accessDenied: jest.fn(),
+            showBlocker: jest.fn()
         };
         const e = {
             target:{
@@ -386,7 +392,7 @@ describe('Testing Figure image component', () => {
             jest.spyOn(elementFigureInstance, 'deleteFigureResource')
             elementFigureInstance.deleteFigureResource();
         })
-        it('Test handleFigureDropdown', () => {
+        xit('Test handleFigureDropdown', () => {
             jest.spyOn(elementFigureInstance, 'handleFigureDropdown')
             elementFigureInstance.handleFigureDropdown();
         })

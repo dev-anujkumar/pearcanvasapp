@@ -11,7 +11,8 @@ import {
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
     DELETE_COMMENT,
-    ERROR_POPUP
+    ERROR_POPUP,
+    UPDATE_ROLE
 } from '../../constants/Action_Constants';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action';
@@ -38,7 +39,7 @@ export const fetchComments = (contentUrn, title) => dispatch => {
         })
         let searchString = window.location.search;
         let q = new URLSearchParams(searchString);
-        if(q.get('q')){
+        if (q.get('q')) {
             let currentWorkId = q.get('q');
             dispatch({
                 type: TOGGLE_COMMENTS_PANEL,
@@ -135,7 +136,7 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
             });
 
         }).catch(error => {
-            dispatch({type: ERROR_POPUP, payload:{show: true}})
+            dispatch({ type: ERROR_POPUP, payload: { show: true } })
             //console.log("Failed to add reply", error);
         })
 };
@@ -169,7 +170,7 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
             });
 
         }).catch(error => {
-            dispatch({type: ERROR_POPUP, payload:{show: true}})
+            dispatch({ type: ERROR_POPUP, payload: { show: true } })
             //console.log("status update fail", error);
         })
 };
@@ -200,7 +201,7 @@ export const updateComment = (commentUrn, updateCommentParams, elementId) => dis
             payload: { commentUrn, updateComment: updateCommentParams.comment }
         });
     }).catch(error => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        dispatch({ type: ERROR_POPUP, payload: { show: true } })
         //console.log("status update fail", error);
     })
 };
@@ -255,7 +256,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
             payload: { commentUrn, newAssignee: newAssignee }
         });
     }).catch(error => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        dispatch({ type: ERROR_POPUP, payload: { show: true } })
         //console.log("error while updating user", error);
     })
 
@@ -276,14 +277,39 @@ export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => 
                 "Content-Type": "application/json",
                 PearsonSSOSession: config.ssoToken
             }
-        }).then(response => { 
+        }).then(response => {
             dispatch({
                 type: DELETE_COMMENT,
                 payload: commentUrn
             });
         }).catch(error => {
-            dispatch({type: ERROR_POPUP, payload:{show: true}})
+            dispatch({ type: ERROR_POPUP, payload: { show: true } })
             console.log("error while deleting user", error);
         })
+
+}
+
+export const updateRole = (commentUrn, newRole, elementId) => dispatch => {
+    let url = `${config.NARRATIVE_API_ENDPOINT}narrative/v1/comment/role`
+    let req = {
+        "commentUrn": commentUrn,
+        "entityUrn": elementId,
+        "role": newRole
+    };
+    return axios.put(url, req, {
+        headers: {
+            "Content-Type": "application/json",
+            ApiKey: config.STRUCTURE_APIKEY,
+            PearsonSSOSession: config.ssoToken
+        }
+    }).then(response => {
+        dispatch({
+            type: UPDATE_ROLE,
+            payload: { commentUrn, newRole: newRole }
+        });
+    }).catch(error => {
+        dispatch({ type: ERROR_POPUP, payload: { show: true } })
+        //console.log("error while updating user", error);
+    })
 
 }

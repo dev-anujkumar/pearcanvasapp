@@ -2015,6 +2015,13 @@ describe('Test-Other Functions', () => {
                 interactivetype: "pdf"
             }
         }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
+            }
+        }
         const spyfigureDifferenceInteractive = jest.spyOn(elementContainerInstance, 'figureDifferenceInteractive')
         elementContainerInstance.figureDifferenceInteractive(1, previousElementData);
         expect(spyfigureDifferenceInteractive).toHaveBeenCalled();
@@ -2586,6 +2593,13 @@ describe('Test-Other Functions', () => {
             },
             figuredata: {
                 interactivetype: "pdf"
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
             }
         }
         const spyfigureDifferenceInteractive = jest.spyOn(elementContainerInstance, 'figureDifferenceInteractive')

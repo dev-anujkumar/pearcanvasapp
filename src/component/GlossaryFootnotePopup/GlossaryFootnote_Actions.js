@@ -171,9 +171,18 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     }
                 } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {  // to support glossary in text elements inside WE/AS of MultiColumn
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
-                    
-                } else if (indexesLen == 5) { // to support glossary in section break inside WE of MultiColumn
+                    }
+                } else if (indexesLen == 5) { // to support glossary in Block Poetry in section break inside WE/MulitColumn
+                    if(elementType==='stanza'){
+                        if(newBodymatter[indexes[0]]?.type == "element-aside"){
+                            glossaryFootElem =  newBodymatter[indexes[0]].elementdata?.bodymatter[indexes[1]].contents?.bodymatter[indexes[2]].contents?.bodymatter[indexes[4]]
+                        } else if (newBodymatter[indexes[0]]?.type == "groupedcontent"){
+                            glossaryFootElem =  newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.contents?.bodymatter[indexes[4]]
+                        }
+                    } else {
+                    // to support glossary in section break inside WE of MultiColumn
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
+                }
                 }
 
             }
@@ -851,11 +860,22 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {
                     // aside inside multi column
                     newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                    }
                    
                 }
                 else if (indexesLen == 5) {
+                    // Block Poetry Inside WE after section break or in MultiColumn
+                    if(elementType && elementType==='stanza'){
+                        if(newBodymatter[indexes[0]] && newBodymatter[indexes[0]].type == "element-aside"){
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].contents.bodymatter[indexes[4]] = res.data
+                        } else if (newBodymatter[indexes[0]] && newBodymatter[indexes[0]].type == "groupedcontent"){
+                            newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].contents.bodymatter[indexes[4]] = res.data
+                        }
+
+                    } else {
                     // element inside popup inside multi column
                     newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data
+                    }
                 }
             }
         }

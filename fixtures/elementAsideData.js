@@ -520,6 +520,56 @@ export const asideDataType2 = {
 	"versionUrn": "urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b0",
 	"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
 }
+
+export const asideDataType3 = {
+	"type": "element-aside",
+	"subtype": "sidebar",
+	"id": "urn:pearson:manifest:8a017219-5a2d-4084-bdf7-4261b868ea35",
+	"contentUrn": "urn:pearson:entity:ae7d88ab-f744-4a0c-8fbb-6dacdf0cadd5",
+	"element": {
+		"id": "urn:pearson:manifest:8a017219-5a2d-4084-bdf7-4261b868ea35",
+		"type": "element-aside",
+		"subtype": "sidebar",
+		"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+		"designtype": "asideSidebar01",
+		"elementdata": {
+			"bodymatter": [
+				{
+					"id": "urn:pearson:work:a0867b79-3163-412a-934c-e98006272377",
+					"type": "element-authoredtext",
+					"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+					"elementdata": {
+						"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+						"text": ""
+					},
+					"html": {
+						"text": "<p class=\"paragraphNumeroUno\"><br></p>",
+						"footnotes": {},
+						"assetsPopover": {},
+						"glossaryentries": {}
+					},
+					"versionUrn": "urn:pearson:work:a0867b79-3163-412a-934c-e98006272377",
+					"contentUrn": "urn:pearson:entity:ccbbc794-5ea0-46a5-a7a8-12c1f8335343"
+				}
+			],
+			"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+		},
+		"versionUrn": "urn:pearson:manifest:8a017219-5a2d-4084-bdf7-4261b868ea35",
+		"contentUrn": "urn:pearson:entity:ae7d88ab-f744-4a0c-8fbb-6dacdf0cadd5",
+		"status": "wip"
+	},
+	"index": "0-0-0",
+	"parent": {
+		"id": "urn:pearson:manifest:0dd4f980-2765-482c-a6b5-16099c4097ce",
+		"type": "groupedcontent",
+		"columnId": "urn:pearson:manifest:f15856ea-d2ac-47a4-8e4b-33eb1efa9ec6",
+		"columnName": "C1",
+		"multiColumnType": "2C",
+		"parentContentUrn": "urn:pearson:entity:456d6fbf-5fd6-43fd-be30-88b6d76ec265",
+		"columnContentUrn": "urn:pearson:entity:deca8a3e-0825-4df2-9bc0-f78ac7837780"
+	}
+}
+
 export const slateLevelData1 ={
 	"urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0": {
 		"id": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c",

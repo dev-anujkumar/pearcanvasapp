@@ -344,6 +344,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     elementType={elementType}
                     showPlayscript={props.showPlayscript}
                     showDiscussion={props.showDiscussion}
+                    asideData={props.asideData}
                 >
                 </ElementContainerType>
             }

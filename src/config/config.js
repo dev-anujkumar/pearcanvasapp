@@ -45,7 +45,7 @@ let config = {
     C6REDIS_SERVER_UPDATE: 'api/projects/',
     C4_API_URL: "./api",
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
-    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
+    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr` :"http://localhost:5000",
     ALFRESCO_CITE_API: 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000',
     PATTERNS: {
         PATTERN_ADD_ASSET: 'https://component-lib-stg.pearson.com/c2/9f01f722-2a2e-4766-b55a-56043cb289cb/PatternAddAnAsset.js',

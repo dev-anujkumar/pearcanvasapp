@@ -23,7 +23,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -467,13 +467,17 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`)
+            || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+        let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
         let oldImage = this.props.oldImage;
         if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
             oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
         }
 
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
-            previousElementData.figuredata.interactivetype === "web-link") {
+            previousElementData.figuredata.interactivetype === "web-link" || previousElementData.figuredata.interactivetype === '3rd-party' || 
+            previousElementData.figuredata.interactivetype === 'table') {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
             posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
@@ -483,7 +487,8 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
-                oldImage !== newInteractiveid
+                oldImage !== newInteractiveid || 
+                podwidth !== (previousElementData.figuredata.posterimage.podwidth ? previousElementData.figuredata.posterimage.podwidth : '') && podwidth !== null
             );
         }
         else {
@@ -699,7 +704,7 @@ class ElementContainer extends Component {
                         /* Contains the data of parent elemens Ex.- 2C/Aside/POP||AgainContainer:SH */
                         const elementLineage = {
                             ...this.props.element, grandParent: { asideData, parentUrn }
-                        }
+                        }   
                         this.props.updateElement(dataToSend, elemIndex, parentUrn, elementLineage, showHideType, parentElement, poetryData);
                     } else {
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
@@ -1333,7 +1338,7 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_IMAGE:
                         case elementTypeConstant.FIGURE_TABLE:
                         case elementTypeConstant.FIGURE_MATH_IMAGE:
-                            editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} {...commonProps}/>
+                            editor = <FigureImage model={element} showBlocker={this.props.showBlocker} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} {...commonProps}/>
                             break;
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
@@ -1343,7 +1348,7 @@ class ElementContainer extends Component {
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
+                            editor = <ElementAudioVideo model={element} showBlocker={this.props.showBlocker} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -1514,6 +1519,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.POETRY_ELEMENT:
                     editor = <ElementPoetry index={index}
+                        asideData={this.props.asideData}
                         accessDenied={this.props.accessDenied}
                         handleCommentspanel={handleCommentspanel}
                         updateFigureData={this.updateFigureData}
@@ -1544,11 +1550,14 @@ class ElementContainer extends Component {
                         elementSepratorProps={elementSepratorProps}
                         pasteElement={this.props.pasteElement}
                         userRole={this.props.userRole}
+                        parentUrn={this.props?.parentUrn}
+                        parentElement={this.props.parentElement}
                     />
                     labelText = 'PE'
                     break;
                 case elementTypeConstant.POETRY_STANZA:
                     editor = <ElementPoetryStanza index={index}
+                        asideData={this.props.asideData}
                         permissions={permissions}
                         openAssetPopoverPopUp={this.openAssetPopoverPopUp}
                         openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
@@ -1746,7 +1755,7 @@ class ElementContainer extends Component {
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false;
         let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
-        let isOwner = projectSharingRole ==="OWNER" ? true :false;
+        let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
         return (
             <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {this.renderCopyComponent(this.props, index, inContainer, tcm)}
@@ -1924,7 +1933,7 @@ class ElementContainer extends Component {
             let elmUrn = []
             let elmComment
 
-            if (element && element.elementdata?.bodymatter?.length || element.groupeddata?.bodymatter?.length || element.contents?.bodymatter?.length || element.interactivedata) {
+            if (element && element.elementdata?.bodymatter?.length || element.groupeddata?.bodymatter?.length || element.contents?.bodymatter?.length || element.interactivedata || element.popupdata) {
              (this.props.allComments).filter(({ commentOnEntity }) => {
                   if (commentOnEntity === detailsToSet.element.id) { elmUrn.push(detailsToSet.element.id) }
             });
