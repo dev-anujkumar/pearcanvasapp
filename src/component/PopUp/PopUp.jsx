@@ -434,7 +434,7 @@ class PopUp extends React.Component {
     }
 
     render() {
-        const { active, assessmentClass, isGlossary } = this.props;
+        const { active, assessmentClass, isGlossary, isTCMCanvasPopup } = this.props;
         return (
             <div className="model">
                 {
@@ -447,7 +447,7 @@ class PopUp extends React.Component {
                                 <div className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
-                                <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>
+                                {!isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
                                 {this.renderCommentPanelInput(this.props)}
                                 {this.renderButtons(this.props)}
                             </div>
