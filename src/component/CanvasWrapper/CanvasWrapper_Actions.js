@@ -48,13 +48,26 @@ import ElementConstants from "../ElementContainer/ElementConstants.js"
 const { SHOW_HIDE } = ElementConstants;
 
 export const findElementType = (element, index) => {
+    // console.log("hello");
     let elementType = {};
     elementType['tag'] = '';
     let altText = "";
     let longDesc = "";
     let podwidth = POD_DEFAULT_VALUE
     try {
+        // if(element.type ==="manifestlist") console.log("They are equal");
         switch (element.type) {
+            case "manifestlist":
+                // console.log("Coming..............",element)
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    //primaryOption : "primary-column-1",
+                    primaryOption: `primary-column-${element.columnnumber}`,
+                    secondaryOption: `secondary-column-${element.columnnumber}`,
+                    contentUrn : element.contentUrn
+                    //secondaryOption: elementDataBank[element.type]["secondaryOption"]
+                }
+                break;
             case 'element-authoredtext':
             case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
@@ -142,17 +155,17 @@ export const findElementType = (element, index) => {
                             elementType.secondaryOption = `secondary-blockcode-language-${(languageBCE).replace(" ", "_")}`
                         }
                         break;
-                    case "video":
-                    case "audio":
-                        if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
-                            element.figuredata.srctype='externallink'
-                        }
-                        elementType = {
-                            elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
-                            ...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
-                        }
-                        break;
+                        case "video":
+                            case "audio":
+                                if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
+                                    element.figuredata.srctype='externallink'
+                                }
+                                elementType = {
+                                    elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+                                    primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
+                                    ...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
+                                }
+                                break;
                     case "interactive":
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
@@ -495,7 +508,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         dispatch(handleTCMData(tcmManifestUrn));
     }
     dispatch(resetAssessmentStore());//reset Assessment Store
-    const elementCount = getState().appStore.slateLength;
+    // const elementCount = getState().appStore.slateLength;
+    const elementCount = 2;
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
