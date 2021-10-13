@@ -181,7 +181,7 @@ class ElementPoetry extends Component {
                             {index === 0 && <ElementSaprator
                                 index={index}
                                 firstOne={index === 0}
-                                esProps={this.props.elementSepratorProps(0, true, parentUrn, this.props.asideData, parentIndex, poetryData)}
+                                esProps={this.props.elementSepratorProps(0, true, parentUrn, elementLineage, parentIndex, poetryData)}
                                 elementType="poetry"
                                 poetryData={poetryData}
                                 parentUrn={parentUrn}
@@ -211,7 +211,7 @@ class ElementPoetry extends Component {
                             </ElementContainer>
                             <ElementSaprator
                                 index={index}
-                                esProps={this.props.elementSepratorProps(index, false, parentUrn, this.props.asideData, parentIndex, poetryData)}
+                                esProps={this.props.elementSepratorProps(index, false, parentUrn, elementLineage, parentIndex, poetryData)}
                                 elementType="poetry"
                                 poetryData={poetryData}
                                 parentUrn={parentUrn}
