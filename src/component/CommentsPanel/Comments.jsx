@@ -244,7 +244,7 @@ class Comments extends React.Component {
             <ul className="comment-action-menu action-menu">
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
                 {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
-                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignByRole}>Change Role</li>}
+                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignByRole}>Change Assigned Role</li>}
                 {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>} 
                 {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
