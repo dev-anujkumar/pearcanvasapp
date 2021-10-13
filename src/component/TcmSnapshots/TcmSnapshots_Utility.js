@@ -193,6 +193,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
         tcmSnapshotsCreateSectionBreak(containerElement, snapshotsData, defaultKeys,index, isPopupSlate)
     }
     /* action on element in WE/PE/CG/2C */
+    /* stanza create inside poetry inside containers */
     else if (poetryData || asideData || parentUrn || (showHideObj && Object.keys(showHideObj)?.length > 0)) {
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType)
     }
@@ -932,17 +933,28 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
         }
     }
+    /* */
     else if (parentElement?.element?.type === POETRY_ELEMENT) {
+        let poetryAsideData = asideData;
+        let poetryParentURN = parentUrn;
+        if(asideData?.type === POETRY_ELEMENT) {
+            // when stanza is created asideData is poetry data
+            poetryAsideData = asideData?.grandParent?.asideData;
+            poetryParentURN = asideData?.grandParent?.parentUrn;
+        }
         elementTag = `${tag.parentTag}:${tag.childTag}`;
-        if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //block poetry inside Aside
+        if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype !== WORKED_EXAMPLE) { //block poetry inside Aside
             elementTag = `AS:${elementTag}`
-            elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
+            elementId = `${poetryAsideData.id}+${eleId.parentId}+${eleId.childId}`
         }
-        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) { //SH inside WE - head/body
-            elementTag = `WE:${isHead ? `${isHead}:` : ""}${elementTag}`
-            elementId = `${asideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
+        else if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype === WORKED_EXAMPLE) { //SH inside WE - head/body
+            const headString = poetryParentURN?.manifestUrn == poetryAsideData?.id ? "HEAD" : "BODY";
+            console.log("the poetry parent aside data 1", headString)
+            elementTag = `WE:${headString}:${elementTag}`
+            elementId = `${poetryAsideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
         }
-        else if (asideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:BP || 3C:BP */
+        
+        else if (poetryAsideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:BP || 3C:BP */
             const {columnName, manifestUrn, mcId} = parentUrn;
             //let grandParentTag = tag.grandParent.split(":")[0];
             elementTag = `${parentUrn?.multiColumnType}:${columnName}:${elementTag}`;

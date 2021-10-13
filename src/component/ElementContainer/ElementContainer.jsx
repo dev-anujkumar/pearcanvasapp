@@ -1548,6 +1548,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.POETRY_STANZA:
                     editor = <ElementPoetryStanza index={index}
+                        asideData={this.props.asideData}
                         permissions={permissions}
                         openAssetPopoverPopUp={this.openAssetPopoverPopUp}
                         openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
