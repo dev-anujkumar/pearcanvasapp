@@ -24,7 +24,7 @@
 }
 .index-text{
     display: flex;
-    padding: 3px 0 5px 0;
+    padding: 3px 0 8px 0;
 }
 .index-text span{
     padding-left: 5px;
@@ -115,4 +115,8 @@
 .index-editor .markedindex-secondlevel-description{
     padding-bottom: 1px;
     padding-top: 2px;
+}
+
+.hide-markedinde-toolbar{
+    display: none;
 }
