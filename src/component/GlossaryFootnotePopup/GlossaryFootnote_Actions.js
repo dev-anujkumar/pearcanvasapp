@@ -167,7 +167,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 } else if (indexesLen == 5) { // to support glossary in Block Poetry in section break inside WE/MulitColumn
                     if(elementType==='stanza'){
                         if(newBodymatter[indexes[0]]?.type == "element-aside"){
-                            glossaryFootElem =  newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[4]]
+                            glossaryFootElem =  newBodymatter[indexes[0]].elementdata?.bodymatter[indexes[1]].contents?.bodymatter[indexes[2]].contents?.bodymatter[indexes[4]]
                         } else if (newBodymatter[indexes[0]]?.type == "groupedcontent"){
                             glossaryFootElem =  newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.contents?.bodymatter[indexes[4]]
                         }
@@ -829,7 +829,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     // Block Poetry Inside WE after section break or in MultiColumn
                     if(elementType && elementType==='stanza'){
                         if(newBodymatter[indexes[0]] && newBodymatter[indexes[0]].type == "element-aside"){
-                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[4]] = res.data
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents?.bodymatter[indexes[2]].contents?.bodymatter[indexes[4]] = res.data
                         } else if (newBodymatter[indexes[0]] && newBodymatter[indexes[0]].type == "groupedcontent"){
                             newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].contents.bodymatter[indexes[4]] = res.data
                         }
