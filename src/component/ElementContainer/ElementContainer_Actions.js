@@ -13,7 +13,7 @@ import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshot
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 
-import ElementConstants from "./ElementConstants";
+import ElementConstants, { containersInSH } from "./ElementConstants";
 const { SHOW_HIDE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
@@ -501,7 +501,11 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
 
         if (config.tcmStatus) {
             const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
-            prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
+            if (containersInSH.includes(type2BAdded)) {
+                prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);    
+            } else {
+                prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
+            }
         }
 
         dispatch({

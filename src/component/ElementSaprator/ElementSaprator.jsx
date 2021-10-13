@@ -365,8 +365,12 @@ export function typeOfContainerElements(elem, props) {
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
     /* Do not show SH and Pop up option if Aside/WE is inside SH  */
     if (elem?.buttonType === "interactive-elem-button" && asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) {
-        delete newData["Add Show Hide"];
-        delete newData["Add Pop Up"];
+        newData = {
+            ["Add Elm Interactive"]: newData["Add Elm Interactive"],
+            ["Add Quad Interactive"]: newData["Add Quad Interactive"],
+            ["Add Smart Link"]: newData["Add Smart Link"],
+            ["Add Discussion"]: newData["Add Discussion"]
+        }
     }
     if(newData){
         return Object.entries(newData).map(function (num) {
