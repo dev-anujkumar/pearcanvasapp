@@ -15,7 +15,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import {markedIndexPopup } from './../PrintIndexPopup/PrintIndex_Action.js'
+import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';

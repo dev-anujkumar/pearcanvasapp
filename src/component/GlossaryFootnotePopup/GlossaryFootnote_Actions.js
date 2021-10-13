@@ -10,7 +10,7 @@ const {
     REACT_APP_API_URL
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
-import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE} from "./../../constants/Action_Constants";
+import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE, SET_MARKED_INDEX_SAVED_VALUE} from "./../../constants/Action_Constants";
 import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
@@ -224,6 +224,32 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
        store.dispatch(handleFigureGlossaryActions(false,{}))
     }
 
+    /*
+    * This will updated the store for marked index values
+    * which is associated with this glossary.
+    */
+    let markedIndexFirstLevel = "", markedIndexSecondLevel = "";
+    if(glossaryContentText && glossaryContentText.includes('markedindexentry')){
+        let markedindexentry = glossaryContentText.slice(glossaryContentText.indexOf('markedindexentry')).split("\"")[1];
+        let indexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedindexentry];
+        let {firstLevelEntry, secondLevelEntry} = JSON.parse(indexEntries);
+
+        markedIndexFirstLevel = firstLevelEntry;
+        markedIndexSecondLevel = secondLevelEntry;
+    } else {
+        markedIndexFirstLevel = glossaryContentText;
+    }
+
+    dispatch({
+        type: SET_MARKED_INDEX_SAVED_VALUE,
+        payload: {
+            markedIndexCurrentValue: {
+                firstLevel: markedIndexFirstLevel,
+                secondLevel: markedIndexSecondLevel
+            },
+        }
+    });
+
     return await dispatch({
         type: OPEN_GLOSSARY_FOOTNOTE,
         payload: {
@@ -297,7 +323,7 @@ function alterFigureAttr(type, figureGlossaryData, addAttributeInDfn, glossaryfo
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField,audioGlossaryData,figureGlossaryData) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField,audioGlossaryData,figureGlossaryData, indexEntries) => {
     if(!glossaryfootnoteid) return false
     let glossaryEntry = Object.create({})
     let footnoteEntry = Object.create({})
@@ -483,6 +509,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     ...figureDataObj,
                     glossaryentries: glossaryEntry,
                     footnotes: {},
+                    indexEntries,
                     assetspopover: {}
                 },
                 projectUrn : config.projectUrn,

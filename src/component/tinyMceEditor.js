@@ -2558,14 +2558,12 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance 
      */
      addMarkedIndex = (editor) => {
-         console.log("===========> inside add mark index")
         let elementId = this.props.elementId;
         let sText = editor.selection.getContent();
         let parser = new DOMParser();
         let htmlDoc = parser.parseFromString(sText, 'text/html');
         let selectedText = window.getSelection().toString()
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        console.log("==========> selectedText: ", selectedText)
         this.markIndexText = selectedText;
         if (selectedText.trim() === "") {
             return false

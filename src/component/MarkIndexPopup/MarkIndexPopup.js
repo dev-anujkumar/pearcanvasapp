@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Close, ErrorOutline } from '@material-ui/icons'
-import '../../styles/PrintIndexPopup/PrintIndexPopup.css';
+import '../../styles/MarkIndexPopup/MarkIndexPopup.css';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import config from '../../config/config';
 import { setFormattingToolbar } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import { saveGlossaryAndFootnote } from "../GlossaryFootnotePopup/GlossaryFootnote_Actions";
+import { getGlossaryFootnoteId } from '../../js/glossaryFootnote';
+import { markedIndexPopupOverGlossary } from '../MarkIndexPopup/MarkIndex_Action';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor"
 import { checkforToolbarClick } from '../../js/utils'
 
@@ -29,6 +32,7 @@ class PrintIndexPopup extends Component {
   }
 
   saveContent = () => {
+
     if (!hasReviewerRole()) {
       const { markedIndexValue } = this.props;
       let { elementWorkId, elementType, markIndexid, type, elementSubType, typeWithPopup, poetryField } = markedIndexValue;
@@ -59,6 +63,23 @@ class PrintIndexPopup extends Component {
     this.props.showMarkedIndexPopup(false, '');
   }
 
+  saveMarkedIndex = () => {
+    if(this.props.isInGlossary){
+      getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", res => {
+        let firstLevel = document.querySelector('#markedindex-editor > div > p');
+        let secondLevel = document.querySelector('#index-secondlevel-attacher > div > p');
+
+      firstLevel = firstLevel.innerHTML.match(/<p>/g) ? firstLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
+        : `<p>${firstLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
+      secondLevel = secondLevel.innerHTML.match(/<p>/g) ? secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
+        : `<p>${secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
+
+        this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id);
+      });
+    } else {
+      this.saveContent();
+    }
+  }
 
   toolbarHandling = (e, action = "") => {
     let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
@@ -81,6 +102,16 @@ class PrintIndexPopup extends Component {
     }
   }
 
+  closePopUp = () =>{
+    if(this.props.isInGlossary){
+      const {indexEntries, markedIndexEntryURN} = this.props.markedIndexData.markedIndexGlossary;
+      const {firstLevelEntry, secondLevelEntry} = JSON.parse(indexEntries[markedIndexEntryURN])
+      this.props.markedIndexPopupOverGlossary(false, firstLevelEntry, secondLevelEntry, markedIndexEntryURN);
+    } else {
+      this.props.showMarkedIndexPopup(false,'')
+    }
+  }
+
   render() {
 
     return (
@@ -88,7 +119,7 @@ class PrintIndexPopup extends Component {
         <div className='index-container'>
           <div className="index-setting">
             <span className="printIndex-label">Index Settings</span>
-            <span><Close onClick={() => this.props.showMarkedIndexPopup(false)} /></span>
+            <span><Close onClick={this.closePopUp} /></span>
           </div>
           <div className="index-body">
             <div className="index-text">
@@ -114,8 +145,8 @@ class PrintIndexPopup extends Component {
             </div>
 
             <div className="button-group">
-              <span className="printIndx-cancel-button" onClick={() => this.props.showMarkedIndexPopup(false, '')}>Cancel</span>
-              <span className="printIndex-save-button" disabled={false} onClick={this.saveContent}>Save</span>
+              <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>
+              <span className="printIndex-save-button" disabled={false} onClick={this.saveMarkedIndex}>Save</span>
             </div>
           </div>
 
@@ -125,4 +156,11 @@ class PrintIndexPopup extends Component {
   }
 }
 
-export default PrintIndexPopup;
+const mapStateToProps = state => {
+  return {
+    glossaryData: state.glossaryFootnoteReducer,
+    markedIndexData:  state.markedIndexReducer
+  }
+}
+
+export default connect(mapStateToProps, { markedIndexPopupOverGlossary })(PrintIndexPopup);

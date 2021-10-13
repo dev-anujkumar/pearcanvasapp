@@ -1,4 +1,4 @@
-import { OPEN_MARKED_INDEX } from '../../constants/Action_Constants';
+import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY  } from '../../constants/Action_Constants';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
@@ -86,4 +86,31 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
             elementIndex: index
         }
     });
+}
+
+
+export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry = "", markedIndexEntryURN = "") => (dispatch) => {
+    let indexEntries = {};
+    if(indexEntry && markedIndexEntryURN){
+        indexEntries[markedIndexEntryURN] = JSON.stringify({
+          firstLevelEntry: indexEntry,
+          secondLevelEntry: subEntry
+        });
+    } else {
+        const markedIndexGlossaryData = store.getState().markedIndexReducer.markedIndexGlossary
+        if(markedIndexGlossaryData.markedIndexEntryURN){
+            indexEntries =  markedIndexGlossaryData.indexEntries;
+            markedIndexEntryURN = markedIndexGlossaryData.markedIndexEntryURN;
+        }
+    }
+    return dispatch({
+        type: OPEN_MARKED_INDEX_ON_GLOSSARY,
+        payload:{
+            markedIndexGlossary:{
+                popUpStatus: status,
+                indexEntries,
+                markedIndexEntryURN
+            }
+        }
+    })
 }

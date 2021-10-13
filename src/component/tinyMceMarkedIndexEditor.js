@@ -10,7 +10,7 @@ import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import { getWirisAltText } from '../js/utils';
 import { setFormattingToolbar } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
-import { markedIndexPopup } from '../component/PrintIndexPopup/PrintIndex_Action';
+import { markedIndexPopup } from '../component/MarkIndexPopup/MarkIndex_Action';
 
 export class ReactMarkedIndexEditor extends React.Component {
   constructor(props) {
