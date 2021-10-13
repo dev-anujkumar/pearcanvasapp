@@ -2051,6 +2051,129 @@ export const NotSectionBreakMockSlateData = {
     }
 }
 
+export const NotSectionBreakMockSlateData2 = {
+    "urn:pearson:manifest:8a017219-5a2d-4084-bdf7-4261b868ea35": {
+        "contents": {
+            "bodymatter": [
+              {
+                "id": "urn:pearson:manifest:0dd4f980-2765-482c-a6b5-16099c4097ce",
+                "type": "groupedcontent",
+                "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                "width": "wider",
+                "groupproportions": "60-40",
+                "versionUrn": "urn:pearson:manifest:0dd4f980-2765-482c-a6b5-16099c4097ce",
+                "contentUrn": "urn:pearson:entity:456d6fbf-5fd6-43fd-be30-88b6d76ec265",
+                "groupeddata": {
+                  "bodymatter": [
+                    {
+                      "id": "urn:pearson:manifest:f15856ea-d2ac-47a4-8e4b-33eb1efa9ec6",
+                      "type": "group",
+                      "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                      "versionUrn": "urn:pearson:manifest:f15856ea-d2ac-47a4-8e4b-33eb1efa9ec6",
+                      "contentUrn": "urn:pearson:entity:deca8a3e-0825-4df2-9bc0-f78ac7837780",
+                      "groupdata": {
+                        "bodymatter": [
+                          {
+                            "id": "urn:pearson:manifest:8a017219-5a2d-4084-bdf7-4261b868ea35",
+                            "type": "element-aside",
+                            "subtype": "sidebar",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "designtype": "asideSidebar01",
+                            "elementdata": {
+                              "bodymatter": [
+                                {
+                                  "id": "urn:pearson:work:a0867b79-3163-412a-934c-e98006272377",
+                                  "type": "element-authoredtext",
+                                  "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                  "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                  },
+                                  "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                    "footnotes": {},
+                                    "assetsPopover": {},
+                                    "glossaryentries": {}
+                                  },
+                                  "versionUrn": "urn:pearson:work:a0867b79-3163-412a-934c-e98006272377",
+                                  "contentUrn": "urn:pearson:entity:ccbbc794-5ea0-46a5-a7a8-12c1f8335343"
+                                }
+                              ],
+                              "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+                            },
+                            "versionUrn": "urn:pearson:manifest:8a017219-5a2d-4084-bdf7-4261b868ea35",
+                            "contentUrn": "urn:pearson:entity:ae7d88ab-f744-4a0c-8fbb-6dacdf0cadd5",
+                            "status": "wip"
+                          }
+                        ]
+                      },
+                      "status": "wip"
+                    },
+                    {
+                      "id": "urn:pearson:manifest:65bca1da-bf6f-4f0a-998a-4bb185f308eb",
+                      "type": "group",
+                      "schema": "http://schemas.pearson.com/wip-authoring/groupedcontent/1",
+                      "versionUrn": "urn:pearson:manifest:65bca1da-bf6f-4f0a-998a-4bb185f308eb",
+                      "contentUrn": "urn:pearson:entity:61b258f4-147a-431d-82ef-ff75407a0b8e",
+                      "groupdata": {
+                        "bodymatter": [
+                          {
+                            "id": "urn:pearson:work:5b3856e2-0044-467f-af1e-4a7ccea6d6d2",
+                            "type": "element-authoredtext",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                              "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                              "text": ""
+                            },
+                            "html": {
+                              "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                              "footnotes": {},
+                              "assetsPopover": {},
+                              "glossaryentries": {}
+                            },
+                            "versionUrn": "urn:pearson:work:5b3856e2-0044-467f-af1e-4a7ccea6d6d2",
+                            "contentUrn": "urn:pearson:entity:c64701ee-2d07-49f1-a502-74efb4216ff8"
+                          }
+                        ]
+                      },
+                      "status": "wip"
+                    }
+                  ]
+                },
+                "status": "wip"
+              }
+            ],
+            "title": {
+              "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+              "text": "Slate2_2"
+            },
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+        }
+    }
+}
+
+export const NotSectionBreakMockSlateData3 = {
+    "urn:pearson:manifest:4b90dfbd-8993-41f7-a474-e95aa64bd21d":{
+        "id":"urn:pearson:manifest:4b90dfbd-8993-41f7-a474-e95aa64bd21d",
+        "type":"manifest",
+        "schema":"http://schemas.pearson.com/wip-authoring/manifest/1",
+        "versionUrn":"urn:pearson:manifest:4b90dfbd-8993-41f7-a474-e95aa64bd21d",
+        "contentUrn":"urn:pearson:entity:9a928422-e337-4f6e-b3a6-7badb89a556b",
+        "contents":{
+            "bodymatter":[],
+            "title":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":"Slate2_2"
+            },
+            "schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+        },
+        "status":"wip",
+        "pageNo":0,
+        "pageCount":1,
+        "pageLimit":10
+    }
+}
+
 export const GlossaryMockState = {
     "type": "Glossary",
     "popUpStatus": false
@@ -2358,6 +2481,94 @@ export const slateWithCitationElement ={
             "id": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
             "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
             "type": "manifest",
+            "tcm":true,
+            "contents": {
+                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "sample slate"
+                },
+                "frontmatter": [],
+                "bodymatter": [
+                    {
+                        "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                        "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                        "type": "citations",
+                        "contents": {
+                            "formatted-title": {
+                                "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                            },
+                            "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                    "textsemantics":
+                                    [
+                                        {
+                                            "type": "strong",
+                                            "charStart": 81,
+                                            "charEnd": 105
+                                        }
+                                    ]
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                            },
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
+                            },
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637"
+                            }
+                        ]
+                        },
+                        "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                        "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
+                    },
+                    { ...multiColumnContainer }
+                ]
+            }
+        
+    }
+}
+}
+
+export const slateWithCitationElement2 ={
+    slateLevelData:{
+        "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e":{
+            "id": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+            "type": "manifest",
+            "tcm":false,
             "contents": {
                 "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
                 "title": {

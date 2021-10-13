@@ -152,6 +152,11 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         if('posterimage' in previousElementData.figuredata && typeof(previousElementData.figuredata.posterimage)!=="object"){
             delete previousElementData.figuredata.posterimage;
         }
+        if(previousElementData.figuredata.interactivetype === '3rd-party' || previousElementData.figuredata.interactivetype === "table" ){
+            let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+            const podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || POD_DEFAULT_VALUE
+            previousElementData.figuredata.posterimage.podwidth = podwidth ? (podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`) : ''
+        }
     
     previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
 

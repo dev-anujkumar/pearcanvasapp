@@ -6,9 +6,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import FigureUserInterface from '../../../src/component/ElementFigure/FigureUserInterface';
-import { newVideoObjWithData} from '../../../fixtures/ElementFigureTestingData.js'
-import config from '../../../src/config/config';
-
+import { newVideoObjWithData,newAudioObjWithData,newSmartLinkObjWithData,newVideoObjWithoutData,newAudioObjWithoutData,newSmartLinkObjWithoutData,smartLinkPdfWithoutData,smartLinkPdfWithData} from '../../../fixtures/ElementFigureTestingData.js'
 
 const dummyData = [
     {title: 'some-tilte-1', body: 'some-1'},
@@ -34,7 +32,8 @@ jest.mock('../../../src/constants/utility.js',()=>{
         },
         checkHTMLdataInsideString: () => {
             return ({
-                toLowerCase: jest.fn()
+                toLowerCase: jest.fn(),
+                replace: jest.fn()
             })
         },
         removeUnoClass: () => {
@@ -45,7 +44,6 @@ jest.mock('../../../src/constants/utility.js',()=>{
         }
     }
 })
-
 
 
 describe('Testing FigureUserInterface component', () => {
@@ -59,377 +57,610 @@ describe('Testing FigureUserInterface component', () => {
             Permission: false
         },
         appStore: {
-            figureDropdownData: []
+            figureDropdownData: [],
+            figureDropdownData: {
+                audio: ["No Label", "Custom"],
+                image: ["No Label", "Custom"],
+                smartlinks: ["No Label", "Custom", "Figure"],
+                video: ["No Label", "Video", "Custom"]
+            }
         },
         projectMetadata:{},
     }
+    let props = {
+        model: newVideoObjWithData,
+        index: "",
+        slateLockInfo: {
+            isLocked: false,
+            userId: 'c5Test01'
+        },
+        onClick: () => { },
+        handleFocus: function () { },
+        permissions: ['add_multimedia_via_alfresco'],
+        element: {
+            figuretype: 'video',
+            figuredata: {
+                hasOwnProperty: jest.fn(),
+                videos: [
+                    {
+                        path: "Test Path"
+                    }
+                ],
+                videoid: 'urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c',
+                posterimage: { path: "urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c" }
+            },
+            html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>video</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+        }
+    }
     const store = mockStore(initialState);
+    const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+    let FigureUserInterfaceInstance = component.find('FigureUserInterface').instance();
+    it('Test componnet Did mount',()=>{
+        jest.spyOn(FigureUserInterfaceInstance, 'componentDidMount')
+        document.addEventListener = () => {
+            return true
+        }
+        FigureUserInterfaceInstance.setState({
+            alfrescoSite:"001_C5 Media POC - AWS US"
+        })
+        FigureUserInterfaceInstance.componentDidMount();
+        expect(FigureUserInterfaceInstance.componentDidMount).toHaveBeenCalled();
+        expect(FigureUserInterfaceInstance.state.alfrescoSite).toBe("001_C5 Media POC - AWS US")
+      
+    })
+    it('Test componentWillUnmount', () => {
+        
+        jest.spyOn(FigureUserInterfaceInstance, 'componentWillUnmount')
+        document.removeEventListener = () => {
+            return true
+        }
+        FigureUserInterfaceInstance.componentWillUnmount();
+        expect(FigureUserInterfaceInstance.componentWillUnmount).toHaveBeenCalled();
+    })
+    it('Test handleClickOutside', () => {
+        const e = {
+            target:{
+                tagName: "p"
+            },
+            stopPropagation() { }
+        }
+        jest.spyOn(FigureUserInterfaceInstance, 'handleClickOutside')
+        FigureUserInterfaceInstance.handleClickOutside(e);
+    })
+    it('Test handleFigureDropdown', () => {
+        jest.spyOn(FigureUserInterfaceInstance, 'handleFigureDropdown')
+        FigureUserInterfaceInstance.handleFigureDropdown();
+    })
+    it('Test onFigureElementFieldFocus 1st if condition', () => {
+        document.getElementById = () => {
+            return {
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => true),
+                        add: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldFocus')
+        FigureUserInterfaceInstance.onFigureElementFieldFocus('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldFocus 1st if-elseif condition', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: 'test text',
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => false),
+                        add: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => false)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldFocus')
+        FigureUserInterfaceInstance.onFigureElementFieldFocus('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldFocus 1st if-elseif-else condition', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: '<br>',
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => false),
+                        add: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => false)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldFocus')
+        FigureUserInterfaceInstance.onFigureElementFieldFocus('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldFocus 2nd if-elseif-else condition', () => {
+        props = {
+            ...props,
+            element: {
+                ...props.element,
+                figuretype: ''
+            }
+        }
+        document.getElementById = () => {
+            return {
+                classList: {
+                    contains: jest.fn(() => false)
+                }
+            }
+        }
+        const store = mockStore(initialState);
+        const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+        let FigureUserInterfaceInstance = component.find('FigureUserInterface').instance();
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldFocus')
+        FigureUserInterfaceInstance.onFigureElementFieldFocus('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    
+    it('Test onFigureElementFieldBlur 1st if condition', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: "<br>",
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => true),
+                        remove: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldBlur')
+        FigureUserInterfaceInstance.onFigureElementFieldBlur('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldBlur 1st if-else condition', () => {
+        document.getElementById = () => {
+            return {
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldBlur')
+        FigureUserInterfaceInstance.onFigureElementFieldBlur('1-0');
+        expect(spyFucntion).toHaveBeenCalledWith('1-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldBlur 3rd if condition', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: {
+                    toLowerCase: jest.fn(() => 'video')
+                },
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldBlur')
+        FigureUserInterfaceInstance.onFigureElementFieldBlur('0-0');
+        expect(spyFucntion).toHaveBeenCalledWith('0-0')
+        spyFucntion.mockClear();
+    })
+    it('Test onFigureElementFieldBlur 3rd if-else condition', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: {
+                    toLowerCase: jest.fn(() => 'test')
+                },
+                classList: {
+                    contains: jest.fn(() => false)
+                }
+            }
+        }
+        let spyFucntion = jest.spyOn(FigureUserInterfaceInstance, 'onFigureElementFieldBlur')
+        FigureUserInterfaceInstance.onFigureElementFieldBlur('0-0');
+        expect(spyFucntion).toHaveBeenCalledWith('0-0')
+        spyFucntion.mockClear();
+    })
 
-    it('renders without crashing', () => {
+    describe('video element', () => {
         let props = {
-            model:newVideoObjWithData,
-            index:"" ,
+            model: newVideoObjWithData,
+            index: "",
             slateLockInfo: {
                 isLocked: false,
                 userId: 'c5Test01'
             },
-            onClick : ()=>{},
-            handleFocus: function(){},
+            onClick: () => { },
+            handleFocus: function () { },
             permissions: ['add_multimedia_via_alfresco'],
             element: {
                 figuretype: 'video',
                 figuredata: {
-                    hasOwnProperty: jest.fn(),
+                    hasOwnProperty: jest.fn(()=> true),
                     videos: [
                         {
                             path: "Test Path"
                         }
-                    ]
-                }
+                    ],
+                    videoid: 'urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c',
+                    posterimage: { imageid: "urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c" }
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
             }
         }
         const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
-        expect(component).toHaveLength(1);
-        let instance = component.instance(); 
-        expect(instance).toBeDefined();
+        let FigureUserInterfaceInstance = component.find('FigureUserInterface').instance();
+        it('renders without crashing', () => {
+            expect(component).toHaveLength(1);
+            expect(FigureUserInterfaceInstance).toBeDefined();
+        });
+        it('handle handleCloseDropDrown',()=>{
+            let FigureUserInterfaceInstance = component.find('FigureUserInterface').instance();
+             const spyFunction = jest.spyOn(FigureUserInterfaceInstance, 'changeFigureLabel');
+            const spyFunction2 = jest.spyOn(FigureUserInterfaceInstance, 'handleCloseDropDrown');
+            FigureUserInterfaceInstance.changeFigureLabel("Video","Video")
+            FigureUserInterfaceInstance.handleCloseDropDrown()
+            FigureUserInterfaceInstance.forceUpdate();
+            component.update();
+            FigureUserInterfaceInstance.setState({
+                figureDropDown: false,
+                figureLabelValue:"Video"
+            })
+            expect(spyFunction).toHaveBeenCalled();
+            expect(spyFunction2).toHaveBeenCalled();
+            expect(FigureUserInterfaceInstance.state.figureDropDown).toBe(false);
+            expect(FigureUserInterfaceInstance.state.figureLabelValue).toBe("Video");
+            spyFunction.mockClear();
+            spyFunction2.mockClear();
+        })
+        it('video element without alfresco data',()=>{
+            let props = {
+                model: newVideoObjWithoutData,
+                index: "",
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'video',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(),
+                        videos: [
+                            {
+                                path: ""
+                            }
+                        ],
+                        videoid: '',
+                        posterimage: { imageid: "" }
+                    }
+                }
+            }  
+            const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            expect(component).toHaveLength(1);
+            let instance = component.instance();
+            expect(instance).toBeDefined();
+        })
     })
-    // xdescribe('Testing alfrescoSiteUrl', () => {
-    //     let props = {
-    //         model:newVideoObjWithData,
-    //         index:"" ,
-    //         slateLockInfo: {
-    //             isLocked: false,
-    //             userId: 'c5Test01'
-    //         },
-    //         onClick : ()=>{},
-    //         handleFocus: function(){},
-    //         permissions: ['add_multimedia_via_alfresco'],
-    //     }
-    //     xtest('Testing updateAlfrescoSiteUrl if condition', () => {
-    //         let elementFigure = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
-    //         const elementFigureInstance = elementFigure.find('FigureUserInterface').instance();
-    //         elementFigureInstance.setState({ alfrescoSiteData: {
-    //             title: 'test'
-    //         }});
-    //         elementFigureInstance.updateAlfrescoSiteUrl();
-    //         expect(elementFigureInstance.state.alfrescoSite).toBe('test')
-    //     })
-    //     xtest('Testing updateAlfrescoSiteUrl else condition', () => {
-    //         let elementFigure = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
-    //         const elementFigureInstance = elementFigure.find('FigureUserInterface').instance();
-    //         elementFigureInstance.setState({ alfrescoSiteData: {
-    //             title: null
-    //         }});
-    //         elementFigureInstance.updateAlfrescoSiteUrl();
-    //         let defaultSite = config.alfrescoMetaData?.alfresco?.repositoryFolder || config.alfrescoMetaData?.alfresco?.title
-    //         expect(elementFigureInstance.state.alfrescoSite).toBe(defaultSite)
-    //     })
-    // })
+    describe('audio element',()=>{
+        let props = {
+            model: newAudioObjWithData,
+            index: "",
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            permissions: ['add_multimedia_via_alfresco'],
+            element: {
+                figuretype: 'audio',
+                figuredata: {
+                    hasOwnProperty: jest.fn(()=> true),
+                    audio: 
+                        {
+                            path: "Test Path"
+                        },
+                    audioid: 'urn:pearson:alfresco:a522bb38-8343-405d-b2cb-30dde04ffcbd',
+                    posterimage:{imageid:"urn:pearson:alfresco:a522bb38-8343-405d-b2cb-30dde04ffcbd"}
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+            }
+        }
+        it('render audio element',()=>{
+            const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            expect(component).toHaveLength(1);
+            let instance = component.instance();
+            expect(instance).toBeDefined();
+        })
+        it('render audio element without alfresco data',()=>{
+            let props = {
+                model: newAudioObjWithoutData,
+                index: "",
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'audio',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(),
+                        audio: 
+                            {
+                                path: ""
+                            },
+                        audioid: '',
+                        posterimage:{imageid:""}
+                    }
+                }
+            }
+            const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            expect(component).toHaveLength(1);
+            let instance = component.instance();
+            expect(instance).toBeDefined();
+        })
+    })
+    describe('render smartLink element',()=>{
+        let props = {
+            model: newSmartLinkObjWithData,
+            index: "",
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            permissions: ['add_multimedia_via_alfresco'],
+            element: {
+                figuretype: 'interactive',
+                figuredata: {
+                    hasOwnProperty: jest.fn(()=> true),
+                    path:'test path',
+                    interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                    interactivetype:'3rd-party',
+                    posterimage:{
+                        imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                        path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                     },
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+            }
+        }
+        it('render smartlink element', () => {
+            const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            let FigureUserInterfaceInstance = component.find('FigureUserInterface').instance();
+            expect(component).toHaveLength(1);
+            FigureUserInterfaceInstance.setState({
+                figureLabelValue: "TestLabel"
+            })
+            expect(FigureUserInterfaceInstance).toBeDefined();
+            expect(FigureUserInterfaceInstance.state.figureLabelValue).toBe("TestLabel")
+        })
+        it('render smartLink element without alfresco data',()=>{
+            let props = {
+                model: newSmartLinkObjWithoutData,
+                index: "",
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'interactive',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(),
+                        interactiveid: '',
+                        interactivetype:'3rd-party',
+                        interactivetitle :'AssetName'
+                    }
+                }
+            }
+            const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            expect(component).toHaveLength(1);
+            let instance = component.instance();
+            expect(instance).toBeDefined();
+        })
+        it('Pdf smartLink withoutData',()=>{
+            let props = {
+                model: smartLinkPdfWithoutData,
+                index: "",
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'interactive',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(),
+                        interactiveid: '',
+                        interactivetype:'pdf',
+                    },
+                    html:{title:"<p class=\"paragraphNumeroUno\"><br></p>",postertext:"",captions:"<p class=\"paragraphNumeroUno\"><br></p>",credits:"<p class=\"paragraphNumeroUno\"><br></p>",footnotes:{},assetsPopover:{},glossaryentries:{}}
+                }
+            }
+            const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            expect(component).toHaveLength(1);
+            let instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Pdf smartLink with Data',()=>{
+            let props = {
+                model: smartLinkPdfWithData,
+                index: "",
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'interactive',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(()=> true),
+                        path:'test path',
+                        interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                        interactivetype:'pdf',
+                        posterimage:{
+                            imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                            path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                         },
+                    },
+                    html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+                }
+            }
+            const component = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            expect(component).toHaveLength(1);
+            let instance = component.instance();
+            expect(instance).toBeDefined();
+        })
+        it('changeFigureLabel case else', () => {
+            document.getElementById = () => {
+                return {
+                    innerHTML: 'test'
+                }
+            }
+            let props = {
+                model: newSmartLinkObjWithData,
+                index: 1,
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                handleBlur: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'interactive',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(()=> true),
+                        path:'test path',
+                        interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                        interactivetype:'3rd-party',
+                        posterimage:{
+                            imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                            path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                         },
+                    },
+                    html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+                }
+            }
+            const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            const FigureUserInterfaceInstance = elementFigureUserInterface.find('FigureUserInterface').instance();
+            FigureUserInterfaceInstance.changeFigureLabel('Figure', 'Table');
+            let instance = elementFigureUserInterface.instance();
+            expect(instance).toBeDefined();
+          });
+          it('changeFigureLabel case if', () => {
+            document.getElementById = () => {
+                return {
+                    innerHTML: 'test'
+                }
+            }
+            let props = {
+                model: newSmartLinkObjWithData,
+                index: 1,
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                handleBlur: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'interactive',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(()=> true),
+                        path:'test path',
+                        interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                        interactivetype:'3rd-party',
+                        posterimage:{
+                            imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                            path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                         },
+                    },
+                    html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+                }
+            }
+            const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            const FigureUserInterfaceInstance = elementFigureUserInterface.find('FigureUserInterface').instance();
+            FigureUserInterfaceInstance.changeFigureLabel('Table', 'Figure');
+            let instance = elementFigureUserInterface.instance();
+            expect(instance).toBeDefined();
+          });
 
-    // xdescribe('Testing Element figure - handleC2MediaClick Functions', () => {
-    //     let type = "audio";
-    //     let props = {
-    //         slateLockInfo: {
-    //             isLocked: false,
-    //             userId: 'c5Test01'
-    //         },
-    //         onClick : ()=>{},
-    //         permissions: ['add_multimedia_via_alfresco'],
-    //         updateFigureData: jest.fn(),
-    //         handleBlur: jest.fn(),
-    //         handleFocus: jest.fn(),
-    //         accessDenied: jest.fn()
-    //     };
-    //     const e = {
-    //         target:{
-    //             tagName: "p"
-    //         },
-    //         stopPropagation() { }
-    //     }
-    //     let alfrescoPath = {
-    //         alfresco: {
-    //             nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
-    //             repositoryFolder: "001_C5 Media POC - AWS US ",
-    //             repositoryName: "AWS US",
-    //             repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
-    //             visibility: "MODERATED",
-    //         },
-    //         associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
-    //         authorName: "Krajewski",
-    //         citeUrn: "urn:pearson:manifestation:191e7b6c-53a3-420f-badd-a90786613ae5",
-    //         containerUrn: "urn:pearson:manifest:fd254701-5063-43aa-bd24-a2c2175be2b2",
-    //         currentOrigin: "local",
-    //         dateApproved: null,
-    //         dateCreated: "2019-02-28T19:14:32.948Z",
-    //         eTag: "Vy8xNTc0Mjc4NDkxMDYz",
-    //         entityUrn: "urn:pearson:entity:f2f656da-c167-4a5f-ab8c-e3dbbd349095",
-    //         gridId: [],
-    //         hasVersions: false,
-    //         id: "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f",
-    //         name: "ELMTEST_StgEnv_Krajewski Test",
-    //         roleId: "admin",
-    //         ssoToken: "qcOerhRD_CT-ocYsh-y2fujsZ0o.*AAJTSQACMDIAAlNLABxnalBuS2VJQi9RUTFMdHVBZDZBMUxyakpUTGM9AAJTMQACMDE.*",
-    //         status: "wip",
-    //         tcm: { timeUpdated: 1553707971031, userIp: "10.50.11.104", user: "c5test01", activated: true },
-    //         url: null,
-    //         userApprover: null,
-    //         userApproverFullName: null,
-    //         userCount: 0,
-    //         'x-prsn-user-id': " "
-    //     }
-    //     const elementFigure = mount(<Provider store={store}><FigureUserInterface type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
-    //     let elementFigureInstance = elementFigure.find('FigureUserInterface').instance();
-    //     it('handleC2MediaClick-default case', () => {
-    //         const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
-    //         let event = {
-    //             target: { tagName: 'b' },
+          it('toggleHyperlinkEditable case if', () => {
+            const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            const FigureUserInterfaceInstance = elementFigureUserInterface.find('FigureUserInterface').instance();
+            FigureUserInterfaceInstance.toggleHyperlinkEditable('show', '1-0');
+            let instance = elementFigureUserInterface.instance();
+            expect(instance).toBeDefined();
+          });
 
-    //         }
-    //         elementFigureInstance.setState({
-    //             projectMetadata: alfrescoPath
-    //         })
-    //         elementFigureInstance.forceUpdate();
-    //         elementFigure.update();
-    //         config.alfrescoMetaData = alfrescoPath
-    //         elementFigureInstance.handleC2MediaClick(event);
-    //         expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
-    //         spyhandleC2MediaClick.mockClear()
-    //     }) 
-    //     it('handleC2MediaClick else case ', () => {
-    //         let alfrescoPath1 = {
-    //             alfresco: {
-    //                 visibility: "MODERATED",
-    //                 name:'test',
-    //                 title:'test',
-    //                 guid:'test'
-    //             }
-    //         }
-    //         const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
-    //         let event = {
-    //             target: { tagName: 'b' },
+          it('without data element for conditional coverage', () => {
+            let props = {
+                model: newSmartLinkObjWithData,
+                index: 1,
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                handleBlur: function () { },
+                permissions: ['add_multimedia_via_alfresco'],
+                element: {
+                    figuretype: 'video',
+                    figuredata: {
+                        hasOwnProperty: jest.fn(()=> true),
+                        path:'test path',
+                        videoid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                        videos: [
+                            {
+                                path: 'test'
+                            }
+                        ],
+                        posterimage:{
+                            path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                         },
+                    },
+                    html:{footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+                }
+            }
+            const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            let instance = elementFigureUserInterface.instance();
+            expect(instance).toBeDefined();
+          });
+    })
 
-    //         }
-    //         elementFigureInstance.setState({
-    //             projectMetadata: alfrescoPath1
-    //         })
-    //         elementFigureInstance.forceUpdate();
-    //         elementFigure.update();
-    //         config.alfrescoMetaData = alfrescoPath
-    //         elementFigureInstance.handleC2MediaClick(event);
-    //         expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
-    //         spyhandleC2MediaClick.mockClear()
-    //     }) 
-    //     it('handleC2MediaClick-if with alfresco_crud_access permissions ', () => {
-    //         let props = {
-    //             slateLockInfo: {
-    //                 isLocked: false,
-    //                 userId: 'c5Test01'
-    //             },
-    //             onClick : ()=>{},
-    //             handleFocus: function(){},
-    //             permissions: [
-    //                 "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview",'alfresco_crud_access', "add_instructor_resource_url", "grid_crud_access", , "set_favorite_project", "sort_projects",
-    //                 "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-    //                 "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-    //             ]
-    //         };
-    //         const elementFigure = mount(<Provider store={store}><FigureUserInterface type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
-    //         let elementFigureInstance = elementFigure.find('FigureUserInterface').instance();
-    //         const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
-    //         let event = {
-    //             target: { tagName: 'b' },
-
-    //         }
-    //         elementFigureInstance.setState({
-    //             projectMetadata: {}
-    //         })
-    //         elementFigure.update();
-    //         config.alfrescoMetaData = {}
-    //         elementFigureInstance.handleC2MediaClick(event);
-    //         elementFigureInstance.forceUpdate();
-    //         expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
-    //         spyhandleC2MediaClick.mockClear()
-    //     }) 
-    //     it('handleC2MediaClick-if else case  alfresco_crud_access ', () => {
-    //         let props = {
-    //             slateLockInfo: {
-    //                 isLocked: false,
-    //                 userId: 'c5Test01'
-    //             },
-    //             onClick : ()=>{},
-    //             handleFocus: function(){},
-    //             permissions: [
-    //                 "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", , "set_favorite_project", "sort_projects",
-    //                 "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-    //                 "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-    //             ]
-    //         };
-    //         const elementFigure = mount(<Provider store={store}><FigureUserInterface type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
-    //         let elementFigureInstance = elementFigure.find('FigureUserInterface').instance();
-    //         const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
-    //         let event = {
-    //             target: { tagName: 'b' },
-
-    //         }
-    //         elementFigureInstance.setState({
-    //             projectMetadata: {}
-    //         })
-    //         elementFigure.update();
-    //         config.alfrescoMetaData = {}
-    //         elementFigureInstance.handleC2MediaClick(event);
-    //         elementFigureInstance.forceUpdate();
-    //         expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
-    //         spyhandleC2MediaClick.mockClear()
-    //     }) 
-    //     it('TEST- Call AddResource function for C2Mdeia',()=>{
-    //         const spyaddFigureResource = jest.spyOn(elementFigureInstance, 'addFigureResource') 
-    //         elementFigureInstance.addFigureResource(e);
-    //         elementFigureInstance.forceUpdate();
-    //         elementFigure.update();
-    //         expect(spyaddFigureResource).toHaveBeenCalledWith(e)
-    //         spyaddFigureResource.mockClear()
-    //     })
-    // });
-    // xdescribe('Testing dataFromAlfresco function', () => {
-    //     let alfrescoPath = {
-    //         alfresco: {
-    //             repositoryFolder: "001_C5 Media POC - AWS US ",
-    //             repositoryName: "AWS US",
-    //             repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
-    //             visibility: "MODERATED",
-    //             title:'',
-    //             name:''
-    //         },
-    //         associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
-    //         authorName: "Krajewski",
-    //         citeUrn: "urn:pearson:manifestation:191e7b6c-53a3-420f-badd-a90786613ae5",
-    //         containerUrn: "urn:pearson:manifest:fd254701-5063-43aa-bd24-a2c2175be2b2",
-    //         currentOrigin: "local",
-    //         dateApproved: null,
-    //         dateCreated: "2019-02-28T19:14:32.948Z",
-    //         eTag: "Vy8xNTc0Mjc4NDkxMDYz",
-    //         entityUrn: "urn:pearson:entity:f2f656da-c167-4a5f-ab8c-e3dbbd349095",
-    //         gridId: [],
-    //         hasVersions: false,
-    //         id: "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f",
-    //         name: "ELMTEST_StgEnv_Krajewski Test",
-    //         roleId: "admin",
-    //         ssoToken: "qcOerhRD_CT-ocYsh-y2fujsZ0o.*AAJTSQACMDIAAlNLABxnalBuS2VJQi9RUTFMdHVBZDZBMUxyakpUTGM9AAJTMQACMDE.*",
-    //         status: "wip",
-    //         tcm: { timeUpdated: 1553707971031, userIp: "10.50.11.104", user: "c5test01", activated: true },
-    //         url: null,
-    //         userApprover: null,
-    //         userApproverFullName: null,
-    //         userCount: 0,
-    //         'x-prsn-user-id': " ",
-    //     }
-    //     let props = {
-    //         slateLockInfo: {
-    //             isLocked: false,
-    //             userId: 'c5Test01'
-    //         },
-    //         onClick: () => { },
-    //         handleFocus: function () { },
-    //         permissions: permissions,
-    //         model: videoElementTypeSLDefault,
-    //         updateFigureData: jest.fn(),
-    //         handleBlur: jest.fn(),
-    //         handleFocus: jest.fn(),
-    //         accessDenied: jest.fn(),
-    //         isCiteChanged:true
-    //     };
-    //     let sampleAltTextDiv = document.createElement('at')
-    //     sampleAltTextDiv.setAttribute('name', 'alt_text');
-    //     sampleAltTextDiv.innerHTML = "alt_text"
-    //     document.body.appendChild(sampleAltTextDiv)
-
-    //     let sampleLongDescriptionDiv = document.createElement('ld')
-    //     sampleLongDescriptionDiv.setAttribute('name', 'long_description');
-    //     sampleLongDescriptionDiv.innerHTML = "long_Description"
-    //     document.body.appendChild(sampleLongDescriptionDiv)
-
-    //     const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
-    //     let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
-    //     const spydataFromAlfresco = jest.spyOn(elementAudioVideoInstance, 'dataFromAlfresco')
-    //     const defaultPath = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
-    //     it('Test- if case workflow', () => {
-    //         config.alfrescoMetaData = alfrescoPath
-    //         elementAudioVideoInstance.dataFromAlfresco(audioData1)
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideo.update();
-    //         expect(spydataFromAlfresco).toHaveBeenCalled()
-    //         expect(elementAudioVideoInstance.state.imgSrc).toBe('https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3')
-    //         spydataFromAlfresco.mockClear()
-    //     })
-    //     it('Test- if case workflow-  epsURL given, clipinfo given-English subtitles', () => {
-    //         let data = newAlfrescoData
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideoInstance.dataFromAlfresco(data)
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideo.update();
-    //         expect(spydataFromAlfresco).toHaveBeenCalled()
-    //         spydataFromAlfresco.mockClear()
-    //     })
-    //     it('Test- if case workflow-  no publicationUrl ', () => {
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideoInstance.dataFromAlfresco(audioData)
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideo.update();
-    //         expect(spydataFromAlfresco).toHaveBeenCalled()
-    //         spydataFromAlfresco.mockClear()
-    //     })
-    //     it('Test- if case workflow-  with viedo smartLinks ', () => {
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideoInstance.dataFromAlfresco(videoSmartLinksData)
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideo.update();
-    //         expect(spydataFromAlfresco).toHaveBeenCalled()
-    //         spydataFromAlfresco.mockClear()
-    //     })
-    //     it('Test- if case workflow-  with viedo avs:jsonString filed else case ', () => {
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideoInstance.dataFromAlfresco(newVideoData)
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideo.update();
-    //         expect(spydataFromAlfresco).toHaveBeenCalled()
-    //         expect(elementAudioVideoInstance.state.imgSrc).toBe(newVideoData.epsUrl)
-    //         spydataFromAlfresco.mockClear()
-    //     })
-    //     it('Test- if case workflow-  with smartlink audio ', () => {
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideoInstance.dataFromAlfresco(smartLinkAudio)
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideo.update();
-    //         expect(spydataFromAlfresco).toHaveBeenCalled()
-    //         expect(elementAudioVideoInstance.state.imgSrc).toBe(smartLinkAudio.epsUrl)
-    //         spydataFromAlfresco.mockClear()
-    //     })
-    //     it('Test- if case workflow- switch case audio ', () => {
-    //         let props = {
-    //             slateLockInfo: {
-    //                 isLocked: false,
-    //                 userId: 'c5Test01'
-    //             },
-    //             onClick: () => { },
-    //             handleFocus: function () { },
-    //             permissions: permissions,
-    //             model: audioElementTypeSLWithData,
-    //             updateFigureData: jest.fn(),
-    //             handleBlur: jest.fn(),
-    //             handleFocus: jest.fn(),
-    //             accessDenied: jest.fn(),
-    //             isCiteChanged:true
-    //         };
-    //         const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
-    //         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
-    //         const spydataFromAlfresco = jest.spyOn(elementAudioVideoInstance, 'dataFromAlfresco')
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideoInstance.dataFromAlfresco(smartLinkAudio)
-    //         elementAudioVideoInstance.forceUpdate();
-    //         elementAudioVideo.update();
-    //         expect(spydataFromAlfresco).toHaveBeenCalled()
-    //         expect(elementAudioVideoInstance.state.imgSrc).toBe(smartLinkAudio.epsUrl)
-    //         spydataFromAlfresco.mockClear()
-    //     })
-    // });
 });

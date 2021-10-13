@@ -215,7 +215,7 @@ class FigureUserInterface extends Component {
         )
     }
 
-    generateUpdateAssetJSX = (element, assetTitleText, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite) => {
+    generateUpdateAssetJSX = (element, assetTitleText, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension) => {
         return (
             <div className='figure-wrapper-update'>
                 <div className='videoIconWrapper'>
@@ -225,7 +225,7 @@ class FigureUserInterface extends Component {
                     </div>
                     <div className="media-button-group">
                         <div className='update-figure-button' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
-                        <div className={`delete-figure-button ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                        <div className={`delete-figure-button ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={(evt) => this.props.deleteElementAsset(true,evt)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                     </div>
                     <div className="media-image-info">
                         <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
@@ -234,13 +234,13 @@ class FigureUserInterface extends Component {
                     </div>
                 </div>
                 <div className="media-assets">
-                    {this.generatePosterImageJSX(element, assetBackgroundType)}
+                    {this.generatePosterImageJSX(element, assetBackgroundType, imageDimension)}
                 </div>
             </div>
         )
     }
 
-    generatePosterImageJSX = (element, assetBackgroundType) => {
+    generatePosterImageJSX = (element, assetBackgroundType, imageDimension) => {
         let posterJsx;
         switch (element.figuretype) {
             case AUDIO:
@@ -257,7 +257,7 @@ class FigureUserInterface extends Component {
                     <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} /></div>
                 break;
             case INTERACTIVE:
-                posterJsx = element.figuredata?.posterimage?.path ?
+                posterJsx = imageDimension !== '' && element.figuredata?.posterimage?.path ?
                     <div className="videoReel">
                         <img width="100%" height="164px" src={element.figuredata?.posterimage?.path} />
                     </div>
@@ -268,20 +268,20 @@ class FigureUserInterface extends Component {
         return posterJsx;
     }
 
-    renderAssetSection = (element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite) => {
+    renderAssetSection = (element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite, imageDimension) => {
         let assetJsx;
         switch (element.figuretype) {
             case AUDIO:
                 assetJsx =
                     assetId ?
-                        this.generateUpdateAssetJSX(element, assetTitleText, figureAudioIcon, assetPath, updateAudioReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite) 
+                        this.generateUpdateAssetJSX(element, assetTitleText, figureAudioIcon, assetPath, updateAudioReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension) 
                         :
                         this.generateAddAssetJSX(figureAudioIcon, assetTitleText, addButtonText, audioReel, assetIdText, assetPathText)
                 break;
             case VIDEO:
                 assetJsx =
                     assetId ?
-                        this.generateUpdateAssetJSX(element, assetTitleText, videoIcon, assetPath, updateVideoReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
+                        this.generateUpdateAssetJSX(element, assetTitleText, videoIcon, assetPath, updateVideoReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
                         :
                         this.generateAddAssetJSX(videoIcon, assetTitleText, addButtonText, videoReel, assetIdText, assetPathText)
                 break;
@@ -289,14 +289,14 @@ class FigureUserInterface extends Component {
                 assetJsx = element.figuredata.interactivetype !== 'pdf' ?
                     (
                         assetId ?
-                            this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
+                            this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
                             :
                             this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, slPosterImage, assetIdText, assetPathText)
                     )
                     :
                     (
                         assetId ?
-                            this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, pdSLfPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite)
+                            this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, pdSLfPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
                             :
                             this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, pdSLfPosterImage, assetIdText, assetPathText)
                     )
@@ -387,7 +387,7 @@ class FigureUserInterface extends Component {
                 break;
             case INTERACTIVE:
                 assetId = element.figuredata.interactiveid ? element.figuredata.interactiveid : '';
-                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : assetId ? 'Smart link' : 'Smart link Title';
+                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : 'Smart link';
                 addButtonText = "Add a Smart Link";
                 assetIdText = "Asset ID:";
                 assetPathText = "Asset Path:";
@@ -424,7 +424,7 @@ class FigureUserInterface extends Component {
                                         <ul>
                                             {this.state.figureLabelData.map((label, i) => {
                                                 return (
-                                                    <li key={i} onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
+                                                    <li className="media-dropdown-options" key={i} onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
                                                 )
 
                                             })}
@@ -469,7 +469,7 @@ class FigureUserInterface extends Component {
                             }
                             <div className="figure-element-container interface-container">
                                 <div id="figure_add_div" className={`pearson-component image figureData ${element.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
-                                    {this.renderAssetSection(element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite)}
+                                    {this.renderAssetSection(element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite, imageDimension)}
                                 </div>
                             </div>
                             <figcaption className={captionDivClass} >

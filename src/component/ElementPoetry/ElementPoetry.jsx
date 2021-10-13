@@ -142,6 +142,7 @@ class ElementPoetry extends Component {
     * @param {*} parentUrn is the URN of poetry elememt
     */
     renderStanzas = (stanzas, parentIndex, parentUrn) => {
+        const { id, type, contentUrn, groupeddata } = this.props?.parentElement || {};
         let poetryData = {
             type: "poetry",
             parentUrn: this.props.elementId,
@@ -149,20 +150,42 @@ class ElementPoetry extends Component {
             contentUrn : this.props.model.contentUrn,
             element : this.props.model           
         };
+         /* @columnIndex@ */
+         const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
+         const columnId = groupeddata?.bodymatter[columnIndex]?.id;
+         const parentContentUrn = contentUrn;
+         const columnContentUrn = groupeddata?.bodymatter[columnIndex]?.contentUrn;
+         const multiColumnType = groupeddata?.bodymatter?.length ? `${groupeddata?.bodymatter?.length}C` : undefined;
+
+        /* Adding parent id and type to update redux store while creating new element inside WE/Aside->Block Poetry->Stanza */
+        poetryData = (type === "element-aside") ? {...poetryData, parent: { id, type, contentUrn }} : poetryData;
+        
+        /* Adding parent id and type to update redux store while creating new element inside 2c->Block Poetry->Stanza */
+        poetryData = (type === "groupedcontent") ? {...poetryData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
         try {
             if (stanzas !== undefined) {
                 if (stanzas.length === 0) {
                     return this.renderBlankContainer(this.props, parentUrn, parentIndex, poetryData)
                 }
                 return stanzas.map((element, index) => {
+                    const elementLineage = {
+                        ...this.props.element,
+                       grandParent: {
+                           asideData: this.props.asideData,
+                           parentUrn: this.props.parentUrn
+                       },
+                       stanzaIndex : index
+                   }
                     return (
                         <React.Fragment key={element.id}>                                   
                             {index === 0 && <ElementSaprator
                                 index={index}
                                 firstOne={index === 0}
-                                esProps={this.props.elementSepratorProps(0, true, parentUrn, "", parentIndex, poetryData)}
+                                esProps={this.props.elementSepratorProps(0, true, parentUrn, elementLineage, parentIndex, poetryData)}
                                 elementType="poetry"
                                 poetryData={poetryData}
+                                parentUrn={parentUrn}
+                                asideData={elementLineage}
                                 sectionBreak= {false}
                                 permissions={this.props.permissions}
                                 onClickCapture={this.props.onClickCapture}
@@ -176,6 +199,7 @@ class ElementPoetry extends Component {
                                 parentUrn={parentUrn}
                                 showBlocker={this.props.showBlocker}
                                 poetryData={poetryData}
+                                asideData={elementLineage}
                                 permissions={this.props.permissions}
                                 handleCommentspanel={this.props.handleCommentspanel}
                                 isBlockerActive={this.props.isBlockerActive}
@@ -187,9 +211,11 @@ class ElementPoetry extends Component {
                             </ElementContainer>
                             <ElementSaprator
                                 index={index}
-                                esProps={this.props.elementSepratorProps(index, false, parentUrn, "", parentIndex, poetryData)}
+                                esProps={this.props.elementSepratorProps(index, false, parentUrn, elementLineage, parentIndex, poetryData)}
                                 elementType="poetry"
                                 poetryData={poetryData}
+                                parentUrn={parentUrn}
+                                asideData={elementLineage}
                                 sectionBreak= {false}
                                 permissions={this.props.permissions}
                                 onClickCapture={this.props.onClickCapture}

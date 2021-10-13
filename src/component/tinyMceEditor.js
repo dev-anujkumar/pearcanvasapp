@@ -3070,6 +3070,8 @@ export class TinyMceEditor extends Component {
             case "Credit":
                 toolbar = config.figurImageCommonToolbar;
                 break;
+            case "Enter Button Label":
+                toolbar = config.smartlinkActionButtonToolbar;
         }
         return toolbar;
     }
@@ -3078,13 +3080,13 @@ export class TinyMceEditor extends Component {
         let toolbar = [];
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        } else if ((this.props.element.type === 'figure' && ['image', 'table', 'mathImage', 'audio', 'video'].includes(this.props.element.figuretype)) || (this.props.element.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype) && this.props.placeholder !== "Enter Button Label")) {
+        } else if ((this.props.element.type === 'figure' && ['image', 'table', 'mathImage', 'audio', 'video'].includes(this.props.element.figuretype)) || (this.props.element.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
             toolbar = this.setFigureToolbar(this.props.placeholder);
         } else if (this.props.element.type === 'figure' && this.props.placeholder === "Enter Number...") {
             toolbar = config.figureNumberToolbar;
         }
-        else if (["Enter Label...", "Enter call to action...", "Enter Button Label"].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...' || this.props.placeholder === "Enter Button Label")) ? config.poetryLabelToolbar : config.labelToolbar;
+        else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
+            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...' )) ? config.poetryLabelToolbar : config.labelToolbar;
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
                 toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;

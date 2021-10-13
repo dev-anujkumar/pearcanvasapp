@@ -124,14 +124,15 @@ jest.mock('../../../src/component/CanvasWrapper/SlateLock_Actions', () => {
                 payload: null
             }
         },
-        getSlateLockStatusWithCallback: function () {
-            return {
-            }
+        getSlateLockStatusWithCallback: ({ }, { }, response) => {
+            response({
+                isLocked: true,
+                userId: 'vmetcda'
+            })
         },
-        releaseSlateLockWithCallback: function () {
-            return {
-            }
-        },
+        releaseSlateLockWithCallback: ({ }, { }, response) => {
+            response({})
+        }
     }
 })
 jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
@@ -315,6 +316,7 @@ describe('Testing communication channel', () => {
         spysetCurrentSlate.mockClear()
     })
     test('Test for deleteTocItem case', () => {
+        config.userId = 'vmetcda';
         let event = {
             data: {
                 type: "deleteTocItem",
@@ -2268,6 +2270,11 @@ describe('Testing communication channel', () => {
             },
             sharingContextRole: "OWNER",
             projectSharingRole: "OWNER"
+        },
+        appStore: {
+            slateLevelData: communicationMockData,
+            permissions: null,
+            currentSlateAncestorData: {}
         }
     })
     const wrapper1 = mount(<Provider store={store1}><CanvasWrapper {...props} /></Provider>)
@@ -2306,4 +2313,61 @@ describe('Testing communication channel', () => {
         spyhandleRefreshSlate.mockClear()
     })
     
+    test('Test - handleUnlinkedLODataCypress method - without message', () => {
+        const spyhandleUnlinkedLODataCypress  = jest.spyOn(channelInstance1, 'handleUnlinkedLODataCypress')
+        channelInstance1.handleUnlinkedLODataCypress({});
+        expect(channelInstance1.handleUnlinkedLODataCypress ).toHaveBeenCalled()
+        spyhandleUnlinkedLODataCypress.mockClear()
+    })
+     
+    test('Test - handleUnlinkedLODataCypress method - metadataElems empty', () => {
+        const message = {
+            statusForSave: true,
+            unlinkedLOs: ['2']
+        }
+        const spyhandleUnlinkedLODataCypress  = jest.spyOn(channelInstance1, 'handleUnlinkedLODataCypress')
+        channelInstance1.handleUnlinkedLODataCypress(message);
+        expect(channelInstance1.handleUnlinkedLODataCypress ).toHaveBeenCalled()
+        spyhandleUnlinkedLODataCypress.mockClear()
+    })
+
+    test('Test - handleUnlinkedLODataCypress method - index > 0', () => {
+        const message = {
+            statusForSave: true,
+            unlinkedLOs: ['2', '1']
+        }
+        const spyhandleUnlinkedLODataCypress  = jest.spyOn(channelInstance1, 'handleUnlinkedLODataCypress')
+        channelInstance1.handleUnlinkedLODataCypress(message);
+        expect(channelInstance1.handleUnlinkedLODataCypress ).toHaveBeenCalled()
+        spyhandleUnlinkedLODataCypress.mockClear()
+    })
+
+    test('Test - sendingPermissions method - permissions not present', () => {
+        const spysendingPermissions  = jest.spyOn(channelInstance1, 'sendingPermissions')
+        channelInstance1.sendingPermissions();
+        expect(channelInstance1.sendingPermissions).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    })
+
+    it('Test for statusForExtLOSave case - handleExtLOData - if blocks - loData - label - en - null', () => {
+        const event = {
+            data: {
+                type: "statusForExtLOSave",
+                message: {
+                    statusForExtLOSave: true,
+                    loLinked: [{
+                        label: {
+                            en: {
+                                replace: jest.fn(() => null)
+                            }
+                        }
+                    }]
+                }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
 })

@@ -45,7 +45,9 @@ export const handleC2MediaClick = (permissions, editor, element) => {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {
             if (permissions && permissions.includes('add_multimedia_via_alfresco')) {
                 let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
-                let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
+                const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
+                const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                let messageObj = { citeName: citeName, 
                     citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
                     elementId: element.id,
                     editor: true}

@@ -751,7 +751,9 @@ class Sidebar extends Component {
 
     podOption = () => {
         if (this.state.activePrimaryOption === 'primary-image-table' || this.state.activePrimaryOption === 'primary-image-figure' ||
-            this.state.activePrimaryOption === 'primary-image-equation') {
+            this.state.activePrimaryOption === 'primary-image-equation' || 
+            (this.state.activePrimaryOption === 'primary-smartlink' && 
+            (this.state.activeSecondaryOption === "secondary-interactive-smartlink-third" || this.state.activeSecondaryOption === 'secondary-interactive-smartlink-tab'))) {
             let active = '';
             if (this.state.podOption) {
                 active = 'active'

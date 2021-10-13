@@ -29,6 +29,9 @@ import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } f
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action';
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper';
+import { updateSmartLinkDataForCompare } from '../ElementContainer/ElementContainer_Actions';
+import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
+
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -56,7 +59,8 @@ class Interactive extends React.Component {
             interactiveTitle: this.props.model.figuredata && this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
             showUpdatePopup:false,
             alfrescoSite: '',
-            alfrescoSiteData: {}
+            alfrescoSiteData: {},
+            deleteAssetPopup: false
            };
 
     }
@@ -190,9 +194,8 @@ class Interactive extends React.Component {
             hideTocBlocker();
             disableHeader(false);
         }
-        this.props.showBlocker(value);
         disableHeader(value);
-        showBlocker(value);
+        this.props.showBlocker(value);
     }
       /*** @description This function is used to render Version update Popup */
     showCustomPopup = () => {
@@ -259,12 +262,14 @@ class Interactive extends React.Component {
         hideTocBlocker(false);
     }
 
-    deleteElementAsset = (element) => {
+    deleteElementAsset = () => {
+        const element = this.props.model
         this.props.handleFocus();
         if (hasReviewerRole()) {
             return true
         }
-        
+        this.toggleDeletePopup(false)
+        this.props.updateSmartLinkDataForCompare(element.figuredata);
         let setFigureData = {
             "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
             "interactiveid": "",
@@ -276,7 +281,44 @@ class Interactive extends React.Component {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
         })
+        
     }
+    
+        /**
+         * @description This function is used to toggle delete popup
+         * @param {*} toggleValue Boolean value
+         * @param {*} event event object
+         */
+         toggleDeletePopup = (toggleValue, event) => {
+            if (event) {
+                event.preventDefault();
+            }
+            this.setState({
+                deleteAssetPopup: toggleValue
+            })
+            this.showCanvasBlocker(toggleValue);
+        }
+    
+        /*** @description This function is used to render delete Popup */
+        showDeleteAssetPopup = () => {
+            if (this.state.deleteAssetPopup) {
+                this.showCanvasBlocker(true)
+                return (
+                    <PopUp
+                        dialogText={DELETE_DIALOG_TEXT}
+                        active={true}
+                        togglePopup={this.toggleDeletePopup}
+                        isDeleteAssetPopup={true}
+                        deleteAssetHandler={this.deleteElementAsset}
+                        isInputDisabled={true}
+                        isDeleteAssetClass="delete-element-text"
+                    />
+                )
+            }
+            else {
+                return null
+            }
+        }
 
     /**
      * @description - This function is for rendering the Jsx Part of different Interactive Elements.
@@ -303,7 +345,7 @@ class Interactive extends React.Component {
 
         let figureHtmlData = getLabelNumberTitleHTML(element);
         if (SMARTLINK_CONTEXTS.includes(context)) {
-            return <FigureUserInterface deleteElementAsset={this.deleteElementAsset} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+            return <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
         }
         else if (context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
             jsx = <div className={divImage} resource="">
@@ -385,6 +427,7 @@ class Interactive extends React.Component {
      */
     handleClickElement = (event) => {
         event.stopPropagation();
+        this.props.handleFocus();
     }
 
     /**
@@ -746,7 +789,9 @@ class Interactive extends React.Component {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
                     const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder
-                    let messageObj = { citeName: alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName  , 
+                    const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
+                    const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                    let messageObj = { citeName: citeName, 
                         citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
                         elementId: this.props.elementId,
                         currentAsset
@@ -878,6 +923,7 @@ class Interactive extends React.Component {
             return (
                     <>
                         <div className={SMARTLINK_CONTEXTS.includes(model?.figuredata?.interactivetype) ? "figureElement" : "interactive-element"} onClick = {this.handleClickElement}>
+                            {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                             {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                             {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                             {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
@@ -913,17 +959,40 @@ Interactive.propTypes = {
     /** itemId coming from c2module */
     itemId: PropTypes.string
 }
-const mapActionToProps = {
-    setCurrentCiteTdx: setCurrentCiteTdx,
-    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx,
-    assessmentSorting:assessmentSorting,
-    setNewItemFromElm: setNewItemFromElm,
-    fetchAssessmentMetadata: fetchAssessmentMetadata,
-    fetchAssessmentVersions: fetchAssessmentVersions,
-    updateAssessmentVersion: updateAssessmentVersion,
-    setElmPickerData: setElmPickerData,
-    alfrescoPopup: alfrescoPopup,
-    saveSelectedAssetData: saveSelectedAssetData
+const mapActionToProps = (dispatch) => {
+    return {
+        setCurrentCiteTdx: (currentAssessmentSelected, openedFrom) => {
+            dispatch(setCurrentCiteTdx(currentAssessmentSelected, openedFrom))
+        },
+        setCurrentInnerCiteTdx: (currentAssessmentSelected, openedFrom) => {
+            dispatch(setCurrentInnerCiteTdx(currentAssessmentSelected, openedFrom))
+        },
+        assessmentSorting: (sortBy,sortOrder) => {
+            dispatch(assessmentSorting(sortBy,sortOrder))
+        },
+        setNewItemFromElm: (payloadObj) => {
+            dispatch(setNewItemFromElm(payloadObj))
+        },
+        fetchAssessmentMetadata: (type, calledFrom, assessmentData, assessmentItemData) => {
+            dispatch(fetchAssessmentMetadata(type, calledFrom, assessmentData, assessmentItemData))
+        },
+        fetchAssessmentVersions: (entityUrn, type, createdDate, assessmentData, assessmentItemData) => {
+            dispatch(fetchAssessmentVersions(entityUrn, type, createdDate, assessmentData, assessmentItemData))
+        },
+        updateAssessmentVersion: updateAssessmentVersion,
+        setElmPickerData: (payloadObj) => {
+            dispatch(setElmPickerData(payloadObj))
+        },
+        alfrescoPopup: (payloadObj) => {
+            dispatch(alfrescoPopup(payloadObj))
+        },
+        saveSelectedAssetData: (payloadObj) => {
+            dispatch(saveSelectedAssetData(payloadObj))
+        },
+        updateSmartLinkDataForCompare: (oldSmartLinkData) => {
+            dispatch(updateSmartLinkDataForCompare(oldSmartLinkData))
+        }
+    }
 }
 
 const mapStateToProps = (state) => {
