@@ -20,7 +20,7 @@ export default function ElementContainerType(props) {
         let elementPickerPosition = 1
         switch (props.text) {
             case 'interactive-elem-button': elementPickerPosition = 5; break;
-            case 'container-elem-button': elementPickerPosition = 8; break;
+            case 'container-elem-button': elementPickerPosition = props.elementType === "showhide" ? 7 : 8; break;
             case "block-text-button" : elementPickerPosition = 4; break;
             case "multi-column-group": elementPickerPosition = 10; break;
         }

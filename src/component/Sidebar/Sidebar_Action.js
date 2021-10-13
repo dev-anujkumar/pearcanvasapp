@@ -238,17 +238,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 oldElementData:oldElementData,
                 response:res.data
             }
-            console.log("inSidebar_APi");
             if (config.isPopupSlate) {
                 elementConversionData.currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
             }
             if (currentSlateData && currentSlateData.status === 'approved') {
-                console.log("inSidebar_APi");
-
                 await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
             }
             else {
-                console.log("inSidebar_APi");
                 /**
                 * @param {Object} newAppStore 
                 * @description - Adding showhide data into appstore variable to form snapshots of conversion
@@ -281,7 +277,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
-        console.log("testing");
         if (currentSlateData.status === 'wip') {
             config.savingInProgress = false
         }
@@ -307,12 +302,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             //const activeElemType = oldElementInfo['elementType']
             //focusedElement = onUpdateSuccessInShowHide(res.data, focusedElement, activeElemType, showHideObj, indexes)
             onUpdateSuccessInShowHide(res?.data, bodymatter, indexes);
-            console.log("testing");
         } else if (appStore.parentUrn.elementType === "group") {
-            console.log("testing");
             focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
         } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
-            console.log("testing");
             switch(indexes.length) {
                 case 4:
                     focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res?.data;
@@ -322,22 +314,31 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     break;
             }
         } else if (appStore?.asideData?.parent?.type === "showhide") {
-            console.log("testing");
-            let focusedElementInnerData;
-            focusedElement.forEach((item,index) =>{
-                if(focusedElement[index]?.interactivedata){
+            let focusedSHElement,focusedElementInnerData, focusedElementInnerData2;
+            focusedElement.forEach((item, index) => {
+                if (item?.interactivedata) {
                     switch (indexes.length) {
                         case 4:
-                            focusedElement = bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType];
+                        case 5:
+                            focusedSHElement = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType];
                             break;
                     }
-                    focusedElement.forEach((item,index )=> {
-                        if (focusedElement[index]?.type === "element-aside") {
+                    focusedSHElement.forEach((item, index2) => {
+                        if (item?.type === "element-aside") {
                             focusedElementInnerData = item?.elementdata?.bodymatter
-                            focusedElementInnerData.forEach((item,innerIndex) => {
-                                console.log("sjhc,sdksd,d",focusedElement,item,innerIndex);
-                                if (newElementData.elementId === item.id) {
-                                    focusedElementInnerData[index] = res?.data
+                            focusedElementInnerData.forEach((item, innerIndex) => {
+                                if (newElementData?.elementId === item.id) {
+                                    console.log("gdsagcashbahjvasbvjasvghsdvsbdj",focusedElement)
+                                    item=res?.data
+                                    // focusedElement=focusedElement[index]?.focusedSHElement[index2]?.focusedElementInnerData[innerIndex] = res?.data
+                                } else if (item?.type === "manifest") {
+                                    focusedElementInnerData2 = item?.contents?.bodymatter
+                                        .forEach((innerItem, i) => {
+                                            if (newElementData.elementId === innerItem.id) {
+                                                innerItem=res.data
+                                                // focusedElement=focusedElement[index]?.focusedSHElement[index2]?.focusedElementInnerData[innerIndex]?.focusedElementInnerData2[i] = res?.data
+                                            }
+                                        })
                                 }
                             })
                         }
@@ -597,28 +598,27 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else if (appStore?.asideData?.parent?.type === "showhide") {
-            let elementOldDataSH,innerElementOldDataSH;
-            bodymatter.forEach((item,index) =>{
-                console.log("SHIndex",index);
-                if(bodymatter[index]?.interactivedata){
+            let elementOldDataSH, innerElementOldDataSH;
+            bodymatter.forEach((item, index) => {
+                if (item?.interactivedata) {
                     switch (indexes.length) {
                         case 4:
-                            elementOldDataSH = bodymatter[index].interactivedata[appStore?.asideData?.parent?.showHideType];
+                        case 5:
+                            elementOldDataSH = bodymatter[index]?.interactivedata[appStore?.asideData?.parent?.showHideType];
                             break;
                     }
-                    elementOldDataSH.forEach((item,index )=> {
-                        console.log("elementOldDataSH-index",index);
+                    elementOldDataSH.forEach((item, index) => {
                         if (item?.type === "element-aside") {
-                            console.log("before",elementOldDataSH,item);
-                            innerElementOldDataSH = item?.elementdata?.bodymatter
-                            console.log("after",innerElementOldDataSH);
-                            innerElementOldDataSH.forEach((item,innerIndex) => {
-                                console.log("Inconversion",item);
-                                if (elementData.elementId === innerElementOldDataSH[innerIndex].id) {
-                                    innerElementOldDataSH=innerElementOldDataSH[innerIndex]
-                                    dispatch(convertElement(innerElementOldDataSH, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
-                                }else{
-                                    console.log("condition not satisfied");
+                            item?.elementdata?.bodymatter.forEach((item, innerIndex) => {
+                                if (elementData?.elementId === item?.id) {
+                                    dispatch(convertElement(item, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
+                                } else if (item?.type === "manifest") {
+                                    item.contents.bodymatter.forEach((innerItem, index) => {
+                                        if (elementData.elementId === innerItem.id) {
+                                            dispatch(convertElement(innerItem, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
+                                        }
+
+                                    })
                                 }
                             })
                         }
@@ -635,7 +635,6 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                         dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar,showHideObj));
                     } else {
                         if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
-                            console.log('bodymatter',bodymatter,appstore.asideData);
                             bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                         }
                         
