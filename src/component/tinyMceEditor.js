@@ -24,19 +24,18 @@ import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessage
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
-import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
-import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
+import { wirisAltTextPopup, createElement } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
-
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -1125,6 +1124,7 @@ export class TinyMceEditor extends Component {
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
+            let blockListData = checkBlockListElement(this.props, 'ENTER');
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;
             }
@@ -1176,7 +1176,7 @@ export class TinyMceEditor extends Component {
                 isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
                 isContainsBlankLine = activeElement.innerHTML.match(/<span/) ? activeElement.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
             }
-            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza" && this.props.element.type !== "element-dialogue") {
+            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza" && this.props.element.type !== "element-dialogue" && (blockListData && Object.keys(blockListData).length === 0)) {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
                 if ('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
                     activeEditor.blur();
@@ -1286,6 +1286,44 @@ export class TinyMceEditor extends Component {
             if (e && e.target && e.target.classList.contains('blockquoteTextCredit') && key === 8 && !e.target.innerText.trim()) {
                 e.preventDefault();
                 return false;
+            }
+            // SHIFT + ENTER key press handling for BlockList element
+            if (key === 13 && e.shiftKey) {
+                e.preventDefault();
+                blockListData = checkBlockListElement(this.props, "TAB");
+                if (blockListData && Object.keys(blockListData).length) {
+                    const { parentData, indexToinsert } = blockListData;
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
+                    this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
+                }
+            } else if (key === 13) {
+                // ENTER key press handling for BlockList element
+                e.preventDefault();
+                if (blockListData && Object.keys(blockListData).length) {
+                    const { parentData, indexToinsert } = blockListData;
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"ENTER"});
+                }
+            } else if (key === 9 && e.shiftKey) {
+                // SHIFT + TAB key press handling for BlockList element
+                e.preventDefault();
+                blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
+                if (blockListData && Object.keys(blockListData).length) {
+                    const { parentData, indexToinsert } = blockListData;
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, {indexOrder:this.props.index,eventType:"SHIFT+TAB"});
+                }
+            } else {
+                // TAB key press handling for BlockList element
+                if (key === 9 && !isNestingLimitReached(this.props.index)) {
+                    e.preventDefault();
+                    blockListData = checkBlockListElement(this.props, "TAB");
+                    if (blockListData && Object.keys(blockListData).length) {
+                        const { parentData, indexToinsert } = blockListData;
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                        this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
+                    }
+                }
             }
         });
     }
@@ -3860,11 +3898,12 @@ const mapStateToProps = (state) => {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isInlineEditor: state.alfrescoReducer.isInlineEditor,
-        imageArgs: state.alfrescoReducer.imageArgs
+        imageArgs: state.alfrescoReducer.imageArgs,
+        slateLevelData: state.appStore.slateLevelData
     }
 }
 
 export default connect(
     mapStateToProps,
-    { conversionElement, wirisAltTextPopup, saveInlineImageData }
+    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement }
 )(TinyMceEditor);

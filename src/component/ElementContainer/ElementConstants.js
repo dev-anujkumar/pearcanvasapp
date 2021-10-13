@@ -65,7 +65,10 @@ export default {
     ELEMENT_DISCUSSION: 'discussion',
 
 /**************** PDF Slate Element ************************ */  
-    PDF_SLATE : "element-pdf"
+    PDF_SLATE : "element-pdf",
+
+/**************** Block list Element ************************ */  
+    BLOCK_LIST : "manifestlist"
 }
 
 export const LABELS = {
