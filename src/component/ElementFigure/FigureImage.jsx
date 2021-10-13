@@ -7,7 +7,6 @@ import {
     DEFAULT_IMAGE_SOURCE
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
-//import { showTocBlocker, hideToc } from '../../js/toggleLoader';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
@@ -34,7 +33,7 @@ class FigureImage extends Component {
             alfrescoSite: '',
             alfrescoSiteData: {},
             figureLabelValue: 'No Label',
-            figureLabelData: this.props.figureDropdownData,
+            figureLabelData: this.props.figureDropdownData?.image,
             figureDropDown: false,
             deleteAssetPopup: false
         }
@@ -175,7 +174,7 @@ class FigureImage extends Component {
         //commented lines will be used to update the element data
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
-
+        if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
         let uniqID = imageData.id ? imageData.id : "";
         let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
         let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
@@ -233,12 +232,14 @@ class FigureImage extends Component {
                 this.updateAlfrescoSiteUrl()
             }
         }
+    }
         // to blank the elementId and asset data after update
         let payloadObj = {
             asset: {},
             id: ''
         }
         this.props.saveSelectedAssetData(payloadObj)
+
     }
     /**
      * @description function will be called on image src add and fetch resources from Alfresco

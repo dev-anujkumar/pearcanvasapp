@@ -492,6 +492,7 @@ class ElementAudioVideo extends Component {
                     "audioid": "",
                     "srctype": "externallink"
                 }
+                break;
             case "video":
                 setFigureData = {
                     ...setFigureData,
@@ -503,6 +504,7 @@ class ElementAudioVideo extends Component {
                         }
                     ]
                 }
+                break;
         }
         
         this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
