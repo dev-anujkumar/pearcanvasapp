@@ -323,6 +323,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
         } else if (appStore?.asideData?.parent?.type === "showhide") {
             console.log("testing");
+            let focusedElementInnerData;
             focusedElement.forEach((item,index) =>{
                 if(focusedElement[index]?.interactivedata){
                     switch (indexes.length) {
@@ -332,11 +333,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     }
                     focusedElement.forEach((item,index )=> {
                         if (focusedElement[index]?.type === "element-aside") {
-                            focusedElement = item?.elementdata?.bodymatter
-                            focusedElement.forEach((item,innerIndex) => {
-                                console.log("sjhc,sdksd,d",focusedElement,item);
-                                if (newElementData.elementId === focusedElement[innerIndex].id) {
-                                    focusedElement[index] = res?.data
+                            focusedElementInnerData = item?.elementdata?.bodymatter
+                            focusedElementInnerData.forEach((item,innerIndex) => {
+                                console.log("sjhc,sdksd,d",focusedElement,item,innerIndex);
+                                if (newElementData.elementId === item.id) {
+                                    focusedElementInnerData[index] = res?.data
                                 }
                             })
                         }
@@ -596,7 +597,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else if (appStore?.asideData?.parent?.type === "showhide") {
-            let elementOldDataSH;
+            let elementOldDataSH,innerElementOldDataSH;
             bodymatter.forEach((item,index) =>{
                 console.log("SHIndex",index);
                 if(bodymatter[index]?.interactivedata){
@@ -609,13 +610,13 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                         console.log("elementOldDataSH-index",index);
                         if (item?.type === "element-aside") {
                             console.log("before",elementOldDataSH,item);
-                            elementOldDataSH = item?.elementdata?.bodymatter
-                            console.log("after",elementOldDataSH);
-                            elementOldDataSH.forEach((item,innerIndex) => {
+                            innerElementOldDataSH = item?.elementdata?.bodymatter
+                            console.log("after",innerElementOldDataSH);
+                            innerElementOldDataSH.forEach((item,innerIndex) => {
                                 console.log("Inconversion",item);
-                                if (elementData.elementId === elementOldDataSH[innerIndex].id) {
-                                    elementOldDataSH=elementOldDataSH[innerIndex]
-                                    dispatch(convertElement(elementOldDataSH, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
+                                if (elementData.elementId === innerElementOldDataSH[innerIndex].id) {
+                                    innerElementOldDataSH=innerElementOldDataSH[innerIndex]
+                                    dispatch(convertElement(innerElementOldDataSH, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
                                 }else{
                                     console.log("condition not satisfied");
                                 }
