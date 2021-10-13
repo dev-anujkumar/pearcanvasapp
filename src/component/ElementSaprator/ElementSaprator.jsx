@@ -363,6 +363,11 @@ export function typeOfContainerElements(elem, props) {
     let newData = containerTypeArray[elem.buttonType];
     /* Do not show Citation Group option if inside Multicolumn  */
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
+    /* Do not show SH and Pop up option if Aside/WE is inside SH  */
+    if (elem?.buttonType === "interactive-elem-button" && asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) {
+        delete newData["Add Show Hide"];
+        delete newData["Add Pop Up"];
+    }
     if(newData){
         return Object.entries(newData).map(function (num) {
             /* If Showhide Element, different set of params required to create elements inside SH */
