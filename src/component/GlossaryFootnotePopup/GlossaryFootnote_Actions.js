@@ -123,9 +123,13 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             } else {
                 glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
             }
-
-
-
+        } else if ((tempIndex.length >= 5 && tempIndex.length <= 7) && elementType === "element-dialogue" && asideParent?.parent?.type === 'showhide' && asideParent?.type === 'element-aside' && asideParent?.parent?.showHideType) { // S/H->AS/WE->PS
+            let elementInsideSH = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]];
+            if (elementInsideSH.subtype === "workedexample" && elementInsideSH.elementdata.bodymatter[tempIndex[3]].type === "manifest" && (tempIndex.length == 6 || tempIndex.length == 7)) {
+                glossaryFootElem = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]];
+            } else {
+                glossaryFootElem = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+            }
         } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "workedexample") { //Playscript inside we element
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
             if (glossaryFootElem.type === 'manifest') {
@@ -725,6 +729,27 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     }
                 }
                 newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
+            }
+            // S/H->AS/WE->PS
+        } else if ((tempIndex.length >= 5 && tempIndex.length <= 7) && elementType === "element-dialogue" && asideParent?.parent?.type === 'showhide' && asideParent?.type === 'element-aside' && asideParent?.parent?.showHideType) { 
+            let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]];
+            if (glossaryFootnoteElementOfWe.subtype === "workedexample" && glossaryFootnoteElementOfWe.elementdata.bodymatter[tempIndex[3]].type === "manifest" && (tempIndex.length == 6 || tempIndex.length == 7)) {
+                glossaryFootnoteElementOfWe = glossaryFootnoteElementOfWe.elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]];
+            } else {
+                glossaryFootnoteElementOfWe = glossaryFootnoteElementOfWe.elementdata.bodymatter[tempIndex[3]];
+            }
+            glossaryFootnoteElementOfWe = {
+                ...glossaryFootnoteElementOfWe,
+                html: {
+                    ...glossaryFootnoteElementOfWe.html,
+                    glossaryentries: res.data.html.glossaryentries,
+                    footnotes: res.data.html.footnotes
+                }
+            }
+            if (newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]].type === "manifest" && (tempIndex.length == 6 || tempIndex.length == 7)) {
+                newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = glossaryFootnoteElementOfWe;
+            } else {
+                newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = glossaryFootnoteElementOfWe;
             }
         } else if (elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "element-aside" && newBodymatter[tempIndex[0]].subtype === "workedexample") { //Playscript inside we element
             let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]];
