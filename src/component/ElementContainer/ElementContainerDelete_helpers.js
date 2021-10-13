@@ -135,16 +135,14 @@ export const deleteFromStore = (params) => {
             /* delete the element inside showhide on cut from sh */
             sh_Object?.interactivedata[sectionType]?.splice(cCIndex, 1);
         }
-    } else
-    if (parentUrn && parentUrn.elementType == "group") {
+    } else if (parentUrn && parentUrn.elementType == "group") {
         const elIndex = index.toString().split('-') 
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
     } else {
-        
         bodymatter.forEach((element, key) => {
             if (element.id === elmId) {
                 bodymatter.splice(key, 1);
-            } else if (parentUrn && parentUrn.elementType == "element-aside") {
+            } else if (parentUrn && parentUrn.elementType == "element-aside" && asideData?.parent?.type !== 'showhide') {
                 if (element.id === parentUrn.manifestUrn) {
                     element.elementdata.bodymatter.forEach((ele, indexInner) => {
                         if (ele.id === elmId) {
@@ -159,12 +157,49 @@ export const deleteFromStore = (params) => {
                         })
                     })
                 }
-            } else if(poetryData && poetryData.type == 'poetry') {
+          /* Delete element inside S/H:AS/WE:ELEMENTS */
+        } else if (asideData?.parent?.type === 'showhide' && asideData?.type === 'element-aside' && element.id === asideData?.parent?.id) {
+            let section = asideData?.parent?.showHideType;
+            delInsideWE(element.interactivedata[section][iList[2]], asideData, parentUrn, elmId);
+        } else if (poetryData && poetryData.type == 'poetry') {
                 if (element.id === poetryData.parentUrn) {
                     element.contents.bodymatter.forEach((ele, indexInner) => {
                         if (ele.id === elmId) {
                             element.contents.bodymatter.splice(indexInner, 1);
                         }
+                    })
+                } else if (element?.type == 'element-aside' && element.id === poetryData?.parent?.id) {  /* To update redux store while deleting new element inside WE/Aside->Block Poetry->Stanza */
+                  element?.elementdata?.bodymatter.forEach((ele) => {
+                        if (ele?.type == "poetry" && ele.id == poetryData?.parentUrn) {
+                            ele.contents?.bodymatter.forEach((ele1, indexInner) => {
+                                if (ele1.id === elmId) {
+                                    ele.contents.bodymatter.splice(indexInner, 1);
+                                }
+                            })
+                        } else if (ele.type == "manifest") {  /* To update redux store while deleting new element inside WE->Block Poetry->Stanza After Section Break */
+                            ele.contents?.bodymatter.forEach((ele1) => {
+                                if (ele1.type == "poetry" && ele1.id == poetryData?.parentUrn) {
+                                    ele1.contents?.bodymatter.forEach((ele2, indexInner) => {
+                                        if (ele2.id === elmId) {
+                                            ele1.contents.bodymatter.splice(indexInner, 1);
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                } else if (element?.type == "groupedcontent" && element?.id === poetryData?.parent?.id) {  /* To update redux store while deleting new element inside Multi-column->Block Poetry->Stanza */
+                  element.groupeddata?.bodymatter.forEach((ele) => {
+                        ele.groupdata?.bodymatter.forEach((ele1) =>{
+                            if (ele1.type == "poetry" && ele1.id == poetryData?.parentUrn) {
+                                ele1.contents?.bodymatter.forEach((ele2, innerIndex) => {
+                                    if (ele2.id === elmId) {
+                                        ele1.contents.bodymatter.splice(innerIndex, 1);
+                                    }
+                                })
+                            }
+                        })
+                      
                     })
                 }
             }
@@ -192,13 +227,24 @@ export const deleteFromStore = (params) => {
                 } else {
                     delInsideWE(element, asideData, parentUrn, elmId);
                 }
-            } else if (parentUrn && parentUrn.elementType == "citations"){
+            } else if (parentUrn && parentUrn.elementType == "citations") {
+                const innerIndex = index.split("-");
+                /* Check if CG is contained by S/H */
+                if (asideData?.parent?.type === SHOWHIDE && element.id === asideData?.parent?.id && innerIndex.length === 4) {
+                    let section = asideData?.parent?.showHideType;
+                    element.interactivedata[section][iList[2]].contents.bodymatter.splice([iList[3] - 1], 1);
+                }
                 if (element.id === parentUrn.manifestUrn) {
-                    const innerIndex = index.split("-")
                     element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
                 }
             }
         })
+
+        // handling block list delete local store updation
+        if (bodymatter && bodymatter.length && iList.length) {
+            const slateLevelElement = bodymatter[Number(iList[0])];
+            deleteBlockListElement(elmId, slateLevelElement)
+        }
     }
 
     dispatch({
@@ -208,6 +254,28 @@ export const deleteFromStore = (params) => {
         }
     })
 }
+
+/**
+ * function to find selected block list element inside block list data 
+ * to delete 
+ * @param {String} elementId 
+ * @param {Object} elementData 
+ */
+const deleteBlockListElement = (elementId, elementData) => {
+    if (elementData?.listdata?.bodymatter) {
+        elementData.listdata?.bodymatter.forEach((listData) => deleteBlockListElement(elementId, listData))
+    }
+    if (elementData?.listitemdata?.bodymatter) {
+        elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
+            if (listItemData.id === elementId) {
+                elementData.listitemdata.bodymatter.splice(index, 1);
+                return;
+            }
+            deleteBlockListElement(elementId, listItemData);
+        });
+    }
+}
+
 /* Delete Element inside WE and aside */
 const delInsideWE = (item, asideData, parentUrn, elmId) => {
     /* Delete elements inside 2C:WE/AS */

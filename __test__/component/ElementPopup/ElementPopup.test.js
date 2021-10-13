@@ -19,6 +19,14 @@ const initialState = {
     appStore: {
         slateLength: '25',
         slateLevelData: mainSlateData
+    },
+    projectInfo:{
+        projectSubscriptionDetails: {
+            projectSharingRole: "SUBSCRIBER",
+            projectSubscriptionDetails: {
+                isSubscribed: true
+            }
+        },
     }
 }
 let store = mockStore(initialState);

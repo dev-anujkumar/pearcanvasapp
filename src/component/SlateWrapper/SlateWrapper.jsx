@@ -21,7 +21,7 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET,OWNER_SLATE_POPUP
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -715,10 +715,10 @@ class SlateWrapper extends Component {
                 this.props.createElement(SMARTLINK, indexToinsert, parentUrn, asideData, null, null);
                 break;
             case 'poetry-elem':
-                this.props.createElement(POETRY, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                this.props.createElement(POETRY, indexToinsert, parentUrn,asideData,null,null,null,poetryData);
                 break;
             case 'stanza-elem':
-                this.props.createElement(STANZA, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                this.props.createElement(STANZA, indexToinsert, parentUrn,asideData,null,null,null,poetryData);
                 break;
             case 'figure-mml-elem':
                 this.props.createElement(FIGURE_MML, indexToinsert, parentUrn, asideData, null, null);
@@ -744,6 +744,9 @@ class SlateWrapper extends Component {
             case 'element-discussion': 
                 this.props.createElement(ELEMENT_DISCUSSION, indexToinsert, parentUrn, asideData, null, null, null, null);
                 break;
+            case 'blocklist-elem':
+                this.props.createElement(MANIFEST_LIST, indexToinsert, parentUrn, asideData, null, null, null, null,null);
+                break;
             case 'text-elem':
             default:
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
@@ -752,6 +755,7 @@ class SlateWrapper extends Component {
     }
 
     elementSepratorProps = (index, firstOne, parentUrn, asideData, outerAsideIndex , poetryData) => {
+        
         return [
             {
                 buttonType: 'text-elem',
@@ -839,7 +843,9 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'stanza-elem',
-                buttonHandler: () => this.splithandlerfunction('stanza-elem', index, firstOne, parentUrn, "", outerAsideIndex, poetryData),
+                buttonHandler: () => {
+                    this.splithandlerfunction('stanza-elem', index, firstOne, parentUrn, asideData, outerAsideIndex, poetryData)
+                },
                 tooltipText: 'Stanza',
                 tooltipDirection: 'left'
             }

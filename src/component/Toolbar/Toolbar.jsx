@@ -120,7 +120,7 @@ const _Toolbar = props => {
                 <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
-                    <div className={`leaningobjective-block`}>
+                    <div className={isToolBarBlocked ? "leaningobjective-block hideToolbar" : "leaningobjective-block"}>
                         <div className="learningobjectiveicon">
                             <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
@@ -135,7 +135,7 @@ const _Toolbar = props => {
                 {/* ***********************Audio Narration in toolbar******************************************** */}
                 {   /* Add Audio if there is no audio exists in slate */
                     (props.addAudio && (!hasReviewerRole())) &&
-                    <div className={`audio-block  ${accessToolbar} ${isToolBarBlocked}`}>
+                    <div className={isToolBarBlocked ? `audio-block ${accessToolbar} ${isToolBarBlocked}` : `audio-block ${accessToolbar}`}>
                         <div className="audioicon">
                             <div className="audio audioicon" title="Audio Tag" onClick={() => {
                                 if (checkSlateLock(props.slateLockInfo)) {

@@ -336,7 +336,8 @@ describe('Testing Figure image component', () => {
             updateFigureData: jest.fn(),
             handleBlur: jest.fn(),
             handleFocus: jest.fn(),
-            accessDenied: jest.fn()
+            accessDenied: jest.fn(),
+            showBlocker: jest.fn()
         };
         const e = {
             target:{
@@ -391,7 +392,7 @@ describe('Testing Figure image component', () => {
             jest.spyOn(elementFigureInstance, 'deleteFigureResource')
             elementFigureInstance.deleteFigureResource();
         })
-        it('Test handleFigureDropdown', () => {
+        xit('Test handleFigureDropdown', () => {
             jest.spyOn(elementFigureInstance, 'handleFigureDropdown')
             elementFigureInstance.handleFigureDropdown();
         })

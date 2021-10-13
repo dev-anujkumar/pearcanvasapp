@@ -48,13 +48,26 @@ import ElementConstants from "../ElementContainer/ElementConstants.js"
 const { SHOW_HIDE } = ElementConstants;
 
 export const findElementType = (element, index) => {
+    // console.log("hello");
     let elementType = {};
     elementType['tag'] = '';
     let altText = "";
     let longDesc = "";
     let podwidth = POD_DEFAULT_VALUE
     try {
+        // if(element.type ==="manifestlist") console.log("They are equal");
         switch (element.type) {
+            case "manifestlist":
+                // console.log("Coming..............",element)
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    //primaryOption : "primary-column-1",
+                    primaryOption: `primary-column-${element.columnnumber}`,
+                    secondaryOption: `secondary-column-${element.columnnumber}`,
+                    contentUrn : element.contentUrn
+                    //secondaryOption: elementDataBank[element.type]["secondaryOption"]
+                }
+                break;
             case 'element-authoredtext':
             case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
@@ -142,17 +155,17 @@ export const findElementType = (element, index) => {
                             elementType.secondaryOption = `secondary-blockcode-language-${(languageBCE).replace(" ", "_")}`
                         }
                         break;
-                    case "video":
-                    case "audio":
-                        if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
-                            element.figuredata.srctype='externallink'
-                        }
-                        elementType = {
-                            elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
-                            ...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
-                        }
-                        break;
+                        case "video":
+                            case "audio":
+                                if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
+                                    element.figuredata.srctype='externallink'
+                                }
+                                elementType = {
+                                    elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+                                    primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
+                                    ...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
+                                }
+                                break;
                     case "interactive":
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
@@ -495,7 +508,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         dispatch(handleTCMData(tcmManifestUrn));
     }
     dispatch(resetAssessmentStore());//reset Assessment Store
-    const elementCount = getState().appStore.slateLength;
+    // const elementCount = getState().appStore.slateLength;
+    const elementCount = 2;
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
@@ -1079,7 +1093,8 @@ export const appendCreatedElement = async (paramObj, responseData) => {
         dispatch,
         cb,
         popupField,
-        createdFromFootnote
+        createdFromFootnote,
+        cgTitleFieldData
     } = paramObj
 
     let elemIndex = `cypress-${popupElementIndex}`
@@ -1133,13 +1148,28 @@ export const appendCreatedElement = async (paramObj, responseData) => {
             }
         }
     }
-    else if(parentElement.type === "citations"){
-        let targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]]
-        if(targetCG){
-            targetCG.contents["formatted-title"] = responseData
-            targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("",elemNode.innerHTML)
-            targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG
+    else if (parentElement.type === "citations") {
+        let targetCG;
+        // Check if CG is created inside S/H
+        if (popupElementIndex.length === 4) {
+            let sectionType = cgTitleFieldData?.asideData?.parent?.showHideType;
+            if (sectionType) {
+                targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]].interactivedata[sectionType][popupElementIndex[2]];
+            }
+            if (targetCG) {
+                targetCG.contents["formatted-title"] = responseData;
+                targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
+                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText;
+                _slateObject.contents.bodymatter[popupElementIndex[0]].interactivedata[sectionType][popupElementIndex[2]] = targetCG;
+            }
+        } else {
+            targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]];
+            if (targetCG) {
+                targetCG.contents["formatted-title"] = responseData;
+                targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
+                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText;
+                _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG;
+            }
         }
     }
     dispatch({
@@ -1203,7 +1233,7 @@ const getRequestData = (parentElement) => {
     }
     return dataToSend
 }
-export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote) => (dispatch, getState) => {
+export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote, cgTitleFieldData = {}) => (dispatch, getState) => {
     let _requestData =  getRequestData(parentElement)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
@@ -1223,7 +1253,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             dispatch,
             cb,
             popupField,
-            createdFromFootnote
+            createdFromFootnote,
+            cgTitleFieldData
         }
         if (parentElement && parentElement.type == 'popup') {
             const parentData = getState().appStore.slateLevelData;

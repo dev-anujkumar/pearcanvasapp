@@ -49,7 +49,7 @@
     }
 }
 
-.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh) * {
+.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl) * {
     cursor: default !important;
 }
 
@@ -122,6 +122,18 @@
     overflow-x: auto;
     overflow-y: hidden;
     min-height: 64px;
+}
+.bl .cypress-editable{
+    min-height: 30px !important;
+}
+.bl .cypress-editable p {
+    margin-top: -10px !important;
+}
+.bl .editor, .manifest-list-li{
+    margin-top: 10px !important;
+}
+.bl .cypress-editable.place-holder::before {
+    margin-top: -10px !important;
 }
 /* .element-container{
     padding: 1px 8px !important; 

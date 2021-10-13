@@ -9,7 +9,7 @@ import {
 import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
-import { hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
@@ -18,7 +18,8 @@ import { updateFigureImageDataForCompare } from '../ElementContainer/ElementCont
 import { connect } from 'react-redux';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import { labelHtmlData } from '../../constants/Element_Constants';
-
+import PopUp from '../PopUp';
+import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
@@ -33,7 +34,8 @@ class FigureImage extends Component {
             alfrescoSiteData: {},
             figureLabelValue: 'No Label',
             figureLabelData: this.props.figureDropdownData?.image,
-            figureDropDown: false
+            figureDropDown: false,
+            deleteAssetPopup: false
         }
         this.wrapperRef = React.createRef();
     }
@@ -92,6 +94,8 @@ class FigureImage extends Component {
         if (hasReviewerRole()) {
             return true
         }
+        this.toggleDeletePopup(false)
+    
         // store current element figuredata in store
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
         let setFigureData = {
@@ -105,6 +109,54 @@ class FigureImage extends Component {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
         })
+    }
+    
+    /*** @description This function is used to handle Canvas Blocker on delete */
+    showCanvasBlocker = (value) => {
+        if (value == true) {
+            showTocBlocker();
+            hideToc();
+        } else {
+            hideTocBlocker(value);
+        }
+        disableHeader(value);
+        this.props.showBlocker(value);
+    }
+    /**
+     * @description This function is used to toggle delete popup
+     * @param {*} toggleValue Boolean value
+     * @param {*} event event object
+     */
+     toggleDeletePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            deleteAssetPopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue);
+    }
+
+    /*** @description This function is used to render delete Popup */
+    showDeleteAssetPopup = () => {
+        if (this.state.deleteAssetPopup) {
+            this.showCanvasBlocker(true)
+            return (
+                <PopUp
+                    dialogText={DELETE_DIALOG_TEXT}
+                    active={true}
+                    togglePopup={this.toggleDeletePopup}
+                    isDeleteAssetPopup={true}
+                    deleteAssetHandler={this.deleteFigureResource}
+                    isInputDisabled={true}
+                    isDeleteAssetClass="delete-element-text"
+                    
+                />
+            )
+        }
+        else {
+            return null
+        }
     }
 
 
@@ -122,7 +174,7 @@ class FigureImage extends Component {
         //commented lines will be used to update the element data
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
-
+        if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
         let uniqID = imageData.id ? imageData.id : "";
         let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
         let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
@@ -180,12 +232,14 @@ class FigureImage extends Component {
                 this.updateAlfrescoSiteUrl()
             }
         }
+    }
         // to blank the elementId and asset data after update
         let payloadObj = {
             asset: {},
             id: ''
         }
         this.props.saveSelectedAssetData(payloadObj)
+
     }
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
@@ -371,6 +425,7 @@ class FigureImage extends Component {
 
         return (
             <div className="figureElement">
+                {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
@@ -441,7 +496,7 @@ class FigureImage extends Component {
                                                 <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{this.props.model.figuredata && this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
                                             </div>
                                             <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
-                                            <div className='deletefigurebutton' onClick={this.deleteFigureResource}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                                            <div className='deletefigurebutton' onClick={() => this.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                                         </div> : ''
                                     }
                                 </div>
@@ -460,6 +515,7 @@ class FigureImage extends Component {
                             </figcredit>
                         </figure>
                     </div>
+                    
                 </div>
             </div>
         );
