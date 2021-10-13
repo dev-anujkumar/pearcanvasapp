@@ -185,6 +185,30 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         }
                     })
                 }
+                /* To update redux store while creating new element inside WE/Aside->Block Poetry->Stanza */
+                else if(poetryData?.parent?.type === "element-aside" && item.id === poetryData?.parent?.id){
+                    item?.elementdata?.bodymatter?.map((ele) => {
+                            if (ele?.id === parentUrn.manifestUrn) {
+                                ele?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                            } else if (ele?.contents?.bodymatter) {
+                                ele.contents.bodymatter.map((ele2) => {
+                                    if (ele2?.id === parentUrn.manifestUrn) {
+                                        ele2?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                                    }
+                                })
+                            }
+                    })
+                }
+                /* To update redux store while creating new element inside 2C->Block Poetry->Stanza */
+                else if(poetryData?.parent?.type === "groupedcontent" && item.id === poetryData?.parent?.id){
+                    item?.groupeddata?.bodymatter?.map((ele) => {
+                        ele?.groupdata?.bodymatter?.map(i => {
+                            if (i?.id === parentUrn.manifestUrn) {
+                                i?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                            }
+                        })
+                    })
+                }
             })  
         }
         else if (asideData && asideData.type === 'groupedcontent') {
@@ -393,7 +417,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 }
                 else if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
-                    const indexs = elementIndex?.split('-') || [];
+                    const indexs = elementIndex?.toString().split('-') || [];
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
                         let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]];
                         if (asid.contentUrn == currentSlateEntityUrn) {
@@ -407,7 +431,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                         }
                     }
                 } else if (containerTypeElem && containerTypeElem == 'section') {
-                    const indexs = elementIndex?.split('-') || [];
+                    const indexs = elementIndex?.toString().split('-') || [];
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:WE:BODY:SECTION-BREAK: Swap Elements */
                         newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.map(item => {
                             if (item.contentUrn == currentSlateEntityUrn) {
@@ -438,6 +462,27 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     newBodymatter.forEach(element => {
                         if (element.id == poetryId) {
                             element.contents.bodymatter.move(oldIndex, newIndex);
+                        } else if (element?.type === 'element-aside') {  /** ----------Swapping block poetry elements inside Aside/WE Element----------------- */
+                            element.elementdata?.bodymatter.forEach((ele) => {
+                                if (ele?.type === "poetry" && ele?.id === poetryId) {
+                                    ele.contents.bodymatter.move(oldIndex, newIndex);
+                                } else if (ele.type === "manifest") {
+                                    ele.contents.bodymatter.forEach(ele1 => {
+                                        if (ele1.id === poetryId) {
+                                            ele1.contents.bodymatter.move(oldIndex, newIndex);
+                                        }
+                                    })
+                                }
+                            })
+                        } else if(element?.type === "groupedcontent"){  /** ----------Swapping block poetry elements inside Multicolumn Element----------------- */
+                            element.groupeddata?.bodymatter.forEach((groupElem)=> {
+                                groupElem.groupdata?.bodymatter.forEach((groupElem1)=>{
+                                    if(groupElem1?.type ==="poetry" && groupElem1?.id === poetryId){
+                                        groupElem1.contents.bodymatter.move(oldIndex, newIndex);
+                                    }
+                                })
+
+                            })
                         }
                     });
                 }

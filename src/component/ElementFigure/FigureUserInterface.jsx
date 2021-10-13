@@ -225,7 +225,7 @@ class FigureUserInterface extends Component {
                     </div>
                     <div className="media-button-group">
                         <div className='update-figure-button' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
-                        <div className={`delete-figure-button ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                        <div className={`delete-figure-button ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={(evt) => this.props.deleteElementAsset(true,evt)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                     </div>
                     <div className="media-image-info">
                         <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
