@@ -475,16 +475,19 @@ menu li {
   align-items: center;
   display: flex;
 }
+
 #comments-panel .property-title {
-  flex-flow: column;
+  /* flex-flow: column; */
   padding: 5px 0;
-  width: 60px;
+  /* width: 60px; */
   font-weight: bolder;
   color: #111;
-}
-.assignee-content span {
   float: left;
+	width: 100px;
 }
+/* .assignee-content span {
+  float: left;
+} */
 #comments-panel .property-value {
   font-weight: 700!important;
   font-size: 12px!important;

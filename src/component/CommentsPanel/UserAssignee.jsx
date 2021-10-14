@@ -11,10 +11,10 @@ class UserAssignee extends React.Component {
     */
 
     assigneeForm = (props) => {
-        const { users, roles, show, mode} = props
+        const { users, show, mode} = props
         if (show) {
             return (
-                <div className="assignee-content">
+                <div>
                         <span className="property-title">{props.name}</span>
                         <span className="property-value color-gray-71 changeAssignee">getUserName</span>
                         <CurrentProjectUsers mode={mode} users={users} currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
