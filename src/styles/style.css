@@ -163,7 +163,7 @@ table p {
     margin-left: 3px;
 }
 
-.definition-editor.place-holder::before{
+.definition-editor.place-holder::before, .markedindex-editor.place-holder::before{
     content: attr(placeholder);
     color: #ADADAD; 
     display: block;

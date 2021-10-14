@@ -121,7 +121,7 @@ export class ReactMarkedIndexEditor extends React.Component {
   * @param {*} editor Editor instance
   */
   editorOnKeyup = (e, editor) => {
-    let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+    let activeElement = editor.dom.getParent(editor.selection.getStart(), ".markedindex-editor");
     let contentHTML = e.target.innerHTML;
     if (activeElement) {
       let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
@@ -142,7 +142,7 @@ export class ReactMarkedIndexEditor extends React.Component {
   editorOnChange = (e, editor) => {
     let content = e.target.getContent({ format: 'text' }),
       contentHTML = e.target.getContent(),
-      activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+      activeElement = editor.dom.getParent(editor.selection.getStart(), ".markedindex-editor");
     if (activeElement) {
       let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
       if (content.trim().length || contentHTML.match(/<math/g) || isContainsMath) {

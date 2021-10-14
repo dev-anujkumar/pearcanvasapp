@@ -133,14 +133,14 @@ class PrintIndexPopup extends Component {
             <div className="markedindex-word-header">
               <div className="markedindex-word-title">Index Entry</div>
               <div className="markedindex-word-name markedindex-word-description" id='markedindex-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.firstLevel} className='definition-editor place-holder' placeholder="Type Something" id='markedindex-0' />
+                <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.firstLevel} className='markedindex-editor place-holder' placeholder="Type Something" id='markedindex-0' />
               </div>
             </div>
 
             <div className="markedindex-secondlevel-header">
               <div className="markedindex-secondlevel-label">Sub-Entry (optional)</div>
               <div className="index-editor markedindex-secondlevel-description" id="index-secondlevel-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel} className='definition-editor place-holder' placeholder="Type Something" id='markedindex-1' />
+                <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel} className='markedindex-editor place-holder' placeholder="Type Something" id='markedindex-1' />
               </div>
             </div>
 

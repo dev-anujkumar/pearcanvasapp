@@ -349,8 +349,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let footnoteEntry = Object.create({})
     let indexEntry = Object.create({})
     let semanticType = type.toUpperCase()
+    const indexElement = type ==='Markedindex' ? store.getState().markedIndexReducer.elementIndex : store.getState().glossaryFootnoteReducer.elementIndex;
     let data = {}, figureDataObj
-    var index = store.getState().glossaryFootnoteReducer.elementIndex;
+    var index = indexElement;
     const slateId = config.slateManifestURN;
     const parentData = store.getState().appStore.slateLevelData;
     let newParentData = JSON.parse(JSON.stringify(parentData));
