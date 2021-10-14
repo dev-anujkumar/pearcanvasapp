@@ -386,3 +386,6 @@
 .container-multi-column-group-3c .elemDiv-expand{
     right: 1%;
 }
+.container-multi-column-group-3c .element-container.pe .dropdown{
+    margin-left: 0px;
+}

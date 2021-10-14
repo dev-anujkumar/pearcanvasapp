@@ -54,6 +54,7 @@ export default function ElementContainerType(props) {
         const hideElementListMulticolumn = ["Add Pop Up","Add Discussion"]
         return propsData && propsData.map((item, index) => {
             if ((elementType === "element-aside" && asideData?.parent?.type === "groupedcontent" && text === "block-text-button" && item.text === "Block Poetry") ||
+            ((elementType === "element-aside" || elementType === "group") && config.isPopupSlate && text === "block-text-button" && item.text === "Block Poetry") ||
             (text === "interactive-elem-button" && (elementType === "group" && hideElementListMulticolumn.includes(item.text)))
             || (config.isPopupSlate && item.text === "Add Pop Up") ||
             /* Not show poetry/Popup/SH inside SH interactive Picker */
