@@ -5,12 +5,7 @@ import { Provider } from 'react-redux';
 import { prepareCommentsManagerIcon } from '../../../src/component/ElementContainer/CommentsManagrIconPrepareOnPaste';
 import * as slateWrapperConstants from "../../../src/component/SlateWrapper/SlateWrapperConstants";
 import { createStore } from 'redux';
-
-// export function prepareCommentsManagerIcon() {
-//     switch(type) {
-//         case slateWrapperConstants.WORKED_EXAMPLE:
-//     }
-// }
+import { getShowhideChildUrns } from "../../../src/constants/utility";
 
 const allComments = [
     {
@@ -41,11 +36,86 @@ const allComments = [
         isCommentSelected: true
     }]
 
-let type1 = slateWrapperConstants.CONTAINER;
+let type1 = slateWrapperConstants.WORKED_EXAMPLE;
+let commentEntity2 = "urn:pearson:work:23093f93-95ed-48fa-af24-ee4efe557c6a"
+let commentOnEntity = "urn:pearson:work:23093f93-95ed-48fa-af24-ee4efe557c6a"
+let elmUrn1 = {
+    some: function(commentEntity2) {
+        return commentOnEntity == commentEntity2
+    }
+}
+
+let type2 = slateWrapperConstants.SECTION_BREAK;
+let createdElementData2 = {
+    contents: {
+        bodymatter: [1, 2, 3, 4, 5]
+    }
+}
+let elmUrn2 = [];
+
+let type4 = slateWrapperConstants.TEXT;
+let elmUrn4 = [];
+let createdElementData4 = {
+    id: 1
+};
+
+let type5 = slateWrapperConstants.MULTI_COLUMN;
+const arr5 = ["show","hide"];
+const elmUrn5 = [];
+let createdElementData5 = {
+    groupeddata: {
+        bodymatter: [
+            {
+                groupdata: {
+                    bodymatter: [{type: "ELEMENT_ASIDE"}, {type: "SHOW_HIDE"}, {type: "different"}]
+            }
+        }
+        ]
+    },
+    type: "MULTI_COLUMN"
+};
+
+let type6 = slateWrapperConstants.SHOW_HIDE;
+const elmUrn6 = [];
+let createdElementData6 = {
+    interactivedata: "data"
+};   
+
+let type7 = slateWrapperConstants.POP_UP;
+const elmUrn7 = [];
+let createdElementData7 = {
+    popupdata: {
+        postertextobject: [{id : 1}],
+        bodymatter: [{id : 1}]
+    }
+};   
 
 
 describe('prepareCommentsManagerIcon cases --', () => {
+
     it('WORKED_EXAMPLE', () => {
-        expect(prepareCommentsManagerIcon(type1, "", "", allComments)).toBeCalled(1);
-      });
-});
+        prepareCommentsManagerIcon(type1, "", elmUrn1, allComments);
+    
+    });
+    it('SECTION_BREAK', () => {
+        prepareCommentsManagerIcon(type2, createdElementData2, elmUrn2, allComments);
+    
+    });
+    it('TEXT', () => {
+        prepareCommentsManagerIcon(type4, createdElementData4, elmUrn4, allComments);
+    
+    });
+    it('MULTI_COLUMN', () => {
+        prepareCommentsManagerIcon(type5, createdElementData5, elmUrn5, allComments);
+    
+    });
+    it('SHOW_HIDE', () => {
+        prepareCommentsManagerIcon(type6, createdElementData6, elmUrn6, allComments);
+    
+    });
+    it('POP_UP', () => {
+        prepareCommentsManagerIcon(type7, createdElementData7, elmUrn7, allComments);
+    
+    });
+
+}); 
