@@ -988,7 +988,7 @@ class SlateWrapper extends Component {
                 this.renderButtonsonCondition(_elements);
                 /* @-isPdf_Assess-@ - TO check TYPE of current slate  */
                 const isPdf_Assess = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(config.slateType);
-                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress) {
+                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress && !isSubscriberRole(projectSharingRole,isSubscribed)) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     const typeOfEle = _slateType === SLATE_TYPE_ASSESSMENT ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
