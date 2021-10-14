@@ -27,6 +27,7 @@ import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants'
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement } from './SlateWrapper/SlateWrapper_Actions';
+import { deleteElement } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
@@ -1322,6 +1323,35 @@ export class TinyMceEditor extends Component {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                         this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
+                    }
+                }
+            }
+
+            if (key === 8 && tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 0) {
+                const { id, type } = this?.props?.element;
+                const blockListData = checkBlockListElement(this.props, "ENTER");
+                let manifestListItemData = checkBlockListElement(this.props, "TAB");
+                const { parentData } = manifestListItemData;
+                const { listdata } = blockListData?.parentData;
+                if (listdata?.bodymatter[0].id === parentData?.id) {
+                    if (parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id !== id) {
+                        const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                        this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                    }
+                }
+
+                if (listdata?.bodymatter?.length > 1 && listdata?.bodymatter[0].id !== parentData?.id) {
+                    if (parentData?.listitemdata?.bodymatter?.length === 1) {
+                        const deleteItemIndex = listdata?.bodymatter.findIndex(listData => listData.id === parentData?.id);
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                        this.props.deleteElement(parentData?.id, "manifestlistitem", { contentUrn: listdata?.contentUrn }, {}, parentData?.contentUrn, deleteItemIndex, {}, {}, null);
+                    } else if (parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === 'manifestlist') {
+                        return;
+                    } else {
+                        const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                        this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
                     }
                 }
             }
@@ -3905,5 +3935,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement }
+    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement }
 )(TinyMceEditor);

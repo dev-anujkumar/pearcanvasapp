@@ -749,7 +749,7 @@ class SlateWrapper extends Component {
                 break;
             case 'text-elem':
             default:
-                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
+                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null, null, null);
                 break;
         }
     }
