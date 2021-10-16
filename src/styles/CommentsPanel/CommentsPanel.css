@@ -67,17 +67,13 @@ html {
 }
 .Path {
   height: 5px !important;
-  display: inline;
-  width: 20px;
-  margin-left: 10px;
-  margin-bottom: 1.5px;
+  margin: 15px 0 0 10px;
 }
 .Replies {
   color: #005a70 !important;
   font-family: inherit;
   font-size: 12px !important;
-  width: 42px !important;
-  height: 14px !important;
+  margin-top: 15px;
 }
 
 /* ---------------------------------*/
@@ -365,9 +361,9 @@ html {
 /* ---------------------------------*/
 .action-menu {
   position: absolute;
-  right: 21px;
-  width: 65px;
-  top: 20px;
+  right: 30px;
+  width: 155px;
+  top: 40px;
   background: white;
   box-shadow: 1px 1px 5px #444;
   z-index: 1000;
@@ -492,6 +488,7 @@ menu li {
   font-weight: 700!important;
   font-size: 12px!important;
   color: #717171;
+  width: 180px;
 }
 .properties .changeAssignee {
   background-color: #dae5f2;
@@ -611,7 +608,7 @@ menu li {
   text-transform: capitalize;
 }
 .defaultAssignee {
-  margin-left: 15px;
+  padding: 3px 0;
 }
 #ext_AddAnAsset {
   font-family: sans-serif !important;

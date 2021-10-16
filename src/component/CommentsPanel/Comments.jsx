@@ -401,14 +401,11 @@ class Comments extends React.Component {
                                 <span className="property-value capitalize color-gray-71">{comment.commentStatus.toLowerCase()}</span>
                             </div>
                             <div className="property">
-                            <div onClick={this.setReplyDropdownState}>
-                            <span className="property-value Replies"> {comment.replyComments.length} </span>
-                            <span className="property-title Replies">Replies</span>
-                            <img className={`${this.state.showReplyComments ? "Path" : "Path collap" }`} src={iconArrow} />
+                                <div className="property" onClick={this.setReplyDropdownState}>
+                                    <div className="Replies">{comment.replyComments.length} Replies</div>
+                                    <img className={`${this.state.showReplyComments ? "Path" : "Path collap" }`} src={iconArrow} />
+                                </div>
                             </div>
-                            </div>
-
-
                         </div>
                     </div>
                 </div>
