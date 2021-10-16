@@ -41,15 +41,12 @@ class UserAssignee extends React.Component {
 
 
     render() {
-
         return (
             <>
                 {this.assigneeForm(this.props)}
             </>
         )
-
     }
-
 }
 
 UserAssignee.propTypes = {
