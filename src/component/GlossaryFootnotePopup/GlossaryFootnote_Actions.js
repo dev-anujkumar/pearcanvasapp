@@ -10,8 +10,9 @@ const {
     REACT_APP_API_URL
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
-import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE, SET_MARKED_INDEX_SAVED_VALUE} from "./../../constants/Action_Constants";
+import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE} from "./../../constants/Action_Constants";
 import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
+import { updateMarkedIndexStore } from '../MarkIndexPopup/MarkIndex_Action';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -244,31 +245,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
        store.dispatch(handleFigureGlossaryActions(false,{}))
     }
 
-    /*
-    * This will updated the store for marked index values
-    * which is associated with this glossary.
-    */
-    let markedIndexFirstLevel = "", markedIndexSecondLevel = "";
-    if(glossaryContentText && glossaryContentText.includes('markedindexentry')){
-        let markedindexentry = glossaryContentText.slice(glossaryContentText.indexOf('markedindexentry')).split("\"")[1];
-        let indexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedindexentry];
-        let {firstLevelEntry, secondLevelEntry} = JSON.parse(indexEntries);
-
-        markedIndexFirstLevel = firstLevelEntry;
-        markedIndexSecondLevel = secondLevelEntry;
-    } else {
-        markedIndexFirstLevel = glossaryContentText;
-    }
-
-    dispatch({
-        type: SET_MARKED_INDEX_SAVED_VALUE,
-        payload: {
-            markedIndexCurrentValue: {
-                firstLevel: markedIndexFirstLevel,
-                secondLevel: markedIndexSecondLevel
-            },
-        }
-    });
+    dispatch(updateMarkedIndexStore(glossaryContentText, glossaryFootElem, glossaaryFootnoteValue, index));
 
     return await dispatch({
         type: OPEN_GLOSSARY_FOOTNOTE,
@@ -337,7 +314,33 @@ function alterFigureAttr(type, figureGlossaryData, addAttributeInDfn, glossaryfo
 }
 
 /**
- * saveGlossaryAndFootnote | this method is used for to save glossary and footnote
+ * This function will add or remove mark-index-id attribute from workContainer
+ * @param {*} type, which operation need to perform "add" or "remove"
+ * @param {*} markedIndexedURN, URN of marked index
+ * @param {*} glossaryfootnoteid, Id of glossary container element
+ * @param {*} workContainer, HTML element to which mark-index-id attribute needs to be added
+ * @returns WorkContainer wiht mark-index-id attribute
+ */
+
+function alterMarkedIndexAttr(type, markedIndexedURN, addAttributeInDfn, glossaryfootnoteid, workEditor, workContainer) {
+    for (let i = 0; i < addAttributeInDfn.length; i++) {
+        let currentAddAttributeInDfn = addAttributeInDfn[i];
+        let currentData = addAttributeInDfn[i].outerHTML
+        let currentDataUri = currentData.slice(currentData.indexOf('data-uri')).split("\"")[1];
+        if (currentDataUri === glossaryfootnoteid) {
+            if (type == 'add') {
+                currentAddAttributeInDfn.setAttribute('mark-index-id', markedIndexedURN)
+            } else if (type == 'remove') {
+                currentAddAttributeInDfn.removeAttribute('mark-index-id')
+            }
+        }
+        workContainer = workEditor.innerHTML;
+    }
+    return workContainer;
+}
+
+/**
+ * saveGlossaryAndFootnote | this method is used for to save glossary, footnote and markedIndex
  * @param {*} elementWorkId, element's workurn of which glosssary&footnote is being saved
  * @param {*} elementType, element's type of which glosssary&footnote is being saved
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
@@ -452,6 +455,14 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             workContainer = alterFigureAttr('add',figureGlossaryData, addAttributeInDfn, glossaryfootnoteid, workEditor,workContainer);
         }else{
             workContainer= alterFigureAttr('remove',figureGlossaryData, addAttributeInDfn, glossaryfootnoteid, workEditor,workContainer);
+        }
+
+        // This code will add the mark-index-id attribute in the html stored in the workcontainer variable
+        let markedIndexURN = indexEntries && Object.keys(indexEntries).length > 0 && Object.keys(indexEntries)[0];
+        if (markedIndexURN) {
+            workContainer = alterMarkedIndexAttr('add',markedIndexURN, addAttributeInDfn, glossaryfootnoteid, workEditor,workContainer);
+        }else{
+            workContainer= alterMarkedIndexAttr('remove',{}, addAttributeInDfn, glossaryfootnoteid, workEditor,workContainer);
         }
 
         workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')

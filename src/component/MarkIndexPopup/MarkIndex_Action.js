@@ -3,6 +3,20 @@ import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
 
+/**
+ * This function acts as an action creator which will update the marked index store when marked index icon
+ * is clicked from the tinyMCE toolbar
+ * @param {*} status, Status of the marked index pop-up (it is a boolean value)
+ * @param {*} popupType, This variable will contain 'Markedindex' value
+ * @param {*} markIndexid, This will contain URN id for indexed text  
+ * @param {*} elementWorkId This will contain Work URN of the container element
+ * @param {*} elementType This will contain element type e.g element authored text
+ * @param {*} index This will contain index of the container element in the slate data
+ * @param {*} elementSubType 
+ * @param {*} markIndexText This will contain the text which is going to be indexed
+ * @param {*} typeWithPopup 
+ * @param {*} poetryField 
+ */
 export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField) => async (dispatch) => {
     let markedIndexValue = {
         type: popupType,
@@ -23,7 +37,7 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         let currentSlateData = newParentData[slateId];
         const showHideElement = store.getState().appStore?.showHideObj;
 
-        if (currentSlateData.type === "popup" && currentSlateData.status === "approved" && (config.isCreateFootnote || config.isCreateGlossary)) {
+        if (currentSlateData.type === "popup" && currentSlateData.status === "approved") {
             return false;
         }
         let newBodymatter = currentSlateData.contents.bodymatter;
@@ -88,20 +102,33 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
     });
 }
 
-
+/**
+ * This function acts as an action creator which will update the marked index store when index is created
+ * along with glossary
+ * @param {*} status, Status of the marked index pop-up over glossary
+ * @param {*} indexEntry, Value of Index entry field in the marked index pop-up
+ * @param {*} subEntry, Value of sub entry field in the marked index pop-up 
+ * @param {*} markedIndexEntryURN, URN of indexed text 
+ */
 export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry = "", markedIndexEntryURN = "") => (dispatch) => {
     let indexEntries = {};
+    let currentValue = {};
     if(indexEntry && markedIndexEntryURN){
         indexEntries[markedIndexEntryURN] = JSON.stringify({
           firstLevelEntry: indexEntry,
           secondLevelEntry: subEntry
         });
-    } else {
-        const markedIndexGlossaryData = store.getState().markedIndexReducer.markedIndexGlossary
-        if(markedIndexGlossaryData.markedIndexEntryURN){
-            indexEntries =  markedIndexGlossaryData.indexEntries;
-            markedIndexEntryURN = markedIndexGlossaryData.markedIndexEntryURN;
+        currentValue = {
+            firstLevel: indexEntry,
+            secondLevel: subEntry
         }
+    } else {
+        const {markedIndexGlossary, markedIndexCurrentValue} = store.getState().markedIndexReducer;
+        if(markedIndexGlossary.markedIndexEntryURN){
+            indexEntries =  markedIndexGlossary.indexEntries;
+            markedIndexEntryURN = markedIndexGlossary.markedIndexEntryURN;
+        }
+        currentValue = markedIndexCurrentValue;
     }
     return dispatch({
         type: OPEN_MARKED_INDEX_ON_GLOSSARY,
@@ -110,7 +137,60 @@ export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry =
                 popUpStatus: status,
                 indexEntries,
                 markedIndexEntryURN
+            },
+            markedIndexCurrentValue:{
+                firstLevel: currentValue.firstLevel,
+                secondLevel: currentValue.secondLevel
             }
         }
     })
 }
+
+/**
+ * This will updated the store for marked index values which is associated with this glossary.
+ * @param {*} glossaryContentText This will contain the text on which is going to be indexed
+ * @param {*} glossaryFootElem This will contain html object which contains the glossary data.
+ * @param {*} glossaaryFootnoteValue This object will contain all the glossry data.
+ * @param {*} index This will contain index of the container element in the slate data.
+ * @returns 
+ */
+export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, glossaaryFootnoteValue, index) => {
+    let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {};
+    if(glossaryContentText && glossaryContentText.includes('mark-index-id')){
+        markedIndexEntryURN = glossaryContentText.slice(glossaryContentText.indexOf('mark-index-id')).split("\"")[1];
+        let indexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
+        let {firstLevelEntry, secondLevelEntry} = JSON.parse(indexEntries);
+
+        markedIndexFirstLevel = firstLevelEntry;
+        markedIndexSecondLevel = secondLevelEntry;
+    } else {
+        markedIndexFirstLevel = glossaryContentText;
+    }
+
+    return {
+        type: OPEN_MARKED_INDEX,
+        payload: {
+            markedIndexValue:{
+                type: 'Markedindex',
+                popUpStatus: false,
+                elementWorkId: glossaaryFootnoteValue.elementWorkId,
+                elementType: glossaaryFootnoteValue.elementType,
+                markIndexid: markedIndexEntryURN,
+                elementSubType: glossaaryFootnoteValue.elementSubType,
+                markIndexText: glossaaryFootnoteValue.glossaryTermText,
+                typeWithPopup: glossaaryFootnoteValue.typeWithPopup ? glossaaryFootnoteValue.typeWithPopup : undefined,
+                poetryField: glossaaryFootnoteValue.poetryField ? poetryField : undefined
+            },
+            markedIndexCurrentValue: {
+                firstLevel: markedIndexFirstLevel,
+                secondLevel: markedIndexSecondLevel
+            },
+            markedIndexGlossary: {
+                popUpStatus: false,  
+                indexEntries, 
+                markedIndexEntryURN 
+            },
+            elementIndex: index
+        }
+    };
+} 
