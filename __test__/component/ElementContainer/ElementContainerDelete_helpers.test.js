@@ -126,6 +126,42 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             "frontmatter": [],
             "bodymatter": [
                 {
+                    id: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a',
+                    type: 'element-authoredtext',
+                    subtype: '',
+                    schema: 'http://schemas.pearson.com/wip-authoring/element/1',
+                    elementdata: {
+                      schema: 'http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext',
+                      text: ''
+                    },
+                    html: { text: '<p class="paragraphNumeroUno"><br></p>' },
+                    comments: false,
+                    tcm: true,
+                    versionUrn: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a',
+                    contentUrn: 'urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527',
+                    groupeddata: {
+                        bodymatter: [{groupeddata: {
+                            bodymatter: [{
+                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                "type": "element-authoredtext",
+                                "subtype": "",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                },
+                                "comments": false,
+                                "tcm": true,
+                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                            }]
+                        }}]
+                    }
+                },
+                {
                     "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
                     "type": "element-authoredtext",
                     "subtype": "",
@@ -219,6 +255,23 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         deleteHelpers.onDeleteSuccess(args)
         expect(spyonDeleteSuccess).toHaveBeenCalled()
         spyonDeleteSuccess.mockClear()
+    })
+    it("deleteFromStore - inside aside random3", () => {
+        
+        let args = { 
+            asideData: null,
+            dispatch: jest.fn(),
+            elmId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+            parentUrn: { elementType : "element-aside", manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b" },
+            index: 3,
+            poetryData: null,
+            newParentData: slateLevelData.slateLevelData
+        }
+        
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
+        deleteHelpers.deleteFromStore(args)
+        expect(spydeleteFromStore).toHaveBeenCalled()
+        spydeleteFromStore.mockClear()
     })
     it("deleteFromStore - inside aside ", () => {
         

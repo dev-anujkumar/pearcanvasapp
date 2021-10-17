@@ -39,9 +39,24 @@ const allComments = [
 let type1 = slateWrapperConstants.WORKED_EXAMPLE;
 let commentEntity2 = "urn:pearson:work:23093f93-95ed-48fa-af24-ee4efe557c6a"
 let commentOnEntity = "urn:pearson:work:23093f93-95ed-48fa-af24-ee4efe557c6a"
-let elmUrn1 = {
-    some: function(commentEntity2) {
-        return commentOnEntity == commentEntity2
+let elmUrn1 = [];
+let createdElementData1 = {
+    type: "element-aside",
+    id: 2,
+    elementdata: {
+        bodymatter: [
+            {type: "showhide"
+            //  interactivedata: {
+            //      sectionType: [{id: 1}, {id: 2}]
+            //  }   
+            }, 
+            {type: "manifest",
+                contents: {
+                    bodymatter: [{type: "showhide"}, {type: "different"}]
+            }},
+            {type: "different"}
+        ]
+
     }
 }
 
@@ -67,12 +82,12 @@ let createdElementData5 = {
         bodymatter: [
             {
                 groupdata: {
-                    bodymatter: [{type: "ELEMENT_ASIDE"}, {type: "SHOW_HIDE"}, {type: "different"}]
+                    bodymatter: [{type: "element-aside"}, {type: "showhide"}, {type: "different"}]
             }
         }
         ]
     },
-    type: "MULTI_COLUMN"
+    type: "groupedcontent"
 };
 
 let type6 = slateWrapperConstants.SHOW_HIDE;
@@ -94,7 +109,7 @@ let createdElementData7 = {
 describe('prepareCommentsManagerIcon cases --', () => {
 
     it('WORKED_EXAMPLE', () => {
-        prepareCommentsManagerIcon(type1, "", elmUrn1, allComments);
+        prepareCommentsManagerIcon(type1, createdElementData1, elmUrn1, allComments);
     
     });
     it('SECTION_BREAK', () => {

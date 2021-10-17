@@ -92,7 +92,7 @@ describe('Tests Slate Wrapper Actions', () => {
     });
     afterEach(() => moxios.uninstall());
   
-    xit('testing------- ADD OPENER ELEMENT ------action', () => {
+    it('testing------- ADD OPENER ELEMENT ------action', () => {
         initialState = {
             appStore : {
                 slateLevelData: SlatetDataOpenerDefault,
@@ -160,7 +160,7 @@ describe('Tests Slate Wrapper Actions', () => {
          store.dispatch(actions.createElement(type, index));
          expect(type).toBe(expectedActions.type);
     });
-    xit('testing------- ASIDE ------action', () => {
+    it('testing------- ASIDE ------action', () => {
         //let store = mockStore(() => initialState);
         const type = "FIGURE";
         const index = 3;
@@ -1246,6 +1246,133 @@ describe('Tests Slate Wrapper Actions', () => {
             id: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e',
             type: 'poetry',
             parentUrn: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40g'
+        };
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('', 0, {manifestUrn: config.projectUrn}, asideDataMock, 1, '', cb, poetryData));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+
+    it('createElement action - poetryData --- testing3', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+                        contents: {
+                            bodymatter: [{
+                                elementdata: {
+                                    bodymatter: [{
+                                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40g",
+                                                contents: {
+                                                    bodymatter: [{
+                                                        id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40g",
+                                                        contents: {
+                                                            bodymatter: [{}]
+                                                        }
+                                                    }]
+                                                }
+                                }]
+                                },
+                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e",
+                                type: "poetr",
+                                contents: {
+                                    bodymatter: [{
+                                        id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40g",
+                                        contents: {
+                                            bodymatter: []
+                                        }
+                                    }]
+                                }
+                            }]
+                        }
+                    }
+                },
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const asideDataMock = {
+            type: ''
+        }
+        const poetryData = {
+            parent: {
+                type: "element-aside",
+                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e"
+            },
+            id: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e',
+            type: 'poetry',
+            parentUrn: {
+                manifestUrn: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40g'
+            }
+        };
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('', 0, {manifestUrn: config.projectUrn}, asideDataMock, 1, '', cb, poetryData));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+
+    it('createElement action - poetryData --- testing4', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+                        contents: {
+                            bodymatter: [{
+                                groupeddata: {
+                                    bodymatter: [{
+                                        groupdata: {
+                                            bodymatter: [{id: ""}]
+                                        }
+                                    }]
+                                },
+                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e",
+                                type: "poetr",
+                                contents: {
+                                    bodymatter: [{
+                                        id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40g",
+                                        contents: {
+                                            bodymatter: [{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40g",
+                                                        contents: {
+                                                            bodymatter: [{}]
+                                                        }}]
+                                        }
+                                    }]
+                                }
+                            }]
+                        }
+                    }
+                },
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const asideDataMock = {
+            type: ''
+        }
+        const poetryData = {
+            parent: {
+                type: "groupedcontent",
+                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e"
+            },
+            id: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e',
+            type: 'poetry',
+            parentUrn: {
+                manifestUrn: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40g'
+            }
         };
         const cb = jest.fn();
         jest.mock('axios');

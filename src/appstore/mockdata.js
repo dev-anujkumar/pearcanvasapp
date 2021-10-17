@@ -2,7 +2,9 @@ export default {
     "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i": {
         "id": "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f",
         "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
-        "type": "manifest",
+        // "type": "manifest",
+        "type": "popup",
+        "status": "approved",
         "contents": {
             "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
             "title": {
@@ -12,7 +14,9 @@ export default {
             "frontmatter": [],
             "bodymatter": [
                 {
-                    
+                        // "elementdata": {
+                        //   bodymatter: ["data1", "data2"]
+                        // },                   
                         "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
                         "type": "poetry",
                         "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
@@ -82,6 +86,7 @@ export default {
                     {
                         "id": "urn:pearson:manifest:64405a07-dab2-4516-8f94-478dbcc9945b",
                         "type": "popup",
+                        // "status": "approved",
                         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
                         "versionUrn": "urn:pearson:manifest:64405a07-dab2-4516-8f94-478dbcc9945b",
                         "contentUrn": "urn:pearson:entity:ae62a278-263d-4e81-b275-47df1fe3e92e",
