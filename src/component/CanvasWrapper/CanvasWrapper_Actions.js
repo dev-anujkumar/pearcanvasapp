@@ -1302,8 +1302,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                                 element1.contents[poetryField] = [response.data]
                                 element1.contents[poetryField][0].html.text  = elemNode.innerHTML
                                 element1.contents[poetryField][0].elementdata.text = elemNode.innerText
-                                element.contents.bodymatter[maniIndex] = element1
-                                targetPoetryElement.elementdata.bodymatter[index] = element.contents.bodymatter[maniIndex]
+                                targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
                                 }
                             })
                         }
@@ -1343,8 +1342,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                                     element1.contents[poetryField] = response.data
                                     element1.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                                     element1.contents[poetryField].elementdata.text = elemNode.innerText
-                                    element.contents.bodymatter[maniIndex] = element1
-                                    targetPoetryElement.elementdata.bodymatter[index] = element.contents.bodymatter[maniIndex]
+                                    targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
                                 }
                             })
                         }
@@ -1378,8 +1376,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                                 if (element1?.type == "poetry") {
                                     element1.contents["formatted-title"] = response.data
                                     element1.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
-                                    element.contents.bodymatter[maniIndex] = element1
-                                    targetPoetryElement.elementdata.bodymatter[index] = element.contents.bodymatter[maniIndex]
+                                    targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
                                 }
                             })
                         }
