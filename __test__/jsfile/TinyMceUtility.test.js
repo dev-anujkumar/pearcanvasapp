@@ -305,4 +305,133 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });
+
+    it('Test - isNestingLimitReached - if block', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
+        const indexes = "0"
+        tinyMceFn.isNestingLimitReached(indexes);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - isNestingLimitReached - else block', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
+        const indexes = "1-0-1"
+        tinyMceFn.isNestingLimitReached(indexes);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+    
+    it('Test - checkBlockListElement - data as {}', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
+        tinyMceFn.checkBlockListElement({}, '');
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - checkBlockListElement - if block - ENTER keypressed', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
+        const data = {
+            slateLevelData: {
+                'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                    contents: {
+                        bodymatter: [{
+                            type: 'manifestlist'
+                        }]
+                    }
+                }
+            },
+            index: "0-0-1"
+        }
+        tinyMceFn.checkBlockListElement(data, 'ENTER');
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - checkBlockListElement - if block - SHIFT+TAB keypressed', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
+        const data = {
+            slateLevelData: {
+                'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                    contents: {
+                        bodymatter: [{
+                            type: 'manifestlist',
+                            listdata: {
+                                bodymatter: [{}]
+                            }
+                        }]
+                    }
+                }
+            },
+            index: "0-0-1"
+        }
+        tinyMceFn.checkBlockListElement(data, 'SHIFT+TAB');
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - checkBlockListElement - if block - type - not - manifestlist', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
+        const data = {
+            slateLevelData: {
+                'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                    contents: {
+                        bodymatter: [{
+                            type: '',
+                            listdata: {
+                                bodymatter: [{}]
+                            }
+                        }]
+                    }
+                }
+            },
+            index: "0-0-1"
+        }
+        tinyMceFn.checkBlockListElement(data, 'SHIFT+TAB');
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - checkBlockListElement - if block - contents - bodymatter - empty', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
+        const data = {
+            slateLevelData: {
+                'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                    contents: {
+                        bodymatter: []
+                    }
+                }
+            },
+            index: "0-0-1"
+        }
+        tinyMceFn.checkBlockListElement(data, 'SHIFT+TAB');
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - getBLParentContainer - manifestlistitem', () => {
+        const bodymatter = {
+            type: 'manifestlistitem',
+            listitemdata: {
+                bodymatter: [{}]
+            }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'getBLParentContainer');
+        tinyMceFn.getBLParentContainer(bodymatter, 0, 1, ["1", "0", "1"]);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - getBLParentContainer - not - manifestlistitem', () => {
+        const bodymatter = {
+            type: '',
+            listitemdata: {
+                bodymatter: [{}]
+            }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'getBLParentContainer');
+        tinyMceFn.getBLParentContainer(bodymatter, 0, 1, ["1", "0", "1"]);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
 })

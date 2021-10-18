@@ -673,7 +673,6 @@ export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
 }
 
 export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) => {
-    console.log("updateContainerMetadata ",dataToUpdate)
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
@@ -742,7 +741,7 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             }
             const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
             if(dataToUpdate.blockListElement){
-                updateBlockListMetaData(dataToUpdate.blockListData.id, parsedParentData[config.slateManifestURN].contents.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
+                updateBlockListMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
             }
             if(updatedStore.currentSlateData){
                 parsedParentData[config.slateManifestURN] = updatedStore.currentSlateData;
