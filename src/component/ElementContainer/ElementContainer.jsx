@@ -835,6 +835,7 @@ class ElementContainer extends Component {
         const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
         let parentElement
         if(containerParent){
+             /* Update title/credit of block poetry inside multicolumn */
             if(element.type == "element-aside" && element?.elementdata?.bodymatter){
                 element.elementdata.bodymatter.map((ele)=>{
                     parentElement = ele.type == "poetry" ? this.props.element : this.props.parentElement
