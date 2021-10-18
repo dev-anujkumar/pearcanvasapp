@@ -65,17 +65,22 @@ class PrintIndexPopup extends Component {
 
   saveMarkedIndex = () => {
     if(this.props.isInGlossary){
-      getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", res => {
-        let firstLevel = document.querySelector('#markedindex-editor > div > p');
-        let secondLevel = document.querySelector('#index-secondlevel-attacher > div > p');
+      let { markedIndexEntryURN } = this.props.markedIndexData.markedIndexGlossary;
+      let firstLevel = document.querySelector('#markedindex-editor > div > p');
+      let secondLevel = document.querySelector('#index-secondlevel-attacher > div > p');
 
       firstLevel = firstLevel.innerHTML.match(/<p>/g) ? firstLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
         : `<p>${firstLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
       secondLevel = secondLevel.innerHTML.match(/<p>/g) ? secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
         : `<p>${secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
 
-        this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id);
-      });
+      if(markedIndexEntryURN){
+        this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN);
+      } else{
+        getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", res => {
+          this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id);
+        });
+      }
     } else {
       this.saveContent();
     }
@@ -97,10 +102,15 @@ class PrintIndexPopup extends Component {
   closePopUp = () =>{
     if(this.props.isInGlossary){
       const {indexEntries, markedIndexEntryURN} = this.props.markedIndexData.markedIndexGlossary;
-      const {firstLevelEntry, secondLevelEntry} = JSON.parse(indexEntries[markedIndexEntryURN])
-      this.props.markedIndexPopupOverGlossary(false, firstLevelEntry, secondLevelEntry, markedIndexEntryURN);
+      let firstLevel = "", secondLevel= "";
+      if(markedIndexEntryURN){
+        const parsedIndexEntries = JSON.parse(indexEntries[markedIndexEntryURN])
+        firstLevel = parsedIndexEntries.firstLevelEntry
+        secondLevel = parsedIndexEntries.secondLevelEntry
+      }
+      this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN);
     } else {
-      this.props.showMarkedIndexPopup(false,'')
+      this.props.showMarkedIndexPopup(false)
     }
   }
 
@@ -141,7 +151,7 @@ class PrintIndexPopup extends Component {
 
             <div className="button-group">
               <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>
-              <span className="printIndex-save-button" disabled={false} onClick={this.saveMarkedIndex}>Save</span>
+              <span className="printIndex-save-button" disabled={false} onClick={this.saveMarkedIndex}>{buttonText}</span>
             </div>
           </div>
 

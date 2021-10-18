@@ -311,9 +311,9 @@ dfn[audio-id] sup::after,
 dfn[image-id]:not(.sup):not(.sub)::after,
 dfn[image-id] sub::after,
 dfn[image-id] sup::after,
-dfn[markedindexentry]:not(.sup):not(.sub)::after,
-dfn[markedindexentry] sub::after,
-dfn[markedindexentry] sup::after {
+dfn[mark-index-id]:not(.sup):not(.sub)::after,
+dfn[mark-index-id] sub::after,
+dfn[mark-index-id] sup::after {
     content: url('./../images/ImageGlossary/imageglossary.svg');
     top: 3px;
     right: 0;
