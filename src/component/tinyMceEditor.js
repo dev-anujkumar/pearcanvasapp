@@ -1300,7 +1300,6 @@ export class TinyMceEditor extends Component {
                 }
             } else if (key === 13) {
                 // ENTER key press handling for BlockList element
-                e.preventDefault();
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
