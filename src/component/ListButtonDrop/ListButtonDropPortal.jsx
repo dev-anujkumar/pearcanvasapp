@@ -64,7 +64,6 @@ class ListButtonDropPortal extends Component {
             this.startValue = null;
             this.selectedOption = null;
             let blockListData = checkBlockListElement({slateLevelData:slateData,index:activeElement.index}, 'ENTER');
-            console.log('blockListData',blockListData)
             if (activeElement.elementWipType === 'element-list') {
                 const slateObject = slateData[config.slateManifestURN];
                 const { contents } = slateObject;

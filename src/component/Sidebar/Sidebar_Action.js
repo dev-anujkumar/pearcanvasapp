@@ -610,7 +610,6 @@ export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
 }
 
 export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) => {
-    console.log("updateContainerMetadata ",dataToUpdate)
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];

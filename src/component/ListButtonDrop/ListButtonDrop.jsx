@@ -195,7 +195,6 @@ const handleInputSubmit = (e, props, onClicked) => {
     if ((charCode === 13 && value != '') || onClicked) {
         let type = document.getElementById('listDropWrapper').querySelector('.list-options.selected') &&
             document.getElementById('listDropWrapper').querySelector('.list-options.selected').getAttribute('data-cmd');
-            console.log('type',type,props)
             if (type) {
             onListOptionSelect(type, props);
         }
