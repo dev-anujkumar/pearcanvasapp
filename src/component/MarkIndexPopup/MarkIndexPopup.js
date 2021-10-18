@@ -65,17 +65,22 @@ class PrintIndexPopup extends Component {
 
   saveMarkedIndex = () => {
     if(this.props.isInGlossary){
-      getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", res => {
-        let firstLevel = document.querySelector('#markedindex-editor > div > p');
-        let secondLevel = document.querySelector('#index-secondlevel-attacher > div > p');
+      let { markedIndexEntryURN } = this.props.markedIndexData.markedIndexGlossary;
+      let firstLevel = document.querySelector('#markedindex-editor > div > p');
+      let secondLevel = document.querySelector('#index-secondlevel-attacher > div > p');
 
       firstLevel = firstLevel.innerHTML.match(/<p>/g) ? firstLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
         : `<p>${firstLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
       secondLevel = secondLevel.innerHTML.match(/<p>/g) ? secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
         : `<p>${secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
 
-        this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id);
-      });
+      if(markedIndexEntryURN){
+        this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN);
+      } else{
+        getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", res => {
+          this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id);
+        });
+      }
     } else {
       this.saveContent();
     }
@@ -92,34 +97,34 @@ class PrintIndexPopup extends Component {
       setFormattingToolbar('disableTinymceToolbar')
       setFormattingToolbar('disableGlossaryFootnoteToolbar')
     }
-    if (document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar')) {
-      if (action === "add") {
-        setFormattingToolbar('disableGlossaryFootnoteToolbar')
-      } else if (action === "remove") {
-        setFormattingToolbar('disableTinymceToolbar')
-        setFormattingToolbar('enableGlossaryFootnoteToolbar')
-      }
-    }
   }
 
   closePopUp = () =>{
     if(this.props.isInGlossary){
       const {indexEntries, markedIndexEntryURN} = this.props.markedIndexData.markedIndexGlossary;
-      const {firstLevelEntry, secondLevelEntry} = JSON.parse(indexEntries[markedIndexEntryURN])
-      this.props.markedIndexPopupOverGlossary(false, firstLevelEntry, secondLevelEntry, markedIndexEntryURN);
+      let firstLevel = "", secondLevel= "";
+      if(markedIndexEntryURN){
+        const parsedIndexEntries = JSON.parse(indexEntries[markedIndexEntryURN])
+        firstLevel = parsedIndexEntries.firstLevelEntry
+        secondLevel = parsedIndexEntries.secondLevelEntry
+      }
+      this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN);
     } else {
-      this.props.showMarkedIndexPopup(false,'')
+      this.props.showMarkedIndexPopup(false)
     }
   }
 
   render() {
-
+    const buttonText = this.props.markedIndexData.markedIndexGlossary.markedIndexEntryURN ||
+                      this.props.markedIndexData.markedIndexValue.markIndexid ? 
+                      'Update' : 
+                      'Add';
     return (
       <div>
         <div className='index-container'>
           <div className="index-setting">
             <span className="printIndex-label">Index Settings</span>
-            <span><Close onClick={this.closePopUp} /></span>
+            <span className="marked-close-icon"><Close onClick={this.closePopUp} /></span>
           </div>
           <div className="index-body">
             <div className="index-text">
@@ -133,20 +138,20 @@ class PrintIndexPopup extends Component {
             <div className="markedindex-word-header">
               <div className="markedindex-word-title">Index Entry</div>
               <div className="markedindex-word-name markedindex-word-description" id='markedindex-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.firstLevel} className='definition-editor place-holder' placeholder="Type Something" id='markedindex-0' />
+                <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.firstLevel} className='markedindex-editor place-holder' placeholder="Type Something" id='markedindex-0' />
               </div>
             </div>
 
             <div className="markedindex-secondlevel-header">
-              <div className="markedindex-secondlevel-label">Sub-Entry (optional)</div>
+              <div className="markedindex-secondlevel-label">Sub-Entry</div>
               <div className="index-editor markedindex-secondlevel-description" id="index-secondlevel-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel} className='definition-editor place-holder' placeholder="Type Something" id='markedindex-1' />
+                <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel} className='markedindex-editor place-holder' placeholder="Type Something" id='markedindex-1' />
               </div>
             </div>
 
             <div className="button-group">
               <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>
-              <span className="printIndex-save-button" disabled={false} onClick={this.saveMarkedIndex}>Save</span>
+              <span className="printIndex-save-button" disabled={false} onClick={this.saveMarkedIndex}>{buttonText}</span>
             </div>
           </div>
 
