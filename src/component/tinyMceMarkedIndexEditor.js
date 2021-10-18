@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 import "tinymce/plugins/paste/plugin.min.js";
 import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 import {
-  tinymceFormulaIcon,tinymceFormulaChemistryIcon,bold,italic,underline,strikethrough,removeformat,subscript,superscript,charmap,code
+  tinymceFormulaIcon, tinymceFormulaChemistryIcon, bold, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, code
 } from '../images/TinyMce/TinyMce.jsx';
 import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import { getWirisAltText } from '../js/utils';
 import { setFormattingToolbar } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
-import { markedIndexPopupOverGlossary } from './MarkIndexPopup/MarkIndex_Action';
+import { markedIndexPopup } from '../component/MarkIndexPopup/MarkIndex_Action';
 
-export class ReactEditor extends React.Component {
+export class ReactMarkedIndexEditor extends React.Component {
   constructor(props) {
     super(props);
     this.placeHolderClass = ''
@@ -25,7 +25,7 @@ export class ReactEditor extends React.Component {
       formats: GlossaryFootnoteEditorConfig.formats,
       plugins: "placeholder tiny_mce_wiris paste",
       menubar: false,
-      selector: '#glossary-0',
+      selector: '#markedindex-0',
       inline: true,
       statusbar: false,
       object_resizing: false,
@@ -44,7 +44,7 @@ export class ReactEditor extends React.Component {
         this.setDefaultIcons(editor)
         editor.on('keyup', (e) => { this.editorOnKeyup(e, editor) });
         editor.ui.registry.addToggleButton('code', {
-          icon:"code",
+          icon: "code",
           tooltip: "Inline code",
           onAction: () => {
             this.addInlineCode(editor)
@@ -54,12 +54,12 @@ export class ReactEditor extends React.Component {
           }
         });
         editor.on('init', (e) => {
-            if(document.querySelector('div.glossary-toolbar-wrapper')){
-              setFormattingToolbar('disableTinymceToolbar')
-              setFormattingToolbar('removeGlossaryFootnoteSuperscript')
-              setFormattingToolbar('removeTinymceSuperscript')
-            }
-          });      
+          if (document.querySelector('div.index-container')) {
+            setFormattingToolbar('disableTinymceToolbar')
+            setFormattingToolbar('removeGlossaryFootnoteSuperscript')
+            setFormattingToolbar('removeTinymceSuperscript')
+          }
+        });
       },
       init_instance_callback: (editor) => {
         if (hasReviewerRole() && !hasProjectPermission('elements_add_remove')) {        // when user doesn't have edit permission
@@ -68,11 +68,11 @@ export class ReactEditor extends React.Component {
           }
         }
         editor.on('Change', (e) => { this.editorOnChange(e, editor) });
-        if(document.querySelector('div.glossary-toolbar-wrapper')){
+        if (document.querySelector('div.index-container')) {
           setFormattingToolbar('disableTinymceToolbar')
           setFormattingToolbar('removeTinymceSuperscript')
         }
-        /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
+        /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
         this.revertingTempContainerHtml(editor)
       },
     }
@@ -83,23 +83,23 @@ export class ReactEditor extends React.Component {
      * This method is called when user clicks on editor.
      * @param {*} editor  editor instance
      */
-   editorClick = (editor) => {
+  editorClick = (editor) => {
     editor.on('click', (e) => {
 
-        if (e && e.target && e.target.classList.contains('Wirisformula')) {
-            this.wirisClick++;
-            if (!this.wirisClickTimeout) {
-                this.wirisClickTimeout = setTimeout(() => {
-                    if (this.wirisClick === 1) {
-                        const ALT_TEXT = getWirisAltText(e);
-                        this.props.wirisAltTextPopup({showPopup : true, altText : ALT_TEXT});
-                    }
-                    clearTimeout(this.wirisClickTimeout);
-                    this.wirisClickTimeout = null;
-                    this.wirisClick = 0;
-                }, 500);
+      if (e && e.target && e.target.classList.contains('Wirisformula')) {
+        this.wirisClick++;
+        if (!this.wirisClickTimeout) {
+          this.wirisClickTimeout = setTimeout(() => {
+            if (this.wirisClick === 1) {
+              const ALT_TEXT = getWirisAltText(e);
+              this.props.wirisAltTextPopup({ showPopup: true, altText: ALT_TEXT });
             }
+            clearTimeout(this.wirisClickTimeout);
+            this.wirisClickTimeout = null;
+            this.wirisClick = 0;
+          }, 500);
         }
+      }
     });
   }
 
@@ -110,8 +110,8 @@ export class ReactEditor extends React.Component {
   revertingTempContainerHtml = editor => {
     let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
     let elementNode = document.getElementById(editor.id)
-    revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
-    if(elementNode){
+    revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
+    if (elementNode) {
       elementNode.innerHTML = revertingTempContainerHtml;
     }
   }
@@ -124,7 +124,7 @@ export class ReactEditor extends React.Component {
     let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
     let contentHTML = e.target.innerHTML;
     if (activeElement) {
-      let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
+      let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
       if (activeElement.innerText.trim().length || isContainsMath) {
         activeElement.classList.remove('place-holder')
       }
@@ -140,17 +140,17 @@ export class ReactEditor extends React.Component {
   * @param {*} editor Editor instance
   */
   editorOnChange = (e, editor) => {
-    let content = e.target.getContent({format: 'text'}),
-        contentHTML = e.target.getContent(),
-        activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+    let content = e.target.getContent({ format: 'text' }),
+      contentHTML = e.target.getContent(),
+      activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
     if (activeElement) {
-        let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
-        if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
-            activeElement.classList.remove('place-holder')
-        }
-        else {
-            activeElement.classList.add('place-holder')
-        }
+      let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
+      if (content.trim().length || contentHTML.match(/<math/g) || isContainsMath) {
+        activeElement.classList.remove('place-holder')
+      }
+      else {
+        activeElement.classList.add('place-holder')
+      }
     }
   }
 
@@ -159,24 +159,24 @@ export class ReactEditor extends React.Component {
      * @param {*} plugin
      * @param {*} args
      */
-    pastePreProcess = (plugin, args) => {
-      let testElement = document.createElement('div');
-      testElement.innerHTML = args.content;
-      if(testElement.innerText && testElement.innerText.trim().length){
-        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
-        args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      }else{
-          args.content = tinymce.activeEditor.selection.getContent();
-      } 
+  pastePreProcess = (plugin, args) => {
+    let testElement = document.createElement('div');
+    testElement.innerHTML = args.content;
+    if (testElement.innerText && testElement.innerText.trim().length) {
+      let tempContent = testElement.innerText.replace(/&/g, "&amp;");
+      args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    } else {
+      args.content = tinymce.activeEditor.selection.getContent();
+    }
   }
 
   pastePostProcess = (plugin, args) => {
     /** Data with &nsbp; creating unwanted saving call as tinymce converts it in space at the time of rendering */
-    if(args.node && args.node.innerHTML){
+    if (args.node && args.node.innerHTML) {
       let content = args.node.innerHTML
       content = content.replace(/\&nbsp;/g, ' ');
       args.node.innerHTML = content;
-    }   
+    }
   }
 
   /*
@@ -188,7 +188,7 @@ export class ReactEditor extends React.Component {
     if (selectedText != "") {
       editor.execCommand('mceToggleFormat', false, 'code');
       let insertionText = '<code>' + selectedText + '</code>';
-      if(editor.innerHTML.indexOf('code') > -1) {
+      if (editor.innerHTML.indexOf('code') > -1) {
         insertionText = selectedText;
       }
       editor.insertContent(insertionText);
@@ -225,8 +225,8 @@ export class ReactEditor extends React.Component {
     editor.ui.registry.addIcon("subscript", subscript);
     editor.ui.registry.addIcon("superscript", superscript);
     editor.ui.registry.addIcon("insert-character", charmap);
-    editor.ui.registry.addIcon("code",code);
-}
+    editor.ui.registry.addIcon("code", code);
+  }
 
   setChemistryFormulaIcon = editor => {
     /*
@@ -262,7 +262,7 @@ export class ReactEditor extends React.Component {
       }
     });
   };
-  
+
   addMathmlFormulaButton = editor => {
     /*
       Adding button and bind exec command on clicking the button to open the Mathml editor
@@ -297,7 +297,7 @@ export class ReactEditor extends React.Component {
   }
   handlePlaceholer() {
     let model, tempPlaceHolderclass;
-    model = this.props.glossaryFootNoteCurrentValue;
+    model = this.props.markIndexCurrentValue;
     tempPlaceHolderclass = this.props.className;
 
     let testElem = document.createElement('div');
@@ -311,7 +311,7 @@ export class ReactEditor extends React.Component {
         this.placeHolderClass = tempPlaceHolderclass.replace('place-holder', '')
       }
     } else {
-      if (tempPlaceHolderclass &&tempPlaceHolderclass.includes('place-holder')) {
+      if (tempPlaceHolderclass && tempPlaceHolderclass.includes('place-holder')) {
         this.placeHolderClass = tempPlaceHolderclass
       } else {
         this.placeHolderClass = tempPlaceHolderclass + 'place-holder';
@@ -319,46 +319,46 @@ export class ReactEditor extends React.Component {
     }
   }
 
-  setGlossaryFootnoteTerm = (id, glossaryNode, footnoteNode) => {
-    if(id === "glossary-0"){
+  setGlossaryFootnoteTerm = (id, glossaryNode) => {
+    if (id === "markedindex-0") {
       this.termtext = glossaryNode && glossaryNode.innerHTML;
     }
-    else if(id === "footnote-0"){
-      this.termtext = footnoteNode && footnoteNode.innerHTML;
-    }
+    // else if(id === "footnote-0"){
+    //   this.termtext = footnoteNode && footnoteNode.innerHTML;
+    // }
   }
 
-  setGlossaryFootnoteNode = (id, glossaryNode, footnoteNode) => {
-    if(id === "glossary-0" && glossaryNode && this.termtext){
-      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
+  setGlossaryFootnoteNode = (id, glossaryNode) => {
+    if (id === "markedindex-0" && glossaryNode && this.termtext) {
+      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
     }
-    else if(id === "footnote-0" && footnoteNode && this.termtext){
-      footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
-    }
+    // else if(id === "footnote-0" && footnoteNode && this.termtext){
+    //   footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
+    // }
   }
-  
+
   componentDidMount() {
     let _isEditorPlaced = false;
     for (let i = tinymce.editors.length - 1; i > -1; i--) {
       let ed_id = tinymce.editors[i].id;
-      if (ed_id.includes('glossary') || ed_id.includes('footnote')) {
+      if (ed_id.includes('markedindex') || ed_id.includes('footnote')) {
         _isEditorPlaced = true;
       }
     }
     setFormattingToolbar('disableTinymceToolbar')
     if (!_isEditorPlaced) {
-      setTimeout(()=>{
+      setTimeout(() => {
         this.editorRef.current.focus();
-      },0)
+      }, 0)
       this.editorConfig.selector = '#' + this.editorRef.current.id;
-      let glossaryNode = document.getElementById('glossary-0')
-      let footnoteNode = document.getElementById('footnote-0')
-      this.setGlossaryFootnoteTerm(this.props.id, glossaryNode, footnoteNode)      
+      let glossaryNode = document.getElementById('markedindex-0')
+      //   let footnoteNode = document.getElementById('footnote-0')
+      this.setGlossaryFootnoteTerm(this.props.id, glossaryNode)
       tinymce.init(this.editorConfig).then((d) => {
         setFormattingToolbar('removeTinymceSuperscript')
         setFormattingToolbar('removeGlossaryFootnoteSuperscript')
         this.handlePlaceholer();
-        this.setGlossaryFootnoteNode(this.props.id, glossaryNode, footnoteNode)
+        this.setGlossaryFootnoteNode(this.props.id, glossaryNode)
       });
     }
   }
@@ -366,17 +366,17 @@ export class ReactEditor extends React.Component {
   componentDidUpdate() {
     let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
     setFormattingToolbar('disableTinymceToolbar')
-    if(tinyMCEInstancesNodes.length>1){
-      if(tinyMCEInstancesNodes[1].parentElement.id!=="tinymceToolbar"){
+    if (tinyMCEInstancesNodes.length > 1) {
+      if (tinyMCEInstancesNodes[1].parentElement.id !== "tinymceToolbar") {
         tinyMCEInstancesNodes[0].remove()
       }
     }
     this.handlePlaceholer()
-    let glossaryNode = document.getElementById('glossary-0')
-    let footnoteNode = document.getElementById('footnote-0')
+    let glossaryNode = document.getElementById('markedindex-0')
+    // let footnoteNode = document.getElementById('footnote-0')
     setFormattingToolbar('removeTinymceSuperscript')
     setFormattingToolbar('removeGlossaryFootnoteSuperscript')
-    this.setGlossaryFootnoteNode(this.props.id, glossaryNode, footnoteNode)
+    this.setGlossaryFootnoteNode(this.props.id, glossaryNode)
   }
 
   componentWillMount() {
@@ -394,7 +394,8 @@ export class ReactEditor extends React.Component {
 
     for (let i = tinymce.editors.length - 1; i > -1; i--) {
       let ed_id = tinymce.editors[i].id;
-      if (ed_id.includes('glossary') || ed_id.includes('footnote')) {
+      console.log('test', ed_id);
+      if (ed_id.includes('markedindex') || ed_id.includes('footnote')) {
         if (ed_id === currentTarget.id) {
           return false;
         }
@@ -427,42 +428,36 @@ export class ReactEditor extends React.Component {
     // }
 
     this.editorConfig.selector = '#' + currentTarget.id;
-    let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
-    tinymce.init(this.editorConfig).then((d)=>{
+    let termText = document.getElementById(currentTarget.id) && document.getElementById(currentTarget.id).innerHTML;
+    tinymce.init(this.editorConfig).then((d) => {
       setFormattingToolbar('removeTinymceSuperscript')
-     if(termText) {
-      /**
-       * BG-1907 -[PCAT-7395] Temp classes in mathml cause issue in opening wiris editor.
-       */
-      termText = termText.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
-      document.getElementById(currentTarget.id).innerHTML = termText;
-     }
-     tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
+      if (termText) {
+        /**
+         * BG-1907 -[PCAT-7395] Temp classes in mathml cause issue in opening wiris editor.
+         */
+        termText = termText.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
+        document.getElementById(currentTarget.id).innerHTML = termText;
+      }
+      tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
     })
   }
 
-  openMarkedIndexPopUp = () => {
-    this.props.markedIndexPopupOverGlossary(true);
-  }
-
   render() {
-    let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue;
-    let {markedIndexIcon} = this.props;
+    let propsGlossaryFootNoteCurrentValue = this.props.markIndexCurrentValue;
 
-    // && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
-    let glossaryFootNoteCurrentValue;
-    try{
-      glossaryFootNoteCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
+    // && this.props.markIndexCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
+    let markIndexCurrentValue;
+    try {
+      markIndexCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
     }
-    catch(err){
-      glossaryFootNoteCurrentValue = propsGlossaryFootNoteCurrentValue;
+    catch (err) {
+      markIndexCurrentValue = propsGlossaryFootNoteCurrentValue;
     }
-    glossaryFootNoteCurrentValue = glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
-    
+    markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
+    console.log("this>>>", this.props.id)
     return (
       <div className="glossary-toolbar">
-        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
-        {markedIndexIcon ? <span dangerouslySetInnerHTML={{__html: markedIndexIcon}} onClick={ this.openMarkedIndexPopUp }></span>: null}
+        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue && markIndexCurrentValue }}></p>
       </div>
     )
   }
@@ -470,6 +465,6 @@ export class ReactEditor extends React.Component {
 
 export default connect(
   null,
-  { wirisAltTextPopup, markedIndexPopupOverGlossary }
-)(ReactEditor);
+  { wirisAltTextPopup, markedIndexPopup }
+)(ReactMarkedIndexEditor);
 

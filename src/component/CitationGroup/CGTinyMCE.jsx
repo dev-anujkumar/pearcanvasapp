@@ -28,7 +28,9 @@ const CGTinyMCE = (props) => {
         slateLockInfo : context.slateLockInfo,
         elementId : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].id,
         citationField  :  "formatted-title",
-        createPopupUnit : (popupField, forceupdate, index, parentElement) => createPopupUnit(popupField, forceupdate, index, parentElement, props, context)
+        createPopupUnit : (popupField, forceupdate, index, parentElement) => createPopupUnit(popupField, forceupdate, index, parentElement, props, context),
+        parentElement : context.element,
+        asideData : props.asideData
     }
 
     return (
@@ -49,6 +51,11 @@ export default CGTinyMCE
  */
 export const createPopupUnit = (popupField, forceupdate, index, parentElement, props, context) => {
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-    config.popupCreationCallInProgress = true
-    props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(true, currentElementData, index, null), index, config.slateManifestURN)
+    config.popupCreationCallInProgress = true;
+    let cgTitleFieldData = {};
+    if (props.asideData?.parent?.type === "showhide") {
+        cgTitleFieldData.asideData = props.asideData;
+        cgTitleFieldData.parentElement = context.element;
+    }
+    props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(true, currentElementData, index, null, null, cgTitleFieldData), index, config.slateManifestURN, null, cgTitleFieldData)
 }

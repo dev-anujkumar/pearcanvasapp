@@ -9,6 +9,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import config from '../../config/config.js'
+import { checkBlockListElement } from '../../js/TinyMceUtility.js';
 class ListButtonDropPortal extends Component {
     constructor(props) {
         super(props);
@@ -62,6 +63,8 @@ class ListButtonDropPortal extends Component {
         try {
             this.startValue = null;
             this.selectedOption = null;
+            let blockListData = checkBlockListElement({slateLevelData:slateData,index:activeElement.index}, 'ENTER');
+            console.log('blockListData',blockListData)
             if (activeElement.elementWipType === 'element-list') {
                 const slateObject = slateData[config.slateManifestURN];
                 const { contents } = slateObject;
@@ -184,12 +187,46 @@ class ListButtonDropPortal extends Component {
                 this.startValue = counter || null
                 this.selectedOption = listElement.subtype || null;
             }
+            else if (blockListData && Object.keys(blockListData).length){
+                let metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[activeElement.index.split("-")[0]]);
+                console.log('metaDataBlockList',metaDataBlockList)
+                this.startValue = metaDataBlockList.startValue 
+                this.selectedOption = metaDataBlockList.selectedOption; 
+            }
         } catch (error) {
             //console.error(error);
             this.startValue = null;
             this.selectedOption = null;
         }
     }
+
+
+
+ getBlockListMetaData = (elementId, elementData) => {
+    if(elementData.id === elementId){
+        return {
+            startValue:elementData.startNumber,
+            selectedOption:elementData.subtype
+        }  
+    }
+    else{
+        if (elementData?.listdata?.bodymatter) {
+            elementData.listdata?.bodymatter.forEach((listData) => this.getBlockListMetaData(elementId, listData))
+        }
+        if (elementData?.listitemdata?.bodymatter) {
+            elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
+                if (listItemData.id === elementId) {
+                    return{
+                        startValue:elementData.listitemdata.bodymatter[index].startNumber,
+                        selectedOption:elementData.listitemdata.bodymatter[index].subtype
+                    } 
+                }
+                this.getBlockListMetaData(elementId, listItemData);
+            });
+        }
+    }
+}
+
 
     /**
      * render | mounts listDrop on custom div

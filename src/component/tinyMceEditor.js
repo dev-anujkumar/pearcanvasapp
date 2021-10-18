@@ -15,7 +15,7 @@ import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon, markedIndex
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
@@ -24,19 +24,18 @@ import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessage
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
-import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER } from '../component/SlateWrapper/SlateWrapperConstants.js';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
-import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
+import { wirisAltTextPopup, createElement } from './SlateWrapper/SlateWrapper_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
-
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -50,6 +49,7 @@ export class TinyMceEditor extends Component {
         this.mathMlMenuButton = null;
         this.assetPopoverButtonState = null;
         this.glossaryTermText = '';
+        this.markIndexText = '';
         this.copyContent = '';
         this.lastContent = '';
         this.clearFormateText = '';
@@ -100,6 +100,8 @@ export class TinyMceEditor extends Component {
                 this.addFootnoteIcon(editor);
                 this.setGlossaryIcon(editor);
                 this.addGlossaryIcon(editor);
+                this.setMarkedIndexIcon(editor);
+                this.addIndexEntryIcon(editor);
                 this.setInlineIcon(editor);
                 this.addInlineCodeIcon(editor);
                 this.editorClick(editor);
@@ -739,11 +741,19 @@ export class TinyMceEditor extends Component {
         let cbFunc = null;
         // alreadyExist | is to check if glossary&footnote tab is open //
         let alreadyExist = false;
+        let isMarkedIndexExist = false;
         /**
          * Case - If Glossary&Footnote is already open then first unmount existing one
          */
         if (document.getElementsByClassName('glossary-toolbar-wrapper').length) {
             alreadyExist = true;
+        }
+
+        /**
+         * Case - If Marked index is already open then first unmount existing one
+         */
+        if (document.getElementsByClassName('index-container').length) {
+            isMarkedIndexExist = true;
         }
         /**
          * Case - clicking over Footnote text
@@ -820,6 +830,30 @@ export class TinyMceEditor extends Component {
             }
         }
         /**
+         * Case - clicking over mark index text
+         */
+        else if (e.target.nodeName == "SPAN" || e.target.closest("span")) {
+            let uri = e.target.dataset.uri;
+            let span = e.target.closest("span");
+
+            if (e.target.nodeName == "SPAN") {
+                uri = e.target.dataset.uri;
+            } else {
+                uri = span.getAttribute('data-uri');
+            }
+            this.markedIndexBtnInstance.setDisabled(true)
+            if (isMarkedIndexExist) {
+                cbFunc = () => {
+                    this.toggleMarkedIndexIcon(true);
+                    this.toggleMarkedIndexPopup(true, 'Markedindex', uri);
+                }
+                this.toggleMarkedIndexPopup(false, null, uri, cbFunc);
+            }
+            else {
+                this.toggleMarkedIndexPopup(true, 'Markedindex', uri, () => { this.toggleMarkedIndexIcon(true); });
+            }
+        }
+        /**
          * Case - clicking over Asset text
          */
         else if (this.isABBR(e.target, 'status')) {
@@ -856,6 +890,10 @@ export class TinyMceEditor extends Component {
                 this.toggleGlossaryandFootnoteIcon(false);
             }
             this.toggleGlossaryandFootnotePopup(false, null, null, cbFunc);
+            cbFunc = () =>{
+                this.toggleMarkedIndexIcon(false)
+            }
+            this.toggleMarkedIndexPopup(false,null,null,cbFunc)
         }
 
         if (this.props.activeShowHide) {
@@ -898,6 +936,10 @@ export class TinyMceEditor extends Component {
     toggleGlossaryandFootnoteIcon = (flag) => {
         this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(flag)
         this.footnoteBtnInstance && this.footnoteBtnInstance.setDisabled(flag)
+    }
+
+    toggleMarkedIndexIcon = (flag) => {
+        this.markedIndexBtnInstance && this.markedIndexBtnInstance.setDisabled(flag)
     }
 
 
@@ -1125,6 +1167,7 @@ export class TinyMceEditor extends Component {
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
+            let blockListData = checkBlockListElement(this.props, 'ENTER');
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;
             }
@@ -1176,7 +1219,7 @@ export class TinyMceEditor extends Component {
                 isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
                 isContainsBlankLine = activeElement.innerHTML.match(/<span/) ? activeElement.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
             }
-            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza" && this.props.element.type !== "element-dialogue") {
+            if (key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type !== 'showhide' && this.props.element.type !== "stanza" && this.props.element.type !== "element-dialogue" && (blockListData && Object.keys(blockListData).length === 0)) {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id);
                 if ('element' in this.props && 'status' in this.props.element && this.props.element.status == "wip") {
                     activeEditor.blur();
@@ -1286,6 +1329,44 @@ export class TinyMceEditor extends Component {
             if (e && e.target && e.target.classList.contains('blockquoteTextCredit') && key === 8 && !e.target.innerText.trim()) {
                 e.preventDefault();
                 return false;
+            }
+            // SHIFT + ENTER key press handling for BlockList element
+            if (key === 13 && e.shiftKey) {
+                e.preventDefault();
+                blockListData = checkBlockListElement(this.props, "TAB");
+                if (blockListData && Object.keys(blockListData).length) {
+                    const { parentData, indexToinsert } = blockListData;
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
+                    this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
+                }
+            } else if (key === 13) {
+                // ENTER key press handling for BlockList element
+                e.preventDefault();
+                if (blockListData && Object.keys(blockListData).length) {
+                    const { parentData, indexToinsert } = blockListData;
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"ENTER"});
+                }
+            } else if (key === 9 && e.shiftKey) {
+                // SHIFT + TAB key press handling for BlockList element
+                e.preventDefault();
+                blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
+                if (blockListData && Object.keys(blockListData).length) {
+                    const { parentData, indexToinsert } = blockListData;
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, {indexOrder:this.props.index,eventType:"SHIFT+TAB"});
+                }
+            } else {
+                // TAB key press handling for BlockList element
+                if (key === 9 && !isNestingLimitReached(this.props.index)) {
+                    e.preventDefault();
+                    blockListData = checkBlockListElement(this.props, "TAB");
+                    if (blockListData && Object.keys(blockListData).length) {
+                        const { parentData, indexToinsert } = blockListData;
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                        this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
+                    }
+                }
             }
         });
     }
@@ -1416,6 +1497,23 @@ export class TinyMceEditor extends Component {
             }
         });
     }
+
+       /**
+     * Adds IndexEntry button to the toolbar
+     * @param {*} editor  editor instance
+     */
+        addIndexEntryIcon = (editor) => {
+            editor.ui.registry.addButton('IndexEntry', {
+                id: 'buttonId',
+                classes: 'buttonClas',
+                icon: "indexEntry",
+                tooltip: "Open Print-Index",
+                onAction: () => this.addMarkedIndex(editor),
+                onSetup: (btnRef) => {
+                    this.markedIndexBtnInstance = btnRef;
+                }
+            });
+        }
 
     /**
      * Adds footnote button to the toolbar
@@ -1756,6 +1854,17 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addIcon(
             "Glossary",
             Glossary
+        );
+    }
+
+     /**
+     * Add IndexEntry Icon Icon icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
+      setMarkedIndexIcon = editor => {
+        editor.ui.registry.addIcon(
+            "IndexEntry",
+            markedIndex
         );
     }
 
@@ -2486,6 +2595,34 @@ export class TinyMceEditor extends Component {
      * Called when glossary button is clicked. Responsible for adding glossary
      * @param {*} editor  editor instance 
      */
+     addMarkedIndex = (editor) => {
+        let elementId = this.props.elementId;
+        let sText = editor.selection.getContent();
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(sText, 'text/html');
+        let selectedText = window.getSelection().toString()
+        selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        this.markIndexText = selectedText;
+        if (selectedText.trim() === "") {
+            return false
+        }
+        config.isCreateGlossary = true
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        getGlossaryFootnoteId(elementId, "MARKEDINDEX", res => {
+            let insertionText = ""
+            if (res.data && res.data.id) {
+                insertionText = `<span data-uri=${res.data.id} class="markedForIndex">${selectedText}</span>`
+            }
+            editor.selection.setContent(insertionText);
+            this.toggleMarkedIndexPopup(true, 'Markedindex', res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); });
+            this.saveMarkedIndexContent()
+        })
+    }
+
+    /**
+     * Called when glossary button is clicked. Responsible for adding glossary
+     * @param {*} editor  editor instance 
+     */
     addGlossary = (editor) => {
         let elementId = this.props.elementId;
         if (this.props.element.type === "element-dialogue") {
@@ -2549,6 +2686,31 @@ export class TinyMceEditor extends Component {
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
         //this.handleBlur(null, true);
     }
+
+
+     /**
+     * Saves MarkedIndexContent on creation
+     */
+      saveMarkedIndexContent = () => {
+        const { markedIndexValue, poetryField } = this.props;
+        let { elementType, markIndexid, type, elementSubType, markIndexText } = markedIndexValue;
+        let typeWithPopup = this.props.element ? this.props.element.type : "";
+        let firstLevelEntry = null;
+        let secondLevelEntry = null;
+        let firstLevelEntryText = markIndexText;//.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
+        // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
+        firstLevelEntry = `<p>${firstLevelEntryText}</p>` || "<p></p>"
+        secondLevelEntry = document.querySelector('#index-secondlevel-attacher > div > p') && `<p>${document.querySelector('#index-secondlevel-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
+        firstLevelEntry = firstLevelEntry.replace(/<br data-mce-bogus="1">/g, "")
+        secondLevelEntry = secondLevelEntry.replace(/<br data-mce-bogus="1">/g, "")
+        customEvent.subscribe('markedIndexSave', (elementWorkId) => {
+            saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevelEntry, secondLevelEntry, elementSubType, typeWithPopup, poetryField)
+            customEvent.unsubscribe('markedIndexSave');
+        })
+        this.handleBlur(null, true); //element saving before creating G/F (as per java team)
+        //this.handleBlur(null, true);
+    }
+
 
     /**
      * Called when page link option is clicked. Responsible for adding page link
@@ -3663,14 +3825,31 @@ export class TinyMceEditor extends Component {
             } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML.replace(/<br>/g, "").replace(/<p><\/p>/g, "") !== "") {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
+                let cgTitleFieldData = {};
+                if (this.props?.asideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" && this.props?.currentElement?.type === "element-authoredtext") {
+                    cgTitleFieldData.asideData = this.props.asideData;
+                    cgTitleFieldData.parentElement = this.props.parentElement;
+                }
                 setTimeout(() => {
-                    this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType, eventTarget)
+                    this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType, eventTarget, cgTitleFieldData);
                 }, 0)
             }
         }
         else {
             this.fromtinyInitBlur = false;
         }
+    }
+
+    toggleMarkedIndexPopup = (status, popupType, markIndexid, callback) => {
+        if (config.savingInProgress) return false
+
+        let typeWithPopup = this.props.element ? this.props.element.type : "";
+        let elementId = this.props.currentElement ? this.props.currentElement.id : this.props.element ? this.props.element.id : "";
+        let elementType = this.props.currentElement ? this.props.currentElement.type : this.props.element ? this.props.element.type : "";
+        let index = this.props.index;
+        let elementSubType = this.props.element ? this.props.element.figuretype : '';
+        let markIndexText = this.markIndexText;
+        this.props.openMarkedIndexPopUp && this.props.openMarkedIndexPopUp(status, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, this.props.poetryField);
     }
 
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback) => {
@@ -3860,11 +4039,12 @@ const mapStateToProps = (state) => {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isInlineEditor: state.alfrescoReducer.isInlineEditor,
-        imageArgs: state.alfrescoReducer.imageArgs
+        imageArgs: state.alfrescoReducer.imageArgs,
+        slateLevelData: state.appStore.slateLevelData
     }
 }
 
 export default connect(
     mapStateToProps,
-    { conversionElement, wirisAltTextPopup, saveInlineImageData }
+    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement }
 )(TinyMceEditor);

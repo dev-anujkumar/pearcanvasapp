@@ -65,7 +65,10 @@ export default {
     ELEMENT_DISCUSSION: 'discussion',
 
 /**************** PDF Slate Element ************************ */  
-    PDF_SLATE : "element-pdf"
+    PDF_SLATE : "element-pdf",
+
+/**************** Block list Element ************************ */  
+    BLOCK_LIST : "manifestlist"
 }
 
 export const LABELS = {
@@ -94,3 +97,4 @@ export const elementTypeTCM = ['element-authoredtext', 'element-list', 'element-
 export const containerType = ['element-aside', 'manifest', 'citations', 'poetry', 'groupedcontent','popup', 'showhide'];
 export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive", "assessment"]
 export const allowedParentType = ['popup', 'showhide']
+export const containersInSH = ['CONTAINER', 'CITATION', 'WORKED_EXAMPLE'];

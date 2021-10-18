@@ -22,9 +22,10 @@ import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations
 
 class Sidebar extends Component {
     constructor(props) {
+        console.log("My sidebar is my gaame isss")
         super(props);
 
-        let elementType = this.props.activeElement.type || 'element-authoredtext';
+        let elementType = this.props.activeElement.type || 'video-audio';
         let elementTypeList = elementList[elementType];
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
@@ -89,32 +90,54 @@ class Sidebar extends Component {
 
         return null;
     }
-    handlePrimaryOptionChange = e => {
-        let value = e.target.getAttribute('data-value');
-        let secondaryelementList = elementList[this.state.activeElementType][value].subtype;
-        let secondaryFirstOption = Object.keys(secondaryelementList)[0];
-        let labelText = secondaryelementList[secondaryFirstOption].labelText;
+    handlePrimaryOptionChange = (e) => {
+      let value = e.target.getAttribute("data-value");
+      let secondaryelementList =
+        elementList[this.state.activeElementType][value].subtype;
+      let secondaryFirstOption = Object.keys(secondaryelementList)[0];
+      let labelText = secondaryelementList[secondaryFirstOption].labelText;
 
-        this.setState({
-            elementDropdown: '',
-            activePrimaryOption: value,
-            activeSecondaryOption: secondaryFirstOption,
-            activeLabelText: labelText,
-            podValue: POD_DEFAULT_VALUE,
-            podOption: false
-        });
+      this.setState({
+        elementDropdown: "",
+        activePrimaryOption: value,
+        activeSecondaryOption: secondaryFirstOption,
+        activeLabelText: labelText,
+        podValue: POD_DEFAULT_VALUE,
+        podOption: false,
+      });
 
-        if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
-            this.props.conversionElement({
-                elementId: this.props.activeElement.elementId,
-                elementType: this.state.activeElementType,
-                primaryOption: value,
-                secondaryOption: secondaryFirstOption,
-                labelText,
-                toolbar: elementList[this.state.activeElementType][value].toolbar
-            });
+      if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
+        if (this.props.activeElement.elementWipType == "manifestlist") {
+          this.props.updateContainerMetadata({
+            blockListData: {
+                id:this.props.activeElement.elementId,
+                contentUrn:this.props.activeElement.contentUrn
+            },
+            elementType: this.state.activeElementType,
+            primaryOption: value,
+            secondaryOption: secondaryFirstOption,
+            elementWipType: this.props.activeElement.elementWipType,
+            index: this.props.activeElement.index,
+            labelText,
+            blockListElement:true,
+            toolbar: elementList[this.state.activeElementType][value].toolbar,
+            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-")[0],
+            dataToSend:{
+                columnnumber : value.split('-')[value.split('-').length-1]
+            }
+          });
+        } else {
+          this.props.conversionElement({
+            elementId: this.props.activeElement.elementId,
+            elementType: this.state.activeElementType,
+            primaryOption: value,
+            secondaryOption: secondaryFirstOption,
+            labelText,
+            toolbar: elementList[this.state.activeElementType][value].toolbar,
+          });
         }
-    }
+      }
+    };
 
     toggleElementDropdown = e => {
         if (hasReviewerRole()) {
@@ -802,7 +825,7 @@ class Sidebar extends Component {
 }
 
 Sidebar.defaultProps = {
-    elementType: "element-authoredtext"
+    elementType: "video-audio"
 }
 
 Sidebar.propTypes = {

@@ -28,6 +28,8 @@ export const MMI_ELM = "MMI_ELM";
 export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have access to the Linked Alfresco site. please contact the Manager for this project";
 export const ELEMENT_DIALOGUE = "ELEMENT_DIALOGUE";
 export const ELEMENT_DISCUSSION = 'DISCUSSION';
+export const MANIFEST_LIST = 'MANIFEST_LIST';
+export const MANIFEST_LIST_ITEM = 'MANIFEST_LIST_ITEM';
 
 /* PDF Slate */
 export const ELEMENT_PDF = "ELEMENT_PDF";
@@ -58,7 +60,7 @@ export const DELETE_DIALOG_TEXT = 'Are you sure you want to delete, This action 
 export const TYPE_SINGLE_CONTAINER_DELETE = 'singleContainerDelete'
 export const TYPE_WITH_PENDING_TRACK = 'withPendingTrack'
 export const TYPE_UNLINK = 'unlink'
-export const elementType = ['ASSESSMENT', 'ELEMENT_ASSESSMENT','WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN', 'MULTI_COLUMN_3C','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE", "ELEMENT_PDF"];
+export const elementType = ['ASSESSMENT', 'ELEMENT_ASSESSMENT','WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN', 'MULTI_COLUMN_3C','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE", "ELEMENT_PDF", "MANIFEST_LIST"];
 
 export const CLONE_STATUS_INTERVAL = 2000
 export const checkTCM = element => {
