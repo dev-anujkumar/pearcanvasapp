@@ -1506,7 +1506,7 @@ export class TinyMceEditor extends Component {
             editor.ui.registry.addButton('IndexEntry', {
                 id: 'buttonId',
                 classes: 'buttonClas',
-                icon: "indexEntry",
+                icon: "marked-index",
                 tooltip: "Open Print-Index",
                 onAction: () => this.addMarkedIndex(editor),
                 onSetup: (btnRef) => {
@@ -1844,6 +1844,7 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addIcon("customListButton", orderedList);
         editor.ui.registry.addIcon("indent", indent);
         editor.ui.registry.addIcon("outdent", outdent);
+        editor.ui.registry.addIcon("marked-index", markedIndex);
     }
 
     /**
@@ -2591,8 +2592,23 @@ export class TinyMceEditor extends Component {
         }
     }
 
+    // Handle MarkedIndex for Italic
+    handleMarkedIndexForItalic = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`span[data-uri="${dataURIId}"]`);
+        let emTag = dfn.closest('em');
+        if (emTag) {
+            dfn.innerHTML = '<em>' + dfn.innerHTML + '</em>'
+            if (emTag.textContent === dfn.textContent) {
+                let innerHTML = emTag.innerHTML;
+                emTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(emTag.parentNode, dfn);
+            }
+        }
+    }
+
     /**
-     * Called when glossary button is clicked. Responsible for adding glossary
+     * Called when markedIndex button is clicked. Responsible for adding indexEntry
      * @param {*} editor  editor instance 
      */
      addMarkedIndex = (editor) => {
@@ -2603,6 +2619,7 @@ export class TinyMceEditor extends Component {
         let selectedText = window.getSelection().toString()
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
         this.markIndexText = selectedText;
+        let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
         if (selectedText.trim() === "") {
             return false
         }
@@ -2614,6 +2631,7 @@ export class TinyMceEditor extends Component {
                 insertionText = `<span data-uri=${res.data.id} class="markedForIndex">${selectedText}</span>`
             }
             editor.selection.setContent(insertionText);
+            this.handleMarkedIndexForItalic(activeElement, res.data.id)
             this.toggleMarkedIndexPopup(true, 'Markedindex', res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); });
             this.saveMarkedIndexContent()
         })

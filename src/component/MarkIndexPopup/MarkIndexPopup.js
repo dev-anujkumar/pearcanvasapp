@@ -92,14 +92,6 @@ class PrintIndexPopup extends Component {
       setFormattingToolbar('disableTinymceToolbar')
       setFormattingToolbar('disableGlossaryFootnoteToolbar')
     }
-    if (document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar')) {
-      if (action === "add") {
-        setFormattingToolbar('disableGlossaryFootnoteToolbar')
-      } else if (action === "remove") {
-        setFormattingToolbar('disableTinymceToolbar')
-        setFormattingToolbar('enableGlossaryFootnoteToolbar')
-      }
-    }
   }
 
   closePopUp = () =>{
@@ -113,13 +105,16 @@ class PrintIndexPopup extends Component {
   }
 
   render() {
-
+    const buttonText = this.props.markedIndexData.markedIndexGlossary.markedIndexEntryURN ||
+                      this.props.markedIndexData.markedIndexValue.markIndexid ? 
+                      'Update' : 
+                      'Add';
     return (
       <div>
         <div className='index-container'>
           <div className="index-setting">
             <span className="printIndex-label">Index Settings</span>
-            <span><Close onClick={this.closePopUp} /></span>
+            <span className="marked-close-icon"><Close onClick={this.closePopUp} /></span>
           </div>
           <div className="index-body">
             <div className="index-text">
@@ -138,7 +133,7 @@ class PrintIndexPopup extends Component {
             </div>
 
             <div className="markedindex-secondlevel-header">
-              <div className="markedindex-secondlevel-label">Sub-Entry (optional)</div>
+              <div className="markedindex-secondlevel-label">Sub-Entry</div>
               <div className="index-editor markedindex-secondlevel-description" id="index-secondlevel-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
                 <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel} className='markedindex-editor place-holder' placeholder="Type Something" id='markedindex-1' />
               </div>
