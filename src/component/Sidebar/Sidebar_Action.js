@@ -313,6 +313,38 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res?.data;
                     break;
             }
+        } else if (appStore?.asideData?.parent?.type === "showhide") {
+            let focusedSHElement,focusedElementInnerData, focusedElementInnerData2;
+            focusedElement.forEach((item, index) => {
+                if (item?.interactivedata) {
+                    switch (indexes.length) {
+                        case 4:
+                        case 5:
+                            focusedSHElement = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType];
+                            break;
+                    }
+                    focusedSHElement.forEach((item, index2) => {
+                        if (item?.type === "element-aside") {
+                            focusedElementInnerData = item?.elementdata?.bodymatter
+                            focusedElementInnerData.forEach((item, innerIndex) => {
+                                if (newElementData?.elementId === item.id) {
+                                    console.log("gdsagcashbahjvasbvjasvghsdvsbdj",focusedElement)
+                                    item=res?.data
+                                    // focusedElement=focusedElement[index]?.focusedSHElement[index2]?.focusedElementInnerData[innerIndex] = res?.data
+                                } else if (item?.type === "manifest") {
+                                    focusedElementInnerData2 = item?.contents?.bodymatter
+                                        .forEach((innerItem, i) => {
+                                            if (newElementData.elementId === innerItem.id) {
+                                                innerItem=res.data
+                                                // focusedElement=focusedElement[index]?.focusedSHElement[index2]?.focusedElementInnerData[innerIndex]?.focusedElementInnerData2[i] = res?.data
+                                            }
+                                        })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
         } else {
             indexes.forEach(index => {
                 if(focusedElement[index]){
@@ -537,6 +569,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
     if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
+        console.log("bodymatter",bodymatter);
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         //Separate case for element conversion in showhide
@@ -564,6 +597,37 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     break;
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
+        } else if (appStore?.asideData?.parent?.type === "showhide") {
+            let elementOldDataSH, innerElementOldDataSH;
+            bodymatter.forEach((item, index) => {
+                if (item?.interactivedata) {
+                    switch (indexes.length) {
+                        case 4:
+                        case 5:
+                            elementOldDataSH = bodymatter[index]?.interactivedata[appStore?.asideData?.parent?.showHideType];
+                            break;
+                    }
+                    elementOldDataSH.forEach((item, index) => {
+                        if (item?.type === "element-aside") {
+                            item?.elementdata?.bodymatter.forEach((item, innerIndex) => {
+                                if (elementData?.elementId === item?.id) {
+                                    dispatch(convertElement(item, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
+                                } else if (item?.type === "manifest") {
+                                    item.contents.bodymatter.forEach((innerItem, index) => {
+                                        if (elementData.elementId === innerItem.id) {
+                                            dispatch(convertElement(innerItem, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
+                                        }
+
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+
+
+
         } else {
             indexes.forEach(index => {
                 if(bodymatter[index]){
@@ -571,7 +635,6 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                         dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar,showHideObj));
                     } else {
                         if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
-                            
                             bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                         }
                         
@@ -618,16 +681,22 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         activeElement: getState().appStore.activeElement,
         currentSlateData
     }
-    let dataToSend = {
-        numberedline: dataToUpdate.isNumbered
-    }
+    let dataToSend = {}
+    let elementEntityUrn = ""
+    // if(dataToUpdate.elementType && dataToUpdate.elementType == "manifestlist" && dataToUpdate.primaryOption){
+    //     dataToSend.columnnumber = dataToUpdate.primaryOption.split('-')[dataToUpdate.primaryOption.split('-').length-1]
+    //     elementEntityUrn = dataToUpdate.contentUrn;
+    // }
     if (dataToUpdate.isNumbered == true) {
         dataToSend.startlinenumber = dataToUpdate.startNumber
     }
-    let elementEntityUrn = ""
     const updatedData = dispatch(updateContainerMetadataInStore(updateParams,""))
     if(updatedData?.elementEntityUrn){
         elementEntityUrn = updatedData.elementEntityUrn
+    }
+    if(dataToUpdate.blockListElement){
+        elementEntityUrn = dataToUpdate.blockListData.contentUrn;
+        dataToSend= dataToUpdate.dataToSend
     }
     let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
     currentParentData[config.slateManifestURN] = updatedSlateLevelData
@@ -671,6 +740,9 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                 currentSlateData: newSlateData
             }
             const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
+            if(dataToUpdate.blockListElement){
+                updateBlockListMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
+            }
             if(updatedStore.currentSlateData){
                 parsedParentData[config.slateManifestURN] = updatedStore.currentSlateData;
                 dispatch({
@@ -680,6 +752,22 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                     }
                 })
             }
+            let activeElementObject = {
+                elementId: dataToUpdate.elementId,
+               index: dataToUpdate.index,
+                elementType: dataToUpdate.elementType,
+                primaryOption: dataToUpdate.primaryOption,
+                secondaryOption: dataToUpdate.secondaryOption,
+                //tag: newElementData.labelText,
+                toolbar: dataToUpdate.toolbar,
+                elementWipType: dataToUpdate.elementWipType,
+                //altText,
+                //longDesc
+            };
+            dispatch({
+                type: SET_ACTIVE_ELEMENT,
+                payload: activeElementObject
+            });
         }
         config.conversionInProcess = false
         config.savingInProgress = false
@@ -694,6 +782,42 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             console.error(" Error >> ", err)
         })
 }
+
+const updateBlockListMetaData = (elementId, elementData, metaData) => {
+    if(elementData.id === elementId){
+        if(metaData.subtype){
+            elementData.subtype = metaData.subtype;
+            elementData.listtype = metaData.listtype;
+            elementData.startNumber = metaData.startNumber;
+        }
+        if(metaData.columnnumber){
+            elementData.columnnumber = metaData.columnnumber;
+        }
+    }
+    else{
+        if (elementData?.listdata?.bodymatter) {
+            elementData.listdata?.bodymatter.forEach((listData) => updateBlockListMetaData(elementId, listData,metaData))
+        }
+        if (elementData?.listitemdata?.bodymatter) {
+            elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
+                if (listItemData.id === elementId) {
+                    if(metaData.subtype){
+                        elementData.listitemdata.bodymatter[index].subtype = metaData.subtype;
+                        elementData.listitemdata.bodymatter[index].listtype = metaData.listtype;
+                        elementData.listitemdata.bodymatter[index].startNumber = metaData.startNumber;
+                    }
+                    if(metaData.columnnumber){
+                        elementData.listitemdata.bodymatter[index].columnnumber = metaData.columnnumber;
+                    }
+                    return;
+                }
+                updateBlockListMetaData(elementId, listItemData,metaData);
+            });
+        }
+    }
+}
+
+
 const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch) => {
     const {
         dataToUpdate,

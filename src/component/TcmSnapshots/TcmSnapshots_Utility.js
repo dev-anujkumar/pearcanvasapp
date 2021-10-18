@@ -228,7 +228,14 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
         else if (elementType.indexOf(item.type) !== -1) {
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
-            elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer,slateManifestVersioning, isPopupSlate);
+            let parentObj = {};
+            if (containerElement?.showHideObj?.currentElement.type === 'element-aside') {
+                parentObj = {
+                    parent: containerElement?.showHideObj?.element,
+                    sectionType: containerElement?.sectionType ? containerElement?.sectionType : containerElement?.showHideObj?.element.sectionType 
+                }
+            }
+            elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer,slateManifestVersioning, isPopupSlate, parentObj, containerElement);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
         else if (item.type === SHOWHIDE) {
@@ -837,8 +844,16 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementTag = `${tag.parentTag}${(eleIndex == 0) ? ':C1' : (eleIndex == 1) ? ':C2' : ':C3'}${tag.childTag ? ":" + tag.childTag : ""}`   ; 
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
-    
-    if (parentElement?.element?.type === SHOWHIDE) {    //showhide
+
+    if (parentElement?.parent?.type === SHOWHIDE) { // create Aside in S/H || create elements in aside in s/h
+        if ((containerElement?.showHideObj?.currentElement?.type === ELEMENT_ASIDE) || (asideData.type === ELEMENT_ASIDE && asideData.parent.type === SHOWHIDE)) {
+            let section = parentElement?.sectionType ? parentElement?.sectionType : asideData.parent.showHideType;
+            let shId = parentElement?.parent?.id ? parentElement?.parent?.id : asideData.parent.id;
+            let showHideSection = getShowHideTag(section);
+            elementTag = `SH:${showHideSection}:${tag.parentTag}:${tag.childTag}`;
+            elementId = `${shId}+${eleId.parentId}+${eleId.childId}`;
+        }
+    } else if (parentElement?.element?.type === SHOWHIDE) {    //showhide
         let showHideSection = getShowHideTag(parentElement.showHideType);
         elementTag = `${tag.parentTag}:${showHideSection}:${tag.childTag}`; //${tag.childTag ? ":" + tag.childTag : ""}
         if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
@@ -1496,7 +1511,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
  * @param {String} entityUrn - entityUrn
  * @returns {Object} WipData for element 
 */
-export const fetchElementWipData = (bodymatter, index, type, entityUrn, operationType) => {
+export const fetchElementWipData = (bodymatter, index, type, entityUrn, operationType, containerElement) => {
     let eleIndex, wipData = {};
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
@@ -1516,7 +1531,12 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[2]];
                 break;
             case CITATION_ELEMENT:                   /** Inside Citations */
-                wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
+                if (eleIndex?.length === 4) {
+                    let sectionType = containerElement?.asideData?.parent?.showHideType;
+                    wipData = sectionType ? bodymatter[eleIndex[0]].interactivedata[sectionType][eleIndex[2]].contents.bodymatter[eleIndex[3] - 1] : {};
+                } else {
+                    wipData = bodymatter[eleIndex[0]].contents.bodymatter[eleIndex[1] - 1];
+                }
                 break;
             case ELEMENT_LIST:
             case BLOCKFEATURE:
@@ -1608,7 +1628,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
             }
         }
         else {
-            const { parentElement, multiColumnData } = setParentUrn(bodymatter, tempIndex, isFigure);
+            const { parentElement, multiColumnData } = setParentUrn(bodymatter, tempIndex, isFigure, asideData);
             parentData.parentUrn = {
                 manifestUrn: parentElement?.id,
                 contentUrn: parentElement?.contentUrn,
@@ -1659,7 +1679,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
  * @param {String/Number} tempIndex - index of element converted
  * @returns {Object} ParentData fo given element
 */
-const setParentUrn = (bodymatter, tempIndex, isFigure) => {
+const setParentUrn = (bodymatter, tempIndex, isFigure, asideData = {}) => {
     let parentElement = {}, multiColumnData = {};
     if (tempIndex.length == 2) {
         parentElement = bodymatter[tempIndex[0]]
@@ -1694,6 +1714,12 @@ const setParentUrn = (bodymatter, tempIndex, isFigure) => {
         else if (bodymatter[tempIndex[0]].type === ELEMENT_ASIDE) {
             parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
             parentElement = parentElement.type === SHOWHIDE ? bodymatter[tempIndex[0]] : parentElement;
+        }
+        /**Aside/WE inside S/H */
+        else if (bodymatter[tempIndex[0]].type === SHOWHIDE && asideData?.parent?.showHideType) {
+            let sectionType = asideData?.parent?.showHideType;
+            parentElement = bodymatter[tempIndex[0]].interactivedata[sectionType][tempIndex[2]];
+            parentElement = parentElement.type === ELEMENT_ASIDE ? bodymatter[tempIndex[0]] : parentElement;
         }
         else {
             parentElement = bodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]

@@ -1,0 +1,160 @@
+.printIndex-label{
+    font-weight: bold;
+    font-size: 18px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.indexCloseIcon{
+    float: left;
+}
+.marked-close-icon{
+  cursor: pointer;
+}
+.index-container{
+    width:240px;
+    height: 100%;
+    border-left:1px solid #eee;
+}
+.index-setting{
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 8px;
+    border-top: 2px solid #005a70;
+    box-shadow: 1px 2px 3px #cccccc;
+}
+.index-body{
+   padding: 5px 12px;
+}
+.index-text{
+    display: flex;
+    padding: 3px 0 8px 0;
+}
+.index-text span{
+    padding-left: 5px;
+}
+
+.printIndx-cancel-button{
+    border-radius: 4px;
+    padding: 8px 22px;
+    background: #fff;
+    color: "#005a70";
+    margin-right: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Open Sans', sans-serif;
+    border: 1px solid #dcdcdc;
+  }
+
+  .printIndx-cancel-button:hover {
+    background: #def8ff;
+    border: 1px solid #005a70;
+  }
+  .printIndex-save-button{
+    border-radius: 4px;
+    padding: 8px 22px;
+    border: 1px solid #005a70;
+    font-size: 13px;
+    color: #fff;
+    background: #005a70;
+    font-weight: 500;
+    font-family: 'Open Sans', sans-serif;
+    cursor: pointer;
+}
+
+.printIndex-save-button:hover{
+    background: #07313b;
+}
+.button-group {
+    /* position: absolute; */
+    /* right: 12px; */
+    /* bottom: 15%; */
+    margin-top: 40px;
+    float: right;
+}
+
+.markedindex-word-header{
+    border-bottom: 1px solid #ccc;
+    background-color: #eee;
+}
+
+.index-container .markedindex-word-title{
+    padding: 10px 10px 5px;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+/* .markedindex-word-title .index-entry.markedindex-editor{
+    font-size: 14px!important;
+    margin: 8px 0 !important;
+    padding: 30px 12px 0 12px !important;
+    font-weight: 500;
+    line-height: 1.5;
+    color:#000;
+    width: 100%;
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.markedindex-word-title {
+    position: relative;
+}
+
+.markedindex-word-title .floating-title {
+    font-size: 14px;
+    color: #737373;
+    position: absolute;
+    pointer-events: none;
+    top: 30px;
+    transition: all 0.1s ease;
+    left:12px;
+}
+
+.index-entry:focus ~ .floating-title, .index-entry:not(:focus):valid ~ .floating-title{
+    top: 7px;
+    bottom: 0px;
+    font-size: 12px;
+    opacity: 1;
+    color: #333;
+} */
+
+.index-container .markedindex-word-name{
+    color: #000;
+    font-size: 14px;
+    line-height: 28px;
+    font-family: 'Open Sans', sans-serif;
+    padding-bottom: 8px;
+}
+
+.markedindex-editor {
+    background-color: #eee;
+    width: 90%;
+    border: none;
+    outline: none;
+    margin: 0 11px 1px;
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.80em;
+    letter-spacing: 0.01em;
+    cursor:text;
+}
+
+.markedindex-secondlevel-header{
+    background-color: #eee;
+    margin-top: 20px;
+    padding: 0 0 14px;
+    border-bottom: 1px solid #ccc;
+}
+
+.index-container .markedindex-secondlevel-label{
+    padding: 10px 10px 5px;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.index-editor .markedindex-secondlevel-description{
+    padding-bottom: 1px;
+    padding-top: 2px;
+}
+
+.hide-markedinde-toolbar{
+    display: none;
+}

@@ -146,6 +146,7 @@ export default {
         },
         enumType: 'text',
     },
+    
     'figure': {
         'primary-image-figure': {
             text: 'Figure Image',
@@ -474,6 +475,57 @@ export default {
             }
         },
         enumType: 'audiovideo',
+    },
+    'manifestlist': {
+        'primary-column-1': {
+            text: '1-Column View',
+            enum: 'COLUMN_VIEW_1',
+            toolbar: ['insertMedia'],
+            subtype: {
+                'secondary-column-1': {
+                    text: '1-Column View',
+                    labelText: 'P',
+                    enum: 'NA',
+                }
+            }
+        },
+        'primary-column-2': {
+            text: '2-Column View',
+            enum: 'COLUMN_VIEW_2',
+            toolbar: ['insertMedia'],
+            subtype: {
+                'secondary-column-2': {
+                    text: '2-Column View',
+                    labelText: 'P',
+                    enum: 'NA',
+                }
+            }
+        },
+        'primary-column-3': {
+            text: '3-Column View',
+            enum: 'COLUMN_VIEW_3',
+            toolbar: ['insertMedia'],
+            subtype: {
+                'secondary-column-3': {
+                    text: '3-Column View',
+                    labelText: 'P',
+                    enum: 'NA',
+                }
+            }
+        },
+        'primary-column-4': {
+            text: '4-Column View',
+            enum: 'COLUMN_VIEW_4',
+            toolbar: ['insertMedia'],
+            subtype: {
+                'secondary-column-4': {
+                    text: '4-Column View',
+                    labelText: 'P',
+                    enum: 'NA',
+                }
+            }
+        },
+        enumType: 'blocklist',
     },
     'element-aside': {
         'primary-aside-aside': {
