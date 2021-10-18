@@ -703,12 +703,11 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
     } = updateParams;
     const { index } = activeElement;
     let tmpIndex = typeof index === 'number' ? index : index.split("-")
-    if (typeof tmpIndex !== 'number') {
-        tmpIndex = parseInt(tmpIndex[tmpIndex.length - 1])
-    }
+    if (typeof tmpIndex === 'number') {
         const updatedElement = prepareElementToUpdate(dataToUpdate, tmpIndex, activeElement, currentSlateData, versionedElement)
         elementEntityUrn = updatedElement.contentUrn
         currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
+    }
     return {
         elementEntityUrn, currentSlateData
     }
