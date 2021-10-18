@@ -830,14 +830,26 @@ class ElementContainer extends Component {
      * Will be called on element blur and a saving call will be made
      */
     handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}) => {
-        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        const { elementType, primaryOption, secondaryOption, elementId } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement : this.props.element;
         /* setting parent element for showhide inner elements on update */
         const { SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT } = elementTypeConstant;
         const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
-        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || containerParent) ? this.props.parentElement : this.props.element
+        let parentElement
+        /* Update title/credit of block poetry inside multicolumn */
+        if (containerParent && this.props?.parentElement?.type == "groupedcontent" && elementType == "poetry") {
+            this.props.parentElement.groupeddata?.bodymatter.map((ele) => {
+                ele.groupdata?.bodymatter.map((ele1) => {
+                    if(ele1.type == "poetry" && ele1.id === elementId) {
+                        parentElement = ele1
+                    }
+                })
+            })
+        } else {
+            parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || containerParent) ? this.props.parentElement : this.props.element
+        }
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
             this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType, null, cgTitleFieldData);
