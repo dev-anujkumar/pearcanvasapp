@@ -1315,8 +1315,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                                 groupElem2.contents[poetryField] = [response.data]
                                 groupElem2.contents[poetryField][0].html.text  = elemNode.innerHTML
                                 groupElem2.contents[poetryField][0].elementdata.text = elemNode.innerText
-                                groupElem1.groupdata.bodymatter[groupIndex1] = groupElem2
-                                targetPoetryElement.groupeddata.bodymatter[groupIndex] = groupElem1.groupdata.bodymatter[groupIndex1]
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
                             }
                         })
                     })
@@ -1357,8 +1356,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                                 groupElem2.contents[poetryField] = response.data
                                 groupElem2.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                                 groupElem2.contents[poetryField].elementdata.text = elemNode.innerText
-                                groupElem1.groupdata.bodymatter[groupIndex1] = groupElem2
-                                targetPoetryElement.groupeddata.bodymatter[groupIndex] = groupElem1.groupdata.bodymatter[groupIndex1]
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
                             }
                         })
                     })
@@ -1392,8 +1390,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                             if (groupElem2.type == "poetry") {
                                 groupElem2.contents["formatted-title"] = response.data
                                 groupElem2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
-                                groupElem1.groupdata.bodymatter[groupIndex1] = groupElem2
-                                targetPoetryElement.groupeddata.bodymatter[groupIndex] = groupElem1.groupdata.bodymatter[groupIndex1]
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
                             }
                         })
                     })

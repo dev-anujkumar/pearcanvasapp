@@ -833,7 +833,16 @@ class ElementContainer extends Component {
         /* setting parent element for showhide inner elements on update */
         const { SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT } = elementTypeConstant;
         const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
-        let parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || containerParent) ? this.props.parentElement : this.props.element
+        let parentElement
+        if(containerParent){
+            if(element.type == "element-aside" && element?.elementdata?.bodymatter){
+                element.elementdata.bodymatter.map((ele)=>{
+                    parentElement = ele.type == "poetry" ? this.props.element : this.props.parentElement
+                })
+            } else {
+                 parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || containerParent) ? this.props.parentElement : this.props.element
+            }
+        }
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
             this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType);
