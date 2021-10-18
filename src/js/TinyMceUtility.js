@@ -116,7 +116,7 @@ export const checkForDataIdAttribute =(defModel) => {
  * @param {Array} indexes 
  * @returns {Object}
  */
-const getBLParentContainer = (bodymatter, start, end, indexes) => {
+export const getBLParentContainer = (bodymatter, start, end, indexes) => {
     if (end === 0) return bodymatter;
     if (end && bodymatter && Object.keys(bodymatter).length) {
         if (bodymatter.type === MANIFEST_LIST && bodymatter.listdata && bodymatter.listdata.bodymatter.length) {
