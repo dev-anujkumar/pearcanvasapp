@@ -36,7 +36,7 @@ const BlockList = (props) => {
     if (props?.element?.listtype === 'ordered') {
         if(props?.element?.startNumber>1){
             return (
-                <ol class="decimal" style={{'counterIncrement': `section ${props?.element?.startNumber}`}}>
+                <ol class="decimal" style={{'counterIncrement': `section ${props?.element?.startNumber - 1}`}}>
                     {
                         fetchLi(props?.element?.subtype)
                     }

@@ -189,9 +189,10 @@ class ListButtonDropPortal extends Component {
             }
             else if (blockListData && Object.keys(blockListData).length){
                 let metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[activeElement.index.split("-")[0]]);
-                console.log('metaDataBlockList',metaDataBlockList)
-                this.startValue = metaDataBlockList.startValue 
-                this.selectedOption = metaDataBlockList.selectedOption; 
+                if (metaDataBlockList && metaDataBlockList.length) {
+                    this.startValue = metaDataBlockList[0].startValue
+                    this.selectedOption = metaDataBlockList[0].selectedOption;
+                }
             }
         } catch (error) {
             //console.error(error);
@@ -201,30 +202,36 @@ class ListButtonDropPortal extends Component {
     }
 
 
-
+ /**
+  * function to get selected element metadata
+  * @param {String} elementId
+  * @param {Object} elementData 
+  * @returns {Array} selected element metadata
+ */
  getBlockListMetaData = (elementId, elementData) => {
+    const selectedElementMetaData = [];
     if(elementData.id === elementId){
-        return {
-            startValue:elementData.startNumber,
-            selectedOption:elementData.subtype
-        }  
+        selectedElementMetaData.push({
+            startValue: elementData.startNumber,
+            selectedOption: elementData.subtype
+        });
     }
-    else{
-        if (elementData?.listdata?.bodymatter) {
-            elementData.listdata?.bodymatter.forEach((listData) => this.getBlockListMetaData(elementId, listData))
-        }
-        if (elementData?.listitemdata?.bodymatter) {
-            elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
-                if (listItemData.id === elementId) {
-                    return{
-                        startValue:elementData.listitemdata.bodymatter[index].startNumber,
-                        selectedOption:elementData.listitemdata.bodymatter[index].subtype
-                    } 
-                }
-                this.getBlockListMetaData(elementId, listItemData);
-            });
-        }
+    if (elementData?.listdata?.bodymatter) {
+        elementData.listdata?.bodymatter.forEach((listData) => selectedElementMetaData.push(...this.getBlockListMetaData(elementId, listData)))
     }
+    if (elementData?.listitemdata?.bodymatter) {
+        elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
+            if (listItemData.id === elementId) {
+                selectedElementMetaData.push({
+                    startValue:elementData.listitemdata.bodymatter[index].startNumber,
+                    selectedOption:elementData.listitemdata.bodymatter[index].subtype
+                })
+            } else {
+                selectedElementMetaData.push(...this.getBlockListMetaData(elementId, listItemData));
+            }
+        });
+    }
+    return selectedElementMetaData;
 }
 
 
