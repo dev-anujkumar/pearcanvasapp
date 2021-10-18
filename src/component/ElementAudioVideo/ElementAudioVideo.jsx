@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import PopUp from '../PopUp';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
+import { updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions'
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
 class ElementAudioVideo extends Component {
@@ -475,7 +476,7 @@ class ElementAudioVideo extends Component {
             return true
         }
         this.toggleDeletePopup(false)
-        
+        this.props.updateAudioVideoDataForCompare(element.figuredata);
         let setFigureData = {
             "schema": `http://schemas.pearson.com/wip-authoring/${element.figuretype}/1#/definitions/${element.figuretype}`,
             "height": "399",
@@ -492,6 +493,7 @@ class ElementAudioVideo extends Component {
                     "audioid": "",
                     "srctype": "externallink"
                 }
+                break;
             case "video":
                 setFigureData = {
                     ...setFigureData,
@@ -503,6 +505,7 @@ class ElementAudioVideo extends Component {
                         }
                     ]
                 }
+                break;
         }
         
         this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
@@ -551,6 +554,9 @@ const mapActionToProps = (dispatch) =>{
         },
         saveSelectedAssetData: (payloadObj) => {
             dispatch(saveSelectedAssetData(payloadObj))
+        },
+        updateAudioVideoDataForCompare: (oldAudioVideoData) => {
+            dispatch(updateAudioVideoDataForCompare(oldAudioVideoData))
         }
     }
 }

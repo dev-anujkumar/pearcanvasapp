@@ -11,10 +11,10 @@ class UserAssignee extends React.Component {
     */
 
     assigneeForm = (props) => {
-        const { users, roles, show, mode} = props
+        const { users, show, mode} = props
         if (show) {
             return (
-                <div className="assignee-content">
+                <>
                         <span className="property-title">{props.name}</span>
                         <span className="property-value color-gray-71 changeAssignee">getUserName</span>
                         <CurrentProjectUsers mode={mode} users={users} currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
@@ -26,14 +26,14 @@ class UserAssignee extends React.Component {
                         </span>
                         <span className="reject-assignee-button" onClick={props.removeAssigneePopup}></span>
                     
-                </div>
+                </>
             );
         } else {
             return (
-                <div>
+                <>
                     <span className="property-title">{props.name}</span>
                     <span className="property-value color-gray-71 defaultAssignee">{props.currentUser}</span>
-                </div>
+                </>
             )
 
         }
@@ -41,15 +41,12 @@ class UserAssignee extends React.Component {
 
 
     render() {
-
         return (
             <>
                 {this.assigneeForm(this.props)}
             </>
         )
-
     }
-
 }
 
 UserAssignee.propTypes = {

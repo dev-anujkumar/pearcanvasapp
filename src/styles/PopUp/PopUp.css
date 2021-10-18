@@ -182,7 +182,7 @@
 
 .dialog-buttons.tcm-canvas-popup{
     height: 70px;
-    margin: 10px -16px -16px -16px;
+    margin: 0px -16px -16px -16px;
     box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, 0.14);
     padding: 0px !important;
     width: 263px;
@@ -694,19 +694,19 @@ span.calloutOne > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-span.calloutOne:hover::after {
-  content: 'CalloutOne';
-  width: 70px;
-  background-color: rgb(139, 139, 139);
+.modal-content.tcm-canvas-popup span.calloutOne:hover::after {
+  content: 'Callout: Option 1';
+  width: 85px;
+  background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
   position: absolute;
   z-index: 1;
   top: 110%;
-  margin-left: -50px;
-  /* left: 50%; */
   opacity: 1;
+  left: 0px;
+  right: 0px;
   transition: opacity 0.3s;
   font-size: 10px;
 }
@@ -719,18 +719,19 @@ span.calloutTwo > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-span.calloutTwo:hover::after {
-  content: 'CalloutTwo';
-  width: 70px;
-  background-color: rgb(139, 139, 139);
+.modal-content.tcm-canvas-popup span.calloutTwo:hover::after {
+  content: 'Callout: Option 2';
+  width: 85px;
+  background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
   position: absolute;
   z-index: 1;
   top: 110%;
-  margin-left: -50px;
   opacity: 1;
+  left: 0px;
+  right: 0px;
   transition: opacity 0.3s;
   font-size: 10px;
 }
@@ -743,18 +744,19 @@ span.calloutThree > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-span.calloutThree:hover::after {
-  content: 'CalloutThree';
-  width: 70px;
-  background-color: rgb(139, 139, 139);
+.modal-content.tcm-canvas-popup span.calloutThree:hover::after {
+  content: 'Callout: Option 3';
+  width: 85px;
+  background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
   position: absolute;
   z-index: 1;
   top: 110%;
-  margin-left: -50px;
   opacity: 1;
+  left: 0px;
+  right: 0px;
   transition: opacity 0.3s;
   font-size: 10px;
 }
@@ -767,18 +769,19 @@ span.calloutFour > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-span.calloutFour:hover::after {
-  content: 'CalloutFour';
-  width: 70px;
-  background-color: rgb(139, 139, 139);
+.modal-content.tcm-canvas-popup span.calloutFour:hover::after {
+  content: 'Callout: Option 4';
+  width: 85px;
+  background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
   position: absolute;
   z-index: 1;
   top: 110%;
-  margin-left: -50px;
   opacity: 1;
+  left: 0px;
+  right: 0px;
   transition: opacity 0.3s;
   font-size: 10px;
 }

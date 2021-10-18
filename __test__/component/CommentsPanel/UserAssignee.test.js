@@ -20,10 +20,6 @@ describe('Testing CommentsPanel component with props', () => {
       expect(wrapper.find('CurrentProjectUsers')).toHaveLength(1);
     })
     it('should have comment-wrapper', () => {
-      wrapper.setProps({isSelectAssignee:false})
-      expect(wrapper.find(".assignee-content")).toHaveLength(1)
-    })
-    it('should have comment-wrapper', () => {
         expect(wrapper.find("CurrentProjectUsers")).toHaveLength(1)
     })
     it('For else part', () => {
