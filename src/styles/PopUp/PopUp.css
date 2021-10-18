@@ -696,8 +696,8 @@ span.calloutOne > ins.diffmod{
 }
 .modal-content.tcm-canvas-popup span.calloutOne:hover::after {
   content: 'Callout: Option 1';
-  width: 100px;
-  background-color: rgb(139, 139, 139);
+  width: 85px;
+  background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
@@ -705,10 +705,10 @@ span.calloutOne > ins.diffmod{
   z-index: 1;
   top: 110%;
   opacity: 1;
-  left: 0;
+  left: 0px;
+  right: 0px;
   transition: opacity 0.3s;
   font-size: 10px;
-  margin: 0px 10px 10px 0px;
 }
 .modal-content.tcm-canvas-popup 
 span.calloutTwo, 
@@ -721,8 +721,8 @@ span.calloutTwo > ins.diffmod{
 }
 .modal-content.tcm-canvas-popup span.calloutTwo:hover::after {
   content: 'Callout: Option 2';
-  width: 100px;
-  background-color: rgb(139, 139, 139);
+  width: 85px;
+  background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
@@ -730,10 +730,10 @@ span.calloutTwo > ins.diffmod{
   z-index: 1;
   top: 110%;
   opacity: 1;
-  left: 0;
+  left: 0px;
+  right: 0px;
   transition: opacity 0.3s;
   font-size: 10px;
-  margin: 0px 10px 10px 0px;
 }
 .modal-content.tcm-canvas-popup 
 span.calloutThree, 
@@ -746,8 +746,8 @@ span.calloutThree > ins.diffmod{
 }
 .modal-content.tcm-canvas-popup span.calloutThree:hover::after {
   content: 'Callout: Option 3';
-  width: 100px;
-  background-color: rgb(139, 139, 139);
+  width: 85px;
+  background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
@@ -755,10 +755,10 @@ span.calloutThree > ins.diffmod{
   z-index: 1;
   top: 110%;
   opacity: 1;
-  left: 0;
+  left: 0px;
+  right: 0px;
   transition: opacity 0.3s;
   font-size: 10px;
-  margin: 0px 10px 10px 0px;
 }
 .modal-content.tcm-canvas-popup 
 span.calloutFour, 
@@ -771,8 +771,8 @@ span.calloutFour > ins.diffmod{
 }
 .modal-content.tcm-canvas-popup span.calloutFour:hover::after {
   content: 'Callout: Option 4';
-  width: 100px;
-  background-color: rgb(139, 139, 139);
+  width: 85px;
+  background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
@@ -780,10 +780,10 @@ span.calloutFour > ins.diffmod{
   z-index: 1;
   top: 110%;
   opacity: 1;
-  left: 0;
+  left: 0px;
+  right: 0px;
   transition: opacity 0.3s;
   font-size: 10px;
-  margin: 0px 10px 10px 0px;
 }
 
 /* added css for list elements */
