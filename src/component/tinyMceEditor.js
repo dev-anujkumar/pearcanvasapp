@@ -34,6 +34,7 @@ import { getParentPosition} from './CutCopyDialog/copyUtil';
 import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
+import ElementConstants from './ElementContainer/ElementConstants';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -684,7 +685,7 @@ export class TinyMceEditor extends Component {
      */
     editorClick = (editor) => {
         editor.on('click', (e) => {
-
+            let blockListData = checkBlockListElement(this.props, "TAB");
             if (e && e.target && e.target.classList.contains('Wirisformula')) {
                 this.wirisClick++;
                 if (!this.wirisClickTimeout) {
@@ -700,7 +701,7 @@ export class TinyMceEditor extends Component {
                 }
             }
             /** Open Alfresco Picker to update inline image in list on double-click*/
-            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list')) {
+            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT && blockListData && Object.keys(blockListData).length))) {
                 const imageArgs = {
                     id: e.target?.dataset?.id,
                     handleBlur:this.handleBlur
@@ -731,7 +732,7 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorOnClick = (e) => {
-
+        
         if (this.props.element.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
             this.props.onFigureImageFieldFocus(this.props.index);
         }
@@ -1757,7 +1758,8 @@ export class TinyMceEditor extends Component {
                 let params = {
                     element: self.props.element,
                     permissions: self.props.permissions,
-                    editor: editor
+                    editor: editor,
+                    props:this.props
                 }
                 self.props.saveInlineImageData(params)
                 const items = insertMediaSelectors(params);
@@ -3108,6 +3110,7 @@ export class TinyMceEditor extends Component {
 
     setInstanceToolbar = () => {
         let toolbar = [];
+        let blockListData = checkBlockListElement(this.props, "TAB");
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
         } else if ((this.props.element.type === 'figure' && ['image', 'table', 'mathImage', 'audio', 'video'].includes(this.props.element.figuretype)) || (this.props.element.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
@@ -3136,6 +3139,9 @@ export class TinyMceEditor extends Component {
             toolbar = config.revelToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
+        }
+        else if (blockListData && Object.keys(blockListData).length){
+            toolbar = config.blockListToolbar
         }
         else {
             toolbar = config.elementToolbar;
@@ -3256,7 +3262,7 @@ export class TinyMceEditor extends Component {
          * case - if active editor and editor currently being focused is same
          */
         if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
-            this.setToolbarByElementType();
+            // this.setToolbarByElementType();
             isSameTarget = true;
         }
         let currentActiveNode = null

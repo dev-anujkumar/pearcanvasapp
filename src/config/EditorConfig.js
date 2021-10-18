@@ -1,6 +1,6 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss';
 import 'tinymce/plugins/charmap/plugin.min.js';
-import { handleC2MediaClick } from '../js/TinyMceUtility.js';
+import { checkBlockListElement, handleC2MediaClick } from '../js/TinyMceUtility.js';
 import ElementConstants from '../component/ElementContainer/ElementConstants.js';
 export const EditorConfig = {
     
@@ -160,7 +160,8 @@ export const elementTypeOptions = Object.freeze({
 /** Insert Image handler - calls Image Alfresco Picker */
 const insertImageHandler = (params) => {
     let { element, permissions, editor } = params;
-    if (element?.type === ElementConstants.ELEMENT_LIST) {
+    let blockListData = checkBlockListElement(params.props, "TAB");
+    if (element?.type === ElementConstants.ELEMENT_LIST || (element?.type === ElementConstants.AUTHORED_TEXT && blockListData && Object.keys(blockListData).length)) {
         handleC2MediaClick(permissions, editor, element);
     }
 }

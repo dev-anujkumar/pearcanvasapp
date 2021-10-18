@@ -21,7 +21,6 @@ import noneList from '../../images/ElementButtons/noneList.svg'
  * @param {object} props | received props to <ListButtonDrop />
  */
 const ListButtonDrop = (props) => {
-    console.log('props@@@@',props)
     return (
         <div className="fr-popup fr-desktop" ref={props.setListDropRef}>
             <div className="fr-buttons numbered-list-dropdown">

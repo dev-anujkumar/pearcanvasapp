@@ -679,7 +679,7 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             }
             const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
             if(dataToUpdate.blockListElement){
-                updateBlockListMetaData(dataToUpdate.blockListData.id, parsedParentData[config.slateManifestURN].contents.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
+                updateBlockListMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
             }
             if(updatedStore.currentSlateData){
                 parsedParentData[config.slateManifestURN] = updatedStore.currentSlateData;
