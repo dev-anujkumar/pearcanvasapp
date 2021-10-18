@@ -490,7 +490,7 @@ class ElementContainer extends Component {
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
                 oldImage !== newInteractiveid || 
-                podwidth !== (previousElementData.figuredata.posterimage.podwidth ? previousElementData.figuredata.posterimage.podwidth : '') && podwidth !== null
+                podwidth !== (previousElementData.figuredata?.posterimage?.podwidth ? previousElementData.figuredata.posterimage.podwidth : '') && podwidth !== null
             );
         }
         else {
