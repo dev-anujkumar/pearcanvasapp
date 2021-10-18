@@ -31,7 +31,10 @@ describe('ListElement', () => {
       launchAlfrescoPopup: true,
       editor: true,
       Permission: false
-  }
+    },
+    appStore: {
+      slateLevelData: {}
+    }
   }
   const store = mockStore(initialState);
   const component = mount(<Provider store={store}><ListElement {...props} /></Provider>,{ attachTo: document.body })

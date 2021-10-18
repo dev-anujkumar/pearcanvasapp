@@ -49,6 +49,7 @@ let cypressConfig = {
     sdToolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'italic', 'assetpopover', 'footnote', 'glossary','decreaseindent','alignment','calloutIcon'],
     deCharacterToolbar: ['insertMedia', 'formatSelector', 'crossLinkingIcon', 'bold', 'assetpopover', 'footnote', 'glossary', 'decreaseindent','alignment','calloutIcon'],
     playScriptToolbar:['insertMedia','formatSelector','decreaseindent','increaseindent','crossLinkingIcon', 'footnote', 'assetpopover','orderedlist','unorderedlist','alignment','calloutIcon'],
+    blockListToolbar:['formatSelector','alignment'],
     APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
     editorRefID:"",
     releaseCallCount: 0,
