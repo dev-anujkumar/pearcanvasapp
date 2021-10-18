@@ -55,6 +55,16 @@ export const findElementType = (element, index) => {
     let podwidth = POD_DEFAULT_VALUE
     try {
         switch (element.type) {
+            case "manifestlist":
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    //primaryOption : "primary-column-1",
+                    primaryOption: `primary-column-${element.columnnumber}`,
+                    secondaryOption: `secondary-column-${element.columnnumber}`,
+                    contentUrn : element.contentUrn
+                    //secondaryOption: elementDataBank[element.type]["secondaryOption"]
+                }
+                break;
             case 'element-authoredtext':
             case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
@@ -142,17 +152,17 @@ export const findElementType = (element, index) => {
                             elementType.secondaryOption = `secondary-blockcode-language-${(languageBCE).replace(" ", "_")}`
                         }
                         break;
-                    case "video":
-                    case "audio":
-                        if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
-                            element.figuredata.srctype='externallink'
-                        }
-                        elementType = {
-                            elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
-                            ...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
-                        }
-                        break;
+                        case "video":
+                            case "audio":
+                                if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
+                                    element.figuredata.srctype='externallink'
+                                }
+                                elementType = {
+                                    elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+                                    primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
+                                    ...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
+                                }
+                                break;
                     case "interactive":
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
@@ -1079,7 +1089,8 @@ export const appendCreatedElement = async (paramObj, responseData) => {
         dispatch,
         cb,
         popupField,
-        createdFromFootnote
+        createdFromFootnote,
+        cgTitleFieldData
     } = paramObj
 
     let elemIndex = `cypress-${popupElementIndex}`
@@ -1133,13 +1144,28 @@ export const appendCreatedElement = async (paramObj, responseData) => {
             }
         }
     }
-    else if(parentElement.type === "citations"){
-        let targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]]
-        if(targetCG){
-            targetCG.contents["formatted-title"] = responseData
-            targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("",elemNode.innerHTML)
-            targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG
+    else if (parentElement.type === "citations") {
+        let targetCG;
+        // Check if CG is created inside S/H
+        if (popupElementIndex.length === 4) {
+            let sectionType = cgTitleFieldData?.asideData?.parent?.showHideType;
+            if (sectionType) {
+                targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]].interactivedata[sectionType][popupElementIndex[2]];
+            }
+            if (targetCG) {
+                targetCG.contents["formatted-title"] = responseData;
+                targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
+                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText;
+                _slateObject.contents.bodymatter[popupElementIndex[0]].interactivedata[sectionType][popupElementIndex[2]] = targetCG;
+            }
+        } else {
+            targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]];
+            if (targetCG) {
+                targetCG.contents["formatted-title"] = responseData;
+                targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
+                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText;
+                _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG;
+            }
         }
     }
     dispatch({
@@ -1203,7 +1229,7 @@ const getRequestData = (parentElement) => {
     }
     return dataToSend
 }
-export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote) => (dispatch, getState) => {
+export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote, cgTitleFieldData = {}) => (dispatch, getState) => {
     let _requestData =  getRequestData(parentElement)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
@@ -1223,7 +1249,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             dispatch,
             cb,
             popupField,
-            createdFromFootnote
+            createdFromFootnote,
+            cgTitleFieldData
         }
         if (parentElement && parentElement.type == 'popup') {
             const parentData = getState().appStore.slateLevelData;
@@ -1289,6 +1316,37 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
 
         if(targetPoetryElement){
             if(poetryField==="creditsarray"){
+                if(targetPoetryElement?.type == "element-aside"){ /* update credit of PE inside aside */
+                    targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
+                        if (element.type == "poetry") {
+                            element.contents[poetryField] = [response.data]
+                            element.contents[poetryField][0].html.text  = elemNode.innerHTML
+                            element.contents[poetryField][0].elementdata.text = elemNode.innerText
+                            targetPoetryElement.elementdata.bodymatter[index] = element
+                        } else if (element?.type == "manifest") { /* update credit of PE inside WE in section break */
+                            element.contents?.bodymatter.map((element1, maniIndex) => {
+                                if (element1?.type == "poetry") {
+                                element1.contents[poetryField] = [response.data]
+                                element1.contents[poetryField][0].html.text  = elemNode.innerHTML
+                                element1.contents[poetryField][0].elementdata.text = elemNode.innerText
+                                targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
+                                }
+                            })
+                        }
+                    })
+                } else if (targetPoetryElement?.type == "groupedcontent") { /* update credit of PE inside MultiColumn */
+                    targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
+                        groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
+                            if (groupElem2.type == "poetry") {
+                                groupElem2.contents[poetryField] = [response.data]
+                                groupElem2.contents[poetryField][0].html.text  = elemNode.innerHTML
+                                groupElem2.contents[poetryField][0].elementdata.text = elemNode.innerText
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
+                            }
+                        })
+                    })
+                } 
+                else {
                 if(!targetPoetryElement.contents[poetryField]){
                     targetPoetryElement.contents[poetryField] = [];
                 }
@@ -1296,14 +1354,75 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 targetPoetryElement.contents[poetryField][0].html.text  = elemNode.innerHTML
                 targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
             }
+        }
             else if(poetryField==="formatted-title"){
+                if(targetPoetryElement?.type == "element-aside"){ /* update Title of PE inside aside */
+                    targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
+                        if (element.type == "poetry") {
+                            element.contents[poetryField] = response.data
+                            element.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                            element.contents[poetryField].elementdata.text = elemNode.innerText
+                            targetPoetryElement.elementdata.bodymatter[index] = element
+                        } else if (element?.type == "manifest") { /* update title of PE inside WE in section break */
+                            element.contents?.bodymatter.map((element1, maniIndex) => {
+                                if (element1?.type == "poetry") {
+                                    element1.contents[poetryField] = response.data
+                                    element1.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                                    element1.contents[poetryField].elementdata.text = elemNode.innerText
+                                    targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
+                                }
+                            })
+                        }
+                    })
+                } else if (targetPoetryElement?.type == "groupedcontent") { /* update title of PE inside MultiColumn */
+                    targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
+                        groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
+                            if (groupElem2.type == "poetry") {
+                                groupElem2.contents[poetryField] = response.data
+                                groupElem2.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                                groupElem2.contents[poetryField].elementdata.text = elemNode.innerText
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
+                            }
+                        })
+                    })
+                } else {
                 targetPoetryElement.contents[poetryField] = response.data
                 targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                 targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
             }
+        }
             else if(poetryField==="formatted-subtitle"){
+                if (targetPoetryElement?.type == "element-aside") {
+                    targetPoetryElement?.elementdata?.bodymatter.map((element, index) => {
+                        if (element.type == "poetry") { /* update subtitle of PE inside Aside/WE */
+                            element.contents["formatted-title"] = response.data
+                            element.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                            targetPoetryElement.elementdata.bodymatter[index] = element
+                        } else if (element.type == "manifest") { /* update subtitle of PE inside WE in section break */
+                            element.contents?.bodymatter.map((element1, maniIndex) => {
+                                if (element1?.type == "poetry") {
+                                    element1.contents["formatted-title"] = response.data
+                                    element1.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                                    targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
+                                }
+                            })
+                        }
+                    })
+                } else if (targetPoetryElement?.type == "groupedcontent") { /* update subtitle of PE inside MultiColumn */
+                    targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
+                        groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
+                            if (groupElem2.type == "poetry") {
+                                groupElem2.contents["formatted-title"] = response.data
+                                groupElem2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
+                            }
+                        })
+                    })
+                }
+                else {
                 targetPoetryElement.contents["formatted-title"] = response.data
                 targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                }
             }
             _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
         }
