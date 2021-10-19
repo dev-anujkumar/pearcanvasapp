@@ -275,7 +275,8 @@ class Sidebar extends Component {
             elementDropdown: '',
             activeSecondaryOption: value,
             activeLabelText: labelText,
-            podOption: false
+            podOption: false,
+            podValue: POD_DEFAULT_VALUE,
         });
 
         if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
