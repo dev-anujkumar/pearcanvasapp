@@ -45,7 +45,7 @@ describe('Testing CommentsPanel component with props', () => {
         expect(wrapper.find('.comment-body')).toHaveLength(1)
       })
     it('Should have  check property', () => {
-      expect(wrapper.find('.property')).toHaveLength(5)
+      expect(wrapper.find('.property')).toHaveLength(6)
     })
     it('Should have user assignee component', () => {
       expect(wrapper.find('UserAssignee')).toHaveLength(2)
