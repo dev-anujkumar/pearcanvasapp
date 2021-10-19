@@ -14,7 +14,7 @@ import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Hel
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 
 import ElementConstants, { containersInSH } from "./ElementConstants";
-const { SHOW_HIDE } = ElementConstants;
+const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
@@ -243,6 +243,22 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                 /* update the data */
                 figure.figuredata = figureData;
             }
+        }
+        /* Update figure inside Aside/WE in S/H */
+    } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) { 
+        let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
+        let figure;
+        if (sectionType) {
+            if ((asideData?.subtype === ELEMENT_WORKEDEXAMPLE || asideDataFromAfrescoMetadata?.type === ELEMENT_WORKEDEXAMPLE) && indexes?.length >= 5) {
+                figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+            } else {
+                figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]];
+            }
+        }
+        if (figure.versionUrn === elementId) {
+            dataToSend = figure?.figuredata;
+            /* update the data */
+            figure.figuredata = figureData;
         }
     } else if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
