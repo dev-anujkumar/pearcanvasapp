@@ -127,95 +127,64 @@ export const SOURCE_MAP = {
     [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION',], 'notSupport': [] }
 };
 
+const SH_NON_SUPPORTED_ELEMENTS = ['poetry', 'popup', 'showhide']
 export const getPasteValidated = (separatorProps, sourceType, selectionType) => {
-    let validation = true, isShowHideValid = false;
-    if(sourceType in SOURCE_MAP) {
-        isShowHideValid = checkShowHideLevel2(separatorProps, sourceType, selectionType);
-        if (isShowHideValid) {
-            validation = getConditionalPasteValidation(sourceType, selectionType);
+    let validation = true;
+    checkShowHideValidation(separatorProps, sourceType, selectionType)
+    if (sourceType in SOURCE_MAP) {
+        if (sourceType === SHOW_HIDE) {
+            validation = checkShowHideValidation(separatorProps, selectionType);
         }
-        else if(SOURCE_MAP[sourceType].support.length > 0) {
-            if((SOURCE_MAP[sourceType].support).indexOf(selectionType) < 0) {
-                validation = false;
-            }
-        } else if(SOURCE_MAP[sourceType].notSupport.length > 0) {
-            if((SOURCE_MAP[sourceType].notSupport).indexOf(selectionType) >= 0) {
-                validation = false;
+        else {
+            if (SOURCE_MAP[sourceType].support.length > 0) {
+                if ((SOURCE_MAP[sourceType].support).indexOf(selectionType) < 0) {
+                    validation = false;
+                }
+            } else if (SOURCE_MAP[sourceType].notSupport.length > 0) {
+                if ((SOURCE_MAP[sourceType].notSupport).indexOf(selectionType) >= 0) {
+                    validation = false;
+                }
             }
         }
         return validation;
     }
 }
 
-const checkShowHideLevel2 = (separatorProps, sourceType, selectionType) => {
-    let isValid = false, ConditionalSelection = [ASIDE_SOURCE, WORKED_EXAMPLE], typeOfAllowedElms = [ASIDE_SOURCE, MULTICOLUMN_SOURCE, WORKED_EXAMPLE];
-    if (sourceType === SHOW_HIDE && ConditionalSelection.includes(selectionType)) {
-        switch (selectionType) {
-            case ASIDE_SOURCE:
-            case WORKED_EXAMPLE:
-                isValid = processASWE(separatorProps, sourceType, selectionType);
-        }
-    } else if (typeOfAllowedElms.includes(sourceType) && selectionType === "SHOW_HIDE") {
-        isValid = processSH(separatorProps, sourceType, selectionType);
+const checkShowHideValidation = (separatorProps, selectionType) => {
+    let isValid = true;
+    switch (selectionType) {
+        case ASIDE_SOURCE:
+        case WORKED_EXAMPLE:
+            isValid = checkASWEValidation(separatorProps?.element, selectionType);
+            break;
     }
-    return isValid
+    return isValid;
 }
-
-
-const processASWE = (separatorProps, sourceType) => {
-    let isSHExists = false;
-    if (separatorProps?.element?.elementdata?.bodymatter) {
-        separatorProps?.element?.elementdata?.bodymatter.forEach((item) => {
-            if (item.type === "showhide" && sourceType === SHOW_HIDE) {
-                isSHExists = true;
-
-            } else if (item.type = "manifest" && sourceType === SHOW_HIDE) {
+const checkASWEValidation = (selectedElement, selectionType) => {
+    let isValidPaste = true;
+    const conditionalSelection = [ASIDE_SOURCE, WORKED_EXAMPLE];
+    const WE_MANIFEST = "manifest"
+    if (selectionType && conditionalSelection.includes(selectionType) && selectedElement?.elementdata?.bodymatter?.length) {
+        let validPaste2;
+        const validPaste1 = selectedElement.elementdata.bodymatter.find((item) => {
+            if (item?.type && SH_NON_SUPPORTED_ELEMENTS.includes(item.type)) {
+                return true;
+            }
+            if (item?.type === WE_MANIFEST) {
                 if (item?.contents?.bodymatter) {
-                    item.contents.bodymatter.forEach((innerItem) => {
-                        if (innerItem.type === "showhide") {
-                            isSHExists = true;
+                    validPaste2 = item.contents.bodymatter.find((innerItem) => {
+                        if (innerItem?.type && SH_NON_SUPPORTED_ELEMENTS.includes(innerItem.type)) {
+                            return true;
                         }
                     })
                 }
             }
         })
-        return isSHExists;
-    }
-}
-
-const processSH = (separatorProps ) => {
-    let isContainerExists = false
-    let interactiveSH = separatorProps?.element?.interactivedata
-    let combinedInteractives = [...interactiveSH["show"], ...interactiveSH["postertextobject"], ...interactiveSH["hide"]]
-    combinedInteractives.forEach((asideData) => {
-        if (asideData.type === "element-aside" || "citations") {
-             isContainerExists = true;
-
+        if (validPaste1 || validPaste2) {
+            isValidPaste = false
         }
-    })
-    return isContainerExists;
-}
-
-export const conditionalRendering = {
-    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY', 'MULTI_COLUMN', 'SHOWHIDE'] },
-    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN', 'POP_UP', 'SHOWHIDE', 'ASIDE', 'WORKED_EXAMPLE'] },
-    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR', 'EXTERNAL_LINK', 'ELEMENT_DIALOGUE'], 'notSupport': [] }
-}
-
-export const getConditionalPasteValidation=(sourceType,selectionType)=>{
-    if(sourceType in conditionalRendering){
-        let isValid = true;
-        if(conditionalRendering[sourceType].support.length > 0) {
-            if((conditionalRendering[sourceType].support).indexOf(selectionType) < 0) {
-                isValid = false;
-            }
-        } else if(conditionalRendering[sourceType].notSupport.length > 0) {
-            if((conditionalRendering[sourceType].notSupport).indexOf(selectionType) >= 0) {
-                isValid = false;
-            }
-        }
-        return isValid
     }
+    return isValidPaste;
 }
 
 /** Metadata Anchor Element constants */
