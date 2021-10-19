@@ -400,6 +400,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let workEditor, workContainer;
     let currentElement = store.getState().appStore.activeElement;
     const showHideElement = store.getState().appStore?.showHideObj;
+    
     /** Feedback status from elementData */
     let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
     let tcmFeedback =  elementNodeData;
@@ -639,6 +640,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
         tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
         tcmParentData = asideParent?.type == 'showhide' ? { asideData: asideParent, parentUrn: shParentUrn } : fetchParentData(tcmBodymatter, index);
+        tcmParentData = asideParent?.type == 'poetry' ? { asideData: asideParent, parentUrn: shParentUrn } : fetchParentData(tcmBodymatter, index);
         tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
     }
     /** ----------------- */
@@ -652,6 +654,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let parentData1 = store.getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
+        let poetryData;
+        console.log("the type with popup is ", typeWithPopup, asideParent, tcmParentData.asideData)
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
         if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
             let showhideTypeVal = "", showHideObject = undefined
@@ -665,6 +669,15 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     index: innerSH_Index,
                     element: showhideElement,
                     showHideType: showhideTypeVal
+                }
+            }
+            if(typeWithPopup === 'stanza' && asideParent?.grandParent) {
+                // stanza is inside container
+                poetryData = {
+                    type: "poetry",
+                    parentUrn: asideParent,
+                    id: asideParent.id,
+                    contentUrn : asideParent.contentUrn
                 }
             }
             let elementUpdateData ={
@@ -682,7 +695,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     metaDataField: data.metaDataField ? data.metaDataField : undefined,
                     sectionType: showhideTypeVal,
                     CurrentSlateStatus: currentSlateData.status,
-                    showHideObj: showHideObject
+                    showHideObj: showHideObject,
+                    poetryData
                 };
             if (currentSlateData && currentSlateData.status === 'approved') {
                 await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
