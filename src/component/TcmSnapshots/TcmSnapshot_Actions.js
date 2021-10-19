@@ -115,7 +115,7 @@ export const slateLinkDetails = async (containerUrn) => {
 
 export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , index) => (dispatch, getState) => {
     const elementCount = getState().appStore.slateLength
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${2}`
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
