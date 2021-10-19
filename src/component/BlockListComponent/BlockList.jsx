@@ -27,6 +27,7 @@ const BlockList = (props) => {
                     borderToggle={props?.borderToggle}
                     onListSelect={props.onListSelect}
                     model={props?.element.html}
+                    handleCommentspanel={props?.handleCommentspanel}
                 />
             )
         })

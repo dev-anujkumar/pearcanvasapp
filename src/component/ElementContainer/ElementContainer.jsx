@@ -1699,7 +1699,7 @@ class ElementContainer extends Component {
                     break;
 
                 case elementTypeConstant.BLOCK_LIST:
-                    editor = <BlockListWrapper indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} {...commonProps} />;
+                    editor = <BlockListWrapper indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} {...commonProps} />;
                     labelText = 'BL'
                     break;
 
