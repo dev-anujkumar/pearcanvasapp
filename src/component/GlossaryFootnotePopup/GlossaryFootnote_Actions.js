@@ -148,7 +148,14 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             } else {
                 let indexes = index.split('-');
                 let indexesLen = indexes.length, condition;
-                if (indexesLen == 2) {
+                if ((indexesLen == 4 || indexesLen == 5) && newBodymatter[tempIndex[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support glossary in text elements inside WE/AS of S/H
+                    glossaryFootElem = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
+                    if (indexesLen == 5 && glossaryFootElem.type === 'manifest') {
+                        glossaryFootElem = glossaryFootElem.contents.bodymatter[indexes[4]];
+                    }
+                } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {  // to support glossary in text elements inside WE/AS of MultiColumn
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
+                } else if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == elementWorkId) {
                         glossaryFootElem = condition
@@ -164,15 +171,14 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     if (condition.versionUrn == elementWorkId) {
                         glossaryFootElem = condition
                     }
-                } else if ((indexesLen == 4 || indexesLen == 5) && newBodymatter[tempIndex[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support glossary in text elements inside WE/AS of S/H
-                    glossaryFootElem = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
-                    if (indexesLen == 5 && glossaryFootElem.type === 'manifest') {
-                        glossaryFootElem = glossaryFootElem.contents.bodymatter[indexes[4]];
+                } else if (indexesLen == 4) {  // to support glossary in Block Poetry before section break inside WE/Aside
+                    if (elementType && elementType === 'stanza') {
+                        glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[3]]
+                    } else {
+                        // to support glossary in text elements inside WE/AS of MultiColumn
+                        glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                     }
-                } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {  // to support glossary in text elements inside WE/AS of MultiColumn
-                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
-                    }
-                else if (indexesLen == 5) { // to support glossary in Block Poetry in section break inside WE/MulitColumn
+                } else if (indexesLen == 5) { // to support glossary in Block Poetry in section break inside WE/MulitColumn
                     if(elementType==='stanza'){
                         if(newBodymatter[indexes[0]]?.type == "element-aside"){
                             glossaryFootElem =  newBodymatter[indexes[0]].elementdata?.bodymatter[indexes[1]].contents?.bodymatter[indexes[2]].contents?.bodymatter[indexes[4]]
@@ -823,7 +829,17 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             } else {
                 let indexes = index.split('-');
                 let indexesLen = indexes.length, condition;
-                if (indexesLen == 2) {
+                if ((indexesLen == 4 || indexesLen == 5) && newBodymatter[indexes[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support glossary in text elements inside WE/AS of S/H
+                    let elementInSH = newBodymatter[tempIndex[0]].interactivedata[asideParent.parent.showHideType][indexes[2]];
+                    if (elementInSH.subtype === "workedexample" && indexesLen == 5 && elementInSH.elementdata.bodymatter[indexes[3]].type === 'manifest') {
+                        newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
+                    } else {
+                        newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                    }
+                } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {
+                    // aside inside multi column
+                    newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                } else if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == elementWorkId) {
                         newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
@@ -850,18 +866,16 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         }
 
                     }
-                } else if ((indexesLen == 4 || indexesLen == 5) && newBodymatter[indexes[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support glossary in text elements inside WE/AS of S/H
-                    let elementInSH = newBodymatter[tempIndex[0]].interactivedata[asideParent.parent.showHideType][indexes[2]];
-                    if (elementInSH.subtype === "workedexample" && indexesLen == 5 && elementInSH.elementdata.bodymatter[indexes[3]].type === 'manifest') {
-                        newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
-                    } else {
-                        newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                } else if (indexesLen == 4) {
+                    if (elementType && elementType === 'stanza') {
+                        // Block Poetry Inside WE/Aside before section break
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[3]] = res.data;
                     }
-                } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {
-                    // aside inside multi column
-                    newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                    else {
+                        // aside inside multi column
+                        newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
                     }
-                else if (indexesLen == 5) {
+                } else if (indexesLen == 5) {
                     // Block Poetry Inside WE after section break or in MultiColumn
                     if(elementType && elementType==='stanza'){
                         if(newBodymatter[indexes[0]] && newBodymatter[indexes[0]].type == "element-aside"){
