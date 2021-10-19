@@ -32,7 +32,7 @@ class Sidebar extends Component {
         let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting = this.props.activeElement.syntaxhighlighting;
-        let podwidth = this.props.activeElement.podwidth || POD_DEFAULT_VALUE;
+        let podwidth = this.props.activeElement.podwidth === undefined ? POD_DEFAULT_VALUE : this.props.activeElement.podwidth;
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
@@ -60,7 +60,7 @@ class Sidebar extends Component {
             //let numberStartFrom = prevState.bceNumberStartFrom;
             //let bceToggle = prevState.bceToggleValue;
             //let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
-            let podValue = prevState.podValue;
+            let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
