@@ -434,7 +434,7 @@ const tcmSnapshotsPoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { a
             isHead = "BODY"
         }
     }
-    console.log("Poetry Snapshot Create 6 ", asideData, isHead);
+    console.log("Poetry Snapshot Poetry Create 6 ", asideData, isHead);
     // always one stanza will be created in poetry but in
     // case of cut paste all of them have to be pasted
     // so multiple snapshots will go 
@@ -1015,18 +1015,20 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
         else if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype === WORKED_EXAMPLE) { //poetry inside WE - head/body
             const headString = poetryParentURN?.manifestUrn == poetryAsideData?.id ? "HEAD" : "BODY";
-            console.log("Poetry Stanza 6.2", headString)
+            console.log("Poetry Snapshot 6.2", headString, sectionId, poetryParentURN.manifestUrn, poetryParentURN)
             elementTag = `WE:${headString}:${elementTag}`
-            elementId = `${poetryAsideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
+            elementId = `${poetryAsideData.id}+${(poetryParentURN?.manifestUrn && headString === "BODY") ? `${poetryParentURN.manifestUrn}+` : ""}${eleId.parentId}+${eleId.childId}`
+            console.log("Poetry Snapshot 6.25", elementTag, elementId)
+           
         }
         
         else if (poetryAsideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:BP || 3C:BP */
             const {columnName, manifestUrn, mcId} = poetryParentURN;
             //let grandParentTag = tag.grandParent.split(":")[0];
-            console.log("Poetry Stanza 6.3", parentUrn, poetryParentURN);
+            console.log("Poetry Snapshot 6.3", parentUrn, poetryParentURN);
             elementTag = `${poetryParentURN?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
-            console.log("Poetry Stanza 6.4", elementTag, elementId);
+            console.log("Poetry Snapshot 6.4", elementTag, elementId);
         }
     }
 
