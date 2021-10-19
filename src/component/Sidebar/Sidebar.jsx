@@ -22,7 +22,6 @@ import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations
 
 class Sidebar extends Component {
     constructor(props) {
-        console.log("My sidebar is my gaame isss")
         super(props);
 
         let elementType = this.props.activeElement.type || 'video-audio';
@@ -298,7 +297,8 @@ class Sidebar extends Component {
             elementDropdown: '',
             activeSecondaryOption: value,
             activeLabelText: labelText,
-            podOption: false
+            podOption: false,
+            podValue: POD_DEFAULT_VALUE,
         });
 
         if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {

@@ -237,14 +237,10 @@ export const deleteFromStore = (params) => {
                 if (element.id === parentUrn.manifestUrn) {
                     element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
                 }
+            } else if (element?.type === "manifestlist") {
+                deleteBlockListElement(elmId, element)
             }
         })
-
-        // handling block list delete local store updation
-        if (bodymatter && bodymatter.length && iList.length) {
-            const slateLevelElement = bodymatter[Number(iList[0])];
-            deleteBlockListElement(elmId, slateLevelElement)
-        }
     }
 
     dispatch({
@@ -263,7 +259,13 @@ export const deleteFromStore = (params) => {
  */
 const deleteBlockListElement = (elementId, elementData) => {
     if (elementData?.listdata?.bodymatter) {
-        elementData.listdata?.bodymatter.forEach((listData) => deleteBlockListElement(elementId, listData))
+        elementData.listdata?.bodymatter.forEach((listData, index) => {
+            if (listData.id === elementId) {
+                elementData.listdata.bodymatter.splice(index, 1);
+                return;
+            }
+            deleteBlockListElement(elementId, listData)
+        })
     }
     if (elementData?.listitemdata?.bodymatter) {
         elementData.listitemdata.bodymatter.forEach((listItemData, index) => {

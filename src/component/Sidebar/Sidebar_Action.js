@@ -314,37 +314,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     break;
             }
         } else if (appStore?.asideData?.parent?.type === "showhide") {
-            let focusedSHElement,focusedElementInnerData, focusedElementInnerData2;
-            focusedElement.forEach((item, index) => {
-                if (item?.interactivedata) {
-                    switch (indexes.length) {
-                        case 4:
-                        case 5:
-                            focusedSHElement = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType];
-                            break;
-                    }
-                    focusedSHElement.forEach((item, index2) => {
-                        if (item?.type === "element-aside") {
-                            focusedElementInnerData = item?.elementdata?.bodymatter
-                            focusedElementInnerData.forEach((item, innerIndex) => {
-                                if (newElementData?.elementId === item.id) {
-                                    console.log("gdsagcashbahjvasbvjasvghsdvsbdj",focusedElement)
-                                    item=res?.data
-                                    // focusedElement=focusedElement[index]?.focusedSHElement[index2]?.focusedElementInnerData[innerIndex] = res?.data
-                                } else if (item?.type === "manifest") {
-                                    focusedElementInnerData2 = item?.contents?.bodymatter
-                                        .forEach((innerItem, i) => {
-                                            if (newElementData.elementId === innerItem.id) {
-                                                innerItem=res.data
-                                                // focusedElement=focusedElement[index]?.focusedSHElement[index2]?.focusedElementInnerData[innerIndex]?.focusedElementInnerData2[i] = res?.data
-                                            }
-                                        })
-                                }
-                            })
-                        }
-                    })
-                }
-            })
+            switch (indexes.length) {
+                case 4:
+                    bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                    break;
+                case 5:
+                    bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
+                    break;
+            }
         } else {
             indexes.forEach(index => {
                 if(focusedElement[index]){
@@ -598,36 +575,16 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else if (appStore?.asideData?.parent?.type === "showhide") {
-            let elementOldDataSH, innerElementOldDataSH;
-            bodymatter.forEach((item, index) => {
-                if (item?.interactivedata) {
-                    switch (indexes.length) {
-                        case 4:
-                        case 5:
-                            elementOldDataSH = bodymatter[index]?.interactivedata[appStore?.asideData?.parent?.showHideType];
-                            break;
-                    }
-                    elementOldDataSH.forEach((item, index) => {
-                        if (item?.type === "element-aside") {
-                            item?.elementdata?.bodymatter.forEach((item, innerIndex) => {
-                                if (elementData?.elementId === item?.id) {
-                                    dispatch(convertElement(item, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
-                                } else if (item?.type === "manifest") {
-                                    item.contents.bodymatter.forEach((innerItem, index) => {
-                                        if (elementData.elementId === innerItem.id) {
-                                            dispatch(convertElement(innerItem, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
-                                        }
-
-                                    })
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-
-
-
+            let elementOldDataSH;
+            switch (indexes.length) {
+                case 4:
+                    elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
+                    break;
+                case 5:
+                    elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                    break;
+            }
+            dispatch(convertElement(elementOldDataSH, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else {
             indexes.forEach(index => {
                 if(bodymatter[index]){
@@ -673,7 +630,6 @@ export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
 }
 
 export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) => {
-    console.log("updateContainerMetadata ",dataToUpdate)
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
@@ -742,7 +698,7 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             }
             const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
             if(dataToUpdate.blockListElement){
-                updateBlockListMetaData(dataToUpdate.blockListData.id, parsedParentData[config.slateManifestURN].contents.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
+                updateBlockListMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
             }
             if(updatedStore.currentSlateData){
                 parsedParentData[config.slateManifestURN] = updatedStore.currentSlateData;

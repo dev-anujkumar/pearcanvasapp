@@ -1,6 +1,6 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss';
 import 'tinymce/plugins/charmap/plugin.min.js';
-import { handleC2MediaClick } from '../js/TinyMceUtility.js';
+import { checkBlockListElement, handleC2MediaClick } from '../js/TinyMceUtility.js';
 import ElementConstants from '../component/ElementContainer/ElementConstants.js';
 export const EditorConfig = {
     
@@ -25,7 +25,7 @@ export const EditorConfig = {
             { selector: 'span', remove: 'empty', split: false }
           ]
     },
-    toolbar: 'undo redo | insertMedia | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code | customListButton customUoListButton indent outdent | slateTag ',
+    toolbar: 'undo redo | insertMedia | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code IndexEntry | customListButton customUoListButton indent outdent | slateTag ',
     contentStyle: CONTENT_STYLE,
     plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image",
 }
@@ -160,7 +160,8 @@ export const elementTypeOptions = Object.freeze({
 /** Insert Image handler - calls Image Alfresco Picker */
 const insertImageHandler = (params) => {
     let { element, permissions, editor } = params;
-    if (element?.type === ElementConstants.ELEMENT_LIST) {
+    let blockListData = checkBlockListElement(params.props, "TAB");
+    if (element?.type === ElementConstants.ELEMENT_LIST || (element?.type === ElementConstants.AUTHORED_TEXT && blockListData && Object.keys(blockListData).length)) {
         handleC2MediaClick(permissions, editor, element);
     }
 }

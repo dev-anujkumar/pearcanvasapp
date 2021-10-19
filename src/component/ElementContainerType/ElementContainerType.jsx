@@ -49,11 +49,16 @@ export default function ElementContainerType(props) {
                 return obj.text !== 'Playscript';
             });
         }
+        /**Block List option only visible on Slate Level*/
+        if (elementType) {
+            propsData = propsData.filter( obj => (obj.text !== 'Block List'));
+        }
         /* Not show poetry/Popup/SH/Interactive elements inside SH interactive Picker */
         const hideElementList = ["poetry-elem", "show-hide-elem", "popup-elem", "elm-interactive-elem", "interactive-elem", "element-discussion"];
         const hideElementListMulticolumn = ["Add Pop Up","Add Discussion"]
         return propsData && propsData.map((item, index) => {
             if ((elementType === "element-aside" && asideData?.parent?.type === "groupedcontent" && text === "block-text-button" && item.text === "Block Poetry") ||
+            ((elementType === "element-aside" || elementType === "group") && config.isPopupSlate && text === "block-text-button" && item.text === "Block Poetry") ||
             (text === "interactive-elem-button" && (elementType === "group" && hideElementListMulticolumn.includes(item.text)))
             || (config.isPopupSlate && item.text === "Add Pop Up") ||
             /* Not show poetry/Popup/SH inside SH interactive Picker */

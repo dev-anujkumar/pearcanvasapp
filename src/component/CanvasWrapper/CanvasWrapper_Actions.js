@@ -48,17 +48,14 @@ import ElementConstants from "../ElementContainer/ElementConstants.js"
 const { SHOW_HIDE } = ElementConstants;
 
 export const findElementType = (element, index) => {
-    // console.log("hello");
     let elementType = {};
     elementType['tag'] = '';
     let altText = "";
     let longDesc = "";
     let podwidth = POD_DEFAULT_VALUE
     try {
-        // if(element.type ==="manifestlist") console.log("They are equal");
         switch (element.type) {
             case "manifestlist":
-                // console.log("Coming..............",element)
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
                     //primaryOption : "primary-column-1",
@@ -508,8 +505,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         dispatch(handleTCMData(tcmManifestUrn));
     }
     dispatch(resetAssessmentStore());//reset Assessment Store
-    // const elementCount = getState().appStore.slateLength;
-    const elementCount = 2;
+    const elementCount = getState().appStore.slateLength;
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
@@ -1320,6 +1316,37 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
 
         if(targetPoetryElement){
             if(poetryField==="creditsarray"){
+                if(targetPoetryElement?.type == "element-aside"){ /* update credit of PE inside aside */
+                    targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
+                        if (element.type == "poetry") {
+                            element.contents[poetryField] = [response.data]
+                            element.contents[poetryField][0].html.text  = elemNode.innerHTML
+                            element.contents[poetryField][0].elementdata.text = elemNode.innerText
+                            targetPoetryElement.elementdata.bodymatter[index] = element
+                        } else if (element?.type == "manifest") { /* update credit of PE inside WE in section break */
+                            element.contents?.bodymatter.map((element1, maniIndex) => {
+                                if (element1?.type == "poetry") {
+                                element1.contents[poetryField] = [response.data]
+                                element1.contents[poetryField][0].html.text  = elemNode.innerHTML
+                                element1.contents[poetryField][0].elementdata.text = elemNode.innerText
+                                targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
+                                }
+                            })
+                        }
+                    })
+                } else if (targetPoetryElement?.type == "groupedcontent") { /* update credit of PE inside MultiColumn */
+                    targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
+                        groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
+                            if (groupElem2.type == "poetry") {
+                                groupElem2.contents[poetryField] = [response.data]
+                                groupElem2.contents[poetryField][0].html.text  = elemNode.innerHTML
+                                groupElem2.contents[poetryField][0].elementdata.text = elemNode.innerText
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
+                            }
+                        })
+                    })
+                } 
+                else {
                 if(!targetPoetryElement.contents[poetryField]){
                     targetPoetryElement.contents[poetryField] = [];
                 }
@@ -1327,14 +1354,75 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 targetPoetryElement.contents[poetryField][0].html.text  = elemNode.innerHTML
                 targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
             }
+        }
             else if(poetryField==="formatted-title"){
+                if(targetPoetryElement?.type == "element-aside"){ /* update Title of PE inside aside */
+                    targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
+                        if (element.type == "poetry") {
+                            element.contents[poetryField] = response.data
+                            element.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                            element.contents[poetryField].elementdata.text = elemNode.innerText
+                            targetPoetryElement.elementdata.bodymatter[index] = element
+                        } else if (element?.type == "manifest") { /* update title of PE inside WE in section break */
+                            element.contents?.bodymatter.map((element1, maniIndex) => {
+                                if (element1?.type == "poetry") {
+                                    element1.contents[poetryField] = response.data
+                                    element1.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                                    element1.contents[poetryField].elementdata.text = elemNode.innerText
+                                    targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
+                                }
+                            })
+                        }
+                    })
+                } else if (targetPoetryElement?.type == "groupedcontent") { /* update title of PE inside MultiColumn */
+                    targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
+                        groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
+                            if (groupElem2.type == "poetry") {
+                                groupElem2.contents[poetryField] = response.data
+                                groupElem2.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                                groupElem2.contents[poetryField].elementdata.text = elemNode.innerText
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
+                            }
+                        })
+                    })
+                } else {
                 targetPoetryElement.contents[poetryField] = response.data
                 targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                 targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
             }
+        }
             else if(poetryField==="formatted-subtitle"){
+                if (targetPoetryElement?.type == "element-aside") {
+                    targetPoetryElement?.elementdata?.bodymatter.map((element, index) => {
+                        if (element.type == "poetry") { /* update subtitle of PE inside Aside/WE */
+                            element.contents["formatted-title"] = response.data
+                            element.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                            targetPoetryElement.elementdata.bodymatter[index] = element
+                        } else if (element.type == "manifest") { /* update subtitle of PE inside WE in section break */
+                            element.contents?.bodymatter.map((element1, maniIndex) => {
+                                if (element1?.type == "poetry") {
+                                    element1.contents["formatted-title"] = response.data
+                                    element1.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                                    targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
+                                }
+                            })
+                        }
+                    })
+                } else if (targetPoetryElement?.type == "groupedcontent") { /* update subtitle of PE inside MultiColumn */
+                    targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
+                        groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
+                            if (groupElem2.type == "poetry") {
+                                groupElem2.contents["formatted-title"] = response.data
+                                groupElem2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
+                            }
+                        })
+                    })
+                }
+                else {
                 targetPoetryElement.contents["formatted-title"] = response.data
                 targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                }
             }
             _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
         }

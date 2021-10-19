@@ -647,6 +647,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     config.isSavingElement = false
     customEvent.trigger('glossaryFootnoteSave', responseData.id); 
+    customEvent.trigger('markedIndexSave', responseData.id); 
     config.popupCreationCallInProgress = false;
     showLinkToast(document.getElementById('link-notification'))
 }

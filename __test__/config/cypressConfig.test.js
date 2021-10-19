@@ -27,14 +27,14 @@ describe('Testing config----->', () => {
           expect(testedModule.assignee).toBe('c5test01')
           expect(testedModule.WRAPPER_URL).toBe('https://localhost:4000')
           expect(testedModule.TCM_DASHBOARD_UI_URL).toBe("http://localhost:7000/")
-          expect(testedModule.LOCK_API_BASE_URL).toBe('https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr')
+        //   expect(testedModule.LOCK_API_BASE_URL).toBe('https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr')
 
         });
         it('will receive process.env.NODE_ENV = production variables', () => {
             process.env.NODE_ENV = 'production';
             const testedModule = require('../../src/config/cypressConfig').default
             expect(testedModule.WRAPPER_URL).toBe("https://localhost:/toc-wrapper/index.html")
-            expect(testedModule.LOCK_API_BASE_URL).toBe("https://localhost:/cypress/dashboard-srvr")
+            // expect(testedModule.LOCK_API_BASE_URL).toBe("https://localhost:/cypress/dashboard-srvr")
             expect(testedModule.TCM_DASHBOARD_UI_URL).toBe('https://localhost:/cypress/trackchanges/index.html')
 
         });

@@ -1,6 +1,6 @@
 import React from 'react';
 import ElementContainer from '../ElementContainer';
-import { fetchLiClassName } from './BlockListHelperFucntions';
+import { fetchLiClassName } from './BlockListHelperFunctions';
 
 const BlockList = (props) => {
     let manifestList = props?.manifestList;
@@ -26,6 +26,8 @@ const BlockList = (props) => {
                     showBlocker={props?.showBlocker}
                     borderToggle={props?.borderToggle}
                     onListSelect={props.onListSelect}
+                    model={props?.element.html}
+                    handleCommentspanel={props?.handleCommentspanel}
                 />
             )
         })
@@ -35,7 +37,7 @@ const BlockList = (props) => {
     if (props?.element?.listtype === 'ordered') {
         if(props?.element?.startNumber>1){
             return (
-                <ol class="decimal" style={{'counterIncrement': `section ${props?.element?.startNumber}`}}>
+                <ol class="decimal" style={{'counterIncrement': `section ${props?.element?.startNumber - 1}`}}>
                     {
                         fetchLi(props?.element?.subtype)
                     }

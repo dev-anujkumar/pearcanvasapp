@@ -244,7 +244,7 @@ class Comments extends React.Component {
             <ul className="comment-action-menu action-menu">
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
                 {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
-                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignByRole}>Change Role</li>}
+                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignByRole}>Change Assigned Role</li>}
                 {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>} 
                 {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
@@ -401,14 +401,11 @@ class Comments extends React.Component {
                                 <span className="property-value capitalize color-gray-71">{comment.commentStatus.toLowerCase()}</span>
                             </div>
                             <div className="property">
-                            <div onClick={this.setReplyDropdownState}>
-                            <span className="property-value Replies"> {comment.replyComments.length} </span>
-                            <span className="property-title Replies">Replies</span>
-                            <img className={`${this.state.showReplyComments ? "Path" : "Path collap" }`} src={iconArrow} />
+                                <div className="property" onClick={this.setReplyDropdownState}>
+                                    <div className="Replies">{comment.replyComments.length} Replies</div>
+                                    <img className={`${this.state.showReplyComments ? "Path" : "Path collap" }`} src={iconArrow} />
+                                </div>
                             </div>
-                            </div>
-
-
                         </div>
                     </div>
                 </div>
