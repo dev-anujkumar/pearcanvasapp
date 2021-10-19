@@ -571,7 +571,7 @@ overflow: unset;
   word-break: break-all;
   padding: 10px 0 10px 0;
   font-size: 12px !important;
-  overflow-y: auto;
+  overflow-x: hidden;
   max-height: 50vh;
 }
 
@@ -702,11 +702,11 @@ span.calloutOne > ins.diffmod{
   text-align: center;
   border-radius: 2px;
   position: absolute;
-  z-index: 2;
-  top: 110%;
+  z-index: 1;
+  top: 10px;
   opacity: 1;
-  left: 0px;
-  right: 0px;
+  /* left: -10px;*/
+  right: -13px; 
   transition: opacity 0.3s;
   font-size: 10px;
 }
@@ -728,10 +728,10 @@ span.calloutTwo > ins.diffmod{
   border-radius: 2px;
   position: absolute;
   z-index: 1;
-  top: 110%;
+  top: 10px;
   opacity: 1;
-  left: 0px;
-  right: 0px;
+  /* left: -10px;*/
+  right: -13px; 
   transition: opacity 0.3s;
   font-size: 10px;
 }
@@ -753,10 +753,10 @@ span.calloutThree > ins.diffmod{
   border-radius: 2px;
   position: absolute;
   z-index: 1;
-  top: 110%;
+  top: 10px;
   opacity: 1;
-  left: 0px;
-  right: 0px;
+  /* left: -10px;*/
+  right: -13px; 
   transition: opacity 0.3s;
   font-size: 10px;
 }
@@ -778,10 +778,10 @@ span.calloutFour > ins.diffmod{
   border-radius: 2px;
   position: absolute;
   z-index: 1;
-  top: 110%;
+  top: 10px;
   opacity: 1;
-  left: 0px;
-  right: 0px;
+  /* left: -10px;*/
+  right: -13px; 
   transition: opacity 0.3s;
   font-size: 10px;
 }
