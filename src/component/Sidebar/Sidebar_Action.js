@@ -782,35 +782,64 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
         currentSlateData,
         versionedElement
     } = updateParams;
-    const { index } = activeElement;
+    const { index, elementType } = activeElement;
     let tmpIndex = typeof index === 'number' ? index : index.split("-")
-    if (typeof tmpIndex === 'number') {
-        const updatedElement = prepareElementToUpdate(dataToUpdate, tmpIndex, activeElement, currentSlateData, versionedElement)
-        elementEntityUrn = updatedElement.contentUrn
-        currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
-    }
-    return {
-        elementEntityUrn, currentSlateData
-    }
-
-}
-
-const prepareElementToUpdate = (dataToUpdate, index, activeElement, currentSlateData, versionedElement) => {
-    let updatedElement = {};
+     let indexesLen = tmpIndex.length
+     let newBodymatter = currentSlateData.contents.bodymatter
+     let updatedElement = {}
     if (versionedElement) {
         return versionedElement
-    } else {
-        if (typeof index === 'number') {
-            const { elementType } = activeElement
-            updatedElement = currentSlateData.contents.bodymatter[index]
-            if (elementType == 'poetry') {
-                updatedElement = {
-                    ...updatedElement,
-                    numberedline: dataToUpdate.isNumbered,
-                    startlinenumber: dataToUpdate.startNumber
-                }
+    } else if (elementType == "poetry") {
+        if(typeof tmpIndex === 'number'){
+            currentSlateData.contents.bodymatter[tmpIndex].numberedline = dataToUpdate.isNumbered
+            currentSlateData.contents.bodymatter[tmpIndex].startlinenumber = dataToUpdate.startNumber
+            updatedElement = currentSlateData.contents.bodymatter[tmpIndex]
+        } else {
+            switch (indexesLen) {
+                case 2:     /** Toggle use line of PE inside WE/Aside */
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].numberedline = dataToUpdate.isNumbered
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].startlinenumber = dataToUpdate.startNumber
+                    updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]]
+                    break;
+    
+                case 3:      /** Toggle Use Line of PE inside multicolumn/ WE section break*/
+                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]]
+                    } else {
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]]
+                    }
+                   break;
+    }
+        }
+    } 
+        elementEntityUrn = updatedElement?.contentUrn
+
+        if (typeof tmpIndex === 'number') {
+            currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
+        } else {
+            switch (indexesLen) {
+                case 1:
+                    newBodymatter[tmpIndex[0]] = updatedElement
+                    break;
+                case 2:
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]] = updatedElement
+                    break;
+                case 3:
+                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
+                    } else {
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]] = updatedElement
+                    }
+                    break;
             }
         }
-        return updatedElement
+
+    return {
+       elementEntityUrn, currentSlateData
     }
+
 }
