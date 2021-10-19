@@ -573,13 +573,6 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
             /* Check head or body of WE */
             isHead = sectionOfWE?.id ? "HEAD" : "BODY";
         }
-        if(asideFigObj?.type === MULTI_COLUMN_GROUP) {
-            const sectionOfWE = asideFigObj?.element?.elementdata?.bodymatter?.find(item => {
-                return (item?.id === wipData?.id);
-            })
-            /* Check head or body of WE */
-            isHead = sectionOfWE?.id ? "HEAD" : "BODY";
-        }
     } else{
         isHead = asideData && asideData.type === ELEMENT_ASIDE && asideData.subtype === WORKED_EXAMPLE ? parentUrn?.manifestUrn == asideData?.id ? "HEAD" : "BODY" : "";
     }
@@ -1022,16 +1015,18 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
         else if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype === WORKED_EXAMPLE) { //poetry inside WE - head/body
             const headString = poetryParentURN?.manifestUrn == poetryAsideData?.id ? "HEAD" : "BODY";
-            console.log("the poetry parent aside data 1", headString)
+            console.log("Poetry Stanza 6.2", headString)
             elementTag = `WE:${headString}:${elementTag}`
             elementId = `${poetryAsideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
         }
         
         else if (poetryAsideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:BP || 3C:BP */
-            const {columnName, manifestUrn, mcId} = parentUrn;
+            const {columnName, manifestUrn, mcId} = poetryParentURN;
             //let grandParentTag = tag.grandParent.split(":")[0];
-            elementTag = `${parentUrn?.multiColumnType}:${columnName}:${elementTag}`;
+            console.log("Poetry Stanza 6.3", parentUrn, poetryParentURN);
+            elementTag = `${poetryParentURN?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
+            console.log("Poetry Stanza 6.4", elementTag, elementId);
         }
     }
 
