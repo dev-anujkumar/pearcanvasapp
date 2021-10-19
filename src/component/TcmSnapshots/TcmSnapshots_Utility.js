@@ -425,8 +425,6 @@ const tcmSnapshotsPoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { a
    const poetryElement = {
         element: wipData
     }
-    tag.childTag = 'ST'
-    elementId.childId = wipData.contents.bodymatter.find((item, i) => i===0).id;
     let isHead = "";
     if(asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE) {
         if(parentUrn?.manifestUrn == asideData?.id) {
@@ -436,11 +434,17 @@ const tcmSnapshotsPoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { a
             isHead = "BODY"
         }
     }
-    const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn });
-    const stanzaData = {html: {text:'<p class="paragraphNumeroUno"><br></p>'}};
-    console.log("Poetry Snapshot Create 6 ", elementDetails, stanzaData);
-        
-    prepareAndSendTcmData(elementDetails, stanzaData, defaultKeys, actionStatus, index);
+    console.log("Poetry Snapshot Create 6 ", asideData, isHead);
+    // always one stanza will be created in poetry but in
+    // case of cut paste all of them have to be pasted
+    // so multiple snapshots will go 
+    wipData.contents.bodymatter.map((item) => {
+        elementId.childId = item.id;
+        tag.childTag = fetchElementsTag(item); 
+        const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn });
+        console.log("Poetry Snapshot Create 7 ", elementDetails);
+        prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
+    })
 }
 
 /**
@@ -551,13 +555,6 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     if(isExist) {
         /* if Figure converion inside 2C:ASIDE; UPDATA Action */
         if(asideFigObj?.type === ELEMENT_ASIDE && asideFigObj?.subtype === WORKED_EXAMPLE) {
-            const sectionOfWE = asideFigObj?.element?.elementdata?.bodymatter?.find(item => {
-                return (item?.id === wipData?.id);
-            })
-            /* Check head or body of WE */
-            isHead = sectionOfWE?.id ? "HEAD" : "BODY";
-        }
-        if(asideFigObj?.type === MULTI_COLUMN_GROUP) {
             const sectionOfWE = asideFigObj?.element?.elementdata?.bodymatter?.find(item => {
                 return (item?.id === wipData?.id);
             })
@@ -1024,16 +1021,18 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
         else if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype === WORKED_EXAMPLE) { //poetry inside WE - head/body
             const headString = poetryParentURN?.manifestUrn == poetryAsideData?.id ? "HEAD" : "BODY";
-            console.log("the poetry parent aside data 1", headString)
+            console.log("Poetry Stanza 6.2", headString)
             elementTag = `WE:${headString}:${elementTag}`
             elementId = `${poetryAsideData.id}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.parentId}+${eleId.childId}`
         }
         
         else if (poetryAsideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:BP || 3C:BP */
-            const {columnName, manifestUrn, mcId} = parentUrn;
+            const {columnName, manifestUrn, mcId} = poetryParentURN;
             //let grandParentTag = tag.grandParent.split(":")[0];
-            elementTag = `${parentUrn?.multiColumnType}:${columnName}:${elementTag}`;
+            console.log("Poetry Stanza 6.3", parentUrn, poetryParentURN);
+            elementTag = `${poetryParentURN?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
+            console.log("Poetry Stanza 6.4", elementTag, elementId);
         }
     }
 
