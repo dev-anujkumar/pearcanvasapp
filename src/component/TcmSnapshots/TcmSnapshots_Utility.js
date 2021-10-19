@@ -971,7 +971,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             let section = parentElement?.sectionType ? parentElement?.sectionType : asideData?.parent?.showHideType;
             let shId = parentElement?.parent?.id ? parentElement?.parent?.id : asideData?.parent?.id;
             let showHideSection = getShowHideTag(section);
-            if (elem?.type === ELEMENT_ASIDE && elem?.subtype === WORKED_EXAMPLE || elem?.subtype === CITATION_GROUP) {
+            if (elem?.type === ELEMENT_ASIDE && elem?.subtype === WORKED_EXAMPLE || elem?.type === CITATION_GROUP) {
                 elementTag = `SH:${showHideSection}:${tag.parentTag}:${isHead ? `${isHead}:` : ""}${tag.childTag}`;
                 elementId = `${shId}+${eleId.parentId}+${sectionId && isHead === "BODY" ? `${sectionId}+` : ""}${eleId.childId}`;
             } else {
