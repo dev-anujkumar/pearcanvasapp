@@ -74,11 +74,13 @@ class PrintIndexPopup extends Component {
       secondLevel = secondLevel.innerHTML.match(/<p>/g) ? secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
         : `<p>${secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
 
+      
+      let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel)
       if(markedIndexEntryURN){
-        this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN);
+        this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN, checkDifference);
       } else{
         getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", res => {
-          this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id);
+          this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id, checkDifference);
         });
       }
     } else {
