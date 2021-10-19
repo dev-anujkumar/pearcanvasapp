@@ -126,54 +126,66 @@ export const SOURCE_MAP = {
     [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] },
     [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION',], 'notSupport': [] }
 };
+const SHOWHIDE = "SHOW_HIDE";
+// This mapping is used for conditional rendering of Paste Button inside Elements
+const CONDITIONAL_PASTE_SUPPORT = {
+    [SHOW_HIDE] : { [ASIDE_SOURCE]: ['poetry', 'popup', 'showhide'], [WORKED_EXAMPLE]: ['poetry', 'popup', 'showhide']},
+    [MULTICOLUMN_SOURCE]: { [SHOWHIDE]: ['element-aside','citations'] },
+    [ASIDE_SOURCE]: { [SHOWHIDE]: ['element-aside','citations']}
+}
 
-const SH_NON_SUPPORTED_ELEMENTS = ['poetry', 'popup', 'showhide']
 export const getPasteValidated = (separatorProps, sourceType, selectionType) => {
     let validation = true;
-    checkShowHideValidation(separatorProps, sourceType, selectionType)
     if (sourceType in SOURCE_MAP) {
-        if (sourceType === SHOW_HIDE) {
-            validation = checkShowHideValidation(separatorProps, selectionType);
-        }
-        else {
-            if (SOURCE_MAP[sourceType].support.length > 0) {
-                if ((SOURCE_MAP[sourceType].support).indexOf(selectionType) < 0) {
-                    validation = false;
-                }
-            } else if (SOURCE_MAP[sourceType].notSupport.length > 0) {
-                if ((SOURCE_MAP[sourceType].notSupport).indexOf(selectionType) >= 0) {
-                    validation = false;
-                }
+        if (SOURCE_MAP[sourceType].support.length > 0) {
+            if ((SOURCE_MAP[sourceType].support).indexOf(selectionType) < 0) {
+                validation = false;
+            }
+        } else if (SOURCE_MAP[sourceType].notSupport.length > 0) {
+            if ((SOURCE_MAP[sourceType].notSupport).indexOf(selectionType) >= 0) {
+                validation = false;
             }
         }
+        if (validation && Object.keys(CONDITIONAL_PASTE_SUPPORT)?.includes(sourceType)) {
+            const selectedElement = separatorProps?.element ?? {}
+            switch (sourceType) {
+                case SHOW_HIDE:
+                    validation = checkShowHidePasteValidation(selectedElement, sourceType, selectionType, validation);
+                    break;
+                case ASIDE_SOURCE:
+                    validation = checkASWEPasteValidation(selectedElement, sourceType, selectionType, validation);
+                case MULTICOLUMN_SOURCE:
+                    validation = checkMultiColumnPasteValidation(selectedElement, sourceType, selectionType, validation);
+                    break;
+            }
+        }
+        // console.log('validation',validation)
         return validation;
     }
 }
 
-const checkShowHideValidation = (separatorProps, selectionType) => {
-    let isValid = true;
-    switch (selectionType) {
-        case ASIDE_SOURCE:
-        case WORKED_EXAMPLE:
-            isValid = checkASWEValidation(separatorProps?.element, selectionType);
-            break;
-    }
-    return isValid;
-}
-const checkASWEValidation = (selectedElement, selectionType) => {
-    let isValidPaste = true;
+/**
+ * Function - Check if Aside/WE selected to CUT/COPY has PE/SH/POPUP then restrict it be copied inside SH
+ * @param {*} separatorProps 
+ * @param {*} sourceType 
+ * @param {*} selectionType 
+ * @param {*} validation 
+ * @returns 
+ */
+const checkShowHidePasteValidation = (selectedElement, sourceType, selectionType, validation) => {
+    let isValidPaste = validation;
+    const WE_MANIFEST = "manifest";
     const conditionalSelection = [ASIDE_SOURCE, WORKED_EXAMPLE];
-    const WE_MANIFEST = "manifest"
     if (selectionType && conditionalSelection.includes(selectionType) && selectedElement?.elementdata?.bodymatter?.length) {
         let validPaste2;
         const validPaste1 = selectedElement.elementdata.bodymatter.find((item) => {
-            if (item?.type && SH_NON_SUPPORTED_ELEMENTS.includes(item.type)) {
+            if (item?.type && CONDITIONAL_PASTE_SUPPORT[sourceType][selectionType]?.includes(item.type)) {
                 return true;
             }
             if (item?.type === WE_MANIFEST) {
                 if (item?.contents?.bodymatter) {
                     validPaste2 = item.contents.bodymatter.find((innerItem) => {
-                        if (innerItem?.type && SH_NON_SUPPORTED_ELEMENTS.includes(innerItem.type)) {
+                        if (innerItem?.type && CONDITIONAL_PASTE_SUPPORT[sourceType][selectionType].includes(innerItem.type)) {
                             return true;
                         }
                     })
@@ -182,6 +194,58 @@ const checkASWEValidation = (selectedElement, selectionType) => {
         })
         if (validPaste1 || validPaste2) {
             isValidPaste = false
+        }
+    }
+    return isValidPaste;
+}
+/**
+ * Function - Check if Showhide selected to CUT/COPY has AS/WE then restrict it be copied inside 2C/3C
+ * @param {*} separatorProps 
+ * @param {*} sourceType 
+ * @param {*} selectionType 
+ * @param {*} validation 
+ * @returns 
+ */
+const checkMultiColumnPasteValidation = (selectedElement, sourceType, selectionType, validation) => {
+    let isValidPaste = validation;
+    const conditionalSelection = [SHOWHIDE];
+    if (selectionType && conditionalSelection.includes(selectionType)) {
+        if (selectedElement?.type === SHOW_HIDE.toLowerCase()) {
+            const showHideInnerElements = Object.values(selectedElement?.interactivedata)?.flat()
+            const validPaste1 = showHideInnerElements?.length && showHideInnerElements?.find((item) => {
+                if (item?.type && CONDITIONAL_PASTE_SUPPORT[sourceType][selectionType]?.includes(item.type)) {
+                    return true;
+                }
+            })
+            if (validPaste1) {
+                isValidPaste = false
+            }
+        }
+    }
+    return isValidPaste;
+}
+/**
+ * Function - Check if Showhide selected to CUT/COPY has AS/WE then restrict it be copied inside AS/WE
+ * @param {*} separatorProps 
+ * @param {*} sourceType 
+ * @param {*} selectionType 
+ * @param {*} validation 
+ * @returns 
+ */
+const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, validation) => {
+    let isValidPaste = validation;
+    const conditionalSelection = [SHOWHIDE];
+    if (selectionType && conditionalSelection.includes(selectionType)) {
+        if (selectedElement?.type === SHOW_HIDE.toLowerCase()) {
+            const showHideInnerElements = Object.values(selectedElement?.interactivedata)?.flat()
+            const validPaste1 = showHideInnerElements?.length && showHideInnerElements?.find((item) => {
+                if (item?.type && CONDITIONAL_PASTE_SUPPORT[sourceType][selectionType]?.includes(item.type)) {
+                    return true;
+                }
+            })
+            if (validPaste1) {
+                isValidPaste = false
+            }
         }
     }
     return isValidPaste;
