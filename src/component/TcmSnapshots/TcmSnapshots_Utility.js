@@ -438,7 +438,7 @@ const tcmSnapshotsPoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { a
     }
     const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn });
     const stanzaData = {html: {text:'<p class="paragraphNumeroUno"><br></p>'}};
-    console.log("Poetry Snapshot Create 6 ", snapshotsData, containerElement);
+    console.log("Poetry Snapshot Create 6 ", elementDetails, stanzaData);
         
     prepareAndSendTcmData(elementDetails, stanzaData, defaultKeys, actionStatus, index);
 }
@@ -1347,6 +1347,7 @@ const isEmpty = (obj) => {
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot) => {
+    console.log("Poetry Snapshot Glossary", elementUpdateData, containerElement);
     if (elementUpdateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementUpdateData.response.figuretype)) {
         return false
     }
