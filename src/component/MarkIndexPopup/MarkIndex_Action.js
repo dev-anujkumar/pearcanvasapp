@@ -110,7 +110,7 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
  * @param {*} subEntry, Value of sub entry field in the marked index pop-up 
  * @param {*} markedIndexEntryURN, URN of indexed text 
  */
-export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry = "", markedIndexEntryURN = "") => (dispatch) => {
+export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry = "", markedIndexEntryURN = "", differenceValue) => (dispatch) => {
     let indexEntries = {};
     let currentValue = {};
     if(indexEntry && markedIndexEntryURN){
@@ -136,7 +136,8 @@ export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry =
             markedIndexGlossary:{
                 popUpStatus: status,
                 indexEntries,
-                markedIndexEntryURN
+                markedIndexEntryURN,
+                isDifference: differenceValue
             },
             markedIndexCurrentValue:{
                 firstLevel: currentValue.firstLevel,

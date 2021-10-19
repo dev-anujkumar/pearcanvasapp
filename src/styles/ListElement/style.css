@@ -61,6 +61,11 @@ li.listItemNumeroUnoBullet {
     margin-bottom: 0.5em;
 }
 
+.bl li.listItemNumeroUnoBullet {
+    font-size: 13px !important;
+    padding-left: 20px;
+}
+
 li.listItemNumeroUnoBullet::before {
     content: counter(item) ". ";
     counter-increment: item;
