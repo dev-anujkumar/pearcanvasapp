@@ -18,7 +18,7 @@ import { modifyObjKeys, loadPatternScripts } from './js/appUtils'
 import './styles/style.css';
 
 
-console.log("!!!!! ---- canvas-1.30.44 ---- !!!!!")
+console.log("!!!!! ---- canvas-1.30.45 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
