@@ -566,7 +566,6 @@ export const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousEle
  * @param {*} containerContext 
  */
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
-    console.log("typeeeee",type)
     let { appStore } = store.getState()
     let dataToReturn = {}
     switch (type){
