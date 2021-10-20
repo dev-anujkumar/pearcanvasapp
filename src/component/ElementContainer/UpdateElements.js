@@ -566,6 +566,7 @@ export const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousEle
  * @param {*} containerContext 
  */
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
+    console.log("typeeeee",type)
     let { appStore } = store.getState()
     let dataToReturn = {}
     switch (type){
@@ -602,11 +603,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 html : {
                     text : innerHTML,
                     footnotes : previousElementData.html.footnotes || {},
-                    glossaryentries : previousElementData.html.glossaryentries || {},
-                    indexEntries:previousElementData.html.indexEntries || {}
+                    glossaryentries : previousElementData.html.glossaryentries || {}
                 },
                 inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
+            }
+
+            if(type === 'element-authoredtext'){
+                dataToReturn.html['indexEntries'] = previousElementData.html.indexEntries || {}
             }
             
             if(type==="stanza"){
