@@ -135,7 +135,7 @@ export function ElementSaprator(props) {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
         let sourceComp = 'source' in props ? props.source : '';
         let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
-        let pasteValidation = getPasteValidated(sourceComp, inputType);
+        let pasteValidation = getPasteValidated(props.elementSelection, sourceComp, inputType);
         if (!config.isPopupSlate && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
@@ -365,12 +365,23 @@ export function typeOfContainerElements(elem, props) {
     /* Do not show Citation Group option if inside Multicolumn  */
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
     /* Do not show SH and Pop up option if Aside/WE is inside SH  */
-    if (elem?.buttonType === "interactive-elem-button" && asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) {
-        newData = {
-            ["Add Elm Interactive"]: newData["Add Elm Interactive"],
-            ["Add Quad Interactive"]: newData["Add Quad Interactive"],
-            ["Add Smart Link"]: newData["Add Smart Link"],
-            ["Add Discussion"]: newData["Add Discussion"]
+    if (asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) {
+        switch (elem?.buttonType) {
+            case "interactive-elem-button" :
+                newData = {
+                    ["Add Elm Interactive"]: newData["Add Elm Interactive"],
+                    ["Add Quad Interactive"]: newData["Add Quad Interactive"],
+                    ["Add Smart Link"]: newData["Add Smart Link"],
+                    ["Add Discussion"]: newData["Add Discussion"]
+                }
+                break;
+            case "block-text-button" :
+                newData = {
+                    ["Block Math"]: newData["Block Math"],
+                    ["Block Code"]: newData["Block Code"],
+                    ["Playscript"]: newData["Playscript"]
+                }
+                break;
         }
     }
     if(newData){

@@ -314,37 +314,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     break;
             }
         } else if (appStore?.asideData?.parent?.type === "showhide") {
-            let focusedSHElement,focusedElementInnerData, focusedElementInnerData2;
-            focusedElement.forEach((item, index) => {
-                if (item?.interactivedata) {
-                    switch (indexes.length) {
-                        case 4:
-                        case 5:
-                            focusedSHElement = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType];
-                            break;
-                    }
-                    focusedSHElement.forEach((item, index2) => {
-                        if (item?.type === "element-aside") {
-                            focusedElementInnerData = item?.elementdata?.bodymatter
-                            focusedElementInnerData.forEach((item, innerIndex) => {
-                                if (newElementData?.elementId === item.id) {
-                                    console.log("gdsagcashbahjvasbvjasvghsdvsbdj",focusedElement)
-                                    item=res?.data
-                                    // focusedElement=focusedElement[index]?.focusedSHElement[index2]?.focusedElementInnerData[innerIndex] = res?.data
-                                } else if (item?.type === "manifest") {
-                                    focusedElementInnerData2 = item?.contents?.bodymatter
-                                        .forEach((innerItem, i) => {
-                                            if (newElementData.elementId === innerItem.id) {
-                                                innerItem=res.data
-                                                // focusedElement=focusedElement[index]?.focusedSHElement[index2]?.focusedElementInnerData[innerIndex]?.focusedElementInnerData2[i] = res?.data
-                                            }
-                                        })
-                                }
-                            })
-                        }
-                    })
-                }
-            })
+            switch (indexes.length) {
+                case 4:
+                    bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                    break;
+                case 5:
+                    bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
+                    break;
+            }
         } else {
             indexes.forEach(index => {
                 if(focusedElement[index]){
@@ -598,36 +575,16 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else if (appStore?.asideData?.parent?.type === "showhide") {
-            let elementOldDataSH, innerElementOldDataSH;
-            bodymatter.forEach((item, index) => {
-                if (item?.interactivedata) {
-                    switch (indexes.length) {
-                        case 4:
-                        case 5:
-                            elementOldDataSH = bodymatter[index]?.interactivedata[appStore?.asideData?.parent?.showHideType];
-                            break;
-                    }
-                    elementOldDataSH.forEach((item, index) => {
-                        if (item?.type === "element-aside") {
-                            item?.elementdata?.bodymatter.forEach((item, innerIndex) => {
-                                if (elementData?.elementId === item?.id) {
-                                    dispatch(convertElement(item, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
-                                } else if (item?.type === "manifest") {
-                                    item.contents.bodymatter.forEach((innerItem, index) => {
-                                        if (elementData.elementId === innerItem.id) {
-                                            dispatch(convertElement(innerItem, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
-                                        }
-
-                                    })
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-
-
-
+            let elementOldDataSH;
+            switch (indexes.length) {
+                case 4:
+                    elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
+                    break;
+                case 5:
+                    elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                    break;
+            }
+            dispatch(convertElement(elementOldDataSH, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else {
             indexes.forEach(index => {
                 if(bodymatter[index]){
@@ -825,35 +782,64 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
         currentSlateData,
         versionedElement
     } = updateParams;
-    const { index } = activeElement;
+    const { index, elementType } = activeElement;
     let tmpIndex = typeof index === 'number' ? index : index.split("-")
-    if (typeof tmpIndex === 'number') {
-        const updatedElement = prepareElementToUpdate(dataToUpdate, tmpIndex, activeElement, currentSlateData, versionedElement)
-        elementEntityUrn = updatedElement.contentUrn
-        currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
-    }
-    return {
-        elementEntityUrn, currentSlateData
-    }
-
-}
-
-const prepareElementToUpdate = (dataToUpdate, index, activeElement, currentSlateData, versionedElement) => {
-    let updatedElement = {};
+     let indexesLen = tmpIndex.length
+     let newBodymatter = currentSlateData.contents.bodymatter
+     let updatedElement = {}
     if (versionedElement) {
         return versionedElement
-    } else {
-        if (typeof index === 'number') {
-            const { elementType } = activeElement
-            updatedElement = currentSlateData.contents.bodymatter[index]
-            if (elementType == 'poetry') {
-                updatedElement = {
-                    ...updatedElement,
-                    numberedline: dataToUpdate.isNumbered,
-                    startlinenumber: dataToUpdate.startNumber
-                }
+    } else if (elementType == "poetry") {
+        if(typeof tmpIndex === 'number'){
+            currentSlateData.contents.bodymatter[tmpIndex].numberedline = dataToUpdate.isNumbered
+            currentSlateData.contents.bodymatter[tmpIndex].startlinenumber = dataToUpdate.startNumber
+            updatedElement = currentSlateData.contents.bodymatter[tmpIndex]
+        } else {
+            switch (indexesLen) {
+                case 2:     /** Toggle use line of PE inside WE/Aside */
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].numberedline = dataToUpdate.isNumbered
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].startlinenumber = dataToUpdate.startNumber
+                    updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]]
+                    break;
+    
+                case 3:      /** Toggle Use Line of PE inside multicolumn/ WE section break*/
+                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]]
+                    } else {
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]]
+                    }
+                   break;
+    }
+        }
+    } 
+        elementEntityUrn = updatedElement?.contentUrn
+
+        if (typeof tmpIndex === 'number') {
+            currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
+        } else {
+            switch (indexesLen) {
+                case 1:
+                    newBodymatter[tmpIndex[0]] = updatedElement
+                    break;
+                case 2:
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]] = updatedElement
+                    break;
+                case 3:
+                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
+                    } else {
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]] = updatedElement
+                    }
+                    break;
             }
         }
-        return updatedElement
+
+    return {
+       elementEntityUrn, currentSlateData
     }
+
 }
