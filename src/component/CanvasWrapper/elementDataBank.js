@@ -4,8 +4,12 @@ const elementDataBank = {
         "elementType" : "element-authoredtext",
         "primaryOption" : "primary-paragraph",
         "secondaryOption" : "secondary-paragraph"
+    }, 
+     "manifestlist" : {
+        "elementType" : "manifestlist",
+        "primaryOption" : "primary-column-1",
+        "secondaryOption" : "secondary-column-1"
     },
-
     "element-authoredtext-heading" : {
         "elementType" : "element-authoredtext",
         "primaryOption" : "primary-heading",

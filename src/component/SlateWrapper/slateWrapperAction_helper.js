@@ -239,6 +239,26 @@ export const onPasteSuccess = async (params) => {
                         ele.contents.bodymatter.splice(cutIndex, 0, responseData)
                     }
                 })
+            } else if(item?.type == "element-aside"){
+                item.elementdata?.bodymatter.map((element)=>{
+                    if(element.type == "manifest"){ /* paste stanza inside PE in WE  in section break*/
+                        element.contents?.bodymatter.map((element1)=>{
+                            if(element1.id == poetryData?.parentUrn){
+                                element1.contents.bodymatter.splice(cutIndex, 0, responseData)
+                            }
+                        })
+                    } else if(element.type === "poetry" && element.id == poetryData.parentUrn){ /* paste stanza inside PE in Aside/WE before section break */
+                        element.contents.bodymatter.splice(cutIndex, 0, responseData)
+                    }
+                })
+            } else if(item?.type == "groupedcontent"){ /* paste stanza inside PE in Multicolumn */
+                item.groupeddata?.bodymatter.map((groupElem1) =>{
+                    groupElem1.groupdata?.bodymatter.map((groupElem1)=>{
+                        if(groupElem1.type == "poetry" && groupElem1.id === poetryData?.parentUrn){
+                            groupElem1.contents.bodymatter.splice(cutIndex, 0, responseData)
+                        }
+                    })
+                })
             }
         })  
     } else if (asideData && asideData.type === 'groupedcontent') {

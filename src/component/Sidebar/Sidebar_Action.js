@@ -314,6 +314,15 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res?.data;
                     break;
             }
+        } else if (appStore?.asideData?.parent?.type === "showhide") {
+            switch (indexes.length) {
+                case 4:
+                    bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                    break;
+                case 5:
+                    bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
+                    break;
+            }
         } else {
             indexes.forEach(index => {
                 if(focusedElement[index]){
@@ -538,6 +547,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
     if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
+        console.log("bodymatter",bodymatter);
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         //Separate case for element conversion in showhide
@@ -565,6 +575,17 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     break;
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
+        } else if (appStore?.asideData?.parent?.type === "showhide") {
+            let elementOldDataSH;
+            switch (indexes.length) {
+                case 4:
+                    elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
+                    break;
+                case 5:
+                    elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                    break;
+            }
+            dispatch(convertElement(elementOldDataSH, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else {
             indexes.forEach(index => {
                 if(bodymatter[index]){
@@ -572,7 +593,6 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                         dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar,showHideObj));
                     } else {
                         if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
-                            
                             bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                         }
                         
@@ -619,16 +639,22 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         activeElement: getState().appStore.activeElement,
         currentSlateData
     }
-    let dataToSend = {
-        numberedline: dataToUpdate.isNumbered
-    }
+    let dataToSend = {}
+    let elementEntityUrn = ""
+    // if(dataToUpdate.elementType && dataToUpdate.elementType == "manifestlist" && dataToUpdate.primaryOption){
+    //     dataToSend.columnnumber = dataToUpdate.primaryOption.split('-')[dataToUpdate.primaryOption.split('-').length-1]
+    //     elementEntityUrn = dataToUpdate.contentUrn;
+    // }
     if (dataToUpdate.isNumbered == true) {
         dataToSend.startlinenumber = dataToUpdate.startNumber
     }
-    let elementEntityUrn = ""
     const updatedData = dispatch(updateContainerMetadataInStore(updateParams,""))
     if(updatedData?.elementEntityUrn){
         elementEntityUrn = updatedData.elementEntityUrn
+    }
+    if(dataToUpdate.blockListElement){
+        elementEntityUrn = dataToUpdate.blockListData.contentUrn;
+        dataToSend= dataToUpdate.dataToSend
     }
     let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
     currentParentData[config.slateManifestURN] = updatedSlateLevelData
@@ -673,6 +699,9 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                 currentSlateData: newSlateData
             }
             const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
+            if(dataToUpdate.blockListElement){
+                updateBlockListMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
+            }
             if(updatedStore.currentSlateData){
                 parsedParentData[config.slateManifestURN] = updatedStore.currentSlateData;
                 dispatch({
@@ -682,6 +711,22 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                     }
                 })
             }
+            let activeElementObject = {
+                elementId: dataToUpdate.elementId,
+               index: dataToUpdate.index,
+                elementType: dataToUpdate.elementType,
+                primaryOption: dataToUpdate.primaryOption,
+                secondaryOption: dataToUpdate.secondaryOption,
+                //tag: newElementData.labelText,
+                toolbar: dataToUpdate.toolbar,
+                elementWipType: dataToUpdate.elementWipType,
+                //altText,
+                //longDesc
+            };
+            dispatch({
+                type: SET_ACTIVE_ELEMENT,
+                payload: activeElementObject
+            });
         }
         config.conversionInProcess = false
         config.savingInProgress = false
@@ -696,6 +741,42 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
             console.error(" Error >> ", err)
         })
 }
+
+const updateBlockListMetaData = (elementId, elementData, metaData) => {
+    if(elementData.id === elementId){
+        if(metaData.subtype){
+            elementData.subtype = metaData.subtype;
+            elementData.listtype = metaData.listtype;
+            elementData.startNumber = metaData.startNumber;
+        }
+        if(metaData.columnnumber){
+            elementData.columnnumber = metaData.columnnumber;
+        }
+    }
+    else{
+        if (elementData?.listdata?.bodymatter) {
+            elementData.listdata?.bodymatter.forEach((listData) => updateBlockListMetaData(elementId, listData,metaData))
+        }
+        if (elementData?.listitemdata?.bodymatter) {
+            elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
+                if (listItemData.id === elementId) {
+                    if(metaData.subtype){
+                        elementData.listitemdata.bodymatter[index].subtype = metaData.subtype;
+                        elementData.listitemdata.bodymatter[index].listtype = metaData.listtype;
+                        elementData.listitemdata.bodymatter[index].startNumber = metaData.startNumber;
+                    }
+                    if(metaData.columnnumber){
+                        elementData.listitemdata.bodymatter[index].columnnumber = metaData.columnnumber;
+                    }
+                    return;
+                }
+                updateBlockListMetaData(elementId, listItemData,metaData);
+            });
+        }
+    }
+}
+
+
 const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch) => {
     const {
         dataToUpdate,
@@ -703,35 +784,64 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
         currentSlateData,
         versionedElement
     } = updateParams;
-    const { index } = activeElement;
+    const { index, elementType } = activeElement;
     let tmpIndex = typeof index === 'number' ? index : index.split("-")
-    if (typeof tmpIndex === 'number') {
-        const updatedElement = prepareElementToUpdate(dataToUpdate, tmpIndex, activeElement, currentSlateData, versionedElement)
-        elementEntityUrn = updatedElement.contentUrn
-        currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
-    }
-    return {
-        elementEntityUrn, currentSlateData
-    }
-
-}
-
-const prepareElementToUpdate = (dataToUpdate, index, activeElement, currentSlateData, versionedElement) => {
-    let updatedElement = {};
+     let indexesLen = tmpIndex.length
+     let newBodymatter = currentSlateData.contents.bodymatter
+     let updatedElement = {}
     if (versionedElement) {
         return versionedElement
-    } else {
-        if (typeof index === 'number') {
-            const { elementType } = activeElement
-            updatedElement = currentSlateData.contents.bodymatter[index]
-            if (elementType == 'poetry') {
-                updatedElement = {
-                    ...updatedElement,
-                    numberedline: dataToUpdate.isNumbered,
-                    startlinenumber: dataToUpdate.startNumber
-                }
+    } else if (elementType == "poetry") {
+        if(typeof tmpIndex === 'number'){
+            currentSlateData.contents.bodymatter[tmpIndex].numberedline = dataToUpdate.isNumbered
+            currentSlateData.contents.bodymatter[tmpIndex].startlinenumber = dataToUpdate.startNumber
+            updatedElement = currentSlateData.contents.bodymatter[tmpIndex]
+        } else {
+            switch (indexesLen) {
+                case 2:     /** Toggle use line of PE inside WE/Aside */
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].numberedline = dataToUpdate.isNumbered
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].startlinenumber = dataToUpdate.startNumber
+                    updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]]
+                    break;
+    
+                case 3:      /** Toggle Use Line of PE inside multicolumn/ WE section break*/
+                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]]
+                    } else {
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]]
+                    }
+                   break;
+    }
+        }
+    } 
+        elementEntityUrn = updatedElement?.contentUrn
+
+        if (typeof tmpIndex === 'number') {
+            currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
+        } else {
+            switch (indexesLen) {
+                case 1:
+                    newBodymatter[tmpIndex[0]] = updatedElement
+                    break;
+                case 2:
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]] = updatedElement
+                    break;
+                case 3:
+                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
+                    } else {
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]] = updatedElement
+                    }
+                    break;
             }
         }
-        return updatedElement
+
+    return {
+       elementEntityUrn, currentSlateData
     }
+
 }

@@ -13,8 +13,8 @@ import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshot
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 
-import ElementConstants from "./ElementConstants";
-const { SHOW_HIDE } = ElementConstants;
+import ElementConstants, { containersInSH } from "./ElementConstants";
+const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
@@ -71,6 +71,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "citations":
             case "poetry":
             case "groupedcontent":
+            case "manifestlist":
+            case "manifestlistitem":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -244,6 +246,22 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                 /* update the data */
                 figure.figuredata = figureData;
             }
+        }
+        /* Update figure inside Aside/WE in S/H */
+    } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) { 
+        let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
+        let figure;
+        if (sectionType) {
+            if ((asideData?.subtype === ELEMENT_WORKEDEXAMPLE || asideDataFromAfrescoMetadata?.type === ELEMENT_WORKEDEXAMPLE) && indexes?.length >= 5) {
+                figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+            } else {
+                figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]];
+            }
+        }
+        if (figure.versionUrn === elementId) {
+            dataToSend = figure?.figuredata;
+            /* update the data */
+            figure.figuredata = figureData;
         }
     } else if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
@@ -505,7 +523,11 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
 
         if (config.tcmStatus) {
             const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
-            prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
+            if (containersInSH.includes(type2BAdded)) {
+                prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);    
+            } else {
+                prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
+            }
         }
 
         dispatch({

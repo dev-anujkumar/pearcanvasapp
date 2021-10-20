@@ -95,16 +95,32 @@ export const updateElementInStore = (paramsObj) => {
         const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList);
         updateShowhideElements(sh_Object, updatedData, iList);
     } else
-    if(parentElement && parentElement.type === "citations"){
-        if(updatedData.type === "element-citation"){
-            const indexes = elementIndex.split("-")
-            _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {...updatedData,
-                tcm: _slateObject.tcm ? true : false
+    if (parentElement && parentElement.type === "citations") {
+        const indexes = elementIndex.split("-");
+        // Update CG inside S/H
+        if (asideData?.parent?.type === SHOW_HIDE) {
+            let sectionType = asideData?.parent?.showHideType;
+            if (updatedData.type === "element-citation") {
+                _slateBodyMatter[indexes[0]].interactivedata[sectionType][indexes[2]].contents.bodymatter[indexes[3] - 1] = {
+                    ...updatedData,
+                    tcm: _slateObject.tcm ? true : false
+                }
+            } else {
+                if (updatedData.type === "element-authoredtext") {
+                    _slateBodyMatter[indexes[0]].interactivedata[sectionType][indexes[2]].contents["formatted-title"] = { ...updatedData }
+                }
             }
-        }
-        else {
-            if(updatedData.type === "element-authoredtext"){
-                _slateBodyMatter[elementIndex].contents["formatted-title"] = {...updatedData}     
+        // Update CG inside Slate
+        } else {
+            if (updatedData.type === "element-citation") {
+                _slateBodyMatter[indexes[0]].contents.bodymatter[indexes[1] - 1] = {
+                    ...updatedData,
+                    tcm: _slateObject.tcm ? true : false
+                }
+            } else {
+                if (updatedData.type === "element-authoredtext") {
+                    _slateBodyMatter[elementIndex].contents["formatted-title"] = { ...updatedData }
+                }
             }
         }
     } else if (parentElement && parentElement.type === "groupedcontent") {
@@ -260,6 +276,57 @@ export const updateElementInStore = (paramsObj) => {
                 }
             } else if (asideData && asideData.type == 'element-aside') {
                 
+
+                // xxxxxxxxxxxxxxxxxxxx  START update elements inside AS/WE inside S/H  xxxxxxxxxxxxxxxxxx //
+                if (asideData?.parent?.type === "showhide" && element.id == asideData?.parent?.id) {
+                    let sectionType = asideData?.parent?.showHideType;
+                    if (sectionType) {
+                        const nestedBodyMatter = element.interactivedata[sectionType] && element.interactivedata[sectionType].map((shChild) => {
+                            if (shChild.id === asideData.id) {
+                                const asideObject = shChild.elementdata.bodymatter && shChild.elementdata.bodymatter.map((asideChild) => {
+                                    if (asideData.subtype === 'workedexample' && parentUrn.elementType === 'manifest' && asideChild.id === parentUrn.manifestUrn) {
+                                        const weBody = asideChild.contents.bodymatter.map((item) => {
+                                            if (item.id === elementId) {
+                                                item = {
+                                                    ...item,
+                                                    ...updatedData,
+                                                    elementdata: {
+                                                        ...item.elementdata,
+                                                        text: updatedData.elementdata ? updatedData.elementdata.text : null
+                                                    },
+                                                    tcm: _slateObject.tcm ? true : false,
+                                                    html: updatedData.html
+                                                };
+                                            }
+                                            return item;
+                                        })
+                                        asideChild.contents.bodymatter = weBody;
+                                    } else {
+                                        if (asideChild.id === elementId) {
+                                            asideChild = {
+                                                ...asideChild,
+                                                ...updatedData,
+                                                elementdata: {
+                                                    ...asideChild.elementdata,
+                                                    text: updatedData.elementdata ? updatedData.elementdata.text : null
+                                                },
+                                                tcm: _slateObject.tcm ? true : false,
+                                                html: updatedData.html
+                                            };
+                                        }
+                                    }
+                                    return asideChild
+                                })
+                                shChild.elementdata.bodymatter = asideObject;
+                            }
+                            return shChild;
+                        })
+                        element.interactivedata[sectionType] = nestedBodyMatter;
+                    }
+                }
+                // xxxxxxxxxxxxxxxxxxxx  END update elements inside AS/WE inside S/H  xxxxxxxxxxxxxxxxxx //
+
+
                 if (element.id == asideData.id) {
                     const nestedBodyMatter = element.elementdata.bodymatter.map((nestedEle) => {
                         /*This condition add object of element in existing element  in aside */
@@ -414,6 +481,56 @@ export const updateElementInStore = (paramsObj) => {
                     })
                     element.contents.bodymatter = newPoetryBodymatter;
                 }
+            } else if (element?.type == "element-aside" && element?.id == asideData?.grandParent?.asideData?.id) { /**updation of PE element inside Aside/WE elements */
+                element?.elementdata?.bodymatter.map((elem, index) => {
+                    if (elem.type === "poetry") {
+                        const newPoetryBodymatter = elem.contents?.bodymatter?.map((stanza) => {
+                            if (stanza.id === elementId) {
+                                stanza = {
+                                    ...stanza,
+                                    ...updatedData,
+                                    tcm: _slateObject.tcm ? true : false,
+                                };
+                            }
+                            return stanza;
+                        })
+                        element.elementdata.bodymatter[index].contents.bodymatter = newPoetryBodymatter;
+                    } else if (elem?.type === "manifest") {   /**updation of PE element inside WE in section break */
+                        elem.contents?.bodymatter.map((elem1, conIndex) => {
+                            if (elem1.type === "poetry") {
+                                const newPoetryBodymatter = elem1?.contents?.bodymatter?.map((stanza) => {
+                                    if (stanza.id === elementId) {
+                                        stanza = {
+                                            ...stanza,
+                                            ...updatedData,
+                                            tcm: _slateObject.tcm ? true : false,
+                                        };
+                                    }
+                                    return stanza;
+                                })
+                                element.elementdata.bodymatter[index].contents.bodymatter[conIndex].contents.bodymatter = newPoetryBodymatter;
+                            }
+                        })
+                    }
+                })
+            }  else if (element?.type == "groupedcontent" && element?.id == asideData?.grandParent?.asideData?.id) { /**updation of PE element inside multicolumn elements */
+                element.groupeddata?.bodymatter.map((elem, index) => {
+                    elem.groupdata?.bodymatter?.map((elem1, groupIndex)=>{
+                        if (elem1?.type === "poetry") {
+                            const newPoetryBodymatter = elem1.contents?.bodymatter?.map((stanza) => {
+                                if (stanza.id === elementId) {
+                                    stanza = {
+                                        ...stanza,
+                                        ...updatedData,
+                                        tcm: _slateObject.tcm ? true : false,
+                                    };
+                                }
+                                return stanza;
+                            })
+                            element.groupeddata.bodymatter[index].groupdata.bodymatter[groupIndex].contents.bodymatter = newPoetryBodymatter;
+                        }
+                    })
+                })
             }
             //else if (element.type === SHOW_HIDE) { 
             //    /* When showhide Element is placed on slate not inside other container */
@@ -580,6 +697,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     config.isSavingElement = false
     customEvent.trigger('glossaryFootnoteSave', responseData.id); 
+    customEvent.trigger('markedIndexSave', responseData.id); 
     config.popupCreationCallInProgress = false;
     showLinkToast(document.getElementById('link-notification'))
 }

@@ -11,7 +11,8 @@ class Comments extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            newAssignee: this.props.comment.assignto,
+            newAssignee: this.props.comment.commentAssignee,
+            newRole: this.props.comment.role,
             showActionsMenu: false,
             mode: 'view',
             updatedFields: {
@@ -19,7 +20,7 @@ class Comments extends React.Component {
                 status: this.props.comment.commentStatus
             },
             isSelectAssignee: false,
-            showReplyForm: true,
+            isSelectRole: false,
             showReplyComments: false
         }
     }
@@ -128,11 +129,22 @@ class Comments extends React.Component {
         if (this.state.newAssignee != user) {
             this.setState({
                 newAssignee: user,
+                // newAssignee: user,
                 isSelectAssignee: true
             })
         }
     }
 
+    newRoleUser =(user)=> {
+        if (this.state.newRole != user) {
+            this.setState({
+                newRole: user,
+                // newAssignee: user,
+                isSelectRole: true
+            })
+        }
+    }    
+    
     /**
     * 
     *@discription - This function is to change the assignee
@@ -142,6 +154,21 @@ class Comments extends React.Component {
         this.setMode('assign')
         this.setState({
             isSelectAssignee: false
+        })
+
+        // if user came from comments manager
+        // than again initilizing the user list
+        if(this.props.users.length === 0) {
+            this.props.getProjectUsers();
+        }
+    }
+
+    changeAssignByRole =()=> {
+        this.toggleActionsMenu(false)
+        this.setMode('role')
+        this.setState({
+            // isSelectAssignee: false
+            isSelectRole: false
         })
 
         // if user came from comments manager
@@ -199,7 +226,6 @@ class Comments extends React.Component {
         this.props.deleteComment(commentUrn, elementId)
     }
 
-
     /**
     * 
     *@discription - This function is to return jsx of action menu
@@ -218,7 +244,8 @@ class Comments extends React.Component {
             <ul className="comment-action-menu action-menu">
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
                 {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
-                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
+                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignByRole}>Change Assigned Role</li>}
+                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>} 
                 {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
         )
@@ -267,9 +294,10 @@ class Comments extends React.Component {
     */
     removeAssigneePopup =() =>{
         this.setMode('view')
-        this.setState({
-            newAssignee: this.props.comment.assignto
-        })
+    }
+
+    removeRolePopup =() =>{
+        this.setMode('view')
     }
 
     /**
@@ -282,8 +310,16 @@ class Comments extends React.Component {
         const { newAssignee } = this.state
         this.props.updateAssignee(commentUrn, newAssignee, elementId)
     }
+
+    updateRole = () => {
+        const { commentUrn } = this.props.comment
+        const { elementId } = this.props
+        const { newRole } = this.state
+        this.props.updateRole(commentUrn, newRole, elementId)
+    }
+
     render() {
-        const { comment, elementId, updateReplyComment, toggleReplyForm, users } = this.props
+        const { comment, elementId, updateReplyComment, toggleReplyForm, users, roles, permissions } = this.props
         let avatarObject = [];
         let avatar = '';
         avatarObject = comment?.commentCreator.split(',');
@@ -331,6 +367,23 @@ class Comments extends React.Component {
                             </div>
                             <div className="property">
                                 <UserAssignee
+                                    name="Assign by role"
+                                    currentUser={this.state.newRole}
+                                    mode={this.state.mode}
+                                    comment={this.props.comment}
+                                    newAssigneeUser={this.newRoleUser}
+                                    isSelectAssignee={this.state.isSelectRole}
+                                    setMode={this.setMode}
+                                    updateAssignee={this.updateRole}
+                                    removeAssigneePopup={this.removeRolePopup}
+                                    users={roles}
+                                    show={this.state.mode == "role"}
+                                />
+                            </div>
+                            <div className="property">
+                                <UserAssignee
+                                    name="Assign to"
+                                    currentUser={this.state.newAssignee }
                                     mode={this.state.mode}
                                     comment={this.props.comment}
                                     newAssigneeUser={this.newAssigneeUser}
@@ -339,6 +392,7 @@ class Comments extends React.Component {
                                     updateAssignee={this.updateAssignee}
                                     removeAssigneePopup={this.removeAssigneePopup}
                                     users={users}
+                                    show={this.state.mode == "assign"}
                                 />
 
                             </div>
@@ -347,14 +401,11 @@ class Comments extends React.Component {
                                 <span className="property-value capitalize color-gray-71">{comment.commentStatus.toLowerCase()}</span>
                             </div>
                             <div className="property">
-                            <div onClick={this.setReplyDropdownState}>
-                            <span className="property-value Replies"> {comment.replyComments.length} </span>
-                            <span className="property-title Replies">Replies</span>
-                            <img className={`${this.state.showReplyComments ? "Path" : "Path collap" }`} src={iconArrow} />
+                                <div className="property" onClick={this.setReplyDropdownState}>
+                                    <div className="Replies">{comment.replyComments.length} Replies</div>
+                                    <img className={`${this.state.showReplyComments ? "Path" : "Path collap" }`} src={iconArrow} />
+                                </div>
                             </div>
-                            </div>
-
-
                         </div>
                     </div>
                 </div>
