@@ -2531,6 +2531,30 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                 }
+            } else if (indexesLen === 3) {
+                switch (tempIndex[2]) {
+                    case "1":
+                        if (!this.props.element.contents['formatted-title']) {
+                            return false;
+                        }
+                        break;
+                    case "4":
+                        if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                            return false;
+                        }
+                }
+            } else if (indexesLen === 4) {
+                switch (tempIndex[3]) {
+                    case "1":
+                        if (!this.props.element.contents['formatted-title']) {
+                            return false;
+                        }
+                        break;
+                    case "4":
+                        if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                            return false;
+                        }
+                }
             }
             elementId = this.props.elementId
             let footNoteSpan = document.getElementById('footnote-attacher');
@@ -3251,6 +3275,7 @@ export class TinyMceEditor extends Component {
 
     setInstanceToolbar = () => {
         let toolbar = [];
+        console.log("INSIDE PLACE HOLDER INSTANCE", this.props.placeholder, "ELEMENT INSIDE", this.props.element.type, "BLOCK LIST DATA", blockListData)
         let blockListData = checkBlockListElement(this.props, "TAB");
         if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
@@ -3280,6 +3305,7 @@ export class TinyMceEditor extends Component {
             toolbar = config.revelToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
+            console.log("SET TOOLBAR", toolbar)
         }
         else if (blockListData && Object.keys(blockListData).length){
             toolbar = config.blockListToolbar
