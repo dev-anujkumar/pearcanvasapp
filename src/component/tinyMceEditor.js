@@ -834,7 +834,7 @@ export class TinyMceEditor extends Component {
         /**
          * Case - clicking over mark index text
          */
-        else if (e.target.nodeName == "SPAN" || e.target.closest("span")) {
+        else if ((e.target.nodeName == "SPAN" || e.target.closest("span")) && e.target.className === "markedForIndex") {
             let uri = e.target.dataset.uri;
             let span = e.target.closest("span");
 
