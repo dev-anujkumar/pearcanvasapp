@@ -817,6 +817,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                             res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
                             responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
                             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents['formatted-title']= responseElement;
+                            break;
                         case "4":
                             if(!newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents['creditsarray']){
                                 newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents['creditsarray'] = [];

@@ -180,7 +180,7 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
                 elementSubType: glossaaryFootnoteValue.elementSubType,
                 markIndexText: glossaaryFootnoteValue.glossaryTermText,
                 typeWithPopup: glossaaryFootnoteValue.typeWithPopup ? glossaaryFootnoteValue.typeWithPopup : undefined,
-                poetryField: glossaaryFootnoteValue.poetryField ? poetryField : undefined
+                poetryField: glossaaryFootnoteValue.poetryField ? glossaaryFootnoteValue.poetryField : undefined
             },
             markedIndexCurrentValue: {
                 firstLevel: markedIndexFirstLevel,
