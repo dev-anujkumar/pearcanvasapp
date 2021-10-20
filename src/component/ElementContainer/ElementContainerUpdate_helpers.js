@@ -484,6 +484,56 @@ export const updateElementInStore = (paramsObj) => {
                     })
                     element.contents.bodymatter = newPoetryBodymatter;
                 }
+            } else if (element?.type == "element-aside" && element?.id == asideData?.grandParent?.asideData?.id) { /**updation of PE element inside Aside/WE elements */
+                element?.elementdata?.bodymatter.map((elem, index) => {
+                    if (elem.type === "poetry") {
+                        const newPoetryBodymatter = elem.contents?.bodymatter?.map((stanza) => {
+                            if (stanza.id === elementId) {
+                                stanza = {
+                                    ...stanza,
+                                    ...updatedData,
+                                    tcm: _slateObject.tcm ? true : false,
+                                };
+                            }
+                            return stanza;
+                        })
+                        element.elementdata.bodymatter[index].contents.bodymatter = newPoetryBodymatter;
+                    } else if (elem?.type === "manifest") {   /**updation of PE element inside WE in section break */
+                        elem.contents?.bodymatter.map((elem1, conIndex) => {
+                            if (elem1.type === "poetry") {
+                                const newPoetryBodymatter = elem1?.contents?.bodymatter?.map((stanza) => {
+                                    if (stanza.id === elementId) {
+                                        stanza = {
+                                            ...stanza,
+                                            ...updatedData,
+                                            tcm: _slateObject.tcm ? true : false,
+                                        };
+                                    }
+                                    return stanza;
+                                })
+                                element.elementdata.bodymatter[index].contents.bodymatter[conIndex].contents.bodymatter = newPoetryBodymatter;
+                            }
+                        })
+                    }
+                })
+            }  else if (element?.type == "groupedcontent" && element?.id == asideData?.grandParent?.asideData?.id) { /**updation of PE element inside multicolumn elements */
+                element.groupeddata?.bodymatter.map((elem, index) => {
+                    elem.groupdata?.bodymatter?.map((elem1, groupIndex)=>{
+                        if (elem1?.type === "poetry") {
+                            const newPoetryBodymatter = elem1.contents?.bodymatter?.map((stanza) => {
+                                if (stanza.id === elementId) {
+                                    stanza = {
+                                        ...stanza,
+                                        ...updatedData,
+                                        tcm: _slateObject.tcm ? true : false,
+                                    };
+                                }
+                                return stanza;
+                            })
+                            element.groupeddata.bodymatter[index].groupdata.bodymatter[groupIndex].contents.bodymatter = newPoetryBodymatter;
+                        }
+                    })
+                })
             }
             //else if (element.type === SHOW_HIDE) { 
             //    /* When showhide Element is placed on slate not inside other container */
