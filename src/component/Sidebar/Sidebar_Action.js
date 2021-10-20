@@ -624,6 +624,11 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
     //     dataToSend.columnnumber = dataToUpdate.primaryOption.split('-')[dataToUpdate.primaryOption.split('-').length-1]
     //     elementEntityUrn = dataToUpdate.contentUrn;
     // }
+    if(!dataToUpdate.blockListElement){
+        dataToSend = {
+            numberedline: dataToUpdate.isNumbered
+        }
+    }
     if (dataToUpdate.isNumbered == true) {
         dataToSend.startlinenumber = dataToUpdate.startNumber
     }
@@ -689,22 +694,24 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                     }
                 })
             }
-            let activeElementObject = {
-                elementId: dataToUpdate.elementId,
-               index: dataToUpdate.index,
-                elementType: dataToUpdate.elementType,
-                primaryOption: dataToUpdate.primaryOption,
-                secondaryOption: dataToUpdate.secondaryOption,
-                //tag: newElementData.labelText,
-                toolbar: dataToUpdate.toolbar,
-                elementWipType: dataToUpdate.elementWipType,
-                //altText,
-                //longDesc
-            };
-            dispatch({
-                type: SET_ACTIVE_ELEMENT,
-                payload: activeElementObject
-            });
+            if(dataToUpdate.blockListElement){
+                let activeElementObject = {
+                    elementId: dataToUpdate.elementId,
+                   index: dataToUpdate.index,
+                    elementType: dataToUpdate.elementType,
+                    primaryOption: dataToUpdate.primaryOption,
+                    secondaryOption: dataToUpdate.secondaryOption,
+                    //tag: newElementData.labelText,
+                    toolbar: dataToUpdate.toolbar,
+                    elementWipType: dataToUpdate.elementWipType,
+                    //altText,
+                    //longDesc
+                };
+                dispatch({
+                    type: SET_ACTIVE_ELEMENT,
+                    payload: activeElementObject
+                });
+            }
         }
         config.conversionInProcess = false
         config.savingInProgress = false
