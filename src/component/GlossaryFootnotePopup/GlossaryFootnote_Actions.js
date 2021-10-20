@@ -1000,7 +1000,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
             newBodymatter[tempIndex[0]] = res.data;
         }
-        else if (newBodymatter[tempIndex[0]].type === "manifestlist") { //Block list condition
+        else if (newBodymatter[tempIndex[0]]?.type === "manifestlist") { //Block list condition
             if(tempIndex.length===3){
                 newBodymatter[tempIndex[0]].listdata.bodymatter[tempIndex[1]].listitemdata.bodymatter[tempIndex[2]] = res.data;
             }
