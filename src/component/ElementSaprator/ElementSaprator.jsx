@@ -445,5 +445,14 @@ const mapStateToProps = (state) => ({
     showDiscussion: state.projectInfo.showDiscussion,
     projectSubscriptionDetails:state.projectInfo
 })
-
-export default connect(mapStateToProps, { cloneContainer })(ElementSaprator)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        cloneContainer: (insertionIndex, selectedElementId,parentUrn,asideData) => {
+            dispatch(cloneContainer(insertionIndex, selectedElementId,parentUrn,asideData))
+        }
+    }
+}
+const mapActionToProps = {
+    cloneContainer
+}
+export default connect(mapStateToProps, mapActionToProps)(ElementSaprator)

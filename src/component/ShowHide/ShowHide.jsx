@@ -5,7 +5,7 @@ import { createShowHideElement } from '../ElementContainer/ElementContainer_Acti
 import RevealAnswer from './Components/RevealAnswer.jsx';
 import ShowHideUiBlock from './Components/ShowHideUiBlock.jsx';
 import { addNestedElements } from './ShowHide_Helper.js';
-import { swapElement } from '../SlateWrapper/SlateWrapper_Actions.js';
+import { swapElement, cloneContainer } from '../SlateWrapper/SlateWrapper_Actions.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 
@@ -90,6 +90,7 @@ const mapStateToProps = (state) => {
 }
 const dispatchActions = {
     createShowHideElement,
-	swapElement
+	swapElement,
+	cloneContainer
 }
 export default connect(mapStateToProps, dispatchActions)(ShowHide);
