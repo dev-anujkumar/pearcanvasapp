@@ -60,7 +60,7 @@ export const addNestedElements = (index, sectionType, props) => {
             tooltipDirection: 'left'
         }
 	]
-    if (props?.asideData?.type !== "groupedcontent" && props?.asideData?.type !== "element-aside") {
+    if (props?.asideData?.type !== "groupedcontent" && props?.asideData?.type !== "element-aside" && !config.isPopupSlate) {
         nestedElements.push({
             buttonType: 'container-elem-button',
             tooltipText: 'Container',
