@@ -54,7 +54,7 @@ class ElementButton extends Component {
   * @param clickHandlerFn Handler method to be called on click event
   *  
   */
-    renderButton = (type, clickHandlerFn, btnClassName = '') => {
+    renderButton = (type, clickHandlerFn, btnClassName = '', elementType) => {
         let buttonJSX = null
         const { labelText,elementId,isSubscribersSlate } = this.props
         switch(type){
@@ -62,20 +62,20 @@ class ElementButton extends Component {
                 buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
                 break;
             case buttonTypes.ADD_COMMENT:
-                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="note" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementType}`} title="note" onClick={clickHandlerFn}>
                     {addNote}
                     </span>
                 break;
             case buttonTypes.COMMENT_FLAG:
-                buttonJSX = <span className={`btn-element small flag-icon`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
+                buttonJSX = <span className={`btn-element small flag-icon ${elementType}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
                     {noteFlag}
                     </span>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
-                buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
+                buttonJSX = <span className={`btn-element element-label ${btnClassName} ${elementType}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
-                buttonJSX = <span className={`btn-element delete-icon`} onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element delete-icon ${elementType}`} onClick={clickHandlerFn}>
                     <img src={deleteIcon} /></span>
                 break;
             case buttonTypes.TCM:
@@ -237,11 +237,11 @@ class ElementButton extends Component {
     }
     
     render() {
-        const { type, onClick, btnClassName } = this.props
+        const { type, onClick, btnClassName, elementType } = this.props
         
         return(
             <>
-                {this.renderButton(type, onClick, btnClassName)}             
+                {this.renderButton(type, onClick, btnClassName, elementType)}             
             </>
         )
     }
