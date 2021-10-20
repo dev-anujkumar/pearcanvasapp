@@ -669,7 +669,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
         let poetryData;
-        console.log("the type with popup is ", typeWithPopup, asideParent, tcmParentData.asideData)
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
         if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
             let showhideTypeVal = "", showHideObject = undefined
