@@ -1561,6 +1561,8 @@ class SlateWrapper extends Component {
                                 setListDropRef={this.setListDropRef}
                                 onListSelect={this.props.convertToListElement}
                                 inputRef={inputRef}
+                                activeElement={this?.props?.activeElement}
+                                slateData={this?.props?.slateData}
                             />
                         )
                     }
@@ -1634,7 +1636,8 @@ const mapStateToProps = state => {
         alfrescoPath : state.alfrescoReducer.alfrescoPath,
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
         removeGlossaryImage:state.appStore.removeGlossaryImage,
-        projectSubscriptionDetails:state?.projectInfo
+        projectSubscriptionDetails:state?.projectInfo,
+        activeElement: state.appStore.activeElement,
     };
 };
 
