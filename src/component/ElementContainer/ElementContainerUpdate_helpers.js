@@ -7,7 +7,8 @@ import { updateAssessmentVersion } from '../../component/AssessmentSlateCanvas/A
 import {
     AUTHORING_ELEMENT_UPDATE,
     OPEN_GLOSSARY_FOOTNOTE,
-    GET_TCM_RESOURCES, 
+    GET_TCM_RESOURCES,
+    OPEN_MARKED_INDEX 
 } from "../../constants/Action_Constants";
 import ElementConstants, { 
     elementTypeTCM,
@@ -652,6 +653,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     const currentSlateData = currentParentData[config.slateManifestURN];
     let { glossaryFootnoteValue, glossaryFootNoteCurrentValue, elementIndex: elementIndexFootnote } = getState().glossaryFootnoteReducer
+    let { markedIndexValue, markedIndexCurrentValue, elementIndex: elementMarkedIndex } = getState().markedIndexReducer
     const { saveAutoUpdateData } = getState().assessmentReducer;
     if (saveAutoUpdateData && saveAutoUpdateData.oldAssessmentId && saveAutoUpdateData.newAssessmentId) {
         dispatch(updateAssessmentVersion(saveAutoUpdateData.oldAssessmentId, saveAutoUpdateData.newAssessmentId));
@@ -664,6 +666,18 @@ export const processAndStoreUpdatedResponse = async (params) => {
                 glossaaryFootnoteValue: glossaryFootnoteValue,
                 glossaryFootNoteCurrentValue: glossaryFootNoteCurrentValue,
                 elementIndex: elementIndexFootnote
+            }
+        })
+    }
+
+    if(responseData.id !== updatedData.id){
+        markedIndexValue.elementWorkId = responseData.id;
+        dispatch({
+            type: OPEN_MARKED_INDEX,
+            payload: {
+                markedIndexValue: markedIndexValue,
+                markedIndexCurrentValue: markedIndexCurrentValue,
+                elementIndex: elementMarkedIndex
             }
         })
     }
