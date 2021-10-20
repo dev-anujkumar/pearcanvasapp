@@ -51,6 +51,9 @@ export const updateNewVersionElementInStore = (paramObj) => {
             dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         } else if (indexes.length === 4 && asideData.parent.type === 'groupedcontent') {
             dispatch(fetchSlateData(asideData.parent.id, asideData.parent.parentContentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+            /* Handeling of elements after versioning inside Aside/WE inside S/H */
+        } else if ((indexes.length === 4 || indexes.length === 5) && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
+            dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
