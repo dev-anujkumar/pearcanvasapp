@@ -244,9 +244,6 @@ export const onPasteSuccess = async (params) => {
                         item?.interactivedata[sectionType][newIndex[2]].elementdata?.bodymatter?.splice(cutIndex, 0, responseData);
                     }
                 } 
-                // else if (indexes.length === 4) {  // paste inside S/H->As/WE-head
-                //     item?.interactivedata[sectionType][indexes[2]].elementdata?.bodymatter[indexes[3]].contents?.bodymatter.splice(cutIndex, 0, responseData);
-                // }
             }
         })
     } else if(asideData && asideData.type == 'citations'){
