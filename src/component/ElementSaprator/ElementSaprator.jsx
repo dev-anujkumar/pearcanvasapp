@@ -375,13 +375,6 @@ export function typeOfContainerElements(elem, props) {
                     ["Add Discussion"]: newData["Add Discussion"]
                 }
                 break;
-            case "block-text-button" :
-                newData = {
-                    ["Block Math"]: newData["Block Math"],
-                    ["Block Code"]: newData["Block Code"],
-                    ["Playscript"]: newData["Playscript"]
-                }
-                break;
         }
     }
     if(newData){

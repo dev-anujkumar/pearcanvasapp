@@ -141,7 +141,7 @@ export const checkBlockListElement = (data, keypressed) => {
         const { contents } = Object.values(slateLevelData)[0];
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
             const indexes = index.split("-");
-            if (indexes && indexes.length && 'type' in contents.bodymatter[indexes[0]] && contents.bodymatter[indexes[0]].type === MANIFEST_LIST) {
+            if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
                 elementData = {
                     indexToinsert: Number(indexes[indexes.length - 1]) + 1,
                     parentData: getBLParentContainer(contents.bodymatter[indexes[0]], 1, indexes.length - BLOCK_LIST_ELEMENT_EVENT_MAPPING[keypressed], indexes)
