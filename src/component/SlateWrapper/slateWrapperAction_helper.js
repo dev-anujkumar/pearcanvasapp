@@ -220,6 +220,30 @@ export const onPasteSuccess = async (params) => {
                         item?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]?.elementdata?.bodymatter?.splice(cutIndex, 0, responseData)
                     }
                 }
+            } else if (asideData?.parent?.type === SHOW_HIDE && item.id === asideData?.parent?.id && asideData?.parent?.showHideType) {
+                const indexes = asideData?.index?.split("-") || [];
+                const sectionType = asideData?.parent?.showHideType;
+                if (indexes.length === 3) {  // paste inside S/H->As/WE-head
+                    const selcetIndex = sourceElementIndex?.toString().split("-") || [];
+                    /* @newIndex@ for cut form same column to inner aside/we */
+                    let newIndex;
+                    if (operationType === 'cut' && selcetIndex?.length === 3 && indexes[1] === selcetIndex[1] && selcetIndex[2] < indexes[2]) {
+                        newIndex = indexes;
+                        newIndex[2] = newIndex[2] - 1;
+                    } else {
+                        newIndex = indexes;
+                    }
+
+                    if (asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest") { /* paste elements inside S/H/WE/Body */ 
+                        item?.interactivedata[sectionType][newIndex[2]].elementdata?.bodymatter?.map(item_L2 => {
+                            if(item_L2.id === parentUrn?.manifestUrn) {
+                                item_L2?.contents?.bodymatter?.splice(cutIndex, 0, responseData);
+                            }
+                        })
+                    } else {
+                        item?.interactivedata[sectionType][newIndex[2]].elementdata?.bodymatter?.splice(cutIndex, 0, responseData);
+                    }
+                } 
             }
         })
     } else if(asideData && asideData.type == 'citations'){

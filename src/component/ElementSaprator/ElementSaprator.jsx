@@ -367,7 +367,7 @@ export function typeOfContainerElements(elem, props) {
     /* Do not show SH and Pop up option if Aside/WE is inside SH  */
     if (asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) {
         switch (elem?.buttonType) {
-            case "interactive-elem-button" :
+            case "interactive-elem-button":
                 newData = {
                     ["Add Elm Interactive"]: newData["Add Elm Interactive"],
                     ["Add Quad Interactive"]: newData["Add Quad Interactive"],
@@ -375,7 +375,7 @@ export function typeOfContainerElements(elem, props) {
                     ["Add Discussion"]: newData["Add Discussion"]
                 }
                 break;
-            case "block-text-button" :
+            case "block-text-button":
                 newData = {
                     ["Block Math"]: newData["Block Math"],
                     ["Block Code"]: newData["Block Code"],
@@ -384,6 +384,7 @@ export function typeOfContainerElements(elem, props) {
                 break;
         }
     }
+
     if(newData){
         return Object.entries(newData).map(function (num) {
             /* If Showhide Element, different set of params required to create elements inside SH */

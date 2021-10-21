@@ -21,7 +21,6 @@ const BlockList = (props) => {
                     element={item}
                     index={`${typeof (props?.index) === 'number' ? props?.index : props?.index?.split('-')[0]}-${props?.indexTemp}${parentIndex}-${index}`}
                     indexTemp={indexT}
-                    onlyElement={item?.type === 'manifestlist' ? false : true}
                     onClickCapture={props?.onClickCapture}
                     showBlocker={props?.showBlocker}
                     borderToggle={props?.borderToggle}
