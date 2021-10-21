@@ -68,6 +68,7 @@ const ShowHideUiBlock = (props) => {
 			element = {props?.element}
 			showPlayscript = {showPlayscript}
 			showDiscussion = {showDiscussion}
+			cloneContainer = {props?.cloneContainer}
 		/>
 	}
 
