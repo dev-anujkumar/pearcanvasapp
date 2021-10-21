@@ -341,7 +341,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     let _isEditorPlaced = false;
     for (let i = tinymce.editors.length - 1; i > -1; i--) {
       let ed_id = tinymce.editors[i].id;
-      if (ed_id.includes('markedindex') || ed_id.includes('footnote')) {
+      if (ed_id.includes('markedindex')) {
         _isEditorPlaced = true;
       }
     }
@@ -394,7 +394,6 @@ export class ReactMarkedIndexEditor extends React.Component {
 
     for (let i = tinymce.editors.length - 1; i > -1; i--) {
       let ed_id = tinymce.editors[i].id;
-      console.log('test', ed_id);
       if (ed_id.includes('markedindex') || ed_id.includes('footnote')) {
         if (ed_id === currentTarget.id) {
           return false;
@@ -444,8 +443,6 @@ export class ReactMarkedIndexEditor extends React.Component {
 
   render() {
     let propsGlossaryFootNoteCurrentValue = this.props.markIndexCurrentValue;
-
-    // && this.props.markIndexCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
     let markIndexCurrentValue;
     try {
       markIndexCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
@@ -454,7 +451,6 @@ export class ReactMarkedIndexEditor extends React.Component {
       markIndexCurrentValue = propsGlossaryFootNoteCurrentValue;
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
-    console.log("this>>>", this.props.id)
     return (
       <div className="glossary-toolbar">
         <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue && markIndexCurrentValue }}></p>

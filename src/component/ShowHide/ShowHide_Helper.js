@@ -30,7 +30,7 @@ export function findSectionType(index){
 
 /* List of Elements can be added inside showhide; Will be displayed on click of 'Seprator + Icon' */
 export const addNestedElements = (index, sectionType, props) => {
-	return [{
+	let nestedElements = [{
 			buttonType: 'text-elem',
 			buttonHandler: () => addElementInShowHide(index, sectionType, TEXT, props),
 			tooltipText: 'Text',
@@ -58,17 +58,22 @@ export const addNestedElements = (index, sectionType, props) => {
             buttonHandler: () => addElementInShowHide(index, sectionType, TABLE_EDITOR, props),
             tooltipText: 'Table',
             tooltipDirection: 'left'
-        },{
+        }
+	]
+    if (props?.asideData?.type !== "groupedcontent" && props?.asideData?.type !== "element-aside" && !config.isPopupSlate) {
+        nestedElements.push({
             buttonType: 'container-elem-button',
             tooltipText: 'Container',
             tooltipDirection: 'left'
-        },{
+        })
+        nestedElements.push({
             buttonType: 'worked-exp-elem',
             buttonHandler: () => addElementInShowHide(index, sectionType, WORKED_EXAMPLE, props),
             tooltipText: 'Worked Example',
             tooltipDirection: 'left'
-        }
-	]
+        })
+    }
+    return nestedElements;
 }
 
 /* On Clicking of icons on Seprator Dropdown; */

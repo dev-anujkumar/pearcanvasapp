@@ -135,6 +135,16 @@
 .bl .cypress-editable.place-holder::before {
     margin-top: -10px !important;
 }
+.bl .p {
+    border: none !important;
+}
+.bl .btn-element {
+    display: none !important;
+}
+.bl .manifestlist {
+    display: block !important;
+}
+
 /* .element-container{
     padding: 1px 8px !important; 
 } */

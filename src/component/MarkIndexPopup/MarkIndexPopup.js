@@ -116,6 +116,20 @@ class PrintIndexPopup extends Component {
     }
   }
 
+ /** to removed tinymce instance */
+  componentWillUnmount() {
+    for (let i = tinymce.editors.length - 1; i > -1; i--) {
+      let ed_id = tinymce.editors[i].id;
+      if (ed_id.includes('markedindex')) {
+        let tempContainerHtml = tinyMCE.$("#" + ed_id).html();
+        tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        document.getElementById(ed_id).innerHTML = tempContainerHtml;
+        tinymce.remove(`#${ed_id}`)
+        tinymce.$('.wrs_modal_desktop').remove();
+      }
+    }
+  }
+
   render() {
     const buttonText = this.props.markedIndexData.markedIndexGlossary.markedIndexEntryURN ||
                       this.props.markedIndexData.markedIndexValue.markIndexid ? 

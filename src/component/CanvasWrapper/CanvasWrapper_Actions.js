@@ -603,6 +603,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     if (versioning.indexes.length === 4 && versioning.parent.type === 'groupedcontent') {
                         newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]].groupeddata.bodymatter[versioning.indexes[1]] = Object.values(slateData.data)[0].groupeddata.bodymatter[versioning.indexes[1]];
+                    } else if ((versioning.indexes.length === 4 || versioning.indexes.length === 5) && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
+                        newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]].interactivedata = Object.values(slateData.data)[0].interactivedata;
                     } else {
                         let index = versioning.indexes[0];
                         newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
