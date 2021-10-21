@@ -1351,6 +1351,9 @@ export class TinyMceEditor extends Component {
             } else if (key === 9 && e.shiftKey) {
                 // SHIFT + TAB key press handling for BlockList element
                 e.preventDefault();
+                const { index } = this.props;
+                // restricting SHIFT + TAB operation on first level BL
+                if (index && typeof index === 'string' && index.includes('-') && index.split("-").length <= 3) return;
                 blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
                 if (blockListData && Object.keys(blockListData).length) {
                     const { parentData, indexToinsert } = blockListData;
@@ -2521,6 +2524,30 @@ export class TinyMceEditor extends Component {
             let indexesLen = tempIndex.length;
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
+                    case "1":
+                        if (!this.props.element.contents['formatted-title']) {
+                            return false;
+                        }
+                        break;
+                    case "4":
+                        if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                            return false;
+                        }
+                }
+            } else if (indexesLen === 3) {
+                switch (tempIndex[2]) {
+                    case "1":
+                        if (!this.props.element.contents['formatted-title']) {
+                            return false;
+                        }
+                        break;
+                    case "4":
+                        if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                            return false;
+                        }
+                }
+            } else if (indexesLen === 4) {
+                switch (tempIndex[3]) {
                     case "1":
                         if (!this.props.element.contents['formatted-title']) {
                             return false;

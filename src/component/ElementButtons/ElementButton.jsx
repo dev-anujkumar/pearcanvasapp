@@ -45,7 +45,7 @@ import pasteIcon from '../../images/ElementButtons/contentPaste.png'
 import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
 import ButtonTypes from './ButtonTypes.js';
 import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
-
+import ElementConstants from '../ElementContainer/ElementConstants'; 
 class ElementButton extends Component {
    
   /**
@@ -56,26 +56,27 @@ class ElementButton extends Component {
   */
     renderButton = (type, clickHandlerFn, btnClassName = '', elementType) => {
         let buttonJSX = null
+        const elementTypeClassName = (elementType === ElementConstants.BLOCK_LIST) ? elementType : ''; 
         const { labelText,elementId,isSubscribersSlate } = this.props
         switch(type){
             case buttonTypes.CLOSE_CONTAINER:
                 buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
                 break;
             case buttonTypes.ADD_COMMENT:
-                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementType}`} title="note" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementTypeClassName}`} title="note" onClick={clickHandlerFn}>
                     {addNote}
                     </span>
                 break;
             case buttonTypes.COMMENT_FLAG:
-                buttonJSX = <span className={`btn-element small flag-icon ${elementType}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
+                buttonJSX = <span className={`btn-element small flag-icon ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
                     {noteFlag}
                     </span>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
-                buttonJSX = <span className={`btn-element element-label ${btnClassName} ${elementType}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
+                buttonJSX = <span className={`btn-element element-label ${btnClassName} ${elementTypeClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
-                buttonJSX = <span className={`btn-element delete-icon ${elementType}`} onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element delete-icon ${elementTypeClassName}`} onClick={clickHandlerFn}>
                     <img src={deleteIcon} /></span>
                 break;
             case buttonTypes.TCM:
