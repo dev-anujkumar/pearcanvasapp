@@ -14,6 +14,7 @@ import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Hel
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 
 import ElementConstants, { containersInSH } from "./ElementConstants";
+import { checkBlockListElement } from '../../js/TinyMceUtility';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
@@ -147,7 +148,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
-    const { showHideObj } = getState().appStore
+    const { showHideObj,slateLevelData } = getState().appStore
     updatedData.projectUrn = config.projectUrn;
     if (updatedData.loData) {
         updatedData.slateVersionUrn = config.slateManifestURN;
@@ -168,6 +169,15 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
     }
     updateStoreInCanvas(helperArgs)
     let updatedData1 = JSON.parse(JSON.stringify(updatedData))
+    const data = {
+        slateLevelData,
+        index: elementIndex
+    };
+    const blockListData = checkBlockListElement(data, 'TAB');
+    if(blockListData && Object.keys(blockListData).length > 0) {
+        const { parentData } = blockListData;
+        updatedData1.elementParentEntityUrn = parentData?.contentUrn;
+    }
     if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
         updatedData1 = {
             ...updatedData,
