@@ -446,13 +446,7 @@ const mapStateToProps = (state) => ({
     showDiscussion: state.projectInfo.showDiscussion,
     projectSubscriptionDetails:state.projectInfo
 })
-const mapDispatchToProps = (dispatch) => {
-    return {
-        cloneContainer: (insertionIndex, selectedElementId,parentUrn,asideData) => {
-            dispatch(cloneContainer(insertionIndex, selectedElementId,parentUrn,asideData))
-        }
-    }
-}
+
 const mapActionToProps = {
     cloneContainer
 }
