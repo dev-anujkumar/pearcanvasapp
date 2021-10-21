@@ -60,11 +60,12 @@ class PrintIndexPopup extends Component {
         saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField)
       }
     }
-    this.props.showMarkedIndexPopup(false, '');
+    this.props.showMarkedIndexPopup(false);
   }
 
   saveMarkedIndex = () => {
     if(this.props.isInGlossary){
+      let {elementWorkId, elementType,  type, elementSubType, typeWithPopup, poetryField} = this.props.markedIndexData.markedIndexValue;
       let { markedIndexEntryURN } = this.props.markedIndexData.markedIndexGlossary;
       let firstLevel = document.querySelector('#markedindex-editor > div > p');
       let secondLevel = document.querySelector('#index-secondlevel-attacher > div > p');
@@ -80,6 +81,7 @@ class PrintIndexPopup extends Component {
         this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN, checkDifference);
       } else{
         getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", res => {
+          saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField);
           this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id, checkDifference);
         });
       }
@@ -103,14 +105,7 @@ class PrintIndexPopup extends Component {
 
   closePopUp = () =>{
     if(this.props.isInGlossary){
-      const {indexEntries, markedIndexEntryURN} = this.props.markedIndexData.markedIndexGlossary;
-      let firstLevel = "", secondLevel= "";
-      if(markedIndexEntryURN){
-        const parsedIndexEntries = JSON.parse(indexEntries[markedIndexEntryURN])
-        firstLevel = parsedIndexEntries.firstLevelEntry
-        secondLevel = parsedIndexEntries.secondLevelEntry
-      }
-      this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN);
+      this.props.markedIndexPopupOverGlossary(false);
     } else {
       this.props.showMarkedIndexPopup(false)
     }
