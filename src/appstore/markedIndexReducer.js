@@ -20,6 +20,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 markedIndexValue: action.payload.markedIndexValue,
                 markedIndexCurrentValue: action.payload.markedIndexCurrentValue,
+                markedIndexGlossary: action.payload.markedIndexGlossary,
                 elementIndex: action.payload.elementIndex
             }
         case OPEN_MARKED_INDEX_ON_GLOSSARY:

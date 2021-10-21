@@ -172,7 +172,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         } else if (elementType === "element-dialogue") {
             glossaryFootElem = newBodymatter[tempIndex[0]];
         }
-        else if (newBodymatter[tempIndex[0]].type === "manifestlist") { //Block list condition
+        else if (newBodymatter[tempIndex[0]]?.type === "manifestlist") { //Block list condition
             if(tempIndex.length===3){
                 glossaryFootElem = newBodymatter[tempIndex[0]].listdata.bodymatter[tempIndex[1]].listitemdata.bodymatter[tempIndex[2]];
             }
@@ -669,7 +669,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let currentParentData = JSON.parse(JSON.stringify(parentData1));
         let currentSlateData = currentParentData[config.slateManifestURN];
         let poetryData;
-        console.log("the type with popup is ", typeWithPopup, asideParent, tcmParentData.asideData)
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
         if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
             let showhideTypeVal = "", showHideObject = undefined
@@ -1000,7 +999,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
             newBodymatter[tempIndex[0]] = res.data;
         }
-        else if (newBodymatter[tempIndex[0]].type === "manifestlist") { //Block list condition
+        else if (newBodymatter[tempIndex[0]]?.type === "manifestlist") { //Block list condition
             if(tempIndex.length===3){
                 newBodymatter[tempIndex[0]].listdata.bodymatter[tempIndex[1]].listitemdata.bodymatter[tempIndex[2]] = res.data;
             }

@@ -838,7 +838,8 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
                 case 3:
                     if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
-                    } else {
+                    } 
+                    if (newBodymatter[tmpIndex[0]].type == "element-aside") {
                         newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]] = updatedElement
                     }
                     break;

@@ -365,9 +365,9 @@ export function typeOfContainerElements(elem, props) {
     /* Do not show Citation Group option if inside Multicolumn  */
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
     /* Do not show SH and Pop up option if Aside/WE is inside SH  */
-    if ((asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) || (asideData?.type === ELEMENT_ASIDE && config.isPopupSlate)) {
+    if (asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) {
         switch (elem?.buttonType) {
-            case "interactive-elem-button" :
+            case "interactive-elem-button":
                 newData = {
                     ["Add Elm Interactive"]: newData["Add Elm Interactive"],
                     ["Add Quad Interactive"]: newData["Add Quad Interactive"],
@@ -375,16 +375,16 @@ export function typeOfContainerElements(elem, props) {
                     ["Add Discussion"]: newData["Add Discussion"]
                 }
                 break;
-        }
-    } else if (asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === 'groupedcontent' && elem?.buttonType === 'interactive-elem-button') {
-        newData = {
-            ["Add Elm Interactive"]: newData["Add Elm Interactive"],
-            ["Add Quad Interactive"]: newData["Add Quad Interactive"],
-            ["Add Smart Link"]: newData["Add Smart Link"],
-            ["Add Pop Up"]: newData["Add Pop Up"],
-            ["Add Discussion"]: newData["Add Discussion"]
+            case "block-text-button":
+                newData = {
+                    ["Block Math"]: newData["Block Math"],
+                    ["Block Code"]: newData["Block Code"],
+                    ["Playscript"]: newData["Playscript"]
+                }
+                break;
         }
     }
+
     if(newData){
         return Object.entries(newData).map(function (num) {
             /* If Showhide Element, different set of params required to create elements inside SH */
@@ -447,4 +447,7 @@ const mapStateToProps = (state) => ({
     projectSubscriptionDetails:state.projectInfo
 })
 
-export default connect(mapStateToProps, { cloneContainer })(ElementSaprator)
+const mapActionToProps = {
+    cloneContainer
+}
+export default connect(mapStateToProps, mapActionToProps)(ElementSaprator)

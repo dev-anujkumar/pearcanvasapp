@@ -839,10 +839,10 @@ class ElementContainer extends Component {
         const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
         let parentElement
         /* Update title/credit of block poetry inside multicolumn */
-        if (containerParent && this.props?.parentElement?.type == "groupedcontent" && elementType == "poetry") {
-            this.props.parentElement.groupeddata?.bodymatter.map((ele) => {
-                ele.groupdata?.bodymatter.map((ele1) => {
-                    if(ele1.type == "poetry" && ele1.id === elementId) {
+        if (containerParent && this.props?.parentElement?.type == "groupedcontent" && this.props?.element?.type == "poetry") {
+            this.props.parentElement?.groupeddata?.bodymatter.map((ele) => {
+                ele.groupdata?.bodymatter?.map((ele1) => {
+                    if(ele1.type == "poetry" && ele1.id === this.props.element?.id) {
                         parentElement = ele1
                     }
                 })
