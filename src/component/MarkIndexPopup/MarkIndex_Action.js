@@ -97,6 +97,7 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
                 firstLevel: markedIndexTextFirstLvl,
                 secondLevel: markedIndexTextSecondLvl
             },
+            markedIndexGlossary:{},
             elementIndex: index
         }
     });
@@ -159,7 +160,7 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
     let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {};
     if(glossaryContentText && glossaryContentText.includes('mark-index-id')){
         markedIndexEntryURN = glossaryContentText.slice(glossaryContentText.indexOf('mark-index-id')).split("\"")[1];
-        let indexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
+        indexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
         let {firstLevelEntry, secondLevelEntry} = JSON.parse(indexEntries);
 
         markedIndexFirstLevel = firstLevelEntry;

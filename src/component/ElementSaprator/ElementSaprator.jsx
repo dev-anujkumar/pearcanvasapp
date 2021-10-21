@@ -447,4 +447,7 @@ const mapStateToProps = (state) => ({
     projectSubscriptionDetails:state.projectInfo
 })
 
-export default connect(mapStateToProps, { cloneContainer })(ElementSaprator)
+const mapActionToProps = {
+    cloneContainer
+}
+export default connect(mapStateToProps, mapActionToProps)(ElementSaprator)

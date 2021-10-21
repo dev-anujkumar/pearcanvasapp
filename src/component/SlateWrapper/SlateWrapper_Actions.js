@@ -1130,6 +1130,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
             const { setPayloadForContainerCopyPaste } = (await import("./slateWrapperAction_helper.js"))
             _requestData = setPayloadForContainerCopyPaste(payloadParams)
+            if (sectionType || (asideData?.sectionType)) {
+                let section = sectionType ? sectionType : asideData?.sectionType;
+                _requestData.content[0].sectionType = section;
+            }
         }
 
         if('manifestationUrn' in selection.element) {
