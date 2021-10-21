@@ -17,7 +17,7 @@ import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper
  * @param {*} typeWithPopup 
  * @param {*} poetryField 
  */
-export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField) => async (dispatch) => {
+export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField, isNewIndex) => async (dispatch) => {
     let markedIndexValue = {
         type: popupType,
         popUpStatus: status,
@@ -27,7 +27,8 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         elementSubType,
         markIndexText,
         typeWithPopup: typeWithPopup ? typeWithPopup : undefined,
-        poetryField: poetryField ? poetryField : undefined
+        poetryField: poetryField ? poetryField : undefined,
+        isNewIndex
     }
 
     if (status === true) {
