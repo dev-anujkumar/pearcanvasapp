@@ -172,7 +172,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         } else if (elementType === "element-dialogue") {
             glossaryFootElem = newBodymatter[tempIndex[0]];
         }
-        else if (newBodymatter[tempIndex[0]].type === "manifestlist") { //Block list condition
+        else if (newBodymatter[tempIndex[0]]?.type === "manifestlist") { //Block list condition
             if(tempIndex.length===3){
                 glossaryFootElem = newBodymatter[tempIndex[0]].listdata.bodymatter[tempIndex[1]].listitemdata.bodymatter[tempIndex[2]];
             }
