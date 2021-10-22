@@ -460,7 +460,7 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     for (const SHType of typeArray) {
         const showhidetag = SHType !== 'postertextobject' ? SHType : 'revel'
-        wipData.interactivedata[SHType]?.map((item) => {
+        wipData.interactivedata[SHType]?.map((item, innerIndex) => {
             if (elementType.indexOf(item?.type) !== -1) { /* Check Element where tcm is not supported */
                 const showhide = {
                     element: wipData,
@@ -473,6 +473,10 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
                 const isHead = asideData?.type === ELEMENT_ASIDE && asideData?.subtype === WORKED_EXAMPLE ? parentUrn.manifestUrn == asideData.id ? "HEAD" : "BODY" : "";
                 elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, showhide, { asideData, parentUrn });
                 prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus, index);
+            } else if (item?.type === ELEMENT_ASIDE) {
+                containerSnapshotsInShowhide(wipData, innerIndex, { asideData, parentUrn }, actionStatus, item, SHType)
+            } else if (item?.type === CITATION_GROUP) {
+                containerSnapshotsInShowhide(wipData, innerIndex, { asideData, parentUrn }, actionStatus, item, SHType)
             }
         })
     }
@@ -1908,3 +1912,18 @@ const setParentUrn = (bodymatter, tempIndex, isFigure, asideData = {}) => {
         multiColumnData
     }
 }
+
+export const containerSnapshotsInShowhide = (wipData, index, containerElement, actionStatus, item, SHType) => {
+    containerElement = {
+        sectionType: SHType,
+        showHideObj: {
+            currentElement: item,
+            element: wipData,
+            showHideType: SHType
+        }
+    }
+    let type = item.type === "citations" ? "CITATION" : "CONTAINER";
+    prepareTcmSnapshots(item, actionStatus, containerElement, type, index);
+}
+
+
