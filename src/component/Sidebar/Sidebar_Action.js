@@ -629,6 +629,62 @@ export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
 
 }
 
+
+
+export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) => {
+    let elementEntityUrn = dataToUpdate.blockListData.contentUrn;
+    let dataToSend = dataToUpdate.dataToSend
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+    config.conversionInProcess = true
+    config.isSavingElement = true
+    const url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata`
+    return axios.put(url, dataToSend, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(res => {
+        const newParentData = getState().appStore.slateLevelData;
+        const parsedParentData = JSON.parse(JSON.stringify(newParentData));
+        updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex], dataToSend)
+        dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: parsedParentData
+            }
+        })
+        if(dataToSend.columnnumber){
+        let activeElementObject = {
+            contentUrn: dataToUpdate.blockListData.contentUrn,
+            elementId: dataToUpdate.blockListData.id,
+            index: dataToUpdate.index,
+            elementType: dataToUpdate.elementType,
+            primaryOption: dataToUpdate.primaryOption,
+            secondaryOption: dataToUpdate.secondaryOption,
+            toolbar: dataToUpdate.toolbar,
+            elementWipType: dataToUpdate.elementWipType,
+            tag: "P"
+        };
+        dispatch({
+            type: SET_ACTIVE_ELEMENT,
+            payload: activeElementObject
+        });
+    }
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        config.conversionInProcess = false
+        config.savingInProgress = false
+        config.isSavingElement = false
+    })
+        .catch(err => {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            dispatch({ type: ERROR_POPUP, payload: { show: true } })
+            config.conversionInProcess = false
+            config.savingInProgress = false
+            config.isSavingElement = false
+            console.error(" Error >> ", err)
+        })
+}
+
 export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
@@ -638,27 +694,16 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         activeElement: getState().appStore.activeElement,
         currentSlateData
     }
-    let dataToSend = {}
-    let elementEntityUrn = ""
-    // if(dataToUpdate.elementType && dataToUpdate.elementType == "manifestlist" && dataToUpdate.primaryOption){
-    //     dataToSend.columnnumber = dataToUpdate.primaryOption.split('-')[dataToUpdate.primaryOption.split('-').length-1]
-    //     elementEntityUrn = dataToUpdate.contentUrn;
-    // }
-    if(!dataToUpdate.blockListElement){
-        dataToSend = {
-            numberedline: dataToUpdate.isNumbered
-        }
+    let dataToSend = {
+        numberedline: dataToUpdate.isNumbered
     }
     if (dataToUpdate.isNumbered == true) {
         dataToSend.startlinenumber = dataToUpdate.startNumber
     }
+    let elementEntityUrn = ""
     const updatedData = dispatch(updateContainerMetadataInStore(updateParams,""))
     if(updatedData?.elementEntityUrn){
         elementEntityUrn = updatedData.elementEntityUrn
-    }
-    if(dataToUpdate.blockListElement){
-        elementEntityUrn = dataToUpdate.blockListData.contentUrn;
-        dataToSend= dataToUpdate.dataToSend
     }
     let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
     currentParentData[config.slateManifestURN] = updatedSlateLevelData
@@ -702,9 +747,6 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                 currentSlateData: newSlateData
             }
             const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
-            if(dataToUpdate.blockListElement){
-                updateBlockListMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
-            }
             if(updatedStore.currentSlateData){
                 parsedParentData[config.slateManifestURN] = updatedStore.currentSlateData;
                 dispatch({
@@ -713,24 +755,6 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                         slateLevelData: parsedParentData//{[config.slateManifestURN] : updatedStore.currentSlateData}
                     }
                 })
-            }
-            if(dataToUpdate.blockListElement){
-                let activeElementObject = {
-                    elementId: dataToUpdate.elementId,
-                   index: dataToUpdate.index,
-                    elementType: dataToUpdate.elementType,
-                    primaryOption: dataToUpdate.primaryOption,
-                    secondaryOption: dataToUpdate.secondaryOption,
-                    //tag: newElementData.labelText,
-                    toolbar: dataToUpdate.toolbar,
-                    elementWipType: dataToUpdate.elementWipType,
-                    //altText,
-                    //longDesc
-                };
-                dispatch({
-                    type: SET_ACTIVE_ELEMENT,
-                    payload: activeElementObject
-                });
             }
         }
         config.conversionInProcess = false
@@ -747,7 +771,7 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         })
 }
 
-const updateBlockListMetaData = (elementId, elementData, metaData) => {
+const updateBLMetaData = (elementId, elementData, metaData) => {
     if(elementData.id === elementId){
         if(metaData.subtype){
             elementData.subtype = metaData.subtype;
@@ -760,7 +784,7 @@ const updateBlockListMetaData = (elementId, elementData, metaData) => {
     }
     else{
         if (elementData?.listdata?.bodymatter) {
-            elementData.listdata?.bodymatter.forEach((listData) => updateBlockListMetaData(elementId, listData,metaData))
+            elementData.listdata?.bodymatter.forEach((listData) => updateBLMetaData(elementId, listData,metaData))
         }
         if (elementData?.listitemdata?.bodymatter) {
             elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
@@ -775,7 +799,7 @@ const updateBlockListMetaData = (elementId, elementData, metaData) => {
                     }
                     return;
                 }
-                updateBlockListMetaData(elementId, listItemData,metaData);
+                updateBLMetaData(elementId, listItemData,metaData);
             });
         }
     }

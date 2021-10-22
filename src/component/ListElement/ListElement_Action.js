@@ -8,7 +8,7 @@ import { LIST_TYPE_MAPPINGS } from '../../constants/Element_Constants';
 import { checkBlockListElement } from '../../js/TinyMceUtility';
 // IMPORT - other dependencies
 import elementList from '../Sidebar/elementTypes.js';
-import { conversionElement, updateContainerMetadata } from '../Sidebar/Sidebar_Action.js';
+import { conversionElement, updateBlockListMetadata, updateContainerMetadata } from '../Sidebar/Sidebar_Action.js';
 
 // ************************************************************************
 // *************************** List Template ****************************** 
@@ -100,7 +100,7 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
         },
         slateLevelBLIndex:activeElement.index.split("-")[0]
        }
-       dispatch(updateContainerMetadata(data))
+       dispatch(updateBlockListMetadata(data))
     }
     else{
         dispatch(conversionElement({
