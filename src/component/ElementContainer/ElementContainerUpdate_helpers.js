@@ -846,11 +846,15 @@ export const updateStoreInCanvas = (params) => {
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
     if (config.tcmStatus) {
-        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
-            const tcmDataArgs = {
-                updatedDataID: updatedData.id, getState, dispatch, versionedData, updatedData
+        //This check will be removed once Blocklist will support TCM
+        const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
+        if(!isBlockListElement) {
+            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
+                const tcmDataArgs = {
+                    updatedDataID: updatedData.id, getState, dispatch, versionedData, updatedData
+                }
+                prepareDataForUpdateTcm(tcmDataArgs);
             }
-            prepareDataForUpdateTcm(tcmDataArgs);
         }
     }
     const commonArgs = { updatedData, asideData, dispatch, elementIndex, parentElement, newslateData }
