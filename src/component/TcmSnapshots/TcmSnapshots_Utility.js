@@ -65,7 +65,6 @@ const {
  * @param {String} type - type of element
 */
 export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null) => {
-    console.log("Poetry Snapshot Create 2 ", wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null);
     
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
@@ -102,7 +101,6 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
         const gId = asideData?.id || parentUrn?.mcId;
         tag.grandParent = multiColumnType + ":" + parentUrn?.columnName;
         elementId.grandParentId = `${gId}+${parentUrn?.manifestUrn}`; 
-        console.log("Poetry Snapshot Create 3 ", tag, elementId);
     } else if((figureElementList.includes(type) || actionStatus?.action === "update" ||  actionStatus?.action === "create" ||
         actionStatus?.action === "delete" || parentUrn?.elementType === ELEMENT_ASIDE ) && 
         gPType === MULTI_COLUMN) {
@@ -164,8 +162,6 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     }
     /** TCM Snapshots on Default Slate - Section/I.S. */
     else {
-        
-        console.log("Poetry Snapshot Create 4 ", snapshotsData, containerElement);
         tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type,index, "",operationType)
     }
 }
@@ -191,8 +187,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     }
     /* For Poetry creation (not on update) */
     else if (wipData.type === POETRY_ELEMENT) {
-        console.log("Poetry Snapshot Create 5 ", snapshotsData, containerElement);
-        tcmSnapshotsPoetry(snapshotsData, defaultKeys, index, isPopupSlate, containerElement);
+        tcmSnapshotsCreatePoetry(snapshotsData, defaultKeys, index, isPopupSlate, containerElement);
     }
     /* action on Section break in WE*/
     else if (type === SECTION_BREAK || wipData.type === WE_MANIFEST) {
@@ -205,8 +200,6 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     /* action on element in WE/PE/CG/2C */
     /* stanza create inside poetry inside containers */
     else if (poetryData || asideData || parentUrn || (showHideObj && Object.keys(showHideObj)?.length > 0)) {
-
-        console.log("Poetry Snapshot Create 6 ", snapshotsData, containerElement);
         tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType)
     }
     /* action on Multi-column */
@@ -245,7 +238,7 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
                     elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? 'BODY' : "", item.id,undefined,popupInContainer,slateManifestVersioning,isPopupSlate, parentObj, containerElement);
                     prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus,index);
                 }
-               else if (ele.type === SHOWHIDE) {
+               else if (ele.type === SHOWHIDE || ele.type === POETRY_ELEMENT) {
                     tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,ele, operationType)
                 }
                 else if (ele.type === POPUP_ELEMENT) {
@@ -259,9 +252,10 @@ const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlat
             elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer,slateManifestVersioning, isPopupSlate, parentObj, containerElement);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
-        else if (item.type === SHOWHIDE) {
+        else if (item.type === SHOWHIDE || item.type === POETRY_ELEMENT) {
             tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,item, operationType)
         }
+        
         else if (item.type === POPUP_ELEMENT) {
             tcmSnapshotsPopup(wipData,index,containerElement,actionStatus,item,operationType);
         }
@@ -335,6 +329,8 @@ function setParentUrnData(wipData, item) {
     return parent;
 }
 
+
+
 const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item,eleIndex,operationType=null) => {
     const { asideData, parentUrn, slateManifest } = containerElement || {};
     const parentObj = setParentUrnData(wipData, item);
@@ -354,7 +350,7 @@ const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,item,el
         },
         slateManifest
     }
-    if(wipData.type === MULTI_COLUMN && item?.type === SHOWHIDE && !updatedContainerElement?.parentUrn?.multiColumnType) {
+    if(wipData.type === MULTI_COLUMN && (item?.type === SHOWHIDE || item?.type === POETRY_ELEMENT) && !updatedContainerElement?.parentUrn?.multiColumnType) {
         updatedContainerElement.parentUrn = {
             ...updatedContainerElement.parentUrn,
             multiColumnType: wipData?.groupeddata?.bodymatter?.length === 3 ? "3C" : "2C",
@@ -420,7 +416,7 @@ const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,item, co
     prepareTcmSnapshots(item, actionStatus, newContainerElement, "", index, "", operationType);
 }
 
-const tcmSnapshotsPoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn }) => {
+const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn }) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
    const poetryElement = {
         element: wipData
@@ -434,7 +430,6 @@ const tcmSnapshotsPoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { a
             isHead = "BODY"
         }
     }
-    console.log("Poetry Snapshot Poetry Create 6 ", asideData, isHead);
     // always one stanza will be created in poetry but in
     // case of cut paste all of them have to be pasted
     // so multiple snapshots will go 
@@ -442,7 +437,6 @@ const tcmSnapshotsPoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { a
         elementId.childId = item.id;
         tag.childTag = fetchElementsTag(item); 
         const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn });
-        console.log("Poetry Snapshot Create 7 ", elementDetails);
         prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
     })
 }
@@ -635,7 +629,7 @@ const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys,ind
     const { parentUrn } = containerElement
     wipData.groupeddata.bodymatter.map((item, eleIndex) => {
         item.groupdata.bodymatter.map((ele) => {
-            if(ele?.type === SHOWHIDE) {
+            if(ele?.type === SHOWHIDE || ele?.type === POETRY_ELEMENT) {
                tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType);
             } else
             if(ele?.type === "element-aside") {
@@ -944,8 +938,6 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
             currentSnapshot.elementWip = JSON.stringify(res)
         }
     }
-
-    console.log("Poetry Snapshot update/create 8 ", currentSnapshot);
     await sendElementTcmSnapshot(currentSnapshot)
 }
 
@@ -1025,20 +1017,16 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
         else if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype === WORKED_EXAMPLE) { //poetry inside WE - head/body
             const headString = poetryParentURN?.manifestUrn == poetryAsideData?.id ? "HEAD" : "BODY";
-            console.log("Poetry Snapshot 6.2", headString, sectionId, poetryParentURN.manifestUrn, poetryParentURN)
             elementTag = `WE:${headString}:${elementTag}`
             elementId = `${poetryAsideData.id}+${(poetryParentURN?.manifestUrn && headString === "BODY") ? `${poetryParentURN.manifestUrn}+` : ""}${eleId.parentId}+${eleId.childId}`
-            console.log("Poetry Snapshot 6.25", elementTag, elementId)
            
         }
         
         else if (poetryAsideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:BP || 3C:BP */
             const {columnName, manifestUrn, mcId} = poetryParentURN;
             //let grandParentTag = tag.grandParent.split(":")[0];
-            console.log("Poetry Snapshot 6.3", parentUrn, poetryParentURN);
             elementTag = `${poetryParentURN?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
-            console.log("Poetry Snapshot 6.4", elementTag, elementId);
         }
     }
 
@@ -1358,7 +1346,6 @@ const isEmpty = (obj) => {
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot) => {
-    console.log("Poetry Snapshot Glossary", elementUpdateData, containerElement);
     if (elementUpdateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementUpdateData.response.figuretype)) {
         return false
     }
@@ -1388,7 +1375,10 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         wipData = containerElement?.showHideObj?.currentElement || {};
     } 
     else if(typeOfElement === POETRY_ELEMENT) {
-        containerElement = prepareSnaphotPoetry(containerElement, response, elementIndex, currentSlateData);
+        containerElement = prepareSnaphotPoetry(containerElement, response, elementIndex, currentSlateData);   
+        // wipData = containerElement?.poetryData?.currentElement || {};
+        // wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
+   
     }
     else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
@@ -1412,6 +1402,10 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     if (response.id !== updatedId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData?.poetrylines;
+            // if(oldData?.type === "stanza" && elementUpdateData){
+            //     console.log("Versioning snapshot 2.5", oldData, elementUpdateData)
+            //     wipData.html = elementUpdateData?.response?.html
+            // }
         }
         else{
             if (oldData?.type === FIGURE) {
@@ -1427,6 +1421,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
                     dispatch(storeOldAssetForTCM({}))
                 }
             }
+           
             else {
                 if(oldData.type === ELEMENT_ASSESSMENT) {
                     oldData.elementdata = elementUpdateData?.figureData
@@ -1458,7 +1453,6 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch, index, operationType = null, elmFeedback = null) => {
-    console.log("Poetry Snapshot Create 1 ", elementCreateData, type, containerElement, dispatch, index, operationType = null, elmFeedback = null);
     if (elementCreateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementCreateData.response.figuretype)) {
         return false
     }

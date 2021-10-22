@@ -646,13 +646,29 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
     }).then(res => {
         const newParentData = getState().appStore.slateLevelData;
         const parsedParentData = JSON.parse(JSON.stringify(newParentData));
-        updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex], dataToSend)
-        dispatch({
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: {
-                slateLevelData: parsedParentData
+        if (parsedParentData?.status === 'approved') {
+            if (parsedParentData.type === "popup") {
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(parsedParentData.id, parsedParentData.contentUrn, 0, parsedParentData, ""));
             }
-        })
+            else {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            config.conversionInProcess = false
+            config.savingInProgress = false
+            config.isSavingElement = false
+        } else {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex], dataToSend)
+            dispatch({
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: parsedParentData
+                }
+            })
+        }
         if(dataToSend.columnnumber){
         let activeElementObject = {
             contentUrn: dataToUpdate.blockListData.contentUrn,
@@ -669,7 +685,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
-    }
+        }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
         config.savingInProgress = false
