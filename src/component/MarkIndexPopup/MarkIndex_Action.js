@@ -161,8 +161,9 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
     let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {};
     if(glossaryContentText && glossaryContentText.includes('mark-index-id')){
         markedIndexEntryURN = glossaryContentText.slice(glossaryContentText.indexOf('mark-index-id')).split("\"")[1];
-        indexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
-        let {firstLevelEntry, secondLevelEntry} = JSON.parse(indexEntries);
+        let oldIndexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
+        indexEntries[markedIndexEntryURN] = oldIndexEntries;
+        let {firstLevelEntry, secondLevelEntry} = JSON.parse(oldIndexEntries);
 
         markedIndexFirstLevel = firstLevelEntry;
         markedIndexSecondLevel = secondLevelEntry;
