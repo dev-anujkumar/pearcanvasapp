@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { conversionElement, setBCEMetadata ,updateContainerMetadata} from './Sidebar_Action';
+import { conversionElement, setBCEMetadata ,updateBlockListMetadata,updateContainerMetadata} from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
@@ -19,7 +19,6 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-
 class Sidebar extends Component {
     constructor(props) {
         super(props);
@@ -107,7 +106,7 @@ class Sidebar extends Component {
 
       if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
         if (this.props.activeElement.elementWipType == "manifestlist") {
-          this.props.updateContainerMetadata({
+        let blockListMetaDataPayload = {
             blockListData: {
                 id:this.props.activeElement.elementId,
                 contentUrn:this.props.activeElement.contentUrn
@@ -124,7 +123,8 @@ class Sidebar extends Component {
             dataToSend:{
                 columnnumber : value.split('-')[value.split('-').length-1]
             }
-          });
+          }
+          this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
           this.props.conversionElement({
             elementId: this.props.activeElement.elementId,
@@ -856,6 +856,7 @@ export default connect(
         conversionElement,
         setBCEMetadata,
         tcmButtonHandler,
-        updateContainerMetadata
+        updateContainerMetadata,
+        updateBlockListMetadata
     }
 )(Sidebar);
