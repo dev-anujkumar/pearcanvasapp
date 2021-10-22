@@ -50,6 +50,49 @@ ol li.listItemNumeroUnoLowerRoman::before {
     content: counter(section, lower-roman)". ";
 }
 
+
+.bl ol li.listItemNumeroUnoNumber::before {
+    counter-increment: section;
+    content: counter(section, decimal)". ";
+    padding-left: 30px;
+    word-break: break-all;
+    width: 40px;
+}
+
+.bl ol li.listItemNumeroUnoLowerAlpha::before {
+    counter-increment: section;
+    content: counter(section, lower-alpha)". ";
+    padding-left: 30px;
+    word-break: break-all;
+    width: 40px;
+}
+
+.bl ol li.listItemNumeroUnoUpperRoman::before {
+    counter-increment: section;
+    content: counter(section, upper-roman)". ";
+    padding-left: 30px;
+    word-break: break-all;
+    width: 40px;
+}
+
+.bl ol li.listItemNumeroUnoLowerRoman::before {
+    counter-increment: section;
+    content: counter(section, lower-roman)". ";
+    padding-left: 30px;
+    word-break: break-all;
+    width: 40px;
+}
+
+.bl ol li.listItemNumeroUnoUpperAlpha::before {
+    counter-increment: section;
+    content: counter(section, upper-alpha)". ";
+    padding-left: 30px;
+    word-break: break-all;
+    width: 40px;
+}
+
+
+
 li.listItemNumeroUnoBullet {
     color: #000;
     font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
