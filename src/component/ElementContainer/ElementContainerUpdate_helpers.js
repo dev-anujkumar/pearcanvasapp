@@ -50,7 +50,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
     if(isBlockListElement){
         const parentBlockListId = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].id
         const parentBlockListContentUrn = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].contentUrn
-        dispatch(fetchSlateData(parentBlockListId,parentBlockListContentUrn, 0, {indexes:indexes}, CONTAINER_VERSIONING, false));
+        dispatch(fetchSlateData(parentBlockListId,parentBlockListContentUrn, 0, {type:'manifestlist' ,indexes:indexes}, CONTAINER_VERSIONING, false));
     }
     else if (asideData && asideData.type == 'element-aside') {
         asideData.indexes = indexes;
@@ -621,14 +621,14 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         currentParentData,
         showHideObj
     } = params
-
+    const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
     const isPopupOrShowhideElement = (allowedParentType.includes(parentElement?.type) || (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     
-    if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
+    if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
         const containerElement = {
             asideData,
             parentUrn,
