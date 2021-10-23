@@ -1332,75 +1332,81 @@ export class TinyMceEditor extends Component {
                 e.preventDefault();
                 return false;
             }
-            // SHIFT + ENTER key press handling for BlockList element
-            if (key === 13 && e.shiftKey) {
-                e.preventDefault();
-                blockListData = checkBlockListElement(this.props, "TAB");
-                if (blockListData && Object.keys(blockListData).length) {
-                    const { parentData, indexToinsert } = blockListData;
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
-                    this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
-                }
-            } else if (key === 13) {
-                // ENTER key press handling for BlockList element
-                if (blockListData && Object.keys(blockListData).length) {
-                    const { parentData, indexToinsert } = blockListData;
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"ENTER"});
-                }
-            } else if (key === 9 && e.shiftKey) {
-                // SHIFT + TAB key press handling for BlockList element
-                e.preventDefault();
-                const { index } = this.props;
-                // restricting SHIFT + TAB operation on first level BL
-                if (index && typeof index === 'string' && index.includes('-') && index.split("-").length <= 3) return;
-                blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
-                if (blockListData && Object.keys(blockListData).length) {
-                    const { parentData, indexToinsert } = blockListData;
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, {indexOrder:this.props.index,eventType:"SHIFT+TAB"});
-                }
-            } else {
-                // TAB key press handling for BlockList element
-                if (key === 9 && !isNestingLimitReached(this.props.index)) {
+
+            // Block list events
+            if (blockListData && Object.keys(blockListData).length) {
+                // SHIFT + ENTER key press handling for BlockList element
+                if (key === 13 && e.shiftKey) {
                     e.preventDefault();
                     blockListData = checkBlockListElement(this.props, "TAB");
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null,{indexOrder:this.props.index,eventType:"TAB"});
+                        this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
+                    }
+                }
+                else if (key === 13) {
+                    // ENTER key press handling for BlockList element
+                    if (blockListData && Object.keys(blockListData).length) {
+                        const { parentData, indexToinsert } = blockListData;
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "ENTER" });
+                    }
+                } else if (key === 9 && e.shiftKey) {
+                    // SHIFT + TAB key press handling for BlockList element
+                    e.preventDefault();
+                    const { index } = this.props;
+                    // restricting SHIFT + TAB operation on first level BL
+                    if (index && typeof index === 'string' && index.includes('-') && index.split("-").length <= 3) return;
+                    blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
+                    if (blockListData && Object.keys(blockListData).length) {
+                        const { parentData, indexToinsert } = blockListData;
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "SHIFT+TAB" });
+                    }
+                } else {
+                    // TAB key press handling for BlockList element
+                    if (key === 9 && !isNestingLimitReached(this.props.index)) {
+                        e.preventDefault();
+                        blockListData = checkBlockListElement(this.props, "TAB");
+                        if (blockListData && Object.keys(blockListData).length) {
+                            const { parentData, indexToinsert } = blockListData;
+                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                            this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
+                        }
+                    }
+                }
+
+                if (key === 8 && tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 0) {
+                    const { id, type } = this?.props?.element;
+                    const blockListData = checkBlockListElement(this.props, "ENTER");
+                    let manifestListItemData = checkBlockListElement(this.props, "TAB");
+                    const { parentData } = manifestListItemData;
+                    const { listdata } = blockListData?.parentData;
+                    if (listdata?.bodymatter[0].id === parentData?.id) {
+                        if (parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id !== id) {
+                            const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
+                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                        }
+                    }
+
+                    if (listdata?.bodymatter?.length > 1 && listdata?.bodymatter[0].id !== parentData?.id) {
+                        if (parentData?.listitemdata?.bodymatter?.length === 1) {
+                            const deleteItemIndex = listdata?.bodymatter.findIndex(listData => listData.id === parentData?.id);
+                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                            this.props.deleteElement(parentData?.id, "manifestlistitem", { contentUrn: listdata?.contentUrn }, {}, parentData?.contentUrn, deleteItemIndex, {}, {}, null);
+                        } else if (parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === 'manifestlist') {
+                            return;
+                        } else {
+                            const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
+                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                        }
                     }
                 }
             }
-
-            if (key === 8 && tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 0) {
-                const { id, type } = this?.props?.element;
-                const blockListData = checkBlockListElement(this.props, "ENTER");
-                let manifestListItemData = checkBlockListElement(this.props, "TAB");
-                const { parentData } = manifestListItemData;
-                const { listdata } = blockListData?.parentData;
-                if (listdata?.bodymatter[0].id === parentData?.id) {
-                    if (parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id !== id) {
-                        const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
-                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
-                    }
-                }
-
-                if (listdata?.bodymatter?.length > 1 && listdata?.bodymatter[0].id !== parentData?.id) {
-                    if (parentData?.listitemdata?.bodymatter?.length === 1) {
-                        const deleteItemIndex = listdata?.bodymatter.findIndex(listData => listData.id === parentData?.id);
-                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.deleteElement(parentData?.id, "manifestlistitem", { contentUrn: listdata?.contentUrn }, {}, parentData?.contentUrn, deleteItemIndex, {}, {}, null);
-                    } else if (parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === 'manifestlist') {
-                        return;
-                    } else {
-                        const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
-                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
-                    }
-                }
-            }
+           
         });
     }
 

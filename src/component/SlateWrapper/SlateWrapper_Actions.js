@@ -313,8 +313,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
-            if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
-                prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
+            //This check will be removed once BlockList will support TCM
+            if(!blockListDetails) {
+                if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
+                    prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
+                }
             }
         }
         const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
