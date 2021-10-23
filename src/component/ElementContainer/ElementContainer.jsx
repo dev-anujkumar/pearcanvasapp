@@ -1075,6 +1075,7 @@ class ElementContainer extends Component {
                 index: index,
                 showHideType
             },
+            isSectionBreak: this.state.sectionBreak ?? {}
         }
         this.handleCommentPopup(false, e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });

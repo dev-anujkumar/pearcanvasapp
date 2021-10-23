@@ -156,7 +156,7 @@ export const onPasteSuccess = async (params) => {
     }
     /* Paste Aside/WE/CG into S/H */
     const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP];
-    if (asideData?.type === SHOW_HIDE && containersInSH.includes(responseData.type)) {
+    if (asideData?.type === SHOW_HIDE && containersInSH.includes(responseData?.type)) {
         const manifestUrn = parentUrn?.manifestUrn;
         try {
             currentSlateData?.contents?.bodymatter?.map(item => {
