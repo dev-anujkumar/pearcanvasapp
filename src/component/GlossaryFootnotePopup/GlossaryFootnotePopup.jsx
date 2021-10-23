@@ -115,7 +115,7 @@ class GlossaryFootnotePopup extends Component {
                         <div className="glossary-word-header">
                             <div className="glossary-word-title">Term:</div>
                             <div className="glossary-word-name glossary-word-description" id='glossary-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                                <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {glossaryFootNoteCurrentValue.glossaryContentText} markedIndexIcon={markedIndex} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
+                                <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {glossaryFootNoteCurrentValue.glossaryContentText} markedIndexIcon={markedIndex} elementType={this.props.glossaryFootnoteValue?.elementType} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
                             </div>
                         </div>
                     }

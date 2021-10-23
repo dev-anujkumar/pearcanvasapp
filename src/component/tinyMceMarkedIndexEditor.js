@@ -126,10 +126,16 @@ export class ReactMarkedIndexEditor extends React.Component {
     if (activeElement) {
       let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
       if (activeElement.innerText.trim().length || isContainsMath) {
-        activeElement.classList.remove('place-holder')
+        activeElement.classList.remove('place-holder');
+        if(editor.id === 'markedindex-0'){
+          tinymce.$('.printIndex-save-button').removeClass('disabled')
+        }
       }
       else {
         activeElement.classList.add('place-holder')
+        if(editor.id === 'markedindex-0'){
+          tinymce.$('.printIndex-save-button').addClass('disabled')
+        }
       }
     }
   }
