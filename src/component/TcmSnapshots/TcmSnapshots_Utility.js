@@ -1375,8 +1375,10 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         wipData = containerElement?.showHideObj?.currentElement || {};
     } 
     else if(typeOfElement === POETRY_ELEMENT) {
-        containerElement = prepareSnaphotPoetry(containerElement, response, elementIndex, currentSlateData);   
-        // wipData = containerElement?.poetryData?.currentElement || {};
+        containerElement = prepareSnaphotPoetry(containerElement, response, elementIndex, currentSlateData);
+        // for versioning case, we get the last data from wip
+        // so initilizing the wip
+        wipData = containerElement?.poetryData?.currentElement || {};
         // wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
    
     }
