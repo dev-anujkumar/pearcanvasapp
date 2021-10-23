@@ -553,8 +553,7 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
         elementId.parentId = (parentElement?.element?.type === SHOWHIDE || parentElement?.element?.type === POETRY_ELEMENT) ? parentElement.element.id : elementId.parentId;
         elementId.childId = wipData.id;
         elementId.columnId = parentUrn && parentUrn.elementType === MULTI_COLUMN_GROUP && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
-        tag.parentTag = showHideObj ? fetchElementsTag(parentElement.element) : fetchElementsTag(parentElement);
-        tag.parentTag = poetryData ? fetchElementsTag(parentElement.element) : fetchElementsTag(parentElement);
+        tag.parentTag = showHideObj || poetryData ? fetchElementsTag(parentElement.element) : fetchElementsTag(parentElement);
         /* On update of reveal answers inside showhide element; "-childTag-" will be CTA not P */
         tag.childTag = (showHideObj?.element?.type === SHOWHIDE && showHideObj?.showHideType === "postertextobject") ?
                         "CTA" : fetchElementsTag(wipData);
