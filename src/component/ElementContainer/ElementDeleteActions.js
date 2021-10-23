@@ -117,7 +117,7 @@ export const updateStorePostDelete = (deleteParams) => {
         case 3: // sh:show:p
             elementToUpdate = newBodymatter[newIndex[0]]
             if (elementToUpdate?.type == 'showhide') {
-                if (isSectionBreak) {
+                if (isSectionBreak?.id) {
                     const sectionBreakParent = newBodymatter[newIndex[0]]?.interactivedata[showHideType[newIndex[1]]][newIndex[2]]
                     const updatedWorkedEx = delSBInsideWE(isSectionBreak, sectionBreakParent)
                     newBodymatter[newIndex[0]].interactivedata[showHideType[newIndex[1]]][newIndex[2]] = updatedWorkedEx
