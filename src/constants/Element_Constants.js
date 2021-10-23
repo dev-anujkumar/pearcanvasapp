@@ -155,7 +155,7 @@ export const getPasteValidated = (separatorProps, sourceType, selectionType) => 
                     validation = checkShowHidePasteValidation(selectedElement, sourceType, selectionType, validation, indexes?.length);
                     break;
                 case ASIDE_SOURCE:
-                    validation = checkASWEPasteValidation(selectedElement, sourceType, selectionType, validation, indexes?.length);
+                    validation = checkASWEPasteValidation(selectedElement, sourceType, selectionType, validation, indexes?.length,separatorProps?.asideData);
                 case MULTICOLUMN_SOURCE:
                     validation = checkMultiColumnPasteValidation(selectedElement, sourceType, selectionType, validation );
                     break;
@@ -236,10 +236,10 @@ const checkMultiColumnPasteValidation = (selectedElement, sourceType, selectionT
  * @param {*} validation 
  * @returns 
  */
-const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, validation, sourceElementIndex) => {
+const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, validation, sourceElementIndex, parentDetails) => {
     let isValidPaste = validation;
     const conditionalSelection = [SHOWHIDE];
-    if (selectionType === "SHOW_HIDE" && sourceElementIndex >= 3) {
+    if ((selectionType === "SHOW_HIDE" && sourceElementIndex >= 3) || (parentDetails?.parent?.type === 'showhide')) {
         isValidPaste = false;
     }
     else if (selectionType && conditionalSelection.includes(selectionType)) {
