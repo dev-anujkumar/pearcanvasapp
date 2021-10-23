@@ -530,7 +530,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
 
-                    if(editor.selection.getNode().className.includes('callout')){
+                    if(editor.selection.getNode().className.includes('callout') || editor.selection.getNode().className.includes('markedForIndex')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
                             editor.insertContent(textSelected);
