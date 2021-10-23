@@ -538,7 +538,17 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
             elementId.childId = wipData.id;
             tag.childTag = fetchElementsTag(wipData);
         }
-    } else {
+    } 
+    else if (containerElement?.showHideObj?.containerinSH && (asideData?.parent?.type === SHOWHIDE && asideData?.element?.type === ELEMENT_ASIDE)) {
+        elementId.parentId =  asideData?.element?.id ??  "";
+        elementId.childId = wipData.id;
+        elementId.columnId = parentUrn && parentUrn.elementType === MULTI_COLUMN_GROUP && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+        tag.parentTag =fetchElementsTag(asideData?.element) ?? "";
+        /* On update of reveal answers inside showhide element; "-childTag-" will be CTA not P */
+        tag.childTag = (asideData?.parent?.type === SHOWHIDE) && showHideObj?.showHideType === "postertextobject" ?
+            "CTA" : fetchElementsTag(wipData);
+    }
+    else {
         elementId.parentId = parentElement && parentElement.id ? parentElement.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
         elementId.parentId = (parentElement?.element?.type === SHOWHIDE || parentElement?.element?.type === POETRY_ELEMENT) ? parentElement.element.id : elementId.parentId;
         elementId.childId = wipData.id;
@@ -565,7 +575,7 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     if (isCgInSh) {
         elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, containerElement);
     } else {
-        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn });
+        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn, showHideObj });
     }
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
 }
@@ -951,7 +961,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
 export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}) => {
-    const { asideData, parentUrn } = containerElement
+    const { asideData, parentUrn, showHideObj } = containerElement
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
     let elementId = `${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
@@ -978,7 +988,16 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
     } else if (parentElement?.element?.type === SHOWHIDE) {    //showhide
         let showHideSection = getShowHideTag(parentElement.showHideType);
         elementTag = `${tag.parentTag}:${showHideSection}:${tag.childTag}`; //${tag.childTag ? ":" + tag.childTag : ""}
-        if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
+        if (showHideObj?.containerinSH && asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOWHIDE) {
+            if (asideData?.subtype === WORKED_EXAMPLE) {
+                elementTag = `SH:${showHideSection}:${tag.parentTag}${isHead ? ":" + isHead : ""}:${tag.childTag}`
+                elementId = `${asideData?.parent?.id}+${eleId.parentId}${sectionId && isHead === "BODY" ? "+" + sectionId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
+            } else {
+                elementTag = `SH:${showHideSection}:${tag.parentTag}:${tag.childTag}`
+                elementId = `${asideData?.parent?.id}+${eleId.parentId}+${eleId.childId}`
+            }
+        }
+        else if (asideData?.type === ELEMENT_ASIDE && asideData?.subtype !== WORKED_EXAMPLE) { //SH inside Aside
             elementTag = `AS:${elementTag}`
             elementId = `${asideData.id}+${eleId.parentId}+${eleId.childId}`
         }
@@ -1791,12 +1810,14 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
     }
     if (isChildElement == true) {
         if (showHideObj) {
-            parentData.showHideObj = {...showHideObj}
-            const { parentElement } = setParentUrn(bodymatter, tempIndex);
-            parentData.parentUrn = {
-                manifestUrn: parentElement?.id,
-                contentUrn: parentElement?.contentUrn,
-                elementType: parentElement?.type
+            parentData.showHideObj = { ...showHideObj }
+            if (!(asideData?.type === 'element-aside' && asideData?.parent?.type === 'showhide' && tempIndex?.length > 3)) {
+                const { parentElement } = setParentUrn(bodymatter, tempIndex);
+                parentData.parentUrn = {
+                    manifestUrn: parentElement?.id,
+                    contentUrn: parentElement?.contentUrn,
+                    elementType: parentElement?.type
+                }
             }
         }
         else {
@@ -1811,12 +1832,19 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
                 parentData.parentUrn.columnIndex = multiColumnData.columnIndex;
             }
         }
-        parentData.asideData = {
-            contentUrn: bodymatter[tempIndex[0]].contentUrn,
-            id: bodymatter[tempIndex[0]].id,
-            subtype: bodymatter[tempIndex[0]].subtype,
-            type: bodymatter[tempIndex[0]].type,
-            element: bodymatter[tempIndex[0]]
+        if (showHideObj && ((asideData?.type === 'element-aside' && asideData?.parent?.type === 'showhide' && tempIndex?.length > 3))) {
+            parentData.showHideObj = { ...showHideObj }
+            parentData.parentUrn = { ...parentUrn }
+            parentData.asideData = { ...asideData }
+        }
+        else {
+            parentData.asideData = {
+                contentUrn: bodymatter[tempIndex[0]].contentUrn,
+                id: bodymatter[tempIndex[0]].id,
+                subtype: bodymatter[tempIndex[0]].subtype,
+                type: bodymatter[tempIndex[0]].type,
+                element: bodymatter[tempIndex[0]]
+            }
         }
         if(isFigure) {
              parentData.asideData.figureIn2cAside = { isExist : true, asideData };
