@@ -613,7 +613,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }
             
             if(type==="stanza"){
-                dataToReturn.html.text=`<p>${innerHTML}</p>`
+                dataToReturn.html.text=`<p>${innerHTML}</p>`;
+                dataToReturn.html['indexEntries'] = previousElementData.html?.indexEntries || {};
                 delete dataToReturn.poetrylines;
             } 
             if(parentElement && parentElement.type === "popup"){
