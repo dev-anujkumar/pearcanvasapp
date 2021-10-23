@@ -493,7 +493,14 @@ const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, default
         if (elementType.indexOf(item.type) !== -1) {
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
-            elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id,undefined,popupInContainer,slateManifestVersioning, isPopupSlate);
+            if (asideData?.parent?.type === SHOWHIDE) {
+                const parentElement = asideData ?? {}
+                { asideData, parentUrn }
+                elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id, undefined, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn });
+            }
+            else{
+                elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id,undefined,popupInContainer,slateManifestVersioning, isPopupSlate);
+            }
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
     })
