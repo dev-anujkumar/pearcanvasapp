@@ -505,7 +505,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         dispatch(handleTCMData(tcmManifestUrn));
     }
     dispatch(resetAssessmentStore());//reset Assessment Store
-    const elementCount = getState().appStore.slateLength;
+    // const elementCount = getState().appStore.slateLength;
+    const elementCount = 2;
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
@@ -615,6 +616,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateLevelData: newslateData
                         }
                     })
+                } else if (versioning?.type == "citations" && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]].interactivedata = Object.values(slateData.data)[0].interactivedata;
                 }
                 else if ((versioning?.type === 'showhide' || (versioning.calledFrom == 'showhide'))) {
                     let parentData = getState().appStore.slateLevelData;
