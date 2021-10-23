@@ -14,7 +14,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import {  handleElementsInShowHide, onUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
+import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
@@ -298,10 +298,19 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
         //Separate case for element conversion in showhide
-        if (showHideObj) {//newElementData.asideData && newElementData.asideData.hasOwnProperty('type') &&
-            //const activeElemType = oldElementInfo['elementType']
-            //focusedElement = onUpdateSuccessInShowHide(res.data, focusedElement, activeElemType, showHideObj, indexes)
-            onUpdateSuccessInShowHide(res?.data, bodymatter, indexes);
+        if (showHideObj) {
+            if (appStore?.asideData?.parent?.type === "showhide") {
+                switch (indexes.length) {
+                    case 4:
+                        bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                        break;
+                    case 5:
+                        bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
+                        break;
+                }
+            } else {
+                onUpdateSuccessInShowHide(res?.data, bodymatter, indexes);
+            }
         } else if (appStore.parentUrn.elementType === "group") {
             focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
         } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
@@ -313,16 +322,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res?.data;
                     break;
             }
-        } else if (appStore?.asideData?.parent?.type === "showhide") {
-            switch (indexes.length) {
-                case 4:
-                    bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
-                    break;
-                case 5:
-                    bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
-                    break;
-            }
-        } else {
+        }
+        else {
             indexes.forEach(index => {
                 if(focusedElement[index]){
                 if(newElementData.elementId === focusedElement[index].id) {
@@ -550,16 +551,25 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         //Separate case for element conversion in showhide
-        if(showHideObj || (appStore?.asideData?.type === 'showhide')) {
-            const innerElementType = activeElement.elementType
-            let oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj)
-            let showhideElement = {
-                currentElement: oldElementData.currentElement,
-                index: activeElement.index,
-                element: appStore?.asideData,
-                showHideType: oldElementData.showHideType
+        if (showHideObj || (appStore?.asideData?.type === 'showhide') || (appStore?.asideData?.parent?.type === "showhide")) {
+            const innerElementType = activeElement?.elementType
+            let oldElementData,elementOldDataSH;
+            if (indexes?.length === 4) {
+                elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
             }
-            dispatch(convertElement(oldElementData.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement))
+            else if (indexes?.length === 5) {
+                elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+            }else{
+                oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj)
+            }
+            let showhideElement = {
+                currentElement: indexes?.length === 4 || indexes?.length === 5 ? elementOldDataSH : oldElementData.currentElement,
+                index: activeElement.index,
+                containerinSH: appStore?.asideData,
+                element: indexes?.length === 4 || indexes?.length === 5 ? appStore?.asideData?.parent : appStore?.asideData,
+                showHideType: indexes?.length === 4 || indexes?.length === 5 ? findSectionType(indexes[1]) : oldElementData.showHideType
+            }
+            dispatch(convertElement(showhideElement.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement))
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
@@ -574,18 +584,8 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     break;
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
-        } else if (appStore?.asideData?.parent?.type === "showhide") {
-            let elementOldDataSH;
-            switch (indexes.length) {
-                case 4:
-                    elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
-                    break;
-                case 5:
-                    elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
-                    break;
-            }
-            dispatch(convertElement(elementOldDataSH, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
-        } else {
+        }
+        else {
             indexes.forEach(index => {
                 if(bodymatter[index]){
                     if(elementData.elementId === bodymatter[index].id) {
@@ -646,13 +646,29 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
     }).then(res => {
         const newParentData = getState().appStore.slateLevelData;
         const parsedParentData = JSON.parse(JSON.stringify(newParentData));
-        updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex], dataToSend)
-        dispatch({
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: {
-                slateLevelData: parsedParentData
+        if (parsedParentData?.status === 'approved') {
+            if (parsedParentData.type === "popup") {
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(parsedParentData.id, parsedParentData.contentUrn, 0, parsedParentData, ""));
             }
-        })
+            else {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            config.conversionInProcess = false
+            config.savingInProgress = false
+            config.isSavingElement = false
+        } else {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex], dataToSend)
+            dispatch({
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: parsedParentData
+                }
+            })
+        }
         if(dataToSend.columnnumber){
         let activeElementObject = {
             contentUrn: dataToUpdate.blockListData.contentUrn,
@@ -669,7 +685,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
-    }
+        }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
         config.savingInProgress = false

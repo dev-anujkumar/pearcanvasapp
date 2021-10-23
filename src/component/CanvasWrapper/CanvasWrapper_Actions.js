@@ -653,6 +653,28 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         }
                     })
 
+                } 
+                else if (versioning.type === 'manifestlist') {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    let index
+                    const indexVar = versioning.index || versioning.indexes
+                    if (typeof indexVar === "number") {
+                        index = indexVar;
+                    }
+                    else if (typeof indexVar === "string") {
+                        index = indexVar.split("-")[0];
+                    }
+                    else if (Array.isArray(indexVar) && indexVar.length) {
+                        index = indexVar[0]
+                    }
+                    newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
                 } else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
                     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
                     let contentUrn = slateData.data[manifestURN].contentUrn;
