@@ -78,6 +78,9 @@ class PrintIndexPopup extends Component {
       
       let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel)
       if(markedIndexEntryURN){
+        if(checkDifference){
+          saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField);
+        }
         this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN, checkDifference);
       } else{
         getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", res => {
@@ -126,10 +129,13 @@ class PrintIndexPopup extends Component {
   }
 
   render() {
-    const buttonText = this.props.markedIndexData.markedIndexGlossary.markedIndexEntryURN ||
-                      this.props.markedIndexData.markedIndexValue.markIndexid ? 
-                      'Update' : 
-                      'Add';
+    let buttonText = ""
+    const {markedIndexValue, markedIndexGlossary } =  this.props.markedIndexData;
+    if(Object.keys(markedIndexValue).includes('isNewIndex')){
+      buttonText = markedIndexValue.isNewIndex ? 'Add': 'Update'
+    } else {
+      buttonText = markedIndexGlossary.markedIndexEntryURN ? 'Update': 'Add'
+    }
     return (
       <div>
         <div className='index-container'>

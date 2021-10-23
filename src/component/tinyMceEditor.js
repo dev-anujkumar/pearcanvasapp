@@ -2696,7 +2696,7 @@ export class TinyMceEditor extends Component {
             }
             editor.selection.setContent(insertionText);
             this.handleMarkedIndexForItalic(activeElement, res.data.id)
-            this.toggleMarkedIndexPopup(true, 'Markedindex', res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); });
+            this.toggleMarkedIndexPopup(true, 'Markedindex', res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); }, true);
             this.saveMarkedIndexContent()
         })
     }
@@ -3926,7 +3926,7 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    toggleMarkedIndexPopup = (status, popupType, markIndexid, callback) => {
+    toggleMarkedIndexPopup = (status, popupType, markIndexid, callback, isNewIndex=false) => {
         if (config.savingInProgress) return false
 
         let typeWithPopup = this.props.element ? this.props.element.type : "";
@@ -3935,7 +3935,7 @@ export class TinyMceEditor extends Component {
         let index = this.props.index;
         let elementSubType = this.props.element ? this.props.element.figuretype : '';
         let markIndexText = this.markIndexText;
-        this.props.openMarkedIndexPopUp && this.props.openMarkedIndexPopUp(status, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, this.props.poetryField);
+        this.props.openMarkedIndexPopUp && this.props.openMarkedIndexPopUp(status, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, this.props.poetryField, isNewIndex);
     }
 
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback) => {

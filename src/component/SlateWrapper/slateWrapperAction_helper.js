@@ -11,7 +11,7 @@ import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
-const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN } = ElementConstants;
+const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
     const {
@@ -154,8 +154,21 @@ export const onPasteSuccess = async (params) => {
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
     }
+    /* Paste Aside/WE/CG into S/H */
+    const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP];
+    if (asideData?.type === SHOW_HIDE && containersInSH.includes(responseData?.type)) {
+        const manifestUrn = parentUrn?.manifestUrn;
+        try {
+            currentSlateData?.contents?.bodymatter?.map(item => {
+                if (item?.id === manifestUrn && asideData?.sectionType) {
+                    item?.interactivedata[asideData?.sectionType]?.splice(cutIndex, 0, responseData);
+                }
+            })
+        } catch(error){
+            console.error(error);
+        }
     /* update the store on /cut/copy/paste of showhide elements */
-    if(asideData?.type === SHOW_HIDE) {
+    } else if (asideData?.type === SHOW_HIDE) {
         const manifestUrn = parentUrn?.manifestUrn;
         try {
             currentSlateData?.contents?.bodymatter?.map(item => {

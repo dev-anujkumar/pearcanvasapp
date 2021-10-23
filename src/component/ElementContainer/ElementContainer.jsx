@@ -1075,6 +1075,7 @@ class ElementContainer extends Component {
                 index: index,
                 showHideType
             },
+            isSectionBreak: this.state.sectionBreak ?? {}
         }
         this.handleCommentPopup(false, e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -2061,8 +2062,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-     openMarkedIndexPopUp = (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField) => {
-        this.props.markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField);
+     openMarkedIndexPopUp = (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField, isNewIndex) => {
+        this.props.markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField, isNewIndex);
     }
 
     /**
@@ -2228,8 +2229,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        markedIndexPopup: (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField) => {
-            dispatch(markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField)).then(() => {
+        markedIndexPopup: (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField, isNewIndex) => {
+            dispatch(markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField, isNewIndex)).then(() => {
                 if (callback) {
                     callback();
                 }

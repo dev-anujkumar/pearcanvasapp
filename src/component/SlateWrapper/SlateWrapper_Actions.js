@@ -136,6 +136,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                             }
                         })
                     })
+                } else if (asideData?.parent?.type === "showhide" && item?.id === asideData?.parent?.id && asideData?.parent?.showHideType) {
+                    item?.interactivedata[asideData?.parent?.showHideType].map( (innerElement) => {
+                        if (innerElement?.id === parentUrn?.manifestUrn) {
+                            innerElement?.elementdata?.bodymatter?.splice(outerAsideIndex, 0, createdElementData);
+                        }
+                    })
                 }
             })
         } else if (asideData && asideData.type == 'element-aside'  && type !== 'SECTION_BREAK') {

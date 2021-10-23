@@ -17,7 +17,7 @@ import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper
  * @param {*} typeWithPopup 
  * @param {*} poetryField 
  */
-export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField) => async (dispatch) => {
+export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField, isNewIndex) => async (dispatch) => {
     let markedIndexValue = {
         type: popupType,
         popUpStatus: status,
@@ -27,7 +27,8 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         elementSubType,
         markIndexText,
         typeWithPopup: typeWithPopup ? typeWithPopup : undefined,
-        poetryField: poetryField ? poetryField : undefined
+        poetryField: poetryField ? poetryField : undefined,
+        isNewIndex
     }
 
     if (status === true) {
@@ -160,8 +161,9 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
     let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {};
     if(glossaryContentText && glossaryContentText.includes('mark-index-id')){
         markedIndexEntryURN = glossaryContentText.slice(glossaryContentText.indexOf('mark-index-id')).split("\"")[1];
-        indexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
-        let {firstLevelEntry, secondLevelEntry} = JSON.parse(indexEntries);
+        let oldIndexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
+        indexEntries[markedIndexEntryURN] = oldIndexEntries;
+        let {firstLevelEntry, secondLevelEntry} = JSON.parse(oldIndexEntries);
 
         markedIndexFirstLevel = firstLevelEntry;
         markedIndexSecondLevel = secondLevelEntry;
