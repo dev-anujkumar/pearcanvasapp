@@ -156,7 +156,7 @@ export const onPasteSuccess = async (params) => {
     }
     /* Paste Aside/WE/CG into S/H */
     const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP];
-    if (asideData?.type === SHOW_HIDE && containersInSH.includes(responseData.type)) {
+    if (asideData?.type === SHOW_HIDE && containersInSH.includes(responseData?.type)) {
         const manifestUrn = parentUrn?.manifestUrn;
         try {
             currentSlateData?.contents?.bodymatter?.map(item => {
@@ -259,12 +259,23 @@ export const onPasteSuccess = async (params) => {
                 } 
             }
         })
-    } else if(asideData && asideData.type == 'citations'){
-        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
-            if (item.id == parentUrn.manifestUrn) {
-                item.contents.bodymatter.splice(cutIndex, 0, responseData)
-            }
-        })
+        /* Store update on cut-paste elements inside citation in S/H or slate */
+    } else if (asideData && asideData.type == 'citations') {
+        if (asideData?.parent?.type === SHOW_HIDE && asideData?.parent?.showHideType) {
+            const newIndex = asideData?.index?.split("-") || [];
+            const sectionType = asideData?.parent?.showHideType;
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id === asideData?.parent?.id) {
+                    item?.interactivedata[sectionType][newIndex[2]].contents?.bodymatter?.splice(cutIndex, 0, responseData);
+                }
+            })
+        } else {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == parentUrn.manifestUrn) {
+                    item.contents.bodymatter.splice(cutIndex, 0, responseData)
+                }
+            })
+        }
     } else if (poetryData && poetryData.type == "poetry"){
         newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
             if (item.id == poetryData.parentUrn) {

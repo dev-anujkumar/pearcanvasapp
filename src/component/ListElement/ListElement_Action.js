@@ -96,7 +96,7 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
         dataToSend:{
             "listtype": type==='disc'? "unordered" :"ordered",
             "subtype": type,
-            "startNumber": startvalue
+            "startNumber": startvalue.toString()
         },
         slateLevelBLIndex:activeElement.index.split("-")[0]
        }
