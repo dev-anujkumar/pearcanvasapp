@@ -463,6 +463,9 @@ class SlateWrapper extends Component {
             })
             return true
         }else if(isOwnerRole(projectSharingRole,isSubscribed)){
+            const slateId = Object.keys(this.props.slateData)[0],
+                lockDuration = 5400
+            this.setSlateLock(slateId, lockDuration)
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
         }else if(isSubscriberRole(projectSharingRole,isSubscribed)){
             return true
