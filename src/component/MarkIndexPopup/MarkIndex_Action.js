@@ -2,6 +2,7 @@ import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY  } from '../../constan
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
+import { UpdateElementWorkId } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 
 /**
  * This function acts as an action creator which will update the marked index store when marked index icon
@@ -132,6 +133,14 @@ export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry =
         }
         currentValue = markedIndexCurrentValue;
     }
+
+    /**
+     * After versioning, This condition will check for new elementWorkId when marked index is updated inside glossary
+     */
+    if(!status){
+        UpdateElementWorkId();
+    }
+
     return dispatch({
         type: OPEN_MARKED_INDEX_ON_GLOSSARY,
         payload:{

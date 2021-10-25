@@ -63,7 +63,7 @@ class PrintIndexPopup extends Component {
     this.props.showMarkedIndexPopup(false);
   }
 
-  saveMarkedIndex = () => {
+  saveMarkedIndex = async () => {
     if(this.props.isInGlossary){
       let {elementWorkId, elementType,  type, elementSubType, typeWithPopup, poetryField} = this.props.markedIndexData.markedIndexValue;
       let { markedIndexEntryURN } = this.props.markedIndexData.markedIndexGlossary;
@@ -79,12 +79,12 @@ class PrintIndexPopup extends Component {
       let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel)
       if(markedIndexEntryURN){
         if(checkDifference){
-          saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField);
+          await saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField);
         }
         this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN, checkDifference);
       } else{
-        getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", res => {
-          saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField);
+        getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", async res => {
+          await saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField);
           this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id, checkDifference);
         });
       }

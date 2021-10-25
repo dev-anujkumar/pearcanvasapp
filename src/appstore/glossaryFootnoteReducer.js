@@ -1,5 +1,5 @@
 
-import {OPEN_GLOSSARY_FOOTNOTE} from  '../constants/Action_Constants';
+import {OPEN_GLOSSARY_FOOTNOTE, UPDATE_NEW_ELEMENT_WORK_ID} from  '../constants/Action_Constants';
 
 const INITIAL_STATE = {
        glossaryFootnoteValue:{"type":"","popUpStatus":false},
@@ -19,6 +19,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             glossaryFootnoteValue: action.payload.glossaaryFootnoteValue,
             glossaryFootNoteCurrentValue: action.payload.glossaryFootNoteCurrentValue,
             elementIndex: action.payload.elementIndex
+        }
+    } else if(action.type === UPDATE_NEW_ELEMENT_WORK_ID){
+        return {
+            ...state,
+            glossaryFootnoteValue: action.payload.glossaryFootnoteValue
         }
     } else {
         return state;
