@@ -48,14 +48,14 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             deleteParentData: newParentData,
             index: eleIndex,
             showHideObj,
-            type,
+            type: isSectionBreak?.type ? isSectionBreak.type: type,
             parentUrn,
             asideData,
             contentUrn: activeElement.contentUrn,
             // sectionType: showHideType[elementIndex[elementIndex.length - 2].toString()],
             newIndex,
             element: activeElement,
-            // poetryData,
+            isSectionBreak,
             cutCopyParentUrn
         }
         const { prepareTCMSnapshotsForDelete } = (await import("./ElementContainerDelete_helpers.js"))

@@ -130,7 +130,7 @@
     min-height: 30px !important;
 }
 .bl .cypress-editable p {
-    margin-top: -1px !important;
+    margin-top: 1px !important;
 }
 .bl .editor, .manifest-list-li{
     margin-bottom: 0px !important;
@@ -147,6 +147,15 @@
 }
 .bl .manifestlist {
     display: block !important;
+}
+.bl .decimal{
+    padding-top: 8px;
+}
+.bl .disc{
+    padding-top: 10px;
+}
+.bl .element-container p.paragraphNumeroUno{
+    font-size: 12px !important;
 }
 
 /* .element-container{

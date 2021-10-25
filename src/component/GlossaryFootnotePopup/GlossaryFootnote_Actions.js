@@ -654,7 +654,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         /** For TCM snapshots */
         let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
         tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-        tcmParentData = (asideParent?.type == 'showhide' || asideParent?.type == 'poetry')  ? { asideData: asideParent, parentUrn: shParentUrn } : fetchParentData(tcmBodymatter, index);
+        tcmParentData = (asideParent?.type == 'showhide' || asideParent?.type == 'poetry' || (asideParent?.parent?.type === 'showhide'))  ? { asideData: asideParent, parentUrn: shParentUrn } : fetchParentData(tcmBodymatter, index);
         tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
     }
     /** ----------------- */
@@ -699,7 +699,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 response: res.data,
                 updatedId:elementWorkId,
                 slateManifestUrn: config.slateManifestURN,
-                CurrentSlateStatus: currentSlateData.status
+                CurrentSlateStatus: currentSlateData?.status
             },
                 containerElement = {
                     asideData:tcmParentData.asideData,
@@ -707,7 +707,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
                     metaDataField: data.metaDataField ? data.metaDataField : undefined,
                     sectionType: showhideTypeVal,
-                    CurrentSlateStatus: currentSlateData.status,
+                    CurrentSlateStatus: currentSlateData?.status,
                     showHideObj: showHideObject,
                     poetryData
                 };
