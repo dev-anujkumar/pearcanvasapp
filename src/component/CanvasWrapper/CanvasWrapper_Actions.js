@@ -604,11 +604,22 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     if (versioning.indexes.length === 4 && versioning.parent.type === 'groupedcontent') {
                         newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]].groupeddata.bodymatter[versioning.indexes[1]] = Object.values(slateData.data)[0].groupeddata.bodymatter[versioning.indexes[1]];
                     } else if ((versioning.indexes.length === 4 || versioning.indexes.length === 5) && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
-                        newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]].interactivedata = Object.values(slateData.data)[0].interactivedata;
+                        newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]] = Object.values(slateData.data)[0];
                     } else {
                         let index = versioning.indexes[0];
                         newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     }
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+                } else if (versioning?.type == "citations" && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]] = Object.values(slateData.data)[0];
+
                     return dispatch({
                         type: AUTHORING_ELEMENT_UPDATE,
                         payload: {
@@ -653,6 +664,28 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         }
                     })
 
+                } 
+                else if (versioning.type === 'manifestlist') {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    let index
+                    const indexVar = versioning.index || versioning.indexes
+                    if (typeof indexVar === "number") {
+                        index = indexVar;
+                    }
+                    else if (typeof indexVar === "string") {
+                        index = indexVar.split("-")[0];
+                    }
+                    else if (Array.isArray(indexVar) && indexVar.length) {
+                        index = indexVar[0]
+                    }
+                    newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
                 } else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
                     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
                     let contentUrn = slateData.data[manifestURN].contentUrn;

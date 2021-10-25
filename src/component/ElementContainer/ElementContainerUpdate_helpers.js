@@ -50,7 +50,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
     if(isBlockListElement){
         const parentBlockListId = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].id
         const parentBlockListContentUrn = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].contentUrn
-        dispatch(fetchSlateData(parentBlockListId,parentBlockListContentUrn, 0, {indexes:indexes}, CONTAINER_VERSIONING, false));
+        dispatch(fetchSlateData(parentBlockListId,parentBlockListContentUrn, 0, {type:'manifestlist' ,indexes:indexes}, CONTAINER_VERSIONING, false));
     }
     else if (asideData && asideData.type == 'element-aside') {
         asideData.indexes = indexes;
@@ -62,12 +62,24 @@ export const updateNewVersionElementInStore = (paramObj) => {
         } else if ((indexes.length === 4 || indexes.length === 5) && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
             dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }
+    } else if (asideData?.type == "citations" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
+        asideData.indexes = indexes;
+        dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+        /* Condition for update title of Approved CG inside S/H */ 
+    } else if (updatedData?.type == "element-authoredtext" && updatedData?.metaDataField === "formattedTitle" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
+        asideData.indexes = indexes;
+        asideData.type = 'citations';
+        dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
+        if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5) && asideData.type === "poetry") {
+            dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+        } else {
         parentElement.index = elementIndex;
         parentElement.indexes = elementIndex;
         dispatch(fetchSlateData(parentVersionUrn, parentElement.contentUrn, 0, parentElement, CONTAINER_VERSIONING, false));
     } 
+    }
     else if (parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.sectionType === "postertextobject") ) {
         dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.elementParentEntityUrn, 0, parentElement, CONTAINER_VERSIONING, true)); 
     }
@@ -621,14 +633,14 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         currentParentData,
         showHideObj
     } = params
-
+    const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
     const isPopupOrShowhideElement = (allowedParentType.includes(parentElement?.type) || (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     
-    if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
+    if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
         const containerElement = {
             asideData,
             parentUrn,
@@ -846,11 +858,15 @@ export const updateStoreInCanvas = (params) => {
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
     if (config.tcmStatus) {
-        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
-            const tcmDataArgs = {
-                updatedDataID: updatedData.id, getState, dispatch, versionedData, updatedData
+        //This check will be removed once Blocklist will support TCM
+        const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
+        if(!isBlockListElement) {
+            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
+                const tcmDataArgs = {
+                    updatedDataID: updatedData.id, getState, dispatch, versionedData, updatedData
+                }
+                prepareDataForUpdateTcm(tcmDataArgs);
             }
-            prepareDataForUpdateTcm(tcmDataArgs);
         }
     }
     const commonArgs = { updatedData, asideData, dispatch, elementIndex, parentElement, newslateData }

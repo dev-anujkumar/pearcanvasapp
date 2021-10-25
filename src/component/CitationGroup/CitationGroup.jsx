@@ -59,7 +59,8 @@ export class CitationGroup extends Component {
             type: "citations",
             id: this.context.element.id,
             contentUrn: this.context.element.contentUrn,
-            element : this.context.element
+            element : this.context.element,
+            index: this.context.index
         };
         asideData = (type === "showhide") ? {...asideData, parent: { id, type, contentUrn, showHideType: this.context?.showHideType }} : asideData;
         try {

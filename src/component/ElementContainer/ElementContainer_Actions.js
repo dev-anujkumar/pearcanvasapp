@@ -369,7 +369,7 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
     ).then(response => {
         let parentData = getState().appStore.slateLevelData;
         /* Table in Showhide - Get the section type */
-        const sectionType = getState()?.appStore?.asideData?.sectionType;
+        const sectionType = getState()?.appStore?.asideData?.sectionType || getState()?.appStore?.asideData?.parent?.showHideType;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         if (newParentData[config.slateManifestURN].status === 'wip') {
             newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter, sectionType)

@@ -130,7 +130,7 @@ const SHOWHIDE = "SHOW_HIDE";
 // This mapping is used for conditional rendering of Paste Button inside Elements
 const CONDITIONAL_PASTE_SUPPORT = {
     [SHOW_HIDE] : { [ASIDE_SOURCE]: ['poetry', 'popup', 'showhide'], [WORKED_EXAMPLE]: ['poetry', 'popup', 'showhide']},
-    [MULTICOLUMN_SOURCE]: { [SHOWHIDE]: ['element-aside','citations'] },
+    [MULTICOLUMN_SOURCE]: { [SHOWHIDE]: ['element-aside','citations'],[ASIDE_SOURCE]:['showhide'],[WORKED_EXAMPLE]:['showhide'] },
     [ASIDE_SOURCE]: { [SHOWHIDE]: ['element-aside','citations']}
 }
 
@@ -147,19 +147,20 @@ export const getPasteValidated = (separatorProps, sourceType, selectionType) => 
             }
         }
         if (validation && Object.keys(CONDITIONAL_PASTE_SUPPORT)?.includes(sourceType)) {
-            const selectedElement = separatorProps?.element ?? {}
+            let selectedElement = separatorProps?.elementSelection?.element ?? {}
+            let sourceElementIndex= sourceType=== ASIDE_SOURCE ? separatorProps?.asideData?.index ?? {} : separatorProps?.index ?? {}
+            let indexes = sourceElementIndex &&  typeof (sourceElementIndex) !== 'number' && sourceElementIndex.split('-');
             switch (sourceType) {
                 case SHOW_HIDE:
-                    validation = checkShowHidePasteValidation(selectedElement, sourceType, selectionType, validation);
+                    validation = checkShowHidePasteValidation(selectedElement, sourceType, selectionType, validation, indexes?.length);
                     break;
                 case ASIDE_SOURCE:
-                    validation = checkASWEPasteValidation(selectedElement, sourceType, selectionType, validation);
+                    validation = checkASWEPasteValidation(selectedElement, sourceType, selectionType, validation, indexes?.length,separatorProps?.asideData);
                 case MULTICOLUMN_SOURCE:
-                    validation = checkMultiColumnPasteValidation(selectedElement, sourceType, selectionType, validation);
+                    validation = checkMultiColumnPasteValidation(selectedElement, sourceType, selectionType, validation );
                     break;
             }
         }
-        // console.log('validation',validation)
         return validation;
     }
 }
@@ -172,11 +173,14 @@ export const getPasteValidated = (separatorProps, sourceType, selectionType) => 
  * @param {*} validation 
  * @returns 
  */
-const checkShowHidePasteValidation = (selectedElement, sourceType, selectionType, validation) => {
+const checkShowHidePasteValidation = (selectedElement, sourceType, selectionType, validation, sourceElementIndex) => {
     let isValidPaste = validation;
     const WE_MANIFEST = "manifest";
     const conditionalSelection = [ASIDE_SOURCE, WORKED_EXAMPLE];
-    if (selectionType && conditionalSelection.includes(selectionType) && selectedElement?.elementdata?.bodymatter?.length) {
+    if (conditionalSelection.includes(selectionType) && sourceElementIndex >= 4) {
+        isValidPaste = false;
+    }
+    else if (selectionType && conditionalSelection.includes(selectionType) && selectedElement?.elementdata?.bodymatter?.length) {
         let validPaste2;
         const validPaste1 = selectedElement.elementdata.bodymatter.find((item) => {
             if (item?.type && CONDITIONAL_PASTE_SUPPORT[sourceType][selectionType]?.includes(item.type)) {
@@ -232,10 +236,13 @@ const checkMultiColumnPasteValidation = (selectedElement, sourceType, selectionT
  * @param {*} validation 
  * @returns 
  */
-const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, validation) => {
+const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, validation, sourceElementIndex, parentDetails) => {
     let isValidPaste = validation;
     const conditionalSelection = [SHOWHIDE];
-    if (selectionType && conditionalSelection.includes(selectionType)) {
+    if ((selectionType === "SHOW_HIDE" && sourceElementIndex >= 3) || (selectionType === "POETRY" && parentDetails?.parent?.type === 'showhide')) {
+        isValidPaste = false;
+    }
+    else if (selectionType && conditionalSelection.includes(selectionType)) {
         if (selectedElement?.type === SHOW_HIDE.toLowerCase()) {
             const showHideInnerElements = Object.values(selectedElement?.interactivedata)?.flat()
             const validPaste1 = showHideInnerElements?.length && showHideInnerElements?.find((item) => {

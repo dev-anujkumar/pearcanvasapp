@@ -61,6 +61,14 @@
     cursor: pointer;
 }
 
+.printIndex-save-button.disabled {
+    background: #b3d8e1;
+    cursor: not-allowed;
+    pointer-events: none;
+    color: white;
+    border: 1px solid #b3d8e1;
+}
+
 .printIndex-save-button:hover{
     background: #07313b;
 }

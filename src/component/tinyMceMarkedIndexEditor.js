@@ -131,12 +131,18 @@ export class ReactMarkedIndexEditor extends React.Component {
           tinymce.$(`#${this.props.markedLabelId}`).addClass('transition-none')
           tinymce.$(`#${this.props.markedLabelId}`).removeClass('floating-title')
         }
+        if(editor.id === 'markedindex-0'){
+          tinymce.$('.printIndex-save-button').removeClass('disabled')
+        }
       }
       else {
         activeElement.classList.add('place-holder')
         if (this.props.markedLabelId) {
           tinymce.$(`#${this.props.markedLabelId}`).addClass('floating-title')
           tinymce.$(`#${this.props.markedLabelId}`).removeClass('transition-none')
+        }
+        if(editor.id === 'markedindex-0'){
+          tinymce.$('.printIndex-save-button').addClass('disabled')
         }
       }
     }
