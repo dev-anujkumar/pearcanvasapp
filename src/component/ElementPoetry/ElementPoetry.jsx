@@ -148,7 +148,7 @@ class ElementPoetry extends Component {
             parentUrn: this.props.elementId,
             id: this.props.elementId,
             contentUrn : this.props.model.contentUrn,
-            element : this.props.model           
+            element : this.props.model,           
         };
          /* @columnIndex@ */
          const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
@@ -172,7 +172,9 @@ class ElementPoetry extends Component {
                         ...this.props.element,
                        grandParent: {
                            asideData: this.props.asideData,
-                           parentUrn: this.props.parentUrn
+                           parentUrn: this.props.parentUrn,
+                           columnContentUrn,
+                           parentContentUrn
                        },
                        stanzaIndex : index
                    }
