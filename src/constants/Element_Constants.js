@@ -239,7 +239,7 @@ const checkMultiColumnPasteValidation = (selectedElement, sourceType, selectionT
 const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, validation, sourceElementIndex, parentDetails) => {
     let isValidPaste = validation;
     const conditionalSelection = [SHOWHIDE];
-    if ((selectionType === "SHOW_HIDE" && sourceElementIndex >= 3) || (parentDetails?.parent?.type === 'showhide')) {
+    if ((selectionType === "SHOW_HIDE" && sourceElementIndex >= 3) || (selectionType === "POETRY" && parentDetails?.parent?.type === 'showhide')) {
         isValidPaste = false;
     }
     else if (selectionType && conditionalSelection.includes(selectionType)) {
