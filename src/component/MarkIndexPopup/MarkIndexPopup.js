@@ -15,6 +15,34 @@ import { checkforToolbarClick } from '../../js/utils'
 class PrintIndexPopup extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      markIndexCurrentValue: this.props.markedIndexCurrentValue?.secondLevel ? (tinyMCE.$(this.props.markedIndexCurrentValue?.secondLevel))[0].innerHTML : ''
+    }
+    this.wrapperRef = null;
+  }
+
+
+  handleClickOutside = (event) => {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      if (!this.props.isInGlossary) {
+        this.saveContent()
+      }
+    }
+  }
+
+componentWillMount() {
+  document.addEventListener('mousedown', this.handleClickOutside);
+}
+
+componentWillUnmount() {
+  document.removeEventListener('mousedown', this.handleClickOutside);
+}
+
+  /**
+       * Set the wrapper ref
+       */
+  setWrapperRef = (node) => {
+    this.wrapperRef = node;
   }
 
   markedIndexValueDifference = (newEntry, newSubEntry, oldEntry, oldSubEntry) => {
@@ -86,10 +114,15 @@ class PrintIndexPopup extends Component {
         getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", res => {
           saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField);
           this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id, checkDifference);
+          this.props.showingToastMessage(true);
         });
       }
     } else {
+      const { markedIndexValue } = this.props.markedIndexData;
       this.saveContent();
+      if (Object.keys(markedIndexValue).includes('isNewIndex') && markedIndexValue?.isNewIndex) {
+        this.props.showingToastMessage(true);
+      }
     }
   }
 
@@ -138,7 +171,7 @@ class PrintIndexPopup extends Component {
     }
     return (
       <div>
-        <div className='index-container'>
+        <div className='index-container' ref={this.setWrapperRef}>
           <div className="index-setting">
             <span className="printIndex-label">Index Settings</span>
             <span className="marked-close-icon"><Close onClick={this.closePopUp} /></span>
@@ -153,16 +186,20 @@ class PrintIndexPopup extends Component {
             </div>
 
             <div className="markedindex-word-header">
-              <div className="markedindex-word-title">Index Entry</div>
-              <div className="markedindex-word-name markedindex-word-description" id='markedindex-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.firstLevel} className='markedindex-editor place-holder' placeholder="Type Something" id='markedindex-0' />
+              <div id='markedindex-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
+                <div className="markedindex-word-title">
+                  <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.firstLevel} className='markedindex-editor place-holder index-entry' id='markedindex-0' markedLabelId="firstLevel" />
+                  <label id="firstLevel" className="transition-none">Index Entry</label>
+                </div>
               </div>
             </div>
 
             <div className="markedindex-secondlevel-header">
-              <div className="markedindex-secondlevel-label">Sub-Entry</div>
-              <div className="index-editor markedindex-secondlevel-description" id="index-secondlevel-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel} className='markedindex-editor place-holder' placeholder="Type Something" id='markedindex-1' />
+              <div id="index-secondlevel-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
+                <div className="markedindex-secondlevel-label">
+                  <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel} className='markedindex-editor place-holder sub-entry' id='markedindex-1' markedLabelId="secondLevel" />
+                  <label id="secondLevel" className={this.state.markIndexCurrentValue === '' ? "floating-title" : "transition-none"} >Sub-Entry</label>
+                </div>
               </div>
             </div>
 
