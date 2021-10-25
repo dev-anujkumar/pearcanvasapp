@@ -699,7 +699,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 response: res.data,
                 updatedId:elementWorkId,
                 slateManifestUrn: config.slateManifestURN,
-                CurrentSlateStatus: currentSlateData.status
+                CurrentSlateStatus: currentSlateData?.status
             },
                 containerElement = {
                     asideData:tcmParentData.asideData,
@@ -707,7 +707,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
                     metaDataField: data.metaDataField ? data.metaDataField : undefined,
                     sectionType: showhideTypeVal,
-                    CurrentSlateStatus: currentSlateData.status,
+                    CurrentSlateStatus: currentSlateData?.status,
                     showHideObj: showHideObject,
                     poetryData
                 };
