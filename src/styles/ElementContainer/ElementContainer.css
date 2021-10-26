@@ -157,6 +157,16 @@
 .bl .element-container p.paragraphNumeroUno{
     font-size: 12px !important;
 }
+.bl .bl {
+    margin-bottom: 10px !important;
+}
+.bl .delete-icon {
+    margin-bottom:10px !important;
+    height: 30px;
+}
+.bl .comment-flag {
+    margin-bottom:10px !important;
+}
 
 /* .element-container{
     padding: 1px 8px !important; 
