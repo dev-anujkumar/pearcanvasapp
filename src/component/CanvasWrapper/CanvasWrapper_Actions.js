@@ -619,6 +619,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]] = Object.values(slateData.data)[0];
+
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
                 }
                 else if ((versioning?.type === 'showhide' || (versioning.calledFrom == 'showhide'))) {
                     let parentData = getState().appStore.slateLevelData;
