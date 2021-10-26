@@ -720,7 +720,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
             spyupdateElementInStore.mockClear()
         })
-        it("updateElementInStore - paragraph inside citation group", () => {
+        xit("updateElementInStore - paragraph inside citation group", () => {
             let store = mockStore(() => initialState2);
             let args = { 
                 updatedData: {
@@ -1397,7 +1397,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateStore).toHaveReturnedWith(false);
             spyupdateStore.mockClear()
         })
-        it("Versioned element - updateNewVersionElementInStore - asideData - groupedcontent condition", () => {
+        xit("Versioned element - updateNewVersionElementInStore - asideData - groupedcontent condition", () => {
             let args = { 
                 updatedData: {...updatedData, pageNumberRef: "1"}, 
                 asideData: {...asideData, parent: {type: 'groupedcontent'}},

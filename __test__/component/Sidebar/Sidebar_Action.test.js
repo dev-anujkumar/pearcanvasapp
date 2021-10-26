@@ -1019,7 +1019,7 @@ describe('Test handleElementConversion- ShowHide -Paragraph to List', () => {
 });
 describe('Test handleElementConversion- ShowHide in Aside -Paragraph to List', () => {
     let store1 = mockStore(() => initialState17);
-    it('Test handleElementConversion- ShowHide in Aside -Paragraph to List', async () => {
+    xit('Test handleElementConversion- ShowHide in Aside -Paragraph to List', async () => {
         store1 = mockStore(() => initialState17);
         let nextStore = slateData.SlateData4
         let expectedRes = {
@@ -1034,7 +1034,7 @@ describe('Test handleElementConversion- ShowHide in Aside -Paragraph to List', (
         spyconversionElement.mockClear()
     });
 });
-describe('Test handleElementConversion- ShowHide in WE-Paragraph to List', () => {
+xdescribe('Test handleElementConversion- ShowHide in WE-Paragraph to List', () => {
     let store1 = mockStore(() => initialState18);
     it('Test handleElementConversion- ShowHide in WE -Paragraph to List', async () => {
         store1 = mockStore(() => initialState18);

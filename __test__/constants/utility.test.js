@@ -93,7 +93,7 @@ describe('Testing Function - requestConfigURI', () => {
             NODE_ENV: "development"
         }
         let result = requestConfigURI(process);
-        expect(result).toBe('dev');
+        expect(result).toBe('test');
     })
     it('Case 2 conditional coverage', () => {
         process.env = {
