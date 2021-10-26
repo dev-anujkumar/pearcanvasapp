@@ -642,7 +642,8 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
         const newParentData = getState().appStore.slateLevelData;
