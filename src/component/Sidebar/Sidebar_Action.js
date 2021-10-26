@@ -657,7 +657,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
     }).then(res => {
         const newParentData = getState().appStore.slateLevelData;
         const parsedParentData = JSON.parse(JSON.stringify(newParentData));
-        if (parsedParentData?.status === 'approved') {
+        if (parsedParentData[config.slateManifestURN]?.status === 'approved') {
             if (parsedParentData.type === "popup") {
                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });

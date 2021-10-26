@@ -126,13 +126,21 @@ export class ReactMarkedIndexEditor extends React.Component {
     if (activeElement) {
       let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
       if (activeElement.innerText.trim().length || isContainsMath) {
-        activeElement.classList.remove('place-holder');
+        activeElement.classList.remove('place-holder')
+        if(this.props.markedLabelId){
+          tinymce.$(`#${this.props.markedLabelId}`).addClass('transition-none')
+          tinymce.$(`#${this.props.markedLabelId}`).removeClass('floating-title')
+        }
         if(editor.id === 'markedindex-0'){
           tinymce.$('.printIndex-save-button').removeClass('disabled')
         }
       }
       else {
         activeElement.classList.add('place-holder')
+        if (this.props.markedLabelId) {
+          tinymce.$(`#${this.props.markedLabelId}`).addClass('floating-title')
+          tinymce.$(`#${this.props.markedLabelId}`).removeClass('transition-none')
+        }
         if(editor.id === 'markedindex-0'){
           tinymce.$('.printIndex-save-button').addClass('disabled')
         }
@@ -458,9 +466,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     return (
-      <div className="glossary-toolbar">
-        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue && markIndexCurrentValue }}></p>
-      </div>
+        <p ref={this.editorRef} className={this.placeHolderClass}  onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue && markIndexCurrentValue }} ></p>
     )
   }
 }

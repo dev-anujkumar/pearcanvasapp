@@ -31,7 +31,7 @@ import { deleteElement } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
@@ -90,6 +90,7 @@ export class TinyMceEditor extends Component {
                     this.addChemistryFormulaButton(editor);
                     this.addMathmlFormulaButton(editor);
                 }
+
                 this.setAlignmentIcon(editor);
                 this.addAlignmentIcon(editor);
                 this.setCrossLinkingIcon(editor);
@@ -294,7 +295,7 @@ export class TinyMceEditor extends Component {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
         });
-
+        
         this.editorRef = React.createRef();
         this.currentCursorBookmark = {};
     }
@@ -334,8 +335,12 @@ export class TinyMceEditor extends Component {
 
     onListButtonClick = (type, subType) => {
         this.elementConverted = true;
+        let blockListData = isElementInsideBlocklist({index:this.props.index}, this.props.slateLevelData);
         removeListHighliting();
-
+        // This block is to make an API call before making metadata call for block list to retain data after metadata call.
+        if(blockListData){
+            this.props.handleBlur(null, this.props.currentElement, this.props.index, {}, {})
+        }
         if ((this.props.element && this.props.element.type === "element-list" && this.props.element.elementdata.listtype === type) ||
             (this.props.currentElement && this.props.currentElement.type === "element-list" && this.props.currentElement.elementdata.listtype === type)) {
             this.toggleConfirmationPopup(true, this.props.element.subtype || this.props.currentElement.subtype);

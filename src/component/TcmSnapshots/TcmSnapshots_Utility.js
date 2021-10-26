@@ -1036,7 +1036,11 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             poetryParentURN = asideData?.grandParent?.parentUrn;
         }
         elementTag = `${tag.parentTag}:${tag.childTag}`;
-        if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype !== WORKED_EXAMPLE) { //block poetry inside Aside
+        if (popupInContainer && config.isPopupSlate){  // PE inside popup
+            elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
+            elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
+       else if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype !== WORKED_EXAMPLE) { //block poetry inside Aside
             elementTag = `AS:${elementTag}`
             elementId = `${poetryAsideData.id}+${eleId.parentId}+${eleId.childId}`
         }
@@ -1429,10 +1433,6 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     if (response.id !== updatedId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData?.poetrylines;
-            // if(oldData?.type === "stanza" && elementUpdateData){
-            //     console.log("Versioning snapshot 2.5", oldData, elementUpdateData)
-            //     wipData.html = elementUpdateData?.response?.html
-            // }
         }
         else{
             if (oldData?.type === FIGURE) {
@@ -1518,6 +1518,7 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
         if (asideData?.parent?.type === SHOWHIDE && (asideData?.element?.type === CITATION_GROUP || asideData?.element?.type === ELEMENT_ASIDE)) {
             parentElem = asideData?.parent;
         }
+        
         let parentId = parentElem && parentElem.id ? parentElem.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
         let element = bodymatter.find(item => item.id == parentId);
         let eleType = type === SECTION_BREAK ? SECTION_BREAK : parentUrn && parentUrn.elementType ?parentUrn.elementType: "";
@@ -1698,6 +1699,48 @@ export const checkContainerElementVersion = async (containerElement, versionStat
             let newElemUrn = await getLatestVersion(containerElement?.parentUrn?.contentUrn);
             containerElement.parentUrn.manifestUrn = newElemUrn;
         }
+
+    }
+    // also check if status is approved
+    // only then go inside this
+    if(
+    currentSlateData && currentSlateData.status && currentSlateData.status === 'approved' && 
+    containerElement?.poetryData?.element?.type === "poetry" && 
+    containerElement?.poetryData?.element?.grandParent?.asideData?.type) {
+       
+        const grandParent = containerElement?.poetryData?.element?.grandParent?.asideData;
+        const grandParentType = grandParent.type;
+
+        const poetryElement = containerElement?.poetryData?.element;
+
+        const newPoetryUrn =  await getLatestVersion(poetryElement.contentUrn);
+        containerElement.poetryData.element.id = newPoetryUrn;
+        if(grandParentType === 'element-aside') {
+            const asideNewUrn = await getLatestVersion(grandParent.contentUrn);
+            containerElement.poetryData.element.grandParent.asideData.id = asideNewUrn;
+            // in case of WE also update manifest urn, 
+            // which is used to get if details are added 
+            // in head or body
+            if (grandParent.subtype) {
+                const newElemUrn = await getLatestVersion(containerElement?.parentUrn?.contentUrn);
+                containerElement.parentUrn.manifestUrn = newElemUrn;
+            }
+        }
+        else if (grandParentType === "groupedcontent")  {
+            // get column id in case of multi column
+            // also add this into parentUrn
+            const updatedMulColParentUrn = containerElement?.parentUrn.contentUrn;
+            if (updatedMulColParentUrn) {
+                const multiColumnProperties = containerElement?.poetryData?.element?.grandParent
+                const manifestUrn =  await getLatestVersion(multiColumnProperties.columnContentUrn);
+                containerElement.parentUrn.manifestUrn =manifestUrn;
+                const mcId = containerElement?.parentUrn?.mcId;
+
+                const cid =  await getLatestVersion(multiColumnProperties.parentContentUrn);
+                containerElement.parentUrn.mcId = cid;
+            }
+        }
+
     }
     /** latest version for slate*/
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {

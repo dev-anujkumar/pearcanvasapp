@@ -46,7 +46,8 @@ export class CanvasWrapper extends Component {
         this.state = {
             showReleasePopup : false,
             toggleApo : false,
-            isConfigLoaded : true
+            isConfigLoaded : true,
+            toastMessage : false
         }  
     }
 
@@ -81,6 +82,17 @@ export class CanvasWrapper extends Component {
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             this.props.releaseSlateLock(config.projectUrn, slateId)
         }
+    }
+
+    showingToastMessage = (status) => {
+        this.setState({
+            toastMessage: status
+        })
+        setTimeout(() => {
+            this.setState({
+                toastMessage: false
+            })  
+        }, 2000);
     }
 
 
@@ -183,6 +195,12 @@ export class CanvasWrapper extends Component {
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
+                                {
+                                    this.state.toastMessage &&
+                                    <div className="toastMsg">
+                                        <p>Index added successfully.</p>
+                                    </div>
+                                }
                                  {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container next-btn ${config.disableNext ? 'disabled':""}`}>
                                     <div className='navigation-content' >
                                         <div className='navigation-button next' onClick={() => this.handleNavClick("next")}>
@@ -211,7 +229,7 @@ export class CanvasWrapper extends Component {
                                             return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData} markedIndexGlossaryData={this.props.markedIndexGlossary}/>)
                                         }
                                         if(markIndexpopUpStatus){
-                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue} isInGlossary={this.props.markedIndexGlossary?.popUpStatus}/>
+                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue} isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage}/>
 
                                         }
                                         else {
