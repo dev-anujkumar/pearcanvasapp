@@ -1036,7 +1036,11 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             poetryParentURN = asideData?.grandParent?.parentUrn;
         }
         elementTag = `${tag.parentTag}:${tag.childTag}`;
-        if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype !== WORKED_EXAMPLE) { //block poetry inside Aside
+        if (popupInContainer && config.isPopupSlate){  // PE inside popup
+            elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
+            elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
+       else if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype !== WORKED_EXAMPLE) { //block poetry inside Aside
             elementTag = `AS:${elementTag}`
             elementId = `${poetryAsideData.id}+${eleId.parentId}+${eleId.childId}`
         }
@@ -1721,6 +1725,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
                 const newElemUrn = await getLatestVersion(containerElement?.parentUrn?.contentUrn);
                 containerElement.parentUrn.manifestUrn = newElemUrn;
             }
+            console.log("the grand parent is ", grandParent)
         }
         else if (grandParentType === "groupedcontent")  {
             // get column id in case of multi column
