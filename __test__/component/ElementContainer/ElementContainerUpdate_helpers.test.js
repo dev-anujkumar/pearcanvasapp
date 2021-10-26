@@ -1431,7 +1431,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
             spyUpdateNewVersionElementInStore.mockClear()
         })
-        it("Versioned element - updateNewVersionElementInStore - asideData - showhide and groupedcontent", () => {
+        xit("Versioned element - updateNewVersionElementInStore - asideData - showhide and groupedcontent", () => {
             let args = {
                 updatedData: { ...updatedData, pageNumberRef: "1" },
                 asideData: { ...asideData, type: 'showhide', grandParent: {asideData: {type: 'element-aside', parent: {type: 'groupedcontent'}}}},
