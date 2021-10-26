@@ -103,6 +103,7 @@ class ElementAudioVideo extends Component {
         let height = imageData?.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
         let smartLinkAssetType = imageData.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
         smartLinkAssetType = smartLinkAssetType?.toLowerCase();
+        if((this.state.elementType.toLowerCase() === figureType) || (this.state.elementType.toLowerCase() === smartLinkAssetType)) {
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
             if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
                 if(imageData?.properties['avs:jsonString']){
@@ -321,7 +322,7 @@ class ElementAudioVideo extends Component {
             // }
             // this.props.saveSelectedAssetData(payloadObj)
             //this.updateAlfrescoSiteUrl(alfrescoData)
-        }
+        }}
     }
 
     updateAlfrescoSiteUrl = () => {

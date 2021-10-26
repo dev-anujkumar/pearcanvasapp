@@ -101,7 +101,7 @@ class ElementContainer extends Component {
     }
 
     getElementVersionStatus = (element, elementStatus) => {
-        if (element && element.id.match(/work/g) && !elementStatus[element.id]) {
+        if (element && element?.id && element.id.match(/work/g) && !elementStatus[element.id]) {
             // call element status API
             this.props.getElementStatus(element.id, this.props.index)
         }
@@ -839,10 +839,10 @@ class ElementContainer extends Component {
         const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
         let parentElement
         /* Update title/credit of block poetry inside multicolumn */
-        if (containerParent && this.props?.parentElement?.type == "groupedcontent" && elementType == "poetry") {
-            this.props.parentElement.groupeddata?.bodymatter.map((ele) => {
-                ele.groupdata?.bodymatter.map((ele1) => {
-                    if(ele1.type == "poetry" && ele1.id === elementId) {
+        if (containerParent && this.props?.parentElement?.type == "groupedcontent" && this.props?.element?.type == "poetry") {
+            this.props.parentElement?.groupeddata?.bodymatter.map((ele) => {
+                ele.groupdata?.bodymatter?.map((ele1) => {
+                    if(ele1.type == "poetry" && ele1.id === this.props.element?.id) {
                         parentElement = ele1
                     }
                 })
@@ -1075,6 +1075,7 @@ class ElementContainer extends Component {
                 index: index,
                 showHideType
             },
+            isSectionBreak: this.state.sectionBreak ?? {}
         }
         this.handleCommentPopup(false, e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -1782,16 +1783,13 @@ class ElementContainer extends Component {
         let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
         let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
         return (
-            this.props.onlyElement ?
-                editor
-                :
                 <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                     {this.renderCopyComponent(this.props, index, inContainer, tcm)}
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        <Button type="element-label" btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
+                        <Button type="element-label"  elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
                         {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
                         {(labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME || MULTI_COLUMN_2C.ELEMENT_TAG_NAME) && <div>{this.renderMultipleColumnLabels(element)}</div>}
-                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" onClick={(e) => this.showDeleteElemPopup(e, true)} />)
+                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" elementType={element?.type} onClick={(e) => this.showDeleteElemPopup(e, true)} />)
                             : null}
                         {this.renderColorPaletteButton(element, permissions)}
                         {this.renderColorTextButton(element, permissions)}
@@ -1803,13 +1801,13 @@ class ElementContainer extends Component {
                         {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} />}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                        {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={(e) => this.handleCommentPopup(true, e)} />}
                         {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
                             if (this.props.projectUsers.length === 0) {
                                 this.props.getProjectUsers();
                             }
                             handleCommentspanel(event, element.id, this.props.index)
-                        }} type="comment-flag" />}
+                        }} type="comment-flag"  elementType={element?.type} />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                         {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
@@ -2064,8 +2062,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-     openMarkedIndexPopUp = (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField) => {
-        this.props.markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField);
+     openMarkedIndexPopUp = (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField, isNewIndex) => {
+        this.props.markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField, isNewIndex);
     }
 
     /**
@@ -2231,8 +2229,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        markedIndexPopup: (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField) => {
-            dispatch(markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField)).then(() => {
+        markedIndexPopup: (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField, isNewIndex) => {
+            dispatch(markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField, isNewIndex)).then(() => {
                 if (callback) {
                     callback();
                 }

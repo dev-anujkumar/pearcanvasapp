@@ -73,7 +73,6 @@ class CommentsPanel extends React.Component {
     //   };
 
     getRoleOption = (users) => {
-        console.log("data",users)
         let roleOptions = [];
         const distinctRoles = [];
         Object.values(users).forEach((item1) => {

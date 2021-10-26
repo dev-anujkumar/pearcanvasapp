@@ -7,7 +7,8 @@ import { updateAssessmentVersion } from '../../component/AssessmentSlateCanvas/A
 import {
     AUTHORING_ELEMENT_UPDATE,
     OPEN_GLOSSARY_FOOTNOTE,
-    GET_TCM_RESOURCES, 
+    GET_TCM_RESOURCES,
+    OPEN_MARKED_INDEX 
 } from "../../constants/Action_Constants";
 import ElementConstants, { 
     elementTypeTCM,
@@ -17,6 +18,7 @@ import ElementConstants, {
 
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
+import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
 
 const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN } = ElementConstants;
 
@@ -37,6 +39,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
         CONTAINER_VERSIONING = "containerVersioning",
         PARENTELEMENT_TYPES = ["poetry", "showhide", "citations", "groupedcontent"]
 
+    const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
     if (updatedData && updatedData.pageNumberRef) {
         versionedData.pageNumberRef = updatedData.pageNumberRef
     }
@@ -44,19 +47,39 @@ export const updateNewVersionElementInStore = (paramObj) => {
     if (asideData?.type == 'showhide') {
         getShowhideParent({ asideData, dispatch, parentElementIndex: elementIndex, fetchSlateData })
     }
+    if(isBlockListElement){
+        const parentBlockListId = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].id
+        const parentBlockListContentUrn = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].contentUrn
+        dispatch(fetchSlateData(parentBlockListId,parentBlockListContentUrn, 0, {type:'manifestlist' ,indexes:indexes}, CONTAINER_VERSIONING, false));
+    }
     else if (asideData && asideData.type == 'element-aside') {
         asideData.indexes = indexes;
         if (indexes.length === 2 || indexes.length === 3) {
             dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         } else if (indexes.length === 4 && asideData.parent.type === 'groupedcontent') {
             dispatch(fetchSlateData(asideData.parent.id, asideData.parent.parentContentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+            /* Handeling of elements after versioning inside Aside/WE inside S/H */
+        } else if ((indexes.length === 4 || indexes.length === 5) && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
+            dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }
+    } else if (asideData?.type == "citations" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
+        asideData.indexes = indexes;
+        dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+        /* Condition for update title of Approved CG inside S/H */ 
+    } else if (updatedData?.type == "element-authoredtext" && updatedData?.metaDataField === "formattedTitle" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
+        asideData.indexes = indexes;
+        asideData.type = 'citations';
+        dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
+        if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5) && asideData.type === "poetry") {
+            dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+        } else {
         parentElement.index = elementIndex;
         parentElement.indexes = elementIndex;
         dispatch(fetchSlateData(parentVersionUrn, parentElement.contentUrn, 0, parentElement, CONTAINER_VERSIONING, false));
     } 
+    }
     else if (parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.sectionType === "postertextobject") ) {
         dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.elementParentEntityUrn, 0, parentElement, CONTAINER_VERSIONING, true)); 
     }
@@ -90,6 +113,8 @@ export const updateElementInStore = (paramsObj) => {
         elementId = updatedData.id;
 
     const iList = elementIndex?.toString()?.split("-") || [];
+    const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
+
     /* update the store on update of showhide elements inside container elements */
     if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
         const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList);
@@ -532,6 +557,21 @@ export const updateElementInStore = (paramsObj) => {
                     })
                 })
             }
+            else if(isBlockListElement){
+                const indexes = elementIndex.split("-");
+                if(indexes.length===3){
+                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]] = updatedData
+                }
+                else if(indexes.length===5){
+                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                }
+                else if(indexes.length===7){
+                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                }
+                else{
+                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                }
+            }
             //else if (element.type === SHOW_HIDE) { 
             //    /* When showhide Element is placed on slate not inside other container */
             //    const indexs = elementIndex?.toString()?.split("-") || [];
@@ -593,14 +633,14 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         currentParentData,
         showHideObj
     } = params
-
+    const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
     const isPopupOrShowhideElement = (allowedParentType.includes(parentElement?.type) || (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     
-    if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
+    if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
         const containerElement = {
             asideData,
             parentUrn,
@@ -652,6 +692,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     const currentSlateData = currentParentData[config.slateManifestURN];
     let { glossaryFootnoteValue, glossaryFootNoteCurrentValue, elementIndex: elementIndexFootnote } = getState().glossaryFootnoteReducer
+    let { markedIndexValue, markedIndexCurrentValue, elementIndex: elementMarkedIndex } = getState().markedIndexReducer
     const { saveAutoUpdateData } = getState().assessmentReducer;
     if (saveAutoUpdateData && saveAutoUpdateData.oldAssessmentId && saveAutoUpdateData.newAssessmentId) {
         dispatch(updateAssessmentVersion(saveAutoUpdateData.oldAssessmentId, saveAutoUpdateData.newAssessmentId));
@@ -664,6 +705,18 @@ export const processAndStoreUpdatedResponse = async (params) => {
                 glossaaryFootnoteValue: glossaryFootnoteValue,
                 glossaryFootNoteCurrentValue: glossaryFootNoteCurrentValue,
                 elementIndex: elementIndexFootnote
+            }
+        })
+    }
+
+    if(responseData.id !== updatedData.id){
+        markedIndexValue.elementWorkId = responseData.id;
+        dispatch({
+            type: OPEN_MARKED_INDEX,
+            payload: {
+                markedIndexValue: markedIndexValue,
+                markedIndexCurrentValue: markedIndexCurrentValue,
+                elementIndex: elementMarkedIndex
             }
         })
     }
@@ -805,11 +858,15 @@ export const updateStoreInCanvas = (params) => {
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
     if (config.tcmStatus) {
-        if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
-            const tcmDataArgs = {
-                updatedDataID: updatedData.id, getState, dispatch, versionedData, updatedData
+        //This check will be removed once Blocklist will support TCM
+        const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
+        if(!isBlockListElement) {
+            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
+                const tcmDataArgs = {
+                    updatedDataID: updatedData.id, getState, dispatch, versionedData, updatedData
+                }
+                prepareDataForUpdateTcm(tcmDataArgs);
             }
-            prepareDataForUpdateTcm(tcmDataArgs);
         }
     }
     const commonArgs = { updatedData, asideData, dispatch, elementIndex, parentElement, newslateData }

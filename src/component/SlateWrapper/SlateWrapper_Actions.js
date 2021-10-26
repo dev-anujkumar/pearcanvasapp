@@ -82,7 +82,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-        if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
+        /**This will be removed when BL supports TCM */
+        const tempSlateWrapperConstants = [...slateWrapperConstants.elementType].filter( item => item !== "MANIFEST_LIST")
+        if (tempSlateWrapperConstants.indexOf(type) !== -1) {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
@@ -134,6 +136,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                                 })
                             }
                         })
+                    })
+                } else if (asideData?.parent?.type === "showhide" && item?.id === asideData?.parent?.id && asideData?.parent?.showHideType) {
+                    item?.interactivedata[asideData?.parent?.showHideType].map( (innerElement) => {
+                        if (innerElement?.id === parentUrn?.manifestUrn) {
+                            innerElement?.elementdata?.bodymatter?.splice(outerAsideIndex, 0, createdElementData);
+                        }
                     })
                 }
             })
@@ -306,8 +314,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
-            if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
-                prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
+            //This check will be removed once BlockList will support TCM
+            if(!blockListDetails) {
+                if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
+                    prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
+                }
             }
         }
         const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -1136,6 +1147,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
             const { setPayloadForContainerCopyPaste } = (await import("./slateWrapperAction_helper.js"))
             _requestData = setPayloadForContainerCopyPaste(payloadParams)
+            if (sectionType || (asideData?.sectionType)) {
+                let section = sectionType ? sectionType : asideData?.sectionType;
+                _requestData.content[0].sectionType = section;
+            }
         }
 
         if('manifestationUrn' in selection.element) {
