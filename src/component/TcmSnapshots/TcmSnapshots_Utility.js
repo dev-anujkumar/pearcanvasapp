@@ -1725,7 +1725,6 @@ export const checkContainerElementVersion = async (containerElement, versionStat
                 const newElemUrn = await getLatestVersion(containerElement?.parentUrn?.contentUrn);
                 containerElement.parentUrn.manifestUrn = newElemUrn;
             }
-            console.log("the grand parent is ", grandParent)
         }
         else if (grandParentType === "groupedcontent")  {
             // get column id in case of multi column
