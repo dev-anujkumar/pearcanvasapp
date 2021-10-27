@@ -1819,6 +1819,9 @@ class ElementContainer extends Component {
                         saveContent={this.saveNewComment}
                         rows={COMMENTS_POPUP_ROWS}
                         dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+                        isOwnerSlate={isOwner}
+                        warningHeaderText={`Warning`}
+                        OwnersDeleteDialogText={OWNERS_ELM_DELETE_DIALOG_TEXT}
                         showDeleteElemPopup={this.state.showDeleteElemPopup}
                         sectionBreak={this.state.sectionBreak}
                         deleteElement={this.deleteElement}
