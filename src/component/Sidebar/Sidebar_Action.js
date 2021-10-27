@@ -16,7 +16,7 @@ import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Ele
 import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-const { ELEMENT_ASIDE, MULTI_COLUMN } = TcmConstants;
+const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
 
@@ -202,9 +202,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
     }
-    if(showHideObj){
-        conversionDataToSend["sectionType"] = showHideObj.showHideType
-        conversionDataToSend["elementParentEntityUrn"] = showHideObj.element.contentUrn
+    if (showHideObj) {
+        if (showHideObj?.containerinSH?.element?.type !== ELEMENT_ASIDE && showHideObj?.containerinSH?.parent?.type !== SHOWHIDE) {
+            conversionDataToSend["sectionType"] = showHideObj.showHideType;
+            conversionDataToSend["elementParentEntityUrn"] = showHideObj.element.contentUrn;
+        }
     }
     let parentEntityUrn = conversionDataToSend.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
@@ -547,29 +549,38 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
     if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
-        console.log("bodymatter",bodymatter);
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         //Separate case for element conversion in showhide
-        if (showHideObj || (appStore?.asideData?.type === 'showhide') || (appStore?.asideData?.parent?.type === "showhide")) {
-            const innerElementType = activeElement?.elementType
-            let oldElementData,elementOldDataSH;
-            if (indexes?.length === 4) {
-                elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
-            }
-            else if (indexes?.length === 5) {
-                elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
-            }else{
-                oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj)
-            }
+        if(showHideObj || (appStore?.asideData?.type === 'showhide')) {
+            const innerElementType = activeElement.elementType
+            let oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj)
             let showhideElement = {
-                currentElement: indexes?.length === 4 || indexes?.length === 5 ? elementOldDataSH : oldElementData.currentElement,
+                currentElement: oldElementData.currentElement,
                 index: activeElement.index,
                 containerinSH: appStore?.asideData,
-                element: indexes?.length === 4 || indexes?.length === 5 ? appStore?.asideData?.parent : appStore?.asideData,
-                showHideType: indexes?.length === 4 || indexes?.length === 5 ? findSectionType(indexes[1]) : oldElementData.showHideType
+                element: appStore?.asideData,
+                showHideType: oldElementData.showHideType
             }
-            dispatch(convertElement(showhideElement.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement))
+            dispatch(convertElement(showhideElement.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement));
+        } else if (appStore?.asideData?.parent?.type === SHOWHIDE) {
+            const innerElementType = activeElement?.elementType
+            let elementOldDataSH;
+            let sectionType = appStore?.asideData?.sectionType ? appStore?.asideData?.sectionType : appStore?.asideData?.parent?.showHideType;
+            if (indexes?.length === 4) {
+                elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]];
+            }
+            else if (indexes?.length === 5) {
+                elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+            }
+            let showhideElement = {
+                currentElement: elementOldDataSH,
+                index: activeElement.index,
+                containerinSH: appStore?.asideData,
+                element: appStore?.asideData?.parent,
+                showHideType: findSectionType(indexes[1])
+            }
+            dispatch(convertElement(showhideElement.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement));
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
