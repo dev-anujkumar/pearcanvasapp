@@ -310,6 +310,75 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
 
         })
     });
+    describe('Test-6-Function--6--popupWipData', () => {
+        const { slate1, slate2 } = tcmTestData
+        let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb",
+            manifest2 = "urn:pearson:manifest:2ec00412-840e-40bf-ae11-d399c5067c9a";
+        let bodymatter1 = slate1[manifest1].contents.bodymatter,
+            bodymatter2 = slate2[manifest2].contents.bodymatter;
+        it('Test-6.3-Function--6--popupWipData #11 - In WE-HEAD | Aside | Citations', () => {
+                let bodymatter = bodymatter2
+                let eleIndex = [0, 1, 2, 3, 4]
+                let operationType = "delet"
+                let wipData = {}
+                
+                const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
+                tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
+                // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
+        })
+        it('Test-6.3-Function--6--popupWipData #11:1 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2
+            let eleIndex = [0, 1]
+            let operationType = "delet"
+            let wipData = {}
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
+            tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
+            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
+        })
+        it('Test-6.3-Function--6--popupWipData #11:2 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2
+            let eleIndex = [0, 1, 2]
+            let operationType = "delet"
+            let wipData = {}
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
+            tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
+            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
+        })
+        it('Test-6.3-Function--6--popupWipData #11:3 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2
+            let eleIndex = [3, 0, 2, 4]
+            let operationType = "delet"
+            let wipData = {}
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
+            tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
+            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
+        })
+        it('Test-6.3-Function--6--popupWipData #12 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2
+            let eleIndex = [0, 1, 2, 3, 4]
+            let operationType = "delete"
+            let wipData = {}
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
+            tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
+            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
+        })
+        it('Test-6.3-Function--6--popupWipData #12:1 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2
+            let eleIndex = [0, 1]
+            let operationType = "delete"
+            let wipData = {}
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
+            tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
+            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
+        })
+        
+    })
+        
     describe('Test-6-Function--6--fetchManifestStatus', () => {
         const { slate1, slate2 } = tcmTestData
         let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb",
@@ -336,44 +405,178 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.fetchManifestStatus(bodymatter, parentElement, type);
             expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
         })
-        it('Test-6.3-Function--6--fetchManifestStatus - In WE-HEAD | Aside | Citations', () => {
-            let bodymatter = bodymatter2, type = "element-citation", parentElement = {
-                asideData: {},
-                parentUrn: {
-                    manifestUrn: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e5"
-                },
-                poetryData: {}
-            }
-            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
-            tcmSnapshotUtility.fetchManifestStatus(bodymatter, parentElement, type);
-            expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
-        })
-        it('Test-6.4-Function--6--fetchManifestStatus - In Section-Break', () => {
-            let bodymatter = bodymatter1, type = "element-authoredtext", parentElement = {
+        it('Test-6.3-Function--6--fetchManifestStatusMULTI_COLUMN_GROUP #1 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2, type = "element-citation", containerElement = {
                 asideData: {
-                    id: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f0"
+                    id: "urn:pearson:work:09d00b1e-66a1-406e-b04f-0612d2d2dcdc"
                 },
                 parentUrn: {
-                    manifestUrn: "urn:pearson:manifest:a4100af0-6143-41ed-82a4-33012dd5f134"
+                    manifestUrn: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e5",
+                    elementType: "group",
+                    columnIndex: "0"
                 },
                 poetryData: {}
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
-            tcmSnapshotUtility.fetchManifestStatus(bodymatter, parentElement, type);
-            expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
+            tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
+            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
-        it('Test-6.5-Function--6--fetchManifestStatus - In Poetry', () => {
-            let bodymatter = bodymatter2, parentElement = {
-                asideData: {},
-                parentUrn: {},
-                poetryData: {
-                    parentUrn: "urn:pearson:manifest:d8666a10-dffd-4b16-ab75-ec714a3fc3a6"
-                }
-            }, type = "stanza"
+        it('Test-6.3-Function--6--fetchManifestStatusWE_MANIFEST #2 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2, type = "element-citation", containerElement = {
+                asideData: {
+                    id: "urn:pearson:work:09d00b1e-66a1-406e-b04f-0612d2d2dcdc"
+                },
+                parentUrn: {
+                    manifestUrn: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e5",
+                    elementType: "manifest",
+                    columnIndex: "0"
+                },
+                poetryData: {}
+            }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
-            tcmSnapshotUtility.fetchManifestStatus(bodymatter, parentElement, type);
-            expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
+            tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
+            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
+        it('Test-6.3-Function--6--fetchManifestStatusPOPUP_ELEMENT #4 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2, type = "element-citation", containerElement = {
+                asideData: {
+                    id: "urn:pearson:work:09d00b1e-66a1-406e-b04f-0612d2d2dcdc"
+                },
+                parentUrn: {
+                    manifestUrn: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e5",
+                    elementType: "popup",
+                    columnIndex: "0"
+                },
+                poetryData: {}
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
+            tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
+            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
+        })
+        it('Test-6.3-Function--6--fetchManifestStatusELEMENT_ASIDE #5 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2, type = "element-citation", containerElement = {
+                asideData: {
+                    id: "urn:pearson:work:09d00b1e-66a1-406e-b04f-0612d2d2dcdc"
+                },
+                parentUrn: {
+                    manifestUrn: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e5",
+                    elementType: "element-aside",
+                    columnIndex: "0"
+                },
+                poetryData: {}
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
+            tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
+            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
+        })
+        it('Test-6.3-Function--6--fetchManifestStatusshowHideObj #6 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2, type = "element-citation", containerElement = {
+                asideData: {
+                    // id: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e",
+                    // type: "groupedcontent",
+                    element: {
+                        elementdata: {
+                            bodymatter: [
+                                {
+                                    id: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e5",
+                                    status: "different"
+                                }
+                        ]
+                        }
+                    },
+                    parent: {
+                        type: "groupedcontent",
+                        id: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e"
+                    }
+                    
+                },
+                parentUrn: {
+                    manifestUrn: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e5",
+                    elementType: "element-aside",
+                    columnIndex: "0"
+                },
+                poetryData: {}, 
+                showHideObj: {
+                    showHideType: {}
+                }
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
+            tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
+            expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
+        })
+        it('Test-6.3-Function--6--fetchManifestStatusshowHideObj #7 - In WE-HEAD | Aside | Citations', () => {
+            let bodymatter = bodymatter2, type = "element-citation", containerElement = {
+                asideData: {
+                    // id: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e",
+                    // type: "groupedcontent",
+                    element: {
+                        elementdata: {
+                            bodymatter: [
+                                {
+                                    id: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e",
+                                    status: "different"
+                                }
+                        ]
+                        }
+                    },
+                    parent: {
+                        type: "groupedcontent",
+                        id: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e"
+                    }
+                    
+                },
+                parentUrn: {
+                    manifestUrn: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e5",
+                    elementType: "element-aside",
+                    columnIndex: "0"
+                },
+                poetryData: {}, 
+                showHideObj: {
+                    showHideType: {}
+                }
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
+            tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
+            expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
+        })
+        // it('Test-6.3-Function--6--fetchManifestStatus - In WE-HEAD | Aside | Citations', () => {
+        //     let bodymatter = bodymatter2, type = "element-citation", parentElement = {
+        //         asideData: {},
+        //         parentUrn: {
+        //             manifestUrn: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e5"
+        //         },
+        //         poetryData: {}
+        //     }
+        //     const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
+        //     tcmSnapshotUtility.fetchManifestStatus(bodymatter, parentElement, type);
+        //     expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
+        // })
+        // it('Test-6.4-Function--6--fetchManifestStatus - In Section-Break', () => {
+        //     let bodymatter = bodymatter1, type = "element-authoredtext", parentElement = {
+        //         asideData: {
+        //             id: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f0"
+        //         },
+        //         parentUrn: {
+        //             manifestUrn: "urn:pearson:manifest:a4100af0-6143-41ed-82a4-33012dd5f134"
+        //         },
+        //         poetryData: {}
+        //     }
+        //     const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
+        //     tcmSnapshotUtility.fetchManifestStatus(bodymatter, parentElement, type);
+        //     expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
+        // })
+        // it('Test-6.5-Function--6--fetchManifestStatus - In Poetry', () => {
+        //     let bodymatter = bodymatter2, parentElement = {
+        //         asideData: {},
+        //         parentUrn: {},
+        //         poetryData: {
+        //             parentUrn: "urn:pearson:manifest:d8666a10-dffd-4b16-ab75-ec714a3fc3a6"
+        //         }
+        //     }, type = "stanza"
+        //     const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
+        //     tcmSnapshotUtility.fetchManifestStatus(bodymatter, parentElement, type);
+        //     expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
+        // })
     });
     describe('Test-7-Figure snapshots helper functions', () => {
         const { setSemanticsSnapshotsData } = tcmTestData
@@ -832,6 +1035,157 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             
             tcmSnapshotUtility.prepareAndSendTcmData(elementDetails, wipData, defaultKeys, defaultKeys, 1, "wip");
             expect(spyFunction).toHaveBeenCalledWith(elementDetails, wipData, defaultKeys, defaultKeys, 1, "wip");
+        })
+        it('setElementTypeAndUrn - Block poetry inside WE#1', async () => {
+            config.isPopupSlate = true;
+            const eleId = {
+                parentId: "urn:pearson:manifest:as242342asd3:32sf4314",
+                childId : "urn:pearson:work:as242342asd3:32sf43sdd"
+            },
+            tag = {
+                parentTag: "SH",
+                childTag : "P"
+            },
+            isHead = "HEAD",
+            eleIndex = -1,
+            popupInContainer = false,
+            slateManifestVersioning = "",
+            popupSlate = false,
+            parentElement = {
+                element: { type: "poetry" }
+            },
+            containerElement = {
+                asideData : {
+                    type: "poetry",
+                    subtype: "",
+                    id: "urn:pearson:manifest:3525235-324323-4432sfe31"
+                }
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setElementTypeAndUrn');
+            
+            tcmSnapshotUtility.setElementTypeAndUrn(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+        })
+        it('setElementTypeAndUrn - Block poetry inside WE#2', async () => {
+            config.isPopupSlate = true;
+            const eleId = {
+                parentId: "urn:pearson:manifest:as242342asd3:32sf4314",
+                childId : "urn:pearson:work:as242342asd3:32sf43sdd"
+            },
+            tag = {
+                parentTag: "SH",
+                childTag : "P"
+            },
+            isHead = "HEAD",
+            eleIndex = -1,
+            popupInContainer = false,
+            slateManifestVersioning = "",
+            popupSlate = false,
+            parentElement = {
+                element: { type: "poetry" }
+            },
+            containerElement = {
+                asideData : {
+                    type: "element-aside",
+                    subtype: "",
+                    id: "urn:pearson:manifest:3525235-324323-4432sfe31"
+                }
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setElementTypeAndUrn');
+            
+            tcmSnapshotUtility.setElementTypeAndUrn(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+        })
+        it('setElementTypeAndUrn - Block poetry inside WE#3', async () => {
+            config.isPopupSlate = true;
+            const eleId = {
+                parentId: "urn:pearson:manifest:as242342asd3:32sf4314",
+                childId : "urn:pearson:work:as242342asd3:32sf43sdd"
+            },
+            tag = {
+                parentTag: "SH",
+                childTag : "P"
+            },
+            isHead = "HEAD",
+            eleIndex = -1,
+            popupInContainer = false,
+            slateManifestVersioning = "",
+            popupSlate = false,
+            parentElement = {
+                element: { type: "poetry" }
+            },
+            containerElement = {
+                asideData : {
+                    type: "element-aside",
+                    subtype: "workedexample",
+                    id: "urn:pearson:manifest:3525235-324323-4432sfe31"
+                }
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setElementTypeAndUrn');
+            
+            tcmSnapshotUtility.setElementTypeAndUrn(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+        })
+        it('setElementTypeAndUrn - Block poetry inside WE#4', async () => {
+            config.isPopupSlate = true;
+            const eleId = {
+                parentId: "urn:pearson:manifest:as242342asd3:32sf4314",
+                childId : "urn:pearson:work:as242342asd3:32sf43sdd"
+            },
+            tag = {
+                parentTag: "SH",
+                childTag : "P"
+            },
+            isHead = "HEAD",
+            eleIndex = -1,
+            popupInContainer = false,
+            slateManifestVersioning = "",
+            popupSlate = false,
+            parentElement = {
+                element: { type: "poetry" }
+            },
+            containerElement = {
+                asideData : {
+                    type: "groupedcontent",
+                    subtype: "",
+                    id: "urn:pearson:manifest:3525235-324323-4432sfe31"
+                },
+                parentUrn: {multiColumnType: "3C", columnName: "C1", manifestUrn:"m-123", mcId: "mc-123"}
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setElementTypeAndUrn');
+            
+            tcmSnapshotUtility.setElementTypeAndUrn(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+        })
+        it('setElementTypeAndUrn - Block poetry inside WE#5', async () => {
+            config.isPopupSlate = true;
+            const eleId = {
+                parentId: "urn:pearson:manifest:as242342asd3:32sf4314",
+                childId : "urn:pearson:work:as242342asd3:32sf43sdd"
+            },
+            tag = {
+                parentTag: "SH",
+                childTag : "P"
+            },
+            isHead = "HEAD",
+            eleIndex = -1,
+            popupInContainer = false,
+            slateManifestVersioning = "",
+            popupSlate = false,
+            parentElement = {
+                element: { type: "different" }
+            },
+            containerElement = {
+                asideData : {
+                    type: "element-aside",
+                    subtype: "workedexample",
+                    id: "urn:pearson:manifest:3525235-324323-4432sfe31"
+                }
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setElementTypeAndUrn');
+            
+            tcmSnapshotUtility.setElementTypeAndUrn(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(eleId, tag, isHead, "" , eleIndex, popupInContainer, slateManifestVersioning, popupSlate, parentElement, containerElement);
         })
         it('setElementTypeAndUrn - showhide inside aside', async () => {
             config.isPopupSlate = true;

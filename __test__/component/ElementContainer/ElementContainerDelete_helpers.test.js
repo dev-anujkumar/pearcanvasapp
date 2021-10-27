@@ -1,6 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as deleteHelpers from '../../../src/component/ElementContainer/ElementContainerDelete_helpers';
+import { delInsideWe } from '../../../src/component/ElementContainer/ElementContainerDelete_helpers';
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
 import { slateLevelData, slateLevelDataWithApproved } from "../../../fixtures/containerActionsTestingData"
@@ -221,7 +222,6 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         spyonDeleteSuccess.mockClear()
     })
     it("deleteFromStore - inside aside ", () => {
-        
         let args = { 
             asideData: null,
             dispatch: jest.fn(),
@@ -229,6 +229,41 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { elementType : "element-aside", manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b" },
             index: 3,
             poetryData: null,
+            // newParentData: parentElement
+            newParentData: slateLevelData.slateLevelData
+        }
+        
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
+        deleteHelpers.deleteFromStore(args)
+        expect(spydeleteFromStore).toHaveBeenCalled()
+        spydeleteFromStore.mockClear()
+    })
+    it("deleteFromStore - inside aside#2 ", () => {
+        let args = { 
+            asideData: null,
+            dispatch: jest.fn(),
+            elmId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+            parentUrn: { elementType : "random", manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b" },
+            index: 3,
+            poetryData: null,
+            // newParentData: parentElement
+            newParentData: slateLevelData.slateLevelData
+        }
+        
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
+        deleteHelpers.deleteFromStore(args)
+        expect(spydeleteFromStore).toHaveBeenCalled()
+        spydeleteFromStore.mockClear()
+    })
+    it("deleteFromStore - inside poetry#2 ", () => {
+        
+        let args = { 
+            asideData: null,
+            dispatch: jest.fn(),
+            elmId: "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67",
+            parentUrn: null,
+            index: 3,
+            poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854", parent: {id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540"} },
             newParentData: slateLevelData.slateLevelData
         }
         
