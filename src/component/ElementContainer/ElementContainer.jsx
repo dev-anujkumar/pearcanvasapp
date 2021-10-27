@@ -446,6 +446,7 @@ class ElementContainer extends Component {
      * @param {*} previousElementData old element data
      */
     figureDifferenceInteractive = (index, previousElementData) => {
+
         let newInteractiveid = previousElementData.figuredata.interactiveid || ""
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             numberDOM = document.getElementById(`cypress-${index}-1`),
@@ -489,8 +490,8 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
-                oldImage !== newInteractiveid || 
-                podwidth !== (previousElementData.figuredata.posterimage.podwidth ? previousElementData.figuredata.posterimage.podwidth : '') && podwidth !== null
+                oldImage !== newInteractiveid ||
+                this.props?.activeElement?.podwidth !== previousElementData?.figuredata?.posterimage?.podwidth
             );
         }
         else {
@@ -849,7 +850,7 @@ class ElementContainer extends Component {
             })
         } else {
             parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || containerParent) ? this.props.parentElement : this.props.element
-        }
+        }  
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
             this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType, null, cgTitleFieldData);
