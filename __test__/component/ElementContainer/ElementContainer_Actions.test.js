@@ -47,6 +47,10 @@ jest.mock('../../../src/component/ElementContainer/ElementContainerUpdate_helper
     prepareDataForUpdateTcm: jest.fn()
 }))
 
+jest.mock('../../../src/js/TinyMceUtility.js', () => ({
+    checkBlockListElement: jest.fn(() => { return { parentData: {} } })
+}));
+
 let cb = new stub();
 jest.setTimeout(10000);
 
