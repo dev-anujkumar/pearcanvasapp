@@ -238,7 +238,7 @@ const store = mockStore({
     },
     assessmentReducer: {},
     markedIndexReducer: {
-        markedIndexCurrentValue: '',
+        markedIndexCurrentValue: {},
         markedIndexValue: { "type": "", "popUpStatus": false }
     }
 });
@@ -246,7 +246,7 @@ const store = mockStore({
 config["elementStatus"] = {}
 
 describe('Test for element container component', () => {
-    xit('Render Element Container without crashing ', () => {      
+    it('Render Element Container without crashing ', () => {      
     let props = {
         element: wipData.paragraph,
          permissions:  [
@@ -265,7 +265,7 @@ describe('Test for element container component', () => {
     expect(elementContainerInstance).toBeDefined();
     })
      
-    xdescribe('Test- renderElement function for Different Elements ', () => {
+    describe('Test- renderElement function for Different Elements ', () => {
         let props = {
             element: wipData.opener,
             permissions: [],
@@ -443,6 +443,10 @@ describe('Test for element container component', () => {
                         sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                         sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                     }
+                },
+                markedIndexReducer: {
+                    markedIndexCurrentValue: {},
+                    markedIndexValue: { "type": "", "popUpStatus": false }
                 }
             });
             let props = {
@@ -928,7 +932,7 @@ describe('Test for element container component', () => {
             expect(elementContainerInstance).toBeDefined();
         })
     })
-    xdescribe('Test- Add Comment Functions', () => {
+    describe('Test- Add Comment Functions', () => {
         let props = {
             element: wipData.paragraph,
             permissions: [
@@ -996,7 +1000,7 @@ describe('Test for element container component', () => {
             spysaveNewComment .mockClear()
         })
     })
-    xdescribe('Test- Popup Functions', () => {
+    describe('Test- Popup Functions', () => {
         let props = {
             element: wipData.paragraph,
             permissions: [
@@ -1066,7 +1070,7 @@ describe('Test for element container component', () => {
             spyhandleOnMouseOut.mockClear()
         })
     })
-    xdescribe('Test- OpenerElement-Functions', () => {
+    describe('Test- OpenerElement-Functions', () => {
         let openerData=wipData.opener
         let props = {
             element: wipData.opener,
@@ -1249,7 +1253,7 @@ describe('Test for element container component', () => {
             spytoggleColorTextList.mockClear()
         })
     })
-    xdescribe('Test-Other Functions', () => {
+    describe('Test-Other Functions', () => {
         let props = {
             element: wipData.paragraph,
             permissions: [
@@ -1417,7 +1421,7 @@ describe('Test for element container component', () => {
         }) 
 
     })
-    xdescribe('Test-Lifecycle Functions', () => {
+    describe('Test-Lifecycle Functions', () => {
         let props = {
             element: wipData.paragraph,
             permissions: [
@@ -1561,7 +1565,7 @@ describe('Test for element container component', () => {
     
         })
     })
-    xdescribe('Test-Elm Assessent Functions', () => {
+    describe('Test-Elm Assessent Functions', () => {
         let newProps = {
             element: singleAssessmentElmDefault,
             permissions: [
@@ -1590,7 +1594,7 @@ describe('Test for element container component', () => {
     })
 });
 
-xdescribe('Test-Lifecycle Functions-componentWillReceiveProps', () => {
+describe('Test-Lifecycle Functions-componentWillReceiveProps', () => {
     let props = {
         element: wipData.opener,
         permissions: [
@@ -1695,7 +1699,7 @@ xdescribe('Test-Lifecycle Functions-componentWillReceiveProps', () => {
         expect(elementContainerInstance.state.ElementId).toBe("urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y")
     })  
 })
-xdescribe('Test-Other Functions', () => {
+describe('Test-Other Functions', () => {
    
     let props = {
         element: wipData.poetry,
