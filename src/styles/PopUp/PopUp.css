@@ -701,14 +701,14 @@ span.calloutOne > ins.diffmod{
   color: #fff;
   text-align: center;
   border-radius: 2px;
-  position: relative;
+  /* position: relative;
   display: inline-block;
-  top: -2px; 
+  top: -2px;  */
   opacity: 1; 
-  /* left: -10px;
+  left: -10px;
   position: absolute;
   z-index: 1;
-  right: -13px; */
+  right: -13px;
   transition: opacity 0.3s;
   font-size: 10px;
 }
@@ -721,8 +721,8 @@ span.calloutTwo > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-.modal-content.tcm-canvas-popup span.calloutTwo:hover::after {
-  content: 'Callout: Option 2';
+.modal-content.tcm-canvas-popup span[title="calloutOne"].calloutTwo:hover::after {
+  /* content: 'Callout: Option 2'; */
   width: 100px;
   background-color: #555;
   color: #fff;
