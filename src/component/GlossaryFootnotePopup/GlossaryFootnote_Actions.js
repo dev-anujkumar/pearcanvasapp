@@ -10,7 +10,7 @@ const {
     REACT_APP_API_URL
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
-import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE} from "./../../constants/Action_Constants";
+import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE, UPDATE_NEW_ELEMENT_WORK_ID} from "./../../constants/Action_Constants";
 import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
 import { updateMarkedIndexStore } from '../MarkIndexPopup/MarkIndex_Action';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
@@ -654,7 +654,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         /** For TCM snapshots */
         let mainSlateId = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
         tcmBodymatter = store.getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-        tcmParentData = (asideParent?.type == 'showhide' || asideParent?.type == 'poetry')  ? { asideData: asideParent, parentUrn: shParentUrn } : fetchParentData(tcmBodymatter, index);
+        tcmParentData = (asideParent?.type == 'showhide' || asideParent?.type == 'poetry' || (asideParent?.parent?.type === 'showhide'))  ? { asideData: asideParent, parentUrn: shParentUrn } : fetchParentData(tcmBodymatter, index);
         tcmMainBodymatter = store.getState().appStore.slateLevelData[mainSlateId].contents.bodymatter;
     }
     /** ----------------- */
@@ -699,7 +699,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 response: res.data,
                 updatedId:elementWorkId,
                 slateManifestUrn: config.slateManifestURN,
-                CurrentSlateStatus: currentSlateData.status
+                CurrentSlateStatus: currentSlateData?.status
             },
                 containerElement = {
                     asideData:tcmParentData.asideData,
@@ -707,7 +707,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
                     metaDataField: data.metaDataField ? data.metaDataField : undefined,
                     sectionType: showhideTypeVal,
-                    CurrentSlateStatus: currentSlateData.status,
+                    CurrentSlateStatus: currentSlateData?.status,
                     showHideObj: showHideObject,
                     poetryData
                 };
@@ -1221,4 +1221,68 @@ export const saveImageDataFromAlfresco = (message) => dispatch => {
     dispatch({ type: SET_FIGURE_GLOSSARY, payload: setImageGlossaryData })
     dispatch({ type: ADD_FIGURE_GLOSSARY_POPUP, payload: true })
     hideTocBlocker();
+}
+
+/**
+ * This function will check for new elementWorkId in slateLevelData, when marked index is updated
+ * inside glossary, and update the elementWorkId in the glossary store
+ */
+export const UpdateElementWorkId = () => {
+    const slateId = config.slateManifestURN;
+    const parentData = store.getState().appStore.slateLevelData;
+    let newParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = newParentData[slateId];
+    let newBodymatter = currentSlateData.contents.bodymatter;
+
+    const {glossaryFootnoteValue, elementIndex} = store.getState().glossaryFootnoteReducer;
+    const {elementType} = glossaryFootnoteValue;
+    let newElementWorkId = "";
+
+    const showHideElement = store.getState().appStore?.showHideObj;
+    const asideParent = store.getState().appStore?.asideData;
+    let tempIndex = elementIndex && typeof (elementIndex) !== 'number' && elementIndex.split('-');
+
+
+    if (showHideElement || asideParent?.type === 'showhide') { 
+        let glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
+        newElementWorkId = glossaryFootElem?.id;
+    } else if ((tempIndex.length == 5 || tempIndex.length == 6) && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
+        let glossaryFootElem = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+        newElementWorkId = glossaryFootElem?.id;
+    } else {
+        if (typeof (elementIndex) == 'number') {
+            newElementWorkId = newBodymatter[elementIndex].id
+        } else {
+            let indexes = elementIndex.split('-');
+            let indexesLen = indexes.length;
+            if (indexesLen == 2) {
+                newElementWorkId = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]?.id
+            } else if (indexesLen == 3) {
+                if (elementType === 'stanza') {
+                    newElementWorkId = newBodymatter[indexes[0]].contents.bodymatter[indexes[2]]?.id;
+                } else if (newBodymatter[indexes[0]].type === "groupedcontent") { 
+                    newElementWorkId = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]?.id;
+                } else {
+                    newElementWorkId = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]?.id;
+                }
+            }
+            else if (indexesLen == 4) {
+                newElementWorkId = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]]?.id;
+            } else if (indexesLen == 5) {
+                newElementWorkId = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]?.id;
+            }
+        }
+    }
+    
+
+    if(newElementWorkId !== glossaryFootnoteValue.elementWorkId){
+        let newGlossaryFootnoteValue = { ...glossaryFootnoteValue, elementWorkId: newElementWorkId};
+
+        store.dispatch({
+            type: UPDATE_NEW_ELEMENT_WORK_ID,
+            payload: {
+                glossaryFootnoteValue: newGlossaryFootnoteValue
+            }
+        })
+    }
 }

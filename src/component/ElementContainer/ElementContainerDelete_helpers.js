@@ -328,14 +328,21 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
         poetryData,
         cutCopyParentUrn,
         showHideObj,
-        element
+        element,
+        isSectionBreak
     } = params
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
         //const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
         //const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
-        const wipData = showHideObj?.currentElement || fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete");
+        let wipData={}
+        if(showHideObj?.currentElement?.type === 'element-aside' && isSectionBreak?.type === 'manifest'){
+            wipData = isSectionBreak
+        }
+        else{
+            wipData = showHideObj?.currentElement || fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete");
+        }
         let containerElement = {
             asideData,
             parentUrn,
@@ -357,9 +364,23 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
         * Update - 2C/Aside/POP:SH:New 
         */
         const typeOfElement = asideData?.type;
-        if(typeOfElement === "showhide") {
-            containerElement = prepareSnapshots_ShowHide(containerElement, deleteData.wipData, index);
-            if(asideData?.grandParent?.asideData?.type === "groupedcontent" && !isEmpty(cutCopyParentUrn)) {
+        if (typeOfElement === "showhide") {
+            if (showHideObj?.currentElement?.type === 'element-aside' && type === 'manifest') {
+                containerElement = {
+                    parentElement: { ...asideData, sectionType: showHideObj?.showHideType },
+                    asideData: {
+                        ...showHideObj?.currentElement,
+                        parent: {...showHideObj?.element,
+                            showHideType: showHideObj?.showHideType}
+                    },
+                    parentUrn,
+                    showHideObj,
+                    sectionType: showHideObj?.showHideType
+                }
+            } else {
+                containerElement = prepareSnapshots_ShowHide(containerElement, deleteData.wipData, index);
+            }
+            if (asideData?.grandParent?.asideData?.type === "groupedcontent" && !isEmpty(cutCopyParentUrn)) {
                 deleteData.wipData = element;
             }
         }
