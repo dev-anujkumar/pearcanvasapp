@@ -1340,6 +1340,12 @@ export class TinyMceEditor extends Component {
 
             // Block list events
             if (blockListData && Object.keys(blockListData).length) {
+                const { index } = this.props;
+                const getSelectedElement = document.getElementById(`cypress-${index}`);
+                // setting the placeholder when textcontent is cleared from element authored text to prevent placecholder overlapping on backspace delete
+                if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2) {
+                    getSelectedElement.setAttribute('placeholder', 'Type Something');
+                }
                 // SHIFT + ENTER key press handling for BlockList element
                 if (key === 13 && e.shiftKey) {
                     e.preventDefault();
@@ -1383,6 +1389,7 @@ export class TinyMceEditor extends Component {
                 }
 
                 if (key === 8 && tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 0) {
+                    getSelectedElement.setAttribute('placeholder', '');
                     const { id, type } = this?.props?.element;
                     const blockListData = checkBlockListElement(this.props, "ENTER");
                     let manifestListItemData = checkBlockListElement(this.props, "TAB");
