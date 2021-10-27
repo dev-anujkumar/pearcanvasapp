@@ -239,7 +239,7 @@ const store = mockStore({
     assessmentReducer: {},
     markedIndexReducer: {
         markedIndexCurrentValue: '',
-        markedIndexValue: ''
+        markedIndexValue: { "type": "", "popUpStatus": false }
     }
 });
 
@@ -1023,6 +1023,15 @@ describe('Test for element container component', () => {
             elementContainer.update();
             expect(spyopenGlossaryFootnotePopUp ).toHaveBeenCalledWith(true, "Footnote", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback)
             spyopenGlossaryFootnotePopUp .mockClear()
+        })
+        it('Test-openMarkedIndexPopUp  Function', () => {
+            let callback=jest.fn();
+            const spyopenMarkedIndexPopUp  = jest.spyOn(elementContainerInstance, 'openMarkedIndexPopUp')
+            elementContainerInstance.openMarkedIndexPopUp(true, "Markedindex", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyopenMarkedIndexPopUp ).toHaveBeenCalledWith(true, "Markedindex", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback)
+            spyopenMarkedIndexPopUp .mockClear()
         })
         it('Test-openAssetPopoverPopUp  Function', () => {
             const spyopenAssetPopoverPopUp = jest.spyOn(elementContainerInstance, 'openAssetPopoverPopUp')
