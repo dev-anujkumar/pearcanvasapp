@@ -236,7 +236,11 @@ const store = mockStore({
         editor: true,
         Permission: false
     },
-    assessmentReducer: {}
+    assessmentReducer: {},
+    markedIndexReducer: {
+        markedIndexCurrentValue: '',
+        markedIndexValue: ''
+    }
 });
 
 config["elementStatus"] = {}
@@ -494,7 +498,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        xit('Render Element Container ----->handleBlur EmbeddedAssessment element', () => {
+        it('Render Element Container ----->handleBlur EmbeddedAssessment element', () => {
             let props = {
                 element: wipData.assessment,
                 permissions: [],
@@ -513,7 +517,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        xit('Render Element Container ----->handleBlur popup', () => {
+        it('Render Element Container ----->handleBlur popup', () => {
             let props = {
                 element: wipData.popup,
                 permissions: [],
@@ -791,7 +795,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        xit('Render Element Container ----->SingleAssessment Element', () => {
+        it('Render Element Container ----->SingleAssessment Element', () => {
             let props = {
                 element: wipData.assessment,
                 permissions: [],
@@ -850,7 +854,7 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
-        xit('Render Element Container ----->AssessmentSlate', () => {
+        it('Render Element Container ----->AssessmentSlate', () => {
             let props = {
                 element: wipData.assessmentSlate,
                 permissions: [],
@@ -1028,7 +1032,7 @@ describe('Test for element container component', () => {
             expect(spyopenAssetPopoverPopUp).toHaveBeenCalledWith(true)
             spyopenAssetPopoverPopUp.mockClear()
         })
-        xit('Test-showDeleteElemPopup  Function', () => {
+        it('Test-showDeleteElemPopup  Function', () => {
             const spyshowDeleteElemPopup = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup')
             elementContainerInstance.showDeleteElemPopup(event,true,true);
             elementContainerInstance.forceUpdate();
@@ -1339,7 +1343,7 @@ describe('Test for element container component', () => {
             expect(spyhandleFocus).toHaveBeenCalled()
             spyhandleFocus.mockClear()
         })
-        xit('Test-handleTCM Function', () => {
+        it('Test-handleTCM Function', () => {
             const spyhandleTCM  = jest.spyOn(elementContainerInstance, 'handleTCM')
             elementContainerInstance.handleTCM(event);
             expect(spyhandleTCM).toHaveBeenCalled()
@@ -1507,7 +1511,7 @@ describe('Test for element container component', () => {
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-            xit('Render Element Container ----->AssessmentSlate-update-LT/LA', () => {
+            it('Render Element Container ----->AssessmentSlate-update-LT/LA', () => {
                 let props = {
                     element: wipData.assessmentSlate,
                     permissions: [],
@@ -1530,7 +1534,7 @@ describe('Test for element container component', () => {
                 expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
                 spyhandleBlurAssessmentSlate.mockClear()
             })
-            xit('Render Element Container ----->AssessmentSlate-update-usageType update', () => {
+            it('Render Element Container ----->AssessmentSlate-update-usageType update', () => {
                 let props = {
                     element: wipData.assessmentSlate,
                     permissions: [],
@@ -1828,6 +1832,10 @@ describe('Test-Other Functions', () => {
                     sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                 }
+            },
+            markedIndexReducer: {
+                markedIndexCurrentValue: '',
+                markedIndexValue: ''
             }
         });
         let props = {
@@ -1946,6 +1954,10 @@ describe('Test-Other Functions', () => {
                     sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                 }
+            },
+            markedIndexReducer: {
+                markedIndexCurrentValue: '',
+                markedIndexValue: ''
             }
         });
         let props = {
@@ -2028,7 +2040,7 @@ describe('Test-Other Functions', () => {
         expect(spyfigureDifferenceInteractive).toHaveReturnedWith(true);
         spyfigureDifferenceInteractive.mockClear()
     })
-    xit("Test - handleTCM: isSavingElement false", () => {
+    it("Test - handleTCM: isSavingElement false", () => {
         const eventObj = {
             stopPropagation: jest.fn()
         }
@@ -2113,6 +2125,29 @@ describe('Test-Other Functions', () => {
         spyhandleContentChange.mockClear()
     })
 
+    it("handleContentChange for CG element when update title field", () => {
+        const previousElementData = {
+            type: "citations",
+            html: {
+                text: "<p>title text</p>"
+            }
+        }
+        document.querySelector = () => {
+            return {
+                innerText: " ",
+                append: jest.fn()
+            }
+        }
+        const cgTitleFieldData = {
+            asideData: { element: {type: 'citations'}},
+            parentElement: {type : 'showhide'}
+        }
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, false, {type: "showhide"}, null, null, cgTitleFieldData);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
     it("handleContentChange for stanza", () => {
         const previousElementData = {
             type: "stanza",
@@ -2178,7 +2213,7 @@ describe('Test-Other Functions', () => {
         spysetBorderToggle.mockClear()
     })
     
-    xit('Render and Update three column test click event', () => {
+    it('Render and Update three column test click event', () => {
         let props = {
             onClickCapture: jest.fn(),
             element: wipData.threeMulticolumn
