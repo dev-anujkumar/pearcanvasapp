@@ -100,7 +100,7 @@ jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js',
 });
 let store = mockStore(initialState);
 
-describe('Testing ElementAside component with props', () => {
+xdescribe('Testing ElementAside component with props', () => {
     let props = {
         element: elementAsideWorkExample,
         swapElement : swapElement,

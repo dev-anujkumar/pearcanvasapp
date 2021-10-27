@@ -1496,7 +1496,7 @@ describe('Tests Slate Wrapper Actions', () => {
         await store3.dispatch(actions.createElement('LO', 0, {manifestUrn: config.projectUrn}, asideDataMock, 0, "loref"));
     });
 
-    it('createElement action - ELSE', async () => {
+    xit('createElement action - ELSE', async () => {
         let initialState0 = {
             appStore: {
               slateLevelData: NotSectionBreakMockSlateData3,
