@@ -96,7 +96,7 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
         dataToSend:{
             "listtype": type==='disc'? "unordered" :"ordered",
             "subtype": type,
-            "startNumber": startvalue.toString()
+            "startNumber": startvalue // Earlier it was a string as discussed it PCAT-12326 comments. Now acc. to discussions changing it back to integer.
         },
         slateLevelBLIndex:activeElement.index.split("-")[0]
        }
