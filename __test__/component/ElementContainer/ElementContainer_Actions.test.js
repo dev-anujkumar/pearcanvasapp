@@ -5,7 +5,7 @@ import * as actions from '../../../src/component/ElementContainer/ElementContain
 import { slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
-import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure } from "../../../fixtures/containerActionsTestingData"
+import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData } from "../../../fixtures/containerActionsTestingData"
 import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
@@ -106,7 +106,7 @@ describe('Tests ElementContainer Actions', () => {
     afterEach(() => {
         moxios.uninstall()
     });
-    xdescribe('testing------- ADD COMMENT ------action', () => {
+    describe('testing------- ADD COMMENT ------action', () => {
         it('testing------- ADD COMMENT for other elements ------action', () => {
             let store = mockStore(() => initialState);
             let newComment = {
@@ -711,6 +711,80 @@ describe('Tests ElementContainer Actions', () => {
 
             const spyAction = jest.spyOn(actions, "createShowHideElement")
             actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
+        })
+
+        it('testing------- Create Aside element inside Show/Hide Element ----action', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                type = "show",
+                index = "3-1-2-0-0",
+                cb = jest.fn(),
+                parentContentUrn = "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                parentElement = {
+                    id: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    type: "showhide",
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    versionUrn: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    contentUrn: "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                    interactivedata: {
+                        "postertextobject": [
+                            {
+                                "type": "element-authoredtext",
+                                "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                            }
+                        ],
+                        "show": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                            }
+                        ],
+                        "hide": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:743ddeed-104e-44ad-8f11-affdcf1b2019"
+                            }
+                        ]
+                    }
+                },
+                parentElementIndex = "0"
+
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                "type": "element-aside",
+                "subtype": "sidebar",
+                "designtype": "sidebar",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "bodymatter": [
+                        {
+                            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                            "type": "element-authoredtext",
+                            "subtype": "",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": ""
+                            },
+                            "html": {
+                                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                            },
+                            "comments": false,
+                            "tcm": true,
+                            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                            "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                        }
+                    ]
+                }
+            }
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
+            const type2BAdded = 'CONTAINER';
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex, type2BAdded)(jest.fn, store.getState)
             expect(spyAction).toHaveBeenCalled()
         })
     })
@@ -1445,4 +1519,67 @@ describe('Tests ElementContainer Actions', () => {
             spyUpdateAudioVideoDataForCompare.mockClear();
         })
     })
+})
+
+describe("asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE && asideDataFromAfrescoMetadata?.parent.type === SHOW_HIDE ", () => {
+    const initialSt = {
+        appStore: {
+            slateLevelData: newslateShowhideData.slateLevelData
+        }
+    }
+    let store = mockStore(() => initialSt);
+    config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220d0"
+    const figureData = {},
+        dispatch = jest.fn(),
+        getState = store.getState;
+    it("condition.versionUrn == elementId index length 4 ", () => {
+        const asideDataFromAfrescoMetadata = {
+            type: 'element-aside',
+            parent: {
+                type: 'showhide',
+                showHideType: 'show'
+            }
+        }
+        const elementId = "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231",
+        elementIndex = "0-1-0-0";
+        const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData');
+        actions.updateFigureData(figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb)(dispatch, getState)
+        expect(spyupdateFigureData).toHaveBeenCalled()
+        spyupdateFigureData.mockClear()
+    })
+
+    it("condition.versionUrn == elementId index length 5", () => {
+        const asideDataFromAfrescoMetadata = {
+            type: 'element-aside',
+            subtype: 'workedexample',
+            parent: {
+                type: 'showhide',
+                showHideType: 'hide'
+            }
+        }
+        const elementId = "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231",
+        elementIndex = "0-2-0-0-0";
+        const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData');
+        actions.updateFigureData(figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb)(dispatch, getState)
+        expect(spyupdateFigureData).toHaveBeenCalled()
+        spyupdateFigureData.mockClear()
+    })
+
+    it("figure.versionUrn !== elementId conditional coverage", () => {
+        const asideDataFromAfrescoMetadata = {
+            type: 'element-aside',
+            subtype: 'workedexample',
+            parent: {
+                type: 'showhide',
+                showHideType: 'hide'
+            }
+        }
+        const elementId = "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d230",
+        elementIndex = "0-2-0-0-0";
+        const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData');
+        actions.updateFigureData(figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb)(dispatch, getState)
+        expect(spyupdateFigureData).toHaveBeenCalled()
+        spyupdateFigureData.mockClear()
+    })
+    
 })
