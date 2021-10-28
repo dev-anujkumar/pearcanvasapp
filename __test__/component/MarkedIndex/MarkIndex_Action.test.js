@@ -74,12 +74,6 @@ jest.mock('../../../src/appstore/store', () => {
 })
 
 describe('Tests marked index action', () => {
-    //   beforeAll(() => {
-    //     const div = document.createElement('div');
-    //     window.domNode = div;
-    //     document.body.appendChild(div);
-    //   })
-
     let store = mockStore(() => initialState);
 
     beforeEach(() => {
@@ -92,18 +86,38 @@ describe('Tests marked index action', () => {
     });
  
 
-   it('should test markedIndexPopup ', async() => {
+   it('should test marked index in para', async() => {
        try{
-            let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','figure','0','image','term text--', "popup", "formatted-subtitle", true);
-            // console.log("=====> result: ", result);
+            let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext',2, undefined,'term text--', "element-authoredtext", undefined, true);
             const item = await result(store.dispatch);
-            // console.log("=======item: ", item)
-            expect(typeof(item)).toEqual('object');
-            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.type).toEqual('OPEN_MARKED_INDEX');
+            expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>ndex</p>');
        } catch(err){
-        //    console.log("=============> error: ", err)
-            expect(err).toEqual(err)
+            expect(err).toEqual(err);
        }
    });
+
+    it('should test marked index in 2C ', async() => {
+       try{
+            let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','6-0-0', undefined,'term text--', "element-authoredtext", undefined, true);
+            const item = await result(store.dispatch);
+            expect(item.type).toEqual('OPEN_MARKED_INDEX');
+            expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
+       } catch(err){
+           console.log("Error: ", err)
+            expect(err).toEqual(err);
+       }
+   });
+
+   it('should test marked index in aside ', async() => {
+    try{
+         let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','7-0', undefined,'term text--', "element-authoredtext", undefined, true);
+         const item = await result(store.dispatch);
+         expect(item.type).toEqual('OPEN_MARKED_INDEX');
+         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
+    } catch(err){
+         expect(err).toEqual(err);
+    }
+});
 });
 
