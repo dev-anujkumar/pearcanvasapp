@@ -189,7 +189,7 @@ jest.mock('../../../src/component/ElementMetaDataAnchor/ExternalLO_helpers.js', 
         setCurrentSlateLOs: jest.fn(()=>[])
     }
 })
-describe('Testing communication channel', () => {
+xdescribe('Testing communication channel', () => {
     let store = mockStore(initialState);
     let props = {
         slateLevelData: {

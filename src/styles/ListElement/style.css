@@ -21,6 +21,10 @@ div.cypress-editable ol,div.cypress-editable li ol, div.cypress-editable ul, div
     counter-reset: section !important;
 }
 
+ol{
+    counter-reset: section !important;
+}
+
 ol li.listItemNumeroUnoUpperAlpha::before {
     counter-increment: section;
     content: counter(section, upper-alpha)". ";
@@ -46,7 +50,53 @@ ol li.listItemNumeroUnoLowerRoman::before {
     content: counter(section, lower-roman)". ";
 }
 
-div.cypress-editable li.listItemNumeroUnoBullet {
+
+.bl ol li.listItemNumeroUnoNumber::before {
+    counter-increment: section;
+    content: counter(section, decimal)". ";
+    padding-left: 15px;
+    word-break: break-all;
+    width: 40px;
+    font-size: 12px;
+}
+
+.bl ol li.listItemNumeroUnoLowerAlpha::before {
+    counter-increment: section;
+    content: counter(section, lower-alpha)". ";
+    padding-left: 15px;
+    word-break: break-all;
+    width: 40px;
+    font-size: 12px;
+}
+
+.bl ol li.listItemNumeroUnoUpperRoman::before {
+    counter-increment: section;
+    content: counter(section, upper-roman)". ";
+    padding-left: 5px;
+    word-break: break-all;
+    width: 40px;
+    font-size: 10px;
+}
+
+.bl ol li.listItemNumeroUnoLowerRoman::before {
+    counter-increment: section;
+    content: counter(section, lower-roman)". ";
+    padding-left: 15px;
+    word-break: break-all;
+    width: 40px;
+    font-size: 12px;
+}
+
+.bl ol li.listItemNumeroUnoUpperAlpha::before {
+    counter-increment: section;
+    content: counter(section, upper-alpha)". ";
+    padding-left: 15px;
+    word-break: break-all;
+    width: 40px;
+    font-size: 12px;
+}
+
+li.listItemNumeroUnoBullet {
     color: #000;
     font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
     font-size: 1.180em;
@@ -57,7 +107,12 @@ div.cypress-editable li.listItemNumeroUnoBullet {
     margin-bottom: 0.5em;
 }
 
-div.cypress-editable li.listItemNumeroUnoBullet::before {
+.bl li.listItemNumeroUnoBullet {
+    font-size: 13px !important;
+    padding-left: 30px;
+}
+
+li.listItemNumeroUnoBullet::before {
     content: counter(item) ". ";
     counter-increment: item;
     font-weight: bold;
@@ -68,7 +123,7 @@ div.cypress-editable li.listItemNumeroUnoBullet::before {
     transform: translateX(-100%);
 }
 
-div.cypress-editable ul li.listItemNumeroUnoBullet::before {
+ul li.listItemNumeroUnoBullet::before {
     counter-increment: section;
     content: counter(section, disc);
     font-size: 1.6rem;

@@ -13,8 +13,9 @@ import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshot
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 
-import ElementConstants from "./ElementConstants";
-const { SHOW_HIDE } = ElementConstants;
+import ElementConstants, { containersInSH } from "./ElementConstants";
+import { checkBlockListElement } from '../../js/TinyMceUtility';
+const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
@@ -71,6 +72,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "citations":
             case "poetry":
             case "groupedcontent":
+            case "manifestlist":
+            case "manifestlistitem":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -145,7 +148,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
-    const { showHideObj } = getState().appStore
+    const { showHideObj,slateLevelData } = getState().appStore
     updatedData.projectUrn = config.projectUrn;
     if (updatedData.loData) {
         updatedData.slateVersionUrn = config.slateManifestURN;
@@ -166,6 +169,15 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
     }
     updateStoreInCanvas(helperArgs)
     let updatedData1 = JSON.parse(JSON.stringify(updatedData))
+    const data = {
+        slateLevelData,
+        index: elementIndex
+    };
+    const blockListData = checkBlockListElement(data, 'TAB');
+    if(blockListData && Object.keys(blockListData).length > 0) {
+        const { parentData } = blockListData;
+        updatedData1.elementParentEntityUrn = parentData?.contentUrn;
+    }
     if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
         updatedData1 = {
             ...updatedData,
@@ -242,6 +254,22 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                 /* update the data */
                 figure.figuredata = figureData;
             }
+        }
+        /* Update figure inside Aside/WE in S/H */
+    } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) { 
+        let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
+        let figure;
+        if (sectionType) {
+            if ((asideData?.subtype === ELEMENT_WORKEDEXAMPLE || asideDataFromAfrescoMetadata?.type === ELEMENT_WORKEDEXAMPLE) && indexes?.length >= 5) {
+                figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+            } else {
+                figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]];
+            }
+        }
+        if (figure.versionUrn === elementId) {
+            dataToSend = figure?.figuredata;
+            /* update the data */
+            figure.figuredata = figureData;
         }
     } else if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
@@ -341,7 +369,7 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
     ).then(response => {
         let parentData = getState().appStore.slateLevelData;
         /* Table in Showhide - Get the section type */
-        const sectionType = getState()?.appStore?.asideData?.sectionType;
+        const sectionType = getState()?.appStore?.asideData?.sectionType || getState()?.appStore?.asideData?.parent?.showHideType;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         if (newParentData[config.slateManifestURN].status === 'wip') {
             newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter, sectionType)
@@ -501,7 +529,11 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
 
         if (config.tcmStatus) {
             const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
-            prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
+            if (containersInSH.includes(type2BAdded)) {
+                prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);    
+            } else {
+                prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
+            }
         }
 
         dispatch({

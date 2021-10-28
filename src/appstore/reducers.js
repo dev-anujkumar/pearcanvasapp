@@ -106,6 +106,7 @@ const INITIAL_ACTION = {
     payload: {}
 }
 
+
 /**
  * This method actually updates app store as per incoming payload
  * @param {Object} state | current state

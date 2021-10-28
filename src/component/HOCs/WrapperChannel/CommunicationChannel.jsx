@@ -762,6 +762,7 @@ function CommunicationChannel(WrappedComponent) {
             // reset owner slate popup flag on slate change
             this.resetOwnerSlatePopupFlag();
             if (message['category'] === 'titleChange') {
+                config.staleTitle = message?.title ?? '';
                 currentSlateObject = {
                     title: message.title,
                 }
