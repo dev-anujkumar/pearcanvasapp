@@ -30,6 +30,22 @@ class PopUp extends React.Component {
         this.processGlossaryFootnotes = this.processGlossaryFootnotes.bind(this)
     }
 
+    /**
+     * funtion to add the callout in html.
+     * @param html : consist of html string of popu
+     * @returns new html having callout in title (to display on hover)
+     */
+    transformHtmlForCallout = (html) => {
+        const calloutClasses = ["calloutOne", "calloutTwo", "calloutThree", "calloutFour"];
+        const calloutContent = ["Callout: Option 1","Callout: Option 2","Callout: Option 3","Callout: Option 4"]
+        let newHtml = html;
+        calloutClasses.forEach((item, index) => {
+        var myRegExp = new RegExp(`class="${item}"`,'g');
+            newHtml = newHtml.replace(myRegExp, `title="${calloutContent[index]} "class=${item}`)
+        });
+        return newHtml;
+    }
+
     componentDidMount() {
         const refVal = this
         /**  Event Listner for close the popup on enter*/
@@ -373,7 +389,7 @@ class PopUp extends React.Component {
             )
         } else if (props.isTCMCanvasPopup) {
             return (
-                <div ref={this.contentRef} className={`dialog-window ${props.assessmentClass}`} dangerouslySetInnerHTML={{ __html: props.dialogText }}></div>
+                <div ref={this.contentRef} className={`dialog-window ${props.assessmentClass}`} dangerouslySetInnerHTML={{ __html: this.transformHtmlForCallout(props.dialogText) }}></div>
             )
         }
         else if (props.AssessmentPopup) {
