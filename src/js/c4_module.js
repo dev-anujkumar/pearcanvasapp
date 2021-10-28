@@ -54,7 +54,7 @@ ajax.send = function (url, cb, method, data, contentType, sync, pubApiKey) {
     x.setRequestHeader('Content-Language', 'en');
     x.setRequestHeader('x-apikey', xApiKey);
     // x.setRequestHeader('X-PearsonSSOSession', config_object.ssoToken);
-    x.setRequestHeader('X-myCloudProxySession', config_object.myCloudProxySession);
+    x.setRequestHeader('myCloudProxySession', config_object.myCloudProxySession);
     x.setRequestHeader('If-Match', IF_MATCH !== "" ? IF_MATCH : "");
     x.setRequestHeader('accept', 'application/json, text/plain, */*');
 
