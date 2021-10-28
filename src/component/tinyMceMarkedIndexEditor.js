@@ -16,6 +16,7 @@ export class ReactMarkedIndexEditor extends React.Component {
   constructor(props) {
     super(props);
     this.placeHolderClass = ''
+    this.ctrlKey = false;
     this.chemistryMlMenuButton = null;
     this.mathMlMenuButton = null;
     this.termtext = null;
@@ -43,6 +44,7 @@ export class ReactMarkedIndexEditor extends React.Component {
         this.onEditorBlur(editor);
         this.setDefaultIcons(editor)
         editor.on('keyup', (e) => { this.editorOnKeyup(e, editor) });
+        editor.on('keydown', (e) => { this.editorOnKeyDown(e, editor) });
         editor.ui.registry.addToggleButton('code', {
           icon: "code",
           tooltip: "Inline code",
@@ -54,6 +56,9 @@ export class ReactMarkedIndexEditor extends React.Component {
           }
         });
         editor.on('init', (e) => {
+          editor.shortcuts.remove('meta+u', '', ''); 
+          editor.shortcuts.remove('meta+b', '', '');
+          editor.shortcuts.remove('meta+i', '', '');
           if (document.querySelector('div.index-container')) {
             setFormattingToolbar('disableTinymceToolbar')
             setFormattingToolbar('removeGlossaryFootnoteSuperscript')
@@ -125,6 +130,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     let contentHTML = e.target.innerHTML;
     if (activeElement) {
       let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
+
       if (activeElement.innerText.trim().length || isContainsMath) {
         activeElement.classList.remove('place-holder')
         if(this.props.markedLabelId){
@@ -147,7 +153,19 @@ export class ReactMarkedIndexEditor extends React.Component {
       }
     }
   }
-
+/**
+  * Called on Keydown
+  * @param {*} e Event Object
+  * @param {*} editor Editor instance
+  */
+  editorOnKeyDown = (e, editor) =>{
+    if(e.keyCode == 17){
+      this.ctrlKey = true;
+    }
+    if(this.ctrlKey && (e.keyCode == 73 || e.keyCode == 85 || e.keyCode == 66)){
+      tinymce.dom.Event.cancel(e);
+    }
+  }
   /**
   * Called on editor change
   * @param {*} e Event Object
