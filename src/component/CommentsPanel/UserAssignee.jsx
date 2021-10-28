@@ -20,7 +20,7 @@ class UserAssignee extends React.Component {
                         <CurrentProjectUsers mode={mode} users={users} currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
                         <span className={`set-assignee-button ${(!props.isSelectAssignee ? 'disabled' : "")}`}
                             onClick={() => {
-                                props.setMode(`{mode}`)
+                                props.setMode('view')
                                 props.updateAssignee('assignee')
                             }}>
                         </span>
@@ -32,7 +32,7 @@ class UserAssignee extends React.Component {
             return (
                 <>
                     <span className="property-title">{props.name}</span>
-                    <span className="property-value color-gray-71 defaultAssignee">{props.currentUser}</span>
+                    <span className="property-value color-gray-71 defaultAssignee">{props.name === 'Assign by role' ? props.comment.role : props.comment.commentAssignee}</span>
                 </>
             )
 
