@@ -2060,7 +2060,7 @@ class ElementContainer extends Component {
     }
 
     /**
-     * @description - This function is for Open Glossarypopup.
+     * @description - This function is for Open openMarkedIndexPopUp.
      * @param {} 
      * @param 
      */

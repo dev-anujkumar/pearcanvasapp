@@ -334,5 +334,27 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyprepareTCMSnapshotsForDelete).toHaveReturnedWith(undefined)
             spyprepareTCMSnapshotsForDelete.mockClear()
         })  
+        it("deleteBlockListElement - listdata", () => {
+            const spydeleteBlockListElement = jest.spyOn(deleteHelpers, "deleteBlockListElement")
+            const elementData = {
+                listdata: {
+                    bodymatter: [{ id: "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27634"}, {id: "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"}]
+                }
+            }
+            deleteHelpers.deleteBlockListElement("urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635", elementData)
+            expect(spydeleteBlockListElement).toHaveBeenCalled()
+            spydeleteBlockListElement.mockClear()
+        })
+        it("deleteBlockListElement - listitemdata", () => {
+            const spydeleteBlockListElement = jest.spyOn(deleteHelpers, "deleteBlockListElement")
+            const elementData = {
+                listitemdata: {
+                    bodymatter: [{ id: "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27634"}, {id: "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"}]
+                }
+            }
+            deleteHelpers.deleteBlockListElement("urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635", elementData)
+            expect(spydeleteBlockListElement).toHaveBeenCalled()
+            spydeleteBlockListElement.mockClear()
+        })
     })
 })

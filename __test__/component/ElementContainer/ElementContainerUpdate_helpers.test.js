@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as updateHelpers from '../../../src/component/ElementContainer/ElementContainerUpdate_helpers';
-import { slateWithCitationElement, slateWithCitationElement2, slateWithPopupData} from "../../../fixtures/slateTestingData"
+import { slateWithCitationElement, slateWithCitationElement2, slateWithPopupData, slateWithShowhideData} from "../../../fixtures/slateTestingData"
 import { multiColumnContainer } from "../../../fixtures/multiColumnContainer";
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
@@ -1465,6 +1465,79 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
             spyUpdateNewVersionElementInStore.mockClear()
         })
+
+        it("Versioned element - updateNewVersionElementInStore - asideData inside Showhide", () => {
+            let args = {
+                updatedData: { ...updatedData, pageNumberRef: "1", sectionType: "postertextobject", elementParentEntityUrn:'urn:pearson:entity:8a49e877-144a-4750-92d2-81d5188d8e0b'},
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb",
+                    index: "0-0-1-0-0",
+                    parent: {id: "urn:pearson:manifest:653fe158-8eb9-42fb-b7c0-62bfd12a6825", type: "showhide", contentUrn: "urn:pearson:entity:f81e38b1-e67a-4c2e-8dbb-ba8d7f572d2c", showHideType: "hide"},
+                    subtype: "workedexample",
+                    type: "element-aside"
+                },
+                dispatch: jest.fn(),
+                versionedData: { ...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b", newParentVersion: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c' },
+                elementIndex: "0-0-1-0-0",
+                parentElement: {...parentElement, type:'showhide'},
+                fetchSlateData: jest.fn(),
+                newslateData: slateLevelData,
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+            updateHelpers.updateNewVersionElementInStore(args)
+            expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+            spyUpdateNewVersionElementInStore.mockClear()
+        })
+        it("Versioned element - updateNewVersionElementInStore - citations inside Showhide", () => {
+            let args = {
+                updatedData: { ...updatedData, pageNumberRef: "1", sectionType: "postertextobject", elementParentEntityUrn:'urn:pearson:entity:8a49e877-144a-4750-92d2-81d5188d8e0b'},
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb",
+                    index: "0-0-1",
+                    parent: {id: "urn:pearson:manifest:653fe158-8eb9-42fb-b7c0-62bfd12a6825", type: "showhide", contentUrn: "urn:pearson:entity:f81e38b1-e67a-4c2e-8dbb-ba8d7f572d2c", showHideType: "hide"},
+                    type: "citations"
+                },
+                dispatch: jest.fn(),
+                versionedData: { ...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b", newParentVersion: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c' },
+                elementIndex: "0-0-1",
+                parentElement: {...parentElement, type:'showhide'},
+                fetchSlateData: jest.fn(),
+                newslateData: slateLevelData,
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+            updateHelpers.updateNewVersionElementInStore(args)
+            expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+            spyUpdateNewVersionElementInStore.mockClear()
+        })
+        it("Versioned element - updateNewVersionElementInStore - citations title field inside Showhide", () => {
+            let args = {
+                updatedData: { ...updatedData, metaDataField: "formattedTitle", pageNumberRef: "1", sectionType: "postertextobject", elementParentEntityUrn:'urn:pearson:entity:8a49e877-144a-4750-92d2-81d5188d8e0b'},
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb",
+                    index: "0-0-1",
+                    parent: {id: "urn:pearson:manifest:653fe158-8eb9-42fb-b7c0-62bfd12a6825", type: "showhide", contentUrn: "urn:pearson:entity:f81e38b1-e67a-4c2e-8dbb-ba8d7f572d2c", showHideType: "hide"},
+                },
+                dispatch: jest.fn(),
+                versionedData: { ...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b", newParentVersion: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c' },
+                elementIndex: "0-0-1",
+                parentElement: {...parentElement, type:'showhide'},
+                fetchSlateData: jest.fn(),
+                newslateData: slateLevelData,
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+            updateHelpers.updateNewVersionElementInStore(args)
+            expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+            spyUpdateNewVersionElementInStore.mockClear()
+        })
     })
     describe('updateShowhideElements testCases',()=>{
         it('updateShowhideElements for authoredText',()=>{
@@ -2257,6 +2330,302 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+
+        it("updateElementInStore - element-citation of Citation inside showhide", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: '',
+                    type: "element-citation"
+                },
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb",
+                    index: "0-0-0",
+                    parent: {id: "urn:pearson:manifest:653fe158-8eb9-42fb-b7c0-62bfd12a6825", type: "showhide", contentUrn: "urn:pearson:entity:f81e38b1-e67a-4c2e-8dbb-ba8d7f572d2c", showHideType: "show"},
+                    type: "citations"
+                },
+                parentUrn: {
+                    elementType: "showhide"
+                },
+                elementIndex: "0-0-0",
+                showHideType: 'show',
+                parentElement: {type: 'citations'},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - element-authoredtext of Citation inside showhide", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: '',
+                    type: "element-authoredtext"
+                },
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb",
+                    index: "0-0-0",
+                    parent: {id: "urn:pearson:manifest:653fe158-8eb9-42fb-b7c0-62bfd12a6825", type: "showhide", contentUrn: "urn:pearson:entity:f81e38b1-e67a-4c2e-8dbb-ba8d7f572d2c", showHideType: "show"},
+                    type: "citations"
+                },
+                parentUrn: {
+                    elementType: "showhide"
+                },
+                elementIndex: "0-0-0",
+                showHideType: 'show',
+                parentElement: {type: 'citations'},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - Citation inside showhide conditional coverage", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: '',
+                    type: "element"
+                },
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb",
+                    index: "0-0-0",
+                    parent: {id: "urn:pearson:manifest:653fe158-8eb9-42fb-b7c0-62bfd12a6825", type: "showhide", contentUrn: "urn:pearson:entity:f81e38b1-e67a-4c2e-8dbb-ba8d7f572d2c", showHideType: "show"},
+                    type: "citations"
+                },
+                parentUrn: {
+                    elementType: "showhide"
+                },
+                elementIndex: "0-0-0",
+                showHideType: 'show',
+                parentElement: {type: 'citations'},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - update elements inside body of WE inside S/H", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: '',
+                    type: "element"
+                },
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                    index: "0-0-0",
+                    parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "hide"},
+                    type: "element-aside",
+                    subtype: 'workedexample'
+                },
+                parentUrn: {
+                    elementType: 'manifest',
+                    manifestUrn: 'urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c'
+                },
+                elementIndex: "0-0-0-0",
+                parentElement: {},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - update elements inside head of WE inside S/H", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: '',
+                    type: "element"
+                },
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                    index: "0-0-0",
+                    parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "hide"},
+                    type: "element-aside",
+                    subtype: 'workedexample'
+                },
+                parentUrn: {
+                    elementType: 'element-authoredtext',
+                    manifestUrn: 'urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c'
+                },
+                elementIndex: "0-0-0-0",
+                parentElement: {},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+
+        it("updateElementInStore - update elements inside AS/WE inside S/H conditional coverage 1", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: '',
+                    type: "element"
+                },
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1bf",
+                    index: "0-0-0",
+                    parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "hide"},
+                    type: "element-aside",
+                    subtype: 'workedexample'
+                },
+                parentUrn: {
+                    elementType: 'element-authoredtext',
+                    manifestUrn: 'urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c'
+                },
+                elementIndex: "0-0-0-0",
+                parentElement: {},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - update elements inside AS/WE inside S/H conditional coverage 2", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: '',
+                    type: "element"
+                },
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1bf",
+                    index: "0-0-0",
+                    parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714"},
+                    type: "element-aside",
+                    subtype: 'workedexample'
+                },
+                parentUrn: {
+                    elementType: 'element-authoredtext',
+                    manifestUrn: 'urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c'
+                },
+                elementIndex: "0-0-0-0",
+                parentElement: {},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+
+        it("updateElementInStore - update elements inside AS/WE inside S/H conditional coverage 3", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    elementdata: {
+                        text: ''
+                    },
+                    html: '',
+                    type: "element"
+                },
+                asideData: {
+                    contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                    element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                    id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1bf",
+                    index: "0-0-0",
+                    parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714"},
+                    type: "element-aside",
+                    subtype: 'workedexample'
+                },
+                parentUrn: {
+                    elementType: 'element-authoredtext',
+                    manifestUrn: 'urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c'
+                },
+                elementIndex: "0-0-0-0",
+                parentElement: {},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
