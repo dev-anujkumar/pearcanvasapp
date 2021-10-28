@@ -75,11 +75,16 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
                         markedIndexElem = condition
                     }
                 }
-
-                else if (indexesLen == 4) {  // to support glossary in text elements inside WE/AS of MultiColumn
+                else if ((indexesLen == 4 || indexesLen == 5) && newBodymatter[tempIndex[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support markedIndex in text elements inside WE/AS of S/H
+                    markedIndexElem = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
+                    if (indexesLen == 5 && markedIndexElem.type === 'manifest') {
+                        markedIndexElem = markedIndexElem.contents.bodymatter[indexes[4]];
+                    }
+                }
+                else if (indexesLen == 4) {  // to support markedIndex in text elements inside WE/AS of MultiColumn
                     markedIndexElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
 
-                } else if (indexesLen == 5) { // to support glossary in section break inside WE of MultiColumn
+                } else if (indexesLen == 5) { // to support markedIndex in section break inside WE of MultiColumn
                     markedIndexElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
                 }
 

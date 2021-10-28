@@ -1247,7 +1247,10 @@ export const UpdateElementWorkId = () => {
         let glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         newElementWorkId = glossaryFootElem?.id;
     } else if ((tempIndex.length == 5 || tempIndex.length == 6) && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
-        let glossaryFootElem = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+        let glossaryFootElem;
+        if (asideParent.subtype === "workedexample" && tempIndex.length == 5 ) {
+           glossaryFootElem = newBodymatter[tempIndex[0]].interactivedata[asideParent.parent.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]]
+        } 
         newElementWorkId = glossaryFootElem?.id;
     } else {
         if (typeof (elementIndex) == 'number') {
@@ -1266,7 +1269,10 @@ export const UpdateElementWorkId = () => {
                     newElementWorkId = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]?.id;
                 }
             }
-            else if (indexesLen == 4) {
+            else if ((indexesLen == 4 ) && newBodymatter[indexes[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support index Entry in text elements inside WE/AS of S/H
+                newElementWorkId = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].id;
+            }
+            else if (indexesLen == 4 &&  newBodymatter[indexes[0]].type === "groupedcontent") {
                 newElementWorkId = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]]?.id;
             } else if (indexesLen == 5) {
                 newElementWorkId = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]?.id;
