@@ -41,7 +41,7 @@ class PopUp extends React.Component {
         let newHtml = html;
         calloutClasses.forEach((item, index) => {
         var myRegExp = new RegExp(`class="${item}"`,'g');
-            newHtml = newHtml.replace(myRegExp, `title="${calloutContent[index]} "class=${item}`)
+            newHtml = newHtml.replace(myRegExp, `title="${calloutContent[index]}" class="${item}"`)
         });
         return newHtml;
     }
