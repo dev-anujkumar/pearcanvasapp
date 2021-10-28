@@ -1556,3 +1556,129 @@ describe('5 Test updateContainerMetadata ', () => {
     });
 });
 
+describe('Test - ManifestList conversion', () => {
+    it('Test - updateBLMetaData', () => {
+        const elementData = {
+            id: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334"
+        }
+        const metadata = {
+            subtype: 'roman',
+            columnnumber: 1
+        }
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBLMetaData');
+        sidebarAction.updateBLMetaData("urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334", elementData, metadata);
+        expect(spyFunction).toHaveBeenCalled()
+    })
+
+    it('Test - updateBLMetaData - listdata', () => {
+        const elementData = {
+            listdata: {
+                bodymatter: [{ id: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334"}]
+            }
+        }
+        const metadata = {
+            subtype: 'roman',
+            columnnumber: 1
+        }
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBLMetaData');
+        sidebarAction.updateBLMetaData("urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334", elementData, metadata);
+        expect(spyFunction).toHaveBeenCalled()
+    })
+
+    it('Test - updateBLMetaData - listitemdata', () => {
+        const elementData = {
+            listitemdata: {
+                bodymatter: [{ id: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65332"},{ id: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334"}]
+            }
+        }
+        const metadata = {
+            subtype: 'roman',
+            columnnumber: 1
+        }
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBLMetaData');
+        sidebarAction.updateBLMetaData("urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334", elementData, metadata);
+        expect(spyFunction).toHaveBeenCalled()
+    })
+
+    it('Test - updateBlockListMetadata - success block', async () => {
+        const {initState} = testData?.testcase18;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.resolve({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: '',
+            },
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 0
+            }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+    it('Test - updateBlockListMetadata - catch block', async () => {
+        const {initState} = testData?.testcase21;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.reject({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: '',
+            },
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 0
+            }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+    it('Test - updateBlockListMetadata - success - approved block', async () => {
+        const {initState} = testData?.testcase21;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.resolve({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: '',
+            },
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 0
+            }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+    it('Test - updateBlockListMetadata - success - approved - parent - popup', async () => {
+        const {initState} = testData?.testcase22;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.resolve({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: '',
+            },
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 0
+            }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+});
+

@@ -257,7 +257,7 @@ export const deleteFromStore = (params) => {
  * @param {String} elementId 
  * @param {Object} elementData 
  */
-const deleteBlockListElement = (elementId, elementData) => {
+export const deleteBlockListElement = (elementId, elementData) => {
     if (elementData?.listdata?.bodymatter) {
         elementData.listdata?.bodymatter.forEach((listData, index) => {
             if (listData.id === elementId) {

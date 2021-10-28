@@ -28,6 +28,11 @@ let initialState = {
 
 const mockStore = configureMockStore(middlewares)
 let store = mockStore(initialState);
+
+jest.mock('../../../src/js/TinyMceUtility.js', () => ({
+    checkBlockListElement: jest.fn(() => { return { parentData: {id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70'} } })
+}));
+
 describe('Testing ListButtonDropPortal component', () => {
     let props = {
         children: jest.fn(),
@@ -238,4 +243,81 @@ describe('Testing ListButtonDropPortal component', () => {
         spygetListDropPopUpState.mockClear()
     })
 
+    it('Test - getBlockListMetaData - elementId present in elementData', () => {
+        const spygetBlockListMetaData = jest.spyOn(ListButtonDropPortalInstance, 'getBlockListMetaData')
+        const elementData = {
+            listdata:{
+                bodymatter: [{
+                    listitemdata: {
+                        bodymatter: [{
+                            id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb72'
+                        }]
+                    }
+                }]
+            }
+        }
+        ListButtonDropPortalInstance.getBlockListMetaData('urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb72', elementData);
+        expect(spygetBlockListMetaData).toHaveBeenCalled();
+        spygetBlockListMetaData.mockClear()
+    });
+
+    it('Test - getBlockListMetaData - elementId not present in elementData', () => {
+        const spygetBlockListMetaData = jest.spyOn(ListButtonDropPortalInstance, 'getBlockListMetaData')
+        const elementData = {
+            listdata:{
+                bodymatter: [{
+                    listitemdata: {
+                        bodymatter: [{
+                            id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb73'
+                        }]
+                    }
+                }]
+            }
+        }
+        ListButtonDropPortalInstance.getBlockListMetaData('urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb72', elementData);
+        expect(spygetBlockListMetaData).toHaveBeenCalled();
+        spygetBlockListMetaData.mockClear()
+    });
+
+    it("Test - getListDropPopUpState - blocklist - activeElement - id - same", () => {
+        const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
+        const slateData = {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                contents: {
+                    bodymatter: [{
+                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70'
+                    }]
+                }
+            }
+        }
+        const activeElement = {
+            elementWipType: '',
+            elementId: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+            index: '0-0-0'
+        }
+        ListButtonDropPortalInstance.getListDropPopUpState(slateData, activeElement);
+        expect(spygetListDropPopUpState).toHaveBeenCalled();
+        spygetListDropPopUpState.mockClear()
+    })
+
+    it("Test - getListDropPopUpState - blocklist - activeElement - id - different", () => {
+        const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
+        const slateData = {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                contents: {
+                    bodymatter: [{
+                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71'
+                    }]
+                }
+            }
+        }
+        const activeElement = {
+            elementWipType: '',
+            elementId: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+            index: '0-0-0'
+        }
+        ListButtonDropPortalInstance.getListDropPopUpState(slateData, activeElement);
+        expect(spygetListDropPopUpState).toHaveBeenCalled();
+        spygetListDropPopUpState.mockClear()
+    })
 })
