@@ -517,5 +517,37 @@ describe('Testing functions', () => {
         const props = {}
         separatorFunctions.typeOfContainerElements(element, props);
         expect(spyTypeOfContainerElements).toHaveBeenCalled()
-    })
+    });
+    it('Testing renderDropdownButtons function -if asideData/we inside showhide then block interactive', () => {
+        const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
+        const props = {
+            asideData:{
+                type:"element-aside",
+                parent:{
+                    type:'showhide'
+                }
+            }
+        }
+        const element = {
+            buttonType:'interactive-elem-button'
+        }
+        separatorFunctions.typeOfContainerElements(element, props);
+        expect(spyTypeOfContainerElements).toHaveBeenCalled()
+    });
+    it('Testing renderDropdownButtons function -if asideData/we inside showhide then block block-text-button', () => {
+        const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
+        const props = {
+            asideData:{
+                type:"element-aside",
+                parent:{
+                    type:'showhide'
+                }
+            }
+        }
+        const element = {
+            buttonType:'block-text-button'
+        }
+        separatorFunctions.typeOfContainerElements(element, props);
+        expect(spyTypeOfContainerElements).toHaveBeenCalled()
+    });
 });
