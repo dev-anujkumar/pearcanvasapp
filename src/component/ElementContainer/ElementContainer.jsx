@@ -446,6 +446,7 @@ class ElementContainer extends Component {
      * @param {*} previousElementData old element data
      */
     figureDifferenceInteractive = (index, previousElementData) => {
+
         let newInteractiveid = previousElementData.figuredata.interactiveid || ""
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             numberDOM = document.getElementById(`cypress-${index}-1`),
@@ -469,9 +470,7 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
-        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`)
-            || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
-        let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
+        let podwidth = this.props?.activeElement?.podwidth;
         let oldImage = this.props.oldImage;
         if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
             oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
@@ -489,8 +488,8 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
-                oldImage !== newInteractiveid || 
-                podwidth !== (previousElementData.figuredata.posterimage.podwidth ? previousElementData.figuredata.posterimage.podwidth : '') && podwidth !== null
+                oldImage !== newInteractiveid ||
+                podwidth !== previousElementData?.figuredata?.posterimage?.podwidth
             );
         }
         else {
@@ -849,7 +848,7 @@ class ElementContainer extends Component {
             })
         } else {
             parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || containerParent) ? this.props.parentElement : this.props.element
-        }
+        }  
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
             this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType, null, cgTitleFieldData);
@@ -1382,7 +1381,7 @@ class ElementContainer extends Component {
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} markedIndexValue={this.props.markedIndexValue} openMarkedIndexPopUp={this.openMarkedIndexPopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType} />;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -1819,6 +1818,9 @@ class ElementContainer extends Component {
                         saveContent={this.saveNewComment}
                         rows={COMMENTS_POPUP_ROWS}
                         dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+                        isOwnerSlate={isOwner}
+                        warningHeaderText={`Warning`}
+                        OwnersDeleteDialogText={OWNERS_ELM_DELETE_DIALOG_TEXT}
                         showDeleteElemPopup={this.state.showDeleteElemPopup}
                         sectionBreak={this.state.sectionBreak}
                         deleteElement={this.deleteElement}
