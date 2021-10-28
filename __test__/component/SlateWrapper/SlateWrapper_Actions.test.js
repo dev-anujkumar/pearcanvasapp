@@ -8,7 +8,7 @@ import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actio
 import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure, slateMockData, sectionBreakMockSlateData, NotSectionBreakMockSlateData, NotSectionBreakMockSlateData2, NotSectionBreakMockSlateData3 } from "../../../fixtures/slateTestingData"
 import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE,SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED,SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
-import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, asideDataType3 } from '../../../fixtures/elementAsideData';
+import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, asideDataType3, slateLevelData3 } from '../../../fixtures/elementAsideData';
 import MockAdapter from 'axios-mock-adapter';
 
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js',()=>({
@@ -798,6 +798,166 @@ describe('Tests Slate Wrapper Actions', () => {
         let pagenumber = 1;
         actions.updatePageNumber(pagenumber, elementId,asideDataType2,parentUrn)(dispatch,getState);
     })
+    it('createElement action - MANIFEST_LIST - indexes - length - 3', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: slateLevelData3,
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('MANIFEST_LIST', 0, {manifestUrn: config.projectUrn}, {}, 1, '', cb, {}, {indexOrder: '0-0-0'}));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - MANIFEST_LIST - indexes - length - 5', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: slateLevelData3,
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('MANIFEST_LIST', 0, {manifestUrn: config.projectUrn}, {}, 1, '', cb, {}, {indexOrder: '0-0-0-0-0'}));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - MANIFEST_LIST - indexes - length - 7', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: slateLevelData3,
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('TEXT', 0, {manifestUrn: config.projectUrn}, {}, 1, '', cb, {}, {indexOrder: '0-0-0-0-0-0-0'}));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - MANIFEST_LIST_ITEM - indexes - length - 3', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: slateLevelData3,
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('MANIFEST_LIST_ITEM', 0, {manifestUrn: config.projectUrn}, {}, 1, '', cb, {}, {indexOrder: '0-0-0', eventType: 'ENTER' }));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - MANIFEST_LIST_ITEM - indexes - length - 5', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: slateLevelData3,
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: { contents: { bodymatter: [{ id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f" }] } } }));
+        await store3.dispatch(actions.createElement('MANIFEST_LIST_ITEM', 0, { manifestUrn: config.projectUrn }, {}, 1, '', cb, {}, { indexOrder: '0-0-0-0-0', eventType: 'ENTER' }));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - MANIFEST_LIST_ITEM - indexes - length - 7', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: slateLevelData3,
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: { contents: { bodymatter: [{ id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f" }] } } }));
+        await store3.dispatch(actions.createElement('MANIFEST_LIST_ITEM', 0, { manifestUrn: config.projectUrn }, {}, 1, '', cb, {}, { indexOrder: '0-0-0-0-0-0-0', eventType: 'ENTER' }));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - MANIFEST_LIST_ITEM - indexes - length - 5', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: slateLevelData3,
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: { contents: { bodymatter: [{ id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f" }] } } }));
+        await store3.dispatch(actions.createElement('MANIFEST_LIST_ITEM', 0, { manifestUrn: config.projectUrn }, {}, 1, '', cb, {}, { indexOrder: '0-0-0-0-0', eventType: 'SHIFT+TAB' }));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - MANIFEST_LIST_ITEM - indexes - length - 7', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: slateLevelData3,
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: { contents: { bodymatter: [{ id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f" }] } } }));
+        await store3.dispatch(actions.createElement('MANIFEST_LIST_ITEM', 0, { manifestUrn: config.projectUrn }, {}, 1, '', cb, {}, { indexOrder: '0-0-0-0-0-0-0', eventType: 'SHIFT+TAB' }));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
     it('updatePageNumber ----if-else',() => {
         jest.mock('axios');
         axios.put = jest.fn(() => Promise.resolve({}));
