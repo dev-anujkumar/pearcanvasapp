@@ -14,7 +14,7 @@ jest.mock('../../src/js/TinyMceUtility.js', () => ({
 config.userId= 'c5test01';
 describe('Testing TinyMceEditor - EditorConfig', () => {
 
-    it('Test - insertMediaSelectors - List Element',()=>{
+    xit('Test - insertMediaSelectors - List Element',()=>{
         let params = {
             editor:{},
             permissions:{},
@@ -26,7 +26,7 @@ describe('Testing TinyMceEditor - EditorConfig', () => {
         dropdownMenu[0].onAction();
         expect(dropdownMenu[0].text).toBe('Image');
     });
-    it('Test - insertMediaSelectors - Other Element',()=>{
+    xit('Test - insertMediaSelectors - Other Element',()=>{
         let params = {
             editor:{},
             permissions:{},

@@ -84,6 +84,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
         /**This will be removed when BL supports TCM */
         const tempSlateWrapperConstants = [...slateWrapperConstants.elementType].filter( item => item !== "MANIFEST_LIST")
+        //This check is for the TEXT element which gets created inside BL on Shift+Enter
+        if(!blockListDetails) {
         if (tempSlateWrapperConstants.indexOf(type) !== -1) {
             let containerElement = {
                 asideData: asideData,
@@ -101,7 +103,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             else {
                 tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
             }
-        }
+        }}
         /**---------------------------------------------------------------------------------------------------*/
 
         if (currentSlateData.status === 'approved') {
@@ -314,11 +316,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
-            //This check will be removed once BlockList will support TCM
+            //This check is for the TEXT element which gets created inside BL on Shift+Enter
             if(!blockListDetails) {
+                //This check will be removed once BlockList will support TCM
+                if(type !== "MANIFEST_LIST") {
                 if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
                     prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
-                }
+                }}
             }
         }
         const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id

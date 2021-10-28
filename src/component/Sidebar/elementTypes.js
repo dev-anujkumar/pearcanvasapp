@@ -15,7 +15,7 @@ export default {
         'primary-handwriting': {
             text: 'Handwriting',
             enum: 'HS',
-            toolbar: ['insertMedia','alignment','IndexEntry'],
+            toolbar: ['insertMedia','alignment'],
             subtype: {
                 'subtype-handwriting': {
                     text: 'Handwriting',
@@ -103,7 +103,7 @@ export default {
         },
         'primary-list': {
             text: 'List',
-            toolbar: ['formatSelector','alignment','IndexEntry'],
+            toolbar: ['formatSelector','alignment'],
             enum: 'LIST',
             subtype: {
                 'secondary-list-1': {

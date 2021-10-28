@@ -167,12 +167,14 @@ export const findElementType = (element, index) => {
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         let interactiveFormat = element.figuredata.interactiveformat;
+                        let podwidth = element?.figuredata?.posterimage?.podwidth;
                         let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
                             altText,
                             longDesc,
+                            podwidth,
                             ...elementDataBank[element.type][element.figuretype][interactiveData]
                         }
                         break;
