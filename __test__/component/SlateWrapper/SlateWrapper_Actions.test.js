@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import axios from 'axios';
 import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
-import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure, slateMockData, sectionBreakMockSlateData, NotSectionBreakMockSlateData, NotSectionBreakMockSlateData2, NotSectionBreakMockSlateData3 } from "../../../fixtures/slateTestingData"
+import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure, slateMockData, sectionBreakMockSlateData, NotSectionBreakMockSlateData, NotSectionBreakMockSlateData2, NotSectionBreakMockSlateData3, slateWithShowhideData } from "../../../fixtures/slateTestingData"
 import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE,SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED,SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
 import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, asideDataType3, slateLevelData3 } from '../../../fixtures/elementAsideData';
@@ -1675,6 +1675,168 @@ describe('Tests Slate Wrapper Actions', () => {
         expect(type).toBe('AUTHORING_ELEMENT_CREATED');
     })
 
+    it('createElement action - section break inside section in we inside s/h', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const asideDataSH = {
+            contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+            element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+            id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+            index: "0-0-1-1",
+            parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "hide"},
+            type: "citations",
+            subtype: 'sidebar'
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('SECTION_BREAK', 0, {manifestUrn: 'urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be'}, asideDataSH));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - section break inside section in we inside s/h else condition coverage', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const asideDataSH = {
+            contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+            element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+            id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+            index: "0-0-1-1",
+            parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "hide"},
+            type: "citations",
+            subtype: 'sidebar'
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('SECTION_BREAK', 0, {manifestUrn: 'urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1bf'}, asideDataSH));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - element-autheredtext inside manifest in WE inside s/h', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const asideDataSH = {
+            contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+            element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+            id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+            index: "0-0-1-1",
+            parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "hide"},
+            type: "element-aside",
+            subtype: 'workedexample'
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('', 0, {manifestUrn: 'urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c', elementType: 'manifest'}, asideDataSH));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - element-autheredtext inside Aside inside s/h', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const asideDataSH = {
+            contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+            element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+            id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+            index: "0-0-1-1",
+            parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "hide"},
+            type: "element-aside",
+            subtype: 'sidebar'
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('', 0, {manifestUrn: 'urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c', elementType: 'manifest'}, asideDataSH));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - element-autheredtext inside Aside inside s/h conditional coverage', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const asideDataSH = {
+            contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+            element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+            id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+            index: "0-0-1-1",
+            parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714"},
+            type: "element-aside",
+            subtype: 'sidebar'
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('', 0, {manifestUrn: 'urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c', elementType: 'manifest'}, asideDataSH));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+    it('createElement action - element-citation inside citation inside s/h', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const asideDataSH = {
+            contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+            id: "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a0",
+            index: "0-0-1-1",
+            parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "show"},
+            type: "citations",
+            subtype: 'sidebar'
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: {contents: {bodymatter:[{id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f"}]}} }));
+        await store3.dispatch(actions.createElement('', 0, {manifestUrn: 'urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c', elementType: 'manifest'}, asideDataSH));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+
     it('pasteElement  action - with poetryData', async () => {
         initialState3 = {
             appStore: {
@@ -2278,6 +2440,157 @@ describe('Tests Slate Wrapper Actions', () => {
         axios.post = jest.fn(() => Promise.resolve({ status: '200' }));
         await store3.dispatch(actions.swapElement(dataObj, jest.fn()));
     })
+
+    it('swapElement  action - Aside/WE inside S/H', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const dataObj = {
+            containerTypeElem: 'we',
+            parentElement: {type: 'showhide', showHideType: 'show'},
+            elementIndex: '1-0-1',
+            swappedElementData: {
+                id : "urn:pearson:work:8a3e6ed2-e67b-4222-bf20-da5fddcaf929",
+                contentUrn : "urn:pearson:entity:a4ecf47d-44b5-4555-acf3-e9445c6d2fd1"
+            },
+            type: 'we',
+            asideId: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f',
+            currentSlateEntityUrn: "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157bs4aw"
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ status: '200'}));
+        await store3.dispatch(actions.swapElement(dataObj, jest.fn()));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('SWAP_ELEMENT');
+    });
+    it('swapElement  action - Aside/WE inside S/H conditional coverage', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const dataObj = {
+            containerTypeElem: 'we',
+            parentElement: {type: 'showhide', showHideType: 'show'},
+            elementIndex: '1-0-1',
+            swappedElementData: {
+                id : "urn:pearson:work:8a3e6ed2-e67b-4222-bf20-da5fddcaf929",
+                contentUrn : "urn:pearson:entity:a4ecf47d-44b5-4555-acf3-e9445c6d2fd1"
+            },
+            type: 'we',
+            asideId: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f',
+            currentSlateEntityUrn: "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157bs4bx"
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ status: '200'}));
+        await store3.dispatch(actions.swapElement(dataObj, jest.fn()));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('SWAP_ELEMENT');
+    });
+    it('swapElement  action - section-break inside WE inside S/H', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const dataObj = {
+            containerTypeElem: 'section',
+            parentElement: {type: 'showhide', showHideType: 'hide'},
+            elementIndex: '1-0-0',
+            swappedElementData: {
+                id : "urn:pearson:work:8a3e6ed2-e67b-4222-bf20-da5fddcaf929",
+                contentUrn : "urn:pearson:entity:a4ecf47d-44b5-4555-acf3-e9445c6d2fd1"
+            },
+            type: 'we',
+            asideId: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f',
+            currentSlateEntityUrn: "urn:pearson:entity:08942f6d-8fd3-4a39-b72d-8bdc33eb289a"
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ status: '200'}));
+        await store3.dispatch(actions.swapElement(dataObj, jest.fn()));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('SWAP_ELEMENT');
+    });
+    it('swapElement  action - elements inside CG inside S/H', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const dataObj = {
+            containerTypeElem: 'cg',
+            parentElement: {type: 'showhide', showHideType: 'show'},
+            elementIndex: '1-0-0',
+            swappedElementData: {
+                id : "urn:pearson:work:8a3e6ed2-e67b-4222-bf20-da5fddcaf929",
+                contentUrn : "urn:pearson:entity:a4ecf47d-44b5-4555-acf3-e9445c6d2fd1"
+            },
+            type: 'we',
+            asideId: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f',
+            currentSlateEntityUrn: "urn:pearson:entity:e1d634f7-3edf-4f57-9e45-a351ae35b2b6"
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ status: '200'}));
+        await store3.dispatch(actions.swapElement(dataObj, jest.fn()));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('SWAP_ELEMENT');
+    });
+    it('swapElement  action - elements inside CG inside S/H conditional coverage', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                  },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const dataObj = {
+            containerTypeElem: 'cg',
+            parentElement: {type: 'showhide', showHideType: 'show'},
+            elementIndex: '1-0-0',
+            swappedElementData: {
+                id : "urn:pearson:work:8a3e6ed2-e67b-4222-bf20-da5fddcaf929",
+                contentUrn : "urn:pearson:entity:a4ecf47d-44b5-4555-acf3-e9445c6d2fd1"
+            },
+            type: 'we',
+            asideId: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f',
+            currentSlateEntityUrn: "urn:pearson:entity:e1d634f7-3edf-4f57-9e45-a351ae35b2c7"
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ status: '200'}));
+        await store3.dispatch(actions.swapElement(dataObj, jest.fn()));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('SWAP_ELEMENT');
+    });
 
     it('createElement action - slate approved without popup as type', async () => {
         initialState3 = {
