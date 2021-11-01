@@ -252,6 +252,18 @@ const initialState19 = {
     }
 }
 
+const initialState20 = {
+    appStore: {
+        slateLevelData: slateData.SlateData5,
+        activeElement: activeElementData.image,
+        parentUrn: {},
+    },
+    elementStatusReducer:{},
+    tcmReducer:{
+        tcmSnapshot:[]
+    }
+}
+
 describe('Test - Sidebar_Actions',()=>{
     describe('Test convertElement- paragraph', () => {
         let store = mockStore(() => initialState);
@@ -1019,7 +1031,7 @@ describe('Test handleElementConversion- ShowHide -Paragraph to List', () => {
 });
 describe('Test handleElementConversion- ShowHide in Aside -Paragraph to List', () => {
     let store1 = mockStore(() => initialState17);
-    xit('Test handleElementConversion- ShowHide in Aside -Paragraph to List', async () => {
+    it('Test handleElementConversion- ShowHide in Aside -Paragraph to List', async () => {
         store1 = mockStore(() => initialState17);
         let nextStore = slateData.SlateData4
         let expectedRes = {
@@ -1034,7 +1046,7 @@ describe('Test handleElementConversion- ShowHide in Aside -Paragraph to List', (
         spyconversionElement.mockClear()
     });
 });
-xdescribe('Test handleElementConversion- ShowHide in WE-Paragraph to List', () => {
+describe('Test handleElementConversion- ShowHide in WE-Paragraph to List', () => {
     let store1 = mockStore(() => initialState18);
     it('Test handleElementConversion- ShowHide in WE -Paragraph to List', async () => {
         store1 = mockStore(() => initialState18);
@@ -1554,6 +1566,30 @@ describe('5 Test updateContainerMetadata ', () => {
         expect(spyFunction).toHaveBeenCalled()
         spyFunction.mockClear()
     });
+    describe("element conversion in showhide",()=>{
+        it('handle conversion of As in SH',()=>{
+            let dispatch=()=>{}
+            let store1 = mockStore(() => initialState20);
+            let nextStore = slateData.SlateData5
+            config.slateManifestURN = "urn:pearson:manifest:6b249fd3-c25b-4c91-b8ac-037c9f30c012"
+            let activeElement = {
+                altText: "",
+                elementId: "urn:pearson:work:6eda30b3-170e-476f-ab17-6ea6098d3d99",
+                elementType: "figure",
+                elementWipType: "figure",
+                index: "0-0-1-1",
+                longDesc: "",
+                podwidth: "",
+                primaryOption: "primary-image-table",
+                secondaryOption: "secondary-image-table-half",
+                tag: "TB"
+            }
+        const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+        let result=store1.dispatch(sidebarAction.conversionElement(activeElement,nextStore,activeElement,undefined,""));
+        expect(result).toHaveBeenCalled();
+        spyconversionElement.mockClear() 
+        })
+    })
 });
 
 describe('Test - ManifestList conversion', () => {
