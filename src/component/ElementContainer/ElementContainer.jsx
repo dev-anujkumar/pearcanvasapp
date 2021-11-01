@@ -479,7 +479,6 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
-        //let podwidth = this.props?.activeElement?.podwidth;
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`)
             || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
         let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
