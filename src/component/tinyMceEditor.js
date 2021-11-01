@@ -24,7 +24,7 @@ import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessage
 import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
-import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT } from '../component/SlateWrapper/SlateWrapperConstants.js';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement } from './SlateWrapper/SlateWrapper_Actions';
 import { deleteElement } from './ElementContainer/ElementContainer_Actions';
@@ -1173,8 +1173,12 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
+           
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
             let blockListData = checkBlockListElement(this.props, 'ENTER');
+            if(blockListData && Object.keys(blockListData).length !== 0 && e.keyCode == 9){
+                e.preventDefault();
+            }
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;
             }
@@ -1340,6 +1344,15 @@ export class TinyMceEditor extends Component {
 
             // Block list events
             if (blockListData && Object.keys(blockListData).length) {
+                const { index } = this.props;
+                const getSelectedElement = document.getElementById(`cypress-${index}`);
+                // setting the placeholder when textcontent is cleared from element authored text to prevent placecholder overlapping on backspace delete
+                if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length===3) {
+                    getSelectedElement.setAttribute('placeholder', 'Type Something');
+                }
+                if(tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length>3){
+                    getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
+                }
                 // SHIFT + ENTER key press handling for BlockList element
                 if (key === 13 && e.shiftKey) {
                     e.preventDefault();
@@ -1371,48 +1384,71 @@ export class TinyMceEditor extends Component {
                     }
                 } else {
                     // TAB key press handling for BlockList element
-                    if (key === 9 && !isNestingLimitReached(this.props.index)) {
+                    if (key === 9) {
                         e.preventDefault();
-                        blockListData = checkBlockListElement(this.props, "TAB");
-                        if (blockListData && Object.keys(blockListData).length) {
-                            const { parentData, indexToinsert } = blockListData;
-                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                            this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
-                        }
+                        this.createNestedBlockList()
                     }
                 }
-
+                // This is the case for deleting element inside blocking when backspace pressed with no characters in it.
+                // Please go through comments of every case for better understanding.
                 if (key === 8 && tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 0) {
                     const { id, type } = this?.props?.element;
                     const blockListData = checkBlockListElement(this.props, "ENTER");
                     let manifestListItemData = checkBlockListElement(this.props, "TAB");
                     const { parentData } = manifestListItemData;
                     const { listdata } = blockListData?.parentData;
-                    if (listdata?.bodymatter[0].id === parentData?.id) {
-                        if (parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id !== id) {
+                    if (listdata?.bodymatter[0].id === parentData?.id) { // Case when user will press backspace on point 1 of manifestlist.
+                        if (parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id !== id) { // If it is not the only point insdie the block list then only delete it.
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                             this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                            getSelectedElement.setAttribute('placeholder', '');
+                        }
+                        if(parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === "element-authoredtext"){ // This case will delete the element only if the next element is a element authored text and it will ove the same next child to deleted position.
+                            const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
+                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                            getSelectedElement.setAttribute('placeholder', '');
                         }
                     }
 
-                    if (listdata?.bodymatter?.length > 1 && listdata?.bodymatter[0].id !== parentData?.id) {
-                        if (parentData?.listitemdata?.bodymatter?.length === 1) {
+                    if (listdata?.bodymatter?.length > 1 && listdata?.bodymatter[0].id !== parentData?.id) { // Case when user will press backspace on other than point 1 of manifestlist.
+                        if (parentData?.listitemdata?.bodymatter?.length === 1) { // When there is only one element authored text in manifestlistitem then it will delete the manifestlistitem.
                             const deleteItemIndex = listdata?.bodymatter.findIndex(listData => listData.id === parentData?.id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                             this.props.deleteElement(parentData?.id, "manifestlistitem", { contentUrn: listdata?.contentUrn }, {}, parentData?.contentUrn, deleteItemIndex, {}, {}, null);
+                            getSelectedElement.setAttribute('placeholder', '');
                         } else if (parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === 'manifestlist') {
+                            store.dispatch({
+                                type: MULTIPLE_LINE_POETRY_ERROR_POPUP,
+                                payload: {
+                                    show: true,
+                                    message: ERROR_DELETING_MANIFEST_LIST_ITEM
+                                }
+                            });
                             return;
-                        } else {
+                        } else { //Deletes the text element in which backspace is pressed.
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                             this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                            getSelectedElement.setAttribute('placeholder', '');
                         }
                     }
                 }
             }
            
         });
+    }
+
+    createNestedBlockList(){
+        if (!isNestingLimitReached(this.props.index)) {
+           let blockListData = checkBlockListElement(this.props, "TAB");
+            if (blockListData && Object.keys(blockListData).length) {
+                const { parentData, indexToinsert } = blockListData;
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
+            }
+        }
     }
 
     getOffSet = (element) => {
@@ -2372,19 +2408,28 @@ export class TinyMceEditor extends Component {
      */
     handleIndent = (e, editor, content, type, selectedNode) => {
         let className = null;
-        if (type && type === 'stanza' && selectedNode) {
-            className = selectedNode.className;
+        let blockListData = isElementInsideBlocklist({index:this.props.index}, this.props.slateLevelData);
+        if(!blockListData){
+            if (type && type === 'stanza' && selectedNode) {
+                className = selectedNode.className;
+            }
+            if (content.match(/paragraphNumeroUno\b/)) {
+                content = content.replace(/paragraphNumeroUno\b/, "paragraphNumeroUnoIndentLevel1")
+            }
+            else if (content.match(/paragraphNumeroUnoIndentLevel1\b/)) {
+                content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUnoIndentLevel2")
+            }
+            else if (content.match(/paragraphNumeroUnoIndentLevel2\b/)) {
+                content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
+            }
         }
-        if (content.match(/paragraphNumeroUno\b/)) {
-            content = content.replace(/paragraphNumeroUno\b/, "paragraphNumeroUnoIndentLevel1")
+        if (blockListData) {
+            content = content.replace(/40px\b/, "0px");
+            setTimeout(() => {
+                this.createNestedBlockList();
+            }, 200);
         }
-        else if (content.match(/paragraphNumeroUnoIndentLevel1\b/)) {
-            content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUnoIndentLevel2")
-        }
-        else if (content.match(/paragraphNumeroUnoIndentLevel2\b/)) {
-            content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
-        }
-
+       
         // Disable Indent For Poetry-Stanza
 
         /*else if (className && className.trim() === 'poetryLine') {

@@ -86,6 +86,9 @@ jest.mock('../../../src/js/TinyMceUtility.js', () => {
             }
         },
         isNestingLimitReached:() =>{
+            return false
+        },
+        isElementInsideBlocklist:() => {
             return true
         }
     }
@@ -3666,7 +3669,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        it('Test-29.1-Method--27--editorKeydown-Other Elements-keyCode:9 with shift key', () => {
+        it('--editorKeydown-Other Elements-keyCode:9 with shift key', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -3712,7 +3715,53 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        it('Test-29.1-Method--27--editorKeydown-Other Elements-keyCode:13 with shift key', () => {
+        it('--editorKeydown-Other Elements-keyCode:9 without shift key', () => {
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { },
+                ctrlKey: true,
+                which: 88,
+                keyCode: 9,
+                type: 'keydown',
+                shiftKey:false
+            }
+            let nextEditor2 = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'BR'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+            }
+            const spyFunction = jest.spyOn(instance, 'editorKeydown')
+            instance.isTabPressed(event);
+            instance.editorKeydown(nextEditor2);
+            expect(spyFunction).toHaveBeenCalled()
+        });
+        it('--editorKeydown-Other Elements-keyCode:13 with shift key', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },

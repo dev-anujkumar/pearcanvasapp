@@ -434,4 +434,57 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     })
+
+    it('Test - isElementInsideBlocklist - slateLevelData', () => {
+        const slateLevelData = {
+            'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                contents: {
+                    bodymatter: [{
+                        type: 'manifestlist'
+                    }]
+                }
+            }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isElementInsideBlocklist');
+        tinyMceFn.isElementInsideBlocklist({index:'0-0-1'}, slateLevelData);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - isElementInsideBlocklist - slateLevelData - bodymatter - empty', () => {
+        const slateLevelData = {
+            'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                contents: {
+                    bodymatter: []
+                }
+            }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isElementInsideBlocklist');
+        tinyMceFn.isElementInsideBlocklist({index:'0-0-1'}, slateLevelData);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - isElementInsideBlocklist - slateLevelData - without type', () => {
+        const slateLevelData = {
+            'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                contents: {
+                    bodymatter: [{
+                        type: ''
+                    }]
+                }
+            }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isElementInsideBlocklist');
+        tinyMceFn.isElementInsideBlocklist({index:'0-0-1'}, slateLevelData);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - isElementInsideBlocklist - slateLevelData - empty', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'isElementInsideBlocklist');
+        tinyMceFn.isElementInsideBlocklist({index:'0-0-1'}, {});
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
 })

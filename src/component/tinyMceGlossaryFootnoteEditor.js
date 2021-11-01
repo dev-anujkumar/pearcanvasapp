@@ -459,7 +459,6 @@ export class ReactEditor extends React.Component {
     }
     glossaryFootNoteCurrentValue = glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     
-    const {type, parent} = this.props.asideData;
     return (
       <div className="glossary-toolbar">
         <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
@@ -469,14 +468,8 @@ export class ReactEditor extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    asideData: state.appStore.asideData
-  }
-}
-
 export default connect(
-  mapStateToProps,
+  null,
   { wirisAltTextPopup, markedIndexPopupOverGlossary }
 )(ReactEditor);
 

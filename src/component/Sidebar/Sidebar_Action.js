@@ -798,8 +798,8 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         })
 }
 
-const updateBLMetaData = (elementId, elementData, metaData) => {
-    if(elementData.id === elementId){
+export const updateBLMetaData = (elementId, elementData, metaData) => {
+    if(elementData?.id === elementId){
         if(metaData.subtype){
             elementData.subtype = metaData.subtype;
             elementData.listtype = metaData.listtype;

@@ -35,6 +35,27 @@ let  initialState = {
     glossaaryFootnoteValue:{ "type":"","popUpStatus":false}
 };
 
+let  initialState2 = {
+    appStore:{
+        slateLevelData:mockData,
+        activeElement: {
+            elementType: "figure",
+            primaryOption: "primary-image-figure",
+            altText: "",
+            longDesc: "",
+            podwidth: "",
+            secondaryOption: "secondary-image-figure-width",
+            elementId: "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6",
+            index: "0-0-0-1-1",
+            elementWipType: "figure",
+            toolbar: ["insertMedia", "formatSelector", "crossLinkingIcon", "assetpopover", "glossary", "decreaseindent", "alignment", "calloutIcon", "IndexEntry"],
+            "tag": "Fg"
+        }
+    },
+    glossaryFootnoteReducer: {"elementIndex" : "0"},
+    glossaaryFootnoteValue:{ "type":"","popUpStatus":false}
+};
+
 
 jest.mock('./../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
@@ -435,6 +456,15 @@ describe('Tests commentsPanel action', () => {
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
         expect(item.payload.elementIndex).toEqual("0-3-0");
+    });
+   });
+   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 5 typeWithPopup is popup   --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","figure","0-0-0-1-1-2","image","","figure",undefined);
+    let store = mockStore(() => initialState2);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual("0-0-0-1-1-2");
     });
    });
     describe('testing setFormattingToolbar ', () => {

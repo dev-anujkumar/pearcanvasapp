@@ -1121,7 +1121,7 @@ class ElementContainer extends Component {
         if (!config.poetryElementCreationInProgress) {
             config.poetryElementCreationInProgress = poetryField === "creditsarray" ? true : false
             this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
-                this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+                this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN, this.props?.element)
         }
     }
 
@@ -1343,7 +1343,7 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} />;
+                    editor = <ElementAuthoring element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} placeholder={this.props.placeholder}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
                     editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />;
@@ -2060,7 +2060,7 @@ class ElementContainer extends Component {
     }
 
     /**
-     * @description - This function is for Open Glossarypopup.
+     * @description - This function is for Open openMarkedIndexPopUp.
      * @param {} 
      * @param 
      */
@@ -2261,8 +2261,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
             dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
         },
-        createPoetryUnit: (poetryField, parentElement, cb, popupElementIndex, slateManifestURN) => {
-            dispatch(createPoetryUnit(poetryField, parentElement, cb, popupElementIndex, slateManifestURN))
+        createPoetryUnit: (poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element) => {
+            dispatch(createPoetryUnit(poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element))
         },
         handleTCMData: () => {
             dispatch(handleTCMData())

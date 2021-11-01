@@ -260,7 +260,7 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
         let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
         let figure;
         if (sectionType) {
-            if ((asideData?.subtype === ELEMENT_WORKEDEXAMPLE || asideDataFromAfrescoMetadata?.type === ELEMENT_WORKEDEXAMPLE) && indexes?.length >= 5) {
+            if ((asideData?.subtype === ELEMENT_WORKEDEXAMPLE || asideDataFromAfrescoMetadata?.subtype === ELEMENT_WORKEDEXAMPLE) && indexes?.length >= 5) {
                 figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
             } else {
                 figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]];

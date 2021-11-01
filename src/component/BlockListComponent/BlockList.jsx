@@ -27,6 +27,7 @@ const BlockList = (props) => {
                     onListSelect={props.onListSelect}
                     model={props?.element.html}
                     handleCommentspanel={props?.handleCommentspanel}
+                    placeholder={typeof (props?.index) === 'string' && props?.index?.split('-').length>=3 ?"Press Shift+Tab to move out" :"Type something..."}
                 />
             )
         })
