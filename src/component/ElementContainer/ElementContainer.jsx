@@ -1121,7 +1121,7 @@ class ElementContainer extends Component {
         if (!config.poetryElementCreationInProgress) {
             config.poetryElementCreationInProgress = poetryField === "creditsarray" ? true : false
             this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
-                this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
+                this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN, this.props?.element)
         }
     }
 
@@ -2261,8 +2261,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
             dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
         },
-        createPoetryUnit: (poetryField, parentElement, cb, popupElementIndex, slateManifestURN) => {
-            dispatch(createPoetryUnit(poetryField, parentElement, cb, popupElementIndex, slateManifestURN))
+        createPoetryUnit: (poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element) => {
+            dispatch(createPoetryUnit(poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element))
         },
         handleTCMData: () => {
             dispatch(handleTCMData())
