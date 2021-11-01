@@ -736,7 +736,7 @@ class Sidebar extends Component {
      */
 
     togglePODDropdown = (e) => {
-        
+                
         let selValue = e.target.getAttribute('data-value');
         if(selValue) {
             this.props.setBCEMetadata('podwidth', selValue);
