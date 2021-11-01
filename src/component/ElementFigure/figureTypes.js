@@ -40,6 +40,16 @@ export default {
             figCaptionClass: 'figcaptionImageTextWidth',
             figCreditClass: 'paragraphImageTextWidthCredit'
         },
+        'actual': {
+            divClass: 'divImageActualSize',
+            figureClass: 'figureImageActualSize',
+            figLabelClass: 'heading4ImageActualSizeTitle',
+            figTitleClass: 'heading4Image25TextTitle',
+            dataType: 'image',
+            imageDimension: 'imageActualSize',
+            figCaptionClass: 'figcaptionImageActualSize',
+            figCreditClass: 'paragraphImageActualSizeCredit',
+        },
         'wider': {
             divClass: 'divImageWiderThanText',
             figureClass: 'figureImageWiderThanText',
@@ -82,6 +92,16 @@ export default {
             figCaptionClass: 'figcaptionImageTextWidthTableImage',
             figCreditClass: 'paragraphImageTextWidthTableImageCredit'
         },
+        'actual': {
+            divClass: 'divImageActualSize',
+            figureClass: 'figureImageActualSize',
+            figLabelClass: 'heading4ImageActualSizeTitle',
+            figTitleClass: 'heading4Image25TextTitle',
+            dataType: 'table',
+            imageDimension: 'imageActualSize',
+            figCaptionClass: 'figcaptionImageActualSize',
+            figCreditClass: 'paragraphImageActualSizeCredit',
+        },
         'wider': {
             divClass: 'divImageWiderThanTextTableImage',
             figureClass: 'figureImageWiderThanTextTableImage',
@@ -123,6 +143,16 @@ export default {
             imageDimension: 'imageTextWidthMathImage',
             figCaptionClass: 'figcaptionImageTextWidthMathImage',
             figCreditClass: 'paragraphImageTextWidthMathImageCredit'
+        },
+        'actual': {
+            divClass: 'divImageActualSize',
+            figureClass: 'figureImageActualSize',
+            figLabelClass: 'heading4ImageActualSizeTitle',
+            figTitleClass: 'heading4Image25TextTitle',
+            dataType: 'mathImage',
+            imageDimension: 'imageActualSize',
+            figCaptionClass: 'figcaptionImageActualSize',
+            figCreditClass: 'paragraphImageActualSizeCredit',
         },
         'wider': {
             divClass: 'divImageWiderThanTextMathImage',

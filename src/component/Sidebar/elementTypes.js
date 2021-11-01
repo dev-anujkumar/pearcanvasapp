@@ -158,6 +158,11 @@ export default {
                     labelText: 'Fg',
                     enum: 'IMAGE_TEXT_WIDTH'
                 },
+                'secondary-image-figure-actual': {
+                    text: 'Actual Width',
+                    labelText: 'Fg',
+                    enum: 'IMAGE_ACTUAL_WIDTH'
+                },
                 'secondary-image-figure-quarter': {
                     text: '25% Text Width',
                     labelText: 'Fg',
@@ -210,6 +215,11 @@ export default {
                     labelText: 'TB',
                     enum: 'IMAGE_TEXT_WIDTH_TABLE'
                 },
+                'secondary-image-figure-actual': {
+                    text: 'Actual Width',
+                    labelText: 'TB',
+                    enum: 'IMAGE_ACTUAL_WIDTH_TABLE'
+                },
                 'secondary-image-table-wider': {
                     text: 'Wider Than Text',
                     labelText: 'TB',
@@ -246,6 +256,11 @@ export default {
                     text: 'Text Width',
                     labelText: 'EQ',
                     enum: 'IMAGE_TEXT_WIDTH_MATH'
+                },
+                'secondary-image-figure-actual': {
+                    text: 'Actual Width',
+                    labelText: 'EQ',
+                    enum: 'IMAGE_ACTUAL_WIDTH_MATH'
                 },
                 'secondary-image-equation-wider': {
                     text: 'Wider Than Text',
