@@ -324,7 +324,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 
                 const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
                 tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
-                // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
         it('Test-6.3-Function--6--popupWipData #11:1 - In WE-HEAD | Aside | Citations', () => {
             let bodymatter = bodymatter2
@@ -334,7 +333,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
             tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
-            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
         it('Test-6.3-Function--6--popupWipData #11:2 - In WE-HEAD | Aside | Citations', () => {
             let bodymatter = bodymatter2
@@ -344,7 +342,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
             tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
-            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
         it('Test-6.3-Function--6--popupWipData #11:3 - In WE-HEAD | Aside | Citations', () => {
             let bodymatter = bodymatter2
@@ -354,7 +351,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
             tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
-            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
         it('Test-6.3-Function--6--popupWipData #12 - In WE-HEAD | Aside | Citations', () => {
             let bodymatter = bodymatter2
@@ -364,7 +360,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
             tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
-            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
         it('Test-6.3-Function--6--popupWipData #12:1 - In WE-HEAD | Aside | Citations', () => {
             let bodymatter = bodymatter2
@@ -374,7 +369,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
             tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
-            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
         
     })
@@ -419,7 +413,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
             tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
-            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
         it('Test-6.3-Function--6--fetchManifestStatusWE_MANIFEST #2 - In WE-HEAD | Aside | Citations', () => {
             let bodymatter = bodymatter2, type = "element-citation", containerElement = {
@@ -435,7 +428,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
             tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
-            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
         it('Test-6.3-Function--6--fetchManifestStatusPOPUP_ELEMENT #4 - In WE-HEAD | Aside | Citations', () => {
             let bodymatter = bodymatter2, type = "element-citation", containerElement = {
@@ -451,7 +443,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
             tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
-            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
         it('Test-6.3-Function--6--fetchManifestStatusELEMENT_ASIDE #5 - In WE-HEAD | Aside | Citations', () => {
             let bodymatter = bodymatter2, type = "element-citation", containerElement = {
@@ -467,13 +458,10 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
             tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
-            // expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
         it('Test-6.3-Function--6--fetchManifestStatusshowHideObj #6 - In WE-HEAD | Aside | Citations', () => {
             let bodymatter = bodymatter2, type = "element-citation", containerElement = {
                 asideData: {
-                    // id: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e",
-                    // type: "groupedcontent",
                     element: {
                         elementdata: {
                             bodymatter: [
@@ -507,8 +495,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
         it('Test-6.3-Function--6--fetchManifestStatusshowHideObj #7 - In WE-HEAD | Aside | Citations', () => {
             let bodymatter = bodymatter2, type = "element-citation", containerElement = {
                 asideData: {
-                    // id: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e",
-                    // type: "groupedcontent",
                     element: {
                         elementdata: {
                             bodymatter: [
@@ -539,44 +525,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement, type);
             expect(spyFunction).toHaveBeenCalledWith(bodymatter, containerElement, type);
         })
-        // it('Test-6.3-Function--6--fetchManifestStatus - In WE-HEAD | Aside | Citations', () => {
-        //     let bodymatter = bodymatter2, type = "element-citation", parentElement = {
-        //         asideData: {},
-        //         parentUrn: {
-        //             manifestUrn: "urn:pearson:manifest:8d910f79-780b-46b2-8762-f6d0b5f593e5"
-        //         },
-        //         poetryData: {}
-        //     }
-        //     const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
-        //     tcmSnapshotUtility.fetchManifestStatus(bodymatter, parentElement, type);
-        //     expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
-        // })
-        // it('Test-6.4-Function--6--fetchManifestStatus - In Section-Break', () => {
-        //     let bodymatter = bodymatter1, type = "element-authoredtext", parentElement = {
-        //         asideData: {
-        //             id: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f0"
-        //         },
-        //         parentUrn: {
-        //             manifestUrn: "urn:pearson:manifest:a4100af0-6143-41ed-82a4-33012dd5f134"
-        //         },
-        //         poetryData: {}
-        //     }
-        //     const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
-        //     tcmSnapshotUtility.fetchManifestStatus(bodymatter, parentElement, type);
-        //     expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
-        // })
-        // it('Test-6.5-Function--6--fetchManifestStatus - In Poetry', () => {
-        //     let bodymatter = bodymatter2, parentElement = {
-        //         asideData: {},
-        //         parentUrn: {},
-        //         poetryData: {
-        //             parentUrn: "urn:pearson:manifest:d8666a10-dffd-4b16-ab75-ec714a3fc3a6"
-        //         }
-        //     }, type = "stanza"
-        //     const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
-        //     tcmSnapshotUtility.fetchManifestStatus(bodymatter, parentElement, type);
-        //     expect(spyFunction).toHaveBeenCalledWith(bodymatter, parentElement, type);
-        // })
     });
     describe('Test-7-Figure snapshots helper functions', () => {
         const { setSemanticsSnapshotsData } = tcmTestData
