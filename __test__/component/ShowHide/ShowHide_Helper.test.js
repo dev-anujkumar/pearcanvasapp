@@ -105,7 +105,7 @@ describe('1. ShowHide test cases', () => {
         const props = {
             createShowHideElement: jest.fn()
         }
-        const elementList = ["TEXT","IMAGE","VIDEO","figure-mml-elem","blockcode-elem","element-dialogue","smartlink-elem","element-discussion","elm-interactive-elem","interactive-elem"];
+        const elementList = ["TEXT","IMAGE","VIDEO","figure-mml-elem","blockcode-elem","element-dialogue","smartlink-elem","element-discussion","elm-interactive-elem","interactive-elem","container-elem","citations-group-elem"];
         it.each(elementList)('add %s element inside sh',(input) => {
             const spyonAddElementInShowHide = jest.spyOn(showHideHelper, "addElementInShowHide");
             showHideHelper.addElementInShowHide("0-0-1", "show", input, props);

@@ -73,9 +73,6 @@
     background: #07313b;
 }
 .button-group {
-    /* position: absolute; */
-    /* right: 12px; */
-    /* bottom: 15%; */
     margin-top: 40px;
     float: right;
 }
@@ -85,21 +82,24 @@
     background-color: #eee;
 }
 
-.index-container .markedindex-word-title{
-    padding: 10px 10px 5px;
+.index-container .markedindex-word-title, .index-container .markedindex-secondlevel-label{
+    padding: 10px 0px 5px;
     font-size: 12px;
     font-family: 'Open Sans', sans-serif;
 }
 
 .markedindex-word-title .index-entry.markedindex-editor, .markedindex-secondlevel-label .sub-entry.markedindex-editor{
     font-size: 14px!important;
-    margin: 8px 0 !important;
-    padding: 13px 0px 0 2px !important;
+    margin: 15px 0 6px 0!important;
+    padding: 4px 12px 0 12px!important;
     font-weight: 500;
     line-height: 1.5;
     color:#000;
     width: 100%;
     font-family: 'Open Sans', sans-serif !important;
+    max-height: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .markedindex-word-title, .markedindex-secondlevel-label {
@@ -151,12 +151,6 @@
     background-color: #eee;
     margin-top: 20px;
     border-bottom: 1px solid #ccc;
-}
-
-.index-container .markedindex-secondlevel-label{
-    padding: 10px 10px 5px;
-    font-size: 12px;
-    font-family: 'Open Sans', sans-serif;
 }
 
 .hide-markedinde-toolbar{

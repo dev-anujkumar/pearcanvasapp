@@ -31,7 +31,7 @@ class Sidebar extends Component {
         let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting = this.props.activeElement.syntaxhighlighting;
-        let podwidth = this.props.activeElement.podwidth === undefined ? POD_DEFAULT_VALUE : this.props.activeElement.podwidth;
+        let podwidth = this.props.activeElement.podwidth;
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
@@ -736,7 +736,11 @@ class Sidebar extends Component {
      */
 
     togglePODDropdown = (e) => {
+        
         let selValue = e.target.getAttribute('data-value');
+        if(selValue) {
+            this.props.setBCEMetadata('podwidth', selValue);
+        }
         this.setState({
             podOption: !this.state.podOption,
             podValue: selValue ? selValue : this.state.podValue,

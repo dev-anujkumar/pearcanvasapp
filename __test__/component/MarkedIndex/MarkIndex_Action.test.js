@@ -63,7 +63,12 @@ jest.mock('../../../src/appstore/store', () => {
                         contentUrn : "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184"
                     }
                 },
-                markedIndexReducer:{"elementIndex": "0"}
+                markedIndexReducer:{
+                    markedIndexValue: { "type": "", "popUpStatus": false },
+                    markedIndexCurrentValue: '',
+                    elementIndex: '',
+                    markedIndexGlossary: {popUpStatus: false,  indexEntries: {}, markedIndexEntryURN: 'test', }
+                }
             }
         },
         dispatch:(obj)=>{
@@ -74,12 +79,6 @@ jest.mock('../../../src/appstore/store', () => {
 })
 
 describe('Tests marked index action', () => {
-    //   beforeAll(() => {
-    //     const div = document.createElement('div');
-    //     window.domNode = div;
-    //     document.body.appendChild(div);
-    //   })
-
     let store = mockStore(() => initialState);
 
     beforeEach(() => {
@@ -92,18 +91,81 @@ describe('Tests marked index action', () => {
     });
  
 
-   it('should test markedIndexPopup ', async() => {
-       try{
-            let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','figure','0','image','term text--', "popup", "formatted-subtitle", true);
-            // console.log("=====> result: ", result);
-            const item = await result(store.dispatch);
-            // console.log("=======item: ", item)
-            expect(typeof(item)).toEqual('object');
-            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
-       } catch(err){
-        //    console.log("=============> error: ", err)
-            expect(err).toEqual(err)
-       }
+   it('should test marked index in para', async() => {
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext',2, undefined,'term text--', "element-authoredtext", undefined, true);
+        const item = await result(store.dispatch);
+        expect(item.type).toEqual('OPEN_MARKED_INDEX');
+        expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>ndex</p>');
    });
-});
 
+    it('should test marked index in 2C ', async() => {
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','6-0-0', undefined,'term text--', "element-authoredtext", undefined, true);
+        const item = await result(store.dispatch);
+        expect(item.type).toEqual('OPEN_MARKED_INDEX');
+        expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
+   });
+
+   it('should test marked index in aside ', async() => {
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','7-0', undefined,'term text--', "element-authoredtext", undefined, true);
+        const item = await result(store.dispatch);
+        expect(item.type).toEqual('OPEN_MARKED_INDEX');
+        expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
+    });
+
+    it('should test marked index in aside of 2C', async() => {
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','8-0-0-0', undefined,'index', "element-authoredtext", undefined, true);
+        const item = await result(store.dispatch);
+        expect(item.type).toEqual('OPEN_MARKED_INDEX');
+        expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('index');
+    });
+
+    it('should test markedIndexPopupOverGlossary - else case', () => {
+        let result = actions.markedIndexPopupOverGlossary(true);
+        const item = result(store.dispatch);
+        expect(item.type).toEqual('OPEN_MARKED_INDEX_ON_GLOSSARY');
+        expect(item.payload.markedIndexGlossary.markedIndexEntryURN).toEqual('test');
+    });
+
+    it('should test markedIndexPopupOverGlossary - if case', () => {
+        let result = actions.markedIndexPopupOverGlossary(true, "<p>index23</p>", "<p>sub</p>", "urn:pearson:work:1c4d7884-139f-42f6-bce3-4327c2eb8ef5", true);
+        const item = result(store.dispatch);
+        expect(item.type).toEqual('OPEN_MARKED_INDEX_ON_GLOSSARY');
+        expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual("<p>index23</p>");
+    });
+
+    it('should test updateMarkedIndexStore', async() => {
+        const glossaryFootElem = {
+            contentUrn: "urn:pearson:entity:a7aeb98e-44ac-421d-84b6-fe547b51001f",
+            elementdata: {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "", glossaryentries: []},
+            html:{
+              assetsPopover: {},
+              footnotes: {},
+              glossaryentries:{
+                "urn:pearson:work:83035b0c-7b6d-4830-ad8e-eedd2265f899": '{"term":"<p mark-index-id=\"urn:pearson:work:1c4d7884-139f-42f6-bce3-4327c2eb8ef5\">index</p>","definition":"<p></p>"}'
+              },
+              indexEntries:{
+                "urn:pearson:work:1c4d7884-139f-42f6-bce3-4327c2eb8ef5": '{"firstLevelEntry":"<p>index23</p>","secondLevelEntry":"<p>sub</p>"}'
+              },
+              text: '<p class="paragraphNumeroUno"><dfn class="Pearson-Component GlossaryTerm" data-uri="urn:pearson:work:83035b0c-7b6d-4830-ad8e-eedd2265f899" mark-index-id="urn:pearson:work:1c4d7884-139f-42f6-bce3-4327c2eb8ef5">index</dfn></p>',
+              id: "urn:pearson:work:a3b8b373-0969-4f79-9a75-14eb55826b3b",
+              schema: "http://schemas.pearson.com/wip-authoring/element/1",
+              type: "element-authoredtext",
+              versionUrn: "urn:pearson:work:a3b8b373-0969-4f79-9a75-14eb55826b3b"
+            }
+          }
+        const glossaaryFootnoteValue = {
+            elementSubType: undefined,
+            elementType: "element-authoredtext",
+            elementWorkId: "urn:pearson:work:a3b8b373-0969-4f79-9a75-14eb55826b3b",
+            glossaryTermText: "",
+            glossaryfootnoteid: "urn:pearson:work:83035b0c-7b6d-4830-ad8e-eedd2265f899",
+            poetryField: undefined,
+            popUpStatus: true,
+            type: "Glossary",
+            typeWithPopup: "element-authoredtext",
+          }
+        let item = actions.updateMarkedIndexStore('<p mark-index-id="urn:pearson:work:1c4d7884-139f-42f6-bce3-4327c2eb8ef5">index</p>', glossaryFootElem, glossaaryFootnoteValue, 0);
+        expect(item.type).toEqual('OPEN_MARKED_INDEX');
+        expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual("<p>index23</p>");
+    });
+});
