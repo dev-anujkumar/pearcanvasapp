@@ -390,6 +390,15 @@ class ElementContainer extends Component {
         );
     }
 
+    // smartlink podwidth check.
+    checkPodWidthUpdate = (newPodwith, oldPodwith) => {
+        if(oldPodwith === '' && newPodwith == 'print100')
+        {
+            return false;
+        }
+        else return  oldPodwith !== newPodwith
+    }
+
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             numberDOM = document.getElementById(`cypress-${index}-1`),
@@ -482,14 +491,13 @@ class ElementContainer extends Component {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
             posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
-
             let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
                 oldImage !== newInteractiveid ||
-                podwidth !== previousElementData?.figuredata?.posterimage?.podwidth
+                this.checkPodWidthUpdate(podwidth, previousElementData?.figuredata?.posterimage?.podwidth)
             );
         }
         else {
