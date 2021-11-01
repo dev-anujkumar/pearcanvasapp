@@ -9,7 +9,7 @@ import {
 import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import { getWirisAltText } from '../js/utils';
-import { setFormattingToolbar } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
+import { setFormattingToolbar, updateCurrentValue } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import { markedIndexPopupOverGlossary } from './MarkIndexPopup/MarkIndex_Action';
 
 export class ReactEditor extends React.Component {
@@ -440,9 +440,18 @@ export class ReactEditor extends React.Component {
      tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
     })
   }
+  
+  updateCurrentGlossaryValue = () => {
+    if(this.props.id === 'glossary-1' || this.props.id === 'glossary-0'){
+      const term = document.getElementById('glossary-0')?.innerHTML || '';
+      const defination = document.getElementById('glossary-1')?.innerHTML || '';
+      updateCurrentValue(term, defination)
+    }
+  }
 
   openMarkedIndexPopUp = () => {
     this.props.markedIndexPopupOverGlossary(true);
+    this.updateCurrentGlossaryValue();
   }
 
   render() {
