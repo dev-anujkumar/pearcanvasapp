@@ -92,15 +92,20 @@ let initialState = {
             sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
             sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
         }
+    },
+    markedIndexReducer: {
+        markedIndexCurrentValue: '',
+        markedIndexValue: ''
     }
 }
 
 let store = mockStore(initialState);
 
-xdescribe('Testing CitationGroup component with props', () => {
+describe('Testing CitationGroup component with props', () => {
     let props = {
         swapElement : jest.fn(),
-        createPopupUnit : jest.fn()
+        createPopupUnit : jest.fn(),
+        asideData: { type: 'showhide' }
     }  
     let contextValue = {
         activeElement: {},
@@ -122,6 +127,7 @@ xdescribe('Testing CitationGroup component with props', () => {
         handleBlur: jest.fn(),
         onClick: jest.fn(),
         deleteElement: jest.fn(),
+        parentElement: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc13", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "show"}
     }
     const wrapper = mount(
     <CitationGroupContext.Provider value={contextValue} >

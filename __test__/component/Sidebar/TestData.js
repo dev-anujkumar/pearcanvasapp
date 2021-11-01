@@ -3211,6 +3211,298 @@ export default {
 			contentUrn: "urn:pearson:entity:4657ec09-bde4-42e0-bebf-acba344829c5",
 			versionUrn: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333"
 		},
+	
+	testcase22:{
+		"urn:pearson:manifest:6b249fd3-c25b-4c91-b8ac-037c9f30c012": {
+			"id": "urn:pearson:manifest:6b249fd3-c25b-4c91-b8ac-037c9f30c012",
+			"type": "manifest",
+			"schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+			"versionUrn": "urn:pearson:manifest:6b249fd3-c25b-4c91-b8ac-037c9f30c012",
+			"contentUrn": "urn:pearson:entity:1d0d2ff6-9eae-4107-9c70-97525cc92923",
+			"contents": {
+				"bodymatter": [{
+					"id": "urn:pearson:manifest:29f4993d-e02b-407a-a0db-07cf5370f71a",
+					"type": "element-aside",
+					"subtype": "sidebar",
+					"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+					"designtype": "asideSidebar01",
+					"elementdata": {
+						"bodymatter": [{
+							"id": "urn:pearson:work:776480d9-f4cb-4b44-9fdf-7e4381171468",
+							"type": "element-authoredtext",
+							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+							"elementdata": {
+								"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+								"text": ""
+							},
+							"html": {
+								"text": "<p class=\"paragraphNumeroUno\"><br></p>",
+								"footnotes": {},
+								"assetsPopover": {},
+								"glossaryentries": {},
+								"indexEntries": {}
+							},
+							"versionUrn": "urn:pearson:work:776480d9-f4cb-4b44-9fdf-7e4381171468",
+							"contentUrn": "urn:pearson:entity:01d6ff29-ccf2-418c-802c-1b851547c6ee"
+						}, {
+							"id": "urn:pearson:manifest:cf0ade16-2be2-48a4-bbd6-16a6d3838296",
+							"type": "showhide",
+							"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+							"versionUrn": "urn:pearson:manifest:cf0ade16-2be2-48a4-bbd6-16a6d3838296",
+							"contentUrn": "urn:pearson:entity:99a156c9-ef31-4034-ac45-2cfcf0ce0729",
+							"status": "wip",
+							"interactivedata": {
+								"postertextobject": [{
+									"id": "urn:pearson:work:f4f7b891-dc45-4b78-a1c4-3f651b3b5c78",
+									"type": "element-authoredtext",
+									"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+									"elementdata": {
+										"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+										"text": "Reveal Answer:"
+									},
+									"html": {
+										"text": "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
+										"footnotes": {},
+										"assetsPopover": {},
+										"glossaryentries": {},
+										"indexEntries": {}
+									},
+									"versionUrn": "urn:pearson:work:f4f7b891-dc45-4b78-a1c4-3f651b3b5c78",
+									"contentUrn": "urn:pearson:entity:a2378c55-daa8-4691-9713-df513989a787"
+								}],
+								"show": [{
+									"id": "urn:pearson:work:5685de2b-da6a-47fd-b5c8-a17b3543e326",
+									"type": "element-authoredtext",
+									"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+									"elementdata": {
+										"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+										"text": ""
+									},
+									"html": {
+										"text": "<p class=\"paragraphNumeroUno\"><br></p>",
+										"footnotes": {},
+										"assetsPopover": {},
+										"glossaryentries": {},
+										"indexEntries": {}
+									},
+									"versionUrn": "urn:pearson:work:5685de2b-da6a-47fd-b5c8-a17b3543e326",
+									"contentUrn": "urn:pearson:entity:fbc5f47e-74a2-433e-9263-32bd893144ae"
+								}],
+								"hide": [{
+									"id": "urn:pearson:work:559b2f11-9626-47a5-8287-f0cf3e4f5e34",
+									"type": "element-authoredtext",
+									"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+									"elementdata": {
+										"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+										"text": ""
+									},
+									"html": {
+										"text": "<p class=\"paragraphNumeroUno\"><br></p>",
+										"footnotes": {},
+										"assetsPopover": {},
+										"glossaryentries": {},
+										"indexEntries": {}
+									},
+									"versionUrn": "urn:pearson:work:559b2f11-9626-47a5-8287-f0cf3e4f5e34",
+									"contentUrn": "urn:pearson:entity:b924be9b-6c07-4cfa-b00a-b941dbde218d"
+								}]
+							}
+						}],
+						"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+					},
+					"versionUrn": "urn:pearson:manifest:29f4993d-e02b-407a-a0db-07cf5370f71a",
+					"contentUrn": "urn:pearson:entity:faacd4c8-098a-49f1-8735-f7b270120bbb",
+					"status": "wip"
+				}, {
+					"id": "urn:pearson:manifest:e0a5619d-6365-4dca-9552-a80e5873d05e",
+					"type": "showhide",
+					"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+					"versionUrn": "urn:pearson:manifest:e0a5619d-6365-4dca-9552-a80e5873d05e",
+					"contentUrn": "urn:pearson:entity:eb2b0c8b-ff24-440f-b11e-2d39b09e94ed",
+					"status": "wip",
+					"interactivedata": {
+						"postertextobject": [{
+							"id": "urn:pearson:work:0c120938-cde2-4cd4-9c78-0f2f12f6aa13",
+							"type": "element-authoredtext",
+							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+							"elementdata": {
+								"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+								"text": "Reveal Answer:"
+							},
+							"html": {
+								"text": "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
+								"footnotes": {},
+								"assetsPopover": {},
+								"glossaryentries": {},
+								"indexEntries": {}
+							},
+							"versionUrn": "urn:pearson:work:0c120938-cde2-4cd4-9c78-0f2f12f6aa13",
+							"contentUrn": "urn:pearson:entity:1c1bb854-a30c-472f-a668-20f611083175"
+						}],
+						"show": [{
+							"id": "urn:pearson:work:1ba3da37-6e12-4d51-905f-842e668014d5",
+							"type": "element-authoredtext",
+							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+							"elementdata": {
+								"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+								"text": ""
+							},
+							"html": {
+								"text": "<p class=\"paragraphNumeroUno\"><br></p>",
+								"footnotes": {},
+								"assetsPopover": {},
+								"glossaryentries": {},
+								"indexEntries": {}
+							},
+							"versionUrn": "urn:pearson:work:1ba3da37-6e12-4d51-905f-842e668014d5",
+							"contentUrn": "urn:pearson:entity:c31b1451-81c4-4eca-bd65-662e6157e157"
+						}, {
+							"id": "urn:pearson:manifest:ef05b0a5-ee0f-41c3-b5eb-06f2c215e318",
+							"type": "element-aside",
+							"subtype": "sidebar",
+							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+							"designtype": "asideSidebar01",
+							"elementdata": {
+								"bodymatter": [{
+									"id": "urn:pearson:work:509a129d-b865-400a-ba2f-edd9a1219b0f",
+									"type": "element-authoredtext",
+									"subtype": "upper-roman",
+									"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+									"elementdata": {
+										"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+										"text": ""
+									},
+									"html": {
+										"text": "<p class=\"paragraphNumeroUno\"></p>",
+										"footnotes": {},
+										"assetsPopover": {},
+										"glossaryentries": {},
+										"indexEntries": {}
+									},
+									"versionUrn": "urn:pearson:work:509a129d-b865-400a-ba2f-edd9a1219b0f",
+									"contentUrn": "urn:pearson:entity:722ea8af-f598-4235-9e1a-6eb2f2275118"
+								}, {
+									"id": "urn:pearson:work:6eda30b3-170e-476f-ab17-6ea6098d3d99",
+									"type": "figure",
+									"figuretype": "table",
+									"subtype": "image50TextTableImage",
+									"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+									"titlecontentintitlefield": true,
+									"alignment": "half-text",
+									"title": {
+										"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+										"text": ""
+									},
+									"captions": {
+										"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+										"text": ""
+									},
+									"credits": {
+										"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+										"text": ""
+									},
+									"figuredata": {
+										"schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+										"imageid": "",
+										"path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+										"height": "422",
+										"width": "680",
+										"podwidth": ""
+									},
+									"html": {
+										"title": "<p><br></p>",
+										"captions": "<p><br></p>",
+										"credits": "<p><br></p>",
+										"footnotes": {},
+										"assetsPopover": {},
+										"glossaryentries": {},
+										"indexEntries": {}
+									},
+									"versionUrn": "urn:pearson:work:6eda30b3-170e-476f-ab17-6ea6098d3d99",
+									"contentUrn": "urn:pearson:entity:0e37ea1d-5644-4cce-9c39-2395cd067534"
+								}],
+								"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+							},
+							"versionUrn": "urn:pearson:manifest:ef05b0a5-ee0f-41c3-b5eb-06f2c215e318",
+							"contentUrn": "urn:pearson:entity:cad8be4d-6563-4cc0-9dc4-a6eddddcd9b7",
+							"status": "wip"
+						}],
+						"hide": [{
+							"id": "urn:pearson:work:1c941055-73ca-47f7-8caa-17edaf030bfa",
+							"type": "element-authoredtext",
+							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+							"elementdata": {
+								"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+								"text": ""
+							},
+							"html": {
+								"text": "<p class=\"paragraphNumeroUno\"><br></p>",
+								"footnotes": {},
+								"assetsPopover": {},
+								"glossaryentries": {},
+								"indexEntries": {}
+							},
+							"versionUrn": "urn:pearson:work:1c941055-73ca-47f7-8caa-17edaf030bfa",
+							"contentUrn": "urn:pearson:entity:05149b8c-6025-48d4-91bd-dd7e89e7b364"
+						}]
+					}
+				}, {
+					"id": "urn:pearson:work:3564a662-f592-4036-a74a-6bedba4b6d27",
+					"type": "figure",
+					"figuretype": "tableasmarkup",
+					"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+					"titlecontentintitlefield": true,
+					"figuredata": {
+						"schema": "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
+						"tableasHTML": "<table class=\"mce-item-table\" style=\"border-collapse: collapse; width: 1011px; word-break: normal; outline: none; height: 373px; text-align: left;\" contenteditable=\"false\" data-mce-style=\"border-collapse: collapse; width: 1011px; word-break: normal; outline: none; height: 373px;\" data-mce-selected=\"1\"><tbody><tr style=\"height: 154px;\" data-mce-style=\"height: 154px;\"><td style=\"width: 504px; outline: none; height: 154px;\" data-mce-style=\"width: 504px; outline: grey solid 2px; height: 154px;\"><ol style=\"list-style-type: decimal;\" data-mce-style=\"list-style-type: decimal;\" counter-reset=\"unset\"><li class=\"listItemNumeroUnoNumber\">one<br>two</li><li class=\"listItemNumeroUnoNumber\">one<br>two</li><li class=\"listItemNumeroUnoNumber\">one<br>two<br>three</li></ol></td><td style=\"width: 505px; outline: none; height: 154px;\" data-mce-style=\"width: 505px; outline: none; height: 154px;\"><ol style=\"list-style-type: decimal;\" data-mce-style=\"list-style-type: decimal;\" counter-reset=\"unset\"><li class=\"listItemNumeroUnoNumber\">vvvhgggh<br>fsddsgf<br>sfs<br>dsdf</li><li class=\"listItemNumeroUnoNumber\">sdasfd<br>asdasfs<br>sdasfsd<br>sdasf</li><li class=\"listItemNumeroUnoNumber\">safasfas<br>asdsad<br>ASSF</li></ol></td></tr><tr style=\"height: 219px;\" data-mce-style=\"height: 219px;\"><td style=\"width: 504px; outline: none; height: 219px;\" data-mce-style=\"width: 504px; outline: none; height: 219px;\"><br></td><td style=\"width: 505px; outline: none; height: 219px;\" data-mce-style=\"width: 505px; outline: none; height: 219px;\"><br></td></tr></tbody></table>"
+					},
+					"html": {
+						"title": "<p><br></p>",
+						"tableasHTML": "<table class=\"mce-item-table\" style=\"border-collapse: collapse; width: 1011px; word-break: normal; outline: none; height: 373px; text-align: left;\" contenteditable=\"false\" data-mce-style=\"border-collapse: collapse; width: 1011px; word-break: normal; outline: none; height: 373px;\" data-mce-selected=\"1\"><tbody><tr style=\"height: 154px;\" data-mce-style=\"height: 154px;\"><td style=\"width: 504px; outline: none; height: 154px;\" data-mce-style=\"width: 504px; outline: grey solid 2px; height: 154px;\"><ol style=\"list-style-type: decimal;\" data-mce-style=\"list-style-type: decimal;\" counter-reset=\"unset\"><li class=\"listItemNumeroUnoNumber\">one<br>two</li><li class=\"listItemNumeroUnoNumber\">one<br>two</li><li class=\"listItemNumeroUnoNumber\">one<br>two<br>three</li></ol></td><td style=\"width: 505px; outline: none; height: 154px;\" data-mce-style=\"width: 505px; outline: none; height: 154px;\"><ol style=\"list-style-type: decimal;\" data-mce-style=\"list-style-type: decimal;\" counter-reset=\"unset\"><li class=\"listItemNumeroUnoNumber\">vvvhgggh<br>fsddsgf<br>sfs<br>dsdf</li><li class=\"listItemNumeroUnoNumber\">sdasfd<br>asdasfs<br>sdasfsd<br>sdasf</li><li class=\"listItemNumeroUnoNumber\">safasfas<br>asdsad<br>ASSF</li></ol></td></tr><tr style=\"height: 219px;\" data-mce-style=\"height: 219px;\"><td style=\"width: 504px; outline: none; height: 219px;\" data-mce-style=\"width: 504px; outline: none; height: 219px;\"><br></td><td style=\"width: 505px; outline: none; height: 219px;\" data-mce-style=\"width: 505px; outline: none; height: 219px;\"><br></td></tr></tbody></table>",
+						"captions": "<p><br></p>",
+						"credits": "<p><br></p>",
+						"footnotes": {},
+						"assetsPopover": {},
+						"glossaryentries": {},
+						"indexEntries": {}
+					},
+					"versionUrn": "urn:pearson:work:3564a662-f592-4036-a74a-6bedba4b6d27",
+					"contentUrn": "urn:pearson:entity:02e1a955-c1f6-4284-a06a-805e65ba6578"
+				}, {
+					"id": "urn:pearson:work:9ecdd9e2-c224-4dd3-b0d5-e849c61cd2c6",
+					"type": "figure",
+					"figuretype": "tableasmarkup",
+					"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+					"titlecontentintitlefield": true,
+					"figuredata": {
+						"schema": "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
+						"tableasHTML": "<table style=\"border-collapse: collapse; width: 1014px; word-break: normal; outline: none; height: 233px; text-align: left;\" data-mce-style=\"border-collapse: collapse; width: 1014px; word-break: normal; outline: none; height: 233px;\" class=\"mce-item-table\" contenteditable=\"false\" data-mce-selected=\"1\"><tbody><tr><td style=\"width: 506px; outline: none;\" data-mce-style=\"width: 506px; outline: grey solid 2px;\"><ol style=\"list-style-type: decimal;\" data-mce-style=\"list-style-type: decimal;\" counter-reset=\"unset\"><li class=\"listItemNumeroUnoNumber\">fdfdsfdbh<br>dsfvdfdfg<br>sdfdg</li><li class=\"listItemNumeroUnoNumber\">sdghfb<br>dsfgdhthrth<br>fghthftg<br>Ssfrgr</li><li class=\"listItemNumeroUnoNumber\">dasdhhgh<br>dsgfdhh<br>afsggdd</li></ol></td><td style=\"width: 506px; outline: none;\" data-mce-style=\"width: 506px; outline: none;\"><br></td></tr><tr><td style=\"width: 506px; outline: none;\" data-mce-style=\"width: 506px; outline: none;\"><br></td><td style=\"width: 506px; outline: none;\" data-mce-style=\"width: 506px; outline: none;\"><br data-mce-bogus=\"1\"></td></tr></tbody></table>"
+					},
+					"html": {
+						"title": "<p><br></p>",
+						"tableasHTML": "<table style=\"border-collapse: collapse; width: 1014px; word-break: normal; outline: none; height: 233px; text-align: left;\" data-mce-style=\"border-collapse: collapse; width: 1014px; word-break: normal; outline: none; height: 233px;\" class=\"mce-item-table\" contenteditable=\"false\" data-mce-selected=\"1\"><tbody><tr><td style=\"width: 506px; outline: none;\" data-mce-style=\"width: 506px; outline: grey solid 2px;\"><ol style=\"list-style-type: decimal;\" data-mce-style=\"list-style-type: decimal;\" counter-reset=\"unset\"><li class=\"listItemNumeroUnoNumber\">fdfdsfdbh<br>dsfvdfdfg<br>sdfdg</li><li class=\"listItemNumeroUnoNumber\">sdghfb<br>dsfgdhthrth<br>fghthftg<br>Ssfrgr</li><li class=\"listItemNumeroUnoNumber\">dasdhhgh<br>dsgfdhh<br>afsggdd</li></ol></td><td style=\"width: 506px; outline: none;\" data-mce-style=\"width: 506px; outline: none;\"><br></td></tr><tr><td style=\"width: 506px; outline: none;\" data-mce-style=\"width: 506px; outline: none;\"><br></td><td style=\"width: 506px; outline: none;\" data-mce-style=\"width: 506px; outline: none;\"><br data-mce-bogus=\"1\"></td></tr></tbody></table>",
+						"captions": "<p><br></p>",
+						"credits": "<p><br></p>",
+						"footnotes": {},
+						"assetsPopover": {},
+						"glossaryentries": {},
+						"indexEntries": {}
+					},
+					"versionUrn": "urn:pearson:work:9ecdd9e2-c224-4dd3-b0d5-e849c61cd2c6",
+					"contentUrn": "urn:pearson:entity:86d07853-931c-4258-b7a9-e6b7fec28ee4"
+				}],
+				"title": {
+					"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+					"text": "slate1"
+				},
+				"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+			},
+			"status": "wip",
+			"pageNo": 0,
+			"pageCount": 4,
+			"pageLimit": 4
+		}
 	}
 }
 
+}

@@ -1320,7 +1320,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
     })
 }
 
-export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN) => (dispatch, getState) => {
+export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN, element) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
@@ -1350,19 +1350,20 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         let newslateData = JSON.parse(JSON.stringify(parentData))
         let _slateObject = newslateData[slateManifestURN]
         let targetPoetryElement = _slateObject.contents.bodymatter[ElementIndex]
+        const activeElementId = element?.id
 
         if(targetPoetryElement){
             if(poetryField==="creditsarray"){
                 if(targetPoetryElement?.type == "element-aside"){ /* update credit of PE inside aside */
                     targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
-                        if (element.type == "poetry") {
+                        if (element.type == "poetry" && element.id == activeElementId) {
                             element.contents[poetryField] = [response.data]
                             element.contents[poetryField][0].html.text  = elemNode.innerHTML
                             element.contents[poetryField][0].elementdata.text = elemNode.innerText
                             targetPoetryElement.elementdata.bodymatter[index] = element
                         } else if (element?.type == "manifest") { /* update credit of PE inside WE in section break */
                             element.contents?.bodymatter.map((element1, maniIndex) => {
-                                if (element1?.type == "poetry") {
+                                if (element1?.type == "poetry" && element1?.id == activeElementId) {
                                 element1.contents[poetryField] = [response.data]
                                 element1.contents[poetryField][0].html.text  = elemNode.innerHTML
                                 element1.contents[poetryField][0].elementdata.text = elemNode.innerText
@@ -1374,7 +1375,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 } else if (targetPoetryElement?.type == "groupedcontent") { /* update credit of PE inside MultiColumn */
                     targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
                         groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
-                            if (groupElem2.type == "poetry") {
+                            if (groupElem2.type == "poetry" && groupElem2.id == activeElementId) {
                                 groupElem2.contents[poetryField] = [response.data]
                                 groupElem2.contents[poetryField][0].html.text  = elemNode.innerHTML
                                 groupElem2.contents[poetryField][0].elementdata.text = elemNode.innerText
@@ -1395,14 +1396,14 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
             else if(poetryField==="formatted-title"){
                 if(targetPoetryElement?.type == "element-aside"){ /* update Title of PE inside aside */
                     targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
-                        if (element.type == "poetry") {
+                        if (element.type == "poetry" && element.id == activeElementId) {
                             element.contents[poetryField] = response.data
                             element.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                             element.contents[poetryField].elementdata.text = elemNode.innerText
                             targetPoetryElement.elementdata.bodymatter[index] = element
                         } else if (element?.type == "manifest") { /* update title of PE inside WE in section break */
                             element.contents?.bodymatter.map((element1, maniIndex) => {
-                                if (element1?.type == "poetry") {
+                                if (element1?.type == "poetry" && element1?.id == activeElementId) {
                                     element1.contents[poetryField] = response.data
                                     element1.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                                     element1.contents[poetryField].elementdata.text = elemNode.innerText
@@ -1414,7 +1415,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 } else if (targetPoetryElement?.type == "groupedcontent") { /* update title of PE inside MultiColumn */
                     targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
                         groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
-                            if (groupElem2.type == "poetry") {
+                            if (groupElem2.type == "poetry" && groupElem2.id == activeElementId) {
                                 groupElem2.contents[poetryField] = response.data
                                 groupElem2.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                                 groupElem2.contents[poetryField].elementdata.text = elemNode.innerText
@@ -1431,13 +1432,13 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
             else if(poetryField==="formatted-subtitle"){
                 if (targetPoetryElement?.type == "element-aside") {
                     targetPoetryElement?.elementdata?.bodymatter.map((element, index) => {
-                        if (element.type == "poetry") { /* update subtitle of PE inside Aside/WE */
+                        if (element.type == "poetry" && element.id == activeElementId) { /* update subtitle of PE inside Aside/WE */
                             element.contents["formatted-title"] = response.data
                             element.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                             targetPoetryElement.elementdata.bodymatter[index] = element
                         } else if (element.type == "manifest") { /* update subtitle of PE inside WE in section break */
                             element.contents?.bodymatter.map((element1, maniIndex) => {
-                                if (element1?.type == "poetry") {
+                                if (element1?.type == "poetry" && element1?.id == activeElementId) {
                                     element1.contents["formatted-title"] = response.data
                                     element1.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                                     targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
@@ -1448,7 +1449,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 } else if (targetPoetryElement?.type == "groupedcontent") { /* update subtitle of PE inside MultiColumn */
                     targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
                         groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
-                            if (groupElem2.type == "poetry") {
+                            if (groupElem2.type == "poetry" && groupElem2.id == activeElementId) {
                                 groupElem2.contents["formatted-title"] = response.data
                                 groupElem2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                                 targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
