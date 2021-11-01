@@ -1343,7 +1343,7 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} />;
+                    editor = <ElementAuthoring element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} placeholder={this.props.placeholder}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
                     editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />;
