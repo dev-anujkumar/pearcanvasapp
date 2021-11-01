@@ -705,7 +705,7 @@ span.calloutOne > ins.diffmod{
   display: inline-block;
   top: -2px; 
   opacity: 1; 
-  left: -10px;
+  /* left: -10px;
   position: absolute;
   z-index: 1;
   right: -13px;
