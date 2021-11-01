@@ -481,7 +481,7 @@ class ElementContainer extends Component {
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`)
             || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
-        let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
+        let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") 
         let oldImage = this.props.oldImage;
         if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
             oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
