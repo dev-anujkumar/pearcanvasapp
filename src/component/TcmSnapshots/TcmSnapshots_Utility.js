@@ -1408,8 +1408,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
         // for versioning case, we get the last data from wip
         // so initilizing the wip
         wipData = containerElement?.poetryData?.currentElement || {};
-        // wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action)
-   
+  
     }
     else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action, containerElement)
@@ -1705,43 +1704,45 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     // only then go inside this
     if(
     currentSlateData && currentSlateData.status && currentSlateData.status === 'approved' && 
-    containerElement?.poetryData?.element?.type === "poetry" && 
-    containerElement?.poetryData?.element?.grandParent?.asideData?.type) {
+    containerElement?.poetryData?.element?.type === "poetry") {
        
-        const grandParent = containerElement?.poetryData?.element?.grandParent?.asideData;
-        const grandParentType = grandParent.type;
 
         const poetryElement = containerElement?.poetryData?.element;
-
         const newPoetryUrn =  await getLatestVersion(poetryElement.contentUrn);
         containerElement.poetryData.element.id = newPoetryUrn;
-        if(grandParentType === 'element-aside') {
-            const asideNewUrn = await getLatestVersion(grandParent.contentUrn);
-            containerElement.poetryData.element.grandParent.asideData.id = asideNewUrn;
-            // in case of WE also update manifest urn, 
-            // which is used to get if details are added 
-            // in head or body
-            if (grandParent.subtype) {
-                const newElemUrn = await getLatestVersion(containerElement?.parentUrn?.contentUrn);
-                containerElement.parentUrn.manifestUrn = newElemUrn;
+        // poetry data with aside data (inside we/mc/aside)
+        if(containerElement?.poetryData?.element?.grandParent?.asideData?.type) {
+            const grandParent = containerElement?.poetryData?.element?.grandParent?.asideData;
+            const grandParentType = grandParent.type;
+            if(grandParentType === 'element-aside') {
+                const asideNewUrn = await getLatestVersion(grandParent.contentUrn);
+                containerElement.poetryData.element.grandParent.asideData.id = asideNewUrn;
+                // in case of WE also update manifest urn, 
+                // which is used to get if details are added 
+                // in head or body
+                if (grandParent.subtype) {
+                    const newElemUrn = await getLatestVersion(containerElement?.parentUrn?.contentUrn);
+                    containerElement.parentUrn.manifestUrn = newElemUrn;
+                }
             }
-        }
-        else if (grandParentType === "groupedcontent")  {
-            // get column id in case of multi column
-            // also add this into parentUrn
-            const updatedMulColParentUrn = containerElement?.parentUrn.contentUrn;
-            if (updatedMulColParentUrn) {
-                const multiColumnProperties = containerElement?.poetryData?.element?.grandParent
-                const manifestUrn =  await getLatestVersion(multiColumnProperties.columnContentUrn);
-                containerElement.parentUrn.manifestUrn =manifestUrn;
-                const mcId = containerElement?.parentUrn?.mcId;
+            else if (grandParentType === "groupedcontent")  {
+                // get column id in case of multi column
+                // also add this into parentUrn
+                const updatedMulColParentUrn = containerElement?.parentUrn.contentUrn;
+                if (updatedMulColParentUrn) {
+                    const multiColumnProperties = containerElement?.poetryData?.element?.grandParent
+                    const manifestUrn =  await getLatestVersion(multiColumnProperties.columnContentUrn);
+                    containerElement.parentUrn.manifestUrn =manifestUrn;
+                    const mcId = containerElement?.parentUrn?.mcId;
 
-                const cid =  await getLatestVersion(multiColumnProperties.parentContentUrn);
-                containerElement.parentUrn.mcId = cid;
+                    const cid =  await getLatestVersion(multiColumnProperties.parentContentUrn);
+                    containerElement.parentUrn.mcId = cid;
+                }
             }
-        }
+    }
 
     }
+    // poetry data without aside data
     /** latest version for slate*/
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
