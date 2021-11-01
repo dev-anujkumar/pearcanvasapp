@@ -130,6 +130,11 @@ export class TinyMceEditor extends Component {
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
 
+                if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
+                    editor.shortcuts.remove('meta+u', '', '');
+                    editor.shortcuts.remove('meta+b', '', '');
+                    editor.shortcuts.remove('meta+i', '', '');
+                }
                 if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
                     if (editor && editor.id) {
                         document.getElementById(editor.id).setAttribute('contenteditable', false);
@@ -1124,6 +1129,16 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
+
+            /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
+            if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
+                const keyCode = e.keyCode || e.which;
+                if ((e.ctrlKey || e.metaKey) && (keyCode === 73 || keyCode === 85 || keyCode === 66)) {
+                    tinymce.dom.Event.cancel(e);
+                }
+            }
+            /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting STOP xxxxxxxxxxxxxxxxx */
+
             let newElement = this.props.currentElement ? this.props.currentElement : this.props.element
             if (e.keyCode == 86 && e.ctrlKey) {
                 this.isctrlPlusV = true;
