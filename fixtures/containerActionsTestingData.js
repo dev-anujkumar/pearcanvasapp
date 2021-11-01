@@ -25,6 +25,47 @@ export const slateLevelData = {
                         "type": "element-authoredtext",
                         "subtype": "",
                         "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "groupeddata": {
+                            "bodymatter": [{"groupdata": {
+                                "bodymatter": [
+                                    {
+                                        type: 'poetry',
+                                        id: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854',
+                                        contents: { bodymatter: [ {} ] }
+                                          
+                                    }
+                                ]
+                            }}]
+                        },
+                        "elementdata": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            "text": ""
+                        },
+                        "html": {
+                            "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                        },
+                        "comments": false,
+                        "tcm": true,
+                        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                    },
+                    {
+                        "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                        "type": "element-authoredtext",
+                        "subtype": "",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "groupeddata": {
+                            "bodymatter": [{"groupdata": {
+                                "bodymatter": [
+                                    {
+                                        type: 'poetry',
+                                        id: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854',
+                                        contents: { bodymatter: [ {} ] }
+                                          
+                                    }
+                                ]
+                            }}]
+                        },
                         "elementdata": {
                             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
                             "text": ""
@@ -595,6 +636,209 @@ export const slateLevelData = {
                                     "slateUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
                                 }
                             
+                        }
+                    },
+                    {
+                        "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540",
+                        "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540",
+                        "contentUrn": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f27y75",
+                        "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                        "type": "groupedcontent",
+                        "numberedline": true,
+                        "numberedstanza": true,
+                        "groupeddata": {
+                            "bodymatter": [
+                                {
+                                    "groupdata": {
+                                        "bodymatter": [
+                                            {
+                                                "type": "poetry",
+                                                "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854",
+                                                "contents": {
+                                                    "bodymatter": [
+                                                        {
+                                                            "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        "elementdata": {
+                            "bodymatter": [
+                                {
+                                    "type": "poetry",
+                                    "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854",
+                                    "contents": {
+                                        "bodymatter": [
+                                            {
+                                                id: "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "manifest",
+                                    "contents": {
+                                        "bodymatter": [
+                                            {
+                                                "type": "poetry",
+                                                "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854",
+                                                "contents": {
+                                                    "bodymatter": [
+                                                        {
+                                                            "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                        ]
+                        },
+                        "contents": {
+                            "formatted-title": {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+                                "text": ""
+                            },
+                            "formatted-subtitle": {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+                                "text": ""
+                            },
+                            "formatted-caption": {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+                                "text": "Poetry caption"
+                            },
+                            "creditsarray": [{
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073go6t",
+                                "text": "Poetry credit"
+                            }],
+                            "bodymatter": [
+                                {
+                                    "type": "stanza",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                                    "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                                    "contentUrn": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5",
+                                    "versionUrn": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                                    "slateUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                                    "poetrylines": [
+                                        {
+                                            "type": "line",
+                                            "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67",
+                                            "authoredtext": {
+                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                "text": ""
+                                            }
+                                        },
+                                    ],
+                                    "html": {
+                                        "title": "<p></p>",
+                                        "subtitle": "<p></p>",
+                                        "captions": "<p></p>",
+                                        "credits": "<p></p>",
+                                        "text": "<span><br /></span>"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540",
+                        "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540",
+                        "contentUrn": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f27y75",
+                        "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                        "type": "element-aside",
+                        "numberedline": true,
+                        "numberedstanza": true,
+                        "elementdata": {
+                            "bodymatter": [
+                                {
+                                    "type": "poetry",
+                                    "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854",
+                                    "contents": {
+                                        "bodymatter": [
+                                            {
+                                                id: "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "manifest",
+                                    "contents": {
+                                        "bodymatter": [
+                                            {
+                                                "type": "poetry",
+                                                "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854",
+                                                "contents": {
+                                                    "bodymatter": [
+                                                        {
+                                                            "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                        ]
+                        },
+                        "contents": {
+                            "formatted-title": {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+                                "text": ""
+                            },
+                            "formatted-subtitle": {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+                                "text": ""
+                            },
+                            "formatted-caption": {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
+                                "text": "Poetry caption"
+                            },
+                            "creditsarray": [{
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073go6t",
+                                "text": "Poetry credit"
+                            }],
+                            "bodymatter": [
+                                {
+                                    "type": "stanza",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                                    "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                                    "contentUrn": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5",
+                                    "versionUrn": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                                    "slateUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                                    "poetrylines": [
+                                        {
+                                            "type": "line",
+                                            "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67",
+                                            "authoredtext": {
+                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                "text": ""
+                                            }
+                                        },
+                                    ],
+                                    "html": {
+                                        "title": "<p></p>",
+                                        "subtitle": "<p></p>",
+                                        "captions": "<p></p>",
+                                        "credits": "<p></p>",
+                                        "text": "<span><br /></span>"
+                                    }
+                                }
+                            ]
                         }
                     },
                     {
