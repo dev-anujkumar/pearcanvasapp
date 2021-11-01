@@ -1347,8 +1347,11 @@ export class TinyMceEditor extends Component {
                 const { index } = this.props;
                 const getSelectedElement = document.getElementById(`cypress-${index}`);
                 // setting the placeholder when textcontent is cleared from element authored text to prevent placecholder overlapping on backspace delete
-                if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2) {
+                if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length===3) {
                     getSelectedElement.setAttribute('placeholder', 'Type Something');
+                }
+                if(tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length>3){
+                    getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
                 }
                 // SHIFT + ENTER key press handling for BlockList element
                 if (key === 13 && e.shiftKey) {
@@ -1387,8 +1390,8 @@ export class TinyMceEditor extends Component {
                     }
                 }
                 // This is the case for deleting element inside blocking when backspace pressed with no characters in it.
+                // Please go through comments of every case for better understanding.
                 if (key === 8 && tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 0) {
-                    getSelectedElement.setAttribute('placeholder', '');
                     const { id, type } = this?.props?.element;
                     const blockListData = checkBlockListElement(this.props, "ENTER");
                     let manifestListItemData = checkBlockListElement(this.props, "TAB");
@@ -1399,19 +1402,22 @@ export class TinyMceEditor extends Component {
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                             this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                            getSelectedElement.setAttribute('placeholder', '');
                         }
-                        if(parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === "element-authoredtext"){
+                        if(parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === "element-authoredtext"){ // This case will delete the element only if the next element is a element authored text and it will ove the same next child to deleted position.
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                             this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                            getSelectedElement.setAttribute('placeholder', '');
                         }
                     }
 
                     if (listdata?.bodymatter?.length > 1 && listdata?.bodymatter[0].id !== parentData?.id) { // Case when user will press backspace on other than point 1 of manifestlist.
-                        if (parentData?.listitemdata?.bodymatter?.length === 1) {
+                        if (parentData?.listitemdata?.bodymatter?.length === 1) { // When there is only one element authored text in manifestlistitem then it will delete the manifestlistitem.
                             const deleteItemIndex = listdata?.bodymatter.findIndex(listData => listData.id === parentData?.id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                             this.props.deleteElement(parentData?.id, "manifestlistitem", { contentUrn: listdata?.contentUrn }, {}, parentData?.contentUrn, deleteItemIndex, {}, {}, null);
+                            getSelectedElement.setAttribute('placeholder', '');
                         } else if (parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === 'manifestlist') {
                             store.dispatch({
                                 type: MULTIPLE_LINE_POETRY_ERROR_POPUP,
@@ -1421,10 +1427,11 @@ export class TinyMceEditor extends Component {
                                 }
                             });
                             return;
-                        } else {
+                        } else { //Deletes the text element in which backspace is pressed.
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                             this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                            getSelectedElement.setAttribute('placeholder', '');
                         }
                     }
                 }
