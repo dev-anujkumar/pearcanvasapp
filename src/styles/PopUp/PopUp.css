@@ -701,9 +701,9 @@ span.calloutOne > ins.diffmod{
   color: #fff;
   text-align: center;
   border-radius: 2px;
-  /* position: relative;
+  position: relative;
   display: inline-block;
-  top: -2px;  
+  top: -2px; 
   opacity: 1; 
   left: -10px;
   position: absolute;
