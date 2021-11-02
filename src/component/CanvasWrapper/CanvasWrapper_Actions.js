@@ -512,13 +512,124 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
     } 
-    return axios.get(apiUrl, {
-        headers: {
-            "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
-        }
-    }).then(slateData => {  
+    // return axios.get(apiUrl, {
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //         "PearsonSSOSession": config.ssoToken
+    //     }
+    // }).then(slateData => {  
          /* Slate tag issue */
+    let slateData = {
+        data: {
+            "urn:pearson:manifest:e7f3b945-cecc-4f74-a462-698ea44f25d6": {
+                "id": "urn:pearson:manifest:e7f3b945-cecc-4f74-a462-698ea44f25d6",
+                "type": "manifest",
+                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                "versionUrn": "urn:pearson:manifest:e7f3b945-cecc-4f74-a462-698ea44f25d6",
+                "contentUrn": "urn:pearson:entity:45b33dc8-a79e-4f0f-8608-ef1971941b44",
+                "contents": {
+                    "bodymatter": [{
+                        "id": "urn:pearson:manifest:965e0160-bf9b-4b13-866d-cfeb55ca0e0d",
+                        "type": "showhide",
+                        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                        "versionUrn": "urn:pearson:manifest:965e0160-bf9b-4b13-866d-cfeb55ca0e0d",
+                        "contentUrn": "urn:pearson:entity:5e04858a-a202-4b25-b268-51dd4bc00eba",
+                        "status": "wip",
+                        "interactivedata": {
+                            "postertextobject": [{
+                                "id": "urn:pearson:work:0843699d-22c9-4c1c-ae55-1461140e0cf2",
+                                "type": "element-authoredtext",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "Reveal Answer:"
+                                },
+                                "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
+                                    "footnotes": {},
+                                    "assetsPopover": {},
+                                    "glossaryentries": {},
+                                    "indexEntries": {}
+                                },
+                                "versionUrn": "urn:pearson:work:0843699d-22c9-4c1c-ae55-1461140e0cf2",
+                                "contentUrn": "urn:pearson:entity:b584f5df-d8a0-4105-b91c-c6cb28c9d089"
+                            }],
+                            "show": [{
+                                "id": "urn:pearson:work:04182cb2-60ee-4d06-a08e-2a71cd7e9a71",
+                                "type": "element-authoredtext",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                    "footnotes": {},
+                                    "assetsPopover": {},
+                                    "glossaryentries": {},
+                                    "indexEntries": {}
+                                },
+                                "versionUrn": "urn:pearson:work:04182cb2-60ee-4d06-a08e-2a71cd7e9a71",
+                                "contentUrn": "urn:pearson:entity:3cd6c3d5-6f54-4a76-9321-6726d2832ed5"
+                            }, {
+                                "id": "urn:pearson:manifest:40caceff-188b-407d-803d-fce1225c26a9",
+                                "type": "poetry",
+                                "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                                "versionUrn": "urn:pearson:manifest:40caceff-188b-407d-803d-fce1225c26a9",
+                                "contentUrn": "urn:pearson:entity:bc19338a-2bd4-4d1c-a9dd-643968a4dfa6",
+                                "contents": {
+                                    "bodymatter": [{
+                                        "id": "urn:pearson:work:c06bd295-aba9-4903-8baf-10fff00e8552",
+                                        "type": "stanza",
+                                        "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                                        "html": {
+                                            "text": "<p><span class=\"poetryLine\" data-id=\"urn:pearson:entity:049e797a-cbd0-407f-95ce-68506678febe:a2db7a11-bc61-40ea-8a7a-e6c3b09cd9fb\"><br></span></p>"
+                                        },
+                                        "versionUrn": "urn:pearson:work:c06bd295-aba9-4903-8baf-10fff00e8552",
+                                        "contentUrn": "urn:pearson:entity:049e797a-cbd0-407f-95ce-68506678febe",
+                                        "status": "wip",
+                                        "poetrylines": [{
+                                            "id": "urn:pearson:entity:049e797a-cbd0-407f-95ce-68506678febe:a2db7a11-bc61-40ea-8a7a-e6c3b09cd9fb",
+                                            "type": "line",
+                                            "authoredtext": {
+                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                "text": ""
+                                            }
+                                        }]
+                                    }]
+                                },
+                                "numberedline": false,
+                                "numberedstanza": true
+                            }],
+                            "hide": [{
+                                "id": "urn:pearson:work:79b30edf-c358-447b-9598-3766039db725",
+                                "type": "element-authoredtext",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                    "footnotes": {},
+                                    "assetsPopover": {},
+                                    "glossaryentries": {},
+                                    "indexEntries": {}
+                                },
+                                "versionUrn": "urn:pearson:work:79b30edf-c358-447b-9598-3766039db725",
+                                "contentUrn": "urn:pearson:entity:1990367d-c4cc-4571-9571-653a00344d1f"
+                            }]
+                        }
+                    }],
+                    "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+                },
+                "status": "wip",
+                "pageNo": 0,
+                "pageCount": 1,
+                "pageLimit": 25
+            }
+        }
+    }
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
@@ -782,7 +893,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             let searchTerm = queryStrings.get('searchElement') || '';
             dispatch(getContainerData(searchTerm));
         }
-    });
+    // });
 };
 
 export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => {
