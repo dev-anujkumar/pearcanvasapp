@@ -42,8 +42,6 @@ class ElementAudioVideo extends Component {
         let clipInfo;
         let audioDes;
         let epsURL = imageData?.epsUrl ? imageData.epsUrl : "";   
-        //let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
-        //checkFormat = checkFormat && checkFormat[0]
         let assetFormat=""
         let figureType = imageData?.content?.mimeType?.split('/')[0]
         let width = imageData?.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
@@ -71,37 +69,7 @@ class ElementAudioVideo extends Component {
                     assetFormat = smartLinkAssetType + "/" + smartLinkUrl?.split('=')[1]
                 }
             }
-            // if (imageData?.properties["cp:clips"]) {
-            //     if (typeof (imageData.properties["cp:clips"]) == "string") {
-            //         let clipInfoData = JSON.parse(imageData.properties["cp:clips"])
-            //         if (clipInfoData === null) {
-            //             clipInfo = null;
-            //         }
-            //         else {
-            //             clipInfo = {
-            //                 "clipid": clipInfoData[0]?.id ? clipInfoData[0].id : "",
-            //                 "starttime": clipInfoData[0]?.start ? clipInfoData[0].start : "",
-            //                 "endtime": clipInfoData[2]?.end ? clipInfoData[2].end : "",
-            //                 "description": clipInfoData[0]?.description ? clipInfoData[0].description : "",
-            //                 "duration": clipInfoData[0].duration ? clipInfoData[0].duration : ""
-            //             }
-            //         }
-            //     }
-            //     else {
-            //         if (imageData['clipinfo'] === null) {
-            //             clipInfo = null;
-            //         }
-            //         else {
-            //             clipInfo = {
-            //                 "clipid": imageData['clipinfo'].id ? imageData['clipinfo'].id : "",
-            //                 "starttime": imageData['clipinfo'].start ? imageData['clipinfo'].start : "",
-            //                 "endtime": imageData['clipinfo'].end ? imageData['clipinfo'].end : "",
-            //                 "description": imageData['clipinfo'].description ? imageData['clipinfo'].description : "",
-            //                 "duration": imageData['clipinfo'].duration ? imageData['clipinfo'].duration : ""
-            //             }
-            //         }
-            //     }
-            // }
+           
             if(imageData?.clip && Object.keys(imageData.clip).length >0){
                 clipInfo = {
                     "clipid": imageData.clip.id ?? "",
@@ -256,18 +224,6 @@ class ElementAudioVideo extends Component {
                     this.updateAlfrescoSiteUrl()
                 }
             }
-            //let alfrescoData = config?.alfrescoMetaData?.alfresco;
-            // if(this.props.isCiteChanged){
-            //     this.setState({alfrescoSiteData: this.props.changedSiteData })
-            // }
-           
-            // to blank the elementId and asset data after update
-            // let payloadObj = {
-            //     asset: {}, 
-            //     id: ''
-            // }
-            // this.props.saveSelectedAssetData(payloadObj)
-            //this.updateAlfrescoSiteUrl(alfrescoData)
         }
     }
 

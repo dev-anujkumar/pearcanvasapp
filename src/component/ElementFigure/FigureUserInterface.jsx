@@ -271,6 +271,7 @@ class FigureUserInterface extends Component {
     renderAssetSection = (element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite, imageDimension) => {
         let assetJsx;
         switch (element.figuretype) {
+            
             case AUDIO:
                 assetJsx =
                     assetId ?

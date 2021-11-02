@@ -1,0 +1,8 @@
+.rounded_btn{
+    margin: 10px;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: rgb(31, 29, 29);
+    color: rgb(46, 250, 80);
+    border-color: rgb(46, 250, 80);
+}
