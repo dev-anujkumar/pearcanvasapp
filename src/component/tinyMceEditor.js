@@ -1312,7 +1312,7 @@ export class TinyMceEditor extends Component {
                     }
                 }
                 let selectedClassName = tinymce.activeEditor.selection.getNode().className;
-                if(selectedClassName.toLowerCase() ==='calloutone' || selectedClassName.toLowerCase() ==='callouttwo' || selectedClassName.toLowerCase() ==='calloutthree' || selectedClassName.toLowerCase() ==='calloutfour' || selectedClassName.toLowerCase() === 'markedforindex'){
+                if(selectedClassName.toLowerCase() ==='calloutone' || selectedClassName.toLowerCase() ==='callouttwo' || selectedClassName.toLowerCase() ==='calloutthree' || selectedClassName.toLowerCase() ==='calloutfour' || selectedClassName.toLowerCase() === 'markedforindex' || selectedClassName.toLowerCase() === 'pearson-component glossaryterm'){
                     let currentElement = tinymce.activeEditor.selection.getNode();
                     let offset = this.getOffSet(currentElement);
                     let textLength = currentElement.textContent.length;
