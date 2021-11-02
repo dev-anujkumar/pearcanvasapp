@@ -463,6 +463,9 @@ class SlateWrapper extends Component {
             })
             return true
         }else if(isOwnerRole(projectSharingRole,isSubscribed)){
+            const slateId = Object.keys(this.props.slateData)[0],
+                lockDuration = 5400
+            this.setSlateLock(slateId, lockDuration)
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
         }else if(isSubscriberRole(projectSharingRole,isSubscribed)){
             return true
@@ -671,7 +674,7 @@ class SlateWrapper extends Component {
                 parentUrn.contentUrn = asideData.contentUrn
                 parentUrn.manifestUrn = asideData.id
                 if (typeof (outerAsideIndex) == "string") {
-                    if (asideData?.parent?.type === "groupedcontent") {
+                    if (asideData?.parent?.type === "groupedcontent" || asideData?.parent?.type === "showhide") {
                         /** When WE is inside Mult-column */
                         outerIndex = outerAsideIndex.split("-")[3];
                         if (!outerIndex) { /** Add Section-Break after Head */
@@ -1561,6 +1564,8 @@ class SlateWrapper extends Component {
                                 setListDropRef={this.setListDropRef}
                                 onListSelect={this.props.convertToListElement}
                                 inputRef={inputRef}
+                                activeElement={this?.props?.activeElement}
+                                slateData={this?.props?.slateData}
                             />
                         )
                     }
@@ -1634,7 +1639,8 @@ const mapStateToProps = state => {
         alfrescoPath : state.alfrescoReducer.alfrescoPath,
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
         removeGlossaryImage:state.appStore.removeGlossaryImage,
-        projectSubscriptionDetails:state?.projectInfo
+        projectSubscriptionDetails:state?.projectInfo,
+        activeElement: state.appStore.activeElement,
     };
 };
 

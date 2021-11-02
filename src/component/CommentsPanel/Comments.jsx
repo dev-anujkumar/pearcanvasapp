@@ -368,7 +368,6 @@ class Comments extends React.Component {
                             <div className="property">
                                 <UserAssignee
                                     name="Assign by role"
-                                    currentUser={this.state.newRole}
                                     mode={this.state.mode}
                                     comment={this.props.comment}
                                     newAssigneeUser={this.newRoleUser}
@@ -383,7 +382,6 @@ class Comments extends React.Component {
                             <div className="property">
                                 <UserAssignee
                                     name="Assign to"
-                                    currentUser={this.state.newAssignee }
                                     mode={this.state.mode}
                                     comment={this.props.comment}
                                     newAssigneeUser={this.newAssigneeUser}

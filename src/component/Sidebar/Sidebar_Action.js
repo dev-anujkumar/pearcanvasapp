@@ -14,9 +14,9 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import {  handleElementsInShowHide, onUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
+import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-const { ELEMENT_ASIDE, MULTI_COLUMN } = TcmConstants;
+const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
 
@@ -202,9 +202,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
     }
-    if(showHideObj){
-        conversionDataToSend["sectionType"] = showHideObj.showHideType
-        conversionDataToSend["elementParentEntityUrn"] = showHideObj.element.contentUrn
+    if (showHideObj) {
+        if (showHideObj?.containerinSH?.element?.type !== ELEMENT_ASIDE && showHideObj?.containerinSH?.parent?.type !== SHOWHIDE) {
+            conversionDataToSend["sectionType"] = showHideObj.showHideType;
+            conversionDataToSend["elementParentEntityUrn"] = showHideObj.element.contentUrn;
+        }
     }
     let parentEntityUrn = conversionDataToSend.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
@@ -298,10 +300,19 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
         //Separate case for element conversion in showhide
-        if (showHideObj) {//newElementData.asideData && newElementData.asideData.hasOwnProperty('type') &&
-            //const activeElemType = oldElementInfo['elementType']
-            //focusedElement = onUpdateSuccessInShowHide(res.data, focusedElement, activeElemType, showHideObj, indexes)
-            onUpdateSuccessInShowHide(res?.data, bodymatter, indexes);
+        if (showHideObj) {
+            if (appStore?.asideData?.parent?.type === "showhide") {
+                switch (indexes.length) {
+                    case 4:
+                        bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                        break;
+                    case 5:
+                        bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
+                        break;
+                }
+            } else {
+                onUpdateSuccessInShowHide(res?.data, bodymatter, indexes);
+            }
         } else if (appStore.parentUrn.elementType === "group") {
             focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
         } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
@@ -313,16 +324,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res?.data;
                     break;
             }
-        } else if (appStore?.asideData?.parent?.type === "showhide") {
-            switch (indexes.length) {
-                case 4:
-                    bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
-                    break;
-                case 5:
-                    bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
-                    break;
-            }
-        } else {
+        }
+        else {
             indexes.forEach(index => {
                 if(focusedElement[index]){
                 if(newElementData.elementId === focusedElement[index].id) {
@@ -546,7 +549,6 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
     if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
-        console.log("bodymatter",bodymatter);
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
         //Separate case for element conversion in showhide
@@ -556,10 +558,29 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
             let showhideElement = {
                 currentElement: oldElementData.currentElement,
                 index: activeElement.index,
+                containerinSH: appStore?.asideData,
                 element: appStore?.asideData,
                 showHideType: oldElementData.showHideType
             }
-            dispatch(convertElement(oldElementData.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement))
+            dispatch(convertElement(showhideElement.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement));
+        } else if (appStore?.asideData?.parent?.type === SHOWHIDE) {
+            const innerElementType = activeElement?.elementType
+            let elementOldDataSH;
+            let sectionType = appStore?.asideData?.sectionType ? appStore?.asideData?.sectionType : appStore?.asideData?.parent?.showHideType;
+            if (indexes?.length === 4) {
+                elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]];
+            }
+            else if (indexes?.length === 5) {
+                elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+            }
+            let showhideElement = {
+                currentElement: elementOldDataSH,
+                index: activeElement.index,
+                containerinSH: appStore?.asideData,
+                element: appStore?.asideData?.parent,
+                showHideType: findSectionType(indexes[1])
+            }
+            dispatch(convertElement(showhideElement.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement));
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
@@ -574,18 +595,8 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     break;
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
-        } else if (appStore?.asideData?.parent?.type === "showhide") {
-            let elementOldDataSH;
-            switch (indexes.length) {
-                case 4:
-                    elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
-                    break;
-                case 5:
-                    elementOldDataSH = bodymatter[indexes[0]]?.interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
-                    break;
-            }
-            dispatch(convertElement(elementOldDataSH, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
-        } else {
+        }
+        else {
             indexes.forEach(index => {
                 if(bodymatter[index]){
                     if(elementData.elementId === bodymatter[index].id) {
@@ -629,6 +640,78 @@ export const setBCEMetadata = (attribute,value) => (dispatch, getState) => {
 
 }
 
+
+
+export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) => {
+    let elementEntityUrn = dataToUpdate.blockListData.contentUrn;
+    let dataToSend = dataToUpdate.dataToSend
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+    config.conversionInProcess = true
+    config.isSavingElement = true
+    const url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata`
+    return axios.put(url, dataToSend, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(res => {
+        const newParentData = getState().appStore.slateLevelData;
+        const parsedParentData = JSON.parse(JSON.stringify(newParentData));
+        if (parsedParentData[config.slateManifestURN]?.status === 'approved') {
+            if (parsedParentData.type === "popup") {
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(parsedParentData.id, parsedParentData.contentUrn, 0, parsedParentData, ""));
+            }
+            else {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            config.conversionInProcess = false
+            config.savingInProgress = false
+            config.isSavingElement = false
+        } else {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex], dataToSend)
+            dispatch({
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: parsedParentData
+                }
+            })
+        }
+        if(dataToSend.columnnumber){
+        let activeElementObject = {
+            contentUrn: dataToUpdate.blockListData.contentUrn,
+            elementId: dataToUpdate.blockListData.id,
+            index: dataToUpdate.index,
+            elementType: dataToUpdate.elementType,
+            primaryOption: dataToUpdate.primaryOption,
+            secondaryOption: dataToUpdate.secondaryOption,
+            toolbar: dataToUpdate.toolbar,
+            elementWipType: dataToUpdate.elementWipType,
+            tag: "P"
+        };
+        dispatch({
+            type: SET_ACTIVE_ELEMENT,
+            payload: activeElementObject
+        });
+        }
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        config.conversionInProcess = false
+        config.savingInProgress = false
+        config.isSavingElement = false
+    })
+        .catch(err => {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            dispatch({ type: ERROR_POPUP, payload: { show: true } })
+            config.conversionInProcess = false
+            config.savingInProgress = false
+            config.isSavingElement = false
+            console.error(" Error >> ", err)
+        })
+}
+
 export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
@@ -638,22 +721,16 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         activeElement: getState().appStore.activeElement,
         currentSlateData
     }
-    let dataToSend = {}
-    let elementEntityUrn = ""
-    // if(dataToUpdate.elementType && dataToUpdate.elementType == "manifestlist" && dataToUpdate.primaryOption){
-    //     dataToSend.columnnumber = dataToUpdate.primaryOption.split('-')[dataToUpdate.primaryOption.split('-').length-1]
-    //     elementEntityUrn = dataToUpdate.contentUrn;
-    // }
+    let dataToSend = {
+        numberedline: dataToUpdate.isNumbered
+    }
     if (dataToUpdate.isNumbered == true) {
         dataToSend.startlinenumber = dataToUpdate.startNumber
     }
+    let elementEntityUrn = ""
     const updatedData = dispatch(updateContainerMetadataInStore(updateParams,""))
     if(updatedData?.elementEntityUrn){
         elementEntityUrn = updatedData.elementEntityUrn
-    }
-    if(dataToUpdate.blockListElement){
-        elementEntityUrn = dataToUpdate.blockListData.contentUrn;
-        dataToSend= dataToUpdate.dataToSend
     }
     let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
     currentParentData[config.slateManifestURN] = updatedSlateLevelData
@@ -697,9 +774,6 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                 currentSlateData: newSlateData
             }
             const updatedStore = dispatch(updateContainerMetadataInStore(newParams));
-            if(dataToUpdate.blockListElement){
-                updateBlockListMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex],dataToSend)
-            }
             if(updatedStore.currentSlateData){
                 parsedParentData[config.slateManifestURN] = updatedStore.currentSlateData;
                 dispatch({
@@ -709,22 +783,6 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
                     }
                 })
             }
-            let activeElementObject = {
-                elementId: dataToUpdate.elementId,
-               index: dataToUpdate.index,
-                elementType: dataToUpdate.elementType,
-                primaryOption: dataToUpdate.primaryOption,
-                secondaryOption: dataToUpdate.secondaryOption,
-                //tag: newElementData.labelText,
-                toolbar: dataToUpdate.toolbar,
-                elementWipType: dataToUpdate.elementWipType,
-                //altText,
-                //longDesc
-            };
-            dispatch({
-                type: SET_ACTIVE_ELEMENT,
-                payload: activeElementObject
-            });
         }
         config.conversionInProcess = false
         config.savingInProgress = false
@@ -740,8 +798,8 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         })
 }
 
-const updateBlockListMetaData = (elementId, elementData, metaData) => {
-    if(elementData.id === elementId){
+export const updateBLMetaData = (elementId, elementData, metaData) => {
+    if(elementData?.id === elementId){
         if(metaData.subtype){
             elementData.subtype = metaData.subtype;
             elementData.listtype = metaData.listtype;
@@ -753,7 +811,7 @@ const updateBlockListMetaData = (elementId, elementData, metaData) => {
     }
     else{
         if (elementData?.listdata?.bodymatter) {
-            elementData.listdata?.bodymatter.forEach((listData) => updateBlockListMetaData(elementId, listData,metaData))
+            elementData.listdata?.bodymatter.forEach((listData) => updateBLMetaData(elementId, listData,metaData))
         }
         if (elementData?.listitemdata?.bodymatter) {
             elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
@@ -768,7 +826,7 @@ const updateBlockListMetaData = (elementId, elementData, metaData) => {
                     }
                     return;
                 }
-                updateBlockListMetaData(elementId, listItemData,metaData);
+                updateBLMetaData(elementId, listItemData,metaData);
             });
         }
     }
@@ -782,35 +840,65 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
         currentSlateData,
         versionedElement
     } = updateParams;
-    const { index } = activeElement;
+    const { index, elementType } = activeElement;
     let tmpIndex = typeof index === 'number' ? index : index.split("-")
-    if (typeof tmpIndex === 'number') {
-        const updatedElement = prepareElementToUpdate(dataToUpdate, tmpIndex, activeElement, currentSlateData, versionedElement)
-        elementEntityUrn = updatedElement.contentUrn
-        currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
-    }
-    return {
-        elementEntityUrn, currentSlateData
-    }
-
-}
-
-const prepareElementToUpdate = (dataToUpdate, index, activeElement, currentSlateData, versionedElement) => {
-    let updatedElement = {};
+     let indexesLen = tmpIndex.length
+     let newBodymatter = currentSlateData.contents.bodymatter
+     let updatedElement = {}
     if (versionedElement) {
         return versionedElement
-    } else {
-        if (typeof index === 'number') {
-            const { elementType } = activeElement
-            updatedElement = currentSlateData.contents.bodymatter[index]
-            if (elementType == 'poetry') {
-                updatedElement = {
-                    ...updatedElement,
-                    numberedline: dataToUpdate.isNumbered,
-                    startlinenumber: dataToUpdate.startNumber
-                }
+    } else if (elementType == "poetry") {
+        if(typeof tmpIndex === 'number'){
+            currentSlateData.contents.bodymatter[tmpIndex].numberedline = dataToUpdate.isNumbered
+            currentSlateData.contents.bodymatter[tmpIndex].startlinenumber = dataToUpdate.startNumber
+            updatedElement = currentSlateData.contents.bodymatter[tmpIndex]
+        } else {
+            switch (indexesLen) {
+                case 2:     /** Toggle use line of PE inside WE/Aside */
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].numberedline = dataToUpdate.isNumbered
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].startlinenumber = dataToUpdate.startNumber
+                    updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]]
+                    break;
+    
+                case 3:      /** Toggle Use Line of PE inside multicolumn/ WE section break*/
+                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]]
+                    } else {
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]]
+                    }
+                   break;
+    }
+        }
+    } 
+        elementEntityUrn = updatedElement?.contentUrn
+
+        if (typeof tmpIndex === 'number') {
+            currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
+        } else {
+            switch (indexesLen) {
+                case 1:
+                    newBodymatter[tmpIndex[0]] = updatedElement
+                    break;
+                case 2:
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]] = updatedElement
+                    break;
+                case 3:
+                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
+                    } 
+                    if (newBodymatter[tmpIndex[0]].type == "element-aside") {
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]] = updatedElement
+                    }
+                    break;
             }
         }
-        return updatedElement
+
+    return {
+       elementEntityUrn, currentSlateData
     }
+
 }

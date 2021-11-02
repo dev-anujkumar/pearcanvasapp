@@ -602,14 +602,19 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 html : {
                     text : innerHTML,
                     footnotes : previousElementData.html.footnotes || {},
-                    glossaryentries : previousElementData.html.glossaryentries || {},
+                    glossaryentries : previousElementData.html.glossaryentries || {}
                 },
                 inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
+
+            if(type === 'element-authoredtext'){
+                dataToReturn.html['indexEntries'] = previousElementData.html.indexEntries || {}
+            }
             
             if(type==="stanza"){
-                dataToReturn.html.text=`<p>${innerHTML}</p>`
+                dataToReturn.html.text=`<p>${innerHTML}</p>`;
+                dataToReturn.html['indexEntries'] = previousElementData.html?.indexEntries || {};
                 delete dataToReturn.poetrylines;
             } 
             if(parentElement && parentElement.type === "popup"){

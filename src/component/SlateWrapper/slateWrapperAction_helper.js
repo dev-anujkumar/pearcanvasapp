@@ -11,7 +11,7 @@ import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
-const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN } = ElementConstants;
+const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
     const {
@@ -154,8 +154,21 @@ export const onPasteSuccess = async (params) => {
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
     }
+    /* Paste Aside/WE/CG into S/H */
+    const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP];
+    if (asideData?.type === SHOW_HIDE && containersInSH.includes(responseData?.type)) {
+        const manifestUrn = parentUrn?.manifestUrn;
+        try {
+            currentSlateData?.contents?.bodymatter?.map(item => {
+                if (item?.id === manifestUrn && asideData?.sectionType) {
+                    item?.interactivedata[asideData?.sectionType]?.splice(cutIndex, 0, responseData);
+                }
+            })
+        } catch(error){
+            console.error(error);
+        }
     /* update the store on /cut/copy/paste of showhide elements */
-    if(asideData?.type === SHOW_HIDE) {
+    } else if (asideData?.type === SHOW_HIDE) {
         const manifestUrn = parentUrn?.manifestUrn;
         try {
             currentSlateData?.contents?.bodymatter?.map(item => {
@@ -220,14 +233,49 @@ export const onPasteSuccess = async (params) => {
                         item?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]?.elementdata?.bodymatter?.splice(cutIndex, 0, responseData)
                     }
                 }
+            } else if (asideData?.parent?.type === SHOW_HIDE && item.id === asideData?.parent?.id && asideData?.parent?.showHideType) {
+                const indexes = asideData?.index?.split("-") || [];
+                const sectionType = asideData?.parent?.showHideType;
+                if (indexes.length === 3) {  // paste inside S/H->As/WE-head
+                    const selcetIndex = sourceElementIndex?.toString().split("-") || [];
+                    /* @newIndex@ for cut form same column to inner aside/we */
+                    let newIndex;
+                    if (operationType === 'cut' && selcetIndex?.length === 3 && indexes[1] === selcetIndex[1] && selcetIndex[2] < indexes[2]) {
+                        newIndex = indexes;
+                        newIndex[2] = newIndex[2] - 1;
+                    } else {
+                        newIndex = indexes;
+                    }
+
+                    if (asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest") { /* paste elements inside S/H/WE/Body */ 
+                        item?.interactivedata[sectionType][newIndex[2]].elementdata?.bodymatter?.map(item_L2 => {
+                            if(item_L2.id === parentUrn?.manifestUrn) {
+                                item_L2?.contents?.bodymatter?.splice(cutIndex, 0, responseData);
+                            }
+                        })
+                    } else {
+                        item?.interactivedata[sectionType][newIndex[2]].elementdata?.bodymatter?.splice(cutIndex, 0, responseData);
+                    }
+                } 
             }
         })
-    } else if(asideData && asideData.type == 'citations'){
-        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
-            if (item.id == parentUrn.manifestUrn) {
-                item.contents.bodymatter.splice(cutIndex, 0, responseData)
-            }
-        })
+        /* Store update on cut-paste elements inside citation in S/H or slate */
+    } else if (asideData && asideData.type == 'citations') {
+        if (asideData?.parent?.type === SHOW_HIDE && asideData?.parent?.showHideType) {
+            const newIndex = asideData?.index?.split("-") || [];
+            const sectionType = asideData?.parent?.showHideType;
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id === asideData?.parent?.id) {
+                    item?.interactivedata[sectionType][newIndex[2]].contents?.bodymatter?.splice(cutIndex, 0, responseData);
+                }
+            })
+        } else {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == parentUrn.manifestUrn) {
+                    item.contents.bodymatter.splice(cutIndex, 0, responseData)
+                }
+            })
+        }
     } else if (poetryData && poetryData.type == "poetry"){
         newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
             if (item.id == poetryData.parentUrn) {

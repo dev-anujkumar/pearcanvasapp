@@ -571,7 +571,7 @@ overflow: unset;
   word-break: break-all;
   padding: 10px 0 10px 0;
   font-size: 12px !important;
-  overflow-y: auto;
+  overflow-x: hidden;
   max-height: 50vh;
 }
 
@@ -694,22 +694,24 @@ span.calloutOne > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-.modal-content.tcm-canvas-popup span.calloutOne:hover::after {
+/* .modal-content.tcm-canvas-popup span.calloutOne:hover::after {
   content: 'Callout: Option 1';
-  width: 85px;
+  width: 100px;
   background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
+  position: relative;
+  display: inline-block;
+  top: -2px; 
+  opacity: 1; 
+  /* left: -10px;
   position: absolute;
   z-index: 1;
-  top: 110%;
-  opacity: 1;
-  left: 0px;
-  right: 0px;
+  right: -13px;
   transition: opacity 0.3s;
   font-size: 10px;
-}
+} */
 .modal-content.tcm-canvas-popup 
 span.calloutTwo, 
 span.calloutTwo > ins.diffins, 
@@ -719,22 +721,24 @@ span.calloutTwo > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-.modal-content.tcm-canvas-popup span.calloutTwo:hover::after {
+/* .modal-content.tcm-canvas-popup span.calloutTwo:hover::after {
   content: 'Callout: Option 2';
-  width: 85px;
+  width: 100px;
   background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
+  position: relative;
+  display: inline-block;
+  top: -2px; 
+  opacity: 1; 
+  /* left: -10px;
   position: absolute;
   z-index: 1;
-  top: 110%;
-  opacity: 1;
-  left: 0px;
-  right: 0px;
+  right: -13px;
   transition: opacity 0.3s;
   font-size: 10px;
-}
+} */
 .modal-content.tcm-canvas-popup 
 span.calloutThree, 
 span.calloutThree > ins.diffins, 
@@ -744,22 +748,24 @@ span.calloutThree > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-.modal-content.tcm-canvas-popup span.calloutThree:hover::after {
+/* .modal-content.tcm-canvas-popup span.calloutThree:hover::after {
   content: 'Callout: Option 3';
-  width: 85px;
+  width: 100px;
   background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
+  position: relative;
+  display: inline-block;
+  top: -2px; 
+  opacity: 1; 
+  /* left: -10px;
   position: absolute;
   z-index: 1;
-  top: 110%;
-  opacity: 1;
-  left: 0px;
-  right: 0px;
+  right: -13px; 
   transition: opacity 0.3s;
   font-size: 10px;
-}
+} */
 .modal-content.tcm-canvas-popup 
 span.calloutFour, 
 span.calloutFour > ins.diffins, 
@@ -769,22 +775,24 @@ span.calloutFour > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-.modal-content.tcm-canvas-popup span.calloutFour:hover::after {
+/* .modal-content.tcm-canvas-popup span.calloutFour:hover::after {
   content: 'Callout: Option 4';
-  width: 85px;
+  width: 100px;
   background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 2px;
+  position: relative;
+  display: inline-block;
+  top: -2px; 
+  opacity: 1; 
+  /* left: -10px;
   position: absolute;
   z-index: 1;
-  top: 110%;
-  opacity: 1;
-  left: 0px;
-  right: 0px;
+  right: -13px;
   transition: opacity 0.3s;
   font-size: 10px;
-}
+} */
 
 /* added css for list elements */
 li ol, li ul{

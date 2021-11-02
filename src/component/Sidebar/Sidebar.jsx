@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { conversionElement, setBCEMetadata ,updateContainerMetadata} from './Sidebar_Action';
+import { conversionElement, setBCEMetadata ,updateBlockListMetadata,updateContainerMetadata} from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
@@ -19,7 +19,6 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-
 class Sidebar extends Component {
     constructor(props) {
         super(props);
@@ -32,7 +31,7 @@ class Sidebar extends Component {
         let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting = this.props.activeElement.syntaxhighlighting;
-        let podwidth = this.props.activeElement.podwidth || POD_DEFAULT_VALUE;
+        let podwidth = this.props.activeElement.podwidth;
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
@@ -60,7 +59,7 @@ class Sidebar extends Component {
             //let numberStartFrom = prevState.bceNumberStartFrom;
             //let bceToggle = prevState.bceToggleValue;
             //let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
-            let podValue = prevState.podValue;
+            let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
@@ -107,7 +106,7 @@ class Sidebar extends Component {
 
       if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
         if (this.props.activeElement.elementWipType == "manifestlist") {
-          this.props.updateContainerMetadata({
+        let blockListMetaDataPayload = {
             blockListData: {
                 id:this.props.activeElement.elementId,
                 contentUrn:this.props.activeElement.contentUrn
@@ -124,7 +123,8 @@ class Sidebar extends Component {
             dataToSend:{
                 columnnumber : value.split('-')[value.split('-').length-1]
             }
-          });
+          }
+          this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
           this.props.conversionElement({
             elementId: this.props.activeElement.elementId,
@@ -736,7 +736,11 @@ class Sidebar extends Component {
      */
 
     togglePODDropdown = (e) => {
+        
         let selValue = e.target.getAttribute('data-value');
+        if(selValue) {
+            this.props.setBCEMetadata('podwidth', selValue);
+        }
         this.setState({
             podOption: !this.state.podOption,
             podValue: selValue ? selValue : this.state.podValue,
@@ -856,6 +860,7 @@ export default connect(
         conversionElement,
         setBCEMetadata,
         tcmButtonHandler,
-        updateContainerMetadata
+        updateContainerMetadata,
+        updateBlockListMetadata
     }
 )(Sidebar);

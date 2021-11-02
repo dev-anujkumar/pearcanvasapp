@@ -16,6 +16,7 @@ export class ReactMarkedIndexEditor extends React.Component {
   constructor(props) {
     super(props);
     this.placeHolderClass = ''
+    this.ctrlKey = false;
     this.chemistryMlMenuButton = null;
     this.mathMlMenuButton = null;
     this.termtext = null;
@@ -43,6 +44,7 @@ export class ReactMarkedIndexEditor extends React.Component {
         this.onEditorBlur(editor);
         this.setDefaultIcons(editor)
         editor.on('keyup', (e) => { this.editorOnKeyup(e, editor) });
+        editor.on('keydown', (e) => { this.editorOnKeyDown(e, editor) });
         editor.ui.registry.addToggleButton('code', {
           icon: "code",
           tooltip: "Inline code",
@@ -54,6 +56,9 @@ export class ReactMarkedIndexEditor extends React.Component {
           }
         });
         editor.on('init', (e) => {
+          editor.shortcuts.remove('meta+u', '', ''); 
+          editor.shortcuts.remove('meta+b', '', '');
+          editor.shortcuts.remove('meta+i', '', '');
           if (document.querySelector('div.index-container')) {
             setFormattingToolbar('disableTinymceToolbar')
             setFormattingToolbar('removeGlossaryFootnoteSuperscript')
@@ -125,15 +130,42 @@ export class ReactMarkedIndexEditor extends React.Component {
     let contentHTML = e.target.innerHTML;
     if (activeElement) {
       let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
+
       if (activeElement.innerText.trim().length || isContainsMath) {
         activeElement.classList.remove('place-holder')
+        if(this.props.markedLabelId){
+          tinymce.$(`#${this.props.markedLabelId}`).addClass('transition-none')
+          tinymce.$(`#${this.props.markedLabelId}`).removeClass('floating-title')
+        }
+        if(editor.id === 'markedindex-0'){
+          tinymce.$('.printIndex-save-button').removeClass('disabled')
+        }
       }
       else {
         activeElement.classList.add('place-holder')
+        if (this.props.markedLabelId) {
+          tinymce.$(`#${this.props.markedLabelId}`).addClass('floating-title')
+          tinymce.$(`#${this.props.markedLabelId}`).removeClass('transition-none')
+        }
+        if(editor.id === 'markedindex-0'){
+          tinymce.$('.printIndex-save-button').addClass('disabled')
+        }
       }
     }
   }
-
+/**
+  * Called on Keydown
+  * @param {*} e Event Object
+  * @param {*} editor Editor instance
+  */
+  editorOnKeyDown = (e, editor) =>{
+    if(e.keyCode == 17){
+      this.ctrlKey = true;
+    }
+    if(this.ctrlKey && (e.keyCode == 73 || e.keyCode == 85 || e.keyCode == 66)){
+      tinymce.dom.Event.cancel(e);
+    }
+  }
   /**
   * Called on editor change
   * @param {*} e Event Object
@@ -341,7 +373,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     let _isEditorPlaced = false;
     for (let i = tinymce.editors.length - 1; i > -1; i--) {
       let ed_id = tinymce.editors[i].id;
-      if (ed_id.includes('markedindex') || ed_id.includes('footnote')) {
+      if (ed_id.includes('markedindex')) {
         _isEditorPlaced = true;
       }
     }
@@ -394,7 +426,6 @@ export class ReactMarkedIndexEditor extends React.Component {
 
     for (let i = tinymce.editors.length - 1; i > -1; i--) {
       let ed_id = tinymce.editors[i].id;
-      console.log('test', ed_id);
       if (ed_id.includes('markedindex') || ed_id.includes('footnote')) {
         if (ed_id === currentTarget.id) {
           return false;
@@ -444,8 +475,6 @@ export class ReactMarkedIndexEditor extends React.Component {
 
   render() {
     let propsGlossaryFootNoteCurrentValue = this.props.markIndexCurrentValue;
-
-    // && this.props.markIndexCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
     let markIndexCurrentValue;
     try {
       markIndexCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
@@ -454,11 +483,8 @@ export class ReactMarkedIndexEditor extends React.Component {
       markIndexCurrentValue = propsGlossaryFootNoteCurrentValue;
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
-    console.log("this>>>", this.props.id)
     return (
-      <div className="glossary-toolbar">
-        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue && markIndexCurrentValue }}></p>
-      </div>
+        <p ref={this.editorRef} className={this.placeHolderClass}  onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue && markIndexCurrentValue }} ></p>
     )
   }
 }

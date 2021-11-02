@@ -2,6 +2,7 @@ import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY  } from '../../constan
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
+import { UpdateElementWorkId } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 
 /**
  * This function acts as an action creator which will update the marked index store when marked index icon
@@ -17,7 +18,7 @@ import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper
  * @param {*} typeWithPopup 
  * @param {*} poetryField 
  */
-export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField) => async (dispatch) => {
+export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, elementType, index, elementSubType, markIndexText, typeWithPopup, poetryField, isNewIndex) => async (dispatch) => {
     let markedIndexValue = {
         type: popupType,
         popUpStatus: status,
@@ -27,7 +28,8 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         elementSubType,
         markIndexText,
         typeWithPopup: typeWithPopup ? typeWithPopup : undefined,
-        poetryField: poetryField ? poetryField : undefined
+        poetryField: poetryField ? poetryField : undefined,
+        isNewIndex
     }
 
     if (status === true) {
@@ -73,11 +75,16 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
                         markedIndexElem = condition
                     }
                 }
-
-                else if (indexesLen == 4) {  // to support glossary in text elements inside WE/AS of MultiColumn
+                else if ((indexesLen == 4 || indexesLen == 5) && newBodymatter[tempIndex[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support markedIndex in text elements inside WE/AS of S/H
+                    markedIndexElem = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
+                    if (indexesLen == 5 && markedIndexElem.type === 'manifest') {
+                        markedIndexElem = markedIndexElem.contents.bodymatter[indexes[4]];
+                    }
+                }
+                else if (indexesLen == 4) {  // to support markedIndex in text elements inside WE/AS of MultiColumn
                     markedIndexElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
 
-                } else if (indexesLen == 5) { // to support glossary in section break inside WE of MultiColumn
+                } else if (indexesLen == 5) { // to support markedIndex in section break inside WE of MultiColumn
                     markedIndexElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
                 }
 
@@ -97,6 +104,7 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
                 firstLevel: markedIndexTextFirstLvl,
                 secondLevel: markedIndexTextSecondLvl
             },
+            markedIndexGlossary:{},
             elementIndex: index
         }
     });
@@ -130,6 +138,14 @@ export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry =
         }
         currentValue = markedIndexCurrentValue;
     }
+
+    /**
+     * After versioning, This condition will check for new elementWorkId when marked index is updated inside glossary
+     */
+    if(!status){
+        UpdateElementWorkId();
+    }
+
     return dispatch({
         type: OPEN_MARKED_INDEX_ON_GLOSSARY,
         payload:{
@@ -159,8 +175,9 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
     let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {};
     if(glossaryContentText && glossaryContentText.includes('mark-index-id')){
         markedIndexEntryURN = glossaryContentText.slice(glossaryContentText.indexOf('mark-index-id')).split("\"")[1];
-        let indexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
-        let {firstLevelEntry, secondLevelEntry} = JSON.parse(indexEntries);
+        let oldIndexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
+        indexEntries[markedIndexEntryURN] = oldIndexEntries;
+        let {firstLevelEntry, secondLevelEntry} = JSON.parse(oldIndexEntries);
 
         markedIndexFirstLevel = firstLevelEntry;
         markedIndexSecondLevel = secondLevelEntry;
@@ -180,7 +197,7 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
                 elementSubType: glossaaryFootnoteValue.elementSubType,
                 markIndexText: glossaaryFootnoteValue.glossaryTermText,
                 typeWithPopup: glossaaryFootnoteValue.typeWithPopup ? glossaaryFootnoteValue.typeWithPopup : undefined,
-                poetryField: glossaaryFootnoteValue.poetryField ? poetryField : undefined
+                poetryField: glossaaryFootnoteValue.poetryField ? glossaaryFootnoteValue.poetryField : undefined
             },
             markedIndexCurrentValue: {
                 firstLevel: markedIndexFirstLevel,

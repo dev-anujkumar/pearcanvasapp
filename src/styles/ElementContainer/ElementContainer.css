@@ -123,18 +123,56 @@
     overflow-y: hidden;
     min-height: 64px;
 }
+.bl .element-container .cypress-editable{
+    padding:0px !important;
+}
 .bl .cypress-editable{
     min-height: 30px !important;
 }
 .bl .cypress-editable p {
-    margin-top: -10px !important;
+    margin-top: 1px !important;
 }
 .bl .editor, .manifest-list-li{
-    margin-top: 10px !important;
+    margin-bottom: 0px !important;
+    /*margin-top: 10px !important; */
 }
 .bl .cypress-editable.place-holder::before {
-    margin-top: -10px !important;
+    margin-top: -2px !important;
 }
+.bl .p {
+    border: none !important;
+}
+.bl .btn-element {
+    display: none !important;
+}
+.bl .manifestlist {
+    display: block !important;
+}
+.bl .decimal{
+    padding-top: 8px;
+}
+.bl .disc{
+    padding-top: 10px;
+}
+.bl .element-container p.paragraphNumeroUno{
+    font-size: 12px !important;
+}
+.bl .bl {
+    margin-bottom: 10px !important;
+}
+.bl .delete-icon {
+    margin-bottom:10px !important;
+    height: 30px;
+}
+.bl .comment-flag {
+    margin-bottom:10px !important;
+}
+
+.bl .add-comment{
+    height: 19px;
+    padding-top: 0px;
+}
+
 /* .element-container{
     padding: 1px 8px !important; 
 } */

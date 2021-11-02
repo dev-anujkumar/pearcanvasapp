@@ -149,7 +149,7 @@ const initialState = {
     }
 };
 
-describe('Testing <CanvasWrapper> Component', () => {
+xdescribe('Testing <CanvasWrapper> Component', () => {
     let store = mockStore(initialState);
     let props = {
         ErrorPopup : {
