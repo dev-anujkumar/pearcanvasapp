@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { conversionElement, setBCEMetadata ,updateContainerMetadata} from './Sidebar_Action';
+import { conversionElement, setBCEMetadata ,updateBlockListMetadata,updateContainerMetadata} from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
@@ -19,12 +19,11 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-
 class Sidebar extends Component {
     constructor(props) {
         super(props);
 
-        let elementType = this.props.activeElement.type || 'element-authoredtext';
+        let elementType = this.props.activeElement.type || 'video-audio';
         let elementTypeList = elementList[elementType];
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
@@ -32,7 +31,7 @@ class Sidebar extends Component {
         let numbered = this.props.activeElement.numbered;
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting = this.props.activeElement.syntaxhighlighting;
-        let podwidth = this.props.activeElement.podwidth === undefined ? POD_DEFAULT_VALUE : this.props.activeElement.podwidth;
+        let podwidth = this.props.activeElement.podwidth;
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
@@ -89,32 +88,55 @@ class Sidebar extends Component {
 
         return null;
     }
-    handlePrimaryOptionChange = e => {
-        let value = e.target.getAttribute('data-value');
-        let secondaryelementList = elementList[this.state.activeElementType][value].subtype;
-        let secondaryFirstOption = Object.keys(secondaryelementList)[0];
-        let labelText = secondaryelementList[secondaryFirstOption].labelText;
+    handlePrimaryOptionChange = (e) => {
+      let value = e.target.getAttribute("data-value");
+      let secondaryelementList =
+        elementList[this.state.activeElementType][value].subtype;
+      let secondaryFirstOption = Object.keys(secondaryelementList)[0];
+      let labelText = secondaryelementList[secondaryFirstOption].labelText;
 
-        this.setState({
-            elementDropdown: '',
-            activePrimaryOption: value,
-            activeSecondaryOption: secondaryFirstOption,
-            activeLabelText: labelText,
-            podValue: POD_DEFAULT_VALUE,
-            podOption: false
-        });
+      this.setState({
+        elementDropdown: "",
+        activePrimaryOption: value,
+        activeSecondaryOption: secondaryFirstOption,
+        activeLabelText: labelText,
+        podValue: POD_DEFAULT_VALUE,
+        podOption: false,
+      });
 
-        if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
-            this.props.conversionElement({
-                elementId: this.props.activeElement.elementId,
-                elementType: this.state.activeElementType,
-                primaryOption: value,
-                secondaryOption: secondaryFirstOption,
-                labelText,
-                toolbar: elementList[this.state.activeElementType][value].toolbar
-            });
+      if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
+        if (this.props.activeElement.elementWipType == "manifestlist") {
+        let blockListMetaDataPayload = {
+            blockListData: {
+                id:this.props.activeElement.elementId,
+                contentUrn:this.props.activeElement.contentUrn
+            },
+            elementType: this.state.activeElementType,
+            primaryOption: value,
+            secondaryOption: secondaryFirstOption,
+            elementWipType: this.props.activeElement.elementWipType,
+            index: this.props.activeElement.index,
+            labelText,
+            blockListElement:true,
+            toolbar: elementList[this.state.activeElementType][value].toolbar,
+            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-")[0],
+            dataToSend:{
+                columnnumber : value.split('-')[value.split('-').length-1]
+            }
+          }
+          this.props.updateBlockListMetadata(blockListMetaDataPayload);
+        } else {
+          this.props.conversionElement({
+            elementId: this.props.activeElement.elementId,
+            elementType: this.state.activeElementType,
+            primaryOption: value,
+            secondaryOption: secondaryFirstOption,
+            labelText,
+            toolbar: elementList[this.state.activeElementType][value].toolbar,
+          });
         }
-    }
+      }
+    };
 
     toggleElementDropdown = e => {
         if (hasReviewerRole()) {
@@ -714,7 +736,11 @@ class Sidebar extends Component {
      */
 
     togglePODDropdown = (e) => {
+        
         let selValue = e.target.getAttribute('data-value');
+        if(selValue) {
+            this.props.setBCEMetadata('podwidth', selValue);
+        }
         this.setState({
             podOption: !this.state.podOption,
             podValue: selValue ? selValue : this.state.podValue,
@@ -802,7 +828,7 @@ class Sidebar extends Component {
 }
 
 Sidebar.defaultProps = {
-    elementType: "element-authoredtext"
+    elementType: "video-audio"
 }
 
 Sidebar.propTypes = {
@@ -834,6 +860,7 @@ export default connect(
         conversionElement,
         setBCEMetadata,
         tcmButtonHandler,
-        updateContainerMetadata
+        updateContainerMetadata,
+        updateBlockListMetadata
     }
 )(Sidebar);

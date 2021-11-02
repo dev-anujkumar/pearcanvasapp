@@ -218,6 +218,8 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
+    },appStore:{
+        slateLevelData:{}
     } });
     const component = mount(<Provider store={store}> < TinyMceEditor {...props} /> </Provider>, { attachTo: document.body })
     let instance = component.find('TinyMceEditor').instance();

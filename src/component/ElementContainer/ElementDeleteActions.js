@@ -14,13 +14,13 @@ import tinymce from 'tinymce';
 export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
     const elementIndex = eleIndex?.toString()?.split('-')
     //const { showHideObj } = getState().appStore
-    const { cutCopyParentUrn, parentUrn, parentElement, asideData, showHideObj } = containerElements
+    const { cutCopyParentUrn, parentUrn, parentElement, asideData, showHideObj, isSectionBreak } = containerElements
     // const parentElementUrn = getState().appStore.parentUrn
     //This block was unused, So commented it while writing testcases.
     // if(type === 'popup'){
     //     dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
     // }
-    const _requestData = prepareDeleteRequestData(type, { elementId, elementIndex, parentElement, parentUrn, activeElement, cutCopyParentUrn })
+    const _requestData = prepareDeleteRequestData(type, { elementId, elementIndex, parentElement, parentUrn, activeElement, cutCopyParentUrn, isSectionBreak })
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -48,14 +48,14 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             deleteParentData: newParentData,
             index: eleIndex,
             showHideObj,
-            type,
+            type: isSectionBreak?.type ? isSectionBreak.type: type,
             parentUrn,
             asideData,
             contentUrn: activeElement.contentUrn,
             // sectionType: showHideType[elementIndex[elementIndex.length - 2].toString()],
             newIndex,
             element: activeElement,
-            // poetryData,
+            isSectionBreak,
             cutCopyParentUrn
         }
         const { prepareTCMSnapshotsForDelete } = (await import("./ElementContainerDelete_helpers.js"))
@@ -72,6 +72,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             newIndex,
             index: elementIndex[elementIndex.length - 1].toString(),
             newParentData,
+            isSectionBreak,
             dispatch
         }
         updateStorePostDelete(deleteParams);
@@ -99,7 +100,8 @@ export const updateStorePostDelete = (deleteParams) => {
         index,
         newIndex,
         newParentData,
-        dispatch
+        dispatch,
+        isSectionBreak
     } = deleteParams
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
     let elementToUpdate;
@@ -115,7 +117,13 @@ export const updateStorePostDelete = (deleteParams) => {
         case 3: // sh:show:p
             elementToUpdate = newBodymatter[newIndex[0]]
             if (elementToUpdate?.type == 'showhide') {
-                newBodymatter[newIndex[0]]?.interactivedata[showHideType[newIndex[1]]].splice(index, 1)
+                if (isSectionBreak?.id) {
+                    const sectionBreakParent = newBodymatter[newIndex[0]]?.interactivedata[showHideType[newIndex[1]]][newIndex[2]]
+                    const updatedWorkedEx = delSBInsideWE(isSectionBreak, sectionBreakParent)
+                    newBodymatter[newIndex[0]].interactivedata[showHideType[newIndex[1]]][newIndex[2]] = updatedWorkedEx
+                } else {
+                    newBodymatter[newIndex[0]]?.interactivedata[showHideType[newIndex[1]]].splice(index, 1)
+                }
             }
             break;
         case 4:// we:head:sh:show:p | as:sh:show:p
@@ -178,7 +186,8 @@ export const prepareDeleteRequestData = (elementType, payloadParams) => {
         elementIndex,
         activeElement,
         cutCopyParentUrn,
-        parentElement
+        parentElement,
+        isSectionBreak
     } = payloadParams
     const containerElements = ["element-aside", "element-workedexample", "showhide", "popup", "citations", "poetry", "groupedcontent"];
     let requestPayload = {
@@ -186,7 +195,7 @@ export const prepareDeleteRequestData = (elementType, payloadParams) => {
         "projectUrn": config.projectUrn        
     }
     if (containerElements.indexOf(elementType) > -1) {
-        requestPayload.entityUrn = activeElement.contentUrn
+        requestPayload.entityUrn = isSectionBreak?.type === 'manifest' ? isSectionBreak.contentUrn : activeElement.contentUrn
         requestPayload.elementParentEntityUrn = cutCopyParentUrn? cutCopyParentUrn.contentUrn: parentUrn ? parentUrn.contentUrn : config.slateEntityURN
     } else {
         requestPayload.workUrn = elementId;
@@ -204,4 +213,16 @@ const showHideType = {
     "0": "show",
     "1": "postertextobject",
     "2": "hide"
+}
+
+const delSBInsideWE = (sectionBreakElement, weData) => {
+    /* Delete SB inside SH:WE */
+    if (weData?.id) {
+        weData?.elementdata?.bodymatter?.forEach((item_L1, index) => {
+            if (item_L1.id === sectionBreakElement?.id) {
+                weData.elementdata.bodymatter.splice(index, 1);
+            }
+        })
+    }
+    return weData
 }

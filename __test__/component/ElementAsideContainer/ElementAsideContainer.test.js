@@ -6,6 +6,7 @@ import configureMockStore from 'redux-mock-store';
 import ElementAsideContainer from '../../../src/component/ElementAsideContainer/ElementAsideContainer';
 import { elementAsideWorkExample, elementAside, element, section } from '../../../fixtures/elementAsideData';
 import { threeMultiColumnContainer } from '../../../fixtures/multiColumnContainer';
+import { showHide } from '../../../fixtures/ElementSHowHideData';
 import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { Provider } from 'react-redux';
 import config from '../../../src/config/config.js';
@@ -100,7 +101,7 @@ jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js',
 });
 let store = mockStore(initialState);
 
-describe('Testing ElementAside component with props', () => {
+xdescribe('Testing ElementAside component with props', () => {
     let props = {
         element: elementAsideWorkExample,
         swapElement : swapElement,
@@ -333,6 +334,14 @@ describe('Testing ElementAside component with props', () => {
             element: elementAsideWorkExample,
             parentElement: threeMultiColumnContainer,
             index: "0-2-0"
+        }  
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>)
+    })
+    it('aside/WE inside showhide data testing', () => {
+        let props = {
+            element: elementAsideWorkExample,
+            parentElement: showHide,
+            index: "0-0-0"
         }  
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>)
     })
