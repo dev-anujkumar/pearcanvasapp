@@ -233,6 +233,14 @@ class ElementContainer extends Component {
         }
     }
 
+    changeInPodwidth = (newPodwidth, oldPodwidth) => {
+        if(newPodwidth === 'print100' && oldPodwidth == "")
+        {
+            return false;
+        }
+        return newPodwidth !== oldPodwidth;
+    }
+
     /**
      * function will be called on element focus of tinymce instance
      */
@@ -470,9 +478,7 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
-        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`)
-            || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
-        let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") 
+        let podwidth = this.props?.activeElement?.podwidth;
         let oldImage = this.props.oldImage;
         if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
             oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
@@ -491,7 +497,7 @@ class ElementContainer extends Component {
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
                 oldImage !== newInteractiveid ||
-                podwidth !== previousElementData?.figuredata?.posterimage?.podwidth
+                this.changeInPodwidth(podwidth, previousElementData?.figuredata?.posterimage?.podwidth)
             );
         }
         else {
@@ -1873,6 +1879,9 @@ class ElementContainer extends Component {
     }
 
     updateColumnValues = (index, element) => {
+        if(config.popupCreationCallInProgress){ /** Restrict click on 2C if saving is inprogress PE */
+            return false
+        }
         let objKey = element.id;
         let multipleColumnObjData = {
             containerId: objKey,
