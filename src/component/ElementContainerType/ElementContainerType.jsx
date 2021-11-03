@@ -38,7 +38,8 @@ export default function ElementContainerType(props) {
     }
 
     const renderMenu = (propsData) => {
-        let {elementType, text, showPlayscript, showDiscussion, asideData} = props;
+        let { elementType, text, showPlayscript, showDiscussion, asideData, elementIndex } = props;
+        const indexOfElement =  elementIndex.toString().split('-') || [];
         if (!showDiscussion) {
             propsData = propsData.filter( (obj) => {
                 return obj.text !== 'Add Discussion';
@@ -49,10 +50,15 @@ export default function ElementContainerType(props) {
                 return obj.text !== 'Playscript';
             });
         }
-        /**Block List option only visible on Slate Level*/
-        // if (elementType || config.isPopupSlate) {
-        //     propsData = propsData.filter( obj => obj.text !== 'Block List');
-        // }
+        /**Block List option only visible on Slate Level & inside SH */
+        const blocklistAllowedIn = ['','showhide'];
+        if (blocklistAllowedIn.indexOf(elementType) === -1 || config.isPopupSlate) {
+            propsData = propsData.filter( obj => obj.text !== 'Block List');
+        }
+        /**Block List option hidden for SH which is already in Container like 2C/3C/Aside/WE */
+        if(elementType === 'showhide' && indexOfElement.length > 3) {
+            propsData = propsData.filter( obj => obj.text !== 'Block List');
+        }
         /* Not show poetry/Popup/SH/Interactive elements inside SH interactive Picker */
         const hideElementList = ["poetry-elem", "show-hide-elem", "popup-elem", "elm-interactive-elem", "interactive-elem", "element-discussion"];
         const hideElementListMulticolumn = ["Add Pop Up","Add Discussion"]
