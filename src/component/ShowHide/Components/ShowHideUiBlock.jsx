@@ -68,6 +68,7 @@ const ShowHideUiBlock = (props) => {
 			element = {props?.element}
 			showPlayscript = {showPlayscript}
 			showDiscussion = {showDiscussion}
+			cloneContainer = {props?.cloneContainer}
 		/>
 	}
 
@@ -108,6 +109,8 @@ const ShowHideUiBlock = (props) => {
 			pasteElement = {props.pasteElement}
 			showHideType = {sectionType}
 			handleFocus = {props.handleFocus}
+			elementSepratorProps={props.elementSepratorProps}
+			splithandlerfunction={props.splithandlerfunction}
 		/>
 	}
 

@@ -5,6 +5,7 @@
 import axios from 'axios';
 import config from '../config/config';
 import { sendDataToIframe } from '../constants/utility';
+import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } from '../constants/Element_Constants';
 /**
   * @description data after selecting an asset from alfresco c2 module
   * @param {*} data selected asset data
@@ -105,4 +106,79 @@ export const checkForDataIdAttribute =(defModel) => {
         }
     }
     return defModel;
+}
+
+/**
+ * function to get selected block list immediate parent container details 
+ * @param {Object} bodymatter 
+ * @param {Number} start 
+ * @param {Number} end 
+ * @param {Array} indexes 
+ * @returns {Object}
+ */
+export const getBLParentContainer = (bodymatter, start, end, indexes) => {
+    if (end === 0) return bodymatter;
+    if (end && bodymatter && Object.keys(bodymatter).length) {
+        if (bodymatter.type === MANIFEST_LIST && bodymatter.listdata && bodymatter.listdata.bodymatter.length) {
+            return getBLParentContainer(bodymatter.listdata.bodymatter[Number(indexes[start])], start + 1, end - 1, indexes);
+        }
+        if (bodymatter.type === MANIFEST_LIST_ITEM && bodymatter.listitemdata && bodymatter.listitemdata.bodymatter.length) {
+            return getBLParentContainer(bodymatter.listitemdata.bodymatter[Number(indexes[start])], start + 1, end - 1, indexes);
+        }
+    }
+}
+
+/**
+ * function to check if selected container is inside block list and get its parent container details 
+ * @param {Object} data 
+ * @param {String} keypressed
+ * @returns {Boolean}
+ */
+export const checkBlockListElement = (data, keypressed) => {
+    const { slateLevelData, index } = data;
+    let elementData = {};
+    if (slateLevelData && Object.values(slateLevelData).length && index && keypressed) {
+        const { contents } = Object.values(slateLevelData)[0];
+        if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
+            const indexes = index.split("-");
+            if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
+                elementData = {
+                    indexToinsert: Number(indexes[indexes.length - 1]) + 1,
+                    parentData: getBLParentContainer(contents.bodymatter[indexes[0]], 1, indexes.length - BLOCK_LIST_ELEMENT_EVENT_MAPPING[keypressed], indexes)
+                }
+                if(keypressed === 'SHIFT+TAB') elementData.indexToinsert = Number(indexes[indexes.length - 4]) + 1
+                if(keypressed === 'ENTER') elementData.indexToinsert = Number(indexes[indexes.length - 2]) + 1
+                return elementData;
+            }
+        }
+    }
+    return elementData;
+}
+
+export const isNestingLimitReached = (index) => {
+    const BLOCK_LIST_NESTING_LIMIT = 4  // This is default block list nesting limit.
+    if(typeof index === 'string' && index.includes('-') && index.split("-").length< BLOCK_LIST_NESTING_LIMIT * 2){
+        return false;
+    }
+    return true;
+}
+
+/**
+ * function to check if selected element is inside blocklist or not
+ * @param {Object} activeElement selected element details
+ * @param {Object} slateData slate data
+ * @returns {Boolean} return whether selected element is inside blocklist or not
+ */
+export const isElementInsideBlocklist = (activeElement, slateData) => {
+    const { index } = activeElement;
+    if (slateData && Object.values(slateData).length && index) {
+        const { contents } = Object.values(slateData)[0];
+        if (contents && contents?.bodymatter && contents?.bodymatter?.length && typeof index === 'string' && index.includes('-')) {
+            const indexes = index.split("-");
+            if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
+                return true;
+            }
+        }
+    }
+    return false;
 }

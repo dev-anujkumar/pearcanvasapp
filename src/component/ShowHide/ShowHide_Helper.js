@@ -1,6 +1,6 @@
 import config from '../../config/config.js';
 import { VIDEO, IMAGE, TEXT, TABLE_EDITOR, BLOCKCODE, ELEMENT_DIALOGUE, FIGURE_MML, SMARTLINK,
-    MMI_ELM, ELEMENT_DISCUSSION, INTERACTIVE } from '../SlateWrapper/SlateWrapperConstants.js';
+    MMI_ELM, ELEMENT_DISCUSSION, INTERACTIVE, WORKED_EXAMPLE, CONTAINER, CITATION } from '../SlateWrapper/SlateWrapperConstants.js';
 import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const showHideConstants = {
@@ -30,7 +30,7 @@ export function findSectionType(index){
 
 /* List of Elements can be added inside showhide; Will be displayed on click of 'Seprator + Icon' */
 export const addNestedElements = (index, sectionType, props) => {
-	return [{
+	let nestedElements = [{
 			buttonType: 'text-elem',
 			buttonHandler: () => addElementInShowHide(index, sectionType, TEXT, props),
 			tooltipText: 'Text',
@@ -58,8 +58,22 @@ export const addNestedElements = (index, sectionType, props) => {
             buttonHandler: () => addElementInShowHide(index, sectionType, TABLE_EDITOR, props),
             tooltipText: 'Table',
             tooltipDirection: 'left'
-        },
+        }
 	]
+    if (props?.asideData?.type !== "groupedcontent" && props?.asideData?.type !== "element-aside" && !config.isPopupSlate) {
+        nestedElements.push({
+            buttonType: 'container-elem-button',
+            tooltipText: 'Container',
+            tooltipDirection: 'left'
+        })
+        nestedElements.push({
+            buttonType: 'worked-exp-elem',
+            buttonHandler: () => addElementInShowHide(index, sectionType, WORKED_EXAMPLE, props),
+            tooltipText: 'Worked Example',
+            tooltipDirection: 'left'
+        })
+    }
+    return nestedElements;
 }
 
 /* On Clicking of icons on Seprator Dropdown; */
@@ -365,6 +379,8 @@ function getElementType(type2BAdded) {
         case "element-discussion": return ELEMENT_DISCUSSION;
         case "elm-interactive-elem": return MMI_ELM;
         case "interactive-elem": return INTERACTIVE;
+        case "container-elem": return CONTAINER;
+        case "citations-group-elem": return CITATION;
         default: return type2BAdded;
     }
 }

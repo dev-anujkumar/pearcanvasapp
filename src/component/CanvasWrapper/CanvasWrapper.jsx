@@ -10,6 +10,7 @@ import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
 import Toolbar from '../Toolbar';
 import PopUp from '../PopUp';
 import config from './../../config/config';
+import MarkIndexPopup from '../MarkIndexPopup/MarkIndexPopup';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
@@ -38,13 +39,15 @@ import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Tool
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
+import {markedIndexPopup} from '../MarkIndexPopup/MarkIndex_Action';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
         this.state = {
             showReleasePopup : false,
             toggleApo : false,
-            isConfigLoaded : true
+            isConfigLoaded : true,
+            toastMessage : false
         }  
     }
 
@@ -79,6 +82,17 @@ export class CanvasWrapper extends Component {
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             this.props.releaseSlateLock(config.projectUrn, slateId)
         }
+    }
+
+    showingToastMessage = (status) => {
+        this.setState({
+            toastMessage: status
+        })
+        setTimeout(() => {
+            this.setState({
+                toastMessage: false
+            })  
+        }, 2000);
     }
 
 
@@ -181,6 +195,12 @@ export class CanvasWrapper extends Component {
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
+                                {
+                                    this.state.toastMessage &&
+                                    <div className="toastMsg">
+                                        <p>Index added successfully.</p>
+                                    </div>
+                                }
                                  {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container next-btn ${config.disableNext ? 'disabled':""}`}>
                                     <div className='navigation-content' >
                                         <div className='navigation-button next' onClick={() => this.handleNavClick("next")}>
@@ -204,8 +224,13 @@ export class CanvasWrapper extends Component {
                             <RootContext.Consumer>
                                 {
                                     () => {
-                                        if (this.props.glossaryFootnoteValue.popUpStatus) {
-                                            return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData} />)
+                                        const markIndexpopUpStatus =  this.props.markedIndexValue?.popUpStatus || this.props.markedIndexGlossary?.popUpStatus;
+                                        if (this.props.glossaryFootnoteValue.popUpStatus && !markIndexpopUpStatus) {
+                                            return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData} markedIndexGlossaryData={this.props.markedIndexGlossary}/>)
+                                        }
+                                        if(markIndexpopUpStatus){
+                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue} isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage}/>
+
                                         }
                                         else {
                                             return (<Sidebar showCanvasBlocker= {this.props.showCanvasBlocker} showPopUp={this.showPopUp} />)
@@ -243,7 +268,11 @@ const mapStateToProps = state => {
         figureGlossaryData:state.appStore.figureGlossaryData,
         alfrescoEditor: state.alfrescoReducer.editor,
         imageArgs: state.alfrescoReducer.imageArgs,
-        projectSubscriptionDetails:state?.projectInfo
+        projectSubscriptionDetails:state?.projectInfo,
+        markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
+        markedIndexValue: state.markedIndexReducer.markedIndexValue,
+        markedIndexGlossary: state.markedIndexReducer.markedIndexGlossary,
+
     };
 };
 
@@ -301,6 +330,7 @@ export default connect(
         setProjectSharingRole,
         setProjectSubscriptionDetails,
         fetchFigureDropdownOptions,
-        isOwnersSubscribedSlate
+        isOwnersSubscribedSlate,
+        markedIndexPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

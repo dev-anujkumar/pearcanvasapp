@@ -57,7 +57,8 @@ describe('Test for Sidebar component', () => {
     let props = {
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
         activeElement: { elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",secondaryOption:'' },
-        updateElement: jest.fn()
+        updateElement: jest.fn(),
+        updateBlockListMetadata: jest.fn()
     };
 
     let sidebar = mount(<Provider store={sidebarWithData}>
@@ -536,6 +537,111 @@ describe('Test for Sidebar component', () => {
             })
             sidebarInstance.handleBceToggle();
             expect(sidebarInstance.state.bceToggleValue).toBe(true);
+        })
+    })
+
+    describe('Test - Blocklist', () => {
+        it("Testing handlePrimaryOptionChange  function - manifestlist block - string index", () => {
+            const sidebarWithData1 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        type: 'manifestlist',
+                        elementType: "manifestlist",
+                        primaryOption: "primary-column-1",
+                        secondaryOption: "secondary-column-1",
+                        index: "1-0",
+                        tag: "BL",
+                        toolbar: []
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData,
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                elementStatusReducer: {
+                    'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                    "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                    "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                    "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+                    
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandlePrimaryOptionChange = jest.spyOn(sidebarInstance, 'handlePrimaryOptionChange')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'primary-column-1';
+                    }
+                }
+            }
+            sidebarInstance.handlePrimaryOptionChange(target);
+            expect(spyHandlePrimaryOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handlePrimaryOptionChange  function - manifestlist block - number index", () => {
+            const sidebarWithData1 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        type: 'manifestlist',
+                        elementType: "manifestlist",
+                        primaryOption: "primary-column-1",
+                        secondaryOption: "secondary-column-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: []
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData,
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                elementStatusReducer: {
+                    'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                    "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                    "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                    "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+                    
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandlePrimaryOptionChange = jest.spyOn(sidebarInstance, 'handlePrimaryOptionChange')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'primary-column-1';
+                    }
+                }
+            }
+            sidebarInstance.handlePrimaryOptionChange(target);
+            expect(spyHandlePrimaryOptionChange).toHaveBeenCalled();
         })
     })
 });

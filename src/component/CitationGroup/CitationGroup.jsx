@@ -54,12 +54,15 @@ export class CitationGroup extends Component {
      * @param {string} parentIndex - Index of parent container element
      */
     renderElement = (_elements, parentUrn, parentIndex) => {
+        const { id, type, contentUrn } = this.context?.parentElement || {};
         let asideData = {
             type: "citations",
             id: this.context.element.id,
             contentUrn: this.context.element.contentUrn,
-            element : this.context.element
+            element : this.context.element,
+            index: this.context.index
         };
+        asideData = (type === "showhide") ? {...asideData, parent: { id, type, contentUrn, showHideType: this.context?.showHideType }} : asideData;
         try {
             if (_elements !== null && _elements !== undefined) {
                 if (_elements.length === 0) {
@@ -93,6 +96,7 @@ export class CitationGroup extends Component {
                                     onClickCapture={this.context.onClickCapture}
                                     parentElement = {this.context.element}
                                     userRole={this.props.userRole}
+                                    asideData={asideData}
                                 >
                                 </ElementContainer>
                                 {
@@ -144,6 +148,8 @@ export class CitationGroup extends Component {
             swappedElementData: swappedElementData,
             currentSlateEntityUrn: parentUrn.contentUrn,
             containerTypeElem: 'cg',
+            elementIndex: this.context?.index,
+            parentElement: { type: this.context?.parentElement?.type, showHideType: this.context?.showHideType }
         }
         return dataObj
     }
@@ -226,10 +232,12 @@ export class CitationGroup extends Component {
      * @param {object} context - component's context object
      */
     renderCitationGroupContainer = (context) => {
+        const {id, type, contentUrn} = context?.parentElement || {};
+        let asideData = (type === "showhide") ? { parent: { id, type, contentUrn, showHideType: context?.showHideType }} : {};
         return (
             <>
                 <header>
-                    <CGTinyMCE createPopupUnit = {this.props.createPopupUnit} />
+                    <CGTinyMCE createPopupUnit = {this.props.createPopupUnit} asideData = {asideData} parentElement = {this.context.element} />
                 </header>
                 <div >
                     {this.renderCitationElementContainer(context)}

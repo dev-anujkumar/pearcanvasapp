@@ -201,3 +201,153 @@ export const node4 = {
         removeAttribute: jest.fn()
     }
 }
+
+export const nodePara1 = [{
+    tagName: "P",
+    classList: {
+        add: jest.fn()
+    },
+    innerHTML: "TEST",
+    setAttribute: jest.fn(),
+    removeAttribute: jest.fn(),
+    children: [{
+        tagName: "IMG",
+        getAttribute: jest.fn()
+    }]
+}]
+
+export const nodePara2 = [{
+    tagName: "P",
+    classList: {
+        add: jest.fn()
+    },
+    innerHTML: "TEST",
+    setAttribute: jest.fn(),
+    removeAttribute: jest.fn(),
+    children: [{
+        tagName: "P",
+        getAttribute: jest.fn()
+    }]
+}]
+
+export const nodeUL = [{
+    tagName: "UL",
+    classList: {
+        add: jest.fn()
+    },
+    innerHTML: "TEST",
+    setAttribute: jest.fn(),
+    removeAttribute: jest.fn(),
+    children: [{
+        tagName: "P",
+        getAttribute: jest.fn(),
+        classList: {
+            add: jest.fn()
+        }
+    }]
+}]
+
+export const nodeOL = [{
+    tagName: "OL",
+    hasAttribute: jest.fn(() => false),
+    classList: {
+        add: jest.fn()
+    },
+    innerHTML: "TEST",
+    setAttribute: jest.fn(),
+    getAttribute: jest.fn(),
+    removeAttribute: jest.fn(),
+    children: [{
+        tagName: "P",
+        getAttribute: jest.fn(),
+        classList: {
+            add: jest.fn()
+        }
+    }]
+}]
+
+export const nodeOLWithStyle = [{
+    tagName: "OL",
+    style: 'numbered',
+    hasAttribute: jest.fn(() => true),
+    classList: {
+        add: jest.fn()
+    },
+    innerHTML: "TEST",
+    setAttribute: jest.fn(),
+    getAttribute: jest.fn(),
+    removeAttribute: jest.fn(),
+    children: [{
+        tagName: "P",
+        getAttribute: jest.fn(),
+        removeAttribute: jest.fn(),
+        classList: {
+            add: jest.fn()
+        },
+        innerHTML: {
+            replace: () => ({
+                replace: () => ({
+                    replace: jest.fn()
+                })
+            })
+        }
+    }]
+}]
+
+export const nodeIMG = [{
+    tagName: "IMG",
+    style: 'numbered',
+    hasAttribute: jest.fn(() => true),
+    src: "testing data",
+    classList: {
+        add: jest.fn()
+    },
+    innerHTML: "TEST",
+    setAttribute: jest.fn(),
+    getAttribute: jest.fn(),
+    removeAttribute: jest.fn(),
+    children: [{
+        tagName: "P",
+        getAttribute: jest.fn(),
+        removeAttribute: jest.fn(),
+        classList: {
+            add: jest.fn()
+        },
+        innerHTML: {
+            replace: () => ({
+                replace: () => ({
+                    replace: jest.fn()
+                })
+            })
+        }
+    }]
+}]
+
+export const nodeHEADING = [{
+    tagName: "H1",
+    style: 'numbered',
+    hasAttribute: jest.fn(() => true),
+    src: "testing data",
+    classList: {
+        add: jest.fn()
+    },
+    innerHTML: "TEST",
+    setAttribute: jest.fn(),
+    getAttribute: jest.fn(),
+    removeAttribute: jest.fn(),
+    children: [{
+        tagName: "P",
+        getAttribute: jest.fn(),
+        removeAttribute: jest.fn(),
+        classList: {
+            add: jest.fn()
+        },
+        innerHTML: {
+            replace: () => ({
+                replace: () => ({
+                    replace: jest.fn()
+                })
+            })
+        }
+    }]
+}]

@@ -22,20 +22,55 @@ class CurrentProjectUsers extends React.Component {
     }
 
     render() {
-        const { currentAssingnee, users } = this.props
-        return (
-            <ul className="assign-user-list-popup-container">
-                {
-                    users.map((item, i) => {
-                        let fullName = item.lastName + ',' + item.firstName
-                        return (
-                            <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
+        const { currentAssingnee, users, mode } = this.props
+
+        if(mode == "assign") {
+            return (
+                <ul className="assign-user-list-popup-container">
+                    {
+                        users.map((item, i) => {
+                                let fullName = item.lastName + ',' + item.firstName
+                                // let fullName = item.label
+                            return (
+                                <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
+                            )
+                        }
                         )
                     }
-                    )
-                }
-            </ul>
-        )
+                </ul>
+            )
+        } else {
+            return (
+                <ul className="assign-user-list-popup-container">
+                    {
+                        users.map((item, i) => {
+                                // let fullName = item.lastName + ',' + item.firstName
+                                let fullName = item.label
+                            return (
+                                <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
+                            )
+                        }
+                        )
+                    }
+                </ul>
+            )
+        }
+
+        // return (
+        //     <ul className="assign-user-list-popup-container">
+        //         {
+        //             users.map((item, i) => {
+        //                     let fullName = item.lastName + ',' + item.firstName
+        //                     // let fullName = item.label
+        //                 return (
+        //                     <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
+        //                 )
+        //             }
+        //             )
+        //         }
+        //     </ul>
+        // )
+
     }
 }
 

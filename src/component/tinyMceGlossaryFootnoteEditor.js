@@ -9,7 +9,9 @@ import {
 import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import { getWirisAltText } from '../js/utils';
-import { setFormattingToolbar } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
+import { setFormattingToolbar, updateCurrentValue } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
+import { markedIndexPopupOverGlossary } from './MarkIndexPopup/MarkIndex_Action';
+
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -438,9 +440,24 @@ export class ReactEditor extends React.Component {
      tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
     })
   }
+  
+  updateCurrentGlossaryValue = () => {
+    if(this.props.id === 'glossary-1' || this.props.id === 'glossary-0'){
+      const term = document.getElementById('glossary-0')?.innerHTML || '';
+      const defination = document.getElementById('glossary-1')?.innerHTML || '';
+      updateCurrentValue(term, defination)
+    }
+  }
+
+  openMarkedIndexPopUp = () => {
+    this.props.markedIndexPopupOverGlossary(true);
+    this.updateCurrentGlossaryValue();
+  }
 
   render() {
-    let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue 
+    let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue;
+    let {markedIndexIcon} = this.props;
+
     // && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
     let glossaryFootNoteCurrentValue;
     try{
@@ -452,8 +469,9 @@ export class ReactEditor extends React.Component {
     glossaryFootNoteCurrentValue = glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     
     return (
-      <div>
+      <div className="glossary-toolbar">
         <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
+        {markedIndexIcon && (this.props.elementType === "element-authoredtext" || this.props.elementType === 'element-list') ? <span dangerouslySetInnerHTML={{__html: markedIndexIcon}} onClick={ this.openMarkedIndexPopUp }></span>: null}
       </div>
     )
   }
@@ -461,6 +479,6 @@ export class ReactEditor extends React.Component {
 
 export default connect(
   null,
-  { wirisAltTextPopup }
+  { wirisAltTextPopup, markedIndexPopupOverGlossary }
 )(ReactEditor);
 

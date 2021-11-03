@@ -5,9 +5,10 @@
 //     SET_ACTIVE_ELEMENT
 // } from './../../constants/Action_Constants';
 import { LIST_TYPE_MAPPINGS } from '../../constants/Element_Constants';
+import { checkBlockListElement } from '../../js/TinyMceUtility';
 // IMPORT - other dependencies
 import elementList from '../Sidebar/elementTypes.js';
-import { conversionElement } from '../Sidebar/Sidebar_Action.js';
+import { conversionElement, updateBlockListMetadata, updateContainerMetadata } from '../Sidebar/Sidebar_Action.js';
 
 // ************************************************************************
 // *************************** List Template ****************************** 
@@ -60,7 +61,7 @@ let _ullistObjectTemplate_ = {
 // ************************************************************************
 
 export const convertToListElement = (type, startvalue, fromToolbar=true) => (dispatch, getState) => {
-    const { activeElement, asideData } = getState().appStore;
+    const { activeElement, asideData,slateLevelData } = getState().appStore;
     // const newParentData = JSON.parse(JSON.stringify(parentData));
     // const slateObject = Object.values(newParentData)[0];
     // const { contents } = slateObject;
@@ -87,19 +88,34 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
     //         bodymatter[index] = listObjectTemplate;
     //     }
     // });
-
-
-    dispatch(conversionElement({
-        elementId: activeElement.elementId,
-        elementType: activeElement.elementType,
-        primaryOption: "primary-list",
-        secondaryOption: LIST_TYPE_MAPPINGS[type].mapType,
-        labelText: LIST_TYPE_MAPPINGS[type].tag,
-        toolbar: elementList[activeElement.elementType]['primary-list'].toolbar,
-        elementWipType: "element-list",
-        startvalue,
-        asideData
-    }, fromToolbar));
+    let blockListData = checkBlockListElement({slateLevelData:slateLevelData,index:activeElement.index}, 'ENTER');
+    if (blockListData && Object.keys(blockListData).length && activeElement.elementType !== "manifestlist") {
+       let data = {
+        blockListData: blockListData.parentData,
+        blockListElement:true,
+        dataToSend:{
+            "listtype": type==='disc'? "unordered" :"ordered",
+            "subtype": type,
+            "startNumber": startvalue // Earlier it was a string as discussed it PCAT-12326 comments. Now acc. to discussions changing it back to integer.
+        },
+        slateLevelBLIndex:activeElement.index.split("-")[0]
+       }
+       dispatch(updateBlockListMetadata(data))
+    }
+    else{
+        dispatch(conversionElement({
+            elementId: activeElement.elementId,
+            elementType: activeElement.elementType,
+            primaryOption: "primary-list",
+            secondaryOption: LIST_TYPE_MAPPINGS[type].mapType,
+            labelText: LIST_TYPE_MAPPINGS[type].tag,
+            toolbar: elementList[activeElement.elementType]['primary-list'].toolbar,
+            elementWipType: "element-list",
+            startvalue,
+            asideData
+        }, fromToolbar));
+    }
+   
 
     // dispatch(updateElementType(activeElement, type));
     // dispatch({
