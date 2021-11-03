@@ -11,6 +11,7 @@ import { getGlossaryFootnoteId } from '../../js/glossaryFootnote';
 import { markedIndexPopupOverGlossary } from '../MarkIndexPopup/MarkIndex_Action';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor"
 import { checkforToolbarClick } from '../../js/utils'
+import { CrossReference } from './MarkIndex_CrossReference';
 
 class PrintIndexPopup extends Component {
   constructor(props) {
@@ -202,6 +203,8 @@ componentWillUnmount() {
                 </div>
               </div>
             </div>
+            
+            <CrossReference />
 
             <div className="button-group">
               <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>
