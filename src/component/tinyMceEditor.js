@@ -3277,7 +3277,7 @@ export class TinyMceEditor extends Component {
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
         }
-        if (this.elementConverted || prevProps.element.subtype !== this.props.element.subtype) {
+        if (this.elementConverted || prevProps?.element?.subtype !== this.props?.element?.subtype) {
             let elementTypeNode = document.querySelector('button[aria-label="formatSelector"] .tox-tbtn__select-label');
             if (elementTypeNode) {
                 elementTypeNode.innerText = this.getElementTypeForToolbar(this.props.element);
