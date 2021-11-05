@@ -141,7 +141,7 @@ describe('Tests ElementContainer Actions', () => {
 
             });
         })
-        xit('testing------- ADD COMMENT for aside elements ------action', () => {
+        it('testing------- ADD COMMENT for aside elements ------action', () => {
             let store = mockStore(() => initialState);
             let newComment = {
                 comment: "test",
@@ -183,7 +183,7 @@ describe('Tests ElementContainer Actions', () => {
 
             });
         })
-        xit('testing------- ADD COMMENT for aside elements ------action-else case', () => {
+        it('testing------- ADD COMMENT for aside elements ------action-else case', () => {
             let newComment = {
                 comment: "test",
                 commentCreator: "c5test01",

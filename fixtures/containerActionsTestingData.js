@@ -18,7 +18,8 @@ export const slateLevelData = {
                         "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                         "type": "manifestlist",
                         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                        "comments":false
                     },
                     {
                         "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
@@ -39,7 +40,12 @@ export const slateLevelData = {
                         },
                         "elementdata": {
                             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                            "text": ""
+                            "text": "",
+                            "bodymatter":[
+                                {
+                                    "comments":true
+                                }
+                            ]
                         },
                         "html": {
                             "text": "<p class=\"paragraphNumeroUno\"><br></p>"
