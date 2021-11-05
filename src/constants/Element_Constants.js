@@ -1,4 +1,6 @@
 import { WORKED_EXAMPLE } from "../component/SlateWrapper/SlateWrapperConstants"
+/*---------------- Error message constants -----------------*/
+export const SLATE_API_ERROR = "Error in getting slate data. Please try again."
 
 /*---------------Element Figure ----------------------*/ 
 export const FIGURE = "figure"

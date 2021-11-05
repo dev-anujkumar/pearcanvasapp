@@ -25,8 +25,11 @@ import {
     SET_PROJECT_SHARING_ROLE,
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
-    UPDATE_FIGURE_DROPDOWN_OPTIONS
+    UPDATE_FIGURE_DROPDOWN_OPTIONS,
+    ERROR_API_POPUP
 } from '../../constants/Action_Constants';
+import { SLATE_API_ERROR } from '../../constants/Element_Constants';
+
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
@@ -782,7 +785,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             let searchTerm = queryStrings.get('searchElement') || '';
             dispatch(getContainerData(searchTerm));
         }
-    });
+    })
+    .catch(err => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+        dispatch({type: ERROR_API_POPUP, payload:{show: true,message:SLATE_API_ERROR}})
+        console.error('Error in fetch Slate api', err);
+    })
+   
 };
 
 export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => {
