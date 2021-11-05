@@ -104,7 +104,7 @@ export const findElementType = (element, index) => {
                         } else {
                             let figureType = figureData[element['figuretype']];
                             let figureAlignment = figureType[element['alignment']]
-                            subType = figureAlignment['imageDimension']
+                            subType = element['alignment'] === 'actual-size' ? element?.subtype : figureAlignment['imageDimension']
                         }
                         if(element.figuretype === "image" || element.figuretype === "table" || element.figuretype === "mathImage"){
                             if(element.figuredata && !element.figuredata.podwidth){
