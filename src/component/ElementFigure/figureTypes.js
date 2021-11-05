@@ -93,14 +93,14 @@ export default {
             figCreditClass: 'paragraphImageTextWidthTableImageCredit'
         },
         'actual': {
-            divClass: 'divImageActualSize',
-            figureClass: 'figureImageActualSize',
-            figLabelClass: 'heading4ImageActualSizeTitle',
-            figTitleClass: 'heading4Image25TextTitle',
+            divClass: 'divImageActualSizeTableImage',
+            figureClass: 'figureImageActualSizeTableImage',
+            figLabelClass: 'heading4ImageActualSizeTableImageTitle',
+            figTitleClass: 'heading4Image25TextTableImageTitle',
             dataType: 'table',
-            imageDimension: 'imageActualSize',
-            figCaptionClass: 'figcaptionImageActualSize',
-            figCreditClass: 'paragraphImageActualSizeCredit',
+            imageDimension: 'imageActualSizeTableImage',
+            figCaptionClass: 'figcaptionImageActualSizeTableImage',
+            figCreditClass: 'paragraphImageActualSizeTableImageCredit',
         },
         'wider': {
             divClass: 'divImageWiderThanTextTableImage',
@@ -145,14 +145,14 @@ export default {
             figCreditClass: 'paragraphImageTextWidthMathImageCredit'
         },
         'actual': {
-            divClass: 'divImageActualSize',
-            figureClass: 'figureImageActualSize',
-            figLabelClass: 'heading4ImageActualSizeTitle',
-            figTitleClass: 'heading4Image25TextTitle',
+            divClass: 'divImageActualSizeMathImage',
+            figureClass: 'figureImageActualSizeMathImage',
+            figLabelClass: 'heading4ImageActualSizeMathImageTitle',
+            figTitleClass: 'heading4Image25TextMathImageTitle',
             dataType: 'mathImage',
-            imageDimension: 'imageActualSize',
-            figCaptionClass: 'figcaptionImageActualSize',
-            figCreditClass: 'paragraphImageActualSizeCredit',
+            imageDimension: 'imageActualSizeMathImage',
+            figCaptionClass: 'figcaptionImageActualSizeMathImage',
+            figCreditClass: 'paragraphImageActualSizeMathImageCredit',
         },
         'wider': {
             divClass: 'divImageWiderThanTextMathImage',
