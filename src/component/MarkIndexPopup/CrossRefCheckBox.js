@@ -12,8 +12,8 @@ export const CrossRefCheckbox = (props) => {
                                 <input type="checkbox"
                                     name={item}
                                     value={item}
-                                    checked={selectedData.indexOf(item) > -1}
-                                    onChange={() => props.handlSelectedCheckboxValue(item)}
+                                    // checked={selectedData.indexOf(item) > -1}
+                                    onChange={() => props.handleSelectedCheckboxValue(item)}
                                 />
                                 <span>
                                     {item}

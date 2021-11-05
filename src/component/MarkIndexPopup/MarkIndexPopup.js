@@ -8,7 +8,7 @@ import config from '../../config/config';
 import { setFormattingToolbar } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import { saveGlossaryAndFootnote } from "../GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { getGlossaryFootnoteId } from '../../js/glossaryFootnote';
-import { markedIndexPopupOverGlossary } from '../MarkIndexPopup/MarkIndex_Action';
+import { markedIndexPopupOverGlossary, getCrossReferenceValues } from '../MarkIndexPopup/MarkIndex_Action';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor"
 import { checkforToolbarClick } from '../../js/utils'
 import { CrossReference } from './MarkIndex_CrossReference';
@@ -38,6 +38,10 @@ componentWillMount() {
 componentWillUnmount() {
   document.removeEventListener('mousedown', this.handleClickOutside);
 }
+
+  componentDidMount(){
+    this.props.getCrossReferenceValues();
+  }
 
   /**
        * Set the wrapper ref
@@ -225,4 +229,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { markedIndexPopupOverGlossary })(PrintIndexPopup);
+export default connect(mapStateToProps, { markedIndexPopupOverGlossary, getCrossReferenceValues })(PrintIndexPopup);

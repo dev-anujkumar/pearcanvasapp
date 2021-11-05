@@ -1,4 +1,5 @@
-import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY  } from '../../constants/Action_Constants';
+import axios from 'axios';
+import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES  } from '../../constants/Action_Constants';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
@@ -211,4 +212,57 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
             elementIndex: index
         }
     };
-} 
+}
+
+/**
+ * This function makes a call to the content-api and get the drop-down values for the 
+ * cross-reference and after re-formatting the data in the required format, update the
+ * redux store
+ */
+export const getCrossReferenceValues = () => async (dispatch) => {
+    let url = `${config.ASSET_POPOVER_ENDPOINT}v1/${config.projectUrn}/indexes`;
+    try{
+        const result = await axios.get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        });
+
+        let crossRefValues = [];
+        if(result?.data?.items && result.data.items.length > 0){
+            const items = result.data.items;
+
+            items.forEach(indexObj => {
+
+                if(indexObj?.firstlevelentry){
+                    let firstLvlObj = indexObj.firstlevelentry;
+                    if(firstLvlObj?.firstlevelentry){
+                        crossRefValues.push(firstLvlObj.firstlevelentry.text);
+                    }
+
+                    if(firstLvlObj?.secondlevelentries && firstLvlObj.secondlevelentries.length > 0) {
+                        let secondLvlObj = firstLvlObj.secondlevelentries[0];
+                        if(secondLvlObj?.secondlevelentry){
+                            crossRefValues.push(secondLvlObj.secondlevelentry.text);
+                        }
+                    }
+                }
+            })
+        }
+
+        dispatch({
+            type: UPDATE_CROSS_REFERENCE_VALUES,
+            payload:{
+                crossReferenceValues: crossRefValues
+            }
+        });
+    } catch(error){
+        dispatch({
+            type: UPDATE_CROSS_REFERENCE_VALUES,
+            payload:{
+                crossReferenceValues: []
+            }
+        });
+    }
+}
