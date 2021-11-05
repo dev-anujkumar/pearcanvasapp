@@ -147,6 +147,9 @@ const elementDataBank = {
             },
             "imageFullscreenMathImage" : {
                 "secondaryOption" : "secondary-image-equation-full"
+            },
+            "imageactualsize" : {
+                "secondaryOption" : "secondary-image-equation-actual"
             }
         },
         "authoredtext" : {
@@ -185,6 +188,9 @@ const elementDataBank = {
             "imageFullscreenTableImage" : {
                 "secondaryOption" : "secondary-image-table-full"
             },
+            "imageactualsize" : {
+                "secondaryOption" : "secondary-image-table-actual"
+            }
         },
         "video" : {
             "elementType" : "video-audio",
