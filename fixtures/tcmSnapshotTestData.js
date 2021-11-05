@@ -679,7 +679,13 @@ export default {
                     "type": "groupedcontent",
                     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
                     "groupeddata": {
-                        "bodymatter": [{}, {}, {}, {}, {}, {}, {}, {}]
+                        "bodymatter": [{
+                            "groupdata":{
+                                "bodymatter":[{},{},
+                                    {"elementdata":{"bodymatter":[{},{}]}}
+                                ,{"elementdata":{"bodymatter":[{"contents":{"bodymatter":[{}]}}]}},{}]
+                        }
+                        }, {}, {}, {}, {}, {}, {}, {}]
                     },
                     "elementdata": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
