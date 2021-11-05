@@ -1879,6 +1879,9 @@ class ElementContainer extends Component {
     }
 
     updateColumnValues = (index, element) => {
+        if(config.popupCreationCallInProgress){ /** Restrict click on 2C if saving is inprogress PE */
+            return false
+        }
         let objKey = element.id;
         let multipleColumnObjData = {
             containerId: objKey,

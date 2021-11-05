@@ -7084,6 +7084,47 @@ describe('Test function--handleBlankLineArrowKeys', () => {
     
     });
 
+    describe('Test-41 Mark index: ', () =>{
+        it('Test-41.1--addMarkIndex', () => {
+            window.getSelection = () => {
+                return {
+                    removeAllRanges: () => { },
+                    toString: () => {
+                        return "Hello"
+                    },
+                    anchorNode: {
+                        parentNode: {
+                            nodeName: "SPAN",
+                            innerHTML: "<span>Hello</span>",
+                            outerHTML: "<p><span>Hello</span></p>",
+                            classList: { contains: () => { return false } }
+                        }
+                    }
+                }
+            }
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                formatter: {
+                    match: () => { },
+                    formatChanged: () => { return jest.fn() },
+                    unbind: () => { }
+                },
+                dom: {
+                    getParent: () => {}
+                }
+            }
+            const spyaddMarkedIndex = jest.spyOn(instance, 'addMarkedIndex')
+            instance.addMarkedIndex(nextEditor);
+            expect(spyaddMarkedIndex).toHaveBeenCalled();
+            spyaddMarkedIndex.mockClear()
+        });
+    });
 });
 describe('------------------------------Test2 TINY_MCE_EDITOR------------------------------', () => {
     let selectEditor={
