@@ -40,11 +40,11 @@ export default {
             figCaptionClass: 'figcaptionImageTextWidth',
             figCreditClass: 'paragraphImageTextWidthCredit'
         },
-        'actual': {
+        'actual-size': {
             divClass: 'divImageActualSize',
             figureClass: 'figureImageActualSize',
             figLabelClass: 'heading4ImageActualSizeTitle',
-            figTitleClass: 'heading4Image25TextTitle',
+            figTitleClass: 'heading4ImageActualSizeTitle',
             dataType: 'image',
             imageDimension: 'imageActualSize',
             figCaptionClass: 'figcaptionImageActualSize',
@@ -92,11 +92,11 @@ export default {
             figCaptionClass: 'figcaptionImageTextWidthTableImage',
             figCreditClass: 'paragraphImageTextWidthTableImageCredit'
         },
-        'actual': {
+        'actual-size': {
             divClass: 'divImageActualSizeTableImage',
             figureClass: 'figureImageActualSizeTableImage',
             figLabelClass: 'heading4ImageActualSizeTableImageTitle',
-            figTitleClass: 'heading4Image25TextTableImageTitle',
+            figTitleClass: 'heading4ImageActualSizeTableImageTitle',
             dataType: 'table',
             imageDimension: 'imageActualSizeTableImage',
             figCaptionClass: 'figcaptionImageActualSizeTableImage',
@@ -144,11 +144,11 @@ export default {
             figCaptionClass: 'figcaptionImageTextWidthMathImage',
             figCreditClass: 'paragraphImageTextWidthMathImageCredit'
         },
-        'actual': {
+        'actual-size': {
             divClass: 'divImageActualSizeMathImage',
             figureClass: 'figureImageActualSizeMathImage',
             figLabelClass: 'heading4ImageActualSizeMathImageTitle',
-            figTitleClass: 'heading4Image25TextMathImageTitle',
+            figTitleClass: 'heading4ImageActualSizeMathImageTitle',
             dataType: 'mathImage',
             imageDimension: 'imageActualSizeMathImage',
             figCaptionClass: 'figcaptionImageActualSizeMathImage',

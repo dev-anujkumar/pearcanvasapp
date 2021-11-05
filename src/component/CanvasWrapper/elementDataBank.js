@@ -148,7 +148,7 @@ const elementDataBank = {
             "imageFullscreenMathImage" : {
                 "secondaryOption" : "secondary-image-equation-full"
             },
-            "imageactualsize" : {
+            "imageactualsizeMathImage" : {
                 "secondaryOption" : "secondary-image-equation-actual"
             }
         },
@@ -188,7 +188,7 @@ const elementDataBank = {
             "imageFullscreenTableImage" : {
                 "secondaryOption" : "secondary-image-table-full"
             },
-            "imageactualsize" : {
+            "imageactualsizeTableImage" : {
                 "secondaryOption" : "secondary-image-table-actual"
             }
         },
