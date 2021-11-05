@@ -1567,7 +1567,7 @@ describe('5 Test updateContainerMetadata ', () => {
         spyFunction.mockClear()
     });
     describe("element conversion in showhide",()=>{
-        it('handle conversion of As in SH',()=>{
+        xit('handle conversion of As in SH',()=>{
             let dispatch=()=>{}
             let store1 = mockStore(() => initialState20);
             let nextStore = slateData.SlateData5
