@@ -3273,7 +3273,7 @@ export class TinyMceEditor extends Component {
      */
     componentDidUpdate(prevProps) {
         const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup, isInlineEditor, imageArgs} = this.props
-        let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
+        let isBlockQuote = this.props.element && this.props?.element?.elementdata && (this.props?.element?.elementdata?.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
         }
@@ -3287,7 +3287,7 @@ export class TinyMceEditor extends Component {
             if (tooltipText) {
                 tooltipText.innerText = this.getElementTypeForToolbar(this.props.element);
             }
-            if ((this.props.element && this.props.element.type === "element-list") || (this.props.currentElement && this.props.currentElement.type === "element-list")) {
+            if ((this.props?.element && this.props?.element?.type === "element-list") || (this.props?.currentElement && this.props?.currentElement?.type === "element-list")) {
                 highlightListIcon(this.props);
             }
             this.elementConverted = false;
