@@ -437,7 +437,6 @@ export default {
                 "groupeddata":{
                   "bodymatter":[{
                   "contentUrn":"urn:pearson:entity:11b5ccdd-9b4a-4e5e-9c15-0536efd3e6be",
-                    "contentUrn":"urn:pearson:entity:a8db00c6-2b19-48cf-b1ab-a7b3c5d9e961",
                     "groupdata":{
                       "bodymatter":[{
                             "contentUrn":"urn:pearson:entity:f0eae3d9-0317-403f-af4d-a45f2ac31050",
@@ -562,8 +561,7 @@ export default {
                 "schema":"http://schemas.pearson.com/wip-authoring/groupedcontent/1",
                 "type":"groupedcontent",
                 "versionUrn":"urn:pearson:manifest:2fdd7c65-b9fb-4c94-a10f-2a072995e197",
-                "width":"wider",
-                "schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+                "width":"wider"
              }
           ]
       }
