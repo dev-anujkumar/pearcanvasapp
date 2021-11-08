@@ -5,12 +5,17 @@ import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor";
 import { CrossRefCheckbox } from './CrossRefCheckBox';
 
 
-export const CrossReference = () => {
+export const CrossReference = ({crossRefValue}) => {
     let [popUpStatus, setPopUpStatus] = useState(false);
     let [crossRef, setcrossRef] = useState([]);
     let [filteredDropDown, setFilteredDropDown] = useState([]);
-    const selectedData = [];
     const dropDown = useSelector(state => state.markedIndexReducer.crossReferenceValues);
+
+    useEffect(() => {
+        if(crossRefValue?.length){
+            setcrossRef(crossRefValue);
+        }
+    },[]);
 
     const changePopUpStatus = () => {
         if(popUpStatus){
@@ -46,7 +51,7 @@ export const CrossReference = () => {
                 </div>
             </div>
             {
-                popUpStatus && <CrossRefCheckbox selectedData={selectedData} handleSelectedCheckboxValue={handleSelectedCheckboxValue} dropDownList={filteredDropDown.length > 0 ? filteredDropDown : dropDown}/>
+                popUpStatus && <CrossRefCheckbox selectedData={crossRef} handleSelectedCheckboxValue={handleSelectedCheckboxValue} dropDownList={filteredDropDown.length > 0 ? filteredDropDown : dropDown}/>
             }
         </div>
     )

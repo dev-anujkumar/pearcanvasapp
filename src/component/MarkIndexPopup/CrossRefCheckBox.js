@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const CrossRefCheckbox = (props) => {
-    const { selectedData, dropDownList } = props
+    const { selectedData, dropDownList } = props;
     if (dropDownList.length > 0) {
         return (
             <div className="cross-ref-dropdown">
@@ -12,7 +12,7 @@ export const CrossRefCheckbox = (props) => {
                                 <input type="checkbox"
                                     name={item}
                                     value={item}
-                                    // checked={selectedData.indexOf(item) > -1}
+                                    defaultChecked={selectedData.includes(item)}
                                     onChange={() => props.handleSelectedCheckboxValue(item)}
                                 />
                                 <span>

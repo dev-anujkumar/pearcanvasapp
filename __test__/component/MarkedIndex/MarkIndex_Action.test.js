@@ -248,5 +248,5 @@ describe('Tests marked index action', () => {
         let result = actions.getCrossReferenceValues();
         let item = await result(store.dispatch);
         expect(item.type).toEqual('UPDATE_CROSS_REFERENCE_VALUES');
-    })
+    });
 });

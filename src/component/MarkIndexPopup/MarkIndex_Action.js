@@ -44,7 +44,7 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
             return false;
         }
         let newBodymatter = currentSlateData.contents.bodymatter;
-        var markedIndexTextFirstLvl, markedIndexTextSecondLvl, markedIndexElem = {}, tempMarkedIndexContentText;
+        var markedIndexTextFirstLvl, markedIndexTextSecondLvl, markedIndexElem = {}, tempMarkedIndexContentText, crossReferences;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
         if (showHideElement || asideParent?.type === 'showhide') { /** markedIndex inside Show-Hide */
@@ -95,6 +95,7 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         tempMarkedIndexContentText = markedIndexElem && markedIndexElem.html['indexEntries'] && markedIndexElem.html['indexEntries'][markIndexid];
         markedIndexTextFirstLvl = tempMarkedIndexContentText && JSON.parse(tempMarkedIndexContentText).firstLevelEntry || markIndexText;
         markedIndexTextSecondLvl = tempMarkedIndexContentText && JSON.parse(tempMarkedIndexContentText).secondLevelEntry;
+        crossReferences = extractCrossRefFromHtml(tempMarkedIndexContentText);
     }
 
     return await dispatch({
@@ -103,7 +104,8 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
             markedIndexValue: markedIndexValue,
             markedIndexCurrentValue: {
                 firstLevel: markedIndexTextFirstLvl,
-                secondLevel: markedIndexTextSecondLvl
+                secondLevel: markedIndexTextSecondLvl,
+                crossReferences
             },
             markedIndexGlossary:{},
             elementIndex: index
@@ -119,17 +121,19 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
  * @param {*} subEntry, Value of sub entry field in the marked index pop-up 
  * @param {*} markedIndexEntryURN, URN of indexed text 
  */
-export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry = "", markedIndexEntryURN = "", differenceValue) => (dispatch) => {
+export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry = "", markedIndexEntryURN = "", differenceValue, crossReferences) => (dispatch) => {
     let indexEntries = {};
     let currentValue = {};
     if(indexEntry && markedIndexEntryURN){
         indexEntries[markedIndexEntryURN] = JSON.stringify({
           firstLevelEntry: indexEntry,
-          secondLevelEntry: subEntry
+          secondLevelEntry: subEntry,
+          crossReferences
         });
         currentValue = {
             firstLevel: indexEntry,
-            secondLevel: subEntry
+            secondLevel: subEntry,
+            crossReferences
         }
     } else {
         const {markedIndexGlossary, markedIndexCurrentValue} = store.getState().markedIndexReducer;
@@ -158,7 +162,8 @@ export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry =
             },
             markedIndexCurrentValue:{
                 firstLevel: currentValue.firstLevel,
-                secondLevel: currentValue.secondLevel
+                secondLevel: currentValue.secondLevel,
+                crossReferences: currentValue.crossReferences
             }
         }
     })
@@ -173,7 +178,7 @@ export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry =
  * @returns 
  */
 export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, glossaaryFootnoteValue, index) => {
-    let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {};
+    let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {}, markedIndexCrossReferences = [];
     if(glossaryContentText && glossaryContentText.includes('mark-index-id')){
         markedIndexEntryURN = glossaryContentText.slice(glossaryContentText.indexOf('mark-index-id')).split("\"")[1];
         let oldIndexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
@@ -182,6 +187,7 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
 
         markedIndexFirstLevel = firstLevelEntry;
         markedIndexSecondLevel = secondLevelEntry;
+        markedIndexCrossReferences = extractCrossRefFromHtml(oldIndexEntries);
     } else {
         markedIndexFirstLevel = glossaryContentText;
     }
@@ -202,7 +208,8 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
             },
             markedIndexCurrentValue: {
                 firstLevel: markedIndexFirstLevel,
-                secondLevel: markedIndexSecondLevel
+                secondLevel: markedIndexSecondLevel,
+                crossReferences: markedIndexCrossReferences
             },
             markedIndexGlossary: {
                 popUpStatus: false,  
@@ -265,4 +272,22 @@ export const getCrossReferenceValues = () => async (dispatch) => {
             }
         });
     }
+}
+
+const extractCrossRefFromHtml = tempMarkedIndexContentText => {
+    let crossRefString = [];
+    if(tempMarkedIndexContentText){
+        let parsedMarkIndex = JSON.parse(tempMarkedIndexContentText);
+        if(parsedMarkIndex?.crossReferences){
+            let crossReferences = parsedMarkIndex.crossReferences;
+            let dummyDiv = document.createElement('div');
+            dummyDiv.innerHTML = crossReferences;
+            let spanList = dummyDiv.children[0].childNodes;
+            spanList.forEach(span => {
+                crossRefString.push(span.innerHTML)
+            });
+        }
+    }
+
+    return crossRefString;
 }

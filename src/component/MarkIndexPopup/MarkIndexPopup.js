@@ -64,7 +64,7 @@ componentWillUnmount() {
     return !(newEntryDom.isEqualNode(oldEntryDom) && newSubEntryDom.isEqualNode(oldSubEntryDom))
   }
 
-  saveContent = () => {
+  saveContent = crossReferences => {
 
     if (!hasReviewerRole()) {
       const { markedIndexValue } = this.props;
@@ -90,13 +90,18 @@ componentWillUnmount() {
       if (this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel)) {
         config.isGlossarySaving = true;
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField)
+        saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField, null, null, null, crossReferences)
       }
     }
     this.props.showMarkedIndexPopup(false);
   }
 
   saveMarkedIndex = async () => {
+    let crossRefValues = document.querySelector('#cross-reference').innerHTML;
+    let crossRefArray = crossRefValues.split(',');
+    let crossReferences = crossRefArray.map(value => `<span>${value}</span>`);
+    crossReferences = `<p>${crossReferences.join('')}</p>`;
+
     if(this.props.isInGlossary){
       let {elementWorkId, elementType,  type, elementSubType, typeWithPopup, poetryField} = this.props.markedIndexData.markedIndexValue;
       let { markedIndexEntryURN } = this.props.markedIndexData.markedIndexGlossary;
@@ -112,19 +117,19 @@ componentWillUnmount() {
       let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel)
       if(markedIndexEntryURN){
         if(checkDifference){
-          await saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField);
+          await saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField,null,null,null,crossReferences);
         }
-        this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN, checkDifference);
+        this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN, checkDifference, crossReferences);
       } else{
         getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", async res => {
-          await saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField);
-          this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id, checkDifference);
+          await saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField,null,null,null,crossReferences);
+          this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id, checkDifference, crossReferences);
           this.props.showingToastMessage(true);
         });
       }
     } else {
       const { markedIndexValue } = this.props.markedIndexData;
-      this.saveContent();
+      this.saveContent(crossReferences);
       if (Object.keys(markedIndexValue).includes('isNewIndex') && markedIndexValue?.isNewIndex) {
         this.props.showingToastMessage(true);
       }
@@ -208,7 +213,7 @@ componentWillUnmount() {
               </div>
             </div>
             
-            <CrossReference />
+            <CrossReference crossRefValue={this.props.markedIndexCurrentValue?.crossReferences}/>
 
             <div className="button-group">
               <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>

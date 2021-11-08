@@ -493,7 +493,7 @@ export default {
                         "assetsPopover": {},
                         "glossaryentries": {},
                         "indexEntries": {
-                          "urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b": "{\"firstLevelEntry\":\"<p>index</p>\",\"secondLevelEntry\":\"<p></p>\"}"
+                          "urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b": "{\"firstLevelEntry\":\"<p>index</p>\",\"secondLevelEntry\":\"<p></p>\", \"crossReferences\":\"<p><span>aside-in-gloss</span></p>\"}"
                         }
                       },
                       "id": "urn:pearson:work:93ba2ac3-603b-4cc0-908e-090ade53c5a8",
