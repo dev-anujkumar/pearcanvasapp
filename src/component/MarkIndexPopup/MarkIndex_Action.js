@@ -251,14 +251,14 @@ export const getCrossReferenceValues = () => async (dispatch) => {
             })
         }
 
-        dispatch({
+        return dispatch({
             type: UPDATE_CROSS_REFERENCE_VALUES,
             payload:{
                 crossReferenceValues: crossRefValues
             }
         });
     } catch(error){
-        dispatch({
+        return dispatch({
             type: UPDATE_CROSS_REFERENCE_VALUES,
             payload:{
                 crossReferenceValues: []
