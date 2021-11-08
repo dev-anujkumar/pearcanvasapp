@@ -40,6 +40,16 @@ export default {
             figCaptionClass: 'figcaptionImageTextWidth',
             figCreditClass: 'paragraphImageTextWidthCredit'
         },
+        'actual-size': {
+            divClass: 'divImageActualSize',
+            figureClass: 'figureImageActualSize',
+            figLabelClass: 'heading4ImageActualSizeTitle',
+            figTitleClass: 'heading4ImageActualSizeTitle',
+            dataType: 'image',
+            imageDimension: 'imageActualSize',
+            figCaptionClass: 'figcaptionImageActualSize',
+            figCreditClass: 'paragraphImageActualSizeCredit',
+        },
         'wider': {
             divClass: 'divImageWiderThanText',
             figureClass: 'figureImageWiderThanText',
@@ -82,6 +92,16 @@ export default {
             figCaptionClass: 'figcaptionImageTextWidthTableImage',
             figCreditClass: 'paragraphImageTextWidthTableImageCredit'
         },
+        'actual-size': {
+            divClass: 'divImageActualSizeTableImage',
+            figureClass: 'figureImageActualSizeTableImage',
+            figLabelClass: 'heading4ImageActualSizeTableImageTitle',
+            figTitleClass: 'heading4ImageActualSizeTableImageTitle',
+            dataType: 'table',
+            imageDimension: 'imageActualSizeTableImage',
+            figCaptionClass: 'figcaptionImageActualSizeTableImage',
+            figCreditClass: 'paragraphImageActualSizeTableImageCredit',
+        },
         'wider': {
             divClass: 'divImageWiderThanTextTableImage',
             figureClass: 'figureImageWiderThanTextTableImage',
@@ -123,6 +143,16 @@ export default {
             imageDimension: 'imageTextWidthMathImage',
             figCaptionClass: 'figcaptionImageTextWidthMathImage',
             figCreditClass: 'paragraphImageTextWidthMathImageCredit'
+        },
+        'actual-size': {
+            divClass: 'divImageActualSizeMathImage',
+            figureClass: 'figureImageActualSizeMathImage',
+            figLabelClass: 'heading4ImageActualSizeMathImageTitle',
+            figTitleClass: 'heading4ImageActualSizeMathImageTitle',
+            dataType: 'mathImage',
+            imageDimension: 'imageActualSizeMathImage',
+            figCaptionClass: 'figcaptionImageActualSizeMathImage',
+            figCreditClass: 'paragraphImageActualSizeMathImageCredit',
         },
         'wider': {
             divClass: 'divImageWiderThanTextMathImage',
