@@ -121,7 +121,7 @@ export const updateElementInStore = (paramsObj) => {
         updateShowhideElements(sh_Object, updatedData, iList);
     } else
     if (parentElement && parentElement.type === "citations") {
-        const indexes = elementIndex.split("-");
+        const indexes = typeof elementIndex === 'string' ? elementIndex?.split("-"): elementIndex;
         // Update CG inside S/H
         if (asideData?.parent?.type === SHOW_HIDE) {
             let sectionType = asideData?.parent?.showHideType;
