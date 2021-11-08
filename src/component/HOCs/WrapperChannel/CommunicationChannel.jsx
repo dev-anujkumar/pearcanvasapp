@@ -17,6 +17,7 @@ import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -129,6 +130,7 @@ function CommunicationChannel(WrappedComponent) {
                         let alfrescoRepository = message.alfresco.repositoryFolder?.split('/')?.[0] || message.alfresco.repositoryFolder
                         config.alfrescoMetaData.alfresco.repositoryFolder = alfrescoRepository
                         if (message?.alfresco?.siteId) config.alfrescoMetaData.alfresco.siteId = alfrescoRepository
+                        fetchAlfrescoSiteDropdownList('projectAlfrescoSettings')
                     }
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
@@ -760,6 +762,7 @@ function CommunicationChannel(WrappedComponent) {
             // reset owner slate popup flag on slate change
             this.resetOwnerSlatePopupFlag();
             if (message['category'] === 'titleChange') {
+                config.staleTitle = message?.title ?? '';
                 currentSlateObject = {
                     title: message.title,
                 }

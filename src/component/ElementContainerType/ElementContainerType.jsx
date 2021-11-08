@@ -20,7 +20,7 @@ export default function ElementContainerType(props) {
         let elementPickerPosition = 1
         switch (props.text) {
             case 'interactive-elem-button': elementPickerPosition = 5; break;
-            case 'container-elem-button': elementPickerPosition = 8; break;
+            case 'container-elem-button': elementPickerPosition = props.elementType === "showhide" ? 7 : 8; break;
             case "block-text-button" : elementPickerPosition = 4; break;
             case "multi-column-group": elementPickerPosition = 10; break;
         }
@@ -38,7 +38,7 @@ export default function ElementContainerType(props) {
     }
 
     const renderMenu = (propsData) => {
-        let {elementType, text, showPlayscript, showDiscussion} = props;
+        let {elementType, text, showPlayscript, showDiscussion, asideData} = props;
         if (!showDiscussion) {
             propsData = propsData.filter( (obj) => {
                 return obj.text !== 'Add Discussion';
@@ -49,11 +49,16 @@ export default function ElementContainerType(props) {
                 return obj.text !== 'Playscript';
             });
         }
+        /**Block List option only visible on Slate Level*/
+        if (elementType || config.isPopupSlate) {
+            propsData = propsData.filter( obj => obj.text !== 'Block List');
+        }
         /* Not show poetry/Popup/SH/Interactive elements inside SH interactive Picker */
         const hideElementList = ["poetry-elem", "show-hide-elem", "popup-elem", "elm-interactive-elem", "interactive-elem", "element-discussion"];
         const hideElementListMulticolumn = ["Add Pop Up","Add Discussion"]
         return propsData && propsData.map((item, index) => {
-            if (((elementType === "element-aside" || elementType === "group") && text === "block-text-button" && item.text === "Block Poetry") ||
+            if ((elementType === "element-aside" && asideData?.parent?.type === "groupedcontent" && text === "block-text-button" && item.text === "Block Poetry") ||
+            ((elementType === "element-aside" || elementType === "group") && config.isPopupSlate && text === "block-text-button" && item.text === "Block Poetry") ||
             (text === "interactive-elem-button" && (elementType === "group" && hideElementListMulticolumn.includes(item.text)))
             || (config.isPopupSlate && item.text === "Add Pop Up") ||
             /* Not show poetry/Popup/SH inside SH interactive Picker */

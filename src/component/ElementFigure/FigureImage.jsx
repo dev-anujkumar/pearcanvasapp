@@ -7,7 +7,6 @@ import {
     DEFAULT_IMAGE_SOURCE
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
-//import { showTocBlocker, hideToc } from '../../js/toggleLoader';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
@@ -20,9 +19,7 @@ import { connect } from 'react-redux';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import { labelHtmlData } from '../../constants/Element_Constants';
 import PopUp from '../PopUp';
-import FormControl from '@material-ui/core/FormControl';
-
-
+import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
@@ -107,6 +104,8 @@ class FigureImage extends Component {
         if (hasReviewerRole()) {
             return true
         }
+        this.toggleDeletePopup(false)
+    
         // store current element figuredata in store
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
         let setFigureData = {
@@ -121,8 +120,8 @@ class FigureImage extends Component {
             this.props.handleBlur();
         })
     }
-
-    /*** @description This function is used to handle Canvas Blocker on Update */
+    
+    /*** @description This function is used to handle Canvas Blocker on delete */
     showCanvasBlocker = (value) => {
         if (value == true) {
             showTocBlocker();
@@ -138,30 +137,30 @@ class FigureImage extends Component {
      * @param {*} toggleValue Boolean value
      * @param {*} event event object
      */
-    toggledeletePopup = (toggleValue, event) => {
+     toggleDeletePopup = (toggleValue, event) => {
         if (event) {
             event.preventDefault();
         }
         this.setState({
-            deleteassetPopup: toggleValue
+            deleteAssetPopup: toggleValue
         })
         this.showCanvasBlocker(toggleValue);
     }
 
     /*** @description This function is used to render delete Popup */
-    showdeleteassetPopup = () => {
-        if (this.state.deleteassetPopup) {
+    showDeleteAssetPopup = () => {
+        if (this.state.deleteAssetPopup) {
             this.showCanvasBlocker(true)
             return (
                 <PopUp
-                    dialogText="Are you sure you want to delete?"
+                    dialogText={DELETE_DIALOG_TEXT}
                     active={true}
-                    togglePopup={this.toggledeletePopup}
-                    isdeleteassetPopup={true}
-                    deleteasset={this.deleteFigureResource}
+                    togglePopup={this.toggleDeletePopup}
+                    isDeleteAssetPopup={true}
+                    deleteAssetHandler={this.deleteFigureResource}
                     isInputDisabled={true}
-                    isdeleteassetClass="elm-update"
-
+                    isDeleteAssetClass="delete-element-text"
+                    
                 />
             )
         }
@@ -185,7 +184,7 @@ class FigureImage extends Component {
         //commented lines will be used to update the element data
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
-
+        if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
         let uniqID = imageData.id ? imageData.id : "";
         let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
         let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
@@ -243,12 +242,14 @@ class FigureImage extends Component {
                 this.updateAlfrescoSiteUrl()
             }
         }
+    }
         // to blank the elementId and asset data after update
         let payloadObj = {
             asset: {},
             id: ''
         }
         this.props.saveSelectedAssetData(payloadObj)
+
     }
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
@@ -465,7 +466,7 @@ class FigureImage extends Component {
 
         return (
             <div className="figureElement">
-                {this.state.deleteassetPopup && this.showdeleteassetPopup()}
+                {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
@@ -575,7 +576,7 @@ class FigureImage extends Component {
                                                 <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{this.props.model.figuredata && this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
                                             </div>
                                             <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
-                                            <div className='deletefigurebutton' onClick={() => this.toggledeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                                            <div className='deletefigurebutton' onClick={() => this.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                                         </div> : ''
                                     }
                                 </div>

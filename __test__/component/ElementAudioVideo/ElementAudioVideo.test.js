@@ -472,7 +472,7 @@ describe('Testing Element Audio-Video component', () => {
         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
         const spydataFromAlfresco = jest.spyOn(elementAudioVideoInstance, 'dataFromAlfresco')
         const defaultPath = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
-        it('Test- if case workflow', () => {
+        xit('Test- if case workflow', () => {
             config.alfrescoMetaData = alfrescoPath
             elementAudioVideoInstance.dataFromAlfresco(audioData1)
             elementAudioVideoInstance.forceUpdate();
@@ -515,7 +515,7 @@ describe('Testing Element Audio-Video component', () => {
             expect(elementAudioVideoInstance.state.imgSrc).toBe(newVideoData.epsUrl)
             spydataFromAlfresco.mockClear()
         })
-        it('Test- if case workflow-  with smartlink audio ', () => {
+        xit('Test- if case workflow-  with smartlink audio ', () => {
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideoInstance.dataFromAlfresco(smartLinkAudio)
             elementAudioVideoInstance.forceUpdate();

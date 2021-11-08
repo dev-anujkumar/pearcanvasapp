@@ -152,6 +152,26 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         if('posterimage' in previousElementData.figuredata && typeof(previousElementData.figuredata.posterimage)!=="object"){
             delete previousElementData.figuredata.posterimage;
         }
+        if(previousElementData.figuredata.interactivetype === '3rd-party' || previousElementData.figuredata.interactivetype === "table" ){
+            let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+            const podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || POD_DEFAULT_VALUE;
+            const podwidthToSend = podwidth ? (podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`) : '';
+            if (previousElementData.figuredata.hasOwnProperty('posterimage')) {
+                previousElementData.figuredata.posterimage.podwidth = podwidthToSend
+            }
+            else {
+                const figuredata = {
+                    ...previousElementData.figuredata,
+                    posterimage: {
+                        podwidth: podwidthToSend,
+                        imageid: '',
+                        path: ''
+                        
+                    }
+                }
+                previousElementData.figuredata = figuredata;
+            }
+        }
     
     previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
 
@@ -582,14 +602,19 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 html : {
                     text : innerHTML,
                     footnotes : previousElementData.html.footnotes || {},
-                    glossaryentries : previousElementData.html.glossaryentries || {},
+                    glossaryentries : previousElementData.html.glossaryentries || {}
                 },
                 inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
+
+            if(type === 'element-authoredtext'){
+                dataToReturn.html['indexEntries'] = previousElementData.html.indexEntries || {}
+            }
             
             if(type==="stanza"){
-                dataToReturn.html.text=`<p>${innerHTML}</p>`
+                dataToReturn.html.text=`<p>${innerHTML}</p>`;
+                dataToReturn.html['indexEntries'] = previousElementData.html?.indexEntries || {};
                 delete dataToReturn.poetrylines;
             } 
             if(parentElement && parentElement.type === "popup"){

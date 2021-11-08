@@ -23,7 +23,7 @@ const store = mockStore({
     }
 });
 
-describe('Testing <ListButtonDrop> Component', () => {
+xdescribe('Testing <ListButtonDrop> Component', () => {
 
     let nodeRef = null;
     let spy = sinon.spy();

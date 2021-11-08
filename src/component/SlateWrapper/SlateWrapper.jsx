@@ -21,7 +21,7 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET,OWNER_SLATE_POPUP
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -463,6 +463,9 @@ class SlateWrapper extends Component {
             })
             return true
         }else if(isOwnerRole(projectSharingRole,isSubscribed)){
+            const slateId = Object.keys(this.props.slateData)[0],
+                lockDuration = 5400
+            this.setSlateLock(slateId, lockDuration)
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
         }else if(isSubscriberRole(projectSharingRole,isSubscribed)){
             return true
@@ -671,7 +674,7 @@ class SlateWrapper extends Component {
                 parentUrn.contentUrn = asideData.contentUrn
                 parentUrn.manifestUrn = asideData.id
                 if (typeof (outerAsideIndex) == "string") {
-                    if (asideData?.parent?.type === "groupedcontent") {
+                    if (asideData?.parent?.type === "groupedcontent" || asideData?.parent?.type === "showhide") {
                         /** When WE is inside Mult-column */
                         outerIndex = outerAsideIndex.split("-")[3];
                         if (!outerIndex) { /** Add Section-Break after Head */
@@ -715,10 +718,10 @@ class SlateWrapper extends Component {
                 this.props.createElement(SMARTLINK, indexToinsert, parentUrn, asideData, null, null);
                 break;
             case 'poetry-elem':
-                this.props.createElement(POETRY, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                this.props.createElement(POETRY, indexToinsert, parentUrn,asideData,null,null,null,poetryData);
                 break;
             case 'stanza-elem':
-                this.props.createElement(STANZA, indexToinsert, parentUrn,null,null,null,null,poetryData);
+                this.props.createElement(STANZA, indexToinsert, parentUrn,asideData,null,null,null,poetryData);
                 break;
             case 'figure-mml-elem':
                 this.props.createElement(FIGURE_MML, indexToinsert, parentUrn, asideData, null, null);
@@ -744,14 +747,18 @@ class SlateWrapper extends Component {
             case 'element-discussion': 
                 this.props.createElement(ELEMENT_DISCUSSION, indexToinsert, parentUrn, asideData, null, null, null, null);
                 break;
+            case 'blocklist-elem':
+                this.props.createElement(MANIFEST_LIST, indexToinsert, parentUrn, asideData, null, null, null, null,null);
+                break;
             case 'text-elem':
             default:
-                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null);
+                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null, null, null);
                 break;
         }
     }
 
     elementSepratorProps = (index, firstOne, parentUrn, asideData, outerAsideIndex , poetryData) => {
+        
         return [
             {
                 buttonType: 'text-elem',
@@ -839,7 +846,9 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'stanza-elem',
-                buttonHandler: () => this.splithandlerfunction('stanza-elem', index, firstOne, parentUrn, "", outerAsideIndex, poetryData),
+                buttonHandler: () => {
+                    this.splithandlerfunction('stanza-elem', index, firstOne, parentUrn, asideData, outerAsideIndex, poetryData)
+                },
                 tooltipText: 'Stanza',
                 tooltipDirection: 'left'
             }
@@ -979,13 +988,13 @@ class SlateWrapper extends Component {
      * renderElement | renders single element according to its type
      */
     renderElement(_elements, _slateType, slateLockInfo) {
-        const { pageLoading } = this.props;
+        const { pageLoading, projectSubscriptionDetails } = this.props;
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
                 /* @-isPdf_Assess-@ - TO check TYPE of current slate  */
                 const isPdf_Assess = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(config.slateType);
-                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress) {
+                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress && !isSubscriberRole(projectSubscriptionDetails?.projectSharingRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     const typeOfEle = _slateType === SLATE_TYPE_ASSESSMENT ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
@@ -1555,6 +1564,8 @@ class SlateWrapper extends Component {
                                 setListDropRef={this.setListDropRef}
                                 onListSelect={this.props.convertToListElement}
                                 inputRef={inputRef}
+                                activeElement={this?.props?.activeElement}
+                                slateData={this?.props?.slateData}
                             />
                         )
                     }
@@ -1628,7 +1639,8 @@ const mapStateToProps = state => {
         alfrescoPath : state.alfrescoReducer.alfrescoPath,
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
         removeGlossaryImage:state.appStore.removeGlossaryImage,
-        projectSubscriptionDetails:state?.projectInfo
+        projectSubscriptionDetails:state?.projectInfo,
+        activeElement: state.appStore.activeElement,
     };
 };
 

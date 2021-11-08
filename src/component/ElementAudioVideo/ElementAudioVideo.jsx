@@ -1,6 +1,6 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
-import PropTypes, { element } from 'prop-types'
+import PropTypes from 'prop-types'
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
 import config from '../../config/config';
@@ -10,12 +10,15 @@ import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
-import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+//import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import { hasReviewerRole, getLabelNumberTitleHTML, sendDataToIframe } from '../../constants/utility.js'
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
-
+import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
+import PopUp from '../PopUp';
+import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
+import { updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions'
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
 class ElementAudioVideo extends Component {
@@ -27,9 +30,59 @@ class ElementAudioVideo extends Component {
             elementType: this.props.model.figuretype || "",
             projectMetadata: false,
             alfrescoSite: '',
-            alfrescoSiteData: {}
+            alfrescoSiteData: {},
+            deleteAssetPopup: false
         }
     }
+    
+    /*** @description This function is used to handle Canvas Blocker on Update */
+    showCanvasBlocker = (value) => {
+        if (value == true) {
+            showTocBlocker();
+            hideToc();
+        } else {
+            hideTocBlocker(value);
+        }
+        disableHeader(value);
+        this.props.showBlocker(value);
+    }
+    /**
+     * @description This function is used to toggle delete popup
+     * @param {*} toggleValue Boolean value
+     * @param {*} event event object
+     */
+     toggleDeletePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            deleteAssetPopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue);
+    }
+
+    /*** @description This function is used to render delete Popup */
+    showDeleteAssetPopup = () => {
+        if (this.state.deleteAssetPopup) {
+            this.showCanvasBlocker(true)
+            return (
+                <PopUp
+                    dialogText={DELETE_DIALOG_TEXT}
+                    active={true}
+                    togglePopup={this.toggleDeletePopup}
+                    isDeleteAssetPopup={true}
+                    deleteAssetHandler={this.deleteElementAsset}
+                    isInputDisabled={true}
+                    isDeleteAssetClass="delete-element-text"    
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+
+    
     /**
      * @description data after selecting an asset from alfresco c2 module
      * @param {*} data selected asset data
@@ -50,6 +103,7 @@ class ElementAudioVideo extends Component {
         let height = imageData?.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
         let smartLinkAssetType = imageData.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
         smartLinkAssetType = smartLinkAssetType?.toLowerCase();
+        if((this.state.elementType.toLowerCase() === figureType) || (this.state.elementType.toLowerCase() === smartLinkAssetType)) {
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
             if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
                 if(imageData?.properties['avs:jsonString']){
@@ -268,7 +322,7 @@ class ElementAudioVideo extends Component {
             // }
             // this.props.saveSelectedAssetData(payloadObj)
             //this.updateAlfrescoSiteUrl(alfrescoData)
-        }
+        }}
     }
 
     updateAlfrescoSiteUrl = () => {
@@ -416,12 +470,14 @@ class ElementAudioVideo extends Component {
         return null;
     }
 
-    deleteElementAsset = (element) => {
+    deleteElementAsset = () => {
+        const element = this.props.model
         this.props.handleFocus();
         if (hasReviewerRole()) {
             return true
         }
-        
+        this.toggleDeletePopup(false)
+        this.props.updateAudioVideoDataForCompare(element.figuredata);
         let setFigureData = {
             "schema": `http://schemas.pearson.com/wip-authoring/${element.figuretype}/1#/definitions/${element.figuretype}`,
             "height": "399",
@@ -438,6 +494,7 @@ class ElementAudioVideo extends Component {
                     "audioid": "",
                     "srctype": "externallink"
                 }
+                break;
             case "video":
                 setFigureData = {
                     ...setFigureData,
@@ -449,6 +506,7 @@ class ElementAudioVideo extends Component {
                         }
                     ]
                 }
+                break;
         }
         
         this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
@@ -462,7 +520,8 @@ class ElementAudioVideo extends Component {
       
             return (
                 <div className="figureElement">
-                    <FigureUserInterface deleteElementAsset={this.deleteElementAsset} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={this.handleC2MediaClick} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
+                {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
+                <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={this.handleC2MediaClick} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                 </div>         
             );
         }
@@ -496,6 +555,9 @@ const mapActionToProps = (dispatch) =>{
         },
         saveSelectedAssetData: (payloadObj) => {
             dispatch(saveSelectedAssetData(payloadObj))
+        },
+        updateAudioVideoDataForCompare: (oldAudioVideoData) => {
+            dispatch(updateAudioVideoDataForCompare(oldAudioVideoData))
         }
     }
 }

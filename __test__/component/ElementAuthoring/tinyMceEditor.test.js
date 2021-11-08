@@ -78,7 +78,19 @@ jest.mock('../../../src/js/glossaryFootnote.js', () => {
 })
 jest.mock('../../../src/js/TinyMceUtility.js', () => {
     return {
-        handleC2MediaClick:()=>{}
+        handleC2MediaClick:()=>{},
+        checkBlockListElement:() => {
+            return {
+                indexToinsert:0,
+                parentData:{}
+            }
+        },
+        isNestingLimitReached:() =>{
+            return false
+        },
+        isElementInsideBlocklist:() => {
+            return true
+        }
     }
 })
 jest.mock('../../../src/component/ListElement/eventBinding', () => {
@@ -165,6 +177,7 @@ let props = {
     },
     tagName: "P",
     conversionElement: jest.fn(),
+    createElement:jest.fn(),
     className: "p",
     index: 1,
     element: elementData.paragraph,
@@ -301,7 +314,11 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
-    } });
+    },
+    appStore:{
+        slateLevelData:{}
+    }
+ });
     const component = mount(<Provider store={store}><span class="randomClass"><b><em><u><div class="codeNoHighlightLineOne">TinyMce</div></u></em></b></span> < TinyMceEditor {...props} /> </Provider>, { attachTo: document.body })
     let instance = component.find('TinyMceEditor').instance();
     let tinymceDiv = document.createElement('div');
@@ -3652,6 +3669,144 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
+        it('--editorKeydown-Other Elements-keyCode:9 with shift key', () => {
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { },
+                ctrlKey: true,
+                which: 88,
+                keyCode: 9,
+                type: 'keydown',
+                shiftKey:true
+            }
+            let nextEditor2 = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'BR'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+            }
+            const spyFunction = jest.spyOn(instance, 'editorKeydown')
+            instance.isTabPressed(event);
+            instance.editorKeydown(nextEditor2);
+            expect(spyFunction).toHaveBeenCalled()
+        });
+        it('--editorKeydown-Other Elements-keyCode:9 without shift key', () => {
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { },
+                ctrlKey: true,
+                which: 88,
+                keyCode: 9,
+                type: 'keydown',
+                shiftKey:false
+            }
+            let nextEditor2 = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'BR'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+            }
+            const spyFunction = jest.spyOn(instance, 'editorKeydown')
+            instance.isTabPressed(event);
+            instance.editorKeydown(nextEditor2);
+            expect(spyFunction).toHaveBeenCalled()
+        });
+        it('--editorKeydown-Other Elements-keyCode:13 with shift key', () => {
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { },
+                ctrlKey: true,
+                which: 88,
+                keyCode: 13,
+                type: 'keydown',
+                shiftKey:true
+            }
+            let nextEditor2 = {
+                on: (temp, cb) => { cb(event) },
+                targetElm: {
+                    findChildren: () => {
+                        return {
+                            length: 0
+                        };
+                    },
+                    dispatchEvent: () => { }
+                },
+                selection: editor.selection,
+                dom: {
+                    getParent: () => {
+                        return {
+                            innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                            children: [
+                                {
+                                    tagName: 'BR'
+                                }
+                            ],
+                            innerText: "hello",
+                            querySelectorAll: jest.fn(),
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                },
+                children: ['<p class="paragraphNumeroUno">hello</p>'],
+                classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+            }
+            const spyFunction = jest.spyOn(instance, 'editorKeydown')
+            instance.isTabPressed(event);
+            instance.editorKeydown(nextEditor2);
+            expect(spyFunction).toHaveBeenCalled()
+        });
         it('Test-29.2.1-Method--27--editorKeydown-CITATION Element-keyCode:86', () => {
             let event = {
                 preventDefault: () => { },
@@ -6929,6 +7084,47 @@ describe('Test function--handleBlankLineArrowKeys', () => {
     
     });
 
+    describe('Test-41 Mark index: ', () =>{
+        it('Test-41.1--addMarkIndex', () => {
+            window.getSelection = () => {
+                return {
+                    removeAllRanges: () => { },
+                    toString: () => {
+                        return "Hello"
+                    },
+                    anchorNode: {
+                        parentNode: {
+                            nodeName: "SPAN",
+                            innerHTML: "<span>Hello</span>",
+                            outerHTML: "<p><span>Hello</span></p>",
+                            classList: { contains: () => { return false } }
+                        }
+                    }
+                }
+            }
+            let event = {
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                formatter: {
+                    match: () => { },
+                    formatChanged: () => { return jest.fn() },
+                    unbind: () => { }
+                },
+                dom: {
+                    getParent: () => {}
+                }
+            }
+            const spyaddMarkedIndex = jest.spyOn(instance, 'addMarkedIndex')
+            instance.addMarkedIndex(nextEditor);
+            expect(spyaddMarkedIndex).toHaveBeenCalled();
+            spyaddMarkedIndex.mockClear()
+        });
+    });
 });
 describe('------------------------------Test2 TINY_MCE_EDITOR------------------------------', () => {
     let selectEditor={
@@ -7000,7 +7196,10 @@ describe('------------------------------Test2 TINY_MCE_EDITOR-------------------
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
-    } });
+    },appStore:{
+        slateLevelData:{}
+    }
+ });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -7612,6 +7811,8 @@ describe('------------------------------Test3 TINY_MCE_EDITOR blockquote if-----
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
+    },appStore:{
+        slateLevelData:{}
     } });
     let newProps = {
         ...props,
@@ -7703,6 +7904,8 @@ describe('------------------------------Test3 TINY_MCE_EDITOR blockquote else---
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
+    },appStore:{
+        slateLevelData:{}
     } });
     let newProps = {
         ...props,
@@ -7791,6 +7994,8 @@ describe('------------------------------Test4 TINY_MCE_EDITOR-------------------
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
+    },appStore:{
+        slateLevelData:{}
     } });
     let newProps = {
         ...props,
@@ -7879,6 +8084,8 @@ describe('------------------------------Test4 TINY_MCE_EDITOR-------------------
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
+    },appStore:{
+        slateLevelData:{}
     } });
     let newProps = {
         ...props,
@@ -7923,6 +8130,8 @@ describe('------------------------------Test TINY_MCE_EDITOR case: figureCredit-
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
+    },appStore:{
+        slateLevelData:{}
     } });
     let newProps = {
         ...props,
@@ -7968,6 +8177,8 @@ describe('------------------------------Test TINY_MCE_EDITOR case: element-citat
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
+    },appStore:{
+        slateLevelData:{}
     } });
     let newProps = {
         ...props,
@@ -8066,6 +8277,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
+    },appStore:{
+        slateLevelData:{}
     } });
     let newProps = {
         ...props,
@@ -9251,6 +9464,8 @@ describe('------------------------------Test TINY_MCE_EDITOR case: Heading 4----
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
+    },appStore:{
+        slateLevelData:{}
     } });
     let newProps = {
         ...props,
