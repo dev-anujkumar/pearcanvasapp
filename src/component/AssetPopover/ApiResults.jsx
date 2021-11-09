@@ -59,6 +59,7 @@ class ApiResults extends React.Component {
             <div>
                 <h3 className="figureCount">Figures ({noOfFigures})</h3>
                 {this.apiResultsJsx(figures, selectedFigure, ValueToBeSearch)}
+                <h3 className="figureCount">Aside (0)</h3>
                 <hr />
             </div>
         )
