@@ -194,7 +194,7 @@ class FigureUserInterface extends Component {
         return lowercaseOptions;
     }
 
-    generateAddAssetJSX = ( assetIcon, assetTitleText, addButtonText, assetBackgroundType, assetIdText, assetPathText) => {
+    generateAddAssetJSX = ( assetIcon, assetTitleText, addButtonText, assetBackgroundType, assetIdText, assetPathText,interactiveformat) => {
         return (
             <div className="media-wrapper">
                 <div className='videoIconWrapper'>
@@ -202,11 +202,25 @@ class FigureUserInterface extends Component {
                         <span className='videoIcon' >{assetIcon}</span>
                         <span className='videoTitle'>{assetTitleText}</span>
                     </div>
-                    <div className="media-image-info">
-                        <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> </span> </div>
-                        <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> </span> </div>
-                        <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'> </span> </div>
-                    </div>
+                    {
+                        interactiveformat === "mmi" ?
+                            <div className="media-image-info">
+                                <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> </span> </div>
+                            </div>
+                            :
+                            interactiveformat === "mmi-elm" ?
+                                <div className="media-image-info">
+                                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> </span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> </span> </div>
+                                </div>
+                                :
+                                <div className="media-image-info">
+                                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> </span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> </span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'> </span> </div>
+                                </div>
+                    }
+
                 </div>
                 <div className="media-assets">
                     <div className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
@@ -271,9 +285,9 @@ class FigureUserInterface extends Component {
     }
 
     renderAssetSection = (element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite, imageDimension) => {
+      console.log('element@@#',element,assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite, imageDimension)
         let assetJsx;
         switch (element.figuretype) {
-
             case AUDIO:
                 assetJsx =
                     assetId ?
@@ -291,10 +305,17 @@ class FigureUserInterface extends Component {
             case INTERACTIVE:
                 assetJsx = element.figuredata.interactivetype !== 'pdf' ?
                     (
-                        assetId ?
-                            this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
+
+                        element.figuredata.interactiveformat === "mmi" ?
+                            assetJsx = this.generateAddAssetJSX(smartlinkIcon, "QuaD Interactive Title", "Add an Interactive", slPosterImage, "Item ID", assetPathText, "mmi")
                             :
-                            this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, slPosterImage, assetIdText, assetPathText)
+                            element.figuredata.interactiveformat === "mmi-elm" ?
+                                assetJsx = this.generateAddAssetJSX(smartlinkIcon, "Elm Interactive Title", "Add an Interactive", slPosterImage, "Item ID", "Version", "mmi-elm")
+                                :
+                                assetId ?
+                                    this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
+                                    :
+                                    this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, slPosterImage, assetIdText, assetPathText)
                     )
                     :
                     (
