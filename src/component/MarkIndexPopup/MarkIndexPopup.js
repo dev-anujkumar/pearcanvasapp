@@ -26,7 +26,8 @@ class PrintIndexPopup extends Component {
   handleClickOutside = (event) => {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       if (!this.props.isInGlossary) {
-        this.saveContent()
+        const {crossReferences, crossRefValues} = this.getCrossRefData();
+        this.saveContent(crossReferences, crossRefValues);
       }
     }
   }
@@ -50,21 +51,26 @@ componentWillUnmount() {
     this.wrapperRef = node;
   }
 
-  markedIndexValueDifference = (newEntry, newSubEntry, oldEntry, oldSubEntry) => {
-    let domparser, newEntryDom, newSubEntryDom, oldEntryDom, oldSubEntryDom, tempVar, tempTerm;
+  markedIndexValueDifference = (newEntry, newSubEntry, oldEntry, oldSubEntry, newCrossRef, oldCrossRef) => {
+    let domparser, newEntryDom, newSubEntryDom, oldEntryDom, oldSubEntryDom, tempVar, tempTerm, tempCrossRef, newCrossRefDom, oldCrossRefDom;
     tempVar = oldSubEntry;
     tempTerm = oldEntry;
+    tempCrossRef = oldCrossRef;
     tempVar = tempVar && tempVar.replace(/\sdata-mathml/g, 'data-temp-mathml')
     domparser = new DOMParser()
     newEntryDom = domparser.parseFromString(newEntry, "text/html")
     oldEntryDom = domparser.parseFromString(tempTerm, "text/html")
     oldSubEntryDom = domparser.parseFromString(tempVar, "text/html")
     newSubEntryDom = domparser.parseFromString(newSubEntry, "text/html")
+    oldCrossRefDom = domparser.parseFromString(tempCrossRef, "text/html")
+    newCrossRefDom = domparser.parseFromString(newCrossRef, "text/html")
 
-    return !(newEntryDom.isEqualNode(oldEntryDom) && newSubEntryDom.isEqualNode(oldSubEntryDom))
+
+
+    return !(newEntryDom.isEqualNode(oldEntryDom) && newSubEntryDom.isEqualNode(oldSubEntryDom) && newCrossRefDom.isEqualNode(oldCrossRefDom))
   }
 
-  saveContent = crossReferences => {
+  saveContent = (crossReferences, crossRefValues) => {
 
     if (!hasReviewerRole()) {
       const { markedIndexValue } = this.props;
@@ -87,7 +93,7 @@ componentWillUnmount() {
       secondLevel = secondLevel.innerHTML.match(/<p>/g) ? secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
         : `<p>${secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
 
-      if (this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel)) {
+      if (this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))) {
         config.isGlossarySaving = true;
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField, null, null, null, crossReferences)
@@ -96,12 +102,15 @@ componentWillUnmount() {
     this.props.showMarkedIndexPopup(false);
   }
 
-  saveMarkedIndex = async () => {
+  getCrossRefData = () => {
     let crossRefValues = document.querySelector('#cross-reference').innerHTML;
     let crossRefArray = crossRefValues.split(',');
     let crossReferences = crossRefArray.map(value => `<span>${value}</span>`);
     crossReferences = `<p>${crossReferences.join('')}</p>`;
-
+    return {crossReferences, crossRefValues};
+  }
+  saveMarkedIndex = async () => {
+    const {crossReferences, crossRefValues} = this.getCrossRefData();
     if(this.props.isInGlossary){
       let {elementWorkId, elementType,  type, elementSubType, typeWithPopup, poetryField} = this.props.markedIndexData.markedIndexValue;
       let { markedIndexEntryURN } = this.props.markedIndexData.markedIndexGlossary;
@@ -114,7 +123,7 @@ componentWillUnmount() {
         : `<p>${secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
 
       
-      let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel)
+      let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))
       if(markedIndexEntryURN){
         if(checkDifference){
           await saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField,null,null,null,crossReferences);
@@ -129,7 +138,7 @@ componentWillUnmount() {
       }
     } else {
       const { markedIndexValue } = this.props.markedIndexData;
-      this.saveContent(crossReferences);
+      this.saveContent(crossReferences, crossRefValues);
       if (Object.keys(markedIndexValue).includes('isNewIndex') && markedIndexValue?.isNewIndex) {
         this.props.showingToastMessage(true);
       }

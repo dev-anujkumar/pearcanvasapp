@@ -31,14 +31,15 @@ export const CrossReference = ({crossRefValue}) => {
     }
 
     const handleSelectedCheckboxValue = (item) => {
-        if (crossRef.length > 0) {
-            let tempIndex = crossRef.indexOf(item)
-            if (tempIndex > -1) crossRef.splice(tempIndex, 1);
-            if (tempIndex <= -1) crossRef.push(item);
+        let tempCrossRef = [...crossRef];
+        if (tempCrossRef.length > 0) {
+            let tempIndex = tempCrossRef.indexOf(item)
+            if (tempIndex > -1) tempCrossRef.splice(tempIndex, 1);
+            if (tempIndex <= -1) tempCrossRef.push(item);
         } else {
-            crossRef.push(item)
+            tempCrossRef.push(item)
         }
-        setcrossRef(crossRef);
+        setcrossRef(tempCrossRef);
     }
     return (
         <div>
@@ -46,7 +47,7 @@ export const CrossReference = ({crossRefValue}) => {
                 <div id="index-secondlevel-attacher">
                     <div className="markedindex-secondlevel-label" onClick={changePopUpStatus}>
                         <label id="secondLevel" className="transition-none">Cross Reference (See Also)</label>
-                        <ReactMarkedIndexEditor className='markedindex-editor place-holder sub-entry' id='cross-reference' markIndexCurrentValue={crossRef.join(',')} placeholder="None" filterCrossRef={filterCrossRef}/>
+                        <ReactMarkedIndexEditor className='markedindex-editor place-holder cross-reference' id='cross-reference' markIndexCurrentValue={crossRef.join(',')} placeholder="None" filterCrossRef={filterCrossRef}/>
                     </div>
                 </div>
             </div>
