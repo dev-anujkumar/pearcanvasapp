@@ -21,7 +21,7 @@ div.cypress-editable ol,div.cypress-editable li ol, div.cypress-editable ul, div
     counter-reset: section !important;
 }
 
-ol{
+.bl ol{
     counter-reset: section !important;
 }
 
