@@ -748,6 +748,12 @@ th ol li.listItemNumeroUnoNone:before {
   right: 0;
   top: 14px;
 }
+.figure-label-number .dropdown-arrow{
+    width: 8px;
+    position: absolute;
+    right: 0;
+    top: 14px;
+  }
 .label{
   font-size: 10px;
   color: #999;
@@ -758,6 +764,7 @@ th ol li.listItemNumeroUnoNone:before {
 .new-figure-image-header {
   position: relative;
   display: flex;
+  flex-direction: row;
 }
 .figure-label-field{
   margin-right: 24px;
