@@ -411,8 +411,8 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         while (indexOfElement < response.data.length) {
             if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1){
                 const containerElement = {
-                    asideData: null,
-                    parentUrn: null,
+                    asideData: asideData?asideData:null,
+                    parentUrn: parentUrn?parentUrn:null,
                     poetryData: null
                 };
                 const slateData = {
