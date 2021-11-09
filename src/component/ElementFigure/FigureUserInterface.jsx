@@ -19,6 +19,8 @@ import { labelHtmlData } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
 import interactiveTypeData from '../ElementInteractive/interactiveTypes.js';
 import { AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE } from '../../constants/Element_Constants';
+import SmallRoundedButton from './Small_RoundedButton.jsx';
+import { ELM_INT, MMI } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -229,7 +231,7 @@ class FigureUserInterface extends Component {
         )
     }
 
-    generateUpdateAssetJSX = (element, assetTitleText, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension) => {
+    generateUpdateAssetJSX = (element, assetTitleText, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension,interactiveformat) => {
         return (
             <div className='figure-wrapper-update'>
                 <div className='videoIconWrapper'>
@@ -241,11 +243,24 @@ class FigureUserInterface extends Component {
                         <div className='update-figure-button' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
                         <div className={`delete-figure-button ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={(evt) => this.props.deleteElementAsset(true,evt)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                     </div>
-                    <div className="media-image-info">
-                        <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
-                        <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
-                        <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite && (alfrescoSite !== '' || alfrescoSite !== undefined) ? alfrescoSite : this.state.alfrescoSite : ""} </span> </div>
-                    </div>
+                    {
+                        interactiveformat === "mmi" ?
+                            <div className="media-image-info">
+                                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
+                            </div>
+                            :
+                            interactiveformat === "mmi-elm" ?
+                                <div className="media-image-info">
+                                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""} <SmallRoundedButton approval={this.props?.assessmentReducer[element.figuredata.interactiveid]?.assessmentStatus === "final"}/> </span> </div>
+                                </div>
+                                :
+                                <div className="media-image-info">
+                                    <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite && (alfrescoSite !== '' || alfrescoSite !== undefined) ? alfrescoSite : this.state.alfrescoSite : ""} </span> </div>
+                                </div>
+                    }
                 </div>
                 <div className="media-assets">
                     {this.generatePosterImageJSX(element, assetBackgroundType, imageDimension)}
@@ -283,7 +298,6 @@ class FigureUserInterface extends Component {
     }
 
     renderAssetSection = (element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite, imageDimension) => {
-      console.log('element@@#',element,assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite, imageDimension)
         let assetJsx;
         switch (element.figuretype) {
             case AUDIO:
@@ -304,11 +318,17 @@ class FigureUserInterface extends Component {
                 assetJsx = element.figuredata.interactivetype !== 'pdf' ?
                     (
 
-                        element.figuredata.interactiveformat === "mmi" ?
-                            assetJsx = this.generateAddAssetJSX(smartlinkIcon, "QuaD Interactive Title", "Add an Interactive", slPosterImage, "Item ID", assetPathText, "mmi")
+                        element.figuredata.interactiveformat === MMI ?
+                            assetId ?
+                                this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID", assetId, "Version", alfrescoSite, imageDimension, MMI)
+                                :
+                                this.generateAddAssetJSX(smartlinkIcon, "QuaD Interactive Title", "Add an Interactive", slPosterImage, "Item ID", assetPathText, MMI)
                             :
-                            element.figuredata.interactiveformat === "mmi-elm" ?
-                                assetJsx = this.generateAddAssetJSX(smartlinkIcon, "Elm Interactive Title", "Add an Interactive", slPosterImage, "Item ID", "Version", "mmi-elm")
+                            element.figuredata.interactiveformat === ELM_INT ?
+                                assetId ?
+                                    this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID", assetId, "Version", alfrescoSite, imageDimension, ELM_INT)
+                                    :
+                                    this.generateAddAssetJSX(smartlinkIcon, "Elm Interactive Title", "Add an Interactive", slPosterImage, "Item ID", "Version", ELM_INT)
                                 :
                                 assetId ?
                                     this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
@@ -409,7 +429,7 @@ class FigureUserInterface extends Component {
                 break;
             case INTERACTIVE:
                 assetId = element.figuredata.interactiveid ? element.figuredata.interactiveid : '';
-                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : 'Smart link';
+                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : element.figuredata.interactiveformat === 'mmi' ? "QUAD" : element.figuredata.interactiveformat === 'mmi-elm' ? "ELM" : 'Smart link';
                 addButtonText = "Add a Smart Link";
                 assetIdText = "Asset ID:";
                 assetPathText = "Asset Path:";
@@ -527,7 +547,8 @@ const mapActionToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        figureDropdownData: state.appStore.figureDropdownData
+        figureDropdownData: state.appStore.figureDropdownData,
+        assessmentReducer: state.assessmentReducer,
     }
 }
 

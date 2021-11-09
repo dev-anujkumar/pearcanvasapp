@@ -1,0 +1,45 @@
+.assets1{
+    padding: 5px;
+    margin: 5px;
+    height:9px;
+    margin-bottom: -5px;
+    margin-left: -7px;
+   margin-top: -7px;
+}
+
+
+.small_rounded_btn{
+    justify-content: space-around;
+    align-items: center;
+    height: 20px;
+    width: 80px;
+    display: flex;
+    border-radius: 10px;
+    background-color: #9bd377;
+}
+
+.small_rounded_btn2{
+    justify-content: space-between;
+    align-items: center;
+    height: 20px;
+    width: 90px;
+    display: flex;
+    border-radius: 10px;
+    background-color: white;
+    flex-direction: row;
+}
+
+.button_title{
+    color: black;
+    width: 100%;
+    flex: 5;
+    justify-content: center;
+    align-items: center;
+    margin-left: 2px;
+}
+
+.version-icon{
+    height: 16px;
+    width: 16px;
+    flex: 1.8;
+}

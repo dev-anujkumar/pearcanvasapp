@@ -131,15 +131,17 @@ class Interactive extends React.Component {
      /*** @description This function is to show Approved/Unapproved Status on interative */
     showElmVersionStatus = () => {
         let elmInt =  this.props?.assessmentReducer[this.state.itemID];
-        if (elmInt) {
-            return (<ElmUpdateButton
-                elmAssessment={elmInt}
-                updateElmVersion={this.updateElm}
-                buttonText={ELM_UPDATE_BUTTON}
-                embeddedElmClass="elm-int-status-alignment"
-                elementType={ELM_INT}
-            />)
-        }
+        // const approveText = elmInt.assessmentStatus == 'final' ? "Approved" : "Unapproved";
+        return elmInt.assessmentStatus === 'final';
+        // if (elmInt.assessmentStatus==='final') {
+        //     return (<ElmUpdateButton
+        //         elmAssessment={elmInt}
+        //         updateElmVersion={this.updateElm}
+        //         buttonText={ELM_UPDATE_BUTTON}
+        //         embeddedElmClass="elm-int-status-alignment"
+        //         elementType={ELM_INT}
+        //     />)
+        // }
     }
     /*** @description This function is used to open Version update Popup */
     updateElm = (event) => {
@@ -346,10 +348,10 @@ class Interactive extends React.Component {
       
         let figureHtmlData = getLabelNumberTitleHTML(element);
         if (SMARTLINK_CONTEXTS.includes(context)) {
-            return <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+            return <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
         }
         else {
-            return <FigureUserInterface deleteElementAsset={this.deleteElementAsset} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+            return <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
         }
         // else if (context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
         //     jsx = <div className={divImage} resource="">
@@ -422,7 +424,7 @@ class Interactive extends React.Component {
         //         </div>
         //     </div>
         // }
-        return jsx;
+        // return jsx;
     }
 
     /**
@@ -508,7 +510,7 @@ class Interactive extends React.Component {
     */
     addElmInteractive = async (pufObj, cb) => {
         const { INTERACTIVE_TYPES : { VIDEO_MCQ, GUIDED_EXAMPLE}} = elementTypeConstant;
-        const thumbnailTypes = [ VIDEO_MCQ, GUIDED_EXAMPLE ];
+        const thumbnailTypes = [ VIDEO_MCQ, GUIDED_EXAMPLE,"gallery-image" ];
         let thumbnailImage="";
         if(pufObj.elementUrn === this.props.elementId){
             showTocBlocker();
@@ -876,7 +878,7 @@ class Interactive extends React.Component {
             let interactiveData ={};
             let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?String.prototype.toLowerCase.apply(citeTdxObj.singleAssessmentID.taxonomicTypes).split(","):"";
             tempInteractiveType = tempInteractiveType ? utils.getTaxonomicType(tempInteractiveType) : this.state.elementType;
-            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
+            // if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
                await getMCQGuidedData(itemId).then((responseData) => {
                     if(responseData && responseData['data'] && responseData['data']["thumbnail"]){
                         interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
@@ -884,7 +886,7 @@ class Interactive extends React.Component {
                         interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
                     }
                 })
-            }
+            // }
             let posterImage = {};
             posterImage['imageid'] = interactiveData['imageId'] ? interactiveData['imageId'] : '';
             posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
@@ -899,11 +901,11 @@ class Interactive extends React.Component {
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
                }
-            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
+            // if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
                 figureData.posterimage = posterImage;
                 figureData.alttext = alttext;  
                 
-            }
+            // }
             that.setState({itemID : itemId,
                 imagePath:posterImage.path,
                 itemParentID:citeTdxObj.id,
