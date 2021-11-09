@@ -92,28 +92,28 @@ describe('Tests marked index action', () => {
  
 
    it('should test marked index in para', async() => {
-        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext',2, undefined,'term text--', "element-authoredtext", undefined, true);
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext',2, undefined,'<p>ndex</p>', "element-authoredtext", undefined, true);
         const item = await result(store.dispatch);
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>ndex</p>');
    });
 
     it('should test marked index in 2C ', async() => {
-        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','6-0-0', undefined,'term text--', "element-authoredtext", undefined, true);
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','7-0-0', undefined,'<p>index</p>', "element-authoredtext", undefined, true);
         const item = await result(store.dispatch);
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
    });
 
    it('should test marked index in aside ', async() => {
-        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','7-0', undefined,'term text--', "element-authoredtext", undefined, true);
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','8-0', undefined,'<p>index</p>', "element-authoredtext", undefined, true);
         const item = await result(store.dispatch);
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
     });
 
     it('should test marked index in aside of 2C', async() => {
-        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','8-0-0-0', undefined,'index', "element-authoredtext", undefined, true);
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','9-0-0-0', undefined,'index', "element-authoredtext", undefined, true);
         const item = await result(store.dispatch);
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('index');

@@ -1620,7 +1620,7 @@ function prepareParentData(asideData, parentUrn) {
 */
 export const checkContainerElementVersion = async (containerElement, versionStatus, currentSlateData, actionType, deleteElementType) => {
     /** latest version for WE/CE/PE/AS*/
-    if (versionStatus && versionStatus.parentStatus && versionStatus.parentStatus === "approved" && !(containerElement?.asideData?.parent?.type === SHOWHIDE)) {
+    if (versionStatus && versionStatus.parentStatus && versionStatus.parentStatus === "approved" && containerElement?.asideData?.parent?.type !== SHOWHIDE) {
         let contentUrn = containerElement.asideData ? containerElement.asideData.contentUrn : containerElement.poetryData ? containerElement.poetryData.contentUrn : containerElement.parentUrn ? containerElement.parentUrn.contentUrn : ""
         if (contentUrn) {
             let newManifestData = await getLatestVersion(contentUrn);
