@@ -96,7 +96,7 @@ class FigureUserInterface extends Component {
     }
 
     changeFigureLabel = (figureLabelValue, data) => {
-        if (!(figureLabelValue === data)) {
+        if (figureLabelValue !== data) {
             this.setState({ figureLabelValue: data });
             let dropdownOptions = [];
             for (let option of this.state.figureLabelData) {
