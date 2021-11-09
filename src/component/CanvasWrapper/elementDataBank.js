@@ -4,8 +4,12 @@ const elementDataBank = {
         "elementType" : "element-authoredtext",
         "primaryOption" : "primary-paragraph",
         "secondaryOption" : "secondary-paragraph"
+    }, 
+     "manifestlist" : {
+        "elementType" : "manifestlist",
+        "primaryOption" : "primary-column-1",
+        "secondaryOption" : "secondary-column-1"
     },
-
     "element-authoredtext-heading" : {
         "elementType" : "element-authoredtext",
         "primaryOption" : "primary-heading",
@@ -121,6 +125,9 @@ const elementDataBank = {
             },
             "image25Text" : {
                 "secondaryOption" : "secondary-image-figure-quarter"
+            },
+            "image75Text" : {
+                "secondaryOption" : "secondary-image-figure-three-quarter"
             }
         },
         "mathImage" : {
@@ -355,6 +362,9 @@ const elementDataBank = {
         },
         "text-width-50-50" : {
             "secondaryOption" : "secondary-multicolumn-half-text"
+        },
+        "wider-33-33-33" : {
+            "secondaryOption" : "secondary-multicolumn-3c-wider"
         }
     },
     "element-dialogue" : {

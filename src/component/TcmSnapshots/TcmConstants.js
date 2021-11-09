@@ -3,6 +3,7 @@ export default {
     AUTHORED_TEXT: "element-authoredtext",
     BLOCKFEATURE: "element-blockfeature",
     ELEMENT_LIST: "element-list",
+    ELEMENT_ASSESSMENT: 'element-assessment',
     HEADING: "heading",
     HAND_WRITING: 'handwriting',
     PARAGRAPH: "paragraph",
@@ -65,6 +66,7 @@ export default {
     BLOCK_CODE_EDITOR: "BLOCK_CODE_EDITOR",
     MMI_ELM: "MMI_ELM",
     TEXT: "TEXT",
+    ELEMENT_TYPE_PDF: "element-pdf",
     /*****************Element Type Arrays*******************/
     elementType: ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'],
     containerType : ['element-aside', 'manifest', 'citations', 'poetry', 'WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'CITATION', 'POETRY', 'groupedcontent'],
@@ -73,5 +75,14 @@ export default {
     bqAttrHtmlTrue:'<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>',
     bqAttrHtmlFalse:'<p class="blockquoteTextCredit" contenteditable="false" data-placeholder="Attribution Text"></p>',
     bqHiddenText:'<p class="blockquote-hidden" contenteditable="false" style="visibility: hidden; height: 20px;">hidden</p>',
-    allowedFigureTypesForTCM : ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
+    allowedFigureTypesForTCM : ['assessment','image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive"]
 }
+
+
+export const ASSESSMENT_TYPE = [
+        {type: 'tdx', label: 'TDX', standAloneLabel: 'Full Assessment TDX'},
+        {type: 'cite', label: 'QuAD CITE', standAloneLabel: 'Full Assessment QuAD CITE'},
+        {type: 'puf', label: 'Elm', standAloneLabel: 'Full Assessment Elm'},
+        {type: 'learnosity', label: 'Learnosity', standAloneLabel: 'Full Assessment Learnosity'},
+        {type: 'learningtemplate',label: 'Learning App Type', standAloneLabel: 'Learning App Type'},
+]

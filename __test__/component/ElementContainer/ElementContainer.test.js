@@ -31,11 +31,6 @@ jest.mock('./../../../src/component/SlateWrapper/PageNumberElement', () => {
 jest.mock('./../../../src/component/ElementSaprator', () => {
     return (<div>null</div>)
 })
-jest.mock('./../../../src/js/c2_media_module', () => {
-    return function (){
-        return (<div>null</div>)
-    }
-})
 jest.mock('./../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
@@ -44,7 +39,11 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     matchHTMLwithRegex:jest.fn(),
     createTitleSubtitleModel:jest.fn(),
     removeBlankTags: jest.fn(),
-    removeUnoClass: jest.fn()
+    removeUnoClass: jest.fn(),
+    createLabelNumberTitleModel: jest.fn(),
+    getLabelNumberTitleHTML: jest.fn(() => ({'formattedLabel': ''})),
+    getTitleSubtitleModel: jest.fn(()=> ''),
+    isSubscriberRole:jest.fn(()=>{return true})
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
@@ -88,6 +87,12 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
         },
         updateFigureData : () => {
             return jest.fn()
+        },
+        updateMultipleColumnData : () => {
+            return jest.fn()
+        },
+        storeOldAssetForTCM: () => {
+            return jest.fn()
         }
     }
 })
@@ -101,6 +106,7 @@ if (!global.Element.prototype.hasOwnProperty("innerText")) {
 
 }
 
+window.open = jest.fn();
 beforeEach(() => {
     // Avoid `attachTo: document.body` Warning
     const tempElm = document.createElement('div');
@@ -125,7 +131,31 @@ const store = mockStore({
             "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
             "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
             "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-        ]
+        ],
+        multipleColumnData: [
+            {
+                containerId: "urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e", 
+                columnIndex: "C1", 
+                columnId: "urn:pearson:manifest:73c11fa8-acec-4b8e-b435-0ec6cb3e5912"
+            },
+            {
+                containerId: "urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffedser3422", 
+                columnIndex: "C2",
+                columnId: "urn:pearson:manifest:73c11fa8-acec-4b8e-b435-0ec6cb3e5922"
+            }
+        ],
+        usageTypeListData: {
+            usageTypeList: []
+        },
+        oldFigureDataForCompare: {
+            path: "test"
+        },
+        oldSmartLinkDataForCompare: {
+            interactiveid: 'test id'
+        },
+        oldAudioVideoDataForCompare: {
+            videoid: 'id'
+        }
     },
     slateLockReducer: {
         slateLockInfo: {
@@ -197,6 +227,19 @@ const store = mockStore({
             sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
             sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
         }
+    },
+    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    },
+    assessmentReducer: {},
+    markedIndexReducer: {
+        markedIndexCurrentValue: {},
+        markedIndexValue: { "type": "", "popUpStatus": false }
     }
 });
 
@@ -212,7 +255,8 @@ describe('Test for element container component', () => {
             "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
         ],
         showBlocker: jest.fn(),
-        tcmData:[{"id":"222","feedback":"asdsa"}]
+        tcmData:[{"id":"222","feedback":"asdsa"}],
+        projectSharingRole:"OWNER"
     };
 
     let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
@@ -399,6 +443,10 @@ describe('Test for element container component', () => {
                         sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                         sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                     }
+                },
+                markedIndexReducer: {
+                    markedIndexCurrentValue: {},
+                    markedIndexValue: { "type": "", "popUpStatus": false }
                 }
             });
             let props = {
@@ -458,7 +506,8 @@ describe('Test for element container component', () => {
             let props = {
                 element: wipData.assessment,
                 permissions: [],
-                index:1
+                index:1,
+                storeOldAssetForTCM :  jest.fn()
             };
             
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
@@ -472,7 +521,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        xit('Render Element Container ----->handleBlur popup', () => {
+        it('Render Element Container ----->handleBlur popup', () => {
             let props = {
                 element: wipData.popup,
                 permissions: [],
@@ -753,7 +802,8 @@ describe('Test for element container component', () => {
         it('Render Element Container ----->SingleAssessment Element', () => {
             let props = {
                 element: wipData.assessment,
-                permissions: []
+                permissions: [],
+                storeOldAssetForTCM : jest.fn()
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -812,7 +862,8 @@ describe('Test for element container component', () => {
             let props = {
                 element: wipData.assessmentSlate,
                 permissions: [],
-                updateElement: jest.fn()
+                updateElement: jest.fn(),
+                storeOldAssetForTCM : jest.fn()
             };
             let assessmentData = {
                 id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
@@ -977,6 +1028,15 @@ describe('Test for element container component', () => {
             expect(spyopenGlossaryFootnotePopUp ).toHaveBeenCalledWith(true, "Footnote", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback)
             spyopenGlossaryFootnotePopUp .mockClear()
         })
+        it('Test-openMarkedIndexPopUp  Function', () => {
+            let callback=jest.fn();
+            const spyopenMarkedIndexPopUp  = jest.spyOn(elementContainerInstance, 'openMarkedIndexPopUp')
+            elementContainerInstance.openMarkedIndexPopUp(true, "Markedindex", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyopenMarkedIndexPopUp ).toHaveBeenCalledWith(true, "Markedindex", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback)
+            spyopenMarkedIndexPopUp .mockClear()
+        })
         it('Test-openAssetPopoverPopUp  Function', () => {
             const spyopenAssetPopoverPopUp = jest.spyOn(elementContainerInstance, 'openAssetPopoverPopUp')
             elementContainerInstance.openAssetPopoverPopUp(true);
@@ -985,7 +1045,7 @@ describe('Test for element container component', () => {
             expect(spyopenAssetPopoverPopUp).toHaveBeenCalledWith(true)
             spyopenAssetPopoverPopUp.mockClear()
         })
-        xit('Test-showDeleteElemPopup  Function', () => {
+        it('Test-showDeleteElemPopup  Function', () => {
             const spyshowDeleteElemPopup = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup')
             elementContainerInstance.showDeleteElemPopup(event,true,true);
             elementContainerInstance.forceUpdate();
@@ -1468,7 +1528,8 @@ describe('Test for element container component', () => {
                 let props = {
                     element: wipData.assessmentSlate,
                     permissions: [],
-                    updateElement: jest.fn()
+                    updateElement: jest.fn(),
+                    storeOldAssetForTCM: jest.fn()
                 };
                 let assessmentData = {
                     id: "urn:pearson:learningtemplate:802c9a49-b5cb-4278-a330-edb4048bcc7f",
@@ -1490,7 +1551,8 @@ describe('Test for element container component', () => {
                 let props = {
                     element: wipData.assessmentSlate,
                     permissions: [],
-                    updateElement: jest.fn()
+                    updateElement: jest.fn(),
+                    storeOldAssetForTCM: jest.fn()
                 };
                 let assessmentData = 'Homework'
                 let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
@@ -1652,7 +1714,8 @@ describe('Test-Other Functions', () => {
         parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
         index:0,
         deleteElement: jest.fn(),
-        searchParent : "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+        searchParent : "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+        multipleColumnData: [{containerId: "urn:pearson:manifest:0beacb79-ee4c-4c26-abcc-dd973c6893c9", columnIndex: "C3", columnId: "urn:pearson:manifest:73c11fa8-acec-4b8e-b435-0ec6cb3e5912"}]
     };
 
     let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
@@ -1782,6 +1845,10 @@ describe('Test-Other Functions', () => {
                     sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                 }
+            },
+            markedIndexReducer: {
+                markedIndexCurrentValue: '',
+                markedIndexValue: ''
             }
         });
         let props = {
@@ -1825,7 +1892,10 @@ describe('Test-Other Functions', () => {
                     tag: "H1",
                     toolbar: ['bold']
                 },
-                permissions: []
+                permissions: [],
+                oldSmartLinkDataForCompare: {
+                    interactiveid: 'test id'
+                }
             },
             slateLockReducer: {
                 slateLockInfo: {
@@ -1897,6 +1967,10 @@ describe('Test-Other Functions', () => {
                     sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                 }
+            },
+            markedIndexReducer: {
+                markedIndexCurrentValue: '',
+                markedIndexValue: ''
             }
         });
         let props = {
@@ -1910,7 +1984,7 @@ describe('Test-Other Functions', () => {
                 secondaryOption: "secondary-pullquote",
                 tag: "BQ",
                 toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
-            }
+            },
         };
         let elementContainer = mount(<Provider store={store1}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -1964,6 +2038,13 @@ describe('Test-Other Functions', () => {
             },
             figuredata: {
                 interactivetype: "pdf"
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
             }
         }
         const spyfigureDifferenceInteractive = jest.spyOn(elementContainerInstance, 'figureDifferenceInteractive')
@@ -2057,6 +2138,29 @@ describe('Test-Other Functions', () => {
         spyhandleContentChange.mockClear()
     })
 
+    it("handleContentChange for CG element when update title field", () => {
+        const previousElementData = {
+            type: "citations",
+            html: {
+                text: "<p>title text</p>"
+            }
+        }
+        document.querySelector = () => {
+            return {
+                innerText: " ",
+                append: jest.fn()
+            }
+        }
+        const cgTitleFieldData = {
+            asideData: { element: {type: 'citations'}},
+            parentElement: {type : 'showhide'}
+        }
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, false, {type: "showhide"}, null, null, cgTitleFieldData);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
     it("handleContentChange for stanza", () => {
         const previousElementData = {
             type: "stanza",
@@ -2120,5 +2224,533 @@ describe('Test-Other Functions', () => {
         expect(spysetBorderToggle).toHaveBeenCalled();
         expect(spysetBorderToggle).toHaveReturnedWith('hideBorder');
         spysetBorderToggle.mockClear()
+    })
+    
+    it('Render and Update three column test click event', () => {
+        let props = {
+            onClickCapture: jest.fn(),
+            element: wipData.threeMulticolumn
+        }
+        const elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        let element = wipData.threeMulticolumn;
+        elementContainerInstance.renderMultipleColumnLabels(element);
+        const spyUpdateColumnValues  = jest.spyOn(elementContainerInstance, 'updateColumnValues') 
+        elementContainer.find('span.element-label-clickable-button').at(0).simulate('click');
+        expect(spyUpdateColumnValues).toHaveBeenCalled();
+        spyUpdateColumnValues.mockClear();
+      });
+      
+      it('setElementDetails method - without parentUrn', () => {
+        let props3 = {
+            element: wipData.opener,
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+            updateElement: jest.fn()
+        };
+        let elementContainer1 = mount(<Provider store={store}><ElementContainer {...props3} /></Provider>);
+        const elementContainerInstance1 = elementContainer1.find('ElementContainer').instance();
+        const elementDetails = {
+            element: {
+                type: 'element-blockfeature',
+                html: {
+                    text: ''
+                },
+                elementdata: {
+                    type: ''
+                }
+            }
+        }
+        elementContainerInstance1.setElementDetails(elementDetails);
+    });
+
+    it('setElementDetails method - with parentUrn and element type groupedcontent', () => {
+        let props4 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                groupeddata: {
+                    bodymatter: [{}]
+                },
+                type: 'groupedcontent'
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: {
+                contentUrn: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319z'
+            }
+        };
+        let elementContainer2 = mount(<Provider store={store}><ElementContainer {...props4} /></Provider>);
+        const elementContainerInstance2 = elementContainer2.find('ElementContainer').instance();
+        const elementDetails = {
+            element: {
+                type: 'element-list',
+                html: {
+                    text: ''
+                },
+                elementdata: {
+                    type: ''
+                },
+            },
+            operationType: 'cut'
+        }
+        elementContainerInstance2.setElementDetails(elementDetails);
+    });
+
+    it('handleEditButton method - element - figure', () => {
+        let props5 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'image',
+                type: 'figure',
+                figuredata: {
+                    imageid: 'urn:pearson:alfresco:f3fbd8cd-6e1b-464a-8a20-c62d4b9f31r'
+                },
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
+        const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
+        const event = {stopPropagation: jest.fn()};
+        elementContainerInstance3.handleEditButton(event);
+    });
+
+    it('handleTCMLaunch method - if block', () => {
+        config.isPopupSlate = false;
+        let props5 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'image',
+                type: 'figure',
+                figuredata: {
+                    imageid: 'urn:pearson:alfresco:f3fbd8cd-6e1b-464a-8a20-c62d4b9f31r'
+                },
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
+        const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
+        const element = {type: 'element-authoredtext'};
+        elementContainerInstance3.handleTCMLaunch({}, element);
+    });
+
+    it('handleTCMLaunch method - else block', () => {
+        config.isPopupSlate = false;
+        let props5 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
+        const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
+        elementContainerInstance3.handleTCMLaunch({}, {});
+    });
+
+    it('checkTCMStatus method', () => {
+        let props6 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x'
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer4 = mount(<Provider store={store}><ElementContainer {...props6} /></Provider>);
+        const elementContainerInstance4 = elementContainer4.find('ElementContainer').instance();
+        const tcmData = [{
+            elemURN: '',
+            txCnt: 1,
+            feedback: 'feedback'
+        }];
+        const elementId = '';
+        const defaultUrn = '';
+        elementContainerInstance4.checkTCMStatus(tcmData, elementId, defaultUrn);
+    })
+
+    it('handleAlfrescoMetadataWindow method for image ', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'image',
+                figuredata: {
+                    imageid: {
+                        replace: jest.fn()
+                    }
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
+
+    it("handleContentChange for MML image - with DOM elements", () => {
+        // creating cypress DOM elements for handling getElementById reference 
+        for (let element = 0; element < 6; element++) {
+            let cypress = document.createElement('div')
+            cypress.id = `cypress-0-${element}`;
+            cypress.innerHTML = '<p>cypress</p>';
+            document.body.append(cypress);
+        }
+        const previousElementData = {
+            type: "figure",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "authoredtext",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it('handleAlfrescoMetadataWindow method for image ', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'image',
+                figuredata: {
+                    imageid: {
+                        replace: jest.fn()
+                    }
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
+
+    it('handleAlfrescoMetadataWindow method for audio ', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'audio',
+                figuredata: {
+                    audioid: {
+                        replace: jest.fn()
+                    }
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
+
+    it('handleAlfrescoMetadataWindow method for video ', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'video',
+                figuredata: {
+                    videoid: {
+                        replace: jest.fn()
+                    }
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
+
+    it('handleAlfrescoMetadataWindow method for smartlinks ', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'interactive',
+                figuredata: {
+                    interactiveid: {
+                        replace: jest.fn()
+                    }
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
+
+    it('handleBlurAssessmentSlate method - calledFrom - updateAssessmentFormat', () => {
+        let props8 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuredata: {
+                    imageid: ''
+                },
+                elementdata: {}
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
+        const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
+        elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: '', calledFrom: 'updateAssessmentFormat'});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
+    });
+
+    it('handleBlurAssessmentSlate method - assessmentData - id', () => {
+        let props8 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuredata: {
+                    imageid: ''
+                },
+                elementdata: {}
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
+        const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
+        elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: '', id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319g'});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
+    });
+
+    it('handleBlurAssessmentSlate method - assessmentData - format - learningtemplate', () => {
+        let props8 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuredata: {
+                    imageid: ''
+                },
+                elementdata: {}
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
+        const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
+        elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: 'learningtemplate', id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319g'});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
+    });
+
+    it('handleBlurAssessmentSlate method - else case', () => {
+        let props8 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuredata: {
+                    imageid: ''
+                },
+                elementdata: {}
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer6 = mount(<Provider store={store}><ElementContainer {...props8} /></Provider>);
+        const elementContainerInstance6 = elementContainer6.find('ElementContainer').instance();
+        const spyHandleBlurAssessmentSlate = jest.spyOn(elementContainerInstance6, 'handleBlurAssessmentSlate')
+        elementContainerInstance6.handleBlurAssessmentSlate({ usageType: '', format: ''});
+        expect(spyHandleBlurAssessmentSlate).toHaveBeenCalled();
+    });
+
+    it('saveNewComment  method - without comment', () => {
+        elementContainerInstance.setState({
+            comment : ''
+        })
+        const spySaveNewComment = jest.spyOn(elementContainerInstance, 'saveNewComment')
+        elementContainerInstance.forceUpdate();
+        elementContainer.update();
+        elementContainerInstance.saveNewComment({stopPropagation:()=>{}},true);
+        expect(spySaveNewComment).toHaveBeenCalled();
+    })
+
+    it("Test - figureDifferenceInteractive - pdf interactive type: difference in content - with DOM elements", () => {
+        const previousElementData = {
+            html: {
+                title: '<p></p>',
+                postertext: "<p>test</p>"
+            },
+            figuredata: {
+                interactivetype: "pdf"
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceInteractive = jest.spyOn(elementContainerInstance, 'figureDifferenceInteractive')
+        elementContainerInstance.figureDifferenceInteractive(0, previousElementData);
+        expect(spyfigureDifferenceInteractive).toHaveBeenCalled();
+        expect(spyfigureDifferenceInteractive).toHaveReturnedWith(true);
+        spyfigureDifferenceInteractive.mockClear()
+    })
+
+    it("Test - figureDifferenceBlockCode: difference in content - with DOM elements", () => {
+        const previousElementData = {
+            html: {
+                preformattedtext: '<p></p>'
+            },
+            figuredata: {
+                startNumber: 1,
+                numbered: 1,
+                syntaxhighlighting: false
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "startnumber" || attr === "numbered" || attr === "syntaxhighlighting") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'figureDifferenceBlockCode')
+        elementContainerInstance.figureDifferenceBlockCode(0, previousElementData);
+        expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
+        expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
+        spyfigureDifferenceBlockCode.mockClear()
+    })
+
+    it("handleContentChange for figuretype - image - with DOM elements", () => {
+        const previousElementData = {
+            type: "figure",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "image",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for figuretype - video - with DOM elements", () => {
+        const previousElementData = {
+            type: "figure",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "video",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for figuretype - assessment - with DOM elements", () => {
+        const previousElementData = {
+            type: "figure",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "assessment",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for type - element-assessment - with DOM elements", () => {
+        const previousElementData = {
+            type: "element-assessment",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "assessment",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
     })
 })

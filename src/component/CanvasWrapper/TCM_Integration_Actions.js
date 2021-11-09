@@ -2,6 +2,7 @@
 import config from '../../config/config';
 import store from '../../appstore/store'
 import { checkSlateLock } from '../../js/slateLockUtility'
+import {LAUNCH_TCM_CANVAS_POPUP} from '../../constants/Action_Constants'
 
 export const loadTrackChanges = (elementId) => {
   let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
@@ -15,5 +16,12 @@ export const loadTrackChanges = (elementId) => {
     const QUERY_URL = `?dURN=${currentProjectUrn}&sURN=${currentSlateUrn}&slateEntityURN=${slateEntityUrn}&slateTitle=${encodeURIComponent(currentSlateTitle)}&entityURN=${currentProjectEntityUrn}`;
     const CURRENT_ELEMENT_QUERY = elementId ? `&eURN=${elementId}` : "";
     window.open(config.TCM_DASHBOARD_UI_URL + QUERY_URL + CURRENT_ELEMENT_QUERY, 'tcmwin');
+  }
+}
+
+export const launchTCMPopup = (data) =>{
+  return {
+      type: LAUNCH_TCM_CANVAS_POPUP,
+      payload: data
   }
 }

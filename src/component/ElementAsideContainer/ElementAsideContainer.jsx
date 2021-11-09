@@ -116,7 +116,7 @@ class ElementAsideContainer extends Component {
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'we',
                                             elementIndex: this.props.index,
-                                            parentElement: { type: this.props?.parentElement?.type }
+                                            parentElement: { type: this.props?.parentElement?.type, showHideType: this.props?.showHideType }
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -186,7 +186,7 @@ class ElementAsideContainer extends Component {
             containerTypeElem: 'section',
             asideId: this.props.element.id,
             elementIndex: this.props.index,
-            parentElement: { type: this.props?.parentElement?.type }
+            parentElement: { type: this.props?.parentElement?.type, showHideType: this.props?.showHideType }
         }
 
         this.props.swapElement(dataObj, (bodyObj) => { })
@@ -358,8 +358,11 @@ class ElementAsideContainer extends Component {
         const columnId = groupeddata?.bodymatter[columnIndex]?.id;
         const parentContentUrn = contentUrn;
         const columnContentUrn = groupeddata?.bodymatter[columnIndex]?.contentUrn;
+        const multiColumnType = groupeddata?.bodymatter?.length ? `${groupeddata?.bodymatter?.length}C` : undefined;
         /* Adding parent id and type to update redux store while creating new element inside 2c->Aside->New */
-        asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : "C2" ,parentContentUrn,columnContentUrn }} : asideData;
+        asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : asideData;
+        /* Adding parent id, type and contentUrn update redux store while creating new element inside S/H->Aside->New */
+        asideData = (type === "showhide") ? {...asideData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType }} : asideData;
         try {
             if (_elements !== undefined) {
                 if (_elements.length == 0) {

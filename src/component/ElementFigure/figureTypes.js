@@ -20,6 +20,16 @@ export default {
             figCaptionClass: 'figcaptionImage50Text',
             figCreditClass: 'paragraphImage50TextCredit'
         },
+        'three-quarters-text': {
+            divClass: 'divImage75Text',
+            figureClass: 'figureImage75Text',
+            figLabelClass: 'heading4Image75TextNumberLabel',
+            figTitleClass: 'heading4Image75TextTitle',
+            dataType: 'image',
+            imageDimension: 'image75Text',
+            figCaptionClass: 'figcaptionImage75Text',
+            figCreditClass: 'paragraphImage75TextCredit',
+        },
         'text-width': {
             divClass: 'divImageTextWidth',
             figureClass: 'figureImageTextWidth',
@@ -170,5 +180,27 @@ export default {
             figCaptionClass: 'figcaptionCodeSnippet',
             figCreditClass: 'paragraphCodeSnippetCredit',
         }
+    },
+    'audio': {
+        divClass: 'divAudio',
+        figureClass: 'figureAudio',
+        figLabelClass: 'heading4AudioNumberLabel figureLabel ',
+        figNumberClass: 'heading4AudioNumberLabel figureNumber',
+        figTitleClass: 'heading4AudioTitle figureTitle',
+        dataType: 'audio',
+        captionDivClass: 'figcaptionAudio',
+        figCaptionClass: 'figureCaption',
+        figCreditClass: 'paragraphAudioCredit figureCredit'
+    },
+    'video': {
+        divClass: 'divVideo',
+        figureClass: 'figureVideo',
+        figLabelClass: 'heading4VideoNumberLabel figureLabel ',
+        figNumberClass: 'heading4VideoNumberLabel figureNumber ',
+        figTitleClass: 'heading4VideoTitle figureTitle',
+        dataType: 'video',
+        captionDivClass: 'figcaptionVideo',
+        figCaptionClass: 'figureCaption',
+        figCreditClass: 'paragraphVideoCredit figureCredit'
     }
 };

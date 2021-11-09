@@ -17,7 +17,8 @@ import {
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
     DELETE_COMMENT,
-    ADD_NEW_COMMENT
+    ADD_NEW_COMMENT,
+    UPDATE_ROLE
 } from '../constants/Action_Constants';
 
 /**
@@ -118,8 +119,7 @@ export default function (state = initialState, action = INITIAL_ACTION) {
                 comments: editComment
             }
         case GET_PROJECT_USER:
-            let users = payload;
-            // users = users.filter(user => user.isMember === true)
+            const users = Array.isArray(payload) ? payload.sort((a,b) => (b.lastName.toLowerCase() < a.lastName.toLowerCase() ? 1 : -1)) : []
             return {
                 ...state,
                 users: users
@@ -169,7 +169,24 @@ export default function (state = initialState, action = INITIAL_ACTION) {
                 allComments: [...addComment, payload],
                 comments: addedComment
             }
+        case UPDATE_ROLE:
+            let updateCommentRole = [...state.comments]
+            updateCommentRole.forEach((comment, index) => {
+                if (comment.commentUrn === payload.commentUrn) {
+                    if(comment.role){
+                        comment.role = payload.newRole
+                    }
+                    else{
+                        comment = Object.assign(comment, {role : payload.newRole});
+                    }
+                }
+            })
+            return {
+                ...state,
+                comments: updateCommentRole
+            }
         default:
             return state;
     }
 }
+

@@ -11,6 +11,9 @@ const mockStore = configureMockStore(middlewares);
 let store = mockStore({});
 let props = {
     glossaryFootnoteValue : {type: "Glossary"},
+    glossaryFootnoteValue: {
+        popUpStatus: true
+    },
     glossaryFootNoteCurrentValue: {"glossaryContentText": ""},
     showGlossaaryFootnote : ()=>{
     return;

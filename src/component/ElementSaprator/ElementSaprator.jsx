@@ -7,13 +7,14 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe, hasProjectPermission, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
 import { getPasteValidated } from '../../constants/Element_Constants.js';
 import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
+import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 
 const { TEXT, 
     IMAGE, 
@@ -134,7 +135,7 @@ export function ElementSaprator(props) {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
         let sourceComp = 'source' in props ? props.source : '';
         let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
-        let pasteValidation = getPasteValidated(sourceComp, inputType);
+        let pasteValidation = getPasteValidated(props, sourceComp, inputType);
         if (!config.isPopupSlate && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
@@ -148,9 +149,11 @@ export function ElementSaprator(props) {
     }
 
     const renderWordPasteButton = (parentElementType, { firstOne, index, userRole, onClickCapture }) => {
-        const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN]
+        const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN, SHOW_HIDE ]
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
-        if(inContainer.includes(parentElementType) || config.isPopupSlate || !allowedRoles.includes(userRole)) {
+        const hasPasteFromWordPermission = hasProjectPermission("paste_from_word");
+        let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn) {
             return null;
         }
 
@@ -170,11 +173,13 @@ export function ElementSaprator(props) {
         pasteRender = true;
         operationType = props.elementSelection.operationType || '';
     }
-    
+    /* @hideSplitSlateIcon@ hide split slate icon in following list of elements */
+    const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
+    let hideElementSeperator = isSubscriberRole(props?.projectSubscriptionDetails?.projectSharingRole,props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? 'hideToolbar' : ''
     return (
-        <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
+        <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
-                {permissions && permissions.includes('split_slate') && (elementType !== 'element-aside' && elementType !== 'citations' && elementType !== 'poetry' && elementType !== 'group') && !config.isPopupSlate && !props.firstOne && !(props.setSlateParent == 'part' && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
+                {permissions && permissions.includes('split_slate') && hideSplitSlateIcon && !config.isPopupSlate && !props.firstOne && !(props.setSlateParent == 'part' && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
             <div className='elemDiv-hr'>
@@ -314,7 +319,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             if(event){
                 event.stopPropagation();
             }
-            if (elem.buttonType === "interactive-elem-button" || elem.buttonType === "container-elem-button" || elem.buttonType === "block-text-button") {
+            if (elem.buttonType === "interactive-elem-button" || elem.buttonType === "container-elem-button" || elem.buttonType === "block-text-button" || elem.buttonType === "multi-column-group") {
                 setData(typeOfContainerElements(elem, props));
                 if(elem.buttonType !== showInteractiveOption.type){
                     setshowInteractiveOption({status:true,type:elem.buttonType});
@@ -337,6 +342,9 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     data={data}
                     sectionBreak={sectionBreak}
                     elementType={elementType}
+                    showPlayscript={props.showPlayscript}
+                    showDiscussion={props.showDiscussion}
+                    asideData={props.asideData}
                 >
                 </ElementContainerType>
             }
@@ -351,20 +359,44 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
     })
 }
   
-function typeOfContainerElements(elem, props) {
-    const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction } = props
+export function typeOfContainerElements(elem, props) {
+    const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction, sectionType } = props
     let newData = containerTypeArray[elem.buttonType];
     /* Do not show Citation Group option if inside Multicolumn  */
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
+    /* Do not show SH and Pop up option if Aside/WE is inside SH  */
+    if (asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) {
+        switch (elem?.buttonType) {
+            case "interactive-elem-button":
+                newData = {
+                    ["Add Elm Interactive"]: newData["Add Elm Interactive"],
+                    ["Add Quad Interactive"]: newData["Add Quad Interactive"],
+                    ["Add Smart Link"]: newData["Add Smart Link"],
+                    ["Add Discussion"]: newData["Add Discussion"]
+                }
+                break;
+            case "block-text-button":
+                newData = {
+                    ["Block Math"]: newData["Block Math"],
+                    ["Block Code"]: newData["Block Code"],
+                    ["Playscript"]: newData["Playscript"]
+                }
+                break;
+        }
+    }
+
     if(newData){
-        let data = Object.entries(newData).map(function (num) {
+        return Object.entries(newData).map(function (num) {
+            /* If Showhide Element, different set of params required to create elements inside SH */
+            const splitHandlerList = asideData?.type === "showhide" ? [index, sectionType, num[1], props]
+                : [num[1], index, firstOne, parentUrn, asideData, parentIndex];
             return {
                 buttonType: num[1],
                 text: num[0],
-                buttonHandler: () => splithandlerfunction(num[1], index, firstOne, parentUrn, asideData, parentIndex),
+                buttonHandler: () => splithandlerfunction(...splitHandlerList),
             }
         })
-        return data;
+        //return data;
     }
     else{
         return;
@@ -380,7 +412,15 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
     }
     const index = separatorProps.index;
     const firstOne = separatorProps.firstOne || false;
-    const insertionIndex = firstOne ? index : index + 1
+    let insertionIndex = firstOne ? index : index + 1;
+    /* For cut/copy paste functionality in showhide element */
+    let sectionType, index2ShowHide;
+    if(separatorProps?.elementType === SHOW_HIDE) {
+        const indexs = index?.toString()?.split("-") || [];
+        insertionIndex = indexs[indexs?.length - 1];
+        sectionType = indexOfSectionType(indexs);
+        index2ShowHide = index;
+    }
     const selectedElement = separatorProps.elementSelection.element
     const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,SHOW_HIDE,POPUP]
     if ((acceptedTypes.includes(selectedElement.type)) && type === 'copy'){
@@ -392,14 +432,22 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
         index: insertionIndex,
         parentUrn: 'parentUrn' in separatorProps ? separatorProps.parentUrn : null,
         asideData: 'asideData' in separatorProps ? separatorProps.asideData : null,
-        poetryData: 'poetryData' in separatorProps ? separatorProps.poetryData : null
+        poetryData: 'poetryData' in separatorProps ? separatorProps.poetryData : null,
+        sectionType,
+        index2ShowHide
     }
     separatorProps?.pasteElement(pasteFnArgs)
 }
 
 const mapStateToProps = (state) => ({
     setSlateParent :  state.appStore.setSlateParent,
-    elementSelection: state.selectionReducer.selection
+    elementSelection: state.selectionReducer.selection,
+    showPlayscript: state.projectInfo.showPlayscript,
+    showDiscussion: state.projectInfo.showDiscussion,
+    projectSubscriptionDetails:state.projectInfo
 })
 
-export default connect(mapStateToProps, { cloneContainer })(ElementSaprator)
+const mapActionToProps = {
+    cloneContainer
+}
+export default connect(mapStateToProps, mapActionToProps)(ElementSaprator)

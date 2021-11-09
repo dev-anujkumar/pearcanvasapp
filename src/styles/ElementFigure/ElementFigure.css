@@ -107,7 +107,7 @@ figure,.element-container{
     display: table;
 }
 
-
+/* figure 25% image*/
 .divImage25Text{
     background-color: transparent;
     padding-top: 0;
@@ -177,7 +177,82 @@ figure,.element-container{
     line-height: 1.45em;
     letter-spacing: 0.02em;
     word-wrap: break-word;
+}/*end figure 25image*/
+
+/* figure 75% image*/
+.divImage75Text{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
 }
+.figureImage75Text{
+	background-color: transparent;
+    padding: 0;
+    margin: 0 auto;
+    }
+.heading4Image75TextNumberLabel{   
+    color: #007FA3;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 0.15em auto;
+    padding: 0;
+    font-size: 1.150em;
+    font-weight: 600;
+    line-height: 1.3em;
+    letter-spacing: 0.02em;
+    }
+.heading4Image75TextTitle{
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0em auto 0em auto;
+    padding: 0;
+    font-size: 1.06em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+}
+.figureElement .pearson-component.image .image75Text{
+    display: block;
+    /* cursor:copy!important; */
+    text-align: center;
+    /*max-width: 170px;*/
+    width: 75%;
+    margin: 0.60em auto 0.65em auto;
+}
+
+.figcaptionImage75Text{  
+    color: #505759;
+    font-family: Open Sans, Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0.75em auto 0.45em auto;
+    padding: 0;
+    font-size: 0.90em;
+    font-weight: 400;
+    line-height: 1.5em;
+    letter-spacing: 0.01em;
+    word-wrap: break-word;
+}
+.paragraphImage75TextCredit{ 
+    color: #505759;
+    font-family: Open Sans, Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0.45em auto 0 auto;
+    padding: 0;
+    font-size: 0.80em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.02em;
+    word-wrap: break-word;
+}
+/*end of figure 75% image*/
+
+
 .image50Text, .image50TextTableImage, .image50TextMathImage{
     width: 50% !important;
     max-width: 340px !important;
@@ -426,3 +501,72 @@ th ol li.listItemNumeroUnoNone:before {
     font-weight: 700;
     font-size:11px;
 }
+.figure-glossary-icon{
+    position: relative;
+}
+
+.figure-glossary-icon::after{
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    top: -3px;
+    background-color: #005a70;
+    right: -3px;
+    border:2px solid #fff;
+}
+
+/**CSS for FigureImage.jsx*/
+
+.image-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.textfield-container {
+    /* margin-top: 20px; */
+    display: flex;
+    flex-direction: column;
+    /* transition: all .2s ease; */
+  }
+  
+  .textfield-label {
+    display: block;
+    font-size: 12px;
+    transition: all .4s ease;
+    transform: translateY(-18px);
+    color: grey;
+    pointer-events: none;
+  }
+  
+  .textfield-container input {
+    outline: none;
+    border: none;
+    height: 20px;
+  }
+  
+  .textfield-border-bottom {
+    position: relative;
+    width: 100%;
+    height: 1px;
+    margin-top: 2px;
+    border-bottom: 1px solid black;
+    transition: all .1s ease;
+    transform: translateY(-13px);
+  }
+  
+  .textfield-container:focus-within > label ,
+  .textfield-container input:not(:placeholder-shown) + label {
+    transform: translateY(-35px);
+    font-size: 9px;
+    font-weight: 600;
+    color: black;
+  }
+  
+  .textfield-container:focus-within > div, 
+  .textfield-container input:valid > div {
+    margin-top: 3px;
+    border-bottom: 3px solid blue;
+  }

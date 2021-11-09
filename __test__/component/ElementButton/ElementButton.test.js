@@ -101,7 +101,6 @@ describe('Testing Button component with props', () => {
     })
     it('render Section break element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.SECTION_BREAK_ELEMENT} />);
-        console.log("this is component button functionality---",component.debug());
         expect(component.find('span.btn-element').hasClass('section-break-elem')).toBe(true);;
         expect(component.find('span.btn-element').hasClass('worked-exp-elem')).toBe(false);
         expect(component.find('svg#sectionBreakElement').exists()).toBe(true);
@@ -186,5 +185,25 @@ describe('Testing Button component with props', () => {
     it('render APPROVE_TICK_ICON Button component  ', () => {
         const component = mount(<Button type={buttonTypes.APPROVE_TICK_ICON} />);
         expect(component.find('span.btn-element').hasClass('approve-icon')).toBe(true);
+    })
+    it('render POWERPASTE Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.POWERPASTE} />);
+        expect(component.find('span.btn-element').hasClass('power-paste-icon')).toBe(true);
+    })
+    it('render ALFRESCO_METADATA Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.ALFRESCO_METADATA} />);
+        expect(component.find('span.btn-element').hasClass('alfresco-metadata-icon')).toBe(true);
+    })
+    it('render STAGE_DIRECTION Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.STAGE_DIRECTION} />);
+        expect(component.find('span.btn-element').hasClass('text-elem')).toBe(true);
+    })
+    it('render DIALOGUE_ELEMENT Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.DIALOGUE_ELEMENT} />);
+        expect(component.find('span.btn-element').hasClass('text-elem')).toBe(true);
+    })
+    it('render ELEMENT_LABEL_CLICKABLE Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.ELEMENT_LABEL_CLICKABLE} />);
+        expect(component.find('span.btn-element').hasClass('element-label-clickable-button')).toBe(true);
     })
 })

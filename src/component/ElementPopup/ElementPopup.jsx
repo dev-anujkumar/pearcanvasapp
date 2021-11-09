@@ -9,7 +9,7 @@ import {
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import { checkSlateLock } from '../../js/slateLockUtility.js'
-import { getTitleSubtitleModel } from "../../constants/utility.js"
+import { getTitleSubtitleModel, isSubscriberRole } from "../../constants/utility.js"
 import { findKey } from "lodash";
 
 /**
@@ -26,7 +26,9 @@ class ElementPopup extends React.Component {
         this.popupBorderRef = React.createRef()
     }
     componentDidMount = () => {
-        this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick)
+        const { projectSharingRole, projectSubscriptionDetails } = this?.props?.projectSubscriptionDetails;
+        let subscriberContent = isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed)
+        if (!subscriberContent) this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick);
     }
     componentWillUnmount = () => {
         this.popupBorderRef.current.removeEventListener('click', this.handlepopupSlateClick);
@@ -112,6 +114,7 @@ class ElementPopup extends React.Component {
                             popupField = "formatted-title"
                             createPopupUnit = {this.createPopupUnit}
                             handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
+                            handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
                         />
                         <TinyMceEditor permissions = {this.props.permissions} 
                             openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp} 
@@ -132,6 +135,7 @@ class ElementPopup extends React.Component {
                             popupField = "formatted-subtitle" 
                             createPopupUnit = {this.createPopupUnit}
                             handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
+                            handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
                         />
                     </header>
                     <div className="pearson-component pu"  data-uri="" data-type="pu" data-width="600" data-height="399" ref={this.popupBorderRef}>
@@ -153,6 +157,7 @@ class ElementPopup extends React.Component {
                                     popupField = "postertextobject" 
                                     createPopupUnit = {this.createPopupUnit}
                                     handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
+                                    handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
                                 />
                             </a>
                         }
@@ -174,7 +179,8 @@ ElementPopup.displayName = "ElementPopup"
 
 const mapStatetoProps = (state) => {
     return {
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        projectSubscriptionDetails: state.projectInfo
     }
 }
 

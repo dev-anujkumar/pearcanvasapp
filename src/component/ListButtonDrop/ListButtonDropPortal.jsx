@@ -9,6 +9,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import config from '../../config/config.js'
+import { checkBlockListElement } from '../../js/TinyMceUtility.js';
 class ListButtonDropPortal extends Component {
     constructor(props) {
         super(props);
@@ -62,6 +63,7 @@ class ListButtonDropPortal extends Component {
         try {
             this.startValue = null;
             this.selectedOption = null;
+            let blockListData = checkBlockListElement({slateLevelData:slateData,index:activeElement.index}, 'ENTER');
             if (activeElement.elementWipType === 'element-list') {
                 const slateObject = slateData[config.slateManifestURN];
                 const { contents } = slateObject;
@@ -81,9 +83,9 @@ class ListButtonDropPortal extends Component {
                                         isMatched = nestedElement.type === 'element-list'
                                         isMatched && (listElement = nestedElement)
                                     }
-                                    else if(nestedElement.type === "showhide" && this.props.showHideObj && this.props.showHideObj.index){
-                                        let indexes = this.props.showHideObj.index.split("-")
-                                        let targetShowhideElem = nestedElement.interactivedata[this.props.showHideObj.showHideType][indexes[3]]
+                                    else if(nestedElement.type === "showhide" && this.props?.asideData?.type === "showhide"){
+                                        let indexes = activeElement.index.split("-")
+                                        let targetShowhideElem = nestedElement.interactivedata[this.props?.asideData?.sectionType][indexes[3]]
                                         if(targetShowhideElem && targetShowhideElem.id === activeElement.elementId){
                                             isMatched = targetShowhideElem.type === 'element-list'
                                             isMatched && (listElement = targetShowhideElem)
@@ -95,9 +97,9 @@ class ListButtonDropPortal extends Component {
                                                 isMatched = leafElement.type === 'element-list'
                                                 isMatched && (listElement = leafElement)
                                             }
-                                            else if(leafElement.type === "showhide" && this.props.showHideObj && this.props.showHideObj.index){
-                                                let indexes = this.props.showHideObj.index.split("-")
-                                                let targetShowhideElem = leafElement.interactivedata[this.props.showHideObj.showHideType][indexes[4]]
+                                            else if(leafElement.type === "showhide" && this.props?.asideData?.type === "showhide"){
+                                                let indexes = activeElement.index.split("-")
+                                                let targetShowhideElem = leafElement.interactivedata[this.props?.asideData?.sectionType][indexes[4]]
                                                 if(targetShowhideElem && targetShowhideElem.id === activeElement.elementId){
                                                     isMatched = targetShowhideElem.type === 'element-list'
                                                     isMatched && (listElement = targetShowhideElem)
@@ -109,7 +111,7 @@ class ListButtonDropPortal extends Component {
                             )
                           
                         }else if (element.type === "showhide"){
-                            this.props.showHideObj && element.interactivedata[this.props.showHideObj.showHideType].find(
+                            this.props?.asideData?.type === "showhide" && this.props.asideData && element.interactivedata[this.props?.asideData?.sectionType].find(
                                 (nselement) => {
                                     // let isMatched = false
                                     if (nselement.id === activeElement.elementId) {
@@ -125,6 +127,54 @@ class ListButtonDropPortal extends Component {
                                 isMatched = liElement.type === 'element-list'
                                 isMatched && (listElement = liElement)
                             }
+                            element.groupeddata.bodymatter.map(data => {
+                                data.groupdata.bodymatter.find(
+                                    (subNestedElement) => {
+                                        if (subNestedElement.type === 'element-aside') {
+                                            subNestedElement.elementdata.bodymatter.find(
+                                                (nestedElement) => {
+                                                    if (nestedElement.id === activeElement.elementId) {
+                                                        isMatched = nestedElement.type === 'element-list'
+                                                        isMatched && (listElement = nestedElement)
+                                                    }
+                                                    else if (nestedElement.type === "showhide" && this.props?.asideData?.type === "showhide") {
+                                                        let indexes = activeElement.index.split("-")
+                                                        let targetShowhideElem = nestedElement.interactivedata[this.props?.asideData?.sectionType][indexes[5]]
+                                                        if (targetShowhideElem && targetShowhideElem.id === activeElement.elementId) {
+                                                            isMatched = targetShowhideElem.type === 'element-list'
+                                                            isMatched && (listElement = targetShowhideElem)
+                                                        }
+                                                    }
+                                                    else if (nestedElement.type === "manifest") {
+                                                        nestedElement.contents.bodymatter.find((leafElement) => {
+                                                            if (leafElement.id === activeElement.elementId) {
+                                                                isMatched = leafElement.type === 'element-list'
+                                                                isMatched && (listElement = leafElement)
+                                                            }
+                                                            else if (leafElement.type === "showhide" && this.props?.asideData?.type === "showhide") {
+                                                                let indexes = activeElement.index.split("-")
+                                                                let targetShowhideElem = leafElement.interactivedata[this.props?.asideData?.sectionType][indexes[6]]
+                                                                if (targetShowhideElem && targetShowhideElem.id === activeElement.elementId) {
+                                                                    isMatched = targetShowhideElem.type === 'element-list'
+                                                                    isMatched && (listElement = targetShowhideElem)
+                                                                }
+                                                            }
+                                                        })
+                                                    }
+                                                }
+                                            )
+                                        } else if (subNestedElement.type === "showhide" && this.props?.asideData?.type === "showhide") {
+                                            let indexes = activeElement.index.split("-")
+                                            let targetShowhideElem = subNestedElement.interactivedata[this.props?.asideData?.sectionType][indexes[4]]
+                                            if (targetShowhideElem && targetShowhideElem.id === activeElement.elementId) {
+                                                isMatched = targetShowhideElem.type === 'element-list'
+                                                isMatched && (listElement = targetShowhideElem)
+                                            }
+                                        }
+                                    }
+                                )
+                            })
+
                         }
                         return isMatched
                     });
@@ -136,12 +186,53 @@ class ListButtonDropPortal extends Component {
                 this.startValue = counter || null
                 this.selectedOption = listElement.subtype || null;
             }
+            else if (blockListData && Object.keys(blockListData).length){
+                let metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[activeElement.index.split("-")[0]]);
+                if (metaDataBlockList && metaDataBlockList.length) {
+                    this.startValue = metaDataBlockList[0].startValue
+                    this.selectedOption = metaDataBlockList[0].selectedOption;
+                }
+            }
         } catch (error) {
             //console.error(error);
             this.startValue = null;
             this.selectedOption = null;
         }
     }
+
+
+ /**
+  * function to get selected element metadata
+  * @param {String} elementId
+  * @param {Object} elementData 
+  * @returns {Array} selected element metadata
+ */
+ getBlockListMetaData = (elementId, elementData) => {
+    const selectedElementMetaData = [];
+    if(elementData.id === elementId){
+        selectedElementMetaData.push({
+            startValue: elementData.startNumber,
+            selectedOption: elementData.subtype
+        });
+    }
+    if (elementData?.listdata?.bodymatter) {
+        elementData.listdata?.bodymatter.forEach((listData) => selectedElementMetaData.push(...this.getBlockListMetaData(elementId, listData)))
+    }
+    if (elementData?.listitemdata?.bodymatter) {
+        elementData.listitemdata.bodymatter.forEach((listItemData, index) => {
+            if (listItemData.id === elementId) {
+                selectedElementMetaData.push({
+                    startValue:elementData.listitemdata.bodymatter[index].startNumber,
+                    selectedOption:elementData.listitemdata.bodymatter[index].subtype
+                })
+            } else {
+                selectedElementMetaData.push(...this.getBlockListMetaData(elementId, listItemData));
+            }
+        });
+    }
+    return selectedElementMetaData;
+}
+
 
     /**
      * render | mounts listDrop on custom div
@@ -167,7 +258,9 @@ ListButtonDropPortal.propTypes = {
 const mapStateToProps = (state) => {
     return {
         activeElement: state.appStore.activeElement,
-        showHideObj:state.appStore.showHideObj
+        showHideObj:state.appStore.showHideObj,
+        asideData:state.appStore.asideData
+
     };
 };
 

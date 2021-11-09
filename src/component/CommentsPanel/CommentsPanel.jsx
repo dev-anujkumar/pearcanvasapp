@@ -8,7 +8,7 @@ import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
 import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
 import { utils } from '../../js/utils'
-import { replyComment, resolveComment, toggleReply, toggleCommentsPanel, updateComment, getProjectUsers, updateAssignee, deleteComment } from './CommentsPanel_Action';
+import { replyComment, resolveComment, toggleReply, toggleCommentsPanel, updateComment, getProjectUsers, updateAssignee, deleteComment , updateRole} from './CommentsPanel_Action';
 
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -48,6 +48,51 @@ class CommentsPanel extends React.Component {
             if (!(isSortDropdown || isStatusDropdown)) this.closeAllDropdown();
         });
     }
+
+    // ROLE = "Role";j
+
+    // getRoleOption = (users) => {
+    //     let roleOptions = [];
+    //     const distinctRoles = [];
+    //     Object.values(users).forEach((item1) => {
+    //       if (item1.roleId) {
+    //         if (
+    //           !roleOptions.some(
+    //             (e) => e.label === item1.roleId
+    //           )
+    //         ) {
+    //           if(distinctRoles.indexOf(item1.roleId) === -1) {
+    //           distinctRoles.push(item1.roleId);
+    //           roleOptions.push({ label: item1.roleId });
+    //           }
+    //         }
+    //       }
+    //     });
+    //     // console.log(roleOptions, "ha;halaa;");
+    //     return roleOptions;
+    //   };
+
+    getRoleOption = (users) => {
+        let roleOptions = [];
+        const distinctRoles = [];
+        Object.values(users).forEach((item1) => {
+          if (item1.roleName) {
+            if (
+              !roleOptions.some(
+                (e) => e.value === item1.roleName && e.label === item1.roleName
+              )
+            ) {
+              if(distinctRoles.indexOf(item1.roleName) === -1) {
+              distinctRoles.push(item1.roleName);
+              roleOptions.push({ value: {roleName: item1.roleName, filterType: "Role", label: item1.roleName}, label: item1.roleName });
+              }
+            }
+          }
+        });
+        roleOptions.sort((a,b) => (b.label.toLowerCase() < a.label.toLowerCase() ? 1 : -1));
+        return roleOptions;
+      };
+
 
     /**
      * 
@@ -174,9 +219,7 @@ class CommentsPanel extends React.Component {
     * 
     * @discription - This function is to get user detail of project
     */
-    getProjectUsers = () => {
-        this.props.getProjectUsers();
-    }
+
 
     /**
     * 
@@ -188,6 +231,10 @@ class CommentsPanel extends React.Component {
 
     updateAssignee = (commentUrn, newAssignee, elementId) => {
         this.props.updateAssignee(commentUrn, newAssignee, elementId);
+    }
+
+    updateRole= (commentUrn, newRole, elementId)=>{
+        this.props.updateRole(commentUrn, newRole, elementId);
     }
 
     /**
@@ -209,6 +256,9 @@ class CommentsPanel extends React.Component {
     */
     renderComment = (commentObject) => {
         let { filters } = this.state;
+        let {users} = this.props;
+        // console.log(users, "checking users ishant");
+        let roles = this.getRoleOption(users);
         let finalFilteredComments = this.filterComments(commentObject, filters)
         if (finalFilteredComments && finalFilteredComments.length > 0) {
             let comments = finalFilteredComments.map((comment, index) => {
@@ -222,10 +272,13 @@ class CommentsPanel extends React.Component {
                     deleteComment={this.deleteComment}
                     toggleReply={this.props.toggleReply}
                     updateAssignee={this.updateAssignee}
+                    updateRole={this.updateRole}
                     toggleReplyForm={this.props.toggleReplyForm}
-                    users={this.props.users}
-                    getProjectUsers={this.getProjectUsers}
+                    users={users}
+                    roles={roles}
                     permissions={this.props.permissions}
+                    getProjectUsers={this.props.getProjectUsers}
+                    roleId={this.props.roleId}
                 />)
             })
             return comments;
@@ -397,7 +450,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         deleteComment: (commentUrn, elementId) => {
             dispatch(deleteComment(commentUrn, elementId))
-        }
+        },
+        updateRole: (commentUrn, newRole, elementId) => {
+            dispatch(updateRole(commentUrn, newRole, elementId))
+        },
     }
 }
 
@@ -409,7 +465,8 @@ const mapStateToProps = state => {
         toggleReplyForm: state.commentsPanelReducer.toggleReplyForm,
         users: state.commentsPanelReducer.users,
         slateTitle: state.commentsPanelReducer.slateTitle,
-        permissions : state.appStore.permissions
+        permissions : state.appStore.permissions,
+        roleId: state.appStore.roleId
     }
 };
 

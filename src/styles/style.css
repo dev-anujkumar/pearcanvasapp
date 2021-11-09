@@ -163,7 +163,7 @@ table p {
     margin-left: 3px;
 }
 
-.definition-editor.place-holder::before{
+.definition-editor.place-holder::before, .markedindex-editor.place-holder::before{
     content: attr(placeholder);
     color: #ADADAD; 
     display: block;
@@ -262,17 +262,18 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
     padding-left: 120px !important;
 }
 
-.learningobjectivedropdown li:hover, .learningobjectivedropdown2 li:hover {
+.learningobjectivedropdown li:hover, .learningobjectivedropdown2 li:hover, .learningobjectivedropdown3 li:hover {
     background-color: #efefef;
     font-family: 'Open Sans',sans-serif;
     cursor: pointer;
 }
-.learningobjectivedropdown li.disable-buttton, .learningobjectivedropdown2 li.disable-buttton, .option-disabled{
+.learningobjectivedropdown li.disable-buttton, .learningobjectivedropdown2 li.disable-buttton, .option-disabled , .learningobjectivedropdown3 li.disable-buttton{
     pointer-events: none;
     opacity: 0.6;
     cursor: not-allowed;
     color: gray;
 }
+
 /* .mce-content-body .Wirisformula[data-custom-editor="chemistry"]{
     vertical-align: -1px!important;
 } */
@@ -306,17 +307,24 @@ abbr[title="Slate Link"] sup::after {
 }
 dfn[audio-id]:not(.sup):not(.sub)::after,
 dfn[audio-id] sub::after,
-dfn[audio-id] sup::after {
-    content: url('./../images/GlossaryAudio/audioEnable.svg');
+dfn[audio-id] sup::after,
+dfn[image-id]:not(.sup):not(.sub)::after,
+dfn[image-id] sub::after,
+dfn[image-id] sup::after,
+dfn[mark-index-id]:not(.sup):not(.sub)::after,
+dfn[mark-index-id] sub::after,
+dfn[mark-index-id] sup::after {
+    content: url('./../images/ImageGlossary/imageglossary.svg');
     top: 3px;
     right: 0;
     left: 0;
     bottom: 1px;
     margin: 0 auto;
-    padding: 0 2px;
+    padding: 0;
     position: relative;
     background: transparent;
 }
+
 /*  Cross Link dropdown color Design  */
 .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled){
     background-color: #efefef !important;
@@ -366,7 +374,19 @@ table:not([cellpadding]) td, table:not([cellpadding]) th {
     border: none !important;
 }
 
-
+/*  Marked index Content Design  */
+span[class="markedForIndex"]:not(.sup):not(.sub)::after{
+    content: url('./../images/MarkedIndex/markedIndex.svg');
+    height: 10px;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 1px;
+    padding: 0 2px;
+    position: relative;
+    text-decoration: underline dotted;
+    border-bottom: 1.1px dotted #007FA3;
+}
 
 /*  Callout Content Design  */
 
@@ -433,6 +453,22 @@ span[title="calloutFour"] sup::after {
     border-bottom: 1.1px dotted #007FA3;
 }
 
+ /*  Marked Index Terms */
+
+ span.markedForIndex {
+    color: #007FA3;
+    font-family: inherit;
+    font-weight: Bold;
+    font-style: normal;
+    border-bottom: 1px dotted #000;
+    
+  }
+  
+span.markedForIndex:hover {
+    color: #9E007E;
+    cursor: pointer;
+    border-bottom: none;
+}
 
 .calloutOne{
     color:#007FA3;

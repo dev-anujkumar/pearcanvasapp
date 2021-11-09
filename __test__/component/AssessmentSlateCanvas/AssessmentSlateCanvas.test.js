@@ -131,6 +131,17 @@ describe('Testing Assessment Slate Canvas component', () => {
             expect(pufInstance.state.getAssessmentDataPopup).toEqual(false);
             expect(pufInstance.addPufAssessment).toHaveBeenCalledWith(pufObj, 'puf');
         });
+        it('Test Case for handleBlur for AssessmentSlate',()=>{
+            let dataToSend={
+                calledFrom: 'updateAssessmentFormat',
+                format: 'puf',
+                usageType: 'Concept Check'
+            }
+            jest.spyOn(assessmentSlateInstance, 'handleAssessmentBlur');
+            assessmentSlateInstance.handleAssessmentBlur(dataToSend);
+            expect(assessmentSlateInstance.state.getAssessmentData).toBe(false);
+            expect(assessmentSlateInstance.state.getAssessmentDataPopup).toBe(false);
+        })
     })
     describe('Test 6- addCiteTdxAssessment', () => {
         beforeEach(() => {

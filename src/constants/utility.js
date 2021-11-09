@@ -232,12 +232,53 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
  * @param {*} figureObj figure element object
  */
  export const getLabelNumberTitleHTML = (figureObj) => {
+     // Modifying old figures html into new pattern
+     // ................................XX...........................................
+     let figureElementsType = ['image', 'table', 'mathImage', 'authoredtext', 'codelisting', 'interactive', 'tableasmarkup'];
+     if ((figureObj.figuretype == 'audio' || figureObj.figuretype == 'video') && figureObj.type == 'figure') {
+        if (figureObj.hasOwnProperty('title') && figureObj.hasOwnProperty('subtitle')) {
+            figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
+        } else if (figureObj.hasOwnProperty('subtitle')) {
+            figureObj.html.title = createLabelNumberTitleModel('', '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
+        }
+        figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
+    } else {
+        if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
+            figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
+            figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
+        }
+    }
+    // ................................XX...........................................
     let data = {};
         figureObj.html.title = figureObj.html.title.replace(/(\r\n|\n|\r)/gm, '');
         data.formattedLabel = getTitleSubtitleModel(figureObj.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
         data.formattedNumber = getTitleSubtitleModel(figureObj.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
         data.formattedTitle = getTitleSubtitleModel(figureObj.html.title, "formatted-subtitle", "figure");
     return data;
+}
+
+export const checkHTMLdataInsideString = (htmlNode) => {
+    let tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlNode;
+    if (tempDiv.firstChild.innerHTML === '<br>' || tempDiv.firstChild.innerHTML === '</br>') {
+        return '';
+    } else { 
+        return tempDiv.firstChild.innerHTML;
+    }
+}
+
+export const dropdownValueAtIntialize = (dropdownData, formattedLabel) => {
+    let figureLabelFromApi = checkHTMLdataInsideString(formattedLabel);
+    let figureLabelValue;
+    if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
+        figureLabelFromApi = figureLabelFromApi.toLowerCase();
+        figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
+    } else if (figureLabelFromApi === '') {
+        figureLabelValue = 'No Label';
+    } else {
+        figureLabelValue = 'Custom';
+    }
+    return figureLabelValue;
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
@@ -586,3 +627,36 @@ export const prepareDialogueDom = (model) => {
     return lineModel;
 }
 
+/**sets Owner key in localstorage
+ * @param data - whether the checkout is checked or not
+ */
+export const releaseOwnerPopup=(data)=>{
+    if(data){
+        localStorage.setItem('hasOwnerEdit', true);
+    }
+
+}
+
+/**It checks whether its a owner project or not
+ * @param projectSharingRole - role of a user
+ * @param isSubscribed- whether it is subscribed or not
+ */
+export const isOwnerRole = (projectSharingRole, isSubscribed) => {
+    if (projectSharingRole === "OWNER" && isSubscribed) {
+        return true
+    }else{
+        return false
+    }
+}
+
+/**It checks whether its a Subscriber project or not
+ * @param projectSharingRole - role of a user
+ * @param isSubscribed- whether it is subscribed or not
+ */
+export const isSubscriberRole = (projectSharingRole, isSubscribed) => {
+    if (projectSharingRole === "SUBSCRIBER" && isSubscribed) {
+        return true
+    }else{
+        return false
+    }
+}

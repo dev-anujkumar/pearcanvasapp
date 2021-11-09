@@ -30,12 +30,18 @@ import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.j
 import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
+import ElementConstants from '../ElementContainer/ElementConstants';
+import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
+const { SHOW_HIDE } = ElementConstants;
+import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
+import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData,blockListDetails) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
@@ -75,7 +81,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-        if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
+        /**This will be removed when BL supports TCM */
+        const tempSlateWrapperConstants = [...slateWrapperConstants.elementType].filter( item => item !== "MANIFEST_LIST")
+        //This check is for the TEXT element which gets created inside BL on Shift+Enter
+        if(!blockListDetails) {
+        if (tempSlateWrapperConstants.indexOf(type) !== -1) {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
@@ -92,7 +102,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             else {
                 tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
             }
-        }
+        }}
         /**---------------------------------------------------------------------------------------------------*/
 
         if (currentSlateData.status === 'approved') {
@@ -128,6 +138,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                             }
                         })
                     })
+                } else if (asideData?.parent?.type === "showhide" && item?.id === asideData?.parent?.id && asideData?.parent?.showHideType) {
+                    item?.interactivedata[asideData?.parent?.showHideType].map( (innerElement) => {
+                        if (innerElement?.id === parentUrn?.manifestUrn) {
+                            innerElement?.elementdata?.bodymatter?.splice(outerAsideIndex, 0, createdElementData);
+                        }
+                    })
                 }
             })
         } else if (asideData && asideData.type == 'element-aside'  && type !== 'SECTION_BREAK') {
@@ -140,6 +156,24 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                             ele.contents.bodymatter.splice(index, 0, createdElementData)
                         }
                     })
+                /* To update redux store while creating new element inside S/H->Aside->New */
+                } else if (asideData?.parent?.type === "showhide" && item.id == asideData?.parent?.id) {
+                    let sectionType = asideData?.parent?.showHideType;
+                    if (sectionType) {
+                        if (asideData.subtype === 'workedexample' && parentUrn.elementType === 'manifest') {
+                            item.interactivedata[sectionType] && item.interactivedata[sectionType].map((element) => {
+                                if (element.id === asideData.id) {
+                                    element.elementdata.bodymatter && element.elementdata.bodymatter.map((ele) => {
+                                        if (ele.id === parentUrn.manifestUrn) {
+                                            ele.contents.bodymatter.splice(index, 0, createdElementData)
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+                            appendElementInsideShowhide(item, sectionType, asideData, 'elementdata', index, createdElementData);
+                        }
+                    }
                 /* To update redux store while creating new element inside 2C->Aside->New */
                 } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
                     item?.groupeddata?.bodymatter?.map((ele) => {
@@ -160,7 +194,16 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }else if (popupSlateData && popupSlateData.type == "popup"){
             newPopupSlateData.popupdata.bodymatter.splice(index, 0, createdElementData);
         }
-        else if(asideData && asideData.type == 'citations'){
+        /* Citation element inside S/H */
+        else if (asideData && asideData?.type == 'citations' && asideData?.parent?.type === "showhide") {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == asideData?.parent?.id) {
+                    appendElementInsideShowhide(item, 'show', asideData, 'contents', index, createdElementData);
+                    appendElementInsideShowhide(item, 'hide', asideData, 'contents', index, createdElementData);
+                }
+            })
+            /* Citation element inside Slate */
+        } else if(asideData && asideData.type == 'citations' && asideData?.parent?.type !== "showhide") {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.contents.bodymatter.splice(index, 0, createdElementData)
@@ -179,6 +222,30 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         }
                     })
                 }
+                /* To update redux store while creating new element inside WE/Aside->Block Poetry->Stanza */
+                else if(poetryData?.parent?.type === "element-aside" && item.id === poetryData?.parent?.id){
+                    item?.elementdata?.bodymatter?.map((ele) => {
+                            if (ele?.id === parentUrn.manifestUrn) {
+                                ele?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                            } else if (ele?.contents?.bodymatter) {
+                                ele.contents.bodymatter.map((ele2) => {
+                                    if (ele2?.id === parentUrn.manifestUrn) {
+                                        ele2?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                                    }
+                                })
+                            }
+                    })
+                }
+                /* To update redux store while creating new element inside 2C->Block Poetry->Stanza */
+                else if(poetryData?.parent?.type === "groupedcontent" && item.id === poetryData?.parent?.id){
+                    item?.groupeddata?.bodymatter?.map((ele) => {
+                        ele?.groupdata?.bodymatter?.map(i => {
+                            if (i?.id === parentUrn.manifestUrn) {
+                                i?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                            }
+                        })
+                    })
+                }
             })  
         }
         else if (asideData && asideData.type === 'groupedcontent') {
@@ -195,12 +262,66 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     column?.groupdata?.bodymatter?.splice(index, 0, createdElementData)
                 }
             })
-        } else {
+        } 
+        /*  Local store update for block list and Text inside block list for multiple levels. */
+        else if((type==='MANIFEST_LIST' || type==='TEXT') && blockListDetails!==null){
+            const indexes = blockListDetails.indexOrder.split('-');
+            let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter;
+            if(indexes.length===3){ // Block list on 1 level nesting
+             initialdata.splice(index, 0, createdElementData)
+            }
+            else if(indexes.length===5){ // Block list on 2 level nesting
+             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+            }
+            else if(indexes.length===7){ // Block list on 3 level nesting
+             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+            }
+            else{ // level 4 
+             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+            }
+         } 
+         /*  Local store update for manifest list item inside block list for multiple levels. */
+         else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="ENTER"){
+             const indexes = blockListDetails.indexOrder.split('-');
+             let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
+             if(indexes.length===3){ // Manifest List Item on 1 level nesting
+              initialdata.splice(index, 0, createdElementData)
+             }
+             else if(indexes.length===5){ // Manifest List Item on 2 level nesting
+              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
+             }
+             else if(indexes.length===7){ // Manifest List Item on 3 level nesting
+              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+             }
+             else{ // Manifest List Item on 4 level nesting
+                 initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+             }
+          } 
+         /*  Local store update for manifest list item inside block list for multiple levels. */
+          else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="SHIFT+TAB"){
+             const indexes = blockListDetails.indexOrder.split('-');
+             let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
+             if(indexes.length===5){ // Manifest List Item on 1 level nesting
+              initialdata.splice(index, 0, createdElementData)
+             }
+             else if(indexes.length===7){ // Manifest List Item on 2 level nesting
+              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
+             }
+             else{ // Manifest List Item on 3 level nesting
+              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+             }
+          } 
+        else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
-            if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
-                prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
+            //This check is for the TEXT element which gets created inside BL on Shift+Enter
+            if(!blockListDetails) {
+                //This check will be removed once BlockList will support TCM
+                if(type !== "MANIFEST_LIST") {
+                if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
+                    prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
+                }}
             }
         }
         const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
@@ -236,6 +357,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         console.log("create Api fail", error);
         if (cb) {
             cb();
+        }
+    })
+}
+
+export const appendElementInsideShowhide = (shObj, key, asideData, innerkey, index, createdElementData) => {
+    shObj.interactivedata[key] && shObj.interactivedata[key].map((element) => {
+        if (element.id === asideData.id) {
+            element[innerkey].bodymatter.splice(index, 0, createdElementData);
         }
     })
 }
@@ -327,7 +456,8 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
 
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId, poetryId, parentElement, elementIndex } = dataObj || {};
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem,
+         asideId, poetryId, parentElement, elementIndex, sectionType } = dataObj || {};
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -339,7 +469,10 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         "type": swappedElementData.type,
         "index": newIndex
     }
-
+    /* If swapping for inner elements of showhide then add section type also, show|hide */
+    if(containerTypeElem === SHOW_HIDE){
+        _requestData.sectionType = sectionType   
+    }
     let parentData = getState().appStore.slateLevelData;
     let currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
@@ -372,13 +505,28 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     return false;
                 }
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
-                if (containerTypeElem && containerTypeElem == 'we') {
+                if(containerTypeElem === SHOW_HIDE) { /* Swap inner elements of ShowHide */
+                    const indexes = elementIndex?.toString().split('-') || [];
+                    /* Get the showhide element object from slate data using indexes */
+                    const shObject = getShowHideElement(newBodymatter, (indexes?.length + 2), indexes);
+                    /* After getting showhide Object, swap the elements */
+                    if(!isEmpty(shObject) && shObject?.contentUrn === currentSlateEntityUrn) {
+                        shObject?.interactivedata[sectionType]?.move(oldIndex, newIndex);
+                    }
+                }
+                else if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
-                    const indexs = elementIndex?.split('-') || [];
+                    const indexs = elementIndex?.toString().split('-') || [];
+                    let sectionType = parentElement?.showHideType;
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
                         let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]];
                         if (asid.contentUrn == currentSlateEntityUrn) {
                             asid?.elementdata?.bodymatter?.move(oldIndex, newIndex);
+                        }
+                    } else if (parentElement?.type === SHOW_HIDE && sectionType && indexs?.length === 3) { /* S/H:AS: Swap Elements */
+                        let asId = newBodymatter[indexs[0]]?.interactivedata[sectionType][indexs[2]];
+                        if (asId.contentUrn == currentSlateEntityUrn) {
+                            asId?.elementdata?.bodymatter?.move(oldIndex, newIndex);
                         }
                     } else {
                         for (let i in newBodymatter) {
@@ -388,9 +536,16 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                         }
                     }
                 } else if (containerTypeElem && containerTypeElem == 'section') {
-                    const indexs = elementIndex?.split('-') || [];
+                    const indexs = elementIndex?.toString().split('-') || [];
+                    let sectionType = parentElement?.showHideType;
                     if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:WE:BODY:SECTION-BREAK: Swap Elements */
                         newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.map(item => {
+                            if (item.contentUrn == currentSlateEntityUrn) {
+                                item?.contents?.bodymatter?.move(oldIndex, newIndex);
+                            }
+                        })
+                    } else if (parentElement?.type === SHOW_HIDE && sectionType && indexs?.length === 3) { /* S/H:WE:BODY:SECTION-BREAK: Swap Elements */
+                        newBodymatter[indexs[0]]?.interactivedata[sectionType][indexs[2]]?.elementdata?.bodymatter?.map(item => {
                             if (item.contentUrn == currentSlateEntityUrn) {
                                 item?.contents?.bodymatter?.move(oldIndex, newIndex);
                             }
@@ -409,9 +564,18 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 } 
                 /** ----------Swapping elements inside Citations Group Element----------------- */
                 else if (containerTypeElem && containerTypeElem == 'cg') {
-                    for (let i in newBodymatter) {
-                        if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
-                            newBodymatter[i].contents.bodymatter.move(oldIndex, newIndex);
+                    const indexs = elementIndex?.split('-') || [];
+                    let sectionType = parentElement?.showHideType;
+                    if (parentElement?.type === SHOW_HIDE && sectionType && indexs?.length === 3) { /* S/H:CG: Swap Elements */
+                        let cgId = newBodymatter[indexs[0]]?.interactivedata[sectionType][indexs[2]];
+                        if (cgId.contentUrn == currentSlateEntityUrn) {
+                            cgId?.contents?.bodymatter?.move(oldIndex, newIndex);
+                        }
+                    } else {
+                        for (let i in newBodymatter) {
+                            if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
+                                newBodymatter[i].contents.bodymatter.move(oldIndex, newIndex);
+                            }
                         }
                     }
                 }
@@ -419,6 +583,27 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     newBodymatter.forEach(element => {
                         if (element.id == poetryId) {
                             element.contents.bodymatter.move(oldIndex, newIndex);
+                        } else if (element?.type === 'element-aside') {  /** ----------Swapping block poetry elements inside Aside/WE Element----------------- */
+                            element.elementdata?.bodymatter.forEach((ele) => {
+                                if (ele?.type === "poetry" && ele?.id === poetryId) {
+                                    ele.contents.bodymatter.move(oldIndex, newIndex);
+                                } else if (ele.type === "manifest") {
+                                    ele.contents.bodymatter.forEach(ele1 => {
+                                        if (ele1.id === poetryId) {
+                                            ele1.contents.bodymatter.move(oldIndex, newIndex);
+                                        }
+                                    })
+                                }
+                            })
+                        } else if(element?.type === "groupedcontent"){  /** ----------Swapping block poetry elements inside Multicolumn Element----------------- */
+                            element.groupeddata?.bodymatter.forEach((groupElem)=> {
+                                groupElem.groupdata?.bodymatter.forEach((groupElem1)=>{
+                                    if(groupElem1?.type ==="poetry" && groupElem1?.id === poetryId){
+                                        groupElem1.contents.bodymatter.move(oldIndex, newIndex);
+                                    }
+                                })
+
+                            })
                         }
                     });
                 }
@@ -429,6 +614,9 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                             element.contents.bodymatter.move(oldIndex, newIndex);
                         }
                     }); */
+                }
+                else if (containerTypeElem && containerTypeElem == '3C') {
+                    newBodymatter[dataObj.containerIndex].groupeddata.bodymatter[dataObj.columnIndex].groupdata.bodymatter.move(oldIndex, newIndex);
                 }
                 else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
@@ -804,6 +992,20 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
     });
 }
 
+const fetchContainerData = (entityURN, manifestURN, isPopup) => {
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`;
+    if (isPopup) {
+        apiUrl = `${apiUrl}?metadata=true`
+    }
+    return axios.get(apiUrl, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+})
+}
+
+
 export const pasteElement = (params) => async (dispatch, getState) => {
     let selection = getState().selectionReducer.selection || {};
 
@@ -812,13 +1014,13 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             index,
             parentUrn,
             asideData,
-            poetryData
+            poetryData, sectionType, index2ShowHide
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
 
         let slateEntityUrn = config.slateEntityURN;
-        if(parentUrn && 'contentUrn' in parentUrn) {
+        if(parentUrn && 'contentUrn' in parentUrn) { //sectionType && 
             slateEntityUrn = parentUrn.contentUrn;
         } else if(poetryData && 'contentUrn' in poetryData) {
             slateEntityUrn = poetryData.contentUrn;
@@ -851,6 +1053,16 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 elmHtml = { "title": selection.element.title.text || "" }
             }
         }
+        if (elmSubtype.indexOf(selection.element.figuretype) >= 0) {
+            if(!('html' in selection.element)) {
+                elmHtml = { "title": selection.element.title.text || "" }
+            } else if (!('title' in selection.element.html)) {
+                elmHtml = { 
+                    ...elmHtml,
+                    "title": "" 
+                }
+            }
+        }
         
         if(selection.operationType === 'copy' && 'html' in selection.element && 'text' in  selection.element.html) {
             let htmlText = (selection.element.html.text);
@@ -874,6 +1086,19 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 "destinationSlateUrn": slateEntityUrn
             }]
         };
+        /* if parent Element type showhide then add sectionType where element tobe paste */
+        if(sectionType) {
+            _requestData.content[0].sectionType = sectionType;
+            _requestData.content[0].index = index;
+            if(selection?.operationType === "cut") {
+                const isSameSection = asideData?.interactivedata?.[sectionType]?.find(item => {
+                    return (item?.id === selection?.element?.id);
+                })
+                if(isSameSection) {
+                    _requestData.content[0].index = cutIndex;
+                }
+            }
+        }
 
         if(selection.operationType.toUpperCase() === "COPY") {
             delete _requestData.content[0].slateVersionUrn;
@@ -899,6 +1124,15 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
+
+        if(selection.element.type === "element-dialogue") {
+            _requestData = {
+                "content": [{
+                    ..._requestData.content[0],
+                    "elementdata": selection.element.elementdata
+                }]
+            }
+        }
         
         const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample",'showhide','popup']
         if(acceptedTypes.includes(selection.element.type)) {
@@ -909,6 +1143,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
             const { setPayloadForContainerCopyPaste } = (await import("./slateWrapperAction_helper.js"))
             _requestData = setPayloadForContainerCopyPaste(payloadParams)
+            if (sectionType || (asideData?.sectionType)) {
+                let section = sectionType ? sectionType : asideData?.sectionType;
+                _requestData.content[0].sectionType = section;
+            }
         }
 
         if('manifestationUrn' in selection.element) {
@@ -919,7 +1157,16 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
-
+        /** Cut-Copy TCM snapshots API Payload Params*/
+        let tcmSnapshotParams = {
+            selection,
+            asideData,
+            parentUrn,
+            elementType: selection.element.type,
+            projectUrn: config.projectUrn,
+            destnSlateManifestURN: config.slateManifestURN,
+            destnSlateEntityURN: config.slateEntityURN
+        }
         try {
             let url = `${config.REACT_APP_API_URL}v1/projects/${config.projectUrn}/containers/${slateEntityUrn}/element/paste?type=${selection.operationType.toUpperCase()}`
             const createdElemData = await axios.post(
@@ -935,11 +1182,22 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             if (createdElemData && createdElemData.status == '200') {
                 let responseData = Object.values(createdElemData.data)
                 const figureTypes = ["image", "mathImage", "table", "video", "audio"]
-                if((responseData[0]?.type === "figure") && figureTypes.includes(responseData[0]?.figuretype) ){
+                const interactiveType = ["3rd-party", "pdf", "web-link", "pop-up-web-link", "table"]
+
+                // Condition to check whether any conatiner element got copy and paste. Fetch new conatiner data for the same.
+                if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
+                    let isPopup;
+                    if (_requestData?.content[0]?.type === 'popup') {
+                        isPopup = true
+                    }
+                    let response =  await fetchContainerData(_requestData.content[0].contentUrn,_requestData.content[0].id,isPopup);
+                    responseData = [response.data[_requestData.content[0].id]]
+                 }
+
+                if((responseData[0]?.type === "figure") && (figureTypes.includes(responseData[0]?.figuretype))  || interactiveType.includes(responseData[0]?.figuredata?.interactivetype)){
                     const elementId = responseData[0].id
                     handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
                 }
-                
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
                     index,
@@ -950,10 +1208,20 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     parentUrn,
                     asideData,
                     poetryData,
-                    slateEntityUrn
+                    slateEntityUrn, index2ShowHide, pasteSHIndex: _requestData?.content[0]?.index
                 };
-        
                 await onPasteSuccess(pasteSuccessArgs)
+                /** Cut-Copy TCM snapshots API */
+                if (_requestData?.content[0]?.type === 'popup') {
+                    tcmSnapshotParams.elementId = responseData[0].id
+                    tcmSnapshotParams.elementNewEntityUrn = responseData[0]?.contentUrn
+                    tcmSnapshotParams.elementStatus = responseData[0]?.status
+                    let tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
+                    if (selection?.operationType === 'copy' || (selection?.operationType === 'cut' && responseData[0]?.status === 'wip')) {
+                        callCutCopySnapshotAPI(tcmSnapshotPayload)
+                    }
+                }
+                /******************************/
                 if (responseData[0].elementdata?.type === "blockquote") {  
                     setTimeout(() => {
                         const node1 = document.querySelector(`[data-id="${responseData[0].id}"]`)
@@ -964,8 +1232,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
         catch(error) {
-            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-            console.error("Exceptional Error on pasting the element:::", error);
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+            console.error("Exceptional Error on pasting the element:::", error);   
         }
     }
 }

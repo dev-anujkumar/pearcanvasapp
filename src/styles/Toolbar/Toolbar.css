@@ -115,7 +115,7 @@
     color: black;
     position: absolute;
     width: 270px;
-    overflow: auto;
+    /* overflow: auto; */
     z-index: 1;
     font-size: 14px;
     font-weight: 400;
@@ -126,6 +126,7 @@
 
 .learningobjectivedropdown2{
   display: none;
+  left: 10px
 }
 
 .learningobjectivedropdown li ,.learningobjectivedropdown2 li{    
@@ -367,6 +368,23 @@ button[aria-label="insertMedia"].tox-tbtn--select{
   cursor:default!important;
   height:32px!important
 }
+
+.editor-toolbar.hideToolbar{
+  display: none !important;
+}
+
+.editor-toolbar.popup.hideToolbar{
+  display: none !important;
+}
+
+.audio-block.hideToolbar {
+  display: none!important;
+}
+
+.leaningobjective-block.hideToolbar {
+  display: none!important;
+}
+
 .tox-tbtn{
   cursor:pointer!important;
 }
@@ -548,7 +566,7 @@ margin-left:6px;
   pointer-events: none;
 }
 
-.glossary-audiodropdown{
+.glossary-audiodropdown, .glossary-figuredropdown{
   left:0;
   top:0;
   width: 325px; 
@@ -566,10 +584,6 @@ margin-left:6px;
 
 .glossary-audiodropdown audio{
   width:100% !important
-}
-
-.learningobjectivedropdown2{
-  left: 10px
 }
 
 @media only screen and (max-width: 1400px) {

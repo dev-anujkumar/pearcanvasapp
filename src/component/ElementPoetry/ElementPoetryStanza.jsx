@@ -41,6 +41,7 @@ class ElementPoetryStanza extends Component {
         glossaryFootnoteValue={glossaryFootnoteValue}
         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
         handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
+        handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
       />
     )
   }

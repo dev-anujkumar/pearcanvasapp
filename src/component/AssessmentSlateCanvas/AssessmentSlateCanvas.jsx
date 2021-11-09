@@ -115,8 +115,17 @@ class AssessmentSlateCanvas extends Component {
     }
 
     /*** @description - This function is to handle Blur on the Assessment element on blur*/
-    handleAssessmentBlur = (assessmentData) => {
+    handleAssessmentBlur = (assessmentData, cb) => {
         this.props.handleBlur(assessmentData);
+        if (assessmentData.calledFrom == 'updateAssessmentFormat') {
+            this.setState({
+                getAssessmentData: false,
+                getAssessmentDataPopup: false
+            })
+            if (cb) {
+                cb();
+            }
+        }
     }
 
     render() {

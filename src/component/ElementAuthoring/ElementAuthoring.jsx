@@ -8,7 +8,7 @@ export class ElementAuthoring extends Component {
   }
 
   render() {
-    const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue} = this.props
+    const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue, openMarkedIndexPopUp, markedIndexValue } = this.props
      return (
         <TinyMceEditor
           openAssetPopoverPopUp ={openAssetPopoverPopUp}
@@ -16,7 +16,7 @@ export class ElementAuthoring extends Component {
           index={this.props.index}
           elementId={this.props.elementId}
           element={this.props.element}
-          placeholder="Type Something..."
+          placeholder={this.props.placeholder || "Type Something..."}
           className={className}
           model={model}
           tagName={this.props.tagName}
@@ -28,6 +28,11 @@ export class ElementAuthoring extends Component {
           glossaryFootnoteValue={glossaryFootnoteValue}
           glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
           handleAudioPopupLocation ={this.props.handleAudioPopupLocation}
+          handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
+          showHideType = {this.props?.showHideType}
+          parentElement={this.props?.parentElement}
+          openMarkedIndexPopUp = {openMarkedIndexPopUp}
+          markedIndexValue={markedIndexValue}
         />
     )
 

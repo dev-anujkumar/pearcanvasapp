@@ -12,7 +12,7 @@ import {
     SET_INTERACTIVE_METADATA
 } from "../../../constants/Action_Constants";
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
-import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent } from './assessmentActions.js';
+import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent, fetchAssessmentItems } from './assessmentActions.js';
 import { hideBlocker} from '../../../js/toggleLoader';
 const AssessmentAPIHandlers = {
     /** @description This function prepares list of Assessment UsageTypes from api-response */
@@ -83,7 +83,7 @@ const AssessmentAPIHandlers = {
         let createDate = new Date(nextData.dateCreated);
         const checkVersionIsClean = AssessmentAPIHandlers.checkElmVersionIsClean(nextData);
         // || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)
-        if ((nextData.status.includes('final')) || (checkVersionIsClean == false) || (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10))) {
+        if ((nextData.status.includes('final')) || (checkVersionIsClean == false) || (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10)) || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)) {
             return true /*Update*/
         }
         return false    /*Approved*/
@@ -259,7 +259,7 @@ const AssessmentAPIHandlers = {
         }
     },
     /** @description This function handles assessment-metadata API response for Assessment-Item */
-    assessmentItemMetadataHandler: (responseData, calledFrom, assessmentData, assessmentItemData, dispatch) => {
+    assessmentItemMetadataHandler: async (responseData, calledFrom, assessmentData, assessmentItemData, dispatch) => {
         const itemTitle = responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : "";
         if (calledFrom == 'fromItemUpdate') {
             const updatedItem = {
@@ -272,8 +272,21 @@ const AssessmentAPIHandlers = {
                 oldItemId: assessmentItemData.itemId,
                 latestItemTitle: itemTitle
             }
-            dispatch(fetchAssessmentVersions(responseData.entityUrn, 'assessmentItem', responseData.dateCreated, assessmentData, { ...assessmentItemData, updatedItem: itemData }));
+            await dispatch(fetchAssessmentItems(responseData.entityUrn, {assessmentData, assessmentItemData: {...assessmentItemData, updatedItem: itemData },dispatch}));
+            //dispatch(fetchAssessmentVersions(responseData.entityUrn, 'assessmentItem', responseData.dateCreated, assessmentData, { ...assessmentItemData, updatedItem: itemData }));
         }
+    },
+    latestAssessmentItemHandler: (responseData, args, dispatch) =>{
+        const {
+            assessmentData, assessmentItemData
+        } = args;
+        const itemTitle = responseData?.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : "";
+        const updatedItem = {
+            oldItemId: assessmentItemData.itemId,
+            latestItemId: responseData?.versionUrn,
+            latestItemTitle: itemTitle
+        }
+        AssessmentAPIHandlers.dispatchUpdatedItemId(assessmentData.activeWorkUrn, updatedItem, dispatch)
     },
     /** @description This function handles assessment-verions API response for Assessment after Update Button Click */
     assessmentVersionUpdateHandler: async (responseData, args, dispatch) => {

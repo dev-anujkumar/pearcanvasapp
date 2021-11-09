@@ -1,6 +1,8 @@
 import React from 'react';
-import {matchHTMLwithRegex,encodeHTMLInWiris} from '../../src/constants/utility.js';
-
+import {matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom } from '../../src/constants/utility.js';
+import cypressConfig from '../../src/config/cypressConfig';
+import { newFigureObj } from '../../fixtures/ElementFigureTestingData.js';
+import { showHide } from '../../fixtures/ElementSHowHideData';
 
 
 describe('Testing Function - matchHTMLwithRegex', () => {
@@ -8,7 +10,6 @@ describe('Testing Function - matchHTMLwithRegex', () => {
         let htmlData = <img align="middle" class="temp_Wirisformula" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAPCAYAAACSol3eAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAABGJhU0UAAAAOJ5y/mQAAAZpJREFUeNpjYMAOyoD4BBBvAeJjQDwBiDkZBiFQAWIuJD7IoUupbAcjLRzOC8SfgVidgDozIP4PxKZEmHkaqpYQPkmqY0EacgmoWQjEB4B4ARHmJUDV4wMgcxJJdehGIJ6ER14EiJ8AsRAQPwViYQLmcUDV41InDDWHk1AUtkHT5SRoVK4B4kV49IAyYBeU3QPEpUR4vhuqD5d53fjS4mogng3EWlBfBwHxByC+BcRzcehjBuI7QKwE5StD+UwEHKqEQx2IfxvJPAywF4jnYRGvhibsRhz6fKBFGTLYBsReRIQqSJ03mhiIvxWXBk8g/gXEsljkYqEOdcNjmRcRjscGsDkKm+PhoB+Ir+CQqwLiF0DMgkVOGRpNTASSAy7AhKZOiVCyWYonBA7iSfSgjFOCJ0N0EhGqyBmxm1BGBIXobizioCi9DM1Y6ICTQBEDK7I4CDhUGKpOkIB5YGADxO+BmAcpSuKB+AKe6EvEkfnQK4E4IkJ1AbSymE9MoV4AzfmrgHgHENdCiyxc4BQVq0FTEqpfmgFmSg0AAMaKY79jtweTAAAAcnRFWHRNYXRoTUwAPG1hdGggeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTgvTWF0aC9NYXRoTUwiPjxtbz4mI3gyMjAyOzwvbW8+PG1vPiYjeDIyMDY7PC9tbz48bW8+JiN4MjIwNzs8L21vPjwvbWF0aD4AQV47AAAAAElFTkSuQmCC" data-temp-mathml="«math xmlns=¨http://www.w3.org/1998/Math/MathML¨»«mo»§#8706;«/mo»«mo»§#8710;«/mo»«mo»§#8711;«/mo»«/math»" alt="partial differential increment nabla" role="math" style="max-width: none;" height="19" width="42"></img>
         let expectedData = false;
         let returnData = matchHTMLwithRegex(htmlData);
-
         expect(returnData).toBe(expectedData);
     })
     it('Case 2- without Html',()=>{
@@ -49,5 +50,347 @@ describe('Testing Function - encodeHTMLInWiris', () => {
         let returnData = encodeHTMLInWiris(strData);
 
         expect(returnData).toBe(expectedData);
+    })
+})
+
+describe('Testing Function - checkHTMLdataInsideString', () => {
+    it('Case 1', () => {
+        let str = `<p>test string</p>`;
+        let result = checkHTMLdataInsideString(str);
+        expect(result).toBe('test string');
+    })
+    it('Case 2', () => {
+        let str = `<p><br></p>`;
+        let result = checkHTMLdataInsideString(str);
+        expect(result).toBe('');
+    })
+})
+
+describe('Testing Function - dropdownValueAtIntialize', () => {
+    it('Case 1', () => {
+        const dropdownData = ['figure', 'table', 'equation'];
+        let formattedLabel = `<p>figure</p>`;
+        let result = dropdownValueAtIntialize(dropdownData, formattedLabel);
+        expect(result).toBe('Figure');
+    })
+    it('Case 2', () => {
+        const dropdownData = ['figure', 'table', 'equation'];
+        let formattedLabel = `<p></p>`;
+        let result = dropdownValueAtIntialize(dropdownData, formattedLabel);
+        expect(result).toBe('No Label');
+    })
+    it('Case 3', () => {
+        const dropdownData = ['figure', 'table', 'equation'];
+        let formattedLabel = `<p>test String</p>`;
+        let result = dropdownValueAtIntialize(dropdownData, formattedLabel);
+        expect(result).toBe('Custom');
+    })
+})
+
+describe('Testing Function - requestConfigURI', () => {
+    it('Case 1', () => {
+        process.env = {
+            NODE_ENV: "development"
+        }
+        let result = requestConfigURI(process);
+        expect(result).toBe('dev');
+    })
+    it('Case 2 conditional coverage', () => {
+        process.env = {
+            NODE_ENV: "prod"
+        }
+        cypressConfig.prodUrl = "http://localhost";
+        let result = requestConfigURI();
+        expect(result).toBe('prod');
+    })
+    it('Case 3 conditional coverage', () => {
+        process.env = {
+            NODE_ENV: "prod"
+        }
+        cypressConfig.prodUrl = "structuredauthoring.pearson.com";
+        let result = requestConfigURI();
+        expect(result).toBe('localhost');
+    })
+})
+
+describe('Testing Function - sendDataToIframe', () => {
+    it('Case 1', () => {
+        let messageObj = {
+            type: 'ShowLoader'
+        }
+        let result = sendDataToIframe(messageObj);
+        expect(result).toBe(undefined);
+    })
+})
+
+describe('Testing Function - guid', () => {
+    it('Case 1', () => {
+        let result = guid();
+        expect(result).toBe("00000000-0000-0000-0000-000000000000");
+    })
+    it('Case 2 Conditional converage', () => {
+        window.crypto = undefined;
+        window.msCrypto = {
+            getRandomValues: jest.fn(() => {
+                return [ 12, 23, 34 ]
+            })
+        }
+        let result = guid();
+        expect(result).toBe("00000000-0000-0000-0000-000000000000");
+    })
+})
+
+describe('Testing Function - hasProjectPermission', () => {
+    it('Case 1', () => {
+        let result = hasProjectPermission('comment_only');
+        expect(result).toBe(false);
+    })
+})
+
+describe('Testing Function - hasReviewerRole', () => {
+    it('Case 1', () => {
+        let result = hasReviewerRole('comment_only');
+        expect(result).toBe(true);
+    })
+    it('Case 2 conditional coverage', () => {
+        let result = hasReviewerRole();
+        expect(result).toBe(false);
+    })
+})
+
+describe('Testing Function - getTitleSubtitleModel', () => {
+    it('Case 1 label part', () => {
+        let model = `<p><label>title text</label><number>number text</number>subtitle text</p>`
+        let result = getTitleSubtitleModel(model, 'formatted-title', 'figure');
+        expect(result).toBe("<p class=\"paragraphNumeroUno\">title text</p>");
+    })
+    it('Case 2 number part', () => {
+        let model = `<p><number>number text</number>subtitle text</p>`
+        let result = getTitleSubtitleModel(model, 'formatted-number', 'figure');
+        expect(result).toBe("<p class=\"paragraphNumeroUno\">number text</p>");
+    })
+    it('Case 3 number part conditional coverage', () => {
+        let model = `<p><label>title text</label><number>number text</number>subtitle text</p>`
+        let result = getTitleSubtitleModel(model, 'formatted-number', 'figure');
+        expect(result).toBe("<p class=\"paragraphNumeroUno\">number text</p>");
+    })
+    it('Case 4 subtitle part conditional coverage', () => {
+        let model = `<p><label>title text</label><number>number text</number>subtitle text</p>`
+        let result = getTitleSubtitleModel(model, 'formatted-subtitle', 'figure');
+        expect(result).toBe("<p class=\"paragraphNumeroUno\">subtitle text</p>");
+    })
+    it('Case 5 else case conditional coverage', () => {
+        let model = `<p><label>title text</label><number>number text</number>subtitle text</p>`
+        let result = getTitleSubtitleModel(model, {}, 'figure');
+        expect(result).toBe("<p class=\"paragraphNumeroUno\"><br/></p>");
+    })
+    it('Case 6 conditional coverage', () => {
+        // let model = `<p><label>title text</label><number>number text</number>subtitle text</p>`
+        let result = getTitleSubtitleModel();
+        expect(result).toBe(undefined);
+    })
+    it('Case 7 subtitle part conditional coverage of removeTagsforSubTitle', () => {
+        let model = `<p><label>title text</label><number>number text</number>subtitle text</p>`
+        let result = getTitleSubtitleModel(model, 'formatted-subtitle', 'popup');
+        expect(result).toBe("<p class=\"paragraphNumeroUno\"><number>number text</number>subtitle text</p>");
+    })
+})
+
+describe('Testing Function - createTitleSubtitleModel', () => {
+    it('Case 1', () => {
+        let result = createTitleSubtitleModel('title text', 'subtitle text');
+        expect(result).toBe('<p><label>title text&nbsp;</label>subtitle text</p>');
+    })
+    it('Case 2 conditional coverage', () => {
+        let result = createTitleSubtitleModel('', 'subtitle text');
+        expect(result).toBe('<p>subtitle text</p>');
+    })
+})
+
+describe('Testing Function - createLabelNumberTitleModel', () => {
+    it('Case 1', () => {
+        let result = createLabelNumberTitleModel('title text', 'number text', 'subtitle text');
+        expect(result).toBe("<p><label>title text&nbsp;</label><number>number text&nbsp;</number>subtitle text</p>");
+    })
+    it('Case 2 conditional coverage', () => {
+        let result = createLabelNumberTitleModel('title text', '', 'subtitle text');
+        expect(result).toBe("<p><label>title text&nbsp;</label>subtitle text</p>");
+    })
+    it('Case 3 conditional coverage', () => {
+        let result = createLabelNumberTitleModel('', 'number text', 'subtitle text');
+        expect(result).toBe("<p><number>number text&nbsp;</number>subtitle text</p>");
+    })
+    it('Case 4 conditional coverage', () => {
+        let result = createLabelNumberTitleModel('', '', 'subtitle text');
+        expect(result).toBe('<p>subtitle text</p>');
+    })
+})
+
+describe('Testing Function - getLabelNumberTitleHTML', () => {
+    let figureObj = newFigureObj;
+    it('Case 1', () => {
+        let result = getLabelNumberTitleHTML(figureObj);
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">12</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+    })
+    it('Case 2', () => {
+        figureObj = {
+            ...figureObj,
+            figuretype: 'video',
+            title: {
+                ...figureObj.title,
+                replace: jest.fn()
+            },
+            subtitle: {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "Equation 12 title",
+                replace: jest.fn()
+            },
+            html: {
+                ...figureObj.html,
+                "subtitle": "<p><label>Equation&nbsp;</label><number>12&nbsp;</number>title</p>",
+            }
+        }
+        let result = getLabelNumberTitleHTML(figureObj);
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\"><label>Equation</label><number>12</number>title</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+    })
+    it('Case 3 conditional coverage', () => {
+        figureObj = {
+            ...figureObj,
+            figuretype: 'video',
+            subtitle: {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "Equation 12 title",
+                replace: jest.fn()
+            },
+            html: {
+                ...figureObj.html,
+                "subtitle": "<p><label>Equation&nbsp;</label><number>12&nbsp;</number>title</p>",
+            }
+        }
+        figureObj.hasOwnProperty('title') ? delete figureObj.title : figureObj;
+        let result = getLabelNumberTitleHTML(figureObj);
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">12</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+    })
+    it('Case 4 conditional coverage', () => {
+        figureObj = {
+            ...figureObj,
+            figuretype: 'video',
+            html: {
+                ...figureObj.html,
+                "subtitle": "<p><label>Equation&nbsp;</label><number>12&nbsp;</number>title</p>",
+            }
+        }
+        figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
+        let result = getLabelNumberTitleHTML(figureObj);
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">12</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+    })
+    it('Case 5 conditional coverage', () => {
+        figureObj = {
+            ...figureObj,
+            figuretype: 'image',
+            subtitle: {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "Equation 12 title",
+            },
+            html: {
+                ...figureObj.html,
+                "subtitle": "<p><label>Equation&nbsp;</label><number>12&nbsp;</number>title</p>",
+            }
+        }
+        let result = getLabelNumberTitleHTML(figureObj);
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\"><label>Equation</label><number>12</number>title</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+    })
+    it('Case 6 conditional coverage', () => {
+        figureObj = {
+            ...figureObj,
+            figuretype: 'image',
+        }
+        figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
+        let result = getLabelNumberTitleHTML(figureObj);
+        expect(result).toStrictEqual({"formattedLabel": "<p class=\"paragraphNumeroUno\"><label>Equation</label><number>12</number>title</p>", "formattedNumber": "<p class=\"paragraphNumeroUno\">Equation</p>", "formattedTitle": "<p class=\"paragraphNumeroUno\">title</p>"});
+    })
+})
+
+describe('Testing Function - removeBlankTags', () => {
+    it('Case 1', () => {
+        let htmlData = "<p><label>title text&nbsp;</label><number>number text&nbsp;</number>subtitle text</p>";
+        let result = removeBlankTags(htmlData);
+        expect(result).toBe("<p><label>title text&nbsp;</label><number>number text&nbsp;</number>subtitle text</p>");
+    })
+})
+
+describe('Testing Function - removeUnoClass', () => {
+    it('Case 1', () => {
+        let htmlData = '<h4 id="cypress-0-2" class="heading4VideoTitle figureTitle cypress-editable mce-edit-focus">xdxfd<strong>xf ,m,mmmmm&nbsp; &nbsp;</strong></h4>';
+        let result = removeUnoClass(htmlData);
+        expect(result).toBe("<h4 id=\"cypress-0-2\">xdxfd<strong>xf ,m,mmmmm&nbsp; &nbsp;</strong></h4>");
+    })
+    it('Case 2 catch block', () => {
+        let htmlData = '<h4 id="cypress-0-2">xdxfd<strong>xf ,m,mmmmm&nbsp; &nbsp;</strong></h4>';
+        let result = removeUnoClass(htmlData);
+        expect(result).toBe("<h4 id=\"cypress-0-2\">xdxfd<strong>xf ,m,mmmmm&nbsp; &nbsp;</strong></h4>");
+    })
+})
+
+describe('Testing Function - getSlateType', () => {
+    it('Case 1', () => {
+        let slateObj = {
+            type: 'pdf'
+        }
+        let result = getSlateType(slateObj);
+        expect(result).toBe("pdf");
+    })
+})
+
+describe('Testing Function - replaceWirisClassAndAttr', () => {
+    it('Case 1', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: "<div>blockquote</div>",
+                replace: () => { }
+            }
+        }
+        let result = replaceWirisClassAndAttr();
+        expect(result).toBe(undefined);
+    })
+    it('Case 2', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: undefined,
+                replace: () => { }
+            }
+        }
+        let result = replaceWirisClassAndAttr();
+        expect(result).toBe(undefined);
+    })
+})
+
+describe('Testing Function - getShowhideChildUrns', () => {
+    it('Case 1', () => {
+        let result = getShowhideChildUrns(showHide);
+        expect(result).toStrictEqual(["urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c", "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa38362", "urn:pearson:work:2b9dde07-1771-488a-b9f1-010af4a8961a", "urn:pearson:work:50994dd9-c556-415f-bee2-57fc4c4fb032"]);
+    })
+    it('Case 2', () => {
+        let newShowHide = delete showHide.interactivedata;
+        let result = getShowhideChildUrns(newShowHide);
+        expect(result).toStrictEqual(undefined);
+    })
+})
+
+describe('Testing Function - removeClassesFromHtml', () => {
+    it('Case 1', () => {
+        let htmlData = "<p class='testing class'>blockquote</p>"
+        let result = removeClassesFromHtml(htmlData);
+        expect(result).toBe("<p>blockquote</p>");
+    })
+})
+
+describe('Testing Function - prepareDialogueDom', () => {
+    it('Case 1', () => {
+        let model = {
+            replace: () => { }
+        }
+        let result = prepareDialogueDom(model);
+        expect(result).toBe("<span class=\"dialogueLine\"><br /></span>");
     })
 })

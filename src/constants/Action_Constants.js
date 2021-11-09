@@ -24,6 +24,7 @@ export const TOGGLE_REPLY = "TOGGLE_REPLY"
 export const UPDATE_COMMENT = "UPDATE_COMMENT"
 export const GET_PROJECT_USER = "GET_PROJECT_USER"
 export const UPDATE_ASSIGNEE = "UPDATE_ASSIGNEE"
+export const UPDATE_ROLE = "UPDATE_ROLE"
 export const DELETE_COMMENT = "DELETE_COMMENT";
 export const ADD_NEW_COMMENT = "ADD_NEW_COMMENT"
 
@@ -42,6 +43,11 @@ export const DELETE_ELEMENT = "DELETE_ELEMENT"
 export const OPEN_GLOSSARY_FOOTNOTE = "OPEN_GLOSSARY_FOOTNOTE"
 export const ADD_GLOSSARY_FOOTNOTE = "ADD_GLOSSARY_FOOTNOTE"
 export const UPDATE_FOOTNOTEGLOSSARY = "UPDATE_FOOTNOTEGLOSSARY"
+export const OPEN_MARKED_INDEX = "OPEN_MARKED_INDEX"
+export const OPEN_MARKED_INDEX_ON_GLOSSARY = "OPEN_MARKED_INDEX_ON_GLOSSARY"
+export const UPDATE_NEW_ELEMENT_WORK_ID = "UPDATE_NEW_ELEMENT_WORK_ID"
+export const UPDATE_CURRENT_VALUE = "UPDATE_CURRENT_VALUE"
+
 
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
@@ -151,9 +157,38 @@ export const WIRIS_ALT_TEXT_POPUP = 'WIRIS_ALT_TEXT_POPUP';
 export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
 
 /* --------------- Learnosity Project ------------------------*/
-export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO";
+export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
+
+/* --------------- Alfresco Project ------------------------*/
+export const SET_ALFRESCO_POPUP = "SET_ALFRESCO_POPUP"
+export const SAVE_ALFRESCO_ASSET_DATA = "SAVE_ALFRESCO_ASSET_DATA"
+export const SAVE_INLINE_IMAGE_DATA = "SAVE_INLINE_IMAGE_DATA"
+
+/* ---------------  Figure Glossary ------------------------*/
+export const SET_FIGURE_GLOSSARY = "SET_FIGURE_GLOSSARY";
+export const ADD_FIGURE_GLOSSARY_POPUP = 'ADD_FIGURE_GLOSSARY_POPUP';
+export const WRONG_IMAGE_POPUP = 'WRONG_IMAGE_POPUP'
+export const SHOW_REMOVE_GLOSSARY_IMAGE = 'SHOW_REMOVE_GLOSSARY_IMAGE'
 
 /*---------------- Cypress Project Info ------------------------*/
 export const UPDATE_PROJECT_INFO = 'UPDATE_PROJECT_INFO';
 export const UPDATE_DISCUSSION_ITEMS = 'UPDATE_DISCUSSION_ITEMS';
 export const UPDATE_USAGE_TYPE = 'UPDATE_USAGE_TYPE';
+export const UPDATE_LOB_PERMISSIONS = 'UPDATE_LOB_PERMISSIONS';
+
+/*---------------- TCM POPUP ON CANVAS ------------------------*/
+export const LAUNCH_TCM_CANVAS_POPUP = 'LAUNCH_TCM_CANVAS_POPUP';
+/*---------------- 3Column details Info ------------------------*/
+export const UPDATE_MULTIPLE_COLUMN_INFO = 'UPDATE_MULTIPLE_COLUMN_INFO';
+/*---------------- spinner Info ------------------------*/
+export const SPINNER = 'SPINNER';
+/*----------------- Project Subscription ---------------*/
+export const SET_PROJECT_SHARING_ROLE = 'SET_PROJECT_SHARING_ROLE';
+export const SET_PROJECT_SUBSCRIPTION_DETAILS = 'SET_PROJECT_SUBSCRIPTION_DETAILS';
+export const OWNERS_SUBSCRIBED_SLATE= 'OWNERS_SUBSCRIBED_SLATE';
+
+/*---------------- figure image figuredata object details Info ------------------------*/
+export const UPDATE_OLD_FIGUREIMAGE_INFO = 'UPDATE_OLD_FIGUREIMAGE_INFO';
+export const UPDATE_OLD_SMARTLINK_INFO = 'UPDATE_OLD_SMARTLINK_INFO';
+export const UPDATE_OLD_AUDIOVIDEO_INFO = 'UPDATE_OLD_AUDIOVIDEO_INFO';
+export const UPDATE_FIGURE_DROPDOWN_OPTIONS = 'UPDATE_FIGURE_DROPDOWN_OPTIONS';

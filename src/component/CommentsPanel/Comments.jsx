@@ -1,15 +1,18 @@
 import React from 'react'
 import UserAssignee from './UserAssignee.jsx';
 import ReplyComment from './ReplyComment.jsx';
+import iconArrow from '../../images/CommentsPanel/icon-arrow.svg'
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
 import PropTypes from 'prop-types';
 import {utils} from '../../js/utils'
 import config from '../../config/config.js'
+import CommentMention from '../CommentMention/CommentMention.jsx';
 class Comments extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            newAssignee: this.props.comment.assignto,
+            newAssignee: this.props.comment.commentAssignee,
+            newRole: this.props.comment.role,
             showActionsMenu: false,
             mode: 'view',
             updatedFields: {
@@ -17,7 +20,8 @@ class Comments extends React.Component {
                 status: this.props.comment.commentStatus
             },
             isSelectAssignee: false,
-            showReplyForm: false
+            isSelectRole: false,
+            showReplyComments: false
         }
     }
     componentDidMount() {
@@ -48,6 +52,36 @@ class Comments extends React.Component {
         this.setState({ showActionsMenu: show })
     }
 
+    /**
+    * 
+    *@discription - This function is to toggle between expanded and collapsed state of replies
+    */    
+    setReplyDropdownState = () => {
+        this.setState({ showReplyComments: !this.state.showReplyComments });
+    }
+    
+    /**
+    * 
+    *@discription - This function is to show the comment in slateview
+    */
+    // printComment = () => {
+    //     const { comment } = this.props;
+    //     var string = comment.commentString;
+    //     var x= string.match(/@(.*?)\)/g)
+    //     var final ="";
+    //     var prevIndex=0;
+    //     for(var i=0;i<x.length;i++){
+    //         var index = string.indexOf(x[i]);
+    //         final+="<span style = 'color: #7a797a'>" + string.substring(prevIndex,index) + "</span>";
+    //         final+="<span style = 'color: #015a70'>"+x[i]+"</span>";
+    //         prevIndex = index + x[i].length;	
+    //     }
+    //     final += "<span>" + string.substring(prevIndex) +  "</span>";
+    //     return (
+    //         <div dangerouslySetInnerHTML={{__html: final}}>
+    //         </div>
+    //     )
+    // }
 
    /**
    * 
@@ -95,11 +129,22 @@ class Comments extends React.Component {
         if (this.state.newAssignee != user) {
             this.setState({
                 newAssignee: user,
+                // newAssignee: user,
                 isSelectAssignee: true
             })
         }
     }
 
+    newRoleUser =(user)=> {
+        if (this.state.newRole != user) {
+            this.setState({
+                newRole: user,
+                // newAssignee: user,
+                isSelectRole: true
+            })
+        }
+    }    
+    
     /**
     * 
     *@discription - This function is to change the assignee
@@ -110,7 +155,27 @@ class Comments extends React.Component {
         this.setState({
             isSelectAssignee: false
         })
-        this.props.getProjectUsers();
+
+        // if user came from comments manager
+        // than again initilizing the user list
+        if(this.props.users.length === 0) {
+            this.props.getProjectUsers();
+        }
+    }
+
+    changeAssignByRole =()=> {
+        this.toggleActionsMenu(false)
+        this.setMode('role')
+        this.setState({
+            // isSelectAssignee: false
+            isSelectRole: false
+        })
+
+        // if user came from comments manager
+        // than again initilizing the user list
+        if(this.props.users.length === 0) {
+            this.props.getProjectUsers();
+        }
     }
 
     /**
@@ -145,7 +210,7 @@ class Comments extends React.Component {
         this.setState({
             updatedFields: {
                 ...this.state.updatedFields,
-                text: e.target.value
+                text: e
             }
         })
     }
@@ -160,7 +225,6 @@ class Comments extends React.Component {
         this.toggleActionsMenu(false)
         this.props.deleteComment(commentUrn, elementId)
     }
-
 
     /**
     * 
@@ -178,10 +242,10 @@ class Comments extends React.Component {
 
         return (
             <ul className="comment-action-menu action-menu">
-                {permissions.includes('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
                 {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
-                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
+                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignByRole}>Change Assigned Role</li>}
+                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>} 
                 {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
         )
@@ -196,10 +260,12 @@ class Comments extends React.Component {
         return (
 
             <div>
-                <textarea rows="10"
-                    className="new-comment textarea-input"
-                    defaultValue={this.props.comment.commentString}
-                    onChange={this.updateCommentText}
+                <CommentMention 
+                urn={this.props.comment.commentUrn}
+                projectUsers={this.props.users} 
+                comment={this.props.comment.commentString} 
+                handleCommentChange={this.updateCommentText}
+                isEditMode={true}
                 />
                 <div className="buttons-wrapper">
                     <button className="btn btn__initial"
@@ -228,9 +294,10 @@ class Comments extends React.Component {
     */
     removeAssigneePopup =() =>{
         this.setMode('view')
-        this.setState({
-            newAssignee: this.props.comment.assignto
-        })
+    }
+
+    removeRolePopup =() =>{
+        this.setMode('view')
     }
 
     /**
@@ -243,8 +310,16 @@ class Comments extends React.Component {
         const { newAssignee } = this.state
         this.props.updateAssignee(commentUrn, newAssignee, elementId)
     }
+
+    updateRole = () => {
+        const { commentUrn } = this.props.comment
+        const { elementId } = this.props
+        const { newRole } = this.state
+        this.props.updateRole(commentUrn, newRole, elementId)
+    }
+
     render() {
-        const { comment, elementId, updateReplyComment, toggleReplyForm, users } = this.props
+        const { comment, elementId, updateReplyComment, toggleReplyForm, users, roles, permissions } = this.props
         let avatarObject = [];
         let avatar = '';
         avatarObject = comment?.commentCreator.split(',');
@@ -281,7 +356,7 @@ class Comments extends React.Component {
                             :
                             <div className="text-medium color-gray-71 mb-4">
                                 <p className="hyphens">
-                                    {comment.commentString}
+                                    <CommentMention projectUsers={users} readOnly urn={this.props.comment.commentUrn} comment={this.props.comment.commentString}/>
                                 </p>
                             </div>
                         }         
@@ -292,6 +367,21 @@ class Comments extends React.Component {
                             </div>
                             <div className="property">
                                 <UserAssignee
+                                    name="Assign by role"
+                                    mode={this.state.mode}
+                                    comment={this.props.comment}
+                                    newAssigneeUser={this.newRoleUser}
+                                    isSelectAssignee={this.state.isSelectRole}
+                                    setMode={this.setMode}
+                                    updateAssignee={this.updateRole}
+                                    removeAssigneePopup={this.removeRolePopup}
+                                    users={roles}
+                                    show={this.state.mode == "role"}
+                                />
+                            </div>
+                            <div className="property">
+                                <UserAssignee
+                                    name="Assign to"
                                     mode={this.state.mode}
                                     comment={this.props.comment}
                                     newAssigneeUser={this.newAssigneeUser}
@@ -300,6 +390,7 @@ class Comments extends React.Component {
                                     updateAssignee={this.updateAssignee}
                                     removeAssigneePopup={this.removeAssigneePopup}
                                     users={users}
+                                    show={this.state.mode == "assign"}
                                 />
 
                             </div>
@@ -308,11 +399,11 @@ class Comments extends React.Component {
                                 <span className="property-value capitalize color-gray-71">{comment.commentStatus.toLowerCase()}</span>
                             </div>
                             <div className="property">
-                                <span className="property-title">Replies</span>
-                                <span className="property-value"> {comment.replyComments && comment.replyComments.length} </span>
+                                <div className="property" onClick={this.setReplyDropdownState}>
+                                    <div className="Replies">{comment.replyComments.length} Replies</div>
+                                    <img className={`${this.state.showReplyComments ? "Path" : "Path collap" }`} src={iconArrow} />
+                                </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -324,6 +415,8 @@ class Comments extends React.Component {
                         updateReplyComment={updateReplyComment}
                         elementId={elementId}
                         toggleReplyForm={toggleReplyForm}
+                        showReplyComments={this.state.showReplyComments}
+                        users={this.props.users}
                     />
                 </div>
             </div>

@@ -7,6 +7,7 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel, getTitleSubtitleModel } from '../../constants/utility';
+import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -103,7 +104,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     return data
 }
 
-const podHtmlmatchWithRegex = (html) => {
+export const podHtmlmatchWithRegex = (html) => {
     let printValue = html && html.match(/print/g) ? true : false
     return printValue;
 }
@@ -150,6 +151,26 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
 
         if('posterimage' in previousElementData.figuredata && typeof(previousElementData.figuredata.posterimage)!=="object"){
             delete previousElementData.figuredata.posterimage;
+        }
+        if(previousElementData.figuredata.interactivetype === '3rd-party' || previousElementData.figuredata.interactivetype === "table" ){
+            let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+            const podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || POD_DEFAULT_VALUE;
+            const podwidthToSend = podwidth ? (podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`) : '';
+            if (previousElementData.figuredata.hasOwnProperty('posterimage')) {
+                previousElementData.figuredata.posterimage.podwidth = podwidthToSend
+            }
+            else {
+                const figuredata = {
+                    ...previousElementData.figuredata,
+                    posterimage: {
+                        podwidth: podwidthToSend,
+                        imageid: '',
+                        path: ''
+                        
+                    }
+                }
+                previousElementData.figuredata = figuredata;
+            }
         }
     
     previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
@@ -496,8 +517,8 @@ const generateCitationElementData = (index, previousElementData, elementType, pr
  * @param {*} showHideType Section in ShowHide
  * @param {*} node HTML node containing content
  */
-const validateRevealAnswerData = (showHideType, node, elementType) => {
-    if(showHideType && (showHideType === "show" || showHideType === "hide") && elementType === elementTypeConstant.AUTHORED_TEXT){
+const validateRevealAnswerData = (showHideType, node, elementType, isHeader) => {
+    if(showHideType && (showHideType === "show" || showHideType === "hide") && (elementType === elementTypeConstant.AUTHORED_TEXT && isHeader !== 'HEADERS')){
         return {
             innerHTML : matchHTMLwithRegex(node.innerHTML) ? node.innerHTML : `<p class="paragraphNumeroUno">${node.innerHTML}</p>`,
             innerText : node.innerText
@@ -516,7 +537,7 @@ const validateRevealAnswerData = (showHideType, node, elementType) => {
  * @param {*} popupdata Popup container data 
  * @param {*} _previousElementData element data inside popup
  */
-const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousElementData) => {
+export const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousElementData) => {
     let hasFormattedTitle = _popupdata.hasOwnProperty("formatted-title"),
         hasFormattedSubtitle = _popupdata.hasOwnProperty("formatted-subtitle");
 
@@ -559,11 +580,13 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }    
             tinyMCE.$(node).find('.blockquote-hidden').remove();
             let innerHTML, innerText;
-            let revealTextData = validateRevealAnswerData(showHideType, node, type)
+
+            let inputElementType = elementTypes[elementTypeObj.elementType][elementTypeObj.primaryOption]['enum'];
+            let revealTextData = validateRevealAnswerData(showHideType, node, type, inputElementType)
             innerHTML = revealTextData.innerHTML
             innerText = revealTextData.innerText
             let attributionText=tinyMCE.$(node).find('.blockquoteTextCredit').text()
-            let inputElementType = elementTypes[elementTypeObj.elementType][elementTypeObj.primaryOption]['enum'];
+
             let inputElementSubType = elementTypes[elementTypeObj.elementType][elementTypeObj.primaryOption]['subtype'][elementTypeObj.secondaryOption]['enum'];
             if ((attributionText.length == 0 && inputElementSubType == "MARGINALIA") || (attributionText.length == 0 && inputElementSubType == "BLOCKQUOTE")) {
                 inputElementSubType = "BLOCKQUOTE"
@@ -579,14 +602,19 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 html : {
                     text : innerHTML,
                     footnotes : previousElementData.html.footnotes || {},
-                    glossaryentries : previousElementData.html.glossaryentries || {},
+                    glossaryentries : previousElementData.html.glossaryentries || {}
                 },
-                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "showhide" && previousElementData.type === "element-authoredtext" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
+                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
+            }
+
+            if(type === 'element-authoredtext'){
+                dataToReturn.html['indexEntries'] = previousElementData.html.indexEntries || {}
             }
             
             if(type==="stanza"){
-                dataToReturn.html.text=`<p>${innerHTML}</p>`
+                dataToReturn.html.text=`<p>${innerHTML}</p>`;
+                dataToReturn.html['indexEntries'] = previousElementData.html?.indexEntries || {};
                 delete dataToReturn.poetrylines;
             } 
             if(parentElement && parentElement.type === "popup"){
@@ -667,6 +695,13 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     if (config.elementStatus[dataToReturn.id] && config.elementStatus[dataToReturn.id] === "approved") {
         config.savingInProgress = true
     }
+    /* On update the inner elements of SH; add section type */
+     if(asideData?.type === elementTypeConstant.SHOW_HIDE || elementType === elementTypeConstant.SHOW_HIDE) {
+        dataToReturn.sectionType = showHideType || asideData?.sectionType;
+        if(parentElement?.type === "groupedcontent") {
+            dataToReturn["elementParentEntityUrn"] = containerContext?.props?.element?.contentUrn;
+        }
+    }
     return dataToReturn
 }
 
@@ -688,11 +723,14 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
     return dataToReturn;
 }
 export const handleBlankLineDom = (html,replaceText)=>{
-    if(replaceText){
-        html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><br><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
-        html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
-        return html;
-    } else {
-        return html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,'<span contenteditable="false" id="blankLine" class="answerLineContent"><br></span>')
+    if(typeof html === 'string' && typeof replaceText === 'string') {
+        if(replaceText){
+            html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><br><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
+            html = html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,`<span contenteditable="false" id="blankLine" class="answerLineContent">${replaceText}</span>`)
+            return html;
+        } else {
+            return html.replace(/<span contenteditable="false" id="blankLine" class="answerLineContent"><\/span>/g,'<span contenteditable="false" id="blankLine" class="answerLineContent"><br></span>')
+        }
     }
+    else return html;
 }

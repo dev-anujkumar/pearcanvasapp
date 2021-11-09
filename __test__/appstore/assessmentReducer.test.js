@@ -10,7 +10,9 @@ import {
     SET_ITEM_UPDATE_EVENT,
     ELM_ASSESSMENT_EDIT_ID,
     ASSESSMENT_CONFIRMATION_POPUP,
-    ELM_NEW_ITEM_DATA
+    ELM_NEW_ITEM_DATA,
+    SET_ELM_PICKER_MSG,
+    SET_USAGE_TYPE
 } from '../../src/constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -213,6 +215,12 @@ describe('Test AssessmentReducer', () => {
             payload: true
         })).toEqual({ usageTypeListData: {}, showConfirmationPopup: true })
     })
+    it('SET_USAGE_TYPE', () => {
+        reducer({ usageTypeListData: {} }, {
+            type: 'SET_USAGE_TYPE',
+            payload: true
+        })
+    })
     it('ELM_ASSESSMENT_EDIT_ID', () => {
         expect(reducer({ usageTypeListData: {}, ...expectedState1 }, {
             type: ELM_ASSESSMENT_EDIT_ID,
@@ -306,4 +314,15 @@ describe('Test AssessmentReducer', () => {
             }
         })
     })
+    it('SET_ELM_PICKER_MSG', () => {
+        reducer(INITIAL_STATE, {
+            type: 'SET_ELM_PICKER_MSG',
+            payload: {
+                source:"elm",
+                type:"item",
+                timeStamp:"3847238923"
+            }
+        })
+    })
+
 });

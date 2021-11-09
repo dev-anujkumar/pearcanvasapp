@@ -1,12 +1,15 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import Comments from '../../../src/component/CommentsPanel/Comments';
-import { comment, users ,permissions} from '../../../fixtures/commentPanelData.js'
+import { comment, users, permissions } from '../../../fixtures/commentPanelData.js'
 import { stub } from 'sinon';
+
+jest.mock('../../../src/component/CommentMention/CommentMention', () => () => (<div />))
 
 describe('Testing CommentsPanel component with props', () => {
   const updateElementComment = new stub();
   const updateAssignee = new stub();
+  const updateRole = new stub();
   const updateResolveComment = new stub();
   const toggleReply = new stub();
   const getProjectUsers = new stub();
@@ -15,16 +18,18 @@ describe('Testing CommentsPanel component with props', () => {
     users: users,
     permissions: permissions
   }
-  let wrapper = mount(< Comments
-    updateElementComment={updateElementComment}
-    updateAssignee={updateAssignee}
-    updateResolveComment={updateResolveComment}
-    toggleReply={toggleReply}
-    getProjectUsers={getProjectUsers}
-    deleteComment={deleteComment}
-    comment={comment}
-    {...props}
-  />)
+  let wrapper = mount(
+    <Comments
+      updateElementComment={updateElementComment}
+      updateAssignee={updateAssignee}
+      updateRole={updateRole}
+      updateResolveComment={updateResolveComment}
+      toggleReply={toggleReply}
+      getProjectUsers={getProjectUsers}
+      deleteComment={deleteComment}
+      comment={comment}
+      {...props}
+    />)
 
   const instance = wrapper.instance();
   describe('Testing rendering component with props', () => {
@@ -40,10 +45,10 @@ describe('Testing CommentsPanel component with props', () => {
         expect(wrapper.find('.comment-body')).toHaveLength(1)
       })
     it('Should have  check property', () => {
-      expect(wrapper.find('.property')).toHaveLength(4)
+      expect(wrapper.find('.property')).toHaveLength(6)
     })
     it('Should have user assignee component', () => {
-      expect(wrapper.find('UserAssignee')).toHaveLength(1)
+      expect(wrapper.find('UserAssignee')).toHaveLength(2)
     })
     it('Should have  Reply component', () => {
       expect(wrapper.find('ReplyComment')).toHaveLength(1)
@@ -52,16 +57,28 @@ describe('Testing CommentsPanel component with props', () => {
   })
 
   describe('Testing functions with props', () => {
-    
+
     it('renders update assignee function correctly', () => {
       const spy = jest.spyOn(instance, 'updateAssignee');
       instance.updateAssignee();
       expect(spy).toHaveBeenCalledTimes(1);
 
     });
+    it('renders update role function correctly', () => {
+      const spy = jest.spyOn(instance, 'updateRole');
+      instance.updateRole();
+      expect(spy).toHaveBeenCalledTimes(1);
+
+    });
     it('renders remove assinee function correctly', () => {
       const spy = jest.spyOn(instance, 'setMode');
       instance.removeAssigneePopup();
+      expect(spy).toHaveBeenCalledTimes(1);
+
+    });
+    it('renders remove role function correctly', () => {
+      const spy = jest.spyOn(instance, 'setMode');
+      instance.removeRolePopup();
       expect(spy).toHaveBeenCalledTimes(1);
 
     });
@@ -73,7 +90,7 @@ describe('Testing CommentsPanel component with props', () => {
     it('render action menu from correctly', () => {
       let actionMenu = instance.actionsMenu();
       expect(actionMenu.props.className).toEqual('comment-action-menu action-menu');
-      expect(actionMenu.props.children).toHaveLength(5); 
+      expect(actionMenu.props.children).toHaveLength(5);
     });
 
     it('render remove comment from correctly', () => {
@@ -134,23 +151,19 @@ describe('Testing CommentsPanel component with props', () => {
 
     });
 
-    it('test update comment test function ', () => {
-      instance.newAssigneeUser("test")
-      const newAssignee = wrapper.state().newAssignee;
-      const isSelectAssignee = wrapper.state().isSelectAssignee
-      expect(isSelectAssignee).toEqual(true);
-      expect(newAssignee).toEqual("test");
-
+    it('test new role function with value ', () => {
+      instance.newRoleUser("test")
+      const newRole = wrapper.state().newRole;
+      const isSelectRole = wrapper.state().isSelectRole
+      expect(isSelectRole).toEqual(true);
+      expect(newRole).toEqual("test");
     });
+
     it('test update comment test function ', () => {
-      let event = {
-        target: {
-          value: "test"
-        }
-      }
+      let event = "test"
       instance.updateCommentText(event)
       const updatedFields = wrapper.state().updatedFields.text;
-      expect(updatedFields).toEqual("test");
+      expect(updatedFields).toEqual(event);
     });
 
     it('test delete comment  function ', () => {
@@ -158,25 +171,25 @@ describe('Testing CommentsPanel component with props', () => {
       instance.deleteComment();
       expect(spy).toHaveBeenCalledTimes(1);
     });
-    it('test toggle action menu function with true',() => {
+    it('test toggle action menu function with true', () => {
       instance.toggleActionsMenu(true);
       const showActionsMenu = wrapper.state().showActionsMenu
       expect(showActionsMenu).toEqual(true);
     })
-    it('test toggle action menu function with false',() => {
+    it('test toggle action menu function with false', () => {
       instance.toggleActionsMenu(false);
       const showActionsMenu = wrapper.state().showActionsMenu
       expect(showActionsMenu).toEqual(false);
     })
-    it('test toggle action menu function with undefiend',() => {
+    it('test toggle action menu function with undefiend', () => {
       instance.toggleActionsMenu(undefined);
       const showActionsMenu = wrapper.state().showActionsMenu
       expect(showActionsMenu).toEqual(true);
     })
   })
 
-  describe('test click events',()=>{
-    it('test toggle action meny click event',() =>{
+  describe('test click events', () => {
+    it('test toggle action meny click event', () => {
       const spy = jest.spyOn(instance, 'toggleActionsMenu');
       wrapper.find('.action-menu-btn').simulate('click')
       expect(spy).toHaveBeenCalledTimes(1);

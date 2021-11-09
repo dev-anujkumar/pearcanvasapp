@@ -11,7 +11,7 @@ xdescribe('Testing Element  component with props', () => {
             isLocked:false
         }
     }
-    const elementAuthoring = mount(<ElementAuthoring {...props} type={type} />);
+    const elementAuthoring = mount(<Provider><ElementAuthoring {...props} type={type} /></Provider>);
     let elementAuthoringInstance = elementAuthoring.find('ElementAuthoring').instance();
     it('render Element component ', () => {  
         ReactDOM.render(<ElementAuthoring {...props}/>, div);

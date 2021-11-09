@@ -10,7 +10,7 @@ jest.mock('../../../src/config/config.js', () => ({
     projectEntityUrn: "urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     TCM_DASHBOARD_UI_URL: "https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html"
 }))
-
+window.open = jest.fn();
 jest.mock('../../../src/appstore/store', () => {
     return {
         getState : () => {

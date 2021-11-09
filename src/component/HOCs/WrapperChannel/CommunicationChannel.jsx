@@ -7,17 +7,17 @@
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
-import { sendDataToIframe, defaultMathImagePath } from '../../../constants/utility.js';
-import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER } from '../../../constants/IFrameMessageTypes';
-import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
+import { sendDataToIframe, defaultMathImagePath, isOwnerRole} from '../../../constants/utility.js';
+import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
+import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS } from '../../../constants/IFrameMessageTypes';
+import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
-import { getProjectDetails } from '../../CanvasWrapper/CanvasWrapper_Actions.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -88,16 +88,16 @@ function CommunicationChannel(WrappedComponent) {
                     });
                     break;
                 case 'enablePrev':
-                    config.disablePrev = false;//message.enablePrev;
+                    config.disablePrev = false;
                     break;
                 case 'enableNext':
-                    config.disableNext = false;//message.enableNext;
+                    config.disableNext = false;
                     break;
                 case 'disablePrev':
-                    config.disablePrev = true;//message.disablePrev;
+                    config.disablePrev = true;
                     break;
                 case 'disableNext':
-                    config.disableNext = true;//message.disableNext;
+                    config.disableNext = true;
                     break;
                 case 'refreshElementWithTable':
                     {
@@ -126,11 +126,18 @@ function CommunicationChannel(WrappedComponent) {
                     config.citeUrn = message.citeUrn;
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
+                    if (message?.alfresco?.repositoryFolder) {
+                        let alfrescoRepository = message.alfresco.repositoryFolder?.split('/')?.[0] || message.alfresco.repositoryFolder
+                        config.alfrescoMetaData.alfresco.repositoryFolder = alfrescoRepository
+                        if (message?.alfresco?.siteId) config.alfrescoMetaData.alfresco.siteId = alfrescoRepository
+                        fetchAlfrescoSiteDropdownList('projectAlfrescoSettings')
+                    }
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
                     this.props.fetchLearnosityContent()
 
                     // call get project api here
+                    this.props.fetchFigureDropdownOptions();
                     this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
@@ -185,6 +192,10 @@ function CommunicationChannel(WrappedComponent) {
                     this.setState({
                         showBlocker: false
                     });
+                    if(message.hasOwnProperty('slateTagEnabled')){
+                        let messageData = {assessmentResponseMsg:message.slateTagEnabled}
+                        this.props.isLOExist(messageData);
+                    }
                     break;
                 case 'slatePreview':
                 case 'projectPreview':
@@ -254,9 +265,48 @@ function CommunicationChannel(WrappedComponent) {
                 case 'unlinkLOFailForWarningPopup':
                     this.handleUnlinkedLOData(message)
                     break;
+                case 'selectedAlfrescoAssetData' :
+                    console.log('ASSET DATA FROM ALFRESCO', message.asset)
+                    if(message.isEditor){
+                        this.handleEditorSave(message)
+                    }
+                     if (message.calledFrom === "NarrativeAudio" || message.calledFromGlossaryFootnote) {
+                        this.handleAudioData(message)
+                    }
+                    if(message.calledFrom === "GlossaryImage" || message.calledFromImageGlossaryFootnote ) {
+                        this.handleImageData(message)
+                    }
+                    this.props.saveSelectedAssetData(message)
+                    break;
+                case 'saveAlfrescoDataToConfig' : 
+                config.alfrescoMetaData = message
+                break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
                     break;
+                case 'openInlineAlsfrescoPopup' :
+                    this.props.alfrescoPopup(message);
+                    break;
+                case PROJECT_SHARING_ROLE:
+                    if (message?.sharingContextRole) {
+                        this.props.setProjectSharingRole(message.sharingContextRole);
+                    }
+                    break;
+                case 'releaseLockPopup':
+                    this.setState({
+                        showBlocker: false
+                    });
+                    this.showCanvasBlocker(false);
+                    hideBlocker()
+                    break;
+                case IS_SLATE_SUBSCRIBED:
+                    if (message && Object.keys(message).length && 'isSubscribed' in message) {
+                        const projectSubscriptionDetails = {
+                            isSubscribed: message.isSubscribed,
+                            owner: {}
+                        }
+                        this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
+                    }
             }
         }
 
@@ -371,6 +421,54 @@ function CommunicationChannel(WrappedComponent) {
             }, 500);
         }
 
+        handleEditorSave = (message) =>{
+            let params = {
+                element: message.id,
+                editor: this.props.alfrescoEditor,
+                asset: message.asset,
+                launchAlfrescoPopup: false,
+                isInlineEditor: message.isEditor,
+                imageArgs: this.props.imageArgs                
+            }
+            this.props.saveInlineImageData(params);
+            hideBlocker();
+        }
+
+        handleAudioData = (message) => {
+            let imageData = message.asset;
+            let figureType = imageData?.content?.mimeType?.split('/')[0]
+            let smartLinkAssetType = imageData?.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
+            if (figureType == "audio" || smartLinkAssetType?.toLowerCase() == "audio") {
+                this.props.saveDataFromAlfresco(message);
+                let payloadObj = {
+                    asset: {},
+                    id: ''
+                }
+                this.props.saveSelectedAssetData(payloadObj);
+                hideBlocker();
+            } else {
+                this.props.showWrongAudioPopup(true);
+            }
+        }
+
+        /**
+         * handle Glossary Image Data
+         */
+        handleImageData = (message) => {
+            let imageData = message.asset;
+            let figureType = imageData?.content?.mimeType?.split('/')[0]
+            if (figureType == "image") {
+                this.props.saveImageDataFromAlfresco(message);
+                let payloadObj = {
+                    asset: {},
+                    id: ''
+                }
+                this.props.saveSelectedAssetData(payloadObj);
+                hideBlocker();
+            } else {
+                this.props.showWrongImagePopup(true);
+            }
+        }
         /**
          * Releases slate lock and logs user out.
          */
@@ -584,7 +682,19 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
 
+        /**
+         * function to set owner project slate popup flag as true
+         */
+        resetOwnerSlatePopupFlag = () => {
+            const { projectSubscriptionDetails } = this.props;
+            const isOwnerKeyExist = localStorage.getItem('hasOwnerEdit');
+            if (isOwnerRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isOwnerKeyExist) {
+                this.props.isOwnersSubscribedSlate(true);
+            }
+        }
+
         handleRefreshSlate = () => {
+            const { projectSubscriptionDetails } = this.props;
             localStorage.removeItem('newElement');
             config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
@@ -592,6 +702,12 @@ function CommunicationChannel(WrappedComponent) {
             config.tempSlateEntityURN = null
             config.isPopupSlate = false
             let id = config.slateManifestURN;
+            // reset owner slate popup flag on slate refresh
+            this.resetOwnerSlatePopupFlag();
+            // get slate subscription details on slate refresh from canvas SPA
+            if (projectSubscriptionDetails?.projectSharingRole === 'OWNER') {
+                sendDataToIframe({ 'type': CHECK_SUBSCRIBED_SLATE_STATUS, 'message': { slateManifestURN: config.slateManifestURN } });
+            }
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, (response) => {
                 config.page = 0;
                 config.scrolling = true;
@@ -639,7 +755,14 @@ function CommunicationChannel(WrappedComponent) {
         setCurrentSlate = (message) => {
             config.isSlateLockChecked = false;
             let currentSlateObject = {};
+            const projectSubscriptionDetails = {
+                isSubscribed: false,
+                owner: {}
+            }
+            // reset owner slate popup flag on slate change
+            this.resetOwnerSlatePopupFlag();
             if (message['category'] === 'titleChange') {
+                config.staleTitle = message?.title ?? '';
                 currentSlateObject = {
                     title: message.title,
                 }
@@ -665,7 +788,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.tempSlateEntityURN = null;
                 config.disablePrev = message.disablePrev;
                 config.disableNext = message.disableNext;
-                config.slateType = message.node.nodeLabel;
+                config.slateType = message?.node?.nodeLabel === "assessment-slate" ? "assessment" : message?.node?.nodeLabel;
                 config.parentContainerUrn = message.node.ParentContainerUrn;
                 config.parentEntityUrn = message.node.ParentEntityUrn;
                 config.page = 0;
@@ -675,6 +798,12 @@ function CommunicationChannel(WrappedComponent) {
                 config.tcmslatemanifest= null;
                 config.parentLabel = message.node.nodeParentLabel;
                 config.parentOfParentItem = message.node.parentOfParentItem
+                // checking if selected container is subscribed or not
+                if (message?.node?.isSubscribed) {
+                    projectSubscriptionDetails.isSubscribed = message.node.isSubscribed;
+                }
+                // calling an action to set project subscription details coming from TOC SPA
+                this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,
@@ -802,12 +931,6 @@ function CommunicationChannel(WrappedComponent) {
 
             sendDataToIframe({type : 'showTOCDeletePopup', message : newMessage})
         }
-        updateTitleSlate = (messageObj) => {
-            /**
-             * TO BE IMPLEMENTED
-             *  */
-        }
-
         showCanvasBlocker = (bFlag) => {
             this.setState({
                 showBlocker: bFlag

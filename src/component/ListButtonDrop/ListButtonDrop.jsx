@@ -15,12 +15,14 @@ import alphabetsSmallList from '../../images/ElementButtons/alphabetsSmallList.s
 import romansCapitalList from '../../images/ElementButtons/romansCapitalList.svg'
 import romansSmallList from '../../images/ElementButtons/romansSmallList.svg'
 import noneList from '../../images/ElementButtons/noneList.svg'
+import { isElementInsideBlocklist } from '../../js/TinyMceUtility.js';
 
 /**
  * ListButtonDrop | it is component renders list drop ui on editor tool header
  * @param {object} props | received props to <ListButtonDrop />
  */
 const ListButtonDrop = (props) => {
+    const {activeElement, slateData} = props;
     return (
         <div className="fr-popup fr-desktop" ref={props.setListDropRef}>
             <div className="fr-buttons numbered-list-dropdown">
@@ -29,7 +31,7 @@ const ListButtonDrop = (props) => {
                 <LowerAlphaListIconBox {...props} />
                 <UpperRomanListIconBox {...props} />
                 <LowerRomanListIconBox {...props} />
-                <NoStyleListIconBox {...props} />
+                {!isElementInsideBlocklist(activeElement, slateData) && <NoStyleListIconBox {...props} />}
             </div>
             <div className="list-input-layer" id="list-input-layer">
                 <div className="topText">Start with</div>
@@ -195,7 +197,7 @@ const handleInputSubmit = (e, props, onClicked) => {
     if ((charCode === 13 && value != '') || onClicked) {
         let type = document.getElementById('listDropWrapper').querySelector('.list-options.selected') &&
             document.getElementById('listDropWrapper').querySelector('.list-options.selected').getAttribute('data-cmd');
-        if (type) {
+            if (type) {
             onListOptionSelect(type, props);
         }
     }

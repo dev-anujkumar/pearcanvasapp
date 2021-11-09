@@ -95,9 +95,19 @@ div.learningObjectiveContainer .Container {
 .lo-navigation-icon {
     float: right;
     margin: 8px 8px 8px 10px;
-  }
+}
+
+.lo-navigation-icon2 {
+    float: right;
+    margin-top: -33px;
+    margin-right: 8px;
+}
 
 .lo-navigation-icon svg#right-dropdown-arrow, .lo-navigation-icon svg#right-dropdown-arrow:hover{
+    background-color: transparent !important;
+}
+
+.lo-navigation-icon2 svg#right-dropdown-arrow, .lo-navigation-icon2 svg#right-dropdown-arrow:hover{
     background-color: transparent !important;
 }
 

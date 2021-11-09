@@ -119,6 +119,7 @@ class ElementDialogue extends React.PureComponent {
                                     glossaaryFootnotePopup={_props.glossaaryFootnotePopup}
                                     openGlossaryFootnotePopUp={_props.openGlossaryFootnotePopUp}
                                     handleAudioPopupLocation = {_props.handleAudioPopupLocation}
+                                    handleAssetsPopupLocation={_props.handleAssetsPopupLocation}
                                 />
                             </div>
                         </div>
@@ -300,7 +301,8 @@ class ElementDialogue extends React.PureComponent {
             glossaryFootnoteValue:this.props.glossaryFootnoteValue,
             glossaaryFootnotePopup:this.props.glossaaryFootnotePopup,
             openGlossaryFootnotePopUp:this.props.openGlossaryFootnotePopUp,
-            handleAudioPopupLocation: this.props.handleAudioPopupLocation
+            handleAudioPopupLocation: this.props.handleAudioPopupLocation,
+            handleAssetsPopupLocation:this.props.handleAssetsPopupLocation
         }
         return (
             (this.props !== null && this.props !== undefined) ?
@@ -374,14 +376,14 @@ const dispatchActions = {
     updateElement,
     setBCEMetadata
 }
-
+/*
 const mapStateToProps = ({ appStore }) => {
     return {
         asideData: appStore.asideData,
         parentUrn: appStore.parentUrn
     }
 }
-
+*/
 ElementDialogue.displayName = "ElementDialogue"
-export default connect(mapStateToProps, dispatchActions)(ElementDialogue);
+export default connect(null, dispatchActions)(ElementDialogue);
 

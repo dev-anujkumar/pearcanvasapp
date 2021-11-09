@@ -3,18 +3,22 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
-import { c2MediaModule } from './../../js/c2_media_module';
 import config from '../../config/config';
 import axios from 'axios';
+import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
-import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
-import { hasReviewerRole, getLabelNumberTitleHTML } from '../../constants/utility.js'
+//import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+import { hasReviewerRole, getLabelNumberTitleHTML, sendDataToIframe } from '../../constants/utility.js'
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
-
-
+import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
+import { connect } from 'react-redux';
+import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
+import PopUp from '../PopUp';
+import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
+import { updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions'
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
 class ElementAudioVideo extends Component {
@@ -26,9 +30,59 @@ class ElementAudioVideo extends Component {
             elementType: this.props.model.figuretype || "",
             projectMetadata: false,
             alfrescoSite: '',
-            alfrescoSiteData: {}
+            alfrescoSiteData: {},
+            deleteAssetPopup: false
         }
     }
+    
+    /*** @description This function is used to handle Canvas Blocker on Update */
+    showCanvasBlocker = (value) => {
+        if (value == true) {
+            showTocBlocker();
+            hideToc();
+        } else {
+            hideTocBlocker(value);
+        }
+        disableHeader(value);
+        this.props.showBlocker(value);
+    }
+    /**
+     * @description This function is used to toggle delete popup
+     * @param {*} toggleValue Boolean value
+     * @param {*} event event object
+     */
+     toggleDeletePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            deleteAssetPopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue);
+    }
+
+    /*** @description This function is used to render delete Popup */
+    showDeleteAssetPopup = () => {
+        if (this.state.deleteAssetPopup) {
+            this.showCanvasBlocker(true)
+            return (
+                <PopUp
+                    dialogText={DELETE_DIALOG_TEXT}
+                    active={true}
+                    togglePopup={this.toggleDeletePopup}
+                    isDeleteAssetPopup={true}
+                    deleteAssetHandler={this.deleteElementAsset}
+                    isInputDisabled={true}
+                    isDeleteAssetClass="delete-element-text"    
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+
+    
     /**
      * @description data after selecting an asset from alfresco c2 module
      * @param {*} data selected asset data
@@ -40,62 +94,92 @@ class ElementAudioVideo extends Component {
         let imageData = data;
         let clipInfo;
         let audioDes;
-        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-        let figureType = imageData['assetType'] ? imageData['assetType'].toLowerCase() : "";
-        let width = imageData['width'] ? imageData['width'] : "";
-        let height = imageData['height'] ? imageData['height'] : "";
-        let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
-        smartLinkAssetType = smartLinkAssetType.toLowerCase();
+        let epsURL = imageData?.epsUrl ? imageData.epsUrl : "";   
+        //let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
+        //checkFormat = checkFormat && checkFormat[0]
+        let assetFormat=""
+        let figureType = imageData?.content?.mimeType?.split('/')[0]
+        let width = imageData?.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
+        let height = imageData?.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
+        let smartLinkAssetType = imageData.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
+        smartLinkAssetType = smartLinkAssetType?.toLowerCase();
+        if((this.state.elementType.toLowerCase() === figureType) || (this.state.elementType.toLowerCase() === smartLinkAssetType)) {
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
             if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
-                epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
-            }
-            let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
-            if (imageData['clipinfo']) {
-                if (typeof (imageData['clipinfo']) == "string") {
-                    let clipInfoData = JSON.parse(imageData['clipinfo'])
-                    if (clipInfoData === null) {
-                        clipInfo = null;
-                    }
-                    else {
-                        clipInfo = {
-                            "clipid": clipInfoData.id ? clipInfoData.id : "",
-                            "starttime": clipInfoData.start ? clipInfoData.start : "",
-                            "endtime": clipInfoData.end ? clipInfoData.end : "",
-                            "description": clipInfoData.description ? clipInfoData.description : "",
-                            "duration": clipInfoData.duration ? clipInfoData.duration : ""
-                        }
-                    }
-                }
-                else {
-                    if (imageData['clipinfo'] === null) {
-                        clipInfo = null;
-                    }
-                    else {
-                        clipInfo = {
-                            "clipid": imageData['clipinfo'].id ? imageData['clipinfo'].id : "",
-                            "starttime": imageData['clipinfo'].start ? imageData['clipinfo'].start : "",
-                            "endtime": imageData['clipinfo'].end ? imageData['clipinfo'].end : "",
-                            "description": imageData['clipinfo'].description ? imageData['clipinfo'].description : "",
-                            "duration": imageData['clipinfo'].duration ? imageData['clipinfo'].duration : ""
-                        }
-                    }
+                if(imageData?.properties['avs:jsonString']){
+                    const avsJsonString = JSON.parse(imageData.properties['avs:jsonString']);
+                    const imageReference = avsJsonString?.imageReferenceURL ?? DEFAULT_VIDEO_POSTER_IMAGE;
+                    epsURL = imageReference
                 }
             }
-            let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
-            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-            let ensubtitle = imageData['subtitle'] ? imageData['subtitle'] : "";
-            let frenchSubtitle = imageData['frenchsubtitle'] ? imageData['frenchsubtitle'] : "";
-            let spanishSubtitle = imageData['spanishsubtitle'] ? imageData['spanishsubtitle'] : "";
-            try{
-                audioDes = JSON.parse(JSON.parse(data.text).results[0].properties['s.avs:jsonString'].value[0]);
-            }catch(err){
-                console.log(err)
+            let smartLinkUrl = "";
+            if(figureType === "video" || figureType === "audio"){
+                smartLinkUrl = imageData["institution-urls"] && imageData["institution-urls"][0]?.publicationUrl
+                if (figureType === "audio" && !smartLinkUrl) {
+                    smartLinkUrl = imageData?.smartLinkURl
+                }
             }
-            if(audioDes && audioDes.audioDescEnabled && audioDes.audioDescEnabled==="Yes"){
+            else if (smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
+                smartLinkUrl = imageData?.properties["avs:url"] ? imageData.properties["avs:url"] : "";
+                if (smartLinkUrl && smartLinkUrl?.split('=') && smartLinkUrl?.split('=').length > 1) {
+                    assetFormat = smartLinkAssetType + "/" + smartLinkUrl?.split('=')[1]
+                }
+            }
+            // if (imageData?.properties["cp:clips"]) {
+            //     if (typeof (imageData.properties["cp:clips"]) == "string") {
+            //         let clipInfoData = JSON.parse(imageData.properties["cp:clips"])
+            //         if (clipInfoData === null) {
+            //             clipInfo = null;
+            //         }
+            //         else {
+            //             clipInfo = {
+            //                 "clipid": clipInfoData[0]?.id ? clipInfoData[0].id : "",
+            //                 "starttime": clipInfoData[0]?.start ? clipInfoData[0].start : "",
+            //                 "endtime": clipInfoData[2]?.end ? clipInfoData[2].end : "",
+            //                 "description": clipInfoData[0]?.description ? clipInfoData[0].description : "",
+            //                 "duration": clipInfoData[0].duration ? clipInfoData[0].duration : ""
+            //             }
+            //         }
+            //     }
+            //     else {
+            //         if (imageData['clipinfo'] === null) {
+            //             clipInfo = null;
+            //         }
+            //         else {
+            //             clipInfo = {
+            //                 "clipid": imageData['clipinfo'].id ? imageData['clipinfo'].id : "",
+            //                 "starttime": imageData['clipinfo'].start ? imageData['clipinfo'].start : "",
+            //                 "endtime": imageData['clipinfo'].end ? imageData['clipinfo'].end : "",
+            //                 "description": imageData['clipinfo'].description ? imageData['clipinfo'].description : "",
+            //                 "duration": imageData['clipinfo'].duration ? imageData['clipinfo'].duration : ""
+            //             }
+            //         }
+            //     }
+            // }
+            if(imageData?.clip && Object.keys(imageData.clip).length >0){
+                clipInfo = {
+                    "clipid": imageData.clip.id ?? "",
+                    "starttime": imageData.clip.start ?? "",
+                    "endtime": imageData.clip.end ?? "",
+                    "description": imageData.clip.description ?? "",
+                    "duration": imageData.clip.duration ?? ""
+                }
+            }
+            const videoFormat = imageData?.mimetype ?? imageData?.content?.mimeType ?? assetFormat ?? "";
+            let uniqID = imageData?.id ?? "";
+            let ensubtitle = ""
+            let frenchSubtitle = ""
+            let spanishSubtitle = ""
+            
+            audioDes = imageData?.properties['avs:jsonString'] && JSON.parse(imageData.properties['avs:jsonString'])
+            ensubtitle = audioDes?.englishCC ?? "";
+            frenchSubtitle = audioDes?.frenchCC ?? "";
+            spanishSubtitle = audioDes?.spanishCC ?? "";
+        
+            if(audioDes?.audioDescEnabled === "Yes"){
                 tracks.push(
                     {
-                        path: audioDes.audioDescription,//.split("?")[0];
+                        path: audioDes?.audioDescription,//.split("?")[0];
                         language: "en",
                         tracktype: "audiodescriptions",
                         label: `English AD`
@@ -105,10 +189,10 @@ class ElementAudioVideo extends Component {
             if (ensubtitle) {
                 tracks.push(
                     {
-                        format: 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1],
+                        format: 'text/' + ensubtitle?.split("?")[1]?.split("&")[0]?.split("=")[1],
                         direction: "lefttoright",
                         path: ensubtitle,//.split("?")[0];
-                        language: ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us",
+                        language: ensubtitle?.split("?")[1]?.split("&")[1]?.split("=")[1] + "-us",
                         tracktype: "captions",
                         label: `English CC`
                     }
@@ -117,7 +201,7 @@ class ElementAudioVideo extends Component {
             if (frenchSubtitle) {
                 tracks.push(
                     {
-                        format: 'text/' + frenchSubtitle.split("?")[1].split("&")[0].split("=")[1],
+                        format: 'text/' + frenchSubtitle?.split("?")[1]?.split("&")[0]?.split("=")[1],
                         path: frenchSubtitle,//.split("?")[0];
                         language: "fr-fr",
                         tracktype: "captions",
@@ -128,7 +212,7 @@ class ElementAudioVideo extends Component {
             if (spanishSubtitle) {
                 tracks.push(
                     {
-                        format: 'text/' + spanishSubtitle.split("?")[1].split("&")[0].split("=")[1],
+                        format: 'text/' + spanishSubtitle?.split("?")[1]?.split("&")[0]?.split("=")[1],
                         path: spanishSubtitle,//.split("?")[0];
                         language: "es-es",
                         tracktype:  "captions",
@@ -137,28 +221,28 @@ class ElementAudioVideo extends Component {
                 )
             }
             
-            this.setState({ imgSrc: epsURL,assetData :smartLinkURl })
+            this.setState({ imgSrc: epsURL, assetData :smartLinkUrl })
             let figureData = {
                 height : height,
                 width : width,
                 srctype: this.props.model.figuredata.srctype,
-                figureType: figureType || smartLinkAssetType,
+                figuretype: figureType || smartLinkAssetType,
             }
             if (audioDes && audioDes.navXML) {
                 figureData.markupurl = audioDes.navXML;
             }
             if (!uniqID) {
-                let uniqIDString = imageData && imageData.req && imageData.req.url;
+                let uniqIDString = imageData?.req?.url;
                 let uniqueIDSmartlink;
                 if (uniqIDString) {
-                    uniqueIDSmartlink = uniqIDString.split('s.cmis:objectId = ')[1].replace(/\'/g, '');
+                    uniqueIDSmartlink = uniqIDString.split('s.cmis:objectId = ')[1]?.replace(/\'/g, '');
                 }
-                let uniqueID = imageData['uniqueID'] ? imageData['uniqueID'] : (uniqueIDSmartlink ? uniqueIDSmartlink : '');
+                let uniqueID = imageData?.id ? imageData.id : (uniqueIDSmartlink ? uniqueIDSmartlink : '');
                 if (uniqueID) {
                     uniqID = uniqueID;
                 }
             }
-            switch(figureType || smartLinkAssetType){
+            switch(this.state.elementType || figureType || smartLinkAssetType){
                 case "video":
                     figureData = {
                         ...figureData,
@@ -170,7 +254,7 @@ class ElementAudioVideo extends Component {
                         videos: [
                             {
                                 format: videoFormat,
-                                path: smartLinkURl
+                                path: smartLinkUrl
                             }
                         ],
                         tracks: [
@@ -185,70 +269,123 @@ class ElementAudioVideo extends Component {
                         ...figureData,
                         audioid: `urn:pearson:alfresco:${uniqID}`,
                         posterimage: {
-                            imageid: `urn:pearson:alfresco:${uniqID}`,
-                            path: epsURL,
+                            imageid: `urn:pearson:alfresco:${uniqID}`
                         },
                         audio: {
                             format: videoFormat,
-                            path: smartLinkURl
+                            path: smartLinkUrl
                         },
                         schema: "http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio"
+                    }
+                    if (epsURL?.match(/.(jpg|jpeg|png|gif)$/i)) {
+                        figureData.posterimage.path = epsURL
                     }
                     break;
             }
             if (figureData && ((figureData.clipinfo && figureData.clipinfo.clipid === "") || (figureData.clipinfo === null))) {
                 delete figureData.clipinfo
             }
-            this.props.updateFigureData(figureData, this.props.index,this.props.elementId, ()=>{
+            this.props.updateFigureData(figureData, this.props.index,this.props.elementId, this.props.asideData, ()=>{
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur(true)
             })
-            const alfrescoData = config?.alfrescoMetaData?.alfresco;
-            let alfrescoSiteLocation = this.state.alfrescoSiteData
-            if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
-                handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
+            let alfrescoData = config?.alfrescoMetaData?.alfresco;
+            let alfrescoSiteLocation = this.state.alfrescoSiteData;
+            if(this.props.isCiteChanged){
+                let changeSiteAlfrescoData={
+                    currentAsset: {},
+                    nodeRef: this.props.changedSiteData.guid,
+                    repositoryFolder: this.props.changedSiteData.title,
+                    siteId: this.props.changedSiteData.id,
+                    visibility: this.props.changedSiteData.visibility
+                }
+                handleAlfrescoSiteUrl(this.props.elementId, changeSiteAlfrescoData)
+                this.setState({
+                    alfrescoSite: changeSiteAlfrescoData?.repositoryFolder,
+                    alfrescoSiteData:changeSiteAlfrescoData
+                })
+            }else{
+                if((!alfrescoSiteLocation?.nodeRef) || (alfrescoSiteLocation?.nodeRef === '')){
+                    handleAlfrescoSiteUrl(this.props.elementId, alfrescoData)
+                    this.updateAlfrescoSiteUrl()
+                }
             }
-            this.updateAlfrescoSiteUrl()
-        }
+            //let alfrescoData = config?.alfrescoMetaData?.alfresco;
+            // if(this.props.isCiteChanged){
+            //     this.setState({alfrescoSiteData: this.props.changedSiteData })
+            // }
+           
+            // to blank the elementId and asset data after update
+            // let payloadObj = {
+            //     asset: {}, 
+            //     id: ''
+            // }
+            // this.props.saveSelectedAssetData(payloadObj)
+            //this.updateAlfrescoSiteUrl(alfrescoData)
+        }}
     }
 
     updateAlfrescoSiteUrl = () => {
         let repositoryData = this.state.alfrescoSiteData
-        if(repositoryData?.repositoryFolder){
+        if (repositoryData?.repositoryFolder || repositoryData?.title ) {
             this.setState({
-                alfrescoSite: repositoryData.repositoryFolder
-            })  
-        }else {
+                alfrescoSite: repositoryData?.repositoryFolder || repositoryData?.title
+            })
+        } else {
             this.setState({
-                alfrescoSite: config.alfrescoMetaData.alfresco.repositoryFolder
-            }) 
+                alfrescoSite: config.alfrescoMetaData?.alfresco?.repositoryFolder || config.alfrescoMetaData?.alfresco?.title
+            })
         }
+    }
+    handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{
+        let that = this
+        let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
+        let SSOToken = config.ssoToken;
+        return axios.get(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'ApiKey': config.CMDS_APIKEY,
+                    'Content-Type': 'application/json',
+                    'PearsonSSOSession': SSOToken
+                }
+            })
+            .then(function (response) {
+               let payloadObj = {launchAlfrescoPopup: true, 
+                alfrescoPath: alfrescoPath, 
+                alfrescoListOption: response.data.list.entries,
+                id,
+                locationData
+            }
+                that.props.alfrescoPopup(payloadObj)
+            })
+            .catch(function (error) {
+                console.log("Error IN SITE API", error)
+            });
     }
     
     componentDidMount() {
         getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.repositoryFolder,
+                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
                 alfrescoSiteData:{...response}
             })
         })
     }
-    
-    /**
-     * @description Open C2 module with predefined Alfresco location
-     * @param {*} locationData alfresco locationData
-     */
-    handleC2ExtendedClick = (locationData) => {
-        let alfrescoLocationData = this.state.alfrescoSiteData
-        let data_1 = alfrescoLocationData?.nodeRef ? alfrescoLocationData : locationData;
-        let that = this;
-        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                that.dataFromAlfresco(data);
-            })
-        })
 
+    componentDidUpdate(prevProps) {
+        const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
+        if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
+            this.dataFromAlfresco(alfrescoAssetData)
+            // to blank the elementId and asset data after update
+            const payloadObj = {
+                asset: {},
+                id: ''
+            }
+            this.props.saveSelectedAssetData(payloadObj)
+        }
     }
+    
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
      */
@@ -283,27 +420,22 @@ class ElementAudioVideo extends Component {
         }
         var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
-            if (alfrescoPath.alfresco.nodeRef) {
+            if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                    data_1 = alfrescoPath.alfresco;
-                    data_1.currentAsset = currentAsset;
-                    /*
-                        data according to new project api 
-                    */
-                    data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
-                    data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
-                    data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
-                    data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
-
-                    /*
-                        data according to old core api and c2media
-                    */
-                    data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
-                    data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
-                    data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
-                    data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
-
-                    this.handleC2ExtendedClick(data_1)
+                    let alfrescoLocationData = this.state.alfrescoSiteData
+                    let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
+                    alfrescoSiteName = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
+                    let nodeRefs = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
+                    const locationSiteDataNodeRef =alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData?.guid
+                    nodeRefs = locationSiteDataNodeRef ? locationSiteDataNodeRef : nodeRefs;
+                    const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
+                    const alfrescoSite = locationSiteDataTitle ? locationSiteDataTitle : alfrescoSiteName
+                    const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                    let messageObj = { citeName: citeName, 
+                        citeNodeRef: nodeRefs, 
+                        elementId: this.props.elementId,
+                        currentAsset }
+                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                 }
                 else {
                     this.props.accessDenied(true)
@@ -313,60 +445,7 @@ class ElementAudioVideo extends Component {
         }
         else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
-                    data_1 = { 
-                        ...alfrescoData,
-                        currentAsset: currentAsset,
-                    };
-                    
-                    let request = {
-                        eTag: alfrescoPath.etag,
-                        projectId: alfrescoPath.id,
-                        ...alfrescoPath,
-                        additionalMetadata: { ...alfrescoData },
-                        alfresco: { ...alfrescoData }
-                    };
-
-                    /*
-                        preparing data according to Project api
-                    */
-
-                    request.additionalMetadata['repositoryName'] = data_1['repoName'];
-                    request.additionalMetadata['repositoryFolder'] = data_1['name'];
-                    request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
-                    request.additionalMetadata['visibility'] = data_1['siteVisibility'];
-
-                    request.alfresco['repositoryName'] = data_1['repoName'];
-                    request.alfresco['repositoryFolder'] = data_1['name'];
-                    request.alfresco['repositoryUrl'] = data_1['repoInstance'];
-                    request.alfresco['visibility'] = data_1['siteVisibility'];
-
-                    that.handleC2ExtendedClick(data_1)
-                    /*
-                        API to set alfresco location on dashboard
-                    */
-                    let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
-                    let SSOToken = request.ssoToken;
-                    return axios.patch(url, request.alfresco,
-                        {
-                            headers: {
-                                'Accept': 'application/json',
-                                'ApiKey': config.STRUCTURE_APIKEY,
-                                'Content-Type': 'application/json',
-                                'PearsonSSOSession': SSOToken,
-                                'If-Match': request.eTag
-                            }
-                        })
-                        .then(function (response) {
-                            let tempData = { alfresco: alfrescoData };
-                            that.setState({
-                                projectMetadata: tempData
-                            })
-                        })
-                        .catch(function (error) {
-                            console.log("error", error)
-                        });
-                })
+                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData)
             }
             else {
                 this.props.accessDenied(true)
@@ -391,97 +470,58 @@ class ElementAudioVideo extends Component {
         return null;
     }
 
-    renderAudioVideoType = (model,index,slateLockInfo) => {
-        var audioVideoJSX;
-        var assetPath;
-        let figureHtmlData = getLabelNumberTitleHTML(model);
-        switch (model.figuretype) {
-            case AUDIO:
-                /**JSX for Audio-type element*/
-                if(model && model.figuredata && model.figuredata.audio && model.figuredata.audio.path){
-                    assetPath=model.figuredata.audio.path;
-                }else{
-                    assetPath= DEFAULT_ASSET
+    deleteElementAsset = () => {
+        const element = this.props.model
+        this.props.handleFocus();
+        if (hasReviewerRole()) {
+            return true
+        }
+        this.toggleDeletePopup(false)
+        this.props.updateAudioVideoDataForCompare(element.figuredata);
+        let setFigureData = {
+            "schema": `http://schemas.pearson.com/wip-authoring/${element.figuretype}/1#/definitions/${element.figuretype}`,
+            "height": "399",
+            "width": "600",
+            "posterimage": {
+                "path": DEFAULT_VIDEO_POSTER_IMAGE,
+                "imageid": ""
+            }
+        }
+        switch (element.figuretype) {
+            case "audio":
+                setFigureData = {
+                    ...setFigureData,
+                    "audioid": "",
+                    "srctype": "externallink"
                 }
-                
-                audioVideoJSX = <div className="divAudio">
-                    <figure className="figureAudio"  >
-                        <header className="figureHeader">
-
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4AudioNumberLabel figureLabel " model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${index}-1`} placeholder="Enter Number..." tagName={'h4'} className={"heading4AudioNumberLabel figureNumber"} model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-2`} placeholder="Enter Title..." tagName={'h4'} className="heading4AudioTitle figureTitle" model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-
-                        </header>
-                        <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : assetPath}</div>
-                        <div className="assetDiv"><strong>Alfresco Site: </strong>{ model?.figuredata?.audioid !== "" ? this.state.alfrescoSite : "" }</div>
-                        <div className="pearson-component audio" data-type="audio" onClick={this.handleC2MediaClick}>
-                            <audio controls="none" preload="none" className="audio" >
-                                <source src={this.state.imgSrc?this.state.imgSrc :""} type="audio/mpeg" />
-                            </audio>
-                        </div>
-                        <figcaption className="figcaptionAudio" >
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.captions} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                        </figcaption>
-
-                    </figure>
-                    <div >
-                        <TinyMceEditor  permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-4`} placeholder="Enter Credit..." tagName={'p'} className="paragraphAudioCredit figureCredit" model={model.html.credits} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                    </div>
-                </div>
                 break;
-            case VIDEO:
-                /**JSX for Video-type element*/
-                var posterImage;
-                if(model && model.figuredata && model.figuredata.videos && model.figuredata.videos[0].path){
-                    assetPath=model.figuredata.videos[0].path;
-                }else{
-                    assetPath= DEFAULT_ASSET
+            case "video":
+                setFigureData = {
+                    ...setFigureData,
+                    "videoid": "",
+                    "videos": [
+                        {
+                            "path": "",
+                            "charAt": 0
+                        }
+                    ]
                 }
-                if(model && model.figuredata && model.figuredata.posterimage){
-                    posterImage=model.figuredata.posterimage.path;
-                }else{
-                    posterImage= DEFAULT_VIDEO_POSTER_IMAGE
-                }
-               
-                audioVideoJSX = <div className="divVideo">
-                    <figure className="figureVideo" >
-
-                        <header className="figureHeader">
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4VideoNumberLabel figureLabel " model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Number..." tagName={'h4'} className="heading4VideoNumberLabel figureNumber " model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-2`} placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle figureTitle" model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                        </header>
-                        <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : (assetPath !== "" ? assetPath : DEFAULT_ASSET)}</div>
-                        <div className="assetDiv"><strong>Alfresco Site: </strong>{ model?.figuredata?.videoid !== "" ? this.state.alfrescoSite : "" }</div>
-                        <div className="pearson-component video" data-type="video" >
-                            <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.handleC2MediaClick}
-                              poster={this.state.imgSrc?this.state.imgSrc : posterImage}
-                            >
-                                <source src="" />
-                                <track src="" kind="subtitles" srcLang="en" label="English" />
-                            </video>
-                        </div>
-                        <figcaption className="figcaptionVideo" >
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.captions}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                        </figcaption>
-                    </figure>
-                    <div >
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-4`} placeholder="Enter Credit..." tagName={'p'} className="paragraphVideoCredit figureCredit" model={model.html.credits}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                    </div>
-                </div>
                 break;
         }
-        return audioVideoJSX;
+        
+        this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
+            this.props.handleFocus("updateFromC2");
+            this.props.handleBlur();
+        })
     }
+
     render() {
-        const { model, index, slateLockInfo } = this.props;
+        const { index, slateLockInfo } = this.props;
       
             return (
                 <div className="figureElement">
-                    {this.renderAudioVideoType(model, index, slateLockInfo)}
+                {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
+                <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={this.handleC2MediaClick} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                 </div>         
             );
         }
@@ -508,4 +548,32 @@ ElementAudioVideo.propTypes = {
 
 }
 
-export default ElementAudioVideo;
+const mapActionToProps = (dispatch) =>{
+    return{
+        alfrescoPopup: (payloadObj) => {
+            dispatch(alfrescoPopup(payloadObj))
+        },
+        saveSelectedAssetData: (payloadObj) => {
+            dispatch(saveSelectedAssetData(payloadObj))
+        },
+        updateAudioVideoDataForCompare: (oldAudioVideoData) => {
+            dispatch(updateAudioVideoDataForCompare(oldAudioVideoData))
+        }
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
+        alfrescoElementId : state.alfrescoReducer.elementId,
+        alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        isCiteChanged : state.alfrescoReducer.isCiteChanged,
+        changedSiteData: state.alfrescoReducer.changedSiteData
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapActionToProps
+)(ElementAudioVideo);

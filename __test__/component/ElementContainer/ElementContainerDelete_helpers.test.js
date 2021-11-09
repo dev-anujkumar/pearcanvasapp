@@ -1,9 +1,10 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as deleteHelpers from '../../../src/component/ElementContainer/ElementContainerDelete_helpers';
+import { delInsideWe } from '../../../src/component/ElementContainer/ElementContainerDelete_helpers';
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
-import { slateLevelData, slateLevelDataWithApproved } from "../../../fixtures/containerActionsTestingData"
+import { slateLevelData, slateLevelDataWithApproved, newslateShowhideData } from "../../../fixtures/containerActionsTestingData";
 import { JSDOM } from 'jsdom'
 
 const middlewares = [thunk];
@@ -221,7 +222,6 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         spyonDeleteSuccess.mockClear()
     })
     it("deleteFromStore - inside aside ", () => {
-        
         let args = { 
             asideData: null,
             dispatch: jest.fn(),
@@ -229,6 +229,41 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { elementType : "element-aside", manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b" },
             index: 3,
             poetryData: null,
+            // newParentData: parentElement
+            newParentData: slateLevelData.slateLevelData
+        }
+        
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
+        deleteHelpers.deleteFromStore(args)
+        expect(spydeleteFromStore).toHaveBeenCalled()
+        spydeleteFromStore.mockClear()
+    })
+    it("deleteFromStore - inside aside#2 ", () => {
+        let args = { 
+            asideData: null,
+            dispatch: jest.fn(),
+            elmId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+            parentUrn: { elementType : "random", manifestUrn: "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b" },
+            index: 3,
+            poetryData: null,
+            // newParentData: parentElement
+            newParentData: slateLevelData.slateLevelData
+        }
+        
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
+        deleteHelpers.deleteFromStore(args)
+        expect(spydeleteFromStore).toHaveBeenCalled()
+        spydeleteFromStore.mockClear()
+    })
+    it("deleteFromStore - inside poetry#2 ", () => {
+        
+        let args = { 
+            asideData: null,
+            dispatch: jest.fn(),
+            elmId: "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67",
+            parentUrn: null,
+            index: 3,
+            poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854", parent: {id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540"} },
             newParentData: slateLevelData.slateLevelData
         }
         
@@ -288,6 +323,56 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         expect(spydeleteFromStore).toHaveBeenCalled()
         spydeleteFromStore.mockClear()
     })
+
+    it("deleteFromStore - inside Aside/WE inside S/H", () => {
+        let args = { 
+            asideData: {
+                contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                index: "12-0-0",
+                parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "show"},
+                type: "element-aside",
+                subtype: 'sidebar'
+            },
+            dispatch: jest.fn(),
+            elmId: "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d23",
+            parentUrn: { manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e" },
+            index: "12-0-0",
+            poetryData: null,
+            newParentData: slateLevelData.slateLevelData
+        }
+        
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
+        deleteHelpers.deleteFromStore(args)
+        expect(spydeleteFromStore).toHaveBeenCalled()
+        spydeleteFromStore.mockClear()
+    })
+    it("deleteFromStore - inside Citations inside S/H", () => {
+        let args = { 
+            asideData: {
+                contentUrn: "urn:pearson:entity:bda611d3-773d-4780-852b-efa14c18742f",
+                element: {id: "urn:pearson:manifest:37788369-3483-4c32-8bc9-470c965e6bbb", type: "element-aside", subtype: "workedexample", schema: "http://schemas.pearson.com/wip-authoring/element/1", designtype: "workedexample1"},
+                id: "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                index: "12-0-1-1",
+                parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc13", type: "showhide", contentUrn: "urn:pearson:entity:62008570-5ab8-4f2f-8ce1-e48ae80bc714", showHideType: "show"},
+                type: "citations",
+                subtype: 'sidebar'
+            },
+            dispatch: jest.fn(),
+            elmId: "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d23",
+            parentUrn: { manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e", elementType: 'citations' },
+            index: "12-0-1-1",
+            poetryData: null,
+            newParentData: slateLevelData.slateLevelData
+        }
+        
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
+        deleteHelpers.deleteFromStore(args)
+        expect(spydeleteFromStore).toHaveBeenCalled()
+        spydeleteFromStore.mockClear()
+    })
+
     describe("TCM helper methods", () => {
         it("tcmSnapshotsForDelete - normal element", async () => {
         
@@ -334,5 +419,27 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyprepareTCMSnapshotsForDelete).toHaveReturnedWith(undefined)
             spyprepareTCMSnapshotsForDelete.mockClear()
         })  
+        it("deleteBlockListElement - listdata", () => {
+            const spydeleteBlockListElement = jest.spyOn(deleteHelpers, "deleteBlockListElement")
+            const elementData = {
+                listdata: {
+                    bodymatter: [{ id: "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27634"}, {id: "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"}]
+                }
+            }
+            deleteHelpers.deleteBlockListElement("urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635", elementData)
+            expect(spydeleteBlockListElement).toHaveBeenCalled()
+            spydeleteBlockListElement.mockClear()
+        })
+        it("deleteBlockListElement - listitemdata", () => {
+            const spydeleteBlockListElement = jest.spyOn(deleteHelpers, "deleteBlockListElement")
+            const elementData = {
+                listitemdata: {
+                    bodymatter: [{ id: "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27634"}, {id: "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"}]
+                }
+            }
+            deleteHelpers.deleteBlockListElement("urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635", elementData)
+            expect(spydeleteBlockListElement).toHaveBeenCalled()
+            spydeleteBlockListElement.mockClear()
+        })
     })
 })

@@ -20,24 +20,32 @@ import {
     PROJECT_LEARNING_FRAMEWORKS,
     UPDATE_PROJECT_INFO,
     UPDATE_USAGE_TYPE,
-    UPDATE_DISCUSSION_ITEMS
+    UPDATE_DISCUSSION_ITEMS,
+    UPDATE_LOB_PERMISSIONS,
+    SET_PROJECT_SHARING_ROLE,
+    SET_PROJECT_SUBSCRIPTION_DETAILS,
+    OWNERS_SUBSCRIBED_SLATE,
+    UPDATE_FIGURE_DROPDOWN_OPTIONS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
-import { HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, UPDATE_PROJECT_METADATA } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
+import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import ElementConstants from "../ElementContainer/ElementConstants.js"
+const { SHOW_HIDE } = ElementConstants;
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -47,6 +55,16 @@ export const findElementType = (element, index) => {
     let podwidth = POD_DEFAULT_VALUE
     try {
         switch (element.type) {
+            case "manifestlist":
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    //primaryOption : "primary-column-1",
+                    primaryOption: `primary-column-${element.columnnumber}`,
+                    secondaryOption: `secondary-column-${element.columnnumber}`,
+                    contentUrn : element.contentUrn
+                    //secondaryOption: elementDataBank[element.type]["secondaryOption"]
+                }
+                break;
             case 'element-authoredtext':
             case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
@@ -134,33 +152,35 @@ export const findElementType = (element, index) => {
                             elementType.secondaryOption = `secondary-blockcode-language-${(languageBCE).replace(" ", "_")}`
                         }
                         break;
-                    case "video":
-                    case "audio":
-                        if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
-                            element.figuredata.srctype='externallink'
-                        }
-                        elementType = {
-                            elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
-                            ...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
-                        }
-                        break;
+                        case "video":
+                            case "audio":
+                                if(element.figuredata.srctype && element.figuredata.srctype==='internal'){
+                                    element.figuredata.srctype='externallink'
+                                }
+                                elementType = {
+                                    elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+                                    primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
+                                    ...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
+                                }
+                                break;
                     case "interactive":
                         altText = element.figuredata.alttext ? element.figuredata.alttext : "";
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         let interactiveFormat = element.figuredata.interactiveformat;
+                        let podwidth = element?.figuredata?.posterimage?.podwidth;
                         let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
                             altText,
                             longDesc,
+                            podwidth,
                             ...elementDataBank[element.type][element.figuretype][interactiveData]
                         }
                         break;
                     case "assessment":
                         if(!element.html){
-                            let assessmentTitle=element.figuredata.elementdata.assessmenttitle?element.figuredata.elementdata.assessmenttitle:""
+                            let assessmentTitle = element.figuredata.elementdata.assessmenttitle ?? element?.title?.text ?? ""
                             element.html={
                                 "title":`<p>${assessmentTitle}</p>`
                             }
@@ -225,11 +245,19 @@ export const findElementType = (element, index) => {
             case "showhide":
             case "citations":
             case "element-citation":
-            case  'poetry':
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"],
                     secondaryOption: elementDataBank[element.type]["secondaryOption"]
+                }
+                break;
+            case 'poetry':
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    primaryOption: elementDataBank[element.type]["primaryOption"],
+                    secondaryOption: elementDataBank[element.type]["secondaryOption"],
+                    numbered: element.numberedline ?? false,
+                    startNumber: element.startlinenumber && element.numberedline ? element.startlinenumber : '1',
                 }
                 break;
             case "element-assessment":
@@ -244,6 +272,8 @@ export const findElementType = (element, index) => {
                     primaryOption: elementDataBank[element.type]["primaryOption"]  
                 }
                 if (element.width && element.groupproportions) {
+                    // checking for column 3 proportion to set primaryOption 
+                    if(element.groupproportions === MULTI_COLUMN_3C.ELEMENT_PROPORTION) elementType["primaryOption"] = MULTI_COLUMN_3C.ELEMENT_NAME; 
                     elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
                 }
                 else {
@@ -297,6 +327,27 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 
+export const fetchFigureDropdownOptions = () => (dispatch) => {
+    // Api to get Figure dropdown options
+    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type`;
+    return axios.get(figureDropdownOptionsURL, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(response => {
+        let dropdownOptionsObj = response?.data;
+        if (Object.keys(dropdownOptionsObj).length > 0) {
+            dispatch({
+                type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
+                payload: dropdownOptionsObj
+            })
+        }
+    }).catch(error => {
+        console.log("Get figure dropdown options API Failed !!", error)
+    })
+}
+
 export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
     console.log("the lob url is " + lobURL)
@@ -310,9 +361,35 @@ export const getProjectDetails = () => (dispatch, getState) => {
             type: UPDATE_PROJECT_INFO,
             payload: response.data
         })
+        // PCAT-10682 - Passing project metadata response to toc wrapper for updating the sharing context role if required
+        if (response?.data && Object.keys(response.data).length > 0) {
+            sendDataToIframe({
+                'type': UPDATE_PROJECT_METADATA,
+                'message': response.data
+            })
+        }
         const data = JSON.parse(JSON.stringify(response.data))
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
+            // Api to get LOB Permissions
+            const lobPermissionsURL = `${config.REACT_APP_API_URL}v1/lobs/permissions/setting/${lineOfBusiness}`;
+            axios.get(lobPermissionsURL, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then (response => {
+                const { elementPermissions } = response.data;
+                if (Object.keys(elementPermissions).length > 0) {
+                    dispatch({
+                        type: UPDATE_LOB_PERMISSIONS,
+                        payload: elementPermissions
+                    })
+                }
+            }).catch(error => {
+                console.log("Get LOB permissions API Failed!!")
+            })
+
             // call api to get usage types
             
             const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
@@ -366,7 +443,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             }) 
         }
     }).catch(error => {
-        console.log("cannnow proceed")
+        console.log("API Failed!!!")
     })  
 }
 
@@ -523,10 +600,46 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
-                if(versioning && (versioning.type === 'element-aside' || versioning.type === 'showhide')){
+                if(versioning && (versioning.type === 'element-aside')) {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
-                    let index =versioning.type === 'showhide'? versioning.indexes:versioning.indexes[0];
+                    if (versioning.indexes.length === 4 && versioning.parent.type === 'groupedcontent') {
+                        newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]].groupeddata.bodymatter[versioning.indexes[1]] = Object.values(slateData.data)[0].groupeddata.bodymatter[versioning.indexes[1]];
+                    } else if ((versioning.indexes.length === 4 || versioning.indexes.length === 5) && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
+                        newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]] = Object.values(slateData.data)[0];
+                    } else {
+                        let index = versioning.indexes[0];
+                        newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    }
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+                } else if (versioning?.type == "citations" && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]] = Object.values(slateData.data)[0];
+
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+                }
+                else if ((versioning?.type === 'showhide' || (versioning.calledFrom == 'showhide'))) {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    let index ;
+                    let showhideIndex = versioning.indexes || versioning.index ;
+                    if(typeof showhideIndex === "number"){
+                        index = showhideIndex;
+                    }
+                    else if(typeof showhideIndex === "string"){
+                        index = showhideIndex.split("-")[0];
+                    }
                     newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     return dispatch({
                         type: AUTHORING_ELEMENT_UPDATE,
@@ -534,7 +647,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateLevelData: newslateData
                         }
                     })
-                } else if (versioning.type === 'citations' || versioning.type === 'poetry' || versioning.type === 'groupedcontent') {
+                }
+                else if (versioning.type === 'citations' || versioning.type === 'poetry' || versioning.type === 'groupedcontent') {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index
@@ -552,6 +666,28 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         }
                     })
 
+                } 
+                else if (versioning.type === 'manifestlist') {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    let index
+                    const indexVar = versioning.index || versioning.indexes
+                    if (typeof indexVar === "number") {
+                        index = indexVar;
+                    }
+                    else if (typeof indexVar === "string") {
+                        index = indexVar.split("-")[0];
+                    }
+                    else if (Array.isArray(indexVar) && indexVar.length) {
+                        index = indexVar[0]
+                    }
+                    newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
                 } else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
                     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
                     let contentUrn = slateData.data[manifestURN].contentUrn;
@@ -571,22 +707,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             dispatch(fetchComments(contentUrn, title))
                         }
                     }
-
-                    // Modifying old figures html into new pattern
-                    // ................................XX...........................................
-                    let figureElementsType = ['image', 'table', 'mathImage', 'authoredtext', 'codelisting', 'interactive'];              
-                    for (let element of slateData.data[manifestURN].contents.bodymatter) {
-                        if (element.hasOwnProperty('figuretype') && figureElementsType.includes(element.figuretype) && element.type == 'figure') {
-                            if (element.hasOwnProperty('subtitle')) {
-                                element.html.title = createLabelNumberTitleModel(element.html.title.replace("<p>", '').replace("</p>", ''), '', element.html.subtitle.replace("<p>", '').replace("</p>", ''));
-                            }
-                        } else if ((element.figuretype == 'audio' || element.figuretype == 'video') && element.type == 'figure') {
-                            if (element.hasOwnProperty('title') && element.hasOwnProperty('subtitle')) {
-                                element.html.title = createLabelNumberTitleModel(element.html.title.replace("<p>", '').replace("</p>", ''), '', element.html.subtitle.replace("<p>", '').replace("</p>", ''));
-                            }
-                        }
-                    }
-                    // ................................XX...........................................
                     
                     config.totalPageCount = slateData.data[manifestURN].pageCount;
                     config.pageLimit = slateData.data[manifestURN].pageLimit;
@@ -617,7 +737,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         dispatch({
                             type: SET_ACTIVE_ELEMENT,
                             payload: {}
-                        });
+                        });    
 
                         let slateWrapperNode = document.getElementById('slateWrapper');
                         if (slateWrapperNode) {
@@ -708,7 +828,7 @@ const setSlateDetail = (slateTitle, slateManifestURN) => {
 
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
     let parentData = getState().appStore.slateLevelData,
-        { parentUrn } = getState().appStore,
+        { parentUrn, asideData } = getState().appStore || {},
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -719,9 +839,12 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
             oldPath = bodymatter[index].figuredata.path || ""
         }
     } else {
-        let indexes = index.split('-');
-        let indexesLen = indexes.length, condition;
-        if (indexesLen == 2) {
+        let indexes = index?.split('-') || [];
+        let indexesLen = indexes?.length, condition;
+        /* update the store on update of figure elements inside showhide elements */
+        if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
+            oldPath = getPathOfFigureAsset(bodymatter, indexes, "path", activeElement?.id);
+        } else if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path
@@ -731,7 +854,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
             if (condition.versionUrn == activeElement.id) {
                 oldPath = condition.figuredata.path || ""
             }
-        } else if (indexesLen == 3) {
+        } else if (indexesLen == 3 && newBodymatter[indexes[0]].type !== "showhide") {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
             if (condition.versionUrn == activeElement.id) {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
@@ -742,7 +865,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
 }
 const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
     let parentData = getState().appStore.slateLevelData,
-        { parentUrn } = getState().appStore,
+        { parentUrn, asideData } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -755,8 +878,12 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     oldPath = bodymatter[index].figuredata.audioid || ""
                 }
             } else {
-                let indexes = index.split('-');
-                let indexesLen = indexes.length, condition;
+                let indexes = index?.split('-');
+                let indexesLen = indexes?.length, condition;
+                /* update the store on update of figure elements inside showhide elements */
+                if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
+                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "audioid", activeElement?.id);
+                } else
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
@@ -767,7 +894,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = condition.figuredata.audioid || ""
                     }
-                } else if (indexesLen == 3) {
+                } else if (indexesLen == 3 && newBodymatter[indexes[0]].type !== "showhide") {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audioid 
@@ -783,8 +910,12 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     // bodymatter[index].figuredata.videos[0].path || ""
                 }
             } else {
-                let indexes = index.split('-');
-                let indexesLen = indexes.length, condition;
+                let indexes = index?.split('-');
+                let indexesLen = indexes?.length, condition;
+                /* update the store on update of figure elements inside showhide elements */
+                if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
+                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "videoid", activeElement?.id);
+                } else
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
@@ -795,7 +926,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = condition.figuredata.videoid || ""
                     }
-                } else if (indexesLen == 3) {
+                } else if (indexesLen == 3 && newBodymatter[indexes[0]].type !== "showhide") {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
                         oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.videoid
@@ -807,9 +938,26 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
 
     return oldPath || ""
 }
+/* Return the image/audio/vedio path/Id */
+function getPathOfFigureAsset(bodymatter, indexes, keyName, activeID) {
+    const indexesLen = indexes?.length;
+    /* Get the showhide */
+    const sh_Object = getShowHideElement(bodymatter, indexesLen, indexes);
+    if(sh_Object?.type === SHOW_HIDE) {
+        /* Get the sectiontype of showhide */
+        const sectionType = indexOfSectionType(indexes);
+        /* Get the Figure element of showhide */
+        let figureObject = sh_Object?.interactivedata[sectionType][indexes[indexesLen - 1]] || {};
+        if (figureObject.versionUrn === activeID) {
+            /* Get the path of Figure element of showhide */
+            return figureObject?.figuredata?.hasOwnProperty(keyName) ? figureObject.figuredata[keyName] : "";
+        }
+    }  
+}
+
 const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     let parentData = getState().appStore.slateLevelData,
-        { parentUrn } = getState().appStore,
+        { parentUrn, asideData } = getState().appStore,
         oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -822,6 +970,10 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     } else {
         let indexes = index.split('-');
         let indexesLen = indexes.length, condition;
+         /* update the store on update of interactive elements inside showhide elements */
+        if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
+            oldPath = getPathOfFigureAsset(bodymatter, indexes, "interactiveid", activeElement?.id);
+        } else
         if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
@@ -863,6 +1015,7 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},as
         case "image":
         case "mathImage":
         case "table":
+        case "tableasmarkup":
             let oldPath = updateFromC2Flag ? "" : setOldImagePath(getState, activeElement, index)
             dispatch({
                 type: SET_OLD_IMAGE_PATH,
@@ -964,7 +1117,7 @@ export const tcmCosConversionSnapshot = () => dispatch => {
  * @param {*} paramObj 
  * @param {*} responseData 
  */
-const appendCreatedElement = async (paramObj, responseData) => {
+export const appendCreatedElement = async (paramObj, responseData) => {
     let {
         popupElementIndex,
         getState,
@@ -973,7 +1126,8 @@ const appendCreatedElement = async (paramObj, responseData) => {
         dispatch,
         cb,
         popupField,
-        createdFromFootnote
+        createdFromFootnote,
+        cgTitleFieldData
     } = paramObj
 
     let elemIndex = `cypress-${popupElementIndex}`
@@ -1027,13 +1181,28 @@ const appendCreatedElement = async (paramObj, responseData) => {
             }
         }
     }
-    else if(parentElement.type === "citations"){
-        let targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]]
-        if(targetCG){
-            targetCG.contents["formatted-title"] = responseData
-            targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("",elemNode.innerHTML)
-            targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText
-            _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG
+    else if (parentElement.type === "citations") {
+        let targetCG;
+        // Check if CG is created inside S/H
+        if (popupElementIndex.length === 4) {
+            let sectionType = cgTitleFieldData?.asideData?.parent?.showHideType;
+            if (sectionType) {
+                targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]].interactivedata[sectionType][popupElementIndex[2]];
+            }
+            if (targetCG) {
+                targetCG.contents["formatted-title"] = responseData;
+                targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
+                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText;
+                _slateObject.contents.bodymatter[popupElementIndex[0]].interactivedata[sectionType][popupElementIndex[2]] = targetCG;
+            }
+        } else {
+            targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]];
+            if (targetCG) {
+                targetCG.contents["formatted-title"] = responseData;
+                targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
+                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText;
+                _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG;
+            }
         }
     }
     dispatch({
@@ -1097,7 +1266,7 @@ const getRequestData = (parentElement) => {
     }
     return dataToSend
 }
-export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote) => (dispatch, getState) => {
+export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote, cgTitleFieldData = {}) => (dispatch, getState) => {
     let _requestData =  getRequestData(parentElement)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
     return axios.post(url, 
@@ -1117,7 +1286,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             dispatch,
             cb,
             popupField,
-            createdFromFootnote
+            createdFromFootnote,
+            cgTitleFieldData
         }
         if (parentElement && parentElement.type == 'popup') {
             const parentData = getState().appStore.slateLevelData;
@@ -1150,7 +1320,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
     })
 }
 
-export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN) => (dispatch, getState) => {
+export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN, element) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
@@ -1180,9 +1350,41 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         let newslateData = JSON.parse(JSON.stringify(parentData))
         let _slateObject = newslateData[slateManifestURN]
         let targetPoetryElement = _slateObject.contents.bodymatter[ElementIndex]
+        const activeElementId = element?.id
 
         if(targetPoetryElement){
             if(poetryField==="creditsarray"){
+                if(targetPoetryElement?.type == "element-aside"){ /* update credit of PE inside aside */
+                    targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
+                        if (element.type == "poetry" && element.id == activeElementId) {
+                            element.contents[poetryField] = [response.data]
+                            element.contents[poetryField][0].html.text  = elemNode.innerHTML
+                            element.contents[poetryField][0].elementdata.text = elemNode.innerText
+                            targetPoetryElement.elementdata.bodymatter[index] = element
+                        } else if (element?.type == "manifest") { /* update credit of PE inside WE in section break */
+                            element.contents?.bodymatter.map((element1, maniIndex) => {
+                                if (element1?.type == "poetry" && element1?.id == activeElementId) {
+                                element1.contents[poetryField] = [response.data]
+                                element1.contents[poetryField][0].html.text  = elemNode.innerHTML
+                                element1.contents[poetryField][0].elementdata.text = elemNode.innerText
+                                targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
+                                }
+                            })
+                        }
+                    })
+                } else if (targetPoetryElement?.type == "groupedcontent") { /* update credit of PE inside MultiColumn */
+                    targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
+                        groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
+                            if (groupElem2.type == "poetry" && groupElem2.id == activeElementId) {
+                                groupElem2.contents[poetryField] = [response.data]
+                                groupElem2.contents[poetryField][0].html.text  = elemNode.innerHTML
+                                groupElem2.contents[poetryField][0].elementdata.text = elemNode.innerText
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
+                            }
+                        })
+                    })
+                } 
+                else {
                 if(!targetPoetryElement.contents[poetryField]){
                     targetPoetryElement.contents[poetryField] = [];
                 }
@@ -1190,14 +1392,75 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 targetPoetryElement.contents[poetryField][0].html.text  = elemNode.innerHTML
                 targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
             }
+        }
             else if(poetryField==="formatted-title"){
+                if(targetPoetryElement?.type == "element-aside"){ /* update Title of PE inside aside */
+                    targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
+                        if (element.type == "poetry" && element.id == activeElementId) {
+                            element.contents[poetryField] = response.data
+                            element.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                            element.contents[poetryField].elementdata.text = elemNode.innerText
+                            targetPoetryElement.elementdata.bodymatter[index] = element
+                        } else if (element?.type == "manifest") { /* update title of PE inside WE in section break */
+                            element.contents?.bodymatter.map((element1, maniIndex) => {
+                                if (element1?.type == "poetry" && element1?.id == activeElementId) {
+                                    element1.contents[poetryField] = response.data
+                                    element1.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                                    element1.contents[poetryField].elementdata.text = elemNode.innerText
+                                    targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
+                                }
+                            })
+                        }
+                    })
+                } else if (targetPoetryElement?.type == "groupedcontent") { /* update title of PE inside MultiColumn */
+                    targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
+                        groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
+                            if (groupElem2.type == "poetry" && groupElem2.id == activeElementId) {
+                                groupElem2.contents[poetryField] = response.data
+                                groupElem2.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                                groupElem2.contents[poetryField].elementdata.text = elemNode.innerText
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
+                            }
+                        })
+                    })
+                } else {
                 targetPoetryElement.contents[poetryField] = response.data
                 targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                 targetPoetryElement.contents[poetryField].elementdata.text = elemNode.innerText
             }
+        }
             else if(poetryField==="formatted-subtitle"){
+                if (targetPoetryElement?.type == "element-aside") {
+                    targetPoetryElement?.elementdata?.bodymatter.map((element, index) => {
+                        if (element.type == "poetry" && element.id == activeElementId) { /* update subtitle of PE inside Aside/WE */
+                            element.contents["formatted-title"] = response.data
+                            element.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                            targetPoetryElement.elementdata.bodymatter[index] = element
+                        } else if (element.type == "manifest") { /* update subtitle of PE inside WE in section break */
+                            element.contents?.bodymatter.map((element1, maniIndex) => {
+                                if (element1?.type == "poetry" && element1?.id == activeElementId) {
+                                    element1.contents["formatted-title"] = response.data
+                                    element1.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                                    targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
+                                }
+                            })
+                        }
+                    })
+                } else if (targetPoetryElement?.type == "groupedcontent") { /* update subtitle of PE inside MultiColumn */
+                    targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
+                        groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
+                            if (groupElem2.type == "poetry" && groupElem2.id == activeElementId) {
+                                groupElem2.contents["formatted-title"] = response.data
+                                groupElem2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                                targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
+                            }
+                        })
+                    })
+                }
+                else {
                 targetPoetryElement.contents["formatted-title"] = response.data
                 targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                }
             }
             _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
         }
@@ -1278,3 +1541,39 @@ export const fetchProjectLFs = () => dispatch => {
     })
 
 };
+
+/**
+ * setProjectSharingRole is responsible to dispatch an action to set 
+ * project sharing role
+ * @param {String} role
+ */
+export const setProjectSharingRole = role => (dispatch) => {
+    dispatch({
+        type: SET_PROJECT_SHARING_ROLE,
+        payload: role
+    });
+}
+
+/**
+ * setProjectSubscriptionDetails is responsible to dispatch an action to 
+ * set project subscription details based on toc container selection
+ * @param {Object} subscriptionDetails 
+ */
+export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch) => {
+    dispatch({
+        type: SET_PROJECT_SUBSCRIPTION_DETAILS,
+        payload: subscriptionDetails
+    });
+
+}
+
+/**
+ * Action Creator
+ * Retrieves the Owner's Slate status
+ */
+ export const isOwnersSubscribedSlate = (showPopup) => (dispatch, getState) => {
+    return dispatch({
+        type: OWNERS_SUBSCRIBED_SLATE,
+        payload: showPopup
+    })
+}

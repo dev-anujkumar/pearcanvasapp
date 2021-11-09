@@ -1,0 +1,99 @@
+.mentions {
+  margin: 1em 0;
+}
+  .mentions--multiLine.comment-mention .mentions__control {
+    font-size: 10pt;
+    border: 1px solid #007fa3;
+  }
+  .mentions--multiLine.comment-mention .mentions__highlighter {
+    padding: 9px;
+    height: 150px;
+  }
+  .mentions--multiLine.comment-mention .mentions__input {
+    padding: 9px;
+    height: 150px;
+    outline: 0;
+    border: 0;
+    overflow-y: auto !important;
+  }
+  
+  .mentions__suggestions__list {
+    width: 100%;
+    max-height: 261px;
+    padding: 1px 1px 10px;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+    background-color: #fffffe;
+    overflow-y: auto;
+    font-size: 16px;
+  }
+  
+  
+  .mentions__suggestions__item--focused {
+    background-color: #f0f0f0;
+  }
+  .mentions__mention {
+    background-color: #d9ecf1 !important;
+    position: relative;
+  }
+  .mentions__highlighter__substring{
+    color: #007fa3 !important;
+  }
+  .comment-mention .mentions__suggestions{
+    top: 15px !important;
+  }
+
+  .mentions.reply-mention .mentions__control{
+      background-color: #fffffe;
+      border: none;
+  }
+  .no-border__control > textarea{
+    border:none;
+  } 
+
+.mentions.reply-mention .mentions__control{
+  background-color: #fffffe;
+  border: none;
+}
+
+  .mentions.reply-mention .mentions__input{
+    padding: 10px;
+    padding-right: 40px;
+    outline: 0;
+    border: 0;
+    height: 50px !important;
+    overflow-y: auto !important;
+  }
+  .mentions.edit-mode.reply-mention .mentions__input{
+    border: 1px solid #007fa3;
+  }
+  .mentions.edit-mode.reply-mention .mentions__suggestions{
+    top: 35px !important
+  }
+
+  .mentions.reply-mention .mentions__input:focus {
+    border: 1px solid #007fa3;
+}
+.mentions.reply-mention .mentions__suggestions__list{
+    max-height: 230px;
+  }
+  .mentions__suggestions__item {
+    padding: 10px 10px !important;
+    color: #007fa3 !important;
+  }
+  .mentions__suggestions__item__display{
+    color: #007fa3 !important;
+  }
+  .mentions.reply-mention .mentions__suggestions{
+    background-color: #f8f9fa !important;
+    top: 30px !important
+  }
+
+  .mentions--multiLine.reply-mention .mentions__highlighter {
+    padding: 9px;
+    height: 50px;
+  }
+
+  .mentions.reply-mention .mentions__input::placeholder{
+    font-size: 12px;
+  }

@@ -124,7 +124,7 @@ export const utils = {
 };
 
 export const checkforToolbarClick = (classList) => {
-    let existingToolbarClasses = ["tox-dialog__body-nav-item", "tox-tab", "tox-dialog__body-nav-item--active", "tox-dialog__content-js", "tox-dialog", "tox-collection__item-icon", "tox-tbtn", "tox-tbtn--select", "tox-split-button", "wrs_focusElement", "tox-split-button__chevron", "definition-editor", "dialog-input-textarea", "SearchLibAutoSuggest__input___jIHit", "plautosuggestTheme__input___Jd4Ux", "patterns__col100___1reM7"];
+    let existingToolbarClasses = ["tox-dialog__body-nav-item", "tox-tab", "tox-dialog__body-nav-item--active", "tox-dialog__content-js", "tox-dialog", "tox-collection__item-icon", "tox-tbtn", "tox-tbtn--select", "tox-split-button", "wrs_focusElement", "tox-split-button__chevron", "definition-editor", "dialog-input-textarea", "SearchLibAutoSuggest__input___jIHit", "plautosuggestTheme__input___Jd4Ux", "patterns__col100___1reM7", "markedindex-editor"];
     let isTargetFound = false;
 
     classList.forEach((val) => {
@@ -543,8 +543,6 @@ export const getWirisAltText = ({target}) =>{
 export const removeBOM = (nodeHTML) => nodeHTML && nodeHTML.replace(/﻿/g, "");
 export const removeImageCache = (nodeHTML) => nodeHTML && nodeHTML.replace(/(?:\.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
 
-export const showCustomAlert = (msg) => alert(msg);
-
 /**
  * This function handles the img-src for Wiris content
  * @param {*} dataHTML html content
@@ -558,11 +556,19 @@ export const removeMathmlImageCache = (dataHTML) => {
     for (let index = 0; index < mathMlImages.length; index++) {
         let imgSrc = mathMlImages[index].getAttribute('src');
         if (imgSrc) {
-            imgSrc = imgSrc.replace(/(?:\.png).*?[\"]/g, '.png?' + (new Date()).getTime() + '"');
-            mathMlImages[index].setAttribute('src', imgSrc);
+            mathMlImages[index].setAttribute('src', fetchUpdatedImageUrl(imgSrc));
         }
     }
     let finalDataHTML = hiddenDiv.innerHTML;
     document.body.removeChild(hiddenDiv);
     return finalDataHTML;
+}
+
+/**
+ * This function returns updated url with new time stamp.
+ * @param {string} url
+ */
+export const fetchUpdatedImageUrl = (url) => {
+    // Updated url for .png images.
+    return `${url.split('.png')[0]}.png?${(new Date()).getTime()}`;
 }

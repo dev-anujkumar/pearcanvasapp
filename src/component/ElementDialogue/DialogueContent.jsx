@@ -37,6 +37,8 @@ function DialogueContent(props) {
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
                 handleAudioPopupLocation = {props.handleAudioPopupLocation}
+                handleAssetsPopupLocation={props.handleAssetsPopupLocation}
+                
             />
             <TinyMceEditor
                 index={`${props.elementIndex}-${props.index}-1`}
@@ -65,6 +67,7 @@ function DialogueContent(props) {
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
                 handleAudioPopupLocation = {props.handleAudioPopupLocation}
+                handleAssetsPopupLocation={props.handleAssetsPopupLocation}
             />
         </Fragment>
     } else {
@@ -95,6 +98,7 @@ function DialogueContent(props) {
             glossaryFootnoteValue={props.glossaryFootnoteValue}
             glossaaryFootnotePopup={props.glossaaryFootnotePopup}
             handleAudioPopupLocation = {props.handleAudioPopupLocation}
+            handleAssetsPopupLocation={props.handleAssetsPopupLocation}
         />;
     }
     return <header>{editor}</header>;

@@ -20,7 +20,7 @@ describe('testing  elm type of  tcm --', () => {
     expect(checkTCM(element)).toEqual(TEXT);
   });
   it('should return the element-assessment', () => {
-    expect(checkTCM({ type: 'element-assessment' })).toEqual(ELEMENT_ASSESSMENT);
+    expect(checkTCM({ type: 'element-assessment' })).toEqual(TEXT);
   });
   it('should return the showhide', () => {
     expect(checkTCM({ type: 'showhide' })).toEqual(SHOW_HIDE);

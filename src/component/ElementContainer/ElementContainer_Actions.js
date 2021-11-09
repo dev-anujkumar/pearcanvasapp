@@ -5,11 +5,17 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
+
+import ElementConstants, { containersInSH } from "./ElementConstants";
+import { checkBlockListElement } from '../../js/TinyMceUtility';
+const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
@@ -66,6 +72,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "citations":
             case "poetry":
             case "groupedcontent":
+            case "manifestlist":
+            case "manifestlistitem":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -140,7 +148,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         return ;
     }
-    const { showHideObj } = getState().appStore
+    const { showHideObj,slateLevelData } = getState().appStore
     updatedData.projectUrn = config.projectUrn;
     if (updatedData.loData) {
         updatedData.slateVersionUrn = config.slateManifestURN;
@@ -161,6 +169,15 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
     }
     updateStoreInCanvas(helperArgs)
     let updatedData1 = JSON.parse(JSON.stringify(updatedData))
+    const data = {
+        slateLevelData,
+        index: elementIndex
+    };
+    const blockListData = checkBlockListElement(data, 'TAB');
+    if(blockListData && Object.keys(blockListData).length > 0) {
+        const { parentData } = blockListData;
+        updatedData1.elementParentEntityUrn = parentData?.contentUrn;
+    }
     if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
         updatedData1 = {
             ...updatedData,
@@ -212,14 +229,49 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
     }
 }
 
-export const updateFigureData = (figureData, elementIndex, elementId, cb) => (dispatch, getState) => {
+export const updateFigureData = (figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
         //element,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
     let dataToSend = {};
-    if (typeof (index) == 'number') {
+
+    const { asideData } = getState()?.appStore || {};
+    const indexes = index?.toString().split('-') || [];
+    /* update figure elements in ShowHide */
+    /* asideDataFromAfrescoMetadata is used for editing figure metadata popup field(alttext, longDescription) inside ShowHide element */
+    if((asideData?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.type === SHOW_HIDE ) && indexes?.length >= 3) {
+        /* Get the showhide element object from slate data using indexes */
+        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+        const section = indexOfSectionType(indexes); /* Get the section type */
+        /* After getting showhide Object, add the new element */
+        if(shObject?.type === SHOW_HIDE) {
+            /* Get the figure element */
+            let figure = shObject?.interactivedata[section][indexes[indexes?.length - 1]];
+            if (figure.versionUrn === elementId) {
+                dataToSend = figure?.figuredata;
+                /* update the data */
+                figure.figuredata = figureData;
+            }
+        }
+        /* Update figure inside Aside/WE in S/H */
+    } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) { 
+        let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
+        let figure;
+        if (sectionType) {
+            if ((asideData?.subtype === ELEMENT_WORKEDEXAMPLE || asideDataFromAfrescoMetadata?.subtype === ELEMENT_WORKEDEXAMPLE) && indexes?.length >= 5) {
+                figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+            } else {
+                figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]];
+            }
+        }
+        if (figure.versionUrn === elementId) {
+            dataToSend = figure?.figuredata;
+            /* update the data */
+            figure.figuredata = figureData;
+        }
+    } else if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
             if (newBodymatter[index].figuretype === "assessment") {
                 dataToSend =  newBodymatter[index].figuredata['elementdata']
@@ -248,6 +300,14 @@ export const updateFigureData = (figureData, elementIndex, elementId, cb) => (di
                 }
             }
         } else if (indexesLen == 3) {
+            // if (newBodymatter[indexes[0]].type === SHOW_HIDE) { /*For showhide container on slate not inside other container */
+            //    const section = findSectionType(indexes[1]); /* Get the section type */
+            //    condition = newBodymatter[indexes[0]].interactivedata[section][indexes[2]];
+            //    if (condition.versionUrn === elementId) {
+            //        dataToSend = condition.figuredata
+            //        condition.figuredata = figureData
+            //    }
+            //} else
             if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
                 condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                 if (condition.versionUrn == elementId) {
@@ -307,10 +367,12 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
             }
         }
     ).then(response => {
-        let parentData = getState().appStore.slateLevelData
+        let parentData = getState().appStore.slateLevelData;
+        /* Table in Showhide - Get the section type */
+        const sectionType = getState()?.appStore?.asideData?.sectionType || getState()?.appStore?.asideData?.parent?.showHideType;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         if (newParentData[config.slateManifestURN].status === 'wip') {
-            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter)
+            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter, sectionType)
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         } else if (newParentData[config.slateManifestURN].status === 'approved') {
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -327,7 +389,7 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
     })
 }
 
-const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
+const updateTableEditorData = (elementId, tableData, slateBodyMatter, sectionType) => {
 
     return slateBodyMatter = slateBodyMatter.map(elm => {
         if (elm.id === elementId) {
@@ -335,34 +397,48 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
                 ...elm,
                 ...tableData
             }
-        }
+        } else /* "Table in Showhide" - Update the store on adding data in table */
+        if (sectionType && elm?.interactivedata?.[sectionType]) {
+            elm.interactivedata[sectionType] = updateTableEditorData(elementId, tableData, elm.interactivedata[sectionType], sectionType)
+        } 
         else if (elm.elementdata && elm.elementdata.bodymatter) {
-            elm.elementdata.bodymatter = updateTableEditorData(elementId, tableData, elm.elementdata.bodymatter)
+            elm.elementdata.bodymatter = updateTableEditorData(elementId, tableData, elm.elementdata.bodymatter, sectionType)
         }
         else if (elm.contents && elm.contents.bodymatter) {
-            elm.contents.bodymatter = updateTableEditorData(elementId, tableData, elm.contents.bodymatter)
+            elm.contents.bodymatter = updateTableEditorData(elementId, tableData, elm.contents.bodymatter, sectionType)
         }
         else if (elm.groupeddata && elm.groupeddata.bodymatter) {
-            elm.groupeddata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupeddata.bodymatter)
+            elm.groupeddata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupeddata.bodymatter, sectionType)
         }
         else if (elm.groupdata && elm.groupdata.bodymatter) {
-            elm.groupdata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupdata.bodymatter)
+            elm.groupdata.bodymatter = updateTableEditorData(elementId, tableData, elm.groupdata.bodymatter, sectionType)
         }
         return elm;
     })
 }
-
-export const createShowHideElement = (elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => (dispatch, getState) => {
+/**
+* @function createShowHideElement
+* @description-This function is to create elements inside showhide
+* @param {String} elementId - id of parent element (ShowHide)   
+* @param {String} type - type of section in showhide element - show|hide|revealAnswer
+* @param {Object} index - Array of indexs
+* @param {String} parentContentUrn - contentUrn of parent element(showhide)
+* @param {Function} cb - )
+* @param {Object} parentElement - parent element(showhide)
+* @param {String} parentElementIndex - index of parent element(showhide) on slate
+* @param {String} type2BAdded - type of new element to be addedd - text|image 
+*/
+export const createShowHideElement = (elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex, type2BAdded) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
-    let newShowhideIndex = parseInt(newIndex[newIndex.length-1])+1
-    const { asideData, parentUrn ,showHideObj } = getState().appStore
+    let newShowhideIndex = parseInt(newIndex[newIndex.length-1]); //+1
+    //const { asideData, parentUrn ,showHideObj } = getState().appStore
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
         "index": newShowhideIndex,
-        "type": "TEXT",
+        "type": type2BAdded || "TEXT",
         "parentType":"showhide",
         "sectionType": type
 
@@ -382,31 +458,45 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-         let containerElement = {
+        /* let containerElement = {
             asideData,
             parentUrn,
             showHideObj
-        };
+        }; */
+        const containerElement = prepareSnapshots_ShowHide({ asideData: {...parentElement}}, createdElemData.data, index);
         let slateData = {
             currentParentData: newParentData,
             bodymatter: currentSlateData.contents.bodymatter,
             response: createdElemData.data
         };
-        if (currentSlateData.status === 'approved') {
-            await tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
+        if (slateWrapperConstants?.elementType?.indexOf(type2BAdded) !== -1) {
+            if (currentSlateData.status === 'approved') {
+                await tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
+            } else {
+                tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
+            }
         }
-        else {
-            tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);
-        } 
-        
-
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
             return false;
         }
         let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-        let condition;
+        /* Create inner elements in ShowHide */
+        const indexes = index?.toString().split('-') || [];
+        /* Get the showhide element object from slate data using indexes */
+        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+        /* After getting showhide Object, add the new element */
+        if(shObject?.id === elementId) {
+            if(shObject?.interactivedata?.hasOwnProperty(type)) {
+                shObject?.interactivedata[type]?.splice(newShowhideIndex, 0, createdElemData.data);
+            } else { /* if interactivedata dont have sectiontype [when all elements of show/hide deleted] */
+                let sectionOfSH = [];
+                sectionOfSH.push(createdElemData.data);
+                shObject.interactivedata[type] = sectionOfSH;
+            }   
+        }
+        /* let condition;
         if (newIndex.length == 4) {
             condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
             if (condition.versionUrn == elementId) {
@@ -434,12 +524,16 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             if(condition.versionUrn == elementId){
                 newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
             }
-        }
+        } */
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
 
         if (config.tcmStatus) {
             const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
-            prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
+            if (containersInSH.includes(type2BAdded)) {
+                prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);    
+            } else {
+                prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
+            }
         }
 
         dispatch({
@@ -458,6 +552,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     })
 }
 
+/** 
 export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, parentId, cb, parentElement, parentElementIndex) => (dispatch, getState) => {
     let _requestData = {
         projectUrn : config.projectUrn,
@@ -486,7 +581,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
 
-        /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
+        // [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------
 
         const deleteData = {
             deleteElemData: response.data,
@@ -560,6 +655,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
         showError(error, dispatch, "error while creating element")
     })
 }
+*/
 
 export const showError = (error, dispatch, errorMessage) => {
     dispatch({type: ERROR_POPUP, payload:{show: true}})
@@ -618,4 +714,36 @@ export const storeOldAssetForTCM = (value) => {
             oldFiguredata: value
         }
     }
+}
+
+export const updateMultipleColumnData = (multipleColumnObjData, objKey) => (dispatch) => {
+    dispatch({
+        type: UPDATE_MULTIPLE_COLUMN_INFO,
+        key: objKey,
+        payload: multipleColumnObjData
+    })
+}
+
+// it saves the asset details of figure image element for compare asset changes
+export const updateFigureImageDataForCompare = (oldFigureData) => (dispatch) => {
+    dispatch({
+        type: UPDATE_OLD_FIGUREIMAGE_INFO,
+        payload: oldFigureData
+    })
+}
+
+// it saves the asset details of smartlink element for compare asset changes
+export const updateSmartLinkDataForCompare = (oldSmartLinkData) => (dispatch) => {
+    dispatch({
+        type: UPDATE_OLD_SMARTLINK_INFO,
+        payload: oldSmartLinkData
+    })
+}
+
+// it saves the asset details of audio video element for compare asset changes
+export const updateAudioVideoDataForCompare = (oldAudioVideoData) => (dispatch) => {
+    dispatch({
+        type: UPDATE_OLD_AUDIOVIDEO_INFO,
+        payload: oldAudioVideoData
+    })
 }

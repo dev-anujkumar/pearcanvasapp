@@ -42,7 +42,16 @@ import {
     SHOW_TOAST_MESSAGE,
     STORE_OLD_ASSET_FOR_TCM,
     WIRIS_ALT_TEXT_POPUP,
-    LEARNOSITY_PROJECT_INFO
+    LEARNOSITY_PROJECT_INFO,
+    SET_FIGURE_GLOSSARY,
+    ADD_FIGURE_GLOSSARY_POPUP,
+    WRONG_IMAGE_POPUP,
+    UPDATE_MULTIPLE_COLUMN_INFO,
+    SHOW_REMOVE_GLOSSARY_IMAGE,
+    UPDATE_OLD_FIGUREIMAGE_INFO,
+    UPDATE_OLD_SMARTLINK_INFO,
+    UPDATE_OLD_AUDIOVIDEO_INFO,
+    UPDATE_FIGURE_DROPDOWN_OPTIONS
 } from '../constants/Action_Constants';
 
 /**
@@ -75,13 +84,28 @@ const INITIAL_STATE = {
     showToast:false,
     oldFiguredata : {},
     wirisAltText : {},
-    isLearnosityProjectInfo:{}
+    isLearnosityProjectInfo:{},
+    figureGlossaryData : {},
+    addfigureGlossarypopup:false,
+    openWrongImagePopup:false,
+    multipleColumnData: [],
+    removeGlossaryImage:false,
+    oldFigureDataForCompare: {},
+    oldSmartLinkDataForCompare: {},
+    oldAudioVideoDataForCompare: {},
+    figureDropdownData: {
+        audio: ["No Label", "Custom"],
+        image: ["No Label", "Custom"],
+        smartlinks: ["No Label", "Custom"],
+        video: ["No Label", "Custom"]
+    }
 };
 
 const INITIAL_ACTION = {
     type: '',
     payload: {}
 }
+
 
 /**
  * This method actually updates app store as per incoming payload
@@ -262,6 +286,67 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             ...state,
             isLearnosityProjectInfo : action.payload
         }
+        case SET_FIGURE_GLOSSARY : 
+        return {
+            ...state,
+            figureGlossaryData : action.payload
+        }
+        case ADD_FIGURE_GLOSSARY_POPUP:
+            return{
+                ...state,
+                addfigureGlossarypopup:action.payload
+            }
+        case WRONG_IMAGE_POPUP:
+            return{
+                ...state,
+                openWrongImagePopup:action.payload
+            }
+        case SHOW_REMOVE_GLOSSARY_IMAGE:
+            return {
+                ...state,
+                removeGlossaryImage:action.payload
+            }
+
+        case UPDATE_MULTIPLE_COLUMN_INFO:
+            if (action.key) {
+                let multipleColumnData = state.multipleColumnData;
+                multipleColumnData = multipleColumnData.filter(function (data) {
+                    return data.containerId !== action.key
+                })
+                return {
+                    ...state,
+                    multipleColumnData: [...multipleColumnData, action.payload]
+                }
+            } else {
+                return {
+                    ...state,
+                    multipleColumnData: []
+                }
+            }
+
+        case UPDATE_OLD_FIGUREIMAGE_INFO:
+            return {
+                ...state,
+                oldFigureDataForCompare: action.payload
+            }
+
+        case UPDATE_OLD_AUDIOVIDEO_INFO:
+            return {
+                ...state,
+                oldAudioVideoDataForCompare: action.payload
+            }
+
+        case UPDATE_OLD_SMARTLINK_INFO:
+            return {
+                ...state,
+                oldSmartLinkDataForCompare: action.payload
+            }
+
+        case UPDATE_FIGURE_DROPDOWN_OPTIONS:
+            return {
+                ...state,
+                figureDropdownData: action.payload
+            }
 
         default:
             return state;

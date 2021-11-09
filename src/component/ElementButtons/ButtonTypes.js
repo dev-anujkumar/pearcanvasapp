@@ -40,5 +40,6 @@ export default {
     APPROVE_TICK_ICON:"approve-icon",
     PASTE:"paste",
     POWERPASTE:"powerpaste",
-    ALFRESCO_METADATA:'alfresco-metadata'
+    ALFRESCO_METADATA:'alfresco-metadata',
+    ELEMENT_LABEL_CLICKABLE : "label-clickable-button",
 }

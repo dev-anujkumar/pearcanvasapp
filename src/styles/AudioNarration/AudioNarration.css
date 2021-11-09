@@ -30,3 +30,43 @@ figure> audio {
     z-index: 1500 ;
     position: relative;
 }
+
+
+.show-content{
+    display: block;
+}
+.content{
+    display: none;
+}
+.tabs-container{
+    display: flex;
+    justify-content: space-between;
+}
+.tabs {
+    padding: 10px;
+    width: 60px;
+    cursor: pointer;
+}
+.active-tabs{
+    border-bottom: 2px solid #3298B5;
+}
+.audio-image-tab{
+    display: flex;
+}
+.audio-text, .image-glossary-text{
+    color: #3298B5;
+    padding: 20px 0 0 10px;
+    font-size: 20px;
+}
+.image-media-title, .audio-media-title{
+    padding: 10px;
+    float: left;
+    word-break: break-all;
+}
+.close-icon-image{
+    padding: 10px;
+    z-index: 1500;
+}
+.close-icon{
+    cursor: pointer;
+}

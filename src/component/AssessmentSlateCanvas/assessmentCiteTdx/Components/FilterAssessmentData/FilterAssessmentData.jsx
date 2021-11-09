@@ -83,7 +83,7 @@ class FilterAssessmentData extends Component {
                             <React.Fragment>
                             <div className="filter-block">
                                 <div className="title-block" >
-                                    <i class="fa fa-search"></i>
+                                    <i className="fa fa-search"></i>
                                     <div className="flex-container">
                                         <div className="input-Container">
                                             {this.state.assessTitleFocus && <label>Title:</label>}

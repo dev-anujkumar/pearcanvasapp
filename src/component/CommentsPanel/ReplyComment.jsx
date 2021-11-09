@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import config from '../../config/config';
+import sendBlack from '../../images/CommentsPanel/send-black.svg'
+import CommentMention from '../CommentMention/CommentMention.jsx'
 
 class ReplyComment extends React.Component {
     constructor(props) {
@@ -13,11 +15,31 @@ class ReplyComment extends React.Component {
 
     /**
     * 
+    *@discription - This function displays the reply box in slate view
+    */
+    showReplyBox = (props) => {
+        const commentCreatorName = config.fullName
+        return (
+            <div className="reply">
+                <div>
+                    <span className="Reply-Num">Reply #{props.comment.replyComments.length + 1}</span>
+                    <span className="Username-Copy">{commentCreatorName}</span>
+                </div>
+                <div className="wrapper-reply">
+               <CommentMention projectUsers={this.props.users} comment={this.state.text} handleCommentChange={this.updateCommentText}/>
+                   <img src={sendBlack} className="unique" onClick={this.replyComment} />
+                </div>
+            </div>
+        )
+    }
+
+    /**
+    * 
     *@discription - This function is to update the text of comment
     */
     updateCommentText = (e) => {
         this.setState({
-            text: e.target.value,
+            text: e
         })
     }
 
@@ -39,6 +61,7 @@ class ReplyComment extends React.Component {
         }
         this.setState({text:""})
         this.props.updateReplyComment(commentUrn, reply, elementId);
+        this.props.close();
     }
 
     /**
@@ -48,11 +71,11 @@ class ReplyComment extends React.Component {
     @param {Array} reply - Array of reply  comments
     @return {String} - returns the jsx code of the reply menu
     */
-    reply = (index, reply) => {
+    reply = (index, reply, length) => {
         return (
             <div key={index} className="reply">
                 <div className="selected-corner"></div>
-                <h4>Reply #{index + 1}</h4>
+                <h4>Reply #{length - index}</h4>
                 <div className="comment-header">
                     <div className="comment-info no-padding">
                         <div className="text-medium-semibold mt-4"> {reply.commentCreator} </div>
@@ -63,7 +86,8 @@ class ReplyComment extends React.Component {
                 <div className="comment-body">
                     <div className="text-medium color-gray-71 mb-4">
                         <p className="hyphens">
-                            {reply.commentString ? reply.commentString : ''}
+                        {typeof reply.commentString === 'string' ? <CommentMention urn={reply.commentUrn} projectUsers={this.props.users} readOnly comment={reply.commentString} />: null }
+                        
                         </p>
                     </div>
                 </div>
@@ -79,39 +103,24 @@ class ReplyComment extends React.Component {
     */
 
     replyCommentForm = (props) => {
-        if (props.showReplyForm && props.toggleReplyForm) {
+        if (props.showReplyComments) {
             return (
                 <>
-                <div className="reply">
-                    <div>
-                        <textarea className="new-comment textarea-input"
-                            value={this.state.text}
-                            onChange={this.updateCommentText}
-                            rows="7" />
-                    </div>
-                    <div className="buttons-wrapper">
-                        <button className="btn btn__initial"
-                            onClick={() => props.close()}>
-                            Cancel
-                    </button>
-                        <button className="btn btn__initial"
-                            onClick={this.replyComment}>
-                            Reply
-                    </button>
-                    </div>
-                </div>
-
-                {props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))}
-            </>
+                {this.showReplyBox(props)}
+                {props.comment.replyComments.slice(0).reverse().map((reply, index) => this.reply(index, reply, props.comment.replyComments.length))}
+                </>
             )
 
         }
         else {
-            return props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))
+            return (
+                <>
+                {this.showReplyBox(props)}
+                </>
+            )
         }
     }
     render() {
-        // const { reply } = this.props
         return (
             <>
                 {this.replyCommentForm(this.props)}

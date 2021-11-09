@@ -1,4 +1,4 @@
-import { multiColumnContainer } from "../../../fixtures/multiColumnContainer";
+import { multiColumnContainer, threeMultiColumnContainer } from "../../../fixtures/multiColumnContainer";
 export default {
     "opener":{
         "id": "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
@@ -1753,7 +1753,8 @@ text: "mathml text"
             "formatted-title": {
                 "type": "element-authoredtext",
                 "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073g5w4",
-                "text": ""
+                "text": "",
+                "html": {}
             },
             "formatted-subtitle": {
                 "type": "element-authoredtext",
@@ -1824,5 +1825,6 @@ text: "mathml text"
             "text": "<span><br /></span>"
         }
     },
-    "multicolumn": multiColumnContainer
+    "multicolumn": multiColumnContainer,
+    "threeMulticolumn": threeMultiColumnContainer
 }

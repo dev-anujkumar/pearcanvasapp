@@ -1,14 +1,14 @@
 /*--------------- Assessment Format Dropdown -------------------*/
 export const assessmentFormats = {
-    'cite': 'Full Assessment CITE',
-    'tdx': 'Full Assessment TDX',
     'puf': 'Full Assessment Elm',
+    'cite': 'Full Assessment QuAD CITE',
+    'tdx': 'Full Assessment TDX',
     'learningtemplate': 'Learning App Type',
     'learnosity': 'Full Assessment Learnosity',
 }
 
 /*--------------- Full Assessment Constants -------------------*/
-export const FULL_ASSESSMENT_CITE = 'Full Assessment CITE'
+export const FULL_ASSESSMENT_CITE = 'Full Assessment QuAD CITE'
 export const FULL_ASSESSMENT_TDX = 'Full Assessment TDX'
 export const FULL_ASSESSMENT_PUF = 'Full Assessment Elm'
 export const LEARNING_APP_TYPE = 'Learning App Type'
@@ -62,6 +62,8 @@ export const SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY = 'secondary-single-assessme
 export const DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
 export const SLATE_TYPE_ASSESSMENT = "assessment";
 
+/*----------------Popup ---------------------*/
+export const UPDATE_ASSESSMENT_TYPE= "Changing the Assessment type will lead to a change in the Assessment picker options for this Assessment Slate."
 /*--------------- PDF Slate ----------------*/
 export const ELEMENT_TYPE_PDF = "element-pdf";
 export const SLATE_TYPE_PDF = "pdfslate";

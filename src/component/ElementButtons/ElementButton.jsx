@@ -45,7 +45,7 @@ import pasteIcon from '../../images/ElementButtons/contentPaste.png'
 import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
 import ButtonTypes from './ButtonTypes.js';
 import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
-
+import ElementConstants from '../ElementContainer/ElementConstants'; 
 class ElementButton extends Component {
    
   /**
@@ -54,32 +54,33 @@ class ElementButton extends Component {
   * @param clickHandlerFn Handler method to be called on click event
   *  
   */
-    renderButton = (type, clickHandlerFn, btnClassName = '') => {
+    renderButton = (type, clickHandlerFn, btnClassName = '', elementType) => {
         let buttonJSX = null
-        const { labelText,elementId } = this.props
+        const elementTypeClassName = (elementType === ElementConstants.BLOCK_LIST) ? elementType : ''; 
+        const { labelText,elementId,isSubscribersSlate } = this.props
         switch(type){
             case buttonTypes.CLOSE_CONTAINER:
                 buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
                 break;
             case buttonTypes.ADD_COMMENT:
-                buttonJSX = <span className={`btn-element small add-comment ${btnClassName}`} title="note" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementTypeClassName}`} title="note" onClick={clickHandlerFn}>
                     {addNote}
                     </span>
                 break;
             case buttonTypes.COMMENT_FLAG:
-                buttonJSX = <span className="btn-element small flag-icon" title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
+                buttonJSX = <span className={`btn-element small flag-icon ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
                     {noteFlag}
                     </span>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
-                buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
+                buttonJSX = <span className={`btn-element element-label ${btnClassName} ${elementTypeClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
-                buttonJSX = <span className="btn-element delete-icon" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element delete-icon ${elementTypeClassName}`} onClick={clickHandlerFn}>
                     <img src={deleteIcon} /></span>
                 break;
             case buttonTypes.TCM:
-                buttonJSX = <span className="btn-element small tcm-icon" title="Track Changes" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small tcm-icon`} title="Track Changes" onClick={clickHandlerFn}>
                     {tcmIcon}
                     </span>
                 break;
@@ -90,10 +91,10 @@ class ElementButton extends Component {
                 buttonJSX = <span className="btn-element split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></span>
                 break;
             case buttonTypes.COLOR_PALETTE:
-                buttonJSX = <span className="btn-element color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
+                buttonJSX = <span className={`btn-element color-palette`} onClick={clickHandlerFn}><img src={colorPalette} /></span>
                 break;
             case buttonTypes.COLOR_TEXT:
-                buttonJSX = <span className="btn-element color-text" onClick={clickHandlerFn}><img src={colorText} /></span>
+                buttonJSX = <span className={`btn-element color-text`} onClick={clickHandlerFn}><img src={colorText} /></span>
                 break;
             case buttonTypes.TEXT_ELEMENT:
                 buttonJSX = <span className="btn-element text-elem" onClick={clickHandlerFn}>
@@ -166,7 +167,7 @@ class ElementButton extends Component {
                 </span>
                 break;
             case ButtonTypes.FEEDBACK:
-                buttonJSX = <span className={`btn-element small feedback ${btnClassName}`} title="feedback" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small feedback ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="feedback" onClick={clickHandlerFn}>
                     {feedbackIcon}
                 </span>
                 break;
@@ -201,7 +202,7 @@ class ElementButton extends Component {
                 </span>
                 break;
             case ButtonTypes.EDIT_BUTTON:
-                buttonJSX = <span className={`btn-element small edit-button ${btnClassName}`} title="edit" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small edit-button ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="edit" onClick={clickHandlerFn}>
                     {editIcon}
                 </span>
                 break;
@@ -217,30 +218,31 @@ class ElementButton extends Component {
                 buttonJSX = <span className="btn-element power-paste-icon" onClick={clickHandlerFn}><img src={powerPasteIcon} /></span>
                 break;
             case ButtonTypes.ALFRESCO_METADATA:
-                buttonJSX = <span className= {`btn-element alfresco-metadata-icon ${btnClassName}`} onClick={clickHandlerFn} title="Expand in Alfresco" ><img src={alfrescoMetadata} /></span>
+                buttonJSX = <span className= {`btn-element alfresco-metadata-icon  ${isSubscribersSlate ? 'subscriberSlate' :''} ${btnClassName}`} onClick={clickHandlerFn} title="Expand in Alfresco" ><img src={alfrescoMetadata} /></span>
                 break;
             case ButtonTypes.STAGE_DIRECTION:
-                    buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
-                        {stageDirectionIcon}
-                    </span>
-                    break;
+                buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
+                    {stageDirectionIcon}
+                </span>
+                break;
             case ButtonTypes.DIALOGUE_ELEMENT:
-                    buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
-                        {dialougeElementIcon}
-                    </span>
-                    break;
-
+                buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>
+                    {dialougeElementIcon}
+                </span>
+                break;
+            case buttonTypes.ELEMENT_LABEL_CLICKABLE:
+                buttonJSX = <span className={`btn-element element-label-clickable-button ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
                 break;
         }
         return buttonJSX
     }
     
     render() {
-        const { type, onClick, btnClassName } = this.props
+        const { type, onClick, btnClassName, elementType } = this.props
         
         return(
             <>
-                {this.renderButton(type, onClick, btnClassName)}             
+                {this.renderButton(type, onClick, btnClassName, elementType)}             
             </>
         )
     }

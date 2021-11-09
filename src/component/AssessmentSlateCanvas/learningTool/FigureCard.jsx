@@ -58,7 +58,6 @@ FigureCard.displayName = "FigureCard"
 FigureCard.propTypes = {
     forInputKey: PropTypes.number,
     apiResultObject: PropTypes.object,
-    selectedResult: PropTypes.object,
-    selectedFigure: PropTypes.object
+    selectedResult: PropTypes.object
 }
 export default FigureCard;

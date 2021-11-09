@@ -23,10 +23,13 @@ export const TABLE_EDITOR = "TABLE_EDITOR";
 export const FIGURE_MML = "MATH_ML_CHEM_EDITOR";
 export const MULTI_COLUMN_GROUP = "GROUPED_CONTENT";
 export const MULTI_COLUMN = "MULTI_COLUMN";
+export const MULTI_COLUMN_3C = "MULTI_COLUMN_3C";
 export const MMI_ELM = "MMI_ELM";
 export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have access to the Linked Alfresco site. please contact the Manager for this project";
 export const ELEMENT_DIALOGUE = "ELEMENT_DIALOGUE";
 export const ELEMENT_DISCUSSION = 'DISCUSSION';
+export const MANIFEST_LIST = 'MANIFEST_LIST';
+export const MANIFEST_LIST_ITEM = 'MANIFEST_LIST_ITEM';
 
 /* PDF Slate */
 export const ELEMENT_PDF = "ELEMENT_PDF";
@@ -39,10 +42,14 @@ export const SPLIT_SLATE_WITH_ADDED_AUDIO = "There is an audio file linked with 
 export const NOT_AUDIO_ASSET = "Selected alfresco media type is not an Audio."
 export const LOCK_DURATION = 900000   //900000ms = 15mins
 export const SYNTAX_HIGHLIGHTING = "Turning auto-highlighting on will clear any recent formatting in this content. Are you sure?"
-
+export const REMOVE_LINKED_IMAGE_GLOSSARY = "Do you want to remove the linked Image with the slate?"
+export const NOT_IMAGE_ASSET = "Selected alfresco media type is not an Image."
 export const ERROR_CREATING_GLOSSARY = "You can not apply Glossary over multiple lines of stanza!!!"
 export const ERROR_CREATING_ASSETPOPOVER = "You can not apply Asset PopOver over multiple lines of stanza!!!"
-
+export const CHANGE_ASSESSMENT_TYPE="Changing the Assessment type will lead to a change in the Assessment picker options for this embedded assessment.";
+export const OWNER_SLATE_POPUP ="If you make a change to this content, it will apply to all its children. Do you still want to proceed?";
+export const DO_NOT_SHOW_TXT="Do not show this message again";
+export const ERROR_DELETING_MANIFEST_LIST_ITEM="The list item can not be deleted if it contains a child Block List. Please delete the child Block List to complete the delete action.";
 /*****************************TOC Delete Popup Dialog text***************************/
 export const SINGLE_CONTAINER_DELETE = 'A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
 export const WITH_PENDING_TRACK = ' Are you sure you want to delete this slate/container with pending changes?'
@@ -54,10 +61,13 @@ export const DELETE_DIALOG_TEXT = 'Are you sure you want to delete, This action 
 export const TYPE_SINGLE_CONTAINER_DELETE = 'singleContainerDelete'
 export const TYPE_WITH_PENDING_TRACK = 'withPendingTrack'
 export const TYPE_UNLINK = 'unlink'
-export const elementType = ['WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE"];
+export const elementType = ['ASSESSMENT', 'ELEMENT_ASSESSMENT','WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN', 'MULTI_COLUMN_3C','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE", "ELEMENT_PDF", "MANIFEST_LIST"];
 
 export const CLONE_STATUS_INTERVAL = 2000
 export const checkTCM = element => {
+    if (element.type === 'groupedcontent' && element.groupeddata?.bodymatter?.length === 3) {
+        return MULTI_COLUMN_3C;
+    }
     switch(element.type) {
         case 'openerelement': return OPENER;
 
@@ -67,9 +77,7 @@ export const checkTCM = element => {
                 case 'assessment': return ASSESSMENT;
                 default: return TEXT;
             }
-
-        case 'element-assessment': return ELEMENT_ASSESSMENT;
-
+            
         case 'showhide': return SHOW_HIDE;
 
         case "element-aside": return CONTAINER;
@@ -81,6 +89,7 @@ export const checkTCM = element => {
         case "workedexample" : return WORKED_EXAMPLE;
         case "popup" : return POP_UP;
         case "discussion" : return ELEMENT_DISCUSSION;
+        case "element-dialogue" : return ELEMENT_DIALOGUE;
         default: return TEXT;
     }
 }
