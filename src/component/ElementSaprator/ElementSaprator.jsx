@@ -154,7 +154,7 @@ export function ElementSaprator(props) {
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
         const hasPasteFromWordPermission = hasProjectPermission("paste_from_word");
         let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
-        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn) {
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && asideData?.parent?.type ==="groupedcontent")) {
             return null;
         }
 
