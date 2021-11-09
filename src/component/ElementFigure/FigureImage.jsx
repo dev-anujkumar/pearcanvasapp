@@ -425,8 +425,8 @@ class FigureImage extends Component {
         let imgWidth = ''
         let imgHeight = ''
         if(this.props?.model?.figuredata && this.props.model.alignment === 'actual-size'){
-            imgWidth = `${this.props.model.figuredata?.width}px` ?? ''
-            imgHeight = `${this.props.model.figuredata?.height}px` ?? ''
+            imgWidth = this.props.model.figuredata?.width && this.props.model.figuredata?.width !== '' ? `${this.props.model.figuredata?.width}px` : ''
+            imgHeight = this.props.model.figuredata?.height && this.props.model.figuredata?.height !== '' ? `${this.props.model.figuredata?.height}px` : ''
         }
         const actualSizeClass = this.props.model.figuredata?.width > '600' ? "" : "img-actual-size";
         return (
