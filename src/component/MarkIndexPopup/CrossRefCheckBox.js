@@ -2,7 +2,7 @@ import React from 'react'
 
 export const CrossRefCheckbox = (props) => {
     const { selectedData, dropDownList } = props;
-    if (dropDownList.length > 0) {
+    if (dropDownList?.length > 0) {
         return (
             <div className="cross-ref-dropdown">
                 {

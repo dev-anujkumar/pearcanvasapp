@@ -236,27 +236,7 @@ export const getCrossReferenceValues = () => async (dispatch) => {
             }
         });
 
-        let crossRefValues = [];
-        if(result?.data?.items && result.data.items.length > 0){
-            const items = result.data.items;
-
-            items.forEach(indexObj => {
-
-                if(indexObj?.firstlevelentry){
-                    let firstLvlObj = indexObj.firstlevelentry;
-                    if(firstLvlObj?.firstlevelentry){
-                        crossRefValues.push(firstLvlObj.firstlevelentry.text);
-                    }
-
-                    if(firstLvlObj?.secondlevelentries && firstLvlObj.secondlevelentries.length > 0) {
-                        let secondLvlObj = firstLvlObj.secondlevelentries[0];
-                        if(secondLvlObj?.secondlevelentry){
-                            crossRefValues.push(secondLvlObj.secondlevelentry.text);
-                        }
-                    }
-                }
-            })
-        }
+        let crossRefValues = prepareCrossRefArray(result);
 
         return dispatch({
             type: UPDATE_CROSS_REFERENCE_VALUES,
@@ -274,6 +254,39 @@ export const getCrossReferenceValues = () => async (dispatch) => {
     }
 }
 
+/**
+ * This function will prepare an array with all the cross-reference values
+ * received in the response
+ */
+const prepareCrossRefArray = result => {
+    let crossRefValues = [];
+    if(result?.data?.items && result.data.items.length > 0){
+        const items = result.data.items;
+
+        items.forEach(indexObj => {
+
+            if(indexObj?.firstlevelentry){
+                let firstLvlObj = indexObj.firstlevelentry;
+                if(firstLvlObj?.firstlevelentry){
+                    crossRefValues.push(firstLvlObj.firstlevelentry.text);
+                }
+
+                if(firstLvlObj?.secondlevelentries && firstLvlObj.secondlevelentries.length > 0) {
+                    let secondLvlObj = firstLvlObj.secondlevelentries[0];
+                    if(secondLvlObj?.secondlevelentry){
+                        crossRefValues.push(secondLvlObj.secondlevelentry.text);
+                    }
+                }
+            }
+        })
+    }
+
+    return crossRefValues;
+}
+
+/**
+ * This function will extract previously selected cross-reference values from HTML
+ */
 const extractCrossRefFromHtml = tempMarkedIndexContentText => {
     let crossRefString = [];
     if(tempMarkedIndexContentText){
