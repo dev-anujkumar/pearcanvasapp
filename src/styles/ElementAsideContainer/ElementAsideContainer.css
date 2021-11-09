@@ -13,10 +13,9 @@
     overflow: hidden;
 }
 
-/* .asideHeader{
-    display: flex;
-    margin-bottom: 18px;
-} */
+.asideHeader{
+    margin-bottom: 24px;
+}
 .aside-horizotal-break{
     border: 4px solid black; 
     margin: 5px -8px 10px -8px;

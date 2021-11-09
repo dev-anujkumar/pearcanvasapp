@@ -16,7 +16,6 @@ import SectionSeperator from './SectionSeperator.jsx';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
 import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
-import checkHTMLdataInsideString from '../../constants/utility';
 // IMPORT - Assets //
 
 let random = guid();
@@ -490,6 +489,34 @@ class ElementAsideContainer extends Component {
             console.log("error", error)
         }
     }
+
+/**
+ * 
+ * @discription - this function render title fields
+ * 
+ */
+    renderTitleField=()=>{
+        return(
+            <div className="asideHeader">
+                <header className="figure-header new-figure-image-header">
+                        <div className='image-label'>
+                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label" tagName={'h4'} className={" figureLabel "} model={this.props.model} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}  parentElement={this.props.parentElement} showHideType={this.props.showHideType}/>
+                            <label className={"floating-label"}>Label</label>
+                        </div>
+                    <div className="floating-number-group">
+                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={"figureNumber"} model={this.props.model} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                        <label className={"floating-number"}>Number</label>
+                    </div>
+                </header>
+                <div className="floating-title-group">
+                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={"figureTitle"} model={this.props.model} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                    <label className={"floating-title"}>Title</label>
+                </div>
+                </div>
+        )
+    }
+
+
     /**
   * 
   * @discription - This function is renders workexample
@@ -499,6 +526,7 @@ class ElementAsideContainer extends Component {
     renderWorkExample = (designtype) => {
         return (
             <React.Fragment>
+                {this.renderTitleField()}
                 <hr className={`aside-horizotal-break ${designtype == "workedexample2" ? 'aside-horizotal-break-green' : ""}`} />
                 {this.renderContainer(this.props)}
                 <hr className={`aside-break-bottom ${designtype == "workedexample2" ? 'aside-break-bottom-green' : ""}`}></hr>
@@ -575,26 +603,10 @@ class ElementAsideContainer extends Component {
   */
 
     renderAside = (designtype) => {
-        console.log("design type",designtype);
         // let figureHtmlData = getLabelNumberTitleHTML(model);
         return (
             <React.Fragment>
-                <div className="asideHeader">
-                <header className="figure-header new-figure-image-header">
-                    <div className="floating-number-group">
-                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Label" tagName={'h4'} className={"figureLabel"} model={this.props.model} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                        <label className={"floating-number"}>Label</label>
-                    </div>
-                    <div className="floating-number-group">
-                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={"figureNumber"} model={this.props.model} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                        <label className={"floating-number"}>Number</label>
-                    </div>
-                </header>
-                <div className="floating-title-group">
-                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={"figureTitle"} model={this.props.model} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                    <label className={"floating-title"}>Title</label>
-                </div>
-                </div>
+                {this.renderTitleField()}
                 {this.borderTop(designtype)}
                 {this.renderContainer(this.props)}
                 <div className={designtype + "BorderBottom"} />

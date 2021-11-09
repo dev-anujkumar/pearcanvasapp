@@ -745,10 +745,12 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorOnClick = (e) => {
+        console.log("InElementAside",this.props);
         if (this.props.element.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
             this.props.onFigureImageFieldFocus(this.props.index);
         }
     if(this.props.element.type === 'element-aside'){
+        console.log("InElementAside",this.props);
         this.props.onFigureImageFieldFocus(this.props.index);
     }
         // cbFunc | is for callback delegates //
@@ -1727,7 +1729,7 @@ export class TinyMceEditor extends Component {
       addCalloutIcon = editor => {
         const calloutsCount = 4;  // Count for dynamically creating callouts.
         const items = [];
-        if ('element' in this.props && 'type' in this.props.element) {
+        if ('element' in this.props && this.props?.element?.type) {
            for(let i=1;i<=calloutsCount;i++){
             items.push({
                 type: 'togglemenuitem',
@@ -2207,7 +2209,7 @@ export class TinyMceEditor extends Component {
     }
 
     getElementTypeForToolbar = (element) => {
-        switch (element.type) {
+        switch (element?.type) {
             case "element-authoredtext":
                 if (element.elementdata.headers)
                     return `Heading ${element.elementdata.headers[0].level}`
@@ -3351,11 +3353,11 @@ export class TinyMceEditor extends Component {
     setInstanceToolbar = () => {
         let toolbar = [];
         let blockListData = checkBlockListElement(this.props, "TAB");
-        if (this.props.element.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
+        if (this.props?.element?.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        } else if ((this.props.element.type === 'figure' && ['image', 'table', 'mathImage', 'audio', 'video'].includes(this.props.element.figuretype)) || (this.props.element.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
+        } else if ((this.props?.element?.type === 'figure' && ['image', 'table', 'mathImage', 'audio', 'video'].includes(this.props?.element?.figuretype)) || (this.props?.element?.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
             toolbar = this.setFigureToolbar(this.props.placeholder);
-        } else if (this.props.element.type === 'figure' && this.props.placeholder === "Enter Number...") {
+        } else if (this.props?.element?.type === 'figure' && this.props.placeholder === "Enter Number...") {
             toolbar = config.figureNumberToolbar;
         }
         else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
@@ -3386,7 +3388,7 @@ export class TinyMceEditor extends Component {
         else {
             toolbar = config.elementToolbar;
         }
-        if (this.props.element.type === "element-dialogue") {
+        if (this.props?.element?.type === "element-dialogue") {
             switch(this.props.placeholder){
                 case "Enter Act Title...": 
                 case "Enter Scene Title...": 
@@ -3884,7 +3886,7 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        if ((this.props.element.type === 'figure'|| this.props.element.type === 'element-aside') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
+        if ((this.props?.element?.type === 'figure'|| this.props?.element?.type === 'element-aside') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
             this.props.onFigureImageFieldBlur(this.props.index);
         }
 

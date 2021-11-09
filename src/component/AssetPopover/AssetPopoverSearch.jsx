@@ -156,19 +156,19 @@ class AssetPopoverSearch extends React.Component {
                     if (!isSearchResultFound) {
                         return <section className="modalFooter">
                             <button disabled={!isFigureSelected} className="myButton" onClick={() => this.apoSearchSave(this.props.apoObject, this.props.selectedFigureValue)}>Update Link</button>
-                            <button disabled={!isFigureSelected} className="myButton" onClick={this.apoSearchClose}>Cancel</button>
+                            <button className="myButton" onClick={this.apoSearchClose}>Cancel</button>
                         </section>
                     } else {
                         return <section className="modalFooter">
                             <button disabled={!shouldOpenCurrentlyLinked || hasReviewerRole()} className="myButton" onClick={() => this.removeLink()}>Remove Link</button>
-                            <button disabled={!isFigureSelected} className="myButton" onClick={this.apoSearchClose}>Cancel</button>
+                            <button  className="myButton" onClick={this.apoSearchClose}>Cancel</button>
                         </section>
                     }
                 } else {
                     if (!isSearchResultFound && shouldShowApoBody) {
                         return <section className="modalFooter">
                             <button disabled={!isFigureSelected} className="myButton" onClick={() => this.apoSearchSave(this.props.apoObject, this.props.selectedFigureValue)}>Save</button>
-                            <button disabled={!isFigureSelected} className="myButton" onClick={this.apoSearchClose}>Cancel</button>
+                            <button  className="myButton" onClick={this.apoSearchClose}>Cancel</button>
                         </section>
                     }
                 }
