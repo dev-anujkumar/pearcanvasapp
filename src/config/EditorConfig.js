@@ -1,5 +1,6 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss';
 import 'tinymce/plugins/charmap/plugin.min.js';
+import 'tinymce/plugins/tinymcespellchecker/plugin.min.js';
 import { checkBlockListElement, handleC2MediaClick } from '../js/TinyMceUtility.js';
 import ElementConstants from '../component/ElementContainer/ElementConstants.js';
 export const EditorConfig = {
@@ -27,7 +28,7 @@ export const EditorConfig = {
     },
     toolbar: 'undo redo | insertMedia | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code IndexEntry | customListButton customUoListButton indent outdent | slateTag ',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image",
+    plugins: "lists advlist placeholder charmap paste image tinymcespellchecker",
 }
 
 export const GlossaryFootnoteEditorConfig = {

@@ -62,6 +62,7 @@ export class TinyMceEditor extends Component {
         this.wirisClick = 0;
         this.activeGlossaryFootnoteId="";
         this.editorConfig = {
+            spellchecker_rpc_url: 'http://localhost:8080/ephox-spelling/',
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
             inline: true,
