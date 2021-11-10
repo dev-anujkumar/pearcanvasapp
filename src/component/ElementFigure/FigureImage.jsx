@@ -20,6 +20,9 @@ import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import { labelHtmlData } from '../../constants/Element_Constants';
 import PopUp from '../PopUp';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormControl from '@material-ui/core/FormControl'
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
@@ -442,6 +445,7 @@ class FigureImage extends Component {
         let figureAlignment = figureType[elementFigureAlignment]
         let divClass = figureAlignment['divClass'],
             figureClass = figureAlignment['figureClass'],
+            previewClass = figureAlignment['previewClass'],
             figLabelClass = figureAlignment['figLabelClass'],
             figTitleClass = figureAlignment['figTitleClass'],
             dataType = figureAlignment['dataType'],
@@ -471,7 +475,7 @@ class FigureImage extends Component {
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
                             <header className="figure-header new-figure-image-header">
-<div className='figure-label-number-field'>
+                            <div className='figure-label-number-field'>
                                     <span className={`label ${this.state.figureNumberDropDown ? 'active' : ''}`}>Label & Number Settings</span>
                                     <div className="figure-label-number" onClick={this.handleFigureNumberDropdown}>
                                         <span>{figureNumberLabelValue}</span>
@@ -529,6 +533,15 @@ class FigureImage extends Component {
                                 </div>
 
                             </header>
+                            <div className="preview">
+                                <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Preview</label>
+
+                                <form className={previewClass} noValidate autoComplete="off" >
+                                    <TextField  id="filled-full-width" label="PreviewData" variant="filled" fullWidth />
+
+                                </form>
+
+                            </div>
                             <div className="floating-title-group">
                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                                 <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>

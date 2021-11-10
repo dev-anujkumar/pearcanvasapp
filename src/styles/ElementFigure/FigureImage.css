@@ -88,7 +88,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     white-space: nowrap;
     overflow: hidden;
 }
-.floating-title-group .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable {
+.floating-title-group  .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable {
     font-size: 14px!important;
     border-bottom: 2px solid #737373;
     margin: 8px 0 !important;
@@ -116,7 +116,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 }
 .figure-header .floating-number-group .figureNumber.cypress-editable.mce-edit-focus,
 .figure-header .image-label .figureLabel.cypress-editable.mce-edit-focus, 
-.floating-title-group .figureTitle.cypress-editable.mce-edit-focus,
+.floating-title-group  .figureTitle.cypress-editable.mce-edit-focus,
 .floating-caption-group .figureCaption.cypress-editable.mce-edit-focus,
 .floating-credit-group .figureCredit.cypress-editable.mce-edit-focus
 {
@@ -832,6 +832,11 @@ th ol li.listItemNumeroUnoNone:before {
     top: 22px;
     transition: all 0.1s ease;
 }
+.previewClass{
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+}
 .floating-title-group .floating-title, .floating-caption-group .floating-caption, .floating-credit-group .floating-credit {
     font-size: 14px;
     color: #737373;
@@ -848,7 +853,7 @@ th ol li.listItemNumeroUnoNone:before {
     opacity: 1;
     color: #005a70;
 }
-.floating-title-group .figureTitle:focus ~ .floating-title, .floating-title-group .figureTitle:not(:focus):valid ~ .floating-title,
+.floating-title-group   .figureTitle:focus ~ .floating-title,.floating-title-group .figureTitle:not(:focus):valid ~ .floating-title,
 .floating-caption-group .figureCaption:focus ~ .floating-caption, .floating-caption-group .figureCaption:not(:focus):valid ~ .floating-caption,
 .floating-credit-group .figureCredit:focus ~ .floating-credit, .floating-credit-group .figureCredit:not(:focus):valid ~ .floating-credit {
     top: -6px;
@@ -867,7 +872,7 @@ th ol li.listItemNumeroUnoNone:before {
     z-index:0;
 }
 
- .floating-title-group .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none {
+ .floating-title-group   .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none {
     transition: none;
     top: -6px;
     font-size: 10px;
