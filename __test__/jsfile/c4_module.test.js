@@ -17,7 +17,7 @@ describe('Testing c4_modules', () => {
         c4PublishObj.publishSlate(project, section, cite);
     })
 
-    it('Testing publishContent function', () => {
+    xit('Testing publishContent function', () => {
         let pubCallBack = jest.fn();
         let pubConObj = {
             distributableVersionUrn: 'version',
