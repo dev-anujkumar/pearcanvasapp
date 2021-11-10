@@ -13,7 +13,7 @@ import config from './config/config';
 import cypressConfig from './config/cypressConfig';
 import { requestConfigURI } from './constants/utility';
 import CanvasWrapper from './component/CanvasWrapper';
-import { modifyObjKeys, loadPatternScripts } from './js/appUtils'
+import { modifyObjKeys } from './js/appUtils'
 // IMPORT - Assets // 
 import './styles/style.css';
 
@@ -48,9 +48,6 @@ class App extends Component {
                 const slateManifestURN = params.get('slateManifestURN')
                 const ssoToken = params.get('ssoToken')
                 this.getQueryParameter(projectUrn, projectEntityUrn, slateEntityURN,slateManifestURN,ssoToken);
-                if(response.data.PATTERNS && Object.keys(response.data.PATTERNS).length>0){
-                    loadPatternScripts(response.data.PATTERNS)
-                }
             }
             
             
