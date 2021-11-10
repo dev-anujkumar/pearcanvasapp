@@ -137,6 +137,7 @@ config.captionToolbar = ['decreaseindent', 'glossary', 'assetpopover']
 config.poetryLabelToolbar = ['footnote', 'decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist', 'mathml', 'chemml']
 config.poetryCaptionToolbar = ['decreaseindent', 'glossary', 'assetpopover', 'orderedlist', 'unorderedlist']
 config.poetryStanzaToolbar = ['increaseindent', 'decreaseindent', 'orderedlist', 'unorderedlist']
+config.ctaButtonSmartlinkContexts = []
 config.conversionInProcess = false
 config.savingInProgress = false
 config.userId = 'c5Test01'
