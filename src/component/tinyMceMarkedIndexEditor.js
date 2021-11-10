@@ -154,7 +154,17 @@ export class ReactMarkedIndexEditor extends React.Component {
     }
 
     if(editor.id === 'cross-reference'){
-      this.props.filterCrossRef(e.target.innerHTML);
+      let value = e.target.innerHTML.replace(/<br data-mce-bogus="1">/g, "");
+      let lableElement = document.getElementById('cross-ref');
+      if(value !== ""){
+          lableElement.classList.remove('show-cross-ref-label');
+          lableElement.classList.add('hide-cross-ref-label');
+      }else{
+          lableElement.classList.add('show-cross-ref-label');
+          lableElement.classList.remove('hide-cross-ref-label');
+      }
+
+      this.props.filterCrossRef(value);
     }
   }
 /**

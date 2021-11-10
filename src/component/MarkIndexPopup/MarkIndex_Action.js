@@ -297,7 +297,9 @@ const extractCrossRefFromHtml = tempMarkedIndexContentText => {
             dummyDiv.innerHTML = crossReferences;
             let spanList = dummyDiv.children[0].childNodes;
             spanList.forEach(span => {
-                crossRefString.push(span.innerHTML)
+                if( span.innerHTML !== '<br data-mce-bogus="1">'){
+                    crossRefString.push(span.innerHTML);
+                }
             });
         }
     }

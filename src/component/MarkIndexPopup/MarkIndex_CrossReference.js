@@ -39,16 +39,29 @@ export const CrossReference = ({crossRefValue}) => {
         } else {
             tempCrossRef.push(item)
         }
+
+        let activeElement = document.getElementById('cross-ref');
+        if(tempCrossRef.length > 0){
+            activeElement.classList.remove('show-cross-ref-label');
+            activeElement.classList.add('hide-cross-ref-label');
+        }else{
+            activeElement.classList.add('show-cross-ref-label');
+            activeElement.classList.remove('hide-cross-ref-label');
+        }
+
         setcrossRef(tempCrossRef);
     }
     return (
         <div>
             <div className="markedindex-secondlevel-header">
                 <div id="index-secondlevel-attacher">
-                    <div className="markedindex-secondlevel-label" onClick={changePopUpStatus}>
-                        <label id="secondLevel" className="transition-none">Cross Reference (See Also)</label>
-                        <ReactMarkedIndexEditor className='markedindex-editor place-holder cross-reference' id='cross-reference' markIndexCurrentValue={crossRef.join(',')} placeholder="None" filterCrossRef={filterCrossRef}/>
-                    </div>
+                    <Tooltip direction="bottom" showClass={crossRef.length === 0 ? true : false} tooltipText={crossRef.join(', ')}>
+                        <div className="markedindex-secondlevel-label" onClick={changePopUpStatus}>
+                            <label className="cross-reference-lable">Cross Reference (See Also)</label>
+                            <ReactMarkedIndexEditor className='markedindex-editor place-holder cross-reference' id='cross-reference' markIndexCurrentValue={crossRef.join(',')} filterCrossRef={filterCrossRef}/>
+                            <label id="cross-ref" className={crossRef.length === 0 ? 'show-cross-ref-label' : 'hide-cross-ref-label'}>None</label>
+                        </div>
+                    </Tooltip>
                 </div>
             </div>
             {

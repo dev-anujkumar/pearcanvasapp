@@ -104,9 +104,12 @@ componentWillUnmount() {
 
   getCrossRefData = () => {
     let crossRefValues = document.querySelector('#cross-reference').innerHTML;
-    let crossRefArray = crossRefValues.split(',');
-    let crossReferences = crossRefArray.map(value => `<span>${value}</span>`);
-    crossReferences = `<p>${crossReferences.join('')}</p>`;
+    let crossReferences = "";
+    if(crossRefValues){
+      let crossRefArray = crossRefValues.split(',');
+      crossReferences = crossRefArray.map(value => `<span>${value}</span>`);
+      crossReferences = `<p>${crossReferences.join('')}</p>`;
+    }
     return {crossReferences, crossRefValues};
   }
   saveMarkedIndex = async () => {
