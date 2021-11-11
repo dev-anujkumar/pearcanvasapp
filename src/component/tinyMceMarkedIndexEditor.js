@@ -164,7 +164,9 @@ export class ReactMarkedIndexEditor extends React.Component {
           lableElement.classList.remove('hide-cross-ref-label');
       }
 
-      this.props.filterCrossRef(value);
+      if(this.props.isFilterCrossRefNeeded){
+        this.props.filterCrossRef(value);
+      }
     }
   }
 /**
