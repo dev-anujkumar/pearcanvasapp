@@ -23,6 +23,8 @@ import SmallRoundedButton from './Small_RoundedButton.jsx';
 import { ELM_INT, MMI } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { add } from 'lodash';
 import RoundedButton from './Rounded_Button.jsx';
+import approvedIcon from './Assets/approved.svg';
+import unApprovedIcon from './Assets/unapproved.svg';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -237,6 +239,10 @@ class FigureUserInterface extends Component {
     }
 
     generateUpdateAssetJSX = (element, assetTitleText, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension,interactiveformat) => {
+        const approval = this.props?.assessmentReducer[element.figuredata.interactiveid]?.assessmentStatus === "final";
+        const buttonTitle = approval?"Approved":"UnApproved";
+        const smallButtonClass = approval? "small_rounded_btn": "small_rounded_btn2";
+        const smallButtonIcon = approval? approvedIcon: unApprovedIcon;
         return (
             <div className='figure-wrapper-update'>
                 <div className='videoIconWrapper'>
@@ -246,7 +252,7 @@ class FigureUserInterface extends Component {
                     </div>
                     {
                         interactiveformat === "mmi-elm" && this.props?.assessmentReducer[element.figuredata.interactiveid]?.showUpdateStatus &&
-                        <RoundedButton className='rounded_btn' onClick={() => this.props.updateElm()}/>
+                        <RoundedButton title="Update Available" className='rounded_btn' onClick={() => this.props.updateElm()}/>
                     }
                     <div className="media-button-group">
                         <div className='update-figure-button' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
@@ -261,7 +267,7 @@ class FigureUserInterface extends Component {
                             interactiveformat === "mmi-elm" ?
                                 <div className="media-image-info">
                                     <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
-                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""} <SmallRoundedButton approval={this.props?.assessmentReducer[element.figuredata.interactiveid]?.assessmentStatus === "final"}/> </span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""} <SmallRoundedButton icon={smallButtonIcon} className={smallButtonClass} buttonTitle={buttonTitle} approval={approval}/> </span> </div>
                                 </div>
                                 :
                                 <div className="media-image-info">
