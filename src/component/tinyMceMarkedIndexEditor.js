@@ -152,6 +152,20 @@ export class ReactMarkedIndexEditor extends React.Component {
         }
       }
     }
+
+    if(editor.id === 'cross-reference'){
+      let value = e.target.innerHTML.replace(/<br data-mce-bogus="1">/g, "");
+      let lableElement = document.getElementById('cross-ref');
+      if(value !== ""){
+          lableElement.classList.remove('show-cross-ref-label');
+          lableElement.classList.add('hide-cross-ref-label');
+      }else{
+          lableElement.classList.add('show-cross-ref-label');
+          lableElement.classList.remove('hide-cross-ref-label');
+      }
+
+      this.props.filterCrossRef(value);
+    }
   }
 /**
   * Called on Keydown
@@ -484,7 +498,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     return (
-        <p ref={this.editorRef} className={this.placeHolderClass}  onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
+        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
     )
   }
 }
