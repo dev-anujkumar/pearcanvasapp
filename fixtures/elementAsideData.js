@@ -747,7 +747,7 @@ export const asideData11={
  export const workedexampleaside = {
 	"type":"element-aside",
 	"subtype":"workedexample",
-	"id":"urn:pearson:manifest:dcf192b0-09dd-4fd0-a79d-423c11355906",
+	"id":"urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7",
 	"contentUrn":"urn:pearson:entity:666a9f5b-719c-4135-b003-2417c446ea52",
 	"element":{
 	   "id":"urn:pearson:manifest:dcf192b0-09dd-4fd0-a79d-423c11355906",
@@ -870,7 +870,7 @@ export const asideData11={
 
  export const asideforgouped = {
 	"type":"groupedcontent",
-	"id":"urn:pearson:manifest:c8f88ad5-6726-449d-b239-8bd7ed833ae0",
+	"id":"urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7",
 	"contentUrn":"urn:pearson:entity:11c936ae-7bdd-4654-a58c-50d0591fece2",
 	"element":{
 	   "id":"urn:pearson:manifest:c8f88ad5-6726-449d-b239-8bd7ed833ae0",

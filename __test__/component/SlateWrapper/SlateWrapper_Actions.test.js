@@ -1272,7 +1272,8 @@ describe('Tests Slate Wrapper Actions', () => {
             }
         }];
         const parentUrn = {
-            contentUrn : "urn:pearson:manifest:b6f0b701-ada0-4118-8480-0827b57e9cf0"
+            contentUrn : "urn:pearson:manifest:b6f0b701-ada0-4118-8480-0827b57e9cf0",
+            manifestUrn: 'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7'
         };
         config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
         config.slateEntityURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
