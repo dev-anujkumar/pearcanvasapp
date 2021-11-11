@@ -648,7 +648,7 @@ a.paragraphNumeroUnoFootnote del{
 
 /* added css for list style in the popup */
 .dialog-window.tcm-canvas-popup ul{
-  list-style-type: disc;
+  list-style-type:none !important;
   color: black;
 }
 
@@ -818,5 +818,9 @@ ol li.listItemNumeroUnoLowerRoman {
     width: 14px;
     height: 14px;
     margin-right: 6px;
+}
+
+.dialog-window.tcm-canvas-popup ol {
+  counter-reset: section !important;
 }
 
