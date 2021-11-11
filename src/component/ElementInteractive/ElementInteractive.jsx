@@ -132,16 +132,16 @@ class Interactive extends React.Component {
     showElmVersionStatus = () => {
         let elmInt =  this.props?.assessmentReducer[this.state.itemID];
         // const approveText = elmInt.assessmentStatus == 'final' ? "Approved" : "Unapproved";
-        return elmInt.assessmentStatus === 'final';
-        // if (elmInt.assessmentStatus==='final') {
-        //     return (<ElmUpdateButton
-        //         elmAssessment={elmInt}
-        //         updateElmVersion={this.updateElm}
-        //         buttonText={ELM_UPDATE_BUTTON}
-        //         embeddedElmClass="elm-int-status-alignment"
-        //         elementType={ELM_INT}
-        //     />)
-        // }
+        // return elmInt.assessmentStatus === 'final';
+        if (elmInt.assessmentStatus==='final') {
+            return (<ElmUpdateButton
+                elmAssessment={elmInt}
+                updateElmVersion={this.updateElm}
+                buttonText={ELM_UPDATE_BUTTON}
+                embeddedElmClass="elm-int-status-alignment"
+                elementType={ELM_INT}
+            />)
+        }
     }
     /*** @description This function is used to open Version update Popup */
     updateElm = (event) => {
@@ -240,12 +240,12 @@ class Interactive extends React.Component {
             figureData.interactiveid = newVersion.id;
             figureData.interactivetitle = latestVersion.title;
         }
-        if (interactivetype && thumbnailTypes.indexOf(interactivetype) > -1) {
+        // if (interactivetype && thumbnailTypes.indexOf(interactivetype) > -1) {
             const thumbnailData = await this.getVideoMCQandGuidedThumbnail(figureData.interactiveid);
             figureData.posterimage = thumbnailData?.posterImage;
             figureData.alttext = thumbnailData?.alttext;
-            thumbnailImage = thumbnailData?.posterImage?.path
-        }
+            thumbnailImage = thumbnailData?.posterImage?.path;
+        // }
         this.setState({
             itemID: figureData.interactiveid,
             interactiveTitle: figureData.interactivetitle,
@@ -351,7 +351,7 @@ class Interactive extends React.Component {
         //     return <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
         // }
         // else {
-            return <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
+            return <FigureUserInterface interactiveformat={this.props.model.figuredata.interactiveformat} deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} updateElm={() => this.updateElm()}/>
         // }
         // else if (context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
         //     jsx = <div className={divImage} resource="">
@@ -510,7 +510,7 @@ class Interactive extends React.Component {
     */
     addElmInteractive = async (pufObj, cb) => {
         const { INTERACTIVE_TYPES : { VIDEO_MCQ, GUIDED_EXAMPLE}} = elementTypeConstant;
-        const thumbnailTypes = [ VIDEO_MCQ, GUIDED_EXAMPLE,"gallery-image" ];
+        const thumbnailTypes = [ VIDEO_MCQ, GUIDED_EXAMPLE ];
         let thumbnailImage="";
         if(pufObj.elementUrn === this.props.elementId){
             showTocBlocker();
@@ -528,7 +528,7 @@ class Interactive extends React.Component {
                 const thumbnailData = await this.getVideoMCQandGuidedThumbnail(pufObj.id);
                 figureData.posterimage = thumbnailData?.posterImage;
                 figureData.alttext = thumbnailData?.alttext;
-                thumbnailImage = thumbnailData?.posterImage?.path
+                thumbnailImage = thumbnailData?.posterImage?.path;
             // }
             this.setState({
                 itemID: pufObj.id,
@@ -884,6 +884,7 @@ class Interactive extends React.Component {
                         interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
                         interactiveData['path'] = responseData['data']["thumbnail"]['src'];
                         interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
+                        interactiveData['title'] = responseData['data']["title"];
                     }
                 })
             // }
@@ -897,7 +898,7 @@ class Interactive extends React.Component {
                    schema: INTERACTIVE_SCHEMA,
                    interactiveid: citeTdxObj.singleAssessmentID.versionUrn,
                    interactiveparentid:citeTdxObj.id,
-                   interactivetitle:citeTdxObj.title,
+                   interactivetitle: interactiveData['title'] || citeTdxObj.title,
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
                }

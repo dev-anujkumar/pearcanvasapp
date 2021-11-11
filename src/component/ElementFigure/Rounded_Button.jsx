@@ -2,11 +2,11 @@ import React from 'react';
 import "./Rounded_Button.css";
 
 
-function RoundedButton() {
+function RoundedButton(props) {
 
 
     return (
-        <><button className='rounded_btn'>Update Available</button> </>
+        <><button onClick={() => props.onClick()} className={props.className}>Update Available</button> </>
        
     );
   }
