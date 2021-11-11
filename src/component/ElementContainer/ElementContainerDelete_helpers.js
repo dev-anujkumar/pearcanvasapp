@@ -201,6 +201,15 @@ export const deleteFromStore = (params) => {
                         })
                       
                     })
+                /* To update redux store while deleting new element inside SH->Block Poetry->Stanza */
+                } else if (element?.type == "showhide" && element?.id === poetryData?.parent?.id) {
+                    element?.interactivedata[poetryData?.parent?.showHideType].map((ele) => {
+                        ele?.contents?.bodymatter.forEach((ele2, innerIndex) => {
+                            if (ele2.id === elmId) {
+                                ele.contents.bodymatter.splice(innerIndex, 1);
+                            }
+                        });
+                    });
                 }
             }
             else if (parentUrn && parentUrn.elementType == "manifest") {

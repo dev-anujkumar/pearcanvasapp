@@ -162,6 +162,7 @@ class ElementPoetry extends Component {
         
         /* Adding parent id and type to update redux store while creating new element inside 2c->Block Poetry->Stanza */
         poetryData = (type === "groupedcontent") ? {...poetryData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
+        poetryData = (type === "showhide") ? { ...poetryData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType } } : poetryData;
         try {
             if (stanzas !== undefined) {
                 if (stanzas.length === 0) {
