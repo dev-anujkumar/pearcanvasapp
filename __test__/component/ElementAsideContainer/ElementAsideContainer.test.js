@@ -101,7 +101,7 @@ jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js',
 });
 let store = mockStore(initialState);
 
-xdescribe('Testing ElementAside component with props', () => {
+describe('Testing ElementAside component with props', () => {
     let props = {
         element: elementAsideWorkExample,
         swapElement : swapElement,
@@ -112,8 +112,7 @@ xdescribe('Testing ElementAside component with props', () => {
         swapElement : jest.fn(),
         deleteElement: jest.fn(),
         slateLockInfo:{isLocked:false,userId:'c5test01'},
-        elementSepratorProps : jest.fn(),
-        permissions: []
+        handleCopyPastePopup:jest.fn()
     }  
 
     const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} esProps={props.elementSepratorProps}/> </Provider>);
@@ -287,7 +286,8 @@ describe('Testing ElementAside component with props', () => {
         handleFocus : jest.fn(),
         swapElement : jest.fn(),
         deleteElement: jest.fn(),
-        slateLockInfo:{isLocked:false,userId:'c5test01'}
+        slateLockInfo:{isLocked:false,userId:'c5test01'},
+        handleCopyPastePopup:jest.fn()
     }  
     it('sortable testing', () => {
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>)
