@@ -58,7 +58,7 @@ export const CrossReference = ({crossRefValue}) => {
                     <Tooltip direction="bottom" showClass={crossRef.length === 0 ? true : false} tooltipText={crossRef.join(', ')}>
                         <div className="markedindex-secondlevel-label" onClick={changePopUpStatus}>
                             <label className="cross-reference-lable">Cross Reference (See Also)</label>
-                            <ReactMarkedIndexEditor className='markedindex-editor place-holder cross-reference' id='cross-reference' markIndexCurrentValue={crossRef.join(',')} filterCrossRef={filterCrossRef} isFilterCrossRefNeeded={crossRefValue?.length > 0 ? false : true}/>
+                            <ReactMarkedIndexEditor className='markedindex-editor place-holder cross-reference' id='markedindex-cross-reference' markIndexCurrentValue={crossRef.join(',')} filterCrossRef={filterCrossRef} isFilterCrossRefNeeded={crossRefValue?.length > 0 ? false : true}/>
                             <label id="cross-ref" className={crossRef.length === 0 ? 'show-cross-ref-label' : 'hide-cross-ref-label'}>None</label>
                         </div>
                     </Tooltip>

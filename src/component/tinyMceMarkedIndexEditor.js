@@ -153,7 +153,7 @@ export class ReactMarkedIndexEditor extends React.Component {
       }
     }
 
-    if(editor.id === 'cross-reference'){
+    if(editor.id === 'markedindex-cross-reference'){
       let value = e.target.innerHTML.replace(/<br data-mce-bogus="1">/g, "");
       let lableElement = document.getElementById('cross-ref');
       if(value !== ""){

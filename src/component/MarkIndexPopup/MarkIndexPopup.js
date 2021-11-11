@@ -103,7 +103,7 @@ componentWillUnmount() {
   }
 
   getCrossRefData = () => {
-    let crossRefValues = document.querySelector('#cross-reference').innerHTML;
+    let crossRefValues = document.querySelector('#markedindex-cross-reference').innerHTML;
     let crossReferences = "";
     if(crossRefValues){
       let crossRefArray = crossRefValues.split(',');
