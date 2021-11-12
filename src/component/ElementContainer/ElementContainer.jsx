@@ -101,7 +101,7 @@ class ElementContainer extends Component {
     }
 
     getElementVersionStatus = (element, elementStatus) => {
-        if (element && element?.id && element.id.match(/work/g) && !elementStatus[element.id]) {
+        if (element && element?.id && element.id.match(/work/g) && elementStatus && !elementStatus.hasOwnProperty(element.id)) {
             // call element status API
             this.props.getElementStatus(element.id, this.props.index)
         }

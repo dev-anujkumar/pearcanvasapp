@@ -147,12 +147,11 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
         dispatch({
           type: IMAGES_FROM_API,
           payload: {
-            images: [
-              ...(data.images ? data.images : []),
-              ...(data.audios ? data.audios : []),
-              ...(data.videos ? data.videos : []),
-              ...(data.interactives ? data.interactives : [])
-            ],
+            images: [...(data.images ?? [])],
+            audios: [...(data.audios ?? [])],
+            videos: [...(data.videos ?? [])],
+            interactives: [...(data.interactives ?? [])],
+            asides: [...(data.elementAside ?? [])],
             searchTerm: searchterm,
             timeByAPI: performance.now() - time1
           }
