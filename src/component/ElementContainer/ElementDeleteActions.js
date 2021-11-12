@@ -189,7 +189,7 @@ export const prepareDeleteRequestData = (elementType, payloadParams) => {
         parentElement,
         isSectionBreak
     } = payloadParams
-    const containerElements = ["element-aside", "element-workedexample", "showhide", "popup", "citations", "poetry", "groupedcontent"];
+    const containerElements = ["element-aside", "element-workedexample", "showhide", "popup", "citations", "poetry", "groupedcontent", "manifestlist"];
     let requestPayload = {
         "index": elementIndex[elementIndex.length - 1]?.toString() || "0",
         "projectUrn": config.projectUrn        

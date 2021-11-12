@@ -639,7 +639,8 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
-    
+    //This check will be removed once Blocklist will support TCM
+    if (asideData.type !== "manifestlist") {
     if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
         const containerElement = {
             asideData,
@@ -666,7 +667,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
         }
         config.isCreateGlossary = false
-    }
+    }}
     return false
 }
 
@@ -860,6 +861,7 @@ export const updateStoreInCanvas = (params) => {
     if (config.tcmStatus) {
         //This check will be removed once Blocklist will support TCM
         const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
+        if(asideData.type !== "manifestlist") {
         if(!isBlockListElement) {
             if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
                 const tcmDataArgs = {
@@ -867,7 +869,7 @@ export const updateStoreInCanvas = (params) => {
                 }
                 prepareDataForUpdateTcm(tcmDataArgs);
             }
-        }
+        }}
     }
     const commonArgs = { updatedData, asideData, dispatch, elementIndex, parentElement, newslateData }
     if(versionedData){

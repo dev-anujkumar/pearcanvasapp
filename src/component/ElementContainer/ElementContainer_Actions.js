@@ -469,13 +469,15 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             bodymatter: currentSlateData.contents.bodymatter,
             response: createdElemData.data
         };
+        //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed 
+        if(type2BAdded !== "MANIFEST_LIST") {
         if (slateWrapperConstants?.elementType?.indexOf(type2BAdded) !== -1) {
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
             } else {
                 tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
             }
-        }
+        }}
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
