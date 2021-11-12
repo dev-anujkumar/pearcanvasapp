@@ -3845,7 +3845,6 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
-
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
@@ -3899,12 +3898,14 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
+        /**Comment the below code to support  tinymce spellcheck. It will reopen data paste issue in blockquote marginalia*/
+        /*
         while (tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').length) {
             tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').each(function () {
                 let innerHtml = this.innerHTML;
                 this.outerHTML = innerHtml;
             })
-        }
+        }*/
         tinymce.$('div[data-mce-bogus="all"]').each(function () {
             this.outerHTML = '';
         })
