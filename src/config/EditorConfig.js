@@ -28,7 +28,7 @@ export const EditorConfig = {
     },
     toolbar: 'undo redo | insertMedia | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code IndexEntry | customListButton customUoListButton indent outdent | slateTag ',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder charmap paste image tinymcespellchecker",
+    plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image tinymcespellchecker",
 }
 
 export const GlossaryFootnoteEditorConfig = {
