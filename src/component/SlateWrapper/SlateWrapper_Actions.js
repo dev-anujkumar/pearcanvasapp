@@ -612,6 +612,13 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                                 })
 
                             })
+                        // handling local redux state for swapping of stanzas inside SH->Poetry  
+                        } else if (element?.type === "showhide" && sectionType) {
+                            element?.interactivedata[sectionType].forEach((eachElement)=>{
+                                if(eachElement?.type === "poetry" && eachElement?.id === poetryId) {
+                                    eachElement.contents.bodymatter.move(oldIndex, newIndex);
+                                }
+                            });
                         }
                     });
                 }
