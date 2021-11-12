@@ -48,6 +48,7 @@ class MultipleColumnContainer extends PureComponent {
                 userRole={this.props.userRole}
                 pasteElement={this.props.pasteElement}
                 source={MULTICOLUMN_SOURCE}
+                handleCopyPastePopup={this.props.handleCopyPastePopup}
             />
         )
     }
@@ -99,6 +100,7 @@ class MultipleColumnContainer extends PureComponent {
                                     userRole={this.props.userRole}
                                     pasteElement={this.props.pasteElement}
                                     source={MULTICOLUMN_SOURCE}
+                                    handleCopyPastePopup={this.props.handleCopyPastePopup}
                                 />
                             }
                             <ElementContainer
@@ -132,6 +134,7 @@ class MultipleColumnContainer extends PureComponent {
                                 userRole={this.props.userRole}
                                 pasteElement={this.props.pasteElement}
                                 source={MULTICOLUMN_SOURCE}
+                                handleCopyPastePopup={this.props.handleCopyPastePopup}
                             />  
                         </React.Fragment>
                     )

@@ -74,6 +74,11 @@ export const updateNewVersionElementInStore = (paramObj) => {
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
         if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5) && asideData.type === "poetry") {
             dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+        }  else if (asideData && asideData.type == 'groupedcontent') {
+            asideData.indexes = indexes;
+            if (indexes.length === 2 || indexes.length === 3) {
+                dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+            }
         } else {
         parentElement.index = elementIndex;
         parentElement.indexes = elementIndex;
@@ -121,7 +126,7 @@ export const updateElementInStore = (paramsObj) => {
         updateShowhideElements(sh_Object, updatedData, iList);
     } else
     if (parentElement && parentElement.type === "citations") {
-        const indexes = elementIndex.split("-");
+        const indexes = typeof elementIndex === 'string' ? elementIndex?.split("-"): elementIndex;
         // Update CG inside S/H
         if (asideData?.parent?.type === SHOW_HIDE) {
             let sectionType = asideData?.parent?.showHideType;

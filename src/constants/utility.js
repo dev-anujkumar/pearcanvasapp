@@ -644,9 +644,8 @@ export const releaseOwnerPopup=(data)=>{
 export const isOwnerRole = (projectSharingRole, isSubscribed) => {
     if (projectSharingRole === "OWNER" && isSubscribed) {
         return true
-    }else{
-        return false
     }
+    return false
 }
 
 /**It checks whether its a Subscriber project or not
@@ -656,7 +655,6 @@ export const isOwnerRole = (projectSharingRole, isSubscribed) => {
 export const isSubscriberRole = (projectSharingRole, isSubscribed) => {
     if (projectSharingRole === "SUBSCRIBER" && isSubscribed) {
         return true
-    }else{
-        return false
     }
+    return false
 }
