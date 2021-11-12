@@ -1,4 +1,4 @@
-import { c4PublishObj, publishContentDelay, publishTitleDelay } from '../../src/js/c4_module.js';
+import { c4PublishObj, publishTitleDelay } from '../../src/js/c4_module.js';
 import _ from 'lodash';
 var axios = require('axios');
 import * as sinon from 'sinon';
@@ -17,7 +17,7 @@ describe('Testing c4_modules', () => {
         c4PublishObj.publishSlate(project, section, cite);
     })
 
-    it('Testing publishContent function', () => {
+    xit('Testing publishContent function', () => {
         let pubCallBack = jest.fn();
         let pubConObj = {
             distributableVersionUrn: 'version',
@@ -36,36 +36,6 @@ describe('Testing c4_modules', () => {
             isPreview = true
         _.delay = jest.fn(jest.fn());
         c4PublishObj.publishTitle(project, section, cite, callBack, isPreview);
-    })
-
-    it('Testing publishContentDelay function',() => {
-        let response = {
-            responseText: {
-                ResponseMetadata: {
-                    requestStatusCode: 200
-                },
-                data: {
-                    previewURL: "http://previewURL"
-                }
-            } 
-        }
-        jest.mock('axios'); 
-        const mockedResponse = Promise.resolve(response);
-        let callback = (response) => jest.fn(response);
-        jest.mock('axios', (response) => ({ post: (response) => jest.fn(response), create: jest.fn() }));
-        mockedResponse.then(function(mockedResponse) {
-            let content_url = 'http://helloUrl',
-            pubConObj = {
-                requestid: 'id',
-                distributableVersionUrn: 'urn',
-                requester: 'cypress',
-                timestamp: '25Dec'
-            },
-            pubApiKey = {};
-           
-            publishContentDelay(content_url, pubConObj, pubApiKey, callback);
-          });
-
     })
 
     it('Testing publishTitleDelay function',() => {

@@ -271,6 +271,12 @@ img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage
     display: list-item;
     text-align: -webkit-match-parent;
 }
+
+.pearson-component.image.figureData.table-figure-data ul li.listItemNumeroUnoBullet::before{
+    counter-increment: section;
+    content: counter(section, disc);
+    font-size: 0px;
+}
 .pearson-component.image.figureData.table-figure-data ol li{
     list-style:inherit !important; 
 }
