@@ -521,11 +521,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => { 
-        if(slateData.data[config.slateManifestURN].contents.bodymatter[0].type ==="element-aside"){
-            slateData.data[config.slateManifestURN].contents.bodymatter[0].html= {
-                title: "<p><label>Test1&nbsp;</label><number>22&nbsp;</number>cc</p>"
-            }
-        } 
+        if (slateData.data[config.slateManifestURN].contents.bodymatter) {
+            slateData.data[config.slateManifestURN].contents.bodymatter = slateData.data[config.slateManifestURN].contents.bodymatter?.map(ele => {
+                if (ele?.type === "element-aside") {
+                    ele.html = {
+                        title: "<p><label>Test1&nbsp;</label><number>22&nbsp;</number>cc</p>"
+                    }
+                }
+                return ele
+            })
+        }
          /* Slate tag issue */
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
