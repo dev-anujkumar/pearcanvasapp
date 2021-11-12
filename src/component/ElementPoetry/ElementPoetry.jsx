@@ -115,7 +115,7 @@ class ElementPoetry extends Component {
      * @param {object} asideData parent data (Poetry container)
      * @param {Number} parentIndex Container index
      */
-    renderBlankContainer = (_props, parentUrn, parentIndex, poetryData) => {
+    renderBlankContainer = (_props, parentUrn, parentIndex, poetryData, asideData) => {
         let index = 0
         return (
             <>
@@ -130,6 +130,7 @@ class ElementPoetry extends Component {
                     userRole={this.props.userRole}
                     pasteElement={this.props.pasteElement}
                     source={POETRY_SOURCE}
+                    asideData={asideData}
                 />
             </>
         )
@@ -150,6 +151,7 @@ class ElementPoetry extends Component {
             contentUrn : this.props.model.contentUrn,
             element : this.props.model,           
         };
+        let asideData = {...poetryData};
          /* @columnIndex@ */
          const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
          const columnId = groupeddata?.bodymatter[columnIndex]?.id;
@@ -162,14 +164,17 @@ class ElementPoetry extends Component {
         
         /* Adding parent id and type to update redux store while creating new element inside 2c->Block Poetry->Stanza */
         poetryData = (type === "groupedcontent") ? {...poetryData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
+        
+        /* Adding parent id , type and showHideType to update redux store while creating new element inside SH->Block Poetry->Stanza */
         poetryData = (type === "showhide") ? { ...poetryData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType } } : poetryData;
+        asideData = (type === "showhide") ? { ...poetryData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType } } : asideData;
         try {
             if (stanzas !== undefined) {
                 if (stanzas.length === 0) {
-                    return this.renderBlankContainer(this.props, parentUrn, parentIndex, poetryData)
+                    return this.renderBlankContainer(this.props, parentUrn, parentIndex, poetryData, asideData)
                 }
                 return stanzas.map((element, index) => {
-                    const elementLineage = {
+                    let elementLineage = {
                         ...this.props.element,
                        grandParent: {
                            asideData: this.props.asideData,
@@ -179,6 +184,8 @@ class ElementPoetry extends Component {
                        },
                        stanzaIndex : index
                    }
+                   // updating elementLineage with asideData when parent container element is showhide   
+                   elementLineage = (type === "showhide") ? {...asideData} : elementLineage;
                     return (
                         <React.Fragment key={element.id}>                                   
                             {index === 0 && <ElementSaprator
