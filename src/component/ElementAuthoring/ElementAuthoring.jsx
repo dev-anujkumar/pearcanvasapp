@@ -33,6 +33,7 @@ export class ElementAuthoring extends Component {
           parentElement={this.props?.parentElement}
           openMarkedIndexPopUp = {openMarkedIndexPopUp}
           markedIndexValue={markedIndexValue}
+          asideData={this.props.asideData}
         />
     )
 

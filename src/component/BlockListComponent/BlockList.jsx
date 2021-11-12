@@ -5,6 +5,17 @@ import { fetchLiClassName } from './BlockListHelperFunctions';
 const BlockList = (props) => {
     let manifestList = props?.manifestList;
 
+    const { id, type, groupeddata, contentUrn } = props?.parentElement || {};
+    let asideData = {
+        type: props.element.type,
+        subtype: props.element.subtype,
+        id: props.element.id,
+        contentUrn: props.element.contentUrn,
+        element: props.element,
+        index: props.index
+    };
+    asideData = (type === "showhide") ? { ...asideData, parent: { id, type, contentUrn, showHideType: props?.showHideType } } : asideData;
+
     const fetchLi = (subtype) => {
         return manifestList?.map((item, index) => {
             return (<li className={`${fetchLiClassName(subtype)} manifest-list-li`}>
@@ -16,10 +27,14 @@ const BlockList = (props) => {
     const renderElement = (parentIndex) => {
         return manifestList[parentIndex]?.listitemdata?.bodymatter.map((item, index) => {
             let indexT = item?.type === 'manifestlist' ? `${props?.indexTemp}${parentIndex}-${index}-` : '';
+            let indexToPass = `${typeof (props?.index) === 'number' ? props?.index : props?.index?.split('-')[0]}-${props?.indexTemp}${parentIndex}-${index}`;
+            if (type === "showhide") {
+                 indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
+            }
             return (
                 <ElementContainer
                     element={item}
-                    index={`${typeof (props?.index) === 'number' ? props?.index : props?.index?.split('-')[0]}-${props?.indexTemp}${parentIndex}-${index}`}
+                    index={indexToPass}
                     indexTemp={indexT}
                     onClickCapture={props?.onClickCapture}
                     showBlocker={props?.showBlocker}
@@ -27,7 +42,8 @@ const BlockList = (props) => {
                     onListSelect={props.onListSelect}
                     model={props?.element.html}
                     handleCommentspanel={props?.handleCommentspanel}
-                    placeholder={typeof (props?.index) === 'string' && props?.index?.split('-').length>=3 ?"Press Shift+Tab to move out" :"Type something..."}
+                    placeholder={typeof (props?.index) === 'string' && props?.index?.split('-').length >= 3 ? "Press Shift+Tab to move out" : "Type something..."}
+                    asideData={asideData}
                 />
             )
         })
@@ -35,16 +51,16 @@ const BlockList = (props) => {
     }
 
     if (props?.element?.listtype === 'ordered') {
-        if(props?.element?.startNumber>1){
+        if (props?.element?.startNumber > 1) {
             return (
-                <ol class="decimal" style={{'counterIncrement': `section ${props?.element?.startNumber - 1}`}}>
+                <ol class="decimal" style={{ 'counterIncrement': `section ${props?.element?.startNumber - 1}` }}>
                     {
                         fetchLi(props?.element?.subtype)
                     }
                 </ol>
             )
         }
-        else{
+        else {
             return (
                 <ol class="decimal">
                     {
@@ -53,7 +69,7 @@ const BlockList = (props) => {
                 </ol>
             )
         }
-       
+
     }
     else {
         return (
