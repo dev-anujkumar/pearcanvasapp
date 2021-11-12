@@ -748,7 +748,7 @@ export class TinyMceEditor extends Component {
         if (this.props?.element?.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
             this.props.onFigureImageFieldFocus(this.props.index);
         }
-    if(this.props?.element?.type === 'element-aside'){
+    if(this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title){
         this.props.onFigureImageFieldFocus(this.props.index);
     }
         // cbFunc | is for callback delegates //
@@ -3884,7 +3884,9 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        if ((this.props?.element?.type === 'figure'|| this.props?.element?.type === 'element-aside') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
+        if ((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
+            this.props.onFigureImageFieldBlur(this.props.index);
+        }else if(this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title){
             this.props.onFigureImageFieldBlur(this.props.index);
         }
 

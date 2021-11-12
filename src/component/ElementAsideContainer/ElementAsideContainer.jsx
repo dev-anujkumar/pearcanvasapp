@@ -17,6 +17,7 @@ import { checkSlateLock } from "../../js/slateLockUtility.js"
 import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, removeUnoClass } from '../../constants/utility';
+import { labelHtmlData } from '../../constants/Element_Constants';
 
 // IMPORT - Assets //
 
@@ -498,6 +499,7 @@ class ElementAsideContainer extends Component {
  * 
  */
     renderTitleField=(asideHtmlData)=>{
+        console.log("This.props.element",this.props.element);
         return(
             <div className="asideHeader">
                 <header className="figure-header new-figure-image-header">
@@ -627,16 +629,6 @@ class ElementAsideContainer extends Component {
         }
         if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.remove('transition-none');
-        }
-        // BG-5081 fixes
-        if (id === '0-0' && labelElement?.innerHTML) {
-            let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
-            if (dropdownData.indexOf(labelElement?.innerHTML.toLowerCase()) > -1) {
-                let { figureLabelValue } = this.state;
-                let labelElementText = labelElement?.innerHTML.toLowerCase();
-                figureLabelValue = labelElementText.charAt(0).toUpperCase() + labelElementText.slice(1);
-                this.setState({ figureLabelValue: figureLabelValue });
-            }
         }
     }
 
