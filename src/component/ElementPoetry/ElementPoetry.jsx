@@ -152,7 +152,6 @@ class ElementPoetry extends Component {
             contentUrn : this.props.model.contentUrn,
             element : this.props.model,           
         };
-        let asideData = {...poetryData};
          /* @columnIndex@ */
          const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
          const columnId = groupeddata?.bodymatter[columnIndex]?.id;
@@ -168,14 +167,13 @@ class ElementPoetry extends Component {
         
         /* Adding parent id , type and showHideType to update redux store while creating new element inside SH->Block Poetry->Stanza */
         poetryData = (type === "showhide") ? { ...poetryData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType } } : poetryData;
-        asideData = (type === "showhide") ? { ...poetryData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType } } : asideData;
         try {
             if (stanzas !== undefined) {
                 if (stanzas.length === 0) {
                     return this.renderBlankContainer(this.props, parentUrn, parentIndex, poetryData, asideData)
                 }
                 return stanzas.map((element, index) => {
-                    let elementLineage = {
+                    const elementLineage = {
                         ...this.props.element,
                        grandParent: {
                            asideData: this.props.asideData,
@@ -185,8 +183,6 @@ class ElementPoetry extends Component {
                        },
                        stanzaIndex : index
                    }
-                   // updating elementLineage with asideData when parent container element is showhide   
-                   elementLineage = (type === "showhide") ? {...asideData} : elementLineage;
                     return (
                         <React.Fragment key={element.id}>                                   
                             {index === 0 && <ElementSaprator
