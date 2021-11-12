@@ -16,6 +16,8 @@ import SectionSeperator from './SectionSeperator.jsx';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
 import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
+import { getLabelNumberTitleHTML, checkHTMLdataInsideString, removeUnoClass } from '../../constants/utility';
+
 // IMPORT - Assets //
 
 let random = guid();
@@ -504,16 +506,60 @@ class ElementAsideContainer extends Component {
                             <label className={"floating-label"}>Label</label>
                         </div>
                     <div className="floating-number-group">
-                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={"figureNumber"} model={this.props.model} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={"figureNumber"} model={this.props.model} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                         <label className={"floating-number"}>Number</label>
                     </div>
                 </header>
                 <div className="floating-title-group">
-                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={"figureTitle"} model={this.props.model} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={"figureTitle"} model={this.props.model} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                     <label className={"floating-title"}>Title</label>
                 </div>
                 </div>
         )
+    }
+
+
+
+    
+    onFigureElementFieldFocus = (id) => {
+        let labelElement = document.getElementById(`cypress-${id}`);
+        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+            labelElement?.nextElementSibling?.classList?.add('label-color-change');
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
+            labelElement?.nextElementSibling?.classList?.add('transition-none');
+        }
+        if (this.props.element.figuretype === 'interactive') {
+            this.props.updateSmartLinkDataForCompare(this.props.element.figuredata);
+        } else if (this.props.element.figuretype === 'audio' || this.props.element.figuretype === 'video') {
+            this.props.updateAudioVideoDataForCompare(this.props.element.figuredata);
+        }
+        if (!labelElement?.classList.contains('actionPU')) {
+            let buttonIndex = this.getIdOfButton(id);
+            this.toggleHyperlinkEditable('hide', buttonIndex);
+        }
+    }
+
+    onFigureElementFieldBlur = (id) => {
+        let labelElement = document.getElementById(`cypress-${id}`);
+        if (labelElement?.nextElementSibling) {
+            labelElement?.nextElementSibling?.classList?.remove('label-color-change');
+        }
+        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+        }
+        if (id === '0-0' && labelElement?.innerHTML) {
+            let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
+            if (dropdownData.indexOf(labelElement?.innerHTML.toLowerCase()) > -1) {
+                let { figureLabelValue } = this.state;
+                let labelElementText = labelElement?.innerHTML.toLowerCase();
+                figureLabelValue = labelElementText.charAt(0).toUpperCase() + labelElementText.slice(1);
+                this.setState({ figureLabelValue: figureLabelValue });
+            }
+        }
+        if (labelElement?.classList.contains('actionPU')) {
+            let buttonIndex = this.getIdOfButton(id);
+            this.toggleHyperlinkEditable('hide', buttonIndex);
+        }
     }
 
 
@@ -622,6 +668,9 @@ class ElementAsideContainer extends Component {
     render() {
         const { element } = this.props;
         console.log("this.props",element);
+        let asideHtmlData = getLabelNumberTitleHTML(element);
+        console.log("asideHTMLdata",asideHtmlData);
+        let asideLabelFromApi = checkHTMLdataInsideString(asideHtmlData.formattedLabel);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         return (

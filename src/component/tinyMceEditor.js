@@ -745,12 +745,10 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorOnClick = (e) => {
-        console.log("InElementAside",this.props);
-        if (this.props.element.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
+        if (this.props?.element?.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
             this.props.onFigureImageFieldFocus(this.props.index);
         }
-    if(this.props.element.type === 'element-aside'){
-        console.log("InElementAside",this.props);
+    if(this.props?.element?.type === 'element-aside'){
         this.props.onFigureImageFieldFocus(this.props.index);
     }
         // cbFunc | is for callback delegates //
@@ -3251,7 +3249,7 @@ export class TinyMceEditor extends Component {
             else {
                 this.placeHolderClass = '';
             }
-        } else if (this.props.element && this.props.element.type === 'figure' && config.figureFieldsPlaceholders.includes(this.props.placeholder)) {
+        } else if (this.props?.element && this.props?.element?.type === 'figure' && config.figureFieldsPlaceholders.includes(this.props.placeholder)) {
             this.placeHolderClass = '';
         } else {
             let testElem = document.createElement('div');
@@ -3517,7 +3515,7 @@ export class TinyMceEditor extends Component {
             currentActiveNode = activeContainerNode
         }
         
-        let currentElementId = this.props.currentElement && currentTarget && currentTarget.getAttribute('data-id') ? this.props.currentElement.id : this.props.element.id
+        let currentElementId = this.props?.currentElement && currentTarget && currentTarget.getAttribute('data-id') ? this.props?.currentElement?.id : this.props?.element?.id
         if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
             isSameByElementId = true;
         }

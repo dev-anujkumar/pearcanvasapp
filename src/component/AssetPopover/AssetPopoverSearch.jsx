@@ -141,7 +141,7 @@ class AssetPopoverSearch extends React.Component {
     apoBodyJsx = (ValueToBeSearch) => {
         return (<section className="modalBody">
             <p className="APOSearchResultText">Search took about {this.props.timeByAPI ? this.props.timeByAPI.toFixed() : ' '} ms, Total hits: {this.props.figures ? this.props.figures.length : 0}</p>
-            <ApiResults selectedFigure={this.selectedFigure} ValueToBeSearch={ValueToBeSearch} figures={this.props.figures} />
+            <ApiResults assetPopoverData={this.props} selectedFigure={this.selectedFigure} ValueToBeSearch={ValueToBeSearch}/>
         </section>
         )
     }
@@ -226,9 +226,13 @@ const mapActionToProps = {
  * Get State as a props here in this component
  */
 const mapStateToProps = (state, props) => {
-    const { figures, showApoCurrentlyLinked, showApoBody, showApoFooter, selectedFigureValue, noSearchResultFound, figureIsSelected, apoObject, searchTerm, figureDetails, timeByAPI, currentlyLinkedImageData } = state.assetPopOverSearch;
+    const { figures,videos, audios, interactives, asides, showApoCurrentlyLinked, showApoBody, showApoFooter, selectedFigureValue, noSearchResultFound, figureIsSelected, apoObject, searchTerm, figureDetails, timeByAPI, currentlyLinkedImageData } = state.assetPopOverSearch;
     return {
         figures,
+        videos,
+        audios,
+        interactives,
+        asides,
         showApoCurrentlyLinked,
         showApoBody,
         showApoFooter,
