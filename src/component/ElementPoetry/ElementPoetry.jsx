@@ -116,7 +116,7 @@ class ElementPoetry extends Component {
      * @param {object} asideData parent data (Poetry container)
      * @param {Number} parentIndex Container index
      */
-    renderBlankContainer = (_props, parentUrn, parentIndex, poetryData, asideData) => {
+    renderBlankContainer = (_props, parentUrn, parentIndex, poetryData) => {
         let index = 0
         return (
             <>
@@ -131,7 +131,6 @@ class ElementPoetry extends Component {
                     userRole={this.props.userRole}
                     pasteElement={this.props.pasteElement}
                     source={POETRY_SOURCE}
-                    asideData={asideData}
                 />
             </>
         )
@@ -170,7 +169,7 @@ class ElementPoetry extends Component {
         try {
             if (stanzas !== undefined) {
                 if (stanzas.length === 0) {
-                    return this.renderBlankContainer(this.props, parentUrn, parentIndex, poetryData, asideData)
+                    return this.renderBlankContainer(this.props, parentUrn, parentIndex, poetryData)
                 }
                 return stanzas.map((element, index) => {
                     const elementLineage = {
