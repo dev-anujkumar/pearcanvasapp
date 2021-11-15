@@ -172,6 +172,13 @@ figure,.element-container{
     display: table;
 }
 
+.divImageActualSize{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
+}
+
 /* figure 25% image*/
 .divImage25Text{
     background-color: transparent;
