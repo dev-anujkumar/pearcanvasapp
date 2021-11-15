@@ -335,15 +335,15 @@ class FigureUserInterface extends Component {
 
                         element.figuredata.interactiveformat === MMI ?
                             assetId ?
-                                this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID", assetId, "Version", alfrescoSite, imageDimension, MMI)
+                                this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID:", assetId, "Version:", alfrescoSite, imageDimension, MMI)
                                 :
-                                this.generateAddAssetJSX(smartlinkIcon, "QuaD Interactive", "Add an Interactive", slPosterImage, "Item ID", assetPathText, MMI)
+                                this.generateAddAssetJSX(smartlinkIcon, "QuaD Interactive", "Add an Interactive", slPosterImage, "Item ID:", assetPathText, MMI)
                             :
                             element.figuredata.interactiveformat === ELM_INT ?
                                 assetId ?
-                                    this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID", assetId, "Version", alfrescoSite, imageDimension, ELM_INT)
+                                    this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID:", assetId, "Version:", alfrescoSite, imageDimension, ELM_INT)
                                     :
-                                    this.generateAddAssetJSX(smartlinkIcon, "Elm Interactive", "Add an Interactive", slPosterImage, "Item ID", "Version", ELM_INT)
+                                    this.generateAddAssetJSX(smartlinkIcon, "Elm Interactive", "Add an Interactive", slPosterImage, "Item ID:", "Version:", ELM_INT)
                                 :
                                 assetId ?
                                     this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
