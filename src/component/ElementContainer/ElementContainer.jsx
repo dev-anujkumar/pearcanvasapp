@@ -1428,6 +1428,7 @@ class ElementContainer extends Component {
                         markedIndexValue= {this.props.markedIndexValue}
                         markedIndexPopup= {this.props.markedIndexPopup}
                         showHideType = {this.props.showHideType}
+                        handleCopyPastePopup={this.props.handleCopyPastePopup}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1634,7 +1635,7 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup} />
                         </MultiColumnContext.Provider>;
                     } else {
                         labelText = MULTI_COLUMN_2C.ELEMENT_TAG_NAME
@@ -1655,7 +1656,7 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup} />
                         </MultiColumnContext.Provider>;
                     }
                     break;

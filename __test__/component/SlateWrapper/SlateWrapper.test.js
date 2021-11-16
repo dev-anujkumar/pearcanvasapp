@@ -489,6 +489,28 @@ describe("SlateWrapper Component", () => {
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
+        it.each(elementList)('add %s element if for section break ',(input) => {
+            let index = 0, firstOne = true, outerAsideIndex = "0-0-1", poetryData = {};
+            let parentUrn = {id:"123"};
+            let asideData = {id:"123",parent:{type:"showhide"}}; 
+            config.savingInProgress = false;
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'splithandlerfunction')
+            compInstance.splithandlerfunction(input,index, firstOne, parentUrn, asideData, outerAsideIndex, poetryData);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it.each(elementList)('add %s element if for section break ',(input) => {
+            let index = 0, firstOne = true, outerAsideIndex = "1", poetryData = {};
+            let parentUrn = {id:"123"};
+            let asideData = {id:"123"}; 
+            config.savingInProgress = false;
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'splithandlerfunction')
+            compInstance.splithandlerfunction(input,index, firstOne, parentUrn, asideData, outerAsideIndex, poetryData);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
         it('1.21.2  Test - if case (config.savingInProgress)', () => {
             config.savingInProgress = true;
             const compInstance = slateWrapInstance(props);

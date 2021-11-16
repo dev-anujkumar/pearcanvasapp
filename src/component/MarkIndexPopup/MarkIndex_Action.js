@@ -1,4 +1,5 @@
-import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY  } from '../../constants/Action_Constants';
+import axios from 'axios';
+import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES  } from '../../constants/Action_Constants';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
@@ -43,7 +44,7 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
             return false;
         }
         let newBodymatter = currentSlateData.contents.bodymatter;
-        var markedIndexTextFirstLvl, markedIndexTextSecondLvl, markedIndexElem = {}, tempMarkedIndexContentText;
+        var markedIndexTextFirstLvl, markedIndexTextSecondLvl, markedIndexElem = {}, tempMarkedIndexContentText, crossReferences;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
         if (showHideElement || asideParent?.type === 'showhide') { /** markedIndex inside Show-Hide */
@@ -94,6 +95,7 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         tempMarkedIndexContentText = markedIndexElem && markedIndexElem.html['indexEntries'] && markedIndexElem.html['indexEntries'][markIndexid];
         markedIndexTextFirstLvl = tempMarkedIndexContentText && JSON.parse(tempMarkedIndexContentText).firstLevelEntry || markIndexText;
         markedIndexTextSecondLvl = tempMarkedIndexContentText && JSON.parse(tempMarkedIndexContentText).secondLevelEntry;
+        crossReferences = extractCrossRefFromHtml(tempMarkedIndexContentText);
     }
 
     return await dispatch({
@@ -102,7 +104,8 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
             markedIndexValue: markedIndexValue,
             markedIndexCurrentValue: {
                 firstLevel: markedIndexTextFirstLvl,
-                secondLevel: markedIndexTextSecondLvl
+                secondLevel: markedIndexTextSecondLvl,
+                crossReferences
             },
             markedIndexGlossary:{},
             elementIndex: index
@@ -118,17 +121,19 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
  * @param {*} subEntry, Value of sub entry field in the marked index pop-up 
  * @param {*} markedIndexEntryURN, URN of indexed text 
  */
-export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry = "", markedIndexEntryURN = "", differenceValue) => (dispatch) => {
+export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry = "", markedIndexEntryURN = "", differenceValue, crossReferences) => (dispatch) => {
     let indexEntries = {};
     let currentValue = {};
     if(indexEntry && markedIndexEntryURN){
         indexEntries[markedIndexEntryURN] = JSON.stringify({
           firstLevelEntry: indexEntry,
-          secondLevelEntry: subEntry
+          secondLevelEntry: subEntry,
+          crossReferences
         });
         currentValue = {
             firstLevel: indexEntry,
-            secondLevel: subEntry
+            secondLevel: subEntry,
+            crossReferences
         }
     } else {
         const {markedIndexGlossary, markedIndexCurrentValue} = store.getState().markedIndexReducer;
@@ -157,7 +162,8 @@ export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry =
             },
             markedIndexCurrentValue:{
                 firstLevel: currentValue.firstLevel,
-                secondLevel: currentValue.secondLevel
+                secondLevel: currentValue.secondLevel,
+                crossReferences: currentValue.crossReferences
             }
         }
     })
@@ -172,7 +178,7 @@ export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry =
  * @returns 
  */
 export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, glossaaryFootnoteValue, index) => {
-    let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {};
+    let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {}, markedIndexCrossReferences = [];
     if(glossaryContentText && glossaryContentText.includes('mark-index-id')){
         markedIndexEntryURN = glossaryContentText.slice(glossaryContentText.indexOf('mark-index-id')).split("\"")[1];
         let oldIndexEntries = glossaryFootElem && glossaryFootElem.html.indexEntries[markedIndexEntryURN];
@@ -181,6 +187,7 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
 
         markedIndexFirstLevel = firstLevelEntry;
         markedIndexSecondLevel = secondLevelEntry;
+        markedIndexCrossReferences = extractCrossRefFromHtml(oldIndexEntries);
     } else {
         markedIndexFirstLevel = glossaryContentText;
     }
@@ -201,7 +208,8 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
             },
             markedIndexCurrentValue: {
                 firstLevel: markedIndexFirstLevel,
-                secondLevel: markedIndexSecondLevel
+                secondLevel: markedIndexSecondLevel,
+                crossReferences: markedIndexCrossReferences
             },
             markedIndexGlossary: {
                 popUpStatus: false,  
@@ -211,4 +219,90 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
             elementIndex: index
         }
     };
-} 
+}
+
+/**
+ * This function makes a call to the content-api and get the drop-down values for the 
+ * cross-reference and after re-formatting the data in the required format, update the
+ * redux store
+ */
+export const getCrossReferenceValues = () => async (dispatch) => {
+    let url = `${config.ASSET_POPOVER_ENDPOINT}v1/${config.projectUrn}/indexes`;
+    try{
+        const result = await axios.get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        });
+
+        let crossRefValues = prepareCrossRefArray(result);
+
+        return dispatch({
+            type: UPDATE_CROSS_REFERENCE_VALUES,
+            payload:{
+                crossReferenceValues: crossRefValues
+            }
+        });
+    } catch(error){
+        return dispatch({
+            type: UPDATE_CROSS_REFERENCE_VALUES,
+            payload:{
+                crossReferenceValues: []
+            }
+        });
+    }
+}
+
+/**
+ * This function will prepare an array with all the cross-reference values
+ * received in the response
+ */
+const prepareCrossRefArray = result => {
+    let crossRefValues = [];
+    if(result?.data?.items && result.data.items.length > 0){
+        const items = result.data.items;
+
+        items.forEach(indexObj => {
+
+            if(indexObj?.firstlevelentry){
+                let firstLvlObj = indexObj.firstlevelentry;
+                if(firstLvlObj?.firstlevelentry){
+                    crossRefValues.push(firstLvlObj.firstlevelentry.text);
+                }
+
+                if(firstLvlObj?.secondlevelentries && firstLvlObj.secondlevelentries.length > 0) {
+                    let secondLvlObj = firstLvlObj.secondlevelentries[0];
+                    if(secondLvlObj?.secondlevelentry){
+                        crossRefValues.push(secondLvlObj.secondlevelentry.text);
+                    }
+                }
+            }
+        })
+    }
+
+    return crossRefValues;
+}
+
+/**
+ * This function will extract previously selected cross-reference values from HTML
+ */
+const extractCrossRefFromHtml = tempMarkedIndexContentText => {
+    let crossRefString = [];
+    if(tempMarkedIndexContentText){
+        let parsedMarkIndex = JSON.parse(tempMarkedIndexContentText);
+        if(parsedMarkIndex?.crossReferences){
+            let crossReferences = parsedMarkIndex.crossReferences;
+            let dummyDiv = document.createElement('div');
+            dummyDiv.innerHTML = crossReferences;
+            let spanList = dummyDiv.children[0].childNodes;
+            spanList.forEach(span => {
+                if( span.innerHTML !== '<br data-mce-bogus="1">'){
+                    crossRefString.push(span.innerHTML);
+                }
+            });
+        }
+    }
+
+    return crossRefString;
+}

@@ -295,6 +295,7 @@ class ElementAsideContainer extends Component {
                     showDeleteElemPopup={this.props.showDeleteElemPopup}
                     permissions={this.props.permissions}
                     userRole={this.props.userRole}
+                    handleCopyPastePopup={this.props.handleCopyPastePopup}
                 />
                 <Sortable
                     options={{
@@ -384,6 +385,7 @@ class ElementAsideContainer extends Component {
                             userRole={this.props.userRole}
                             pasteElement={this.props.pasteElement}
                             source={ASIDE_SOURCE}
+                            handleCopyPastePopup={this.props.handleCopyPastePopup}
                         />
                     )
                 } else {
@@ -409,6 +411,7 @@ class ElementAsideContainer extends Component {
                                     userRole={this.props.userRole}
                                     pasteElement={this.props.pasteElement}
                                     source={ASIDE_SOURCE}
+                                    handleCopyPastePopup={this.props.handleCopyPastePopup}
                                 />
                                 {this.section(element, index)}
                                 </>
@@ -440,6 +443,7 @@ class ElementAsideContainer extends Component {
                                         userRole={this.props.userRole}
                                         pasteElement={this.props.pasteElement}
                                         source={ASIDE_SOURCE}
+                                        handleCopyPastePopup={this.props.handleCopyPastePopup}
                                     />
                                     }
                                     <ElementContainer
@@ -474,6 +478,7 @@ class ElementAsideContainer extends Component {
                                         userRole={this.props.userRole}
                                         pasteElement={this.props.pasteElement}
                                         source={ASIDE_SOURCE}
+                                        handleCopyPastePopup={this.props.handleCopyPastePopup}
                                     />
                                 </React.Fragment>
                             )

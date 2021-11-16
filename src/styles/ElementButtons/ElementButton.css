@@ -83,6 +83,14 @@
     margin-left: -10px;
 }
 
+.container-aside .power-paste-icon {
+    margin-left: -35px;
+}
+
+.multi-column-container .power-paste-icon {
+    margin-left: -12px;
+}
+
 .btn-element.color-text {
     background-color: transparent;
 }

@@ -105,7 +105,7 @@ class FigureUserInterface extends Component {
     }
 
     changeFigureLabel = (figureLabelValue, data) => {
-        if (!(figureLabelValue === data)) {
+        if (figureLabelValue !== data) {
             this.setState({ figureLabelValue: data });
             let dropdownOptions = [];
             for (let option of this.state.figureLabelData) {
@@ -335,9 +335,9 @@ class FigureUserInterface extends Component {
 
                         element.figuredata.interactiveformat === MMI ?
                             assetId ?
-                                this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID", assetId, "Version", alfrescoSite, imageDimension, MMI)
+                                this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID:", assetId, "Version:", alfrescoSite, imageDimension, MMI)
                                 :
-                                this.generateAddAssetJSX(smartlinkIcon, "QuaD Interactive", "Add an Interactive", slPosterImage, "Item ID", assetPathText, MMI)
+                                this.generateAddAssetJSX(smartlinkIcon, "QuaD Interactive", "Add an Interactive", slPosterImage, "Item ID:", assetPathText, MMI)
                             :
                             element.figuredata.interactiveformat === ELM_INT ?
                                 assetId && element.figuredata?.interactivetitle ?
