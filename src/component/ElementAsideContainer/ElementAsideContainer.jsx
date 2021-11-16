@@ -522,9 +522,6 @@ class ElementAsideContainer extends Component {
                 </div>
         )
         }
-        else{
-            return null;
-        }
     }
 
 

@@ -16,7 +16,7 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
@@ -351,19 +351,20 @@ class ElementContainer extends Component {
     }
 
 
-    // asideDifference=(index, previousElementData)=>{
-    //     let titleDOM = document.getElementById(`cypress-${index}-t1`),
-    //     numberDOM = document.getElementById(`cypress-${index}-t2`),
-    //     subtitleDOM = document.getElementById(`cypress-${index}-t3`)
-    //     titleHTML = titleDOM ? titleDOM.innerHTML : "",
-    //     numberHTML = numberDOM ? numberDOM.innerHTML : "",
-    //     subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : ""
+    asideDifference=(index, previousElementData)=>{
+        let titleDOM = document.getElementById(`cypress-${index}-t1`),
+        numberDOM = document.getElementById(`cypress-${index}-t2`),
+        subtitleDOM = document.getElementById(`cypress-${index}-t3`),
+        titleHTML = titleDOM ? titleDOM.innerHTML : "",
+        numberHTML = numberDOM ? numberDOM.innerHTML : "",
+        subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : ""
 
-    //     titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
-    //     numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-    //     titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
-    //     return titleHTML !== this.removeClassesFromHtml(previousElementData.html.title)
-    // }
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+        return titleHTML !== this.removeClassesFromHtml(previousElementData.html.title)
+    }
+
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
@@ -740,13 +741,12 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ELEMENT_ASIDE:
-                // if (this.asideDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                //     // dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
-                //     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                //     config.isSavingElement = true
-                    
-                // }
-                break;
+                console.log("PreviousData",previousElementData);
+                if (this.asideDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
+                    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                    config.isSavingElement = true
+                    updateAsideNumber(previousElementData);
+                }
             break;
 
             case elementTypeConstant.FIGURE:
