@@ -350,6 +350,20 @@ class ElementContainer extends Component {
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }
 
+
+    // asideDifference=(index, previousElementData)=>{
+    //     let titleDOM = document.getElementById(`cypress-${index}-t1`),
+    //     numberDOM = document.getElementById(`cypress-${index}-t2`),
+    //     subtitleDOM = document.getElementById(`cypress-${index}-t3`)
+    //     titleHTML = titleDOM ? titleDOM.innerHTML : "",
+    //     numberHTML = numberDOM ? numberDOM.innerHTML : "",
+    //     subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : ""
+
+    //     titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
+    //     numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+    //     titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+    //     return titleHTML !== this.removeClassesFromHtml(previousElementData.html.title)
+    // }
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
@@ -575,6 +589,7 @@ class ElementContainer extends Component {
         let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "");
         let oldImage = this.props.oldImage;
         oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
+
         // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -583,6 +598,8 @@ class ElementContainer extends Component {
             // (defaultImageUrl !== (previousElementData.figuredata.posterimage && previousElementData.figuredata.posterimage.path)) //PCAT-6815  fixes
         );
     }
+
+    // updateAside
 
     updateOpenerElement = (dataToSend) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
@@ -609,6 +626,7 @@ class ElementContainer extends Component {
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
+        console.log("asideData",asideData, this.props, previousElementData.type,elementType);
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
@@ -720,6 +738,16 @@ class ElementContainer extends Component {
                     }
                 }
                 break;
+
+            case elementTypeConstant.ELEMENT_ASIDE:
+                // if (this.asideDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
+                //     // dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
+                //     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                //     config.isSavingElement = true
+                    
+                // }
+                break;
+            break;
 
             case elementTypeConstant.FIGURE:
                 switch (previousElementData.figuretype) {
