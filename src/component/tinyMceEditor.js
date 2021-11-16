@@ -1374,7 +1374,7 @@ export class TinyMceEditor extends Component {
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
+                        this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
                     }
                 }
                 else if (key === 13) {
@@ -1382,7 +1382,7 @@ export class TinyMceEditor extends Component {
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "ENTER" });
+                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "ENTER" });
                     }
                 } else if (key === 9 && e.shiftKey) {
                     // SHIFT + TAB key press handling for BlockList element
@@ -1394,7 +1394,7 @@ export class TinyMceEditor extends Component {
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "SHIFT+TAB" });
+                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "SHIFT+TAB" });
                     }
                 } else {
                     // TAB key press handling for BlockList element
@@ -1455,12 +1455,12 @@ export class TinyMceEditor extends Component {
     }
 
     createNestedBlockList(){
-        if (!isNestingLimitReached(this.props.index)) {
+        if (!isNestingLimitReached(this.props.index,this.props.asideData)) {
            let blockListData = checkBlockListElement(this.props, "TAB");
             if (blockListData && Object.keys(blockListData).length) {
                 const { parentData, indexToinsert } = blockListData;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
+                this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
             }
         }
     }

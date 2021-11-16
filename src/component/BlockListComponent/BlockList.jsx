@@ -28,6 +28,10 @@ const BlockList = (props) => {
         return manifestList[parentIndex]?.listitemdata?.bodymatter.map((item, index) => {
             let indexT = item?.type === 'manifestlist' ? `${props?.indexTemp}${parentIndex}-${index}-` : '';
             let indexToPass = `${typeof (props?.index) === 'number' ? props?.index : props?.index?.split('-')[0]}-${props?.indexTemp}${parentIndex}-${index}`;
+           
+            asideData.parentManifestListItem = manifestList[parentIndex];
+            asideData.parentManifestList = props.element;
+            asideData.grandParentManifestList = props.grandParentManifestList;
             if (type === "showhide") {
                  indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
             }
@@ -44,6 +48,9 @@ const BlockList = (props) => {
                     handleCommentspanel={props?.handleCommentspanel}
                     placeholder={typeof (props?.index) === 'string' && props?.index?.split('-').length >= 3 ? "Press Shift+Tab to move out" : "Type something..."}
                     asideData={asideData}
+                    currentManifestList={props.element}
+                    parentElement={props?.parentElement}
+                    showHideType={props?.showHideType}
                 />
             )
         })
