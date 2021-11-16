@@ -180,7 +180,8 @@ class ElementPoetry extends Component {
                            columnContentUrn,
                            parentContentUrn
                        },
-                       stanzaIndex : index
+                       stanzaIndex : index,
+                       showHideType: this.props?.showHideType
                    }
                     return (
                         <React.Fragment key={element.id}>                                   
