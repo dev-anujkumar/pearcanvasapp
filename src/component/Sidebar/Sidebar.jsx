@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { conversionElement, setBCEMetadata ,updateBlockListMetadata,updateContainerMetadata} from './Sidebar_Action';
+import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateContainerMetadata, EnableAsideNumbering } from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
@@ -49,7 +49,8 @@ class Sidebar extends Component {
             bceNumberStartFrom: startNumber,
             podOption: false,
             podValue: podwidth,
-            usageType: this.props.activeElement.usageType
+            usageType: this.props.activeElement.usageType,
+            AsideNumber: false
         };
     }
 
@@ -421,6 +422,7 @@ class Sidebar extends Component {
         let attributionsObject = {};
         let attributionsList = [];
         if (this.state.activeElementType) {
+            console.log("active-props",this.props);
             let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
             let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
             if ((primaryOptionList.text && primaryOptionList.text === "Quad Interactive") && (this.props.activeElement.altText && this.props.activeElement.altText != "")) {
@@ -522,6 +524,15 @@ class Sidebar extends Component {
                 return attributions;
             }
 
+            if(this.state.activePrimaryOption === "primary-aside-aside" && this.props.activeElement.elementId){
+                attributions=
+                <div className="asideNumberHeading">
+                <div className="toggleAsideNumber">Label, number, Title</div>
+                <div className={`asideSlider ${this.state.AsideNumber == true ? 'on' : 'off'}`} onBlur={this.handleAsideNumber}></div>
+                </div>
+                return attributions;
+            }
+
             attributions = <div className="attributions">
                 {attributions}
             </div>;
@@ -551,6 +562,12 @@ class Sidebar extends Component {
             this.props.setBCEMetadata('startNumber', e.target.value);
             this.setState({ bceNumberStartFrom: e.target.value })
         }
+    }
+
+    handleAsideNumber=()=>{
+        this.setState=({
+            AsideNumber: true
+        },()=> this.props.EnableAsideNumbering(this.state.AsideNumber));
     }
 
     saveElementAttributes = () => {
@@ -861,6 +878,7 @@ export default connect(
         setBCEMetadata,
         tcmButtonHandler,
         updateContainerMetadata,
-        updateBlockListMetadata
+        updateBlockListMetadata,
+        EnableAsideNumbering
     }
 )(Sidebar);

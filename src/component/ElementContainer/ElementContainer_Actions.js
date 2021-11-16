@@ -749,3 +749,67 @@ export const updateAudioVideoDataForCompare = (oldAudioVideoData) => (dispatch) 
         payload: oldAudioVideoData
     })
 }
+
+// updateStoreAsideNumber=()=>{
+
+// }
+
+// export const updateAsideNumber=()=>(getState)=>{
+//     const parentData = getState().appStore.slateLevelData;
+//     const currentParentData = JSON.parse(JSON.stringify(parentData));
+//     let currentSlateData = currentParentData[config.slateManifestURN];
+//     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
+//     return axios.put(url, dataToSend, {
+//         headers: {
+//             "Content-Type": "application/json",
+//             "PearsonSSOSession": config.ssoToken
+//         }
+//     }).then(res => {
+//         if (currentSlateData?.status === 'approved') {
+//             if (currentSlateData.type === "popup") {
+//                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+//                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+//                 dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
+//             }
+//             else {
+//                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+//             }
+//             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+//             config.conversionInProcess = false
+//             config.savingInProgress = false
+//             config.isSavingElement = false
+//         } else {
+//             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+//             const newParentData = getState().appStore.slateLevelData;
+//             const parsedParentData = JSON.parse(JSON.stringify(newParentData));
+//             let newSlateData = parsedParentData[config.slateManifestURN];
+//             const newParams = {
+//                 dataToUpdate,
+//                 activeElement: getState().appStore.activeElement,
+//                 currentSlateData: newSlateData
+//             }
+//             const updatedStore = dispatch(updateStoreAsideNumber(newParams));
+//             if(updatedStore.currentSlateData){
+//                 parsedParentData[config.slateManifestURN] = updatedStore.currentSlateData;
+//                 dispatch({
+//                     type: AUTHORING_ELEMENT_UPDATE,
+//                     payload: {
+//                         slateLevelData: parsedParentData
+//                     }
+//                 })
+//             }
+//         }
+//         config.conversionInProcess = false
+//         config.savingInProgress = false
+//         config.isSavingElement = false
+//     })
+//         .catch(err => {
+//             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+//             dispatch({ type: ERROR_POPUP, payload: { show: true } })
+//             config.conversionInProcess = false
+//             config.savingInProgress = false
+//             config.isSavingElement = false
+//             console.error(" Error >> ", err)
+//         })
+
+// }

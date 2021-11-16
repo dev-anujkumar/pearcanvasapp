@@ -250,11 +250,12 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
      }
     // ................................XX...........................................
     let data = {};
+     if(figureObj?.html && figureObj?.html?.title){
         figureObj.html.title = figureObj.html.title.replace(/(\r\n|\n|\r)/gm, '');
         data.formattedLabel = getTitleSubtitleModel(figureObj.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
         data.formattedNumber = getTitleSubtitleModel(figureObj.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
         data.formattedTitle = getTitleSubtitleModel(figureObj.html.title, "formatted-subtitle", "figure");
-        console.log("inUtility for data",data);
+     }
     return data;
 }
 

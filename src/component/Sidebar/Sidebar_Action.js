@@ -902,3 +902,10 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
     }
 
 }
+
+export const EnableAsideNumbering = (isNumbered) => (dispatch) => {
+    dispatch({
+        type: CHECK_ASIDE_NUMBER,
+        payload: isNumbered
+    });
+}

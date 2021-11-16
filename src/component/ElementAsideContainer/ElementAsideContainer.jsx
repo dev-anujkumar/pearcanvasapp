@@ -18,6 +18,7 @@ import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, removeUnoClass } from '../../constants/utility';
 import { labelHtmlData } from '../../constants/Element_Constants';
+import {EnableAsideNumbering} from '../../component/Sidebar/Sidebar_Action.js';
 
 // IMPORT - Assets //
 
@@ -29,7 +30,6 @@ class ElementAsideContainer extends Component {
         this.state = {
             sectionFocus: false,
             btnClassName: ""
-
         }
         this.asideRef = React.createRef();
     }
@@ -500,6 +500,9 @@ class ElementAsideContainer extends Component {
  */
     renderTitleField=(asideHtmlData)=>{
         console.log("This.props.element",this.props.element);
+        let isNumberEnabled= this.props?.element?.html?.title ? true : false;
+        EnableAsideNumbering(isNumberEnabled);
+        if(this.props.isAsideNumber|| true){
         return(
             <div className="asideHeader">
                 <header className="figure-header new-figure-image-header">
@@ -518,6 +521,10 @@ class ElementAsideContainer extends Component {
                 </div>
                 </div>
         )
+        }
+        else{
+            return null;
+        }
     }
 
 
@@ -548,19 +555,6 @@ class ElementAsideContainer extends Component {
         }
         if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.remove('transition-none');
-        }
-        if (id === '0-0' && labelElement?.innerHTML) {
-            let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
-            if (dropdownData.indexOf(labelElement?.innerHTML.toLowerCase()) > -1) {
-                let { figureLabelValue } = this.state;
-                let labelElementText = labelElement?.innerHTML.toLowerCase();
-                figureLabelValue = labelElementText.charAt(0).toUpperCase() + labelElementText.slice(1);
-                this.setState({ figureLabelValue: figureLabelValue });
-            }
-        }
-        if (labelElement?.classList.contains('actionPU')) {
-            let buttonIndex = this.getIdOfButton(id);
-            this.toggleHyperlinkEditable('hide', buttonIndex);
         }
     }
 
@@ -659,6 +653,7 @@ class ElementAsideContainer extends Component {
      */
     render() {
         const { element } = this.props;
+        console.log("element",element);
         let asideHtmlData = getLabelNumberTitleHTML(element);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
@@ -678,7 +673,8 @@ ElementAsideContainer.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        searchUrn: state.searchReducer.searchTerm
+        searchUrn: state.searchReducer.searchTerm,
+        isAsideNumber: state.appStore.isAsideNumber
     };
 };
 
