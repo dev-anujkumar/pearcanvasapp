@@ -240,7 +240,7 @@ class FigureUserInterface extends Component {
 
     generateUpdateAssetJSX = (element, assetTitleText, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension,interactiveformat) => {
         const approval = this.props?.assessmentReducer[element.figuredata.interactiveid]?.assessmentStatus === "final";
-        const buttonTitle = approval?"Approved":"UnApproved";
+        const buttonTitle = approval?"Approved":"Unapproved";
         const smallButtonClass = approval? "small_rounded_btn": "small_rounded_btn2";
         const smallButtonIcon = approval? approvedIcon: unApprovedIcon;
         return (
