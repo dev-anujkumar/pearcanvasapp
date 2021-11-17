@@ -976,7 +976,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
 
-    if (parentElement?.parent?.type === SHOWHIDE) { // create Aside/CG in S/H || create elements in aside in s/h
+    if (parentElement?.parent?.type === SHOWHIDE && (parentElement?.element?.type !== POETRY_ELEMENT)) { // create Aside/CG in S/H || create elements in aside in s/h
         const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP]
         const elem = containerElement?.showHideObj?.currentElement?.type ? containerElement?.showHideObj?.currentElement : asideData;
         if ((containersInSH.includes(elem?.type)) || (containersInSH.includes(elem?.type) && asideData?.parent?.type === SHOWHIDE)) {
@@ -1056,6 +1056,12 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             //let grandParentTag = tag.grandParent.split(":")[0];
             elementTag = `${poetryParentURN?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
+        } 
+        else if (poetryAsideData?.type === SHOWHIDE) {
+            let section = poetryAsideData?.sectionType
+            let showHideSection = getShowHideTag(section);
+            elementTag = `SH:${showHideSection}:${tag.parentTag}:${tag.childTag}`
+            elementId = `${poetryAsideData.id}+${eleId.parentId}+${eleId.childId}`
         }
     }
 
@@ -1519,6 +1525,9 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
         }
         
         let parentId = parentElem && parentElem.id ? parentElem.id : parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "";
+        if(asideData?.type === "poetry" && asideData?.grandParent?.asideData?.type === SHOWHIDE){
+            parentId = parentElem && parentElem?.grandParent?.asideData?.id
+        }
         let element = bodymatter.find(item => item.id == parentId);
         let eleType = type === SECTION_BREAK ? SECTION_BREAK : parentUrn && parentUrn.elementType ?parentUrn.elementType: "";
         let popupElem = parentElement && parentElement.type === POPUP_ELEMENT ? parentElement : undefined
@@ -1584,6 +1593,11 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
         if (asideData?.parent?.type === SHOWHIDE && (asideData?.element?.type === CITATION_GROUP || asideData?.element?.type === ELEMENT_ASIDE)) {
             element.interactivedata[asideData?.parent?.showHideType].map((ele) => {
                 parentData.childStatus = ele.id === asideData?.element?.id ? ele.status : undefined;
+            })
+        }
+        if(asideData?.type === "poetry" && asideData?.grandParent?.asideData?.type === SHOWHIDE){
+            element.interactivedata[asideData?.grandParent?.asideData?.sectionType].map((ele) => {
+                parentData.childStatus = ele.id === asideData?.id ? ele.status : undefined;
             })
         }
     }
