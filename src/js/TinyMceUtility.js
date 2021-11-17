@@ -200,11 +200,16 @@ export const isNestingLimitReached = (index,asideData) => {
  * @returns {Boolean} return whether selected element is inside blocklist or not
  */
 export const isElementInsideBlocklist = (activeElement, slateData) => {
-    const { index } = activeElement;
+    const { index,data } = activeElement;
     if (slateData && Object.values(slateData).length && index) {
         const { contents } = Object.values(slateData)[0];
         if (contents && contents?.bodymatter && contents?.bodymatter?.length && typeof index === 'string' && index.includes('-')) {
             const indexes = index.split("-");
+            let parentElement = data?.asideData?.parent;
+
+            if (parentElement && parentElement.type === "showhide" && data.asideData.parentManifestListItem && data.asideData.parentManifestList) {
+                return true;
+            }
             if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
                 return true;
             }
