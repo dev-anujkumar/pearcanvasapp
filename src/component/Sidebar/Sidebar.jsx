@@ -527,12 +527,13 @@ class Sidebar extends Component {
             }
 
             if(this.state.activePrimaryOption === "primary-aside-aside" && this.props.activeElement.elementId){
-                attributions=
+                attributions=<>
                 <div className="asideNumberHeading">
                 <div className="toggleAsideNumber">Label, Number, Title</div>
                 <label className="switch"><input type="checkbox" checked={(this.state.asideNumber || this.state.asideNumber === false) ? this.state.asideNumber : false} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleAsideNumber} />
                             <span className="slider round"></span></label>
                 </div>
+                </>
                 return attributions;
             }
 

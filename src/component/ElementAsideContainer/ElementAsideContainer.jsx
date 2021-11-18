@@ -517,23 +517,20 @@ class ElementAsideContainer extends Component {
             <div className="asideHeader">
                 <header className="figure-header new-figure-image-header">
                         <div className='image-label'>
-                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t1`} placeholder="Label" tagName={'h4'} className={" figureLabel "} model={asideHtmlData?.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}  parentElement={this.props.parentElement} showHideType={this.props.showHideType}/>
+                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label" tagName={'h4'} className={" figureLabel "} model={asideHtmlData?.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}  parentElement={this.props.parentElement} showHideType={this.props.showHideType}/>
                             <label className={checkHTMLdataInsideString(asideHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label</label>
                         </div>
                     <div className="floating-number-group">
-                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t2`} placeholder="Number" tagName={'h4'} className={"figureNumber"} model={asideHtmlData?.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={"figureNumber"} model={asideHtmlData?.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                         <label className={checkHTMLdataInsideString(asideHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
                     </div>
                 </header>
                 <div className="floating-title-group">
-                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t3`} placeholder="Title" tagName={'h4'} className={"figureTitle"} model={asideHtmlData?.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={"figureTitle"} model={asideHtmlData?.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                     <label className={checkHTMLdataInsideString(asideHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
                 </div>
                 </div>
         )
-        }
-        else{
-            return null;
         }
     }
 
@@ -546,15 +543,6 @@ class ElementAsideContainer extends Component {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
         } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
             labelElement?.nextElementSibling?.classList?.add('transition-none');
-        }
-        if (this.props.element.figuretype === 'interactive') {
-            this.props.updateSmartLinkDataForCompare(this.props.element.figuredata);
-        } else if (this.props.element.figuretype === 'audio' || this.props.element.figuretype === 'video') {
-            this.props.updateAudioVideoDataForCompare(this.props.element.figuredata);
-        }
-        if (!labelElement?.classList.contains('actionPU')) {
-            let buttonIndex = this.getIdOfButton(id);
-            this.toggleHyperlinkEditable('hide', buttonIndex);
         }
     }
 
@@ -663,7 +651,7 @@ class ElementAsideContainer extends Component {
      */
     render() {
         const { element } = this.props;
-        console.log("element",element);
+        console.log("");
         let asideHtmlData = getLabelNumberTitleHTML(element);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
