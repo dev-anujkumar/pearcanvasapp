@@ -237,6 +237,13 @@ export const deleteFromStore = (params) => {
                 if (element.id === parentUrn.manifestUrn) {
                     element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
                 }
+            } else if (asideData?.parent?.type === 'showhide' && element.id === asideData?.parent?.id && asideData?.type === "manifestlist") {
+                let section = asideData?.parent?.showHideType;
+                const indexes = asideData?.index?.toString()?.split("-") || [];
+                if (section && indexes.length >= 3) {
+                    let blElemInSh = element.interactivedata[section][indexes[2]];
+                    deleteBlockListElement(elmId, blElemInSh);
+                }
             } else if (element?.type === "manifestlist") {
                 deleteBlockListElement(elmId, element)
             }
@@ -258,6 +265,7 @@ export const deleteFromStore = (params) => {
  * @param {Object} elementData 
  */
 export const deleteBlockListElement = (elementId, elementData) => {
+    console.log("############", elementData)
     if (elementData?.listdata?.bodymatter) {
         elementData.listdata?.bodymatter.forEach((listData, index) => {
             if (listData.id === elementId) {
