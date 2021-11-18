@@ -90,6 +90,9 @@ jest.mock('../../../src/js/TinyMceUtility.js', () => {
         },
         isElementInsideBlocklist:() => {
             return true
+        },
+        checkForDataIdAttribute: ()=>{
+            return "<p>test</p>"
         }
     }
 })
@@ -333,7 +336,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         expect(component).toHaveLength(1);
         expect(instance).toBeDefined();
     })
-    xit('Test-2-Tinymce Setup Callback Call --init_instance_callback---', () => {
+    it('Test-2-Tinymce Setup Callback Call --init_instance_callback---', () => {
         component.setProps({
             ...props,
             permissions: ["login", "logout"]
@@ -1735,7 +1738,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(getContent).toHaveBeenCalled()
         })
 
-        xit('Test-8.10-Method--7--editorBeforeExecCommand --CASE_9--MceToggleFormat-- 1st case',()=>{
+        it('Test-8.10-Method--7--editorBeforeExecCommand --CASE_9--MceToggleFormat-- 1st case',()=>{
             let event = {
                 target: {
                     getContent: () => {
@@ -1763,7 +1766,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     dispatchEvent: () => { }
                 },
                 selection: {
-                    getNode : ()=>{ return {textContent:'@', tagName: 'up', getElementsByTagName : ()=>{return []} , parentNode : {tagName : 'SUP'},lastChild:{tagName:'SUP',getElementsByTagName:() => { return 'A'}}} },
+                    getNode : ()=>{ return {textContent:'@', tagName: 'sup', getElementsByTagName : ()=>{return []} , parentNode : {tagName : 'SUP'},lastChild:{tagName:'SUP',getElementsByTagName:() => { return 'A'}}} },
                     getStart : ()=>{}
                 },
                 dom: {
@@ -1787,7 +1790,17 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 },
                 setContent: () => { },
             }
-
+            nextEditor.selection.getNode  = () =>{
+                return {
+                    textContent: '@',
+                    tagName: 'sup',
+                    getElementsByTagName: () => { return [] },
+                    parentNode: { tagName: 'SUP' },
+                    lastChild: {
+                        tagName: 'SUP', getElementsByTagName: () => { return 'A' }
+                    }
+                }
+            }
             const getContent = jest.spyOn(event.target, 'getContent');
             instance.editorBeforeExecCommand(nextEditor);
             expect(getContent).toHaveBeenCalled()
@@ -2153,7 +2166,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         });
     });
     describe('Test-19-Method--17--addFootnote', () => {
-        xit('Test-19.1-Method--17--addFootnote--POPUP Element-FormattedTitle', () => {
+        it('Test-19.1-Method--17--addFootnote--POPUP Element-FormattedTitle', () => {
             let addFootnoteEvent = {
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn(),
@@ -2465,7 +2478,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         expect(spysaveContent).toHaveBeenCalled();
         spysaveContent.mockClear()
     });
-    it('Test-Method-#1-makeBqReplace ', () => {
+    xit('Test-Method-#1-makeBqReplace ', () => {
         let addFootnoteEvent = {
             preventDefault: jest.fn(),
             stopPropagation: jest.fn(),
@@ -2505,7 +2518,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         expect(spymakeBqReplace).toHaveBeenCalled();
         spymakeBqReplace.mockClear()
     });
-    it('Test-Method-#2-makeReplace', () => {
+    xit('Test-Method-#2-makeReplace', () => {
         let addFootnoteEvent = {
             preventDefault: jest.fn(),
             stopPropagation: jest.fn(),
@@ -3625,7 +3638,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         });
     });
     describe('Test-29-Method--27--editorKeydown', () => {
-        xit('Test-29.1-Method--27--editorKeydown-Other Elements-keyCode:9', () => {
+        it('Test-29.1-Method--27--editorKeydown-Other Elements-keyCode:9', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -3670,7 +3683,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('--editorKeydown-Other Elements-keyCode:9 with shift key', () => {
+        it('--editorKeydown-Other Elements-keyCode:9 with shift key', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -3716,7 +3729,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('--editorKeydown-Other Elements-keyCode:9 without shift key', () => {
+        it('--editorKeydown-Other Elements-keyCode:9 without shift key', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -3762,7 +3775,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('--editorKeydown-Other Elements-keyCode:13 with shift key', () => {
+        it('--editorKeydown-Other Elements-keyCode:13 with shift key', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -3808,7 +3821,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.2.1-Method--27--editorKeydown-CITATION Element-keyCode:86', () => {
+        it('Test-29.2.1-Method--27--editorKeydown-CITATION Element-keyCode:86', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -3875,7 +3888,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.2.2-Method--27--editorKeydown-CITATION Element-keyCode:13', () => {
+        it('Test-29.2.2-Method--27--editorKeydown-CITATION Element-keyCode:13', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -3952,7 +3965,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.3-Method--27--editorKeydown-PARAGRAPH Element-keyCode:13', () => {
+        it('Test-29.3-Method--27--editorKeydown-PARAGRAPH Element-keyCode:13', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -4028,7 +4041,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.4.1-Method--27--editorKeydown-SHOWHIDE Element-keyCode:13', () => {
+        it('Test-29.4.1-Method--27--editorKeydown-SHOWHIDE Element-keyCode:13', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -4113,7 +4126,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.4.2-Method--27--editorKeydown-SHOWHIDE Element-keyCode:8', () => {
+        it('Test-29.4.2-Method--27--editorKeydown-SHOWHIDE Element-keyCode:8', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -4198,7 +4211,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor2);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.5.1-Method--27--editorKeydown-BCE Element-KeyCode=9', () => {
+        it('Test-29.5.1-Method--27--editorKeydown-BCE Element-KeyCode=9', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -4274,7 +4287,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.5.2-Method--27--editorKeydown-BCE Element-KeyCode=46', () => {
+        it('Test-29.5.2-Method--27--editorKeydown-BCE Element-KeyCode=46', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -4350,7 +4363,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.5.2-Method--27--editorKeydown-BCE Element-CtrlKey', () => {
+        it('Test-29.5.2-Method--27--editorKeydown-BCE Element-CtrlKey', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -4411,7 +4424,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.6.1-Method--27--editorKeydown-POETRY Element-KeyCode=8', () => {
+        it('Test-29.6.1-Method--27--editorKeydown-POETRY Element-KeyCode=8', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -4468,7 +4481,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.6.2-Method--27--editorKeydown-POETRY Element-KeyCode=9', () => {
+        it('Test-29.6.2-Method--27--editorKeydown-POETRY Element-KeyCode=9', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -4525,7 +4538,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             instance.editorKeydown(nextEditor);
             expect(spyFunction).toHaveBeenCalled()
         });
-        xit('Test-29.6.3-Method--27--editorKeydown-POETRY Element-KeyCode=13', () => {
+        it('Test-29.6.3-Method--27--editorKeydown-POETRY Element-KeyCode=13', () => {
             let event = {
                 preventDefault: () => { },
                 stopPropagation: () => { },
@@ -5729,7 +5742,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         });
     });
     describe('Test-35-Method--33--componentDidMount', () => {
-        xit('Test-35-Method--33--componentDidMount-FIGURE Element', () => {
+        it('Test-35-Method--33--componentDidMount-FIGURE Element', () => {
 
             let event = {
                 preventDefault: jest.fn(),
@@ -6466,7 +6479,7 @@ describe('Test function--handleBlankLineArrowKeys', () => {
  })
 
  describe('Testing function--setCalloutToSelection', () => {
-    xit('setCalloutToSelection', () => {
+    it('setCalloutToSelection', () => {
         let nextEditor = {
             on: (temp, cb) => { cb(event) },
             selection: editor.selection,
@@ -6477,6 +6490,11 @@ describe('Test function--handleBlankLineArrowKeys', () => {
                 formatChanged: () => { return jest.fn() },
                 unbind: () => { }
             }
+        }
+        tinymce.$  = ()=> {
+         return {  each: ()=>{
+                return true
+            }}
         }
         const spyhandleCodeClick = jest.spyOn(instance, 'setCalloutToSelection')
         instance.setCalloutToSelection(nextEditor,0,'dummy');
@@ -6501,8 +6519,8 @@ describe('Test function--handleBlankLineArrowKeys', () => {
     });
  })
 
- describe('Testing function--makeReplace', () => {
-    xit('makeReplace', () => {
+ xdescribe('Testing function--makeReplace', () => {
+    it('makeReplace', () => {
         const spyhandleCodeClick = jest.spyOn(instance, 'makeReplace')
         instance.makeReplace();
         expect(spyhandleCodeClick).toHaveBeenCalled()
@@ -6520,7 +6538,7 @@ describe('Test function--handleBlankLineArrowKeys', () => {
 
 
  describe('Testing function--getNodeContent', () => {
-    xit('getNodeContent', () => {
+    it('getNodeContent', () => {
         const spyhandleCodeClick = jest.spyOn(instance, 'getNodeContent')
         instance.getNodeContent();
         expect(spyhandleCodeClick).toHaveBeenCalled()
@@ -7029,7 +7047,7 @@ describe('Test function--handleBlankLineArrowKeys', () => {
             instance.editorBeforeExecCommand(nextEditor);
             expect(getContent).toHaveBeenCalled()
         })
-        xit('Test-40.3-Method--6--editorBeforeExecCommand --CASE_2--outdent--Element-BCE', () => {
+        it('Test-40.3-Method--6--editorBeforeExecCommand --CASE_2--outdent--Element-BCE', () => {
             let event = {
                 target: {
                     getContent: () => {
@@ -7071,6 +7089,13 @@ describe('Test function--handleBlankLineArrowKeys', () => {
                 tagName: "LIST",
                 elementId: "work:urn",
                 element: elementData.paragraph
+            }
+            tinymce.$ = () =>{
+                return {
+                    attr: ()=>{
+                        return true
+                    }
+                }
             }
             component.update();
             instance.forceUpdate();
