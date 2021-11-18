@@ -55,6 +55,10 @@ describe('Testing FigureUserInterface component', () => {
             launchAlfrescoPopup: true,
             editor: true,
             Permission: false
+        },assessmentReducer:{
+            'id': {
+                'assessmentStatus':'final'
+            }
         },
         appStore: {
             figureDropdownData: [],
