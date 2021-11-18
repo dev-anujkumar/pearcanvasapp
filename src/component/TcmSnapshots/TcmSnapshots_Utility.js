@@ -416,7 +416,7 @@ const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,item, co
     prepareTcmSnapshots(item, actionStatus, newContainerElement, "", index, "", operationType);
 }
 
-const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn }) => {
+const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn, showHideObj }) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
    const poetryElement = {
         element: wipData
@@ -436,7 +436,7 @@ const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPopupSlat
     wipData.contents.bodymatter.map((item) => {
         elementId.childId = item.id;
         tag.childTag = fetchElementsTag(item); 
-        const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn });
+        const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn, showHideObj });
         prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
     })
 }
@@ -966,7 +966,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
  * @param {String} sectionId - Urn for section break
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
-export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}) => {
+export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}, parentPTObj) => {
     const { asideData, parentUrn, showHideObj } = containerElement
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
@@ -1057,11 +1057,13 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementTag = `${poetryParentURN?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
         } 
-        else if (poetryAsideData?.type === SHOWHIDE) {
-            let section = poetryAsideData?.sectionType
+        else if (showHideObj?.element?.type === SHOWHIDE || poetryAsideData?.type === SHOWHIDE) {
+            const showSectionType = showHideObj?.sectionType ? showHideObj?.sectionType : showHideObj?.element.sectionType
+            let section = showSectionType ? showSectionType : poetryAsideData?.sectionType;
+            let shId = showHideObj?.element?.id ? showHideObj?.element?.id : poetryAsideData?.id;
             let showHideSection = getShowHideTag(section);
             elementTag = `SH:${showHideSection}:${tag.parentTag}:${tag.childTag}`
-            elementId = `${poetryAsideData.id}+${eleId.parentId}+${eleId.childId}`
+            elementId = `${shId}+${eleId.parentId}+${eleId.childId}`
         }
     }
 
@@ -1714,6 +1716,22 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         }
 
     }
+     // poetry inside show hide versioning
+    if((containerElement?.poetryData?.element?.type === "poetry" &&  containerElement?.poetryData?.parent?.type === SHOWHIDE) || (containerElement?.poetryData?.element?.type === "poetry" && containerElement?.poetryData?.element?.grandParent?.asideData?.type === SHOWHIDE) ){
+        if (versionStatus?.parentStatus === "approved") {
+            const grandParent = containerElement?.poetryData?.parent ?  containerElement?.poetryData?.parent : containerElement?.poetryData?.element?.grandParent?.asideData
+            let newShUrn = await getLatestVersion(grandParent?.contentUrn);
+            let updatedId = containerElement?.poetryData?.parent ? containerElement?.poetryData?.parent?.id : containerElement?.poetryData?.element?.grandParent?.asideData?.id
+            updatedId = newShUrn;
+        }
+        if (containerElement?.poetryData?.element?.status === "approved") {
+            const poetryUrn = containerElement?.poetryData?.contentUrn ? containerElement?.poetryData?.contentUrn : containerElement?.poetryData?.element?.contentUrn
+            let newElemUrn = await getLatestVersion(poetryUrn);
+            containerElement.poetryData.element.id = newElemUrn
+            containerElement.poetryData.id = newElemUrn;
+        }
+    }
+
     // also check if status is approved
     // only then go inside this
     if(
