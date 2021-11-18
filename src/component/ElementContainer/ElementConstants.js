@@ -85,7 +85,7 @@ export const LABELS = {
     "narrative-link": "Pop",
     "workedexample": "WE",
     "poetry": "PE",
-    "mmi":"QuaD",
+    "mmi":"Quad",
     "mmi-elm":"ELM",
     "element-dialogue": "PS",
     "stagedirection": "SD",
