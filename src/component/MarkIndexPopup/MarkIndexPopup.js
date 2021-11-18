@@ -107,7 +107,7 @@ componentWillUnmount() {
     let crossReferences = "";
     if(crossRefValues){
       let crossRefArray = crossRefValues.split(',');
-      crossReferences = crossRefArray.map(value => `<span>${value}</span>`);
+      crossReferences = crossRefArray.map(value => `<span>${value.replace('&nbsp;', ' ')}</span>`);
       crossReferences = `<p>${crossReferences.join('')}</p>`;
     }
     return {crossReferences, crossRefValues};

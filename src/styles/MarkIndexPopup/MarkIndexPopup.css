@@ -233,7 +233,8 @@
     top: 33px;
     font-size: 14px;
     display: block;
-    color: #ADADAD; 
+    color: #ADADAD;
+    cursor: text;
 }
 
 .hide-cross-ref-label{
