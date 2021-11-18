@@ -18,7 +18,6 @@ import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, removeUnoClass } from '../../constants/utility';
 import { labelHtmlData } from '../../constants/Element_Constants';
-import {EnableAsideNumbering} from '../../component/Sidebar/Sidebar_Action.js';
 
 // IMPORT - Assets //
 
@@ -508,6 +507,7 @@ class ElementAsideContainer extends Component {
  * 
  */
     renderTitleField = (asideHtmlData) => {
+        console.log('this.state.showTitle',this.state.showTitle,this.props.isAsideNumber)
         if (this.state.showTitle) {
             return (
                 <div className="asideHeader">
@@ -629,7 +629,6 @@ class ElementAsideContainer extends Component {
   */
 
     renderAside = (designtype,asideHtmlData) => {
-        // let figureHtmlData = getLabelNumberTitleHTML(model);
         return (
             <React.Fragment>
                 {this.renderTitleField(asideHtmlData)}
@@ -647,7 +646,6 @@ class ElementAsideContainer extends Component {
      */
     render() {
         const { element } = this.props;
-        console.log("");
         let asideHtmlData = getLabelNumberTitleHTML(element);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
