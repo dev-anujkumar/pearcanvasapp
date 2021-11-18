@@ -365,6 +365,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
            activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
             
         }
+        if(newElementData.primaryOption=='primary-aside-aside'){
+            const hasAsideNumber = (res.data?.html?.title && res.data.html.title !== "<p class='paragraphNumeroUno'></p>") ? true : false
+            activeElementObject.asideNumber= hasAsideNumber
+        }
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -903,9 +907,9 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
 
 }
 
-export const EnableAsideNumbering = (isNumbered) => (dispatch) => {
+export const enableAsideNumbering = (isNumbered) => (dispatch) => {
     dispatch({
-        type: CHECK_ASIDE_NUMBER,
+        type: 'CHECK_ASIDE_NUMBER',
         payload: isNumbered
     });
 }

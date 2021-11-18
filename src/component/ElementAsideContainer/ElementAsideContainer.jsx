@@ -29,11 +29,20 @@ class ElementAsideContainer extends Component {
         super(props);
         this.state = {
             sectionFocus: false,
-            btnClassName: ""
+            btnClassName: "",
+            showTitle: false
         }
         this.asideRef = React.createRef();
     }
 
+    static getDerivedStateFromProps(nextProps){
+        console.log('nextProps.isAsideNumber',nextProps.isAsideNumber)
+        if(nextProps && nextProps.isAsideNumber){
+            return {
+                showTitle : nextProps.isAsideNumber
+            }
+        }
+    }
     handleFocus = (e) => {
         // if(e.target && !(e.target.classList.contains('elemDiv-hr') )){
         //     return false;
@@ -500,9 +509,10 @@ class ElementAsideContainer extends Component {
  */
     renderTitleField=(asideHtmlData)=>{
         console.log("This.props.element",this.props.element);
-        let isNumberEnabled= this.props?.element?.html?.title ? true : false;
-        EnableAsideNumbering(isNumberEnabled);
-        if(this.props.isAsideNumber|| true){
+        // let isNumberEnabled= this.props?.element?.html?.title ? true : false;
+        // EnableAsideNumbering(isNumberEnabled);
+        console.log('isAsideNumber',this.props.isAsideNumber)
+        if(this.state.showTitle){
         return(
             <div className="asideHeader">
                 <header className="figure-header new-figure-image-header">
