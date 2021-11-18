@@ -525,11 +525,12 @@ class Sidebar extends Component {
             }
 
             if(this.state.activePrimaryOption === "primary-aside-aside" && this.props.activeElement.elementId){
-                attributions=
+                attributions=<>
                 <div className="asideNumberHeading">
                 <div className="toggleAsideNumber">Label, number, Title</div>
                 <div className={`asideSlider ${this.state.AsideNumber == true ? 'on' : 'off'}`} onBlur={this.handleAsideNumber}></div>
                 </div>
+                </>
                 return attributions;
             }
 

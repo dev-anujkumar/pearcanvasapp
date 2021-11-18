@@ -750,10 +750,102 @@ export const updateAudioVideoDataForCompare = (oldAudioVideoData) => (dispatch) 
     })
 }
 
+const updateAsideNumberInStore = (updateParams, elementEntityUrn = "") => (dispatch) => {
+    const {
+        dataToUpdate,
+        activeElement,
+        currentSlateData,
+        versionedElement
+    } = updateParams;
+    const { index, elementType } = activeElement;
+    let tmpIndex = typeof index === 'number' ? index : index.split("-")
+     let indexesLen = tmpIndex.length
+     let newBodymatter = currentSlateData.contents.bodymatter
+     let updatedElement = {}
+    if (versionedElement) {
+        return versionedElement
+    } else if (elementType == "poetry") {
+        if(typeof tmpIndex === 'number'){
+            currentSlateData.contents.bodymatter[tmpIndex].numberedline = dataToUpdate.isNumbered
+            currentSlateData.contents.bodymatter[tmpIndex].startlinenumber = dataToUpdate.startNumber
+            updatedElement = currentSlateData.contents.bodymatter[tmpIndex]
+        } else {
+            switch (indexesLen) {
+                case 2:     /** Toggle use line of PE inside WE/Aside */
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].numberedline = dataToUpdate.isNumbered
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].startlinenumber = dataToUpdate.startNumber
+                    updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]]
+                    break;
+    
+                case 3:      /** Toggle Use Line of PE inside multicolumn/ WE section break*/
+                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]]
+                    } else {
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]]
+                    }
+                   break;
+    }
+        }
+    } 
+        elementEntityUrn = updatedElement?.contentUrn
+
+        if (typeof tmpIndex === 'number') {
+            currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
+        } else {
+            switch (indexesLen) {
+                case 1:
+                    newBodymatter[tmpIndex[0]] = updatedElement
+                    break;
+                case 2:
+                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]] = updatedElement
+                    break;
+                case 3:
+                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
+                    } 
+                    if (newBodymatter[tmpIndex[0]].type == "element-aside") {
+                        newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]] = updatedElement
+                    }
+                    break;
+            }
+        }
+
+    return {
+       elementEntityUrn, currentSlateData
+    }
+}
+
 export const updateAsideNumber = (previousData) => (getState) => {
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
+    let activeElement=getState().appStore.activeElement;
+    let elementEntityUrn = "",dataToUpdate
+    dataToUpdate=activeElement.html.title
+    const updateParams = {
+        dataToUpdate,
+        activeElement: activeElement,
+        currentSlateData
+    }
+    const updatedData = dispatch(updateAsideNumberInStore(updateParams,""))
+    if(updatedData?.elementEntityUrn){
+        elementEntityUrn = updatedData.elementEntityUrn
+    }
+    let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
+    currentParentData[config.slateManifestURN] = updatedSlateLevelData
+    dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: currentParentData//{[config.slateManifestURN] : updatedSlateLevelData }
+        }
+    })
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+    config.conversionInProcess = true
+    config.isSavingElement = true
     let dataToSend;
     dataToSend = {
         id: previousData.id,

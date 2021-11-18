@@ -352,9 +352,9 @@ class ElementContainer extends Component {
 
 
     asideDifference=(index, previousElementData)=>{
-        let titleDOM = document.getElementById(`cypress-${index}-t1`),
-        numberDOM = document.getElementById(`cypress-${index}-t2`),
-        subtitleDOM = document.getElementById(`cypress-${index}-t3`),
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+        numberDOM = document.getElementById(`cypress-${index}-1`),
+        subtitleDOM = document.getElementById(`cypress-${index}-2`),
         titleHTML = titleDOM ? titleDOM.innerHTML : "",
         numberHTML = numberDOM ? numberDOM.innerHTML : "",
         subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : ""
@@ -362,7 +362,7 @@ class ElementContainer extends Component {
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
         titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
-        return titleHTML !== this.removeClassesFromHtml(previousElementData.html.title)
+        return titleHTML !== this.removeClassesFromHtml(previousElementData?.html?.title)
     }
 
     /**
@@ -627,7 +627,7 @@ class ElementContainer extends Component {
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
-        console.log("asideData",asideData, this.props, previousElementData.type,elementType);
+        console.log("asideData",this.props, previousElementData.type,elementType);
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
@@ -741,8 +741,8 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ELEMENT_ASIDE:
-                console.log("PreviousData",previousElementData);
-                if (this.asideDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
+                console.log("PreviousData",previousElementData, this.props.index);
+                if (this.asideDifference(this.props.index, previousElementData) || !previousElementData.hasOwnProperty("html")) {
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
                     updateAsideNumber(previousElementData);
