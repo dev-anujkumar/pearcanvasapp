@@ -142,7 +142,7 @@ export const checkBlockListElement = (data, keypressed) => {
         const { contents } = Object.values(slateLevelData)[0];
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
             let indexes = index.split("-");
-            let parentElement = data.asideData.parent;
+            let parentElement = data?.asideData?.parent;
 
             if (parentElement && parentElement.type === "showhide") {
                 let indexToinsert = null;
