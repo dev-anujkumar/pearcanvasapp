@@ -131,9 +131,7 @@ class Interactive extends React.Component {
      /*** @description This function is to show Approved/Unapproved Status on interative */
     showElmVersionStatus = () => {
         let elmInt =  this.props?.assessmentReducer[this.state.itemID];
-        // const approveText = elmInt.assessmentStatus == 'final' ? "Approved" : "Unapproved";
-        // return elmInt.assessmentStatus === 'final';
-        if (elmInt.assessmentStatus==='final') {
+        if (elmInt) {
             return (<ElmUpdateButton
                 elmAssessment={elmInt}
                 updateElmVersion={this.updateElm}
@@ -348,7 +346,7 @@ class Interactive extends React.Component {
       
         let figureHtmlData = getLabelNumberTitleHTML(element);
 
-            return <FigureUserInterface interactiveformat={this.props.model.figuredata.interactiveformat} deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} updateElm={() => this.updateElm()}/>
+            return <FigureUserInterface elmInteractiveTitle={this.state.interactiveTitle} interactiveformat={this.props.model.figuredata.interactiveformat} deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} updateElm={() => this.updateElm()}/>
     }
 
     /**
