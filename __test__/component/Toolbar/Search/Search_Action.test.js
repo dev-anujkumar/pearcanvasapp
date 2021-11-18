@@ -3,7 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import MockAdapter from 'axios-mock-adapter';
-import * as actions from '../../../../canvas-stabilization/src/component/Toolbar/Search/Search_Action';
+import * as actions from '../../../../src/component/Toolbar/Search/Search_Action.js';
 import axios from 'axios';
 //import config from './../../../config/config';
 import { fetchSlateData } from './../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
