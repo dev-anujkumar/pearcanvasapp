@@ -149,7 +149,7 @@ export const checkBlockListElement = (data, keypressed) => {
                 let parentData = {};
                 if (keypressed === "TAB") {
                     indexToinsert = Number(indexes[indexes.length - 1]) + 1;
-                    parentData = data.asideData.parentManifestListItem;
+                    parentData = data.parentManifestListItem;
                 }
                 else if (keypressed === 'ENTER') {
                     indexToinsert = Number(indexes[indexes.length - 2]) + 1;

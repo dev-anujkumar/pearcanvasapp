@@ -29,7 +29,7 @@ const BlockList = (props) => {
             let indexT = item?.type === 'manifestlist' ? `${props?.indexTemp}${parentIndex}-${index}-` : '';
             let indexToPass = `${typeof (props?.index) === 'number' ? props?.index : props?.index?.split('-')[0]}-${props?.indexTemp}${parentIndex}-${index}`;
            
-            asideData.parentManifestListItem = manifestList[parentIndex];
+            let parentManifestListItem = manifestList[parentIndex];
             asideData.parentManifestList = props.element;
             asideData.grandParentManifestList = props.grandParentManifestList;
             if (type === "showhide") {
@@ -51,6 +51,7 @@ const BlockList = (props) => {
                     currentManifestList={props.element}
                     parentElement={props?.parentElement}
                     showHideType={props?.showHideType}
+                    parentManifestListItem={parentManifestListItem}
                 />
             )
         })
