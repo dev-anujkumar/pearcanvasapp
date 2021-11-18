@@ -11,9 +11,7 @@
   cursor: pointer;
 }
 .index-container{
-    width:240px;
     height: 100%;
-    border-left:1px solid #eee;
 }
 .index-setting{
     display: flex;
@@ -230,7 +228,7 @@
 .show-cross-ref-label{
     position: absolute;
     padding-left: 12px;
-    top: 33px;
+    top: 30px;
     font-size: 14px;
     display: block;
     color: #ADADAD;
@@ -239,4 +237,9 @@
 
 .hide-cross-ref-label{
     display: none;
+}
+
+.marked-index-outer-div{
+    height: 450px;
+    background-color: #fff;
 }

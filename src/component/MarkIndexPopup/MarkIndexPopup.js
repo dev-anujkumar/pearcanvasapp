@@ -107,7 +107,7 @@ componentWillUnmount() {
     let crossReferences = "";
     if(crossRefValues){
       let crossRefArray = crossRefValues.split(',');
-      crossReferences = crossRefArray.map(value => `<span>${value.replace('&nbsp;', ' ')}</span>`);
+      crossReferences = crossRefArray.map(value => `<span>${value.replace('&nbsp;', '')}</span>`);
       crossReferences = `<p>${crossReferences.join('')}</p>`;
     }
     return {crossReferences, crossRefValues};
@@ -192,7 +192,7 @@ componentWillUnmount() {
       buttonText = markedIndexGlossary.markedIndexEntryURN ? 'Update': 'Add'
     }
     return (
-      <div>
+      <div className="marked-index-outer-div">
         <div className='index-container' ref={this.setWrapperRef}>
           <div className="index-setting">
             <span className="printIndex-label">Index Settings</span>
