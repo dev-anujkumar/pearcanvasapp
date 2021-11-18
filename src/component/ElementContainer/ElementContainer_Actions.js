@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
@@ -819,30 +819,41 @@ const updateAsideNumberInStore = (updateParams, elementEntityUrn = "") => (dispa
     }
 }
 
-export const updateAsideNumber = (previousData) => (getState) => {
+export const updateAsideNumber = (previousData,index) => (dispatch,getState) => {
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
     let activeElement=getState().appStore.activeElement;
     let elementEntityUrn = "",dataToUpdate
-    dataToUpdate=activeElement.html.title
-    const updateParams = {
-        dataToUpdate,
-        activeElement: activeElement,
-        currentSlateData
+
+    let labelDOM = document.getElementById(`cypress-${index}-t1`),
+        numberDOM = document.getElementById(`cypress-${index}-t2`),
+        titleDOM = document.getElementById(`cypress-${index}-t3`),
+        labeleHTML = labelDOM ? labelDOM.innerHTML : "",
+        numberHTML = numberDOM ? numberDOM.innerHTML : "",
+        titleHTML = titleDOM ? titleDOM.innerHTML : ""
+    labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+    titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
+
+    dataToUpdate = titleHTML
+    // const updateParams = {
+    //     dataToUpdate,
+    //     activeElement: activeElement,
+    //     currentSlateData
+    // }
+   // const updatedData = dispatch(updateAsideNumberInStore(updateParams,""))
+    if(previousData?.contentUrn){
+        elementEntityUrn = previousData.contentUrn
     }
-    const updatedData = dispatch(updateAsideNumberInStore(updateParams,""))
-    if(updatedData?.elementEntityUrn){
-        elementEntityUrn = updatedData.elementEntityUrn
-    }
-    let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
-    currentParentData[config.slateManifestURN] = updatedSlateLevelData
-    dispatch({
-        type: AUTHORING_ELEMENT_UPDATE,
-        payload: {
-            slateLevelData: currentParentData//{[config.slateManifestURN] : updatedSlateLevelData }
-        }
-    })
+    // let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
+    // currentParentData[config.slateManifestURN] = updatedSlateLevelData
+    // dispatch({
+    //     type: AUTHORING_ELEMENT_UPDATE,
+    //     payload: {
+    //         slateLevelData: currentParentData//{[config.slateManifestURN] : updatedSlateLevelData }
+    //     }
+    // })
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
     config.isSavingElement = true
@@ -852,7 +863,7 @@ export const updateAsideNumber = (previousData) => (getState) => {
         projectUrn: config.projectUrn,
         subtype: previousData.subtype,
         type: previousData.type,
-        html: previousData.html,
+        html: titleHTML,
         versionUrn: previousData.versionUrn,
         contentUrn: previousData.contentUrn,
         status: previousData.status
@@ -879,6 +890,27 @@ export const updateAsideNumber = (previousData) => (getState) => {
             config.savingInProgress = false
             config.isSavingElement = false
         }
+
+        let activeElementObject = {
+            contentUrn:dataToSend.contentUrn,
+            elementId: dataToSend.id,
+            index: index,
+            elementType: 'element-aside',
+            primaryOption: 'primary-aside-aside',
+            secondaryOption: "secondary-aside-sb1",
+            toolbar: [],
+            elementWipType: dataToSend.type,
+            tag: "As",
+            asideNumber: (titleHTML !== "<p class='paragraphNumeroUno'></p>") ? true:  false
+        };
+        dispatch({
+            type: 'SET_ACTIVE_ELEMENT',
+            payload: activeElementObject
+        });
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        config.conversionInProcess = false
+        config.savingInProgress = false
+        config.isSavingElement = false
     }).catch(err => {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             dispatch({ type: ERROR_POPUP, payload: { show: true } })
