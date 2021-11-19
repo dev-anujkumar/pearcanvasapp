@@ -104,6 +104,7 @@ componentWillUnmount() {
 
   getCrossRefData = () => {
     let crossRefValues = document.querySelector('#markedindex-cross-reference').innerHTML;
+    crossRefValues = crossRefValues.replace('<br data-mce-bogus="1">', '')
     let crossReferences = "";
     if(crossRefValues){
       let crossRefArray = crossRefValues.split(',');
