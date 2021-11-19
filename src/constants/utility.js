@@ -242,11 +242,11 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
             figureObj.html.title = createLabelNumberTitleModel('', '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
         }
         figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
-     } else {
-         if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
-             figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
+     } else if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
+             figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj?.html?.subtitle?.replace("<p>", '')?.replace("</p>", ''));
              figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
-         }
+     }else if (figureObj.type ==="element-aside"){
+        figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj?.html?.subtitle?.replace("<p>", '')?.replace("</p>", ''));
      }
     // ................................XX...........................................
     let data = {};

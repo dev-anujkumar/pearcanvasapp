@@ -18,7 +18,6 @@ import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, removeUnoClass } from '../../constants/utility';
 import { labelHtmlData } from '../../constants/Element_Constants';
-import {EnableAsideNumbering} from '../../component/Sidebar/Sidebar_Action.js';
 
 // IMPORT - Assets //
 
@@ -29,9 +28,18 @@ class ElementAsideContainer extends Component {
         super(props);
         this.state = {
             sectionFocus: false,
-            btnClassName: ""
+            btnClassName: "",
+            showTitle: false
         }
         this.asideRef = React.createRef();
+    }
+
+    static getDerivedStateFromProps(nextProps){
+        if(nextProps && nextProps.isAsideNumber){
+            return {
+                showTitle : nextProps.isAsideNumber
+            }
+        }
     }
 
     handleFocus = (e) => {
@@ -499,10 +507,7 @@ class ElementAsideContainer extends Component {
  * 
  */
     renderTitleField=(asideHtmlData)=>{
-        console.log("This.props.element",this.props.element);
-        let isNumberEnabled= this.props?.element?.html?.title ? true : false;
-        EnableAsideNumbering(isNumberEnabled);
-        if(this.props.isAsideNumber|| true){
+        if(this.state.showTitle){
         return(
             <div className="asideHeader">
                 <header className="figure-header new-figure-image-header">
@@ -641,8 +646,13 @@ class ElementAsideContainer extends Component {
      */
     render() {
         const { element } = this.props;
-        console.log("");
-        let asideHtmlData = getLabelNumberTitleHTML(element);
+        let dummtData={
+            html:{
+                title: "<p></p>"
+            },
+            type:"element-aside"
+        }
+        let asideHtmlData = getLabelNumberTitleHTML(dummtData);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         return (

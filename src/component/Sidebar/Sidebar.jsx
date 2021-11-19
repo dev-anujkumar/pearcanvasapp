@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateContainerMetadata, EnableAsideNumbering } from './Sidebar_Action';
+import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateContainerMetadata, enableAsideNumbering } from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
@@ -32,6 +32,7 @@ class Sidebar extends Component {
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting = this.props.activeElement.syntaxhighlighting;
         let podwidth = this.props.activeElement.podwidth;
+        let asideNumberValue = this.props.activeElement?.asideNumber || false;
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
@@ -50,7 +51,7 @@ class Sidebar extends Component {
             podOption: false,
             podValue: podwidth,
             usageType: this.props.activeElement.usageType,
-            AsideNumber: false
+            asideNumber: asideNumberValue
         };
     }
 
@@ -83,7 +84,8 @@ class Sidebar extends Component {
                 syntaxHighlightingToggleValue: nextProps.activeElement.syntaxhighlighting,
                 podValue: podValue,
                 podOption: podOption,
-                usageType: nextProps.activeElement.usageType
+                usageType: nextProps.activeElement.usageType,
+                asideNumber: nextProps.activeElement.asideNumber
             };
         }
 
@@ -525,12 +527,14 @@ class Sidebar extends Component {
             }
 
             if(this.state.activePrimaryOption === "primary-aside-aside" && this.props.activeElement.elementId){
-                attributions=<>
+                console.log("asideNumber", this.state.asideNumber);
+                attributions=
                 <div className="asideNumberHeading">
-                <div className="toggleAsideNumber">Label, number, Title</div>
-                <div className={`asideSlider ${this.state.AsideNumber == true ? 'on' : 'off'}`} onBlur={this.handleAsideNumber}></div>
+                {/* <div className="toggleAsideNumber">Label, number, Title</div>
+                <div className={`asideSlider ${this.state.AsideNumber == true ? 'on' : 'off'}`} onBlur={this.handleAsideNumber}></div> */}
+                <div className="toggleAsideNumber">Label, Number, Title</div>
+                <div className={`asideSlider ${ this.state.asideNumber  ? 'on' : 'off'}`} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleAsideNumber} ></div>
                 </div>
-                </>
                 return attributions;
             }
 
@@ -566,9 +570,12 @@ class Sidebar extends Component {
     }
 
     handleAsideNumber=()=>{
+        const newToggleValue =  !this.state.asideNumber
+        this.props.setBCEMetadata('asideNumber',newToggleValue)
+        this.props.enableAsideNumbering(newToggleValue)
         this.setState=({
-            AsideNumber: true
-        },()=> this.props.EnableAsideNumbering(this.state.AsideNumber));
+            asideNumber: newToggleValue
+        });
     }
 
     saveElementAttributes = () => {
@@ -866,7 +873,7 @@ const mapStateToProps = state => {
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
         elementData: state.tcmReducer.elementData,
-        tcmStatus: state.tcmReducer.tcmStatus
+        tcmStatus: state.tcmReducer.tcmStatus,
     };
 };
 
@@ -880,6 +887,6 @@ export default connect(
         tcmButtonHandler,
         updateContainerMetadata,
         updateBlockListMetadata,
-        EnableAsideNumbering
+        enableAsideNumbering
     }
 )(Sidebar);

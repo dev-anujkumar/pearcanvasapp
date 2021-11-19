@@ -57,6 +57,7 @@ import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
+import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import ElementDialogue from '../ElementDialogue';
@@ -152,6 +153,10 @@ class ElementContainer extends Component {
                 targetId: element?.figuredata?.interactiveid
             }
             this.props.fetchAssessmentMetadata('interactive', 'fromElementContainer', interactiveData);
+        }
+        if(element?.type === 'element-aside'){
+            const showAsideTitle = (element?.html?.title && element.html.title !== "<p class='paragraphNumeroUno'></p>") ? true: false
+            this.props.enableAsideNumbering(showAsideTitle)
         }
         document.addEventListener('click', () => {
             this.setState({ showCopyPopup: false })
@@ -2344,7 +2349,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         getProjectUsers: () => {
             dispatch(getProjectUsers())
-        }
+        },
+        enableAsideNumbering: (data) => {
+            dispatch(enableAsideNumbering(data))
+        },
     }
 }
 

@@ -99,7 +99,8 @@ const INITIAL_STATE = {
         image: ["No Label", "Custom"],
         smartlinks: ["No Label", "Custom"],
         video: ["No Label", "Custom"]
-    }
+    },
+    isAsideNumber:false
 };
 
 const INITIAL_ACTION = {
