@@ -399,7 +399,7 @@ function alterMarkedIndexAttr(type, markedIndexedURN, addAttributeInDfn, glossar
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField,audioGlossaryData,figureGlossaryData, indexEntries) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField,audioGlossaryData,figureGlossaryData, indexEntries, crossReferences) => {
     if(!glossaryfootnoteid) return false
     let glossaryEntry = Object.create({})
     let footnoteEntry = Object.create({})
@@ -611,7 +611,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             case "MARKEDINDEX":   
             indexEntry[glossaryfootnoteid] = JSON.stringify({
                 firstLevelEntry: term,
-                secondLevelEntry: definition
+                secondLevelEntry: definition,
+                crossReferences
                 })
                 data = {
                     id: elementWorkId,

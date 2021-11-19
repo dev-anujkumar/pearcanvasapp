@@ -654,7 +654,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             parentElement: allowedParentType.includes(parentElement?.type) ? parentElement : undefined,
             metaDataField: parentElement && parentElement.type === 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
             sectionType : allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : showHideType,
-            CurrentSlateStatus: currentSlateData.status
+            CurrentSlateStatus: currentSlateData?.status
         },
         elementUpdateData = {
             currentParentData,
@@ -662,7 +662,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             response: responseData,
             updatedId: updatedData.id,
             slateManifestUrn: config.slateManifestURN,
-            CurrentSlateStatus: currentSlateData.status,
+            CurrentSlateStatus: currentSlateData?.status,
             figureData: oldFigureData,
             
         }
