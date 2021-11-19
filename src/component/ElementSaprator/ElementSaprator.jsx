@@ -173,6 +173,13 @@ export function ElementSaprator(props) {
         pasteRender = true;
         operationType = props.elementSelection.operationType || '';
     }
+    /** 
+     Hide Paste Button for Container Elements when there is BL inside ShowHide
+     Note:- This will removed once BL will be supported in AS,WE,2C & 3C 
+    */
+    if(['element-aside','groupedcontent'].indexOf(props?.asideData?.type) > -1 && props?.elementSelection?.containsBlockList) {
+        pasteRender = false;
+    }
     /* @hideSplitSlateIcon@ hide split slate icon in following list of elements */
     const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
     let hideElementSeperator = isSubscriberRole(props?.projectSubscriptionDetails?.projectSharingRole,props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? 'hideToolbar' : ''

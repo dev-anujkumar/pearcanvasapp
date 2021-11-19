@@ -1954,7 +1954,9 @@ class ElementContainer extends Component {
             inputType,
             inputSubType,
             //type: enum type to be included
-            multiColumnType: (element.type === 'groupedcontent' && element?.groupeddata?.bodymatter) ? `${element?.groupeddata?.bodymatter.length}C` : undefined
+            multiColumnType: (element.type === 'groupedcontent' && element?.groupeddata?.bodymatter) ? `${element?.groupeddata?.bodymatter.length}C` : undefined,
+            //This property will be remove once BL will be supported in all container elements AS,WE,2C & 3C
+            containsBlockList: false
         }
 
         if ('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
@@ -1985,6 +1987,15 @@ class ElementContainer extends Component {
             getAlfrescositeResponse(id, (response) => {
                 detailsToSet['alfrescoSiteData'] = response
             })
+        }
+        /**
+         Check if Copied ShowHide contains any BlockList Element
+         Note:- This piece of code and also the propertry named 
+            as 'containsBlockList' in const detailsToSet will be removed once BL will be supported  in AS,WE,2C & 3C
+        */
+        if(element?.type === 'showhide') {
+            let elementsList = [...element?.interactivedata?.show.concat(...element?.interactivedata?.hide)]
+            detailsToSet['containsBlockList'] = elementsList.some(item => item.type === 'manifestlist')
         }
 
         console.log("Element Details action to be dispatched from here", detailsToSet)
