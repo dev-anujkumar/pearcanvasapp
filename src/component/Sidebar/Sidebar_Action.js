@@ -7,6 +7,7 @@ import {
     ERROR_POPUP,
     GET_TCM_RESOURCES,
     AUTHORING_ELEMENT_UPDATE,
+    CHECK_ASIDE_NUMBER 
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -909,7 +910,7 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
 
 export const enableAsideNumbering = (isNumbered) => (dispatch) => {
     dispatch({
-        type: 'CHECK_ASIDE_NUMBER',
+        type: CHECK_ASIDE_NUMBER,
         payload: isNumbered
     });
 }

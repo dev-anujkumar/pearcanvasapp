@@ -508,7 +508,7 @@ class ElementAsideContainer extends Component {
  */
     renderTitleField = (asideHtmlData) => {
         console.log('this.state.showTitle',this.state.showTitle,this.props.isAsideNumber)
-        if (this.state.showTitle) {
+        // if (this.state.showTitle) {
             return (
                 <div className="asideHeader">
                     <header className="figure-header new-figure-image-header">
@@ -527,7 +527,7 @@ class ElementAsideContainer extends Component {
                     </div>
                 </div>
             )
-        }
+        // }
     }
 
 

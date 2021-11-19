@@ -100,7 +100,7 @@ const INITIAL_STATE = {
         smartlinks: ["No Label", "Custom"],
         video: ["No Label", "Custom"]
     },
-    isAsideNumber: false
+    isAsideNumber:false
 };
 
 const INITIAL_ACTION = {

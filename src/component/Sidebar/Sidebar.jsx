@@ -85,7 +85,7 @@ class Sidebar extends Component {
                 podValue: podValue,
                 podOption: podOption,
                 usageType: nextProps.activeElement.usageType,
-                asideNumber:  nextProps.activeElement.asideNumber
+                asideNumber: nextProps.activeElement.asideNumber
             };
         }
 

@@ -221,11 +221,7 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type][element.subtype]["elementType"],
                     ...elementDataBank[element.type][element.subtype][element.designtype]
                 }
-                if (element?.html?.title && element.html.title !== "<p class='paragraphNumeroUno'></p>") {
-                    elementType.asideNumber = true
-                }else{
-                    elementType.asideNumber = false
-                }
+                elementType.asideNumber = element?.html?.title && element.html.title !== "<p class='paragraphNumeroUno'></p>" ? true : false
                 break;
             case 'element-list': {
                 let type = element.type
@@ -515,7 +511,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         dispatch(handleTCMData(tcmManifestUrn));
     }
     dispatch(resetAssessmentStore());//reset Assessment Store
-    const elementCount = getState().appStore.slateLength;
+    const elementCount = 4;
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
@@ -526,16 +522,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => { 
-        if (slateData.data[config.slateManifestURN].contents.bodymatter) {
-            slateData.data[config.slateManifestURN].contents.bodymatter = slateData.data[config.slateManifestURN].contents.bodymatter?.map(ele => {
-                if (ele?.type === "element-aside") {
-                    ele.html = {
-                        title: "<p><label>Test1&nbsp;</label><number>22&nbsp;</number>cc</p>"
-                    }
-                }
-                return ele
-            })
-        }
+        // if (slateData.data[config.slateManifestURN].contents.bodymatter) {
+        //     slateData.data[config.slateManifestURN].contents.bodymatter = slateData.data[config.slateManifestURN].contents.bodymatter?.map(ele => {
+        //         if (ele?.type === "element-aside") {
+        //             ele.html = {
+        //                 title: "<p><label>Test1&nbsp;</label><number>22&nbsp;</number>cc</p>"
+        //             }
+        //         }
+        //         return ele
+        //     })
+        // }
          /* Slate tag issue */
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
