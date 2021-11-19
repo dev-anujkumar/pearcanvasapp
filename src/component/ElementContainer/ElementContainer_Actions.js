@@ -847,7 +847,9 @@ export const updateAsideNumber = (previousData,index) => (dispatch,getState) => 
         projectUrn: config.projectUrn,
         subtype: previousData.subtype,
         type: previousData.type,
-        html: titleHTML,
+        html: {
+            title: titleHTML
+        },
         versionUrn: previousData.versionUrn,
         contentUrn: previousData.contentUrn,
         status: previousData.status
