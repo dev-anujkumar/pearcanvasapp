@@ -424,7 +424,7 @@ class Sidebar extends Component {
         let attributionsObject = {};
         let attributionsList = [];
         if (this.state.activeElementType) {
-            console.log("active-props",this.props);
+            // console.log("active-props",this.props);
             let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
             let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
             if ((primaryOptionList.text && primaryOptionList.text === "Quad Interactive") && (this.props.activeElement.altText && this.props.activeElement.altText != "")) {
