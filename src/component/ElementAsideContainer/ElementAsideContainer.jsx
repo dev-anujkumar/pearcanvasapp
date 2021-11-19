@@ -567,7 +567,7 @@ class ElementAsideContainer extends Component {
     renderWorkExample = (designtype) => {
         return (
             <React.Fragment>
-                {this.renderTitleField()}
+                
                 <hr className={`aside-horizotal-break ${designtype == "workedexample2" ? 'aside-horizotal-break-green' : ""}`} />
                 {this.renderContainer(this.props)}
                 <hr className={`aside-break-bottom ${designtype == "workedexample2" ? 'aside-break-bottom-green' : ""}`}></hr>
@@ -633,10 +633,9 @@ class ElementAsideContainer extends Component {
   * @param {string} designtype -string to select type of aside container
   */
 
-    renderAside = (designtype,asideHtmlData) => {
+    renderAside = (designtype) => {
         return (
             <React.Fragment>
-                {this.renderTitleField(asideHtmlData)}
                 {this.borderTop(designtype)}
                 {this.renderContainer(this.props)}
                 <div className={designtype + "BorderBottom"} />
@@ -656,7 +655,8 @@ class ElementAsideContainer extends Component {
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         return (
             <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
-                {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype,asideHtmlData)}
+                {this.renderTitleField(asideHtmlData)}
+                {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
         );
     }
