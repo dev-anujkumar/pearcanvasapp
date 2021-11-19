@@ -12,8 +12,8 @@ export const CrossRefCheckbox = (props) => {
                                 <input type="checkbox"
                                     name={item}
                                     value={item}
-                                    defaultChecked={selectedData.includes(item.trim())}
-                                    onChange={() => props.handleSelectedCheckboxValue(item.trim())}
+                                    defaultChecked={selectedData.includes(item?.trim())}
+                                    onChange={() => props.handleSelectedCheckboxValue(item?.trim())}
                                 />
                                 <span>
                                     {item}
