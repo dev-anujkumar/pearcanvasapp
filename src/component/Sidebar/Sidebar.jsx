@@ -525,8 +525,8 @@ class Sidebar extends Component {
                 </div>
                 return attributions;
             }
-
-            if(this.state.activePrimaryOption === "primary-aside-aside" && this.props.activeElement.elementId){
+            console.log("element-aside",this.props.activeElement);
+            if ((this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample") && this.props.activeElement.elementId) {
                 attributions = <div className="asideNumberHeading">
                     <div className="toggleAsideNumber">Label, Number, Title</div>
                     <div className="setting-value" onClick={!hasReviewerRole() && !config.savingInProgress && this.handleAsideNumber}>
