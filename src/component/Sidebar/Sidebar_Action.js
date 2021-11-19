@@ -672,7 +672,12 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             config.isSavingElement = false
         } else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-            updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex], dataToSend)
+            if(dataToUpdate.asideData.parent && dataToUpdate.asideData.parent.type==="showhide"){
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex[0]].interactivedata[dataToUpdate.asideData.parent.showHideType][dataToUpdate.slateLevelBLIndex[2]], dataToSend)
+            }
+            else{
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex[0]], dataToSend)
+            }
             dispatch({
                 type: AUTHORING_ELEMENT_UPDATE,
                 payload: {

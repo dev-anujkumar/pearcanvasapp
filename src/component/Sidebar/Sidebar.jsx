@@ -103,7 +103,7 @@ class Sidebar extends Component {
         podValue: POD_DEFAULT_VALUE,
         podOption: false,
       });
-
+      const {asideData} = this.props;
       if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
         if (this.props.activeElement.elementWipType == "manifestlist") {
         let blockListMetaDataPayload = {
@@ -119,10 +119,11 @@ class Sidebar extends Component {
             labelText,
             blockListElement:true,
             toolbar: elementList[this.state.activeElementType][value].toolbar,
-            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-")[0],
+            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
             dataToSend:{
                 columnnumber : value.split('-')[value.split('-').length-1]
-            }
+            },
+            asideData:asideData
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
@@ -848,7 +849,8 @@ const mapStateToProps = state => {
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
         elementData: state.tcmReducer.elementData,
-        tcmStatus: state.tcmReducer.tcmStatus
+        tcmStatus: state.tcmReducer.tcmStatus,
+        asideData:state.appStore.asideData
     };
 };
 
