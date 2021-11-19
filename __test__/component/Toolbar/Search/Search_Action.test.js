@@ -5,10 +5,9 @@ import moxios from 'moxios';
 import MockAdapter from 'axios-mock-adapter';
 import * as actions from '../../../../src/component/Toolbar/Search/Search_Action.js';
 import axios from 'axios';
-//import config from './../../../config/config';
 // import { fetchSlateData } from './../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from '../../../../src/constants/Search_Constants';
-import config from '../../../src/config/config';
+import config from '../../../../src/config/config';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 let initialState = {
@@ -17,7 +16,7 @@ let initialState = {
 };
 // jest.mock('axios');
 const axiosMock = axios.create()
-jest.mock('../../../src/appstore/store', () => {
+jest.mock('../../../../src/appstore/store', () => {
     return {
         getState: () => {
             return {
@@ -30,16 +29,13 @@ jest.mock('../../../src/appstore/store', () => {
         dispatch: () => jest.fn().mockImplementationOnce((cb) => { cb() })
     }
 })
-jest.mock('./../../../src/component/CanvasWrapper/CanvasWrapper_Actions', () => ({
+jest.mock('../../../../src/component/CanvasWrapper/CanvasWrapper_Actions', () => ({
     fetchSlateData: jest.fn()
 }))
-jest.mock('../../../src/config/config.js', () => ({
-    slateEntityURN: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
-    slateManifestURN: "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0",
-    projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
-}))
 
-
+config.slateEntityURN = "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb"
+config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0"
+config.projectUrn = "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d"
 
 describe('-----------------Testing Search Actions-----------------', () => {
     const mockdata = {
