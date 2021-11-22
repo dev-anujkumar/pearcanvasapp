@@ -853,7 +853,7 @@ export const updateAsideNumber = (previousData, index) => (dispatch, getState) =
         },
         versionUrn: previousData.versionUrn,
         contentUrn: previousData.contentUrn,
-        status: previousData.status
+        status: updatedSlateLevelData.status
 
     }
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
