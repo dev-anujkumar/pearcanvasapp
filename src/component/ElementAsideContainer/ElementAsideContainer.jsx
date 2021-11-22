@@ -35,7 +35,6 @@ class ElementAsideContainer extends Component {
     }
 
     static getDerivedStateFromProps(nextProps){
-        console.log('nextProps.isAsideNumber',nextProps.isAsideNumber)
         if(nextProps && nextProps.isAsideNumber){
             return {
                 showTitle : nextProps.isAsideNumber
@@ -512,7 +511,7 @@ class ElementAsideContainer extends Component {
  * 
  */
     renderTitleField = (asideHtmlData) => {
-        if (this.state.showTitle) {
+        // if (this.state.showTitle) {
             return (
                 <div className="asideHeader">
                     <header className="figure-header new-figure-image-header">
@@ -531,7 +530,7 @@ class ElementAsideContainer extends Component {
                     </div>
                 </div>
             )
-        }
+        // }
     }
 
 

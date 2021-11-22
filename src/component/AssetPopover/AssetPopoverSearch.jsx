@@ -139,9 +139,16 @@ class AssetPopoverSearch extends React.Component {
      *Jsx for apo body or results from API 
      */
     apoBodyJsx = (ValueToBeSearch) => {
+        const assetArray = {
+            figures: this.props.figures,
+            audios: this.props.audios,
+            videos: this.props.videos,
+            interactives: this.props.interactives,
+            asides: this.props.asides
+        }
         return (<section className="modalBody">
             <p className="APOSearchResultText">Search took about {this.props.timeByAPI ? this.props.timeByAPI.toFixed() : ' '} ms, Total hits: {this.props.figures ? this.props.figures.length : 0}</p>
-            <ApiResults assetPopoverData={this.props} selectedFigure={this.selectedFigure} ValueToBeSearch={ValueToBeSearch}/>
+            <ApiResults assetPopoverData={assetArray} selectedFigure={this.selectedFigure} ValueToBeSearch={ValueToBeSearch}/>
         </section>
         )
     }

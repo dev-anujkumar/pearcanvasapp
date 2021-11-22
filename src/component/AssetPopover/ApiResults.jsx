@@ -3,7 +3,7 @@
 
 import React from 'react';
 import FigureCard from './FigureCard.jsx';
-
+import ErrorComp from './ErrorComp.jsx';
 class ApiResults extends React.Component {
     constructor(props) {
         super(props);
@@ -12,41 +12,45 @@ class ApiResults extends React.Component {
         }
     }
 
-    getFigureTypeData = (ValueToBeSearch, Details) => {
-        if (ValueToBeSearch && (typeof (Details?.title) !== 'undefined' || typeof (Details?.unformattedTitle) !== 'undefined')) {
-            let searchItem = Details?.title ?? Details?.unformattedTitle?.en ?? '';
-            searchItem = String(searchItem).replace(/\u00a0/g, ' ').replace(/&nbsp;/g, ' ').replace(/ /g, ' ');
-            let searchValue = ValueToBeSearch;
-            searchValue = String(searchValue).replace(/\u00a0/g, ' ').replace(/&nbsp;/g, ' ').replace(/ /g, ' ');
-            if (searchItem.toUpperCase().includes(searchValue.toUpperCase())) {
-                return Details
+    apiResultsJsx = (assetPopoverData, selectedFigure, ValueToBeSearch) => {
+        let cardForApiResults
+        var tempFiguresForResults = [], figureDataLength
+        const AssetDetails = Object.values(assetPopoverData);
+        let filteredDetails = AssetDetails.filter(assetType => {
+            if (Array.isArray(assetType) && assetType?.length >= 1) {
+                return assetType;
             }
+        });
+        const finalAssetDetails = filteredDetails?.flat()
+        if (ValueToBeSearch && finalAssetDetails) {
+            tempFiguresForResults = finalAssetDetails.filter((value, index, array) => {
+                if (typeof (value.title) !== 'undefined' || (typeof (value?.unformattedTitle) !== 'undefined')) {
+                    let searchItem = value?.title ? value.title : value?.unformattedTitle?.en ? value.unformattedTitle.en : "";
+                    searchItem = String(searchItem).replace(/\u00a0/g, ' ').replace(/&nbsp;/g, ' ').replace(/ /g, ' ');
+                    let searchValue = ValueToBeSearch;
+                    searchValue = String(searchValue).replace(/\u00a0/g, ' ').replace(/&nbsp;/g, ' ').replace(/ /g, ' ');
+                    return searchItem.toUpperCase().includes(searchValue.toUpperCase());
+                }
+            });
         }
-    }
+        figureDataLength = tempFiguresForResults.length;
 
-    //dynamically generate cards of each result so call FigureCard
-    //component with some props
-    apiResultsJsx = (selectedFigure, ValueToBeSearch) => {
-        let cardForApiResults,filteredDetails,finalDetails
-        let AssetDetails=Object.values(this.props.assetPopoverData);
-        filteredDetails=AssetDetails.filter(value=>{
-            if( Array.isArray(value) && value?.length >=1){
-                return value;
-            }
-        });
-        finalDetails=filteredDetails.flat().map((data)=>{
-            return this.getFigureTypeData(ValueToBeSearch,data)
-        });
-      
-        cardForApiResults = finalDetails.map((value, index) => {
-            if ( value && value?.title || value?.unformattedTitle?.en) {
-                return (
-                    <>
-                        <FigureCard forInputKey={index} key={index} figureDetails={value} title={value.title} path={value.path} selectedFigure={selectedFigure} />
-                    </>
-                )
-            }
-        });
+        if (this.state.figureDataLength != figureDataLength) {
+            this.setState({
+                figureDataLength: figureDataLength
+            })
+        }
+        //If number figureforresults has 1> elements then muild cards otherwise 
+        //No result found for this search term
+        if (figureDataLength >= 1) {
+            cardForApiResults = tempFiguresForResults.map((value, index) => {
+                const assetTitle = value?.title ? value.title : value?.unformattedTitle?.en ? value.unformattedTitle.en : "";
+                return <FigureCard forInputKey={index} key={index} figureDetails={value} title={assetTitle} path={value.path ?? assetTitle} selectedFigure={selectedFigure} />
+            });
+        } else {
+            let errorMsg = "No Match found! ";
+            cardForApiResults = <ErrorComp errorMsg={errorMsg} />
+        }
         return cardForApiResults;
     }
 
@@ -55,7 +59,7 @@ class ApiResults extends React.Component {
         return (
             <div>
                 <h3 className="figureCount">Assets Matched</h3>
-                {this.apiResultsJsx(selectedFigure, ValueToBeSearch)}
+                {this.apiResultsJsx(assetPopoverData, selectedFigure, ValueToBeSearch)}
                 <hr />
             </div>
         )

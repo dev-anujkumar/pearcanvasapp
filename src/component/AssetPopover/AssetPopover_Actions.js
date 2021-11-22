@@ -151,7 +151,7 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
             audios: [...(data.audios ?? [])],
             videos: [...(data.videos ?? [])],
             interactives: [...(data.interactives ?? [])],
-            asides: [...(data.elementAside ?? [])],
+            asides: [...(data.elementAsides ?? [])],
             searchTerm: searchterm,
             timeByAPI: performance.now() - time1
           }

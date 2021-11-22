@@ -366,6 +366,7 @@ class ElementContainer extends Component {
         labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
         titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
+        titleHTML = this.removeClassesFromHtml(titleHTML)
         return titleHTML !== this.removeClassesFromHtml(previousElementData?.html?.title)
     }
 
@@ -631,7 +632,6 @@ class ElementContainer extends Component {
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
-        console.log("asideData",this.props, previousElementData.type,elementType);
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
