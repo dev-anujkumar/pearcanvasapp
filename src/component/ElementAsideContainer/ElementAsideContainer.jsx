@@ -29,18 +29,11 @@ class ElementAsideContainer extends Component {
         this.state = {
             sectionFocus: false,
             btnClassName: "",
-            showTitle: false
         }
         this.asideRef = React.createRef();
     }
 
-    static getDerivedStateFromProps(nextProps){
-        if(nextProps && nextProps.isAsideNumber){
-            return {
-                showTitle : nextProps.isAsideNumber
-            }
-        }
-    }
+ 
     handleFocus = (e) => {
         // if(e.target && !(e.target.classList.contains('elemDiv-hr') )){
         //     return false;

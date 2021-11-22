@@ -363,11 +363,18 @@ class ElementContainer extends Component {
             labeleHTML = labelDOM ? labelDOM.innerHTML : "",
             numberHTML = numberDOM ? numberDOM.innerHTML : "",
             titleHTML = titleDOM ? titleDOM.innerHTML : ""
+
         labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
         titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
         titleHTML = this.removeClassesFromHtml(titleHTML)
-        return titleHTML !== this.removeClassesFromHtml(previousElementData?.html?.title)
+        let oldTitleHTML = ""
+        if (!(previousElementData?.html?.title)) {
+            oldTitleHTML = createLabelNumberTitleModel("", "", "")
+        } else {
+            oldTitleHTML = this.removeClassesFromHtml(previousElementData?.html?.title)
+        }
+        return titleHTML !== oldTitleHTML
     }
 
     /**
@@ -745,7 +752,7 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ELEMENT_ASIDE:
-                if (this.asideDifference(this.props.index, previousElementData) || !previousElementData.hasOwnProperty("html")) {
+                if (this.asideDifference(this.props.index, previousElementData)) {
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
                     this.props.updateAsideNumber(previousElementData,this.props.index);

@@ -148,7 +148,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
-                tinymce.activeEditor.on('ObjectResizeStart', function (e) {
+                tinymce?.activeEditor?.on('ObjectResizeStart', function (e) {
                     if (e?.target?.nodeName == 'IMG' && e.target.classList.length > 0 && (e.target.classList.contains('Wirisformula') || e.target.classList.contains('temp_Wirisformula'))) {
                         e.preventDefault();/** Prevent IMG resize for MathML images */
                     }
