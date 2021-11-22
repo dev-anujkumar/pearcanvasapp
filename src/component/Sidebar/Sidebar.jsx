@@ -33,6 +33,7 @@ class Sidebar extends Component {
         let syntaxhighlighting = this.props.activeElement.syntaxhighlighting;
         let podwidth = this.props.activeElement.podwidth;
         let asideNumberValue = this.props.activeElement?.asideNumber || false;
+        console.log("asideNumberValue",asideNumberValue);
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
@@ -525,7 +526,7 @@ class Sidebar extends Component {
                 </div>
                 return attributions;
             }
-            if ((this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample") && this.props.activeElement.elementId) {
+            if (this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample") {
                 attributions = <div className="asideNumberHeading">
                     <div className="toggleAsideNumber">Label, Number, Title</div>
                     <div className="setting-value" onClick={!hasReviewerRole() && !config.savingInProgress && this.handleAsideNumber}>
@@ -567,7 +568,8 @@ class Sidebar extends Component {
     }
 
     handleAsideNumber=()=>{
-        const newToggleValue =  !this.state.asideNumber
+        const newToggleValue = this.state.asideNumber
+        console.log("newToggleValue",newToggleValue);
         this.props.setBCEMetadata('asideNumber',newToggleValue)
         this.props.enableAsideNumbering(newToggleValue)
         this.setState=({

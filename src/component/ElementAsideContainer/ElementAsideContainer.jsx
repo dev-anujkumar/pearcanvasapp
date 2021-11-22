@@ -512,8 +512,7 @@ class ElementAsideContainer extends Component {
  * 
  */
     renderTitleField = (asideHtmlData) => {
-        console.log('this.state.showTitle',this.state.showTitle,this.props.isAsideNumber,asideHtmlData)
-        // if (this.state.showTitle) {
+        if (this.state.showTitle) {
             return (
                 <div className="asideHeader">
                     <header className="figure-header new-figure-image-header">
@@ -532,7 +531,7 @@ class ElementAsideContainer extends Component {
                     </div>
                 </div>
             )
-        // }
+        }
     }
 
 
@@ -542,7 +541,7 @@ class ElementAsideContainer extends Component {
         let labelElement = document.getElementById(`cypress-${id}`);
         if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
-        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) {
             labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
     }
