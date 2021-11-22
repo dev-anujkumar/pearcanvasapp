@@ -973,7 +973,12 @@ export class TinyMceEditor extends Component {
                 setFormattingToolbar('disableTinymceToolbar')
             }
             if (activeElement) {
-                let lastCont = this.lastContent;
+                let lastCont = '';
+                if(['<br data-mce-bogus="1">', '<br>'].includes(this.lastContent) && this.props.element.type === 'element-aside'){
+                    lastCont = activeElement.innerHTML;
+                } else {
+                    lastCont = this.lastContent;
+                }
                 this.lastContent = activeElement.innerHTML;
                 if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
