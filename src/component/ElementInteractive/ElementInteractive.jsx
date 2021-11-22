@@ -131,9 +131,7 @@ class Interactive extends React.Component {
      /*** @description This function is to show Approved/Unapproved Status on interative */
     showElmVersionStatus = () => {
         let elmInt =  this.props?.assessmentReducer[this.state.itemID];
-        // const approveText = elmInt.assessmentStatus == 'final' ? "Approved" : "Unapproved";
-        // return elmInt.assessmentStatus === 'final';
-        if (elmInt.assessmentStatus==='final') {
+        if (elmInt) {
             return (<ElmUpdateButton
                 elmAssessment={elmInt}
                 updateElmVersion={this.updateElm}

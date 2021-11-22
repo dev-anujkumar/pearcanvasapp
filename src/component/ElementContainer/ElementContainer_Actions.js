@@ -144,53 +144,53 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => async (dispatch, getState) => {
-    if(hasReviewerRole()){
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
-        return ;
-    }
-    const { showHideObj,slateLevelData } = getState().appStore
-    updatedData.projectUrn = config.projectUrn;
-    if (updatedData.loData) {
-        updatedData.slateVersionUrn = config.slateManifestURN;
-    }
-    updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
-    /** updateBodymatter | Used for TCM Snapshots */
-    let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
-    const helperArgs = { 
-        updatedData,
-        asideData,
-        parentUrn,
-        dispatch,
-        getState,
-        versionedData: null,
-        elementIndex,
-        showHideType,
-        parentElement
-    }
-    updateStoreInCanvas(helperArgs)
-    let updatedData1 = JSON.parse(JSON.stringify(updatedData))
-    const data = {
-        slateLevelData,
-        index: elementIndex
-    };
-    const blockListData = checkBlockListElement(data, 'TAB');
-    if(blockListData && Object.keys(blockListData).length > 0) {
-        const { parentData } = blockListData;
-        updatedData1.elementParentEntityUrn = parentData?.contentUrn;
-    }
-    if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
-        updatedData1 = {
-            ...updatedData,
-            elementdata : {
-                text : "Reveal Answer:"
-            },
-            html: {
-                ...updatedData1.html,
-                text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"
+    try {
+        if(hasReviewerRole()){
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+            return ;
+        }
+        const { showHideObj,slateLevelData } = getState().appStore
+        updatedData.projectUrn = config.projectUrn;
+        if (updatedData.loData) {
+            updatedData.slateVersionUrn = config.slateManifestURN;
+        }
+        updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
+        /** updateBodymatter | Used for TCM Snapshots */
+        let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+        const helperArgs = { 
+            updatedData,
+            asideData,
+            parentUrn,
+            dispatch,
+            getState,
+            versionedData: null,
+            elementIndex,
+            showHideType,
+            parentElement
+        }
+        updateStoreInCanvas(helperArgs)
+        let updatedData1 = JSON.parse(JSON.stringify(updatedData))
+        const data = {
+            slateLevelData,
+            index: elementIndex
+        };
+        const blockListData = checkBlockListElement(data, 'TAB');
+        if(blockListData && Object.keys(blockListData).length > 0) {
+            const { parentData } = blockListData;
+            updatedData1.elementParentEntityUrn = parentData?.contentUrn;
+        }
+        if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
+            updatedData1 = {
+                ...updatedData,
+                elementdata : {
+                    text : "Reveal Answer:"
+                },
+                html: {
+                    ...updatedData1.html,
+                    text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"
+                }
             }
         }
-    }
-    try {
         const response = await axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData1,
             {
@@ -230,127 +230,133 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
 }
 
 export const updateFigureData = (figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb) => (dispatch, getState) => {
-    let parentData = getState().appStore.slateLevelData,
-        //element,
-        index = elementIndex;
-    const newParentData = JSON.parse(JSON.stringify(parentData));
-    let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-    let dataToSend = {};
+    try{
+        let parentData = getState().appStore.slateLevelData,
+            //element,
+            index = elementIndex;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
+        let dataToSend = {};
 
-    const { asideData } = getState()?.appStore || {};
-    const indexes = index?.toString().split('-') || [];
-    /* update figure elements in ShowHide */
-    /* asideDataFromAfrescoMetadata is used for editing figure metadata popup field(alttext, longDescription) inside ShowHide element */
-    if((asideData?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.type === SHOW_HIDE ) && indexes?.length >= 3) {
-        /* Get the showhide element object from slate data using indexes */
-        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
-        const section = indexOfSectionType(indexes); /* Get the section type */
-        /* After getting showhide Object, add the new element */
-        if(shObject?.type === SHOW_HIDE) {
-            /* Get the figure element */
-            let figure = shObject?.interactivedata[section][indexes[indexes?.length - 1]];
+        const { asideData } = getState()?.appStore || {};
+        const indexes = index?.toString().split('-') || [];
+        /* update figure elements in ShowHide */
+        /* asideDataFromAfrescoMetadata is used for editing figure metadata popup field(alttext, longDescription) inside ShowHide element */
+        if((asideData?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.type === SHOW_HIDE ) && indexes?.length >= 3) {
+            /* Get the showhide element object from slate data using indexes */
+            const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+            const section = indexOfSectionType(indexes); /* Get the section type */
+            /* After getting showhide Object, add the new element */
+            if(shObject?.type === SHOW_HIDE) {
+                /* Get the figure element */
+                let figure = shObject?.interactivedata[section][indexes[indexes?.length - 1]];
+                if (figure.versionUrn === elementId) {
+                    dataToSend = figure?.figuredata;
+                    /* update the data */
+                    figure.figuredata = figureData;
+                }
+            }
+            /* Update figure inside Aside/WE in S/H */
+        } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) { 
+            let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
+            let figure;
+            if (sectionType) {
+                if ((asideData?.subtype === ELEMENT_WORKEDEXAMPLE || asideDataFromAfrescoMetadata?.subtype === ELEMENT_WORKEDEXAMPLE) && indexes?.length >= 5) {
+                    figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                } else {
+                    figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]];
+                }
+            }
             if (figure.versionUrn === elementId) {
                 dataToSend = figure?.figuredata;
                 /* update the data */
                 figure.figuredata = figureData;
             }
-        }
-        /* Update figure inside Aside/WE in S/H */
-    } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) { 
-        let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
-        let figure;
-        if (sectionType) {
-            if ((asideData?.subtype === ELEMENT_WORKEDEXAMPLE || asideDataFromAfrescoMetadata?.subtype === ELEMENT_WORKEDEXAMPLE) && indexes?.length >= 5) {
-                figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
-            } else {
-                figure = newBodymatter[indexes[0]].interactivedata[sectionType][indexes[2]].elementdata.bodymatter[indexes[3]];
-            }
-        }
-        if (figure.versionUrn === elementId) {
-            dataToSend = figure?.figuredata;
-            /* update the data */
-            figure.figuredata = figureData;
-        }
-    } else if (typeof (index) == 'number') {
-        if (newBodymatter[index].versionUrn == elementId) {
-            if (newBodymatter[index].figuretype === "assessment") {
-                dataToSend =  newBodymatter[index].figuredata['elementdata']
-                newBodymatter[index].figuredata['elementdata'] = figureData
-                //element = newBodymatter[index]
-            } else {
-                dataToSend = newBodymatter[index].figuredata
-                newBodymatter[index].figuredata = figureData
-                //element = newBodymatter[index]
-            }
-        }
-    } else {
-        let indexes = index.split('-');
-        let indexesLen = indexes.length, condition;
-        if (indexesLen == 2) {
-            condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
-            if (condition.versionUrn == elementId) {
-                if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuretype === "assessment") {
-                    dataToSend = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata['elementdata']
-                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata['elementdata'] = figureData
+        } else if (typeof (index) == 'number') {
+            if (newBodymatter[index].versionUrn == elementId) {
+                if (newBodymatter[index].figuretype === "assessment") {
+                    dataToSend =  newBodymatter[index].figuredata['elementdata']
+                    newBodymatter[index].figuredata['elementdata'] = figureData
                     //element = newBodymatter[index]
                 } else {
-                    dataToSend =  newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata
-                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
-                    //element = condition
+                    dataToSend = newBodymatter[index].figuredata
+                    newBodymatter[index].figuredata = figureData
+                    //element = newBodymatter[index]
                 }
             }
-        } else if (indexesLen == 3) {
-            // if (newBodymatter[indexes[0]].type === SHOW_HIDE) { /*For showhide container on slate not inside other container */
-            //    const section = findSectionType(indexes[1]); /* Get the section type */
-            //    condition = newBodymatter[indexes[0]].interactivedata[section][indexes[2]];
-            //    if (condition.versionUrn === elementId) {
-            //        dataToSend = condition.figuredata
-            //        condition.figuredata = figureData
-            //    }
-            //} else
-            if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
-                condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+        } else {
+            let indexes = index.split('-');
+            let indexesLen = indexes.length, condition;
+            if (indexesLen == 2) {
+                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                 if (condition.versionUrn == elementId) {
-                    dataToSend = condition.figuredata
-                    condition.figuredata = figureData
-                }
-            } else {
-                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-                if (condition.versionUrn == elementId) {
-                    if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
-                        dataToSend = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata']
-                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
-                        //element = condition
+                    if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuretype === "assessment") {
+                        dataToSend = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata['elementdata']
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata['elementdata'] = figureData
+                        //element = newBodymatter[index]
                     } else {
-                        dataToSend = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata
-                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
+                        dataToSend =  newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
                         //element = condition
                     }
-    
+                }
+            } else if (indexesLen == 3) {
+                // if (newBodymatter[indexes[0]].type === SHOW_HIDE) { /*For showhide container on slate not inside other container */
+                //    const section = findSectionType(indexes[1]); /* Get the section type */
+                //    condition = newBodymatter[indexes[0]].interactivedata[section][indexes[2]];
+                //    if (condition.versionUrn === elementId) {
+                //        dataToSend = condition.figuredata
+                //        condition.figuredata = figureData
+                //    }
+                //} else
+                if (newBodymatter[indexes[0]].type === "groupedcontent") {              //For Multi-column container
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    if (condition.versionUrn == elementId) {
+                        dataToSend = condition.figuredata
+                        condition.figuredata = figureData
+                    }
+                } else {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if (condition.versionUrn == elementId) {
+                        if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
+                            dataToSend = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata']
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
+                            //element = condition
+                        } else {
+                            dataToSend = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
+                            //element = condition
+                        }
+                    
+                    }
+                }
+            } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === "groupedcontent") { /* 2C:AS:Fig */
+                if (indexesLen == 4) {
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];  
+                } else if (indexesLen == 5) {
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                }
+                if (condition.versionUrn === elementId) {
+                    dataToSend = condition?.figuredata
+                    condition.figuredata = figureData
                 }
             }
-        } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === "groupedcontent") { /* 2C:AS:Fig */
-            if (indexesLen == 4) {
-                condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];  
-            } else if (indexesLen == 5) {
-                condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
-            }
-            if (condition.versionUrn === elementId) {
-                dataToSend = condition?.figuredata
-                condition.figuredata = figureData
-            }
         }
+        dispatch(storeOldAssetForTCM(dataToSend))
+        dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newParentData
+            }
+        })
+        setTimeout(() => {
+            cb();
+        }, 300);
+
+    } catch(error){
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
     }
-    dispatch(storeOldAssetForTCM(dataToSend))
-    dispatch({
-        type: AUTHORING_ELEMENT_UPDATE,
-        payload: {
-            slateLevelData: newParentData
-        }
-    })
-    setTimeout(() => {
-        cb();
-    }, 300)
 }
 
 export const getTableEditorData = (elementid,updatedData) => (dispatch, getState) => {

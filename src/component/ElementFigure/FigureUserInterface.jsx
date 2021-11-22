@@ -240,11 +240,11 @@ class FigureUserInterface extends Component {
 
     generateUpdateAssetJSX = (element, assetTitleText, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension,interactiveformat) => {
         const approval = this.props?.assessmentReducer[element.figuredata.interactiveid]?.assessmentStatus === "final";
-        const buttonTitle = approval?"Approved":"UnApproved";
+        const buttonTitle = approval?"Approved":"Unapproved";
         const smallButtonClass = approval? "small_rounded_btn": "small_rounded_btn2";
         const smallButtonIcon = approval? approvedIcon: unApprovedIcon;
         return (
-            <div className='figure-wrapper-update'>
+            <div className={`figure-wrapper-update ${interactiveformat === "mmi" || interactiveformat === "mmi-elm" ? 'figure-wrapper-update-quad' :''}`}>
                 <div className='videoIconWrapper'>
                     <div className="update-icon-wrapper">
                         <span className='videoIcon' >{assetIcon}</span>
@@ -335,15 +335,15 @@ class FigureUserInterface extends Component {
 
                         element.figuredata.interactiveformat === MMI ?
                             assetId ?
-                                this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID", assetId, "Version", alfrescoSite, imageDimension, MMI)
+                                this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID:", assetId, "Version:", alfrescoSite, imageDimension, MMI)
                                 :
-                                this.generateAddAssetJSX(smartlinkIcon, "QuaD Interactive Title", "Add an Interactive", slPosterImage, "Item ID", assetPathText, MMI)
+                                this.generateAddAssetJSX(smartlinkIcon, "QuaD Interactive", "Add an Interactive", slPosterImage, "Item ID:", assetPathText, MMI)
                             :
                             element.figuredata.interactiveformat === ELM_INT ?
                                 assetId ?
-                                    this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID", assetId, "Version", alfrescoSite, imageDimension, ELM_INT)
+                                    this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID:", assetId, "Version:", alfrescoSite, imageDimension, ELM_INT)
                                     :
-                                    this.generateAddAssetJSX(smartlinkIcon, "Elm Interactive Title", "Add an Interactive", slPosterImage, "Item ID", "Version", ELM_INT)
+                                    this.generateAddAssetJSX(smartlinkIcon, "Elm Interactive", "Add an Interactive", slPosterImage, "Item ID:", "Version:", ELM_INT)
                                 :
                                 assetId ?
                                     this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
@@ -445,7 +445,7 @@ class FigureUserInterface extends Component {
                 break;
             case INTERACTIVE:
                 assetId = element.figuredata.interactiveid ? element.figuredata.interactiveid : '';
-                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : element.figuredata.interactiveformat === 'mmi' ? "QUAD" : element.figuredata.interactiveformat === 'mmi-elm' ? "ELM" : 'Smart link';
+                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : element.figuredata.interactiveformat === 'mmi' ? "QUAD" : element.figuredata.interactiveformat === 'mmi-elm' ? "Elm Interactive" : 'Smart link';
                 addButtonText = "Add a Smart Link";
                 assetIdText = "Asset ID:";
                 assetPathText = "Asset Path:";
