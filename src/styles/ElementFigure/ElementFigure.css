@@ -113,6 +113,18 @@ figure,.element-container{
     margin: 2.5em auto;
     border-style: none;
 }
+.divImageActualSizeTableImage{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
+}
+.divImageActualSizeMathImage{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
+}
 
 /* figure 25% image*/
 .divImage25Text{
