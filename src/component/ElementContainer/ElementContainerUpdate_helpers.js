@@ -74,6 +74,10 @@ export const updateNewVersionElementInStore = (paramObj) => {
         asideData.type = 'citations';
         dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
     }
+    else if (asideData?.type == "poetry" && asideData?.grandParent?.asideData?.type === 'showhide') {
+        dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+        /* Condition for update Approved poetry inside S/H */ 
+    }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
         if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5) && asideData.type === "poetry") {
             dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));

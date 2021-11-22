@@ -59,8 +59,8 @@ export default function ElementContainerType(props) {
         if(elementType === 'showhide' && indexOfElement.length > 3) {
             propsData = propsData.filter( obj => obj.text !== 'Block List');
         }
-        /* Not show poetry/Popup/SH/Interactive elements inside SH interactive Picker */
-        const hideElementList = ["poetry-elem", "show-hide-elem", "popup-elem", "elm-interactive-elem", "interactive-elem", "element-discussion"];
+        /* Not show Popup/SH/Interactive elements inside SH interactive Picker */
+        const hideElementList = ["show-hide-elem", "popup-elem", "elm-interactive-elem", "interactive-elem", "element-discussion"];
         const hideElementListMulticolumn = ["Add Pop Up","Add Discussion"]
         return propsData && propsData.map((item, index) => {
             if ((elementType === "element-aside" && asideData?.parent?.type === "groupedcontent" && text === "block-text-button" && item.text === "Block Poetry") ||

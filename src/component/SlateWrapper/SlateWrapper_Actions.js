@@ -246,6 +246,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         })
                     })
                 }
+                /* To update redux store while creating new element inside SH->Block Poetry->Stanza */
+                else if(poetryData?.parent?.type === "showhide" && item.id === poetryData?.parent?.id){
+                    item?.interactivedata[poetryData?.parent?.showHideType].map((ele) => {
+                        if(ele?.id === poetryData?.id) {
+                            ele?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                        }
+                    });
+                }
             })  
         }
         else if (asideData && asideData.type === 'groupedcontent') {
@@ -677,6 +685,13 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                                 })
 
                             })
+                        // handling local redux state for swapping of stanzas inside SH->Poetry  
+                        } else if (element?.type === "showhide" && sectionType) {
+                            element?.interactivedata[sectionType].forEach((eachElement)=>{
+                                if(eachElement?.type === "poetry" && eachElement?.id === poetryId) {
+                                    eachElement.contents.bodymatter.move(oldIndex, newIndex);
+                                }
+                            });
                         }
                     });
                 }
