@@ -51,7 +51,6 @@ class ApiResults extends React.Component {
     }
 
     render() {
-        // let noOfFigures = this.state.figureDataLength ? this.state.figureDataLength : '0';
         const {selectedFigure, ValueToBeSearch,assetPopoverData} = this.props;
         return (
             <div>

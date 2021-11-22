@@ -756,64 +756,65 @@ export const updateAudioVideoDataForCompare = (oldAudioVideoData) => (dispatch) 
     })
 }
 
-const updateAsideNumberInStore = (updateParams, elementEntityUrn = "") => (dispatch) => {
+const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
     const {
+        index,
         updatedElement,
-        activeElement,
         currentSlateData,
-        versionedElement
     } = updateParams;
-    const { index, elementType } = activeElement;
-    let tmpIndex = typeof index === 'number' ? index : index.split("-")
-     let indexesLen = tmpIndex.length
-     let newBodymatter = currentSlateData.contents.bodymatter
-    if (versionedElement) {
-        return versionedElement
-    }
-        elementEntityUrn = updatedElement?.contentUrn
 
-        if (typeof tmpIndex === 'number') {
-            currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
-        } else {
-            switch (indexesLen) {
-                case 2:
-                    newBodymatter[tmpIndex[0]] = updatedElement
-                    break;
-                case 3:
-                    newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]] = updatedElement
-                    break;
-                case 4:
-                    if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
-                        newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
-                    }
-                    else if (newBodymatter[tmpIndex[0]].type == "showhide") {
-                        newBodymatter[tmpIndex[0]].interactivedata[findSectionType(tmpIndex[1])][tmpIndex[2]] = updatedElement
-                    }
-                    break;
-            }
+    let tmpIndex = typeof index === 'number' ? index : index.split("-")
+    let indexesLen = tmpIndex.length
+    let newBodymatter = currentSlateData.contents.bodymatter
+    if (updatedId?.trim !== "") { /** Update Aside Id for versioning */
+        updatedElement.id = updatedId
+        updatedElement.versionUrn = updatedId
+    }
+    if (typeof tmpIndex === 'number') {
+        currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
+    } else {
+        switch (indexesLen) {
+            case 2:
+                newBodymatter[tmpIndex[0]] = updatedElement
+                break;
+            case 3:
+                newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]] = updatedElement
+                break;
+            case 4:
+                if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                    newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
+                }
+                else if (newBodymatter[tmpIndex[0]].type == "showhide") {
+                    newBodymatter[tmpIndex[0]].interactivedata[findSectionType(tmpIndex[1])][tmpIndex[2]] = updatedElement
+                }
+                break;
         }
+    }
 
     return {
-       elementEntityUrn, currentSlateData
+        currentSlateData
     }
 }
 
-export const updateAsideNumber = (previousData,index) => (dispatch,getState) => {
-    const parentData = getState().appStore.slateLevelData;
-    const currentParentData = JSON.parse(JSON.stringify(parentData));
-    let currentSlateData = currentParentData[config.slateManifestURN];
-    let activeElement=getState().appStore.activeElement;
-    let elementEntityUrn = "",updatedElement
-
+const prepareAsideTitleForUpdate = (index) => {
     let labelDOM = document.getElementById(`cypress-${index}-t1`),
         numberDOM = document.getElementById(`cypress-${index}-t2`),
-        titleDOM = document.getElementById(`cypress-${index}-t3`),
-        labeleHTML = labelDOM ? labelDOM.innerHTML : "",
+        titleDOM = document.getElementById(`cypress-${index}-t3`)
+    let labeleHTML = labelDOM ? labelDOM.innerHTML : "",
         numberHTML = numberDOM ? numberDOM.innerHTML : "",
         titleHTML = titleDOM ? titleDOM.innerHTML : ""
     labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
     numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
     titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
+
+    return titleHTML
+}
+export const updateAsideNumber = (previousData, index) => (dispatch, getState) => {
+    const parentData = getState().appStore.slateLevelData;
+    const currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    let elementEntityUrn = "", updatedElement
+    let titleHTML = prepareAsideTitleForUpdate(index);
 
     updatedElement = {
         ...previousData,
@@ -822,12 +823,12 @@ export const updateAsideNumber = (previousData,index) => (dispatch,getState) => 
         }
     }
     const updateParams = {
+        index,
         updatedElement,
-        activeElement: activeElement,
         currentSlateData
     }
-   const updatedData = dispatch(updateAsideNumberInStore(updateParams,""))
-    if(previousData?.contentUrn){
+    const updatedData = dispatch(updateAsideNumberInStore(updateParams))
+    if (previousData?.contentUrn) {
         elementEntityUrn = previousData.contentUrn
     }
     let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
@@ -835,7 +836,7 @@ export const updateAsideNumber = (previousData,index) => (dispatch,getState) => 
     dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
         payload: {
-            slateLevelData: currentParentData//{[config.slateManifestURN] : updatedSlateLevelData }
+            slateLevelData: currentParentData
         }
     })
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
@@ -876,18 +877,31 @@ export const updateAsideNumber = (previousData,index) => (dispatch,getState) => 
             config.savingInProgress = false
             config.isSavingElement = false
         }
-
+        else {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            const newParentData = getState().appStore.slateLevelData;
+            const parsedParentData = JSON.parse(JSON.stringify(newParentData));
+            let newSlateData = parsedParentData[config.slateManifestURN];
+            const newVersionURN = res?.data?.versionUrn ?? ""
+            const updatedSlateData = dispatch(updateAsideNumberInStore({
+                index,
+                updatedElement,
+                newSlateData
+            }, newVersionURN))
+            currentParentData[config.slateManifestURN] = updatedSlateData?.currentSlateData
+            dispatch({
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: currentParentData
+                }
+            })
+        }
+        const oldActiveElement = getState()?.appStore?.activeElement;
+        const BLANK_PARA_VALUES = ['<p></p>', '<p><br></p>', '<p><br/></p>', '<br data-mce-bogus="1">', '<p><br data-mce-bogus="1"></p>',"<p class='paragraphNumeroUno'></p>"];
         let activeElementObject = {
-            contentUrn:dataToSend.contentUrn,
-            elementId: dataToSend.id,
-            index: index,
-            elementType: 'element-aside',
-            primaryOption: 'primary-aside-aside',
-            secondaryOption: "secondary-aside-sb1",
-            toolbar: [],
-            elementWipType: dataToSend.type,
-            tag: "As",
-            asideNumber: (titleHTML !== "<p class='paragraphNumeroUno'></p>") ? true:  false
+            ...oldActiveElement,
+            elementId: res?.data?.versionUrn ?? dataToSend.id,
+            asideNumber: (!BLANK_PARA_VALUES.includes(titleHTML)) ? true : false
         };
         dispatch({
             type: 'SET_ACTIVE_ELEMENT',
@@ -898,11 +912,11 @@ export const updateAsideNumber = (previousData,index) => (dispatch,getState) => 
         config.savingInProgress = false
         config.isSavingElement = false
     }).catch(err => {
-            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-            dispatch({ type: ERROR_POPUP, payload: { show: true } })
-            config.conversionInProcess = false
-            config.savingInProgress = false
-            config.isSavingElement = false
-            console.error(" Error >> ", err)
-        })
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        dispatch({ type: ERROR_POPUP, payload: { show: true } })
+        config.conversionInProcess = false
+        config.savingInProgress = false
+        config.isSavingElement = false
+        console.error(" Error >> ", err)
+    })
 }

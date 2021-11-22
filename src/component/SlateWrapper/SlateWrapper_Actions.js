@@ -1168,6 +1168,9 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 let section = sectionType ? sectionType : asideData?.sectionType;
                 _requestData.content[0].sectionType = section;
             }
+            if (selection?.element?.type === 'element-aside' && selection?.element?.html?.title) {
+                _requestData.html = selection.element.html
+            }
         }
 
         if('manifestationUrn' in selection.element) {

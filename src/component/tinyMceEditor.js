@@ -749,9 +749,9 @@ export class TinyMceEditor extends Component {
         if (this.props?.element?.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
             this.props.onFigureImageFieldFocus(this.props.index);
         }
-    if(this.props.element && this.props?.element?.type === 'element-aside'){
-        this.props.onFigureImageFieldFocus(this.props.index);
-    }
+        if (this.props.element && this.props?.element?.type === 'element-aside' && config.figureFieldsPlaceholders.includes(this.props.placeholder)) {
+            this.props.onFigureImageFieldFocus(this.props.index);
+        }
         // cbFunc | is for callback delegates //
         let cbFunc = null;
         // alreadyExist | is to check if glossary&footnote tab is open //
