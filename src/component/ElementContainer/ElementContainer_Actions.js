@@ -474,13 +474,15 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             bodymatter: currentSlateData.contents.bodymatter,
             response: createdElemData.data
         };
+        //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed 
+        if(type2BAdded !== "MANIFEST_LIST") {
         if (slateWrapperConstants?.elementType?.indexOf(type2BAdded) !== -1) {
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
             } else {
                 tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
             }
-        }
+        }}
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -534,11 +536,13 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
 
         if (config.tcmStatus) {
             const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
+            //This check will be removed once BL will support TCM
+            if(type2BAdded !== "MANIFEST_LIST") {
             if (containersInSH.includes(type2BAdded)) {
                 prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);    
             } else {
                 prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
-            }
+            }}
         }
 
         dispatch({

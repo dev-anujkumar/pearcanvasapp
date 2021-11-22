@@ -341,7 +341,7 @@ export class TinyMceEditor extends Component {
 
     onListButtonClick = (type, subType) => {
         this.elementConverted = true;
-        let blockListData = isElementInsideBlocklist({index:this.props.index}, this.props.slateLevelData);
+        let blockListData = isElementInsideBlocklist({index:this.props.index,data:this.props}, this.props.slateLevelData);
         removeListHighliting();
         // This block is to make an API call before making metadata call for block list to retain data after metadata call.
         if(blockListData){
@@ -1382,7 +1382,7 @@ export class TinyMceEditor extends Component {
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
+                        this.props.createElement(TEXT, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
                     }
                 }
                 else if (key === 13) {
@@ -1390,7 +1390,7 @@ export class TinyMceEditor extends Component {
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "ENTER" });
+                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "ENTER" });
                     }
                 } else if (key === 9 && e.shiftKey) {
                     // SHIFT + TAB key press handling for BlockList element
@@ -1402,7 +1402,7 @@ export class TinyMceEditor extends Component {
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "SHIFT+TAB" });
+                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "SHIFT+TAB" });
                     }
                 } else {
                     // TAB key press handling for BlockList element
@@ -1423,13 +1423,13 @@ export class TinyMceEditor extends Component {
                         if (parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id !== id) { // If it is not the only point insdie the block list then only delete it.
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, this.props.asideData, {}, deleteItemIndex, {}, {}, null);
                             getSelectedElement.setAttribute('placeholder', '');
                         }
                         if(parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === "element-authoredtext"){ // This case will delete the element only if the next element is a element authored text and it will ove the same next child to deleted position.
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, this.props.asideData, {}, deleteItemIndex, {}, {}, null);
                             getSelectedElement.setAttribute('placeholder', '');
                         }
                     }
@@ -1438,7 +1438,7 @@ export class TinyMceEditor extends Component {
                         if (parentData?.listitemdata?.bodymatter?.length === 1) { // When there is only one element authored text in manifestlistitem then it will delete the manifestlistitem.
                             const deleteItemIndex = listdata?.bodymatter.findIndex(listData => listData.id === parentData?.id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                            this.props.deleteElement(parentData?.id, "manifestlistitem", { contentUrn: listdata?.contentUrn }, {}, parentData?.contentUrn, deleteItemIndex, {}, {}, null);
+                            this.props.deleteElement(parentData?.id, "manifestlistitem", { contentUrn: listdata?.contentUrn }, this.props.asideData, parentData?.contentUrn, deleteItemIndex, {}, {}, null);
                             getSelectedElement.setAttribute('placeholder', '');
                         } else if (parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === 'manifestlist') {
                             store.dispatch({
@@ -1452,7 +1452,7 @@ export class TinyMceEditor extends Component {
                         } else { //Deletes the text element in which backspace is pressed.
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, {}, {}, deleteItemIndex, {}, {}, null);
+                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, this.props.asideData, {}, deleteItemIndex, {}, {}, null);
                             getSelectedElement.setAttribute('placeholder', '');
                         }
                     }
@@ -1463,12 +1463,12 @@ export class TinyMceEditor extends Component {
     }
 
     createNestedBlockList(){
-        if (!isNestingLimitReached(this.props.index)) {
+        if (!isNestingLimitReached(this.props.index,this.props.asideData)) {
            let blockListData = checkBlockListElement(this.props, "TAB");
             if (blockListData && Object.keys(blockListData).length) {
                 const { parentData, indexToinsert } = blockListData;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, {}, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
+                this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
             }
         }
     }
@@ -2430,7 +2430,7 @@ export class TinyMceEditor extends Component {
      */
     handleIndent = (e, editor, content, type, selectedNode) => {
         let className = null;
-        let blockListData = isElementInsideBlocklist({index:this.props.index}, this.props.slateLevelData);
+        let blockListData = isElementInsideBlocklist({index:this.props.index,data:this.props}, this.props.slateLevelData);
         if(!blockListData){
             if (type && type === 'stanza' && selectedNode) {
                 className = selectedNode.className;
@@ -3388,7 +3388,7 @@ export class TinyMceEditor extends Component {
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
         }
-        else if (blockListData && Object.keys(blockListData).length){
+        else if ((blockListData && Object.keys(blockListData).length) || this.props?.asideData?.type === "manifestlist") {
             toolbar = config.blockListToolbar
         }
         else {

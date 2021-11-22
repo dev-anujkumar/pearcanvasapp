@@ -637,7 +637,13 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             } else if(parentElement && parentElement.type === "citations") {
                 dataToReturn["metaDataField"] = "formattedTitle"
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
-            } else if(parentElement && parentElement.type === "showhide" && showHideType){
+            } 
+            else if(asideData.type==="manifestlist" && parentElement && parentElement.type === "showhide" && showHideType){
+                // dataToReturn.sectionType = showHideType;
+                let manifestListItemIndex = asideData.index.split('-');
+                dataToReturn["elementParentEntityUrn"] = asideData?.parentManifestList?.listdata?.bodymatter[manifestListItemIndex[manifestListItemIndex.length-2]]?.contentUrn
+            }
+            else if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.sectionType = showHideType;
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
             }
