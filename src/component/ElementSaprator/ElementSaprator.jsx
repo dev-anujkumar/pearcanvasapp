@@ -366,7 +366,8 @@ export function typeOfContainerElements(elem, props) {
     /* Do not show Citation Group option if inside Multicolumn  */
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
     /* Do not show SH and Pop up option if Aside/WE is inside SH  */
-    if (asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) {
+    /* Do not show block poetry option inside SH if SH is inside Aside/WE/MultiColumn */
+    if ((asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) || (asideData?.grandParent?.asideData && Object.keys(asideData.grandParent.asideData).length)) {
         switch (elem?.buttonType) {
             case "interactive-elem-button":
                 newData = {

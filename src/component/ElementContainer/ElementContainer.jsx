@@ -1158,9 +1158,11 @@ class ElementContainer extends Component {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         config.popupCreationCallInProgress = true
         if (!config.poetryElementCreationInProgress) {
+            const { showHideType } = this.props;
             config.poetryElementCreationInProgress = poetryField === "creditsarray" ? true : false
+            if(parentElement && Object.keys(parentElement).length && showHideType) parentElement["showHideType"] = showHideType;
             this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
-                this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN, this.props?.element)
+                this.handleBlur(forceupdate, currentElementData, index, showHideType), index, config.slateManifestURN, this.props?.element)
         }
     }
 
@@ -1612,6 +1614,7 @@ class ElementContainer extends Component {
                         userRole={this.props.userRole}
                         parentUrn={this.props?.parentUrn}
                         parentElement={this.props.parentElement}
+                        showHideType = {this.props.showHideType}
                     />
                     labelText = 'PE'
                     break;

@@ -1393,7 +1393,16 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                             }
                         })
                     })
-                } 
+                } else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents[poetryField] = [response.data]
+                            element2.contents[poetryField][0].html.text = elemNode.innerHTML
+                            element2.contents[poetryField][0].elementdata.text = elemNode.innerText
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
+                    })
+                }
                 else {
                 if(!targetPoetryElement.contents[poetryField]){
                     targetPoetryElement.contents[poetryField] = [];
@@ -1433,6 +1442,15 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                             }
                         })
                     })
+                } else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents[poetryField] = response.data
+                            element2.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                            element2.contents[poetryField].elementdata.text = elemNode.innerText
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
+                    })
                 } else {
                 targetPoetryElement.contents[poetryField] = response.data
                 targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
@@ -1465,6 +1483,14 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                                 targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
                             }
                         })
+                    })
+                }  else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents["formatted-title"] = response.data
+                            element2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
                     })
                 }
                 else {
