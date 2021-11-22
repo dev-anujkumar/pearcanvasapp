@@ -838,7 +838,8 @@ export const updateBLMetaData = (elementId, elementData, metaData) => {
 }
 
 
-const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch) => {
+const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch, getState) => {
+    const { appStore } =  getState();
     const {
         dataToUpdate,
         activeElement,
@@ -870,6 +871,10 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
                         updatedElement = newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]]
+                    } else if (newBodymatter[tmpIndex[0]]?.type == "showhide") {
+                        newBodymatter[tmpIndex[0]].interactivedata[appStore?.asideData?.sectionType][tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].interactivedata[appStore?.asideData?.sectionType][tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].interactivedata[appStore?.asideData?.sectionType][tmpIndex[2]]
                     } else {
                         newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
                         newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
