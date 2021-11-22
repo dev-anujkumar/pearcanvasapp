@@ -32,8 +32,10 @@ const BlockList = (props) => {
             let parentManifestListItem = manifestList[parentIndex];
             asideData.parentManifestList = props.element;
             asideData.grandParentManifestList = props.grandParentManifestList;
+            let placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 3 ? "Press Shift+Tab to move out" : "Type something...";
             if (type === "showhide") {
                  indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
+                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? "Press Shift+Tab to move out" : "Type something...";
             }
             return (
                 <ElementContainer
@@ -46,7 +48,7 @@ const BlockList = (props) => {
                     onListSelect={props.onListSelect}
                     model={props?.element.html}
                     handleCommentspanel={props?.handleCommentspanel}
-                    placeholder={typeof (props?.index) === 'string' && props?.index?.split('-').length >= 3 ? "Press Shift+Tab to move out" : "Type something..."}
+                    placeholder={placeholder}
                     asideData={asideData}
                     currentManifestList={props.element}
                     parentElement={props?.parentElement}

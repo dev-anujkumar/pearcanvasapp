@@ -39,7 +39,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
         CONTAINER_VERSIONING = "containerVersioning",
         PARENTELEMENT_TYPES = ["poetry", "showhide", "citations", "groupedcontent"]
 
-    const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
+    const isBlockListElement  = isElementInsideBlocklist({index:elementIndex,data:{asideData:asideData}},newslateData)
     if (updatedData && updatedData.pageNumberRef) {
         versionedData.pageNumberRef = updatedData.pageNumberRef
     }
@@ -113,7 +113,7 @@ export const updateElementInStore = (paramsObj) => {
         elementId = updatedData.id;
 
     const iList = elementIndex?.toString()?.split("-") || [];
-    const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
+    const isBlockListElement  = isElementInsideBlocklist({index:elementIndex,data:{asideData:asideData}},newslateData)
 
     /* update the store on update of showhide elements inside container elements */
     if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
@@ -558,18 +558,36 @@ export const updateElementInStore = (paramsObj) => {
                 })
             }
             else if(isBlockListElement){
-                const indexes = elementIndex.split("-");
-                if(indexes.length===3){
-                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]] = updatedData
-                }
-                else if(indexes.length===5){
-                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
-                }
-                else if(indexes.length===7){
-                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                let indexes;
+                if(asideData.parent && asideData.parent.type==="showhide"){
+                    indexes = parentElement.index.split("-")
+                    if(indexes.length===5){
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                    }
+                    else if(indexes.length===7){
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                    }
+                    else if(indexes.length===9){
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                    }
+                    else{
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
+                    }
                 }
                 else{
-                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                    indexes = elementIndex.split("-");
+                    if(indexes.length===3){
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]] = updatedData
+                    }
+                    else if(indexes.length===5){
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                    }
+                    else if(indexes.length===7){
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                    }
+                    else{
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                    }
                 }
             }
             //else if (element.type === SHOW_HIDE) { 

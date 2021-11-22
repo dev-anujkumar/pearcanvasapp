@@ -207,7 +207,7 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
             const indexes = index.split("-");
             let parentElement = data?.asideData?.parent;
 
-            if (parentElement && parentElement.type === "showhide" && data.asideData.parentManifestListItem && data.asideData.parentManifestList) {
+            if (parentElement && parentElement.type === "showhide" && data.asideData.parentManifestList) {
                 return true;
             }
             if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
