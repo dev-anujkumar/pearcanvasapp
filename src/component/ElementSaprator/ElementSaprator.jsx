@@ -149,11 +149,12 @@ export function ElementSaprator(props) {
     }
 
     const renderWordPasteButton = (parentElementType, { firstOne, index, userRole, onClickCapture }) => {
-        const inContainer = [POETRY, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP_ELEMENT, SINGLE_COLUMN, SHOW_HIDE ]
+        const { parentUrn, asideData } = props
+        const inContainer = [POETRY, CITATION_GROUP_ELEMENT, SHOW_HIDE ]
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
         const hasPasteFromWordPermission = hasProjectPermission("paste_from_word");
         let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
-        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn) {
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && asideData?.parent?.type ==="groupedcontent")) {
             return null;
         }
 
@@ -161,7 +162,7 @@ export function ElementSaprator(props) {
         return (
             <div className={`elemDiv-expand paste-button-wrapper}`} onClickCapture={onClickCapture} >
                 <Tooltip direction='poc' tooltipText='Paste from Word'>
-                    <Button type="powerpaste" onClick={() => props.handleCopyPastePopup(true, insertionIndex)} />
+                    <Button type="powerpaste" onClick={() => props.handleCopyPastePopup(true, insertionIndex, parentUrn, asideData)} />
                 </Tooltip>
             </div>
         )

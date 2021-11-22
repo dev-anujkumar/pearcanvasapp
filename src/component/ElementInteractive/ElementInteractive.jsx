@@ -238,12 +238,12 @@ class Interactive extends React.Component {
             figureData.interactiveid = newVersion.id;
             figureData.interactivetitle = latestVersion.title;
         }
-        if (interactivetype && thumbnailTypes.indexOf(interactivetype) > -1) {
+        // if (interactivetype && thumbnailTypes.indexOf(interactivetype) > -1) {
             const thumbnailData = await this.getVideoMCQandGuidedThumbnail(figureData.interactiveid);
             figureData.posterimage = thumbnailData?.posterImage;
             figureData.alttext = thumbnailData?.alttext;
-            thumbnailImage = thumbnailData?.posterImage?.path
-        }
+            thumbnailImage = thumbnailData?.posterImage?.path;
+        // }
         this.setState({
             itemID: figureData.interactiveid,
             interactiveTitle: figureData.interactivetitle,
@@ -329,6 +329,7 @@ class Interactive extends React.Component {
     renderInteractiveType = (element, itemId, index, slateLockInfo) => {
         let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass,path;
         var context = element && element.figuredata && element.figuredata.interactivetype;
+        
         /**------------------ Set classes for jsx based on interactivetype value ------------------*/
 
         let interactiveData = interactiveTypeData.hasOwnProperty(context) === true ? interactiveTypeData[context] : interactiveTypeData["fpo"];
@@ -342,83 +343,10 @@ class Interactive extends React.Component {
         figcaptionClass = interactiveData['figcaptionClass'];
         paragraphCredit = interactiveData['paragraphCredit'];
         hyperlinkClass = interactiveData['hyperlinkClass'] ? interactiveData['hyperlinkClass'] : "";
-
+      
         let figureHtmlData = getLabelNumberTitleHTML(element);
-        if (SMARTLINK_CONTEXTS.includes(context)) {
-            return <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
-        }
-        else if (context === 'video-mcq' || context === 'mcq' || context === "guided-example" ) {
-            jsx = <div className={divImage} resource="">
-                <figure className={figureImage} resource="">
-                    <header>
-                            <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={figureHtmlData.formattedLabel}
-                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className={heading4Label + ' figureNumber'} id={this.props.id} placeholder="Enter Number..." tagName={'h4'} model={figureHtmlData.formattedNumber}
-                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
-                            <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={figureHtmlData.formattedTitle}
-                             handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
-                    </header>
-                    <div className={id +' interactive-id'} onClick={()=> this.handleClickElement()}><strong>{path ? path : 'ITEM ID: '} </strong><span>{this.state.itemID?this.state.itemID : itemId}</span></div>
-                    {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title elm-int-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong><span>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</span></div>}
-                    {(element.figuredata.interactiveformat === ELM_INT ) && <div className={id+' interactive-status cls-display-flex eml-int-status-padding'}><strong className="eml-int-status-label-tm">{ 'CURRENT VERSION: '} </strong>{ this.showElmVersionStatus() }</div> }
-                    <div className={"pearson-component " + dataType} data-uri={this.state.itemID?this.state.itemID : itemId} data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
 
-                        <img src={this.state.imagePath ? this.state.imagePath : INTERACTIVE_FPO} title="View Image" alt="" className={imageDimension + " lazyload"} />
-
-                    </div>
-                    <figcaption>
-                        <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-4`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
-                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
-                    </figcaption>
-                </figure>
-                <div>
-                    <TinyMceEditor element={this.props.model} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-5`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
-                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
-                </div>
-            </div>
-        }
-        else {
-            jsx = <div className={divImage} resource="">
-                <figure className={figureImage} resource="">
-                    <header>
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={figureHtmlData.formattedLabel}
-                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className={heading4Label + ' figureNumber'} id={this.props.id} placeholder="Enter Number..." tagName={'h4'} model={figureHtmlData.formattedNumber}
-                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-2`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={figureHtmlData.formattedTitle}
-                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
-                    </header>
-                    <div className={id+" interactive-id"} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'ITEM ID: '} </strong><span>{this.state.itemID ? this.state.itemID : itemId}</span></div>
-                    {element.figuredata.interactiveformat === ELM_INT && <div className={id+' interactive-title elm-int-title'} onClick={(event) => this.handleClickElement(event)}><strong>{path ? path : 'INTERACTIVE TITLE: '} </strong><span>{this.state.interactiveTitle ? this.state.interactiveTitle : ""}</span></div>}
-                    {(element.figuredata.interactiveformat === ELM_INT ) && this.state?.itemID && <div className={id+' interactive-status cls-display-flex eml-int-status-padding'}><strong className="eml-int-status-label-tm">{ 'CURRENT VERSION: '} </strong>{ this.showElmVersionStatus() }</div> }
-                    <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e) => { this.togglePopup(e, true) }} >
-                        {
-                            imageDimension !== '' ?
-                                (context === 'table' ?
-                                    <a className="" href="javascript:void(0)">
-                                        <img src={this.state.posterImage ? this.state.posterImage : INTERACTIVE_FPO} data-src={INTERACTIVE_FPO} title="View Image" alt="" className={imageDimension + " lazyload"} />
-                                    </a>
-                                    : <img src={this.state.posterImage ? this.state.posterImage : INTERACTIVE_FPO} title="View Image" alt="" className={imageDimension + " lazyload"} />
-                                )
-                                : 
-                                 <a className={hyperlinkClass} href="javascript:void(0)">
-                                    <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.html.postertext? element.html.postertext:""} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} element={this.props.model} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}/>
-                                 </a>
-                        }
-                    </div>
-                    <figcaption>
-                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-4`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
-                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
-                    </figcaption>
-                </figure>
-                <div>
-                    <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-5`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
-                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
-                </div>
-            </div>
-        }
-        return jsx;
+            return <FigureUserInterface interactiveformat={this.props.model.figuredata.interactiveformat} deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={(e) => this.togglePopup(e, true)} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}  handleAudioPopupLocation = {this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} updateElm={() => this.updateElm()}/>
     }
 
     /**
@@ -518,12 +446,12 @@ class Interactive extends React.Component {
                 interactiveformat: ELM_INT
             }
             const interactiveType = pufObj.interactiveType ?? this.props?.model?.figuredata?.interactivetype;
-            if (interactiveType && thumbnailTypes.indexOf(interactiveType) > -1) {
+            // if (interactiveType && thumbnailTypes.indexOf(interactiveType) > -1) {
                 const thumbnailData = await this.getVideoMCQandGuidedThumbnail(pufObj.id);
                 figureData.posterimage = thumbnailData?.posterImage;
                 figureData.alttext = thumbnailData?.alttext;
-                thumbnailImage = thumbnailData?.posterImage?.path
-            }
+                thumbnailImage = thumbnailData?.posterImage?.path;
+            // }
             this.setState({
                 itemID: pufObj.id,
                 interactiveTitle: pufObj.title,
@@ -872,15 +800,16 @@ class Interactive extends React.Component {
             let interactiveData ={};
             let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?String.prototype.toLowerCase.apply(citeTdxObj.singleAssessmentID.taxonomicTypes).split(","):"";
             tempInteractiveType = tempInteractiveType ? utils.getTaxonomicType(tempInteractiveType) : this.state.elementType;
-            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
+            // if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
                await getMCQGuidedData(itemId).then((responseData) => {
                     if(responseData && responseData['data'] && responseData['data']["thumbnail"]){
                         interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
                         interactiveData['path'] = responseData['data']["thumbnail"]['src'];
                         interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
+                        interactiveData['title'] = responseData['data']["title"];
                     }
                 })
-            }
+            // }
             let posterImage = {};
             posterImage['imageid'] = interactiveData['imageId'] ? interactiveData['imageId'] : '';
             posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
@@ -891,15 +820,15 @@ class Interactive extends React.Component {
                    schema: INTERACTIVE_SCHEMA,
                    interactiveid: citeTdxObj.singleAssessmentID.versionUrn,
                    interactiveparentid:citeTdxObj.id,
-                   interactivetitle:citeTdxObj.title,
+                   interactivetitle: interactiveData['title'] || citeTdxObj.title,
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
                }
-            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
+            // if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
                 figureData.posterimage = posterImage;
                 figureData.alttext = alttext;  
                 
-            }
+            // }
             that.setState({itemID : itemId,
                 imagePath:posterImage.path,
                 itemParentID:citeTdxObj.id,

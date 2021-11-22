@@ -1,22 +1,5 @@
 import cypressConfig from '../config/cypressConfig';
 import { sendDataToIframe} from '../constants/utility';
-export const loadPatternScripts = (PATTERNS) => {
-
-    appendPatternScripts(PATTERNS['PATTERN_VENDOR'])
-    appendPatternScripts(PATTERNS['PATTERN_BROKER'])
-    appendPatternScripts(PATTERNS['PATTERN_ADD_ASSET'])
-    appendPatternScripts(PATTERNS['PATTERN_PRODUCT_LINK'])
-    appendPatternScripts(PATTERNS['PATTERN_SEARCH_SELECT'])
-}
-
-const appendPatternScripts = (src) => {
-    let script = document.createElement('script');
-    script.type = "text/javascript";
-    script.defer = true;
-    script.async = false;
-    script.src = src;
-    document.getElementsByTagName('head')[0].appendChild(script);
-}
 
 export const modifyObjKeys = (obj, newObj) => {
     Object.keys(obj).forEach(function(key) {

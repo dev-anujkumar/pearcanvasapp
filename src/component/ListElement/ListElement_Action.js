@@ -8,7 +8,7 @@ import { LIST_TYPE_MAPPINGS } from '../../constants/Element_Constants';
 import { checkBlockListElement } from '../../js/TinyMceUtility';
 // IMPORT - other dependencies
 import elementList from '../Sidebar/elementTypes.js';
-import { conversionElement, updateBlockListMetadata, updateContainerMetadata } from '../Sidebar/Sidebar_Action.js';
+import { conversionElement, updateBlockListMetadata } from '../Sidebar/Sidebar_Action.js';
 
 // ************************************************************************
 // *************************** List Template ****************************** 

@@ -232,4 +232,8 @@
     transition: opacity 1s;
 }
 
+.container-aside .tooltip .tooltip-poc {
+    margin-left: -65px;
+}
+
 

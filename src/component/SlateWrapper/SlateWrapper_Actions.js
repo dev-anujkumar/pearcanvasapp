@@ -426,9 +426,9 @@ export const appendElementInsideShowhide = (shObj, key, asideData, innerkey, ind
  * @param {Array} powerPasteData Elements to be pasted
  * @param {Number} index index of insertion
  */
-export const createPowerPasteElements = (powerPasteData, index) => async (dispatch, getState) => {
+export const createPowerPasteElements = (powerPasteData, index, parentUrn, asideData) => async (dispatch, getState) => {
     let data = []
-    let slateEntityUrn = config.slateEntityURN
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -463,8 +463,8 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
         while (indexOfElement < response.data.length) {
             if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1){
                 const containerElement = {
-                    asideData: null,
-                    parentUrn: null,
+                    asideData: asideData?asideData:null,
+                    parentUrn: parentUrn?parentUrn:null,
                     poetryData: null
                 };
                 const slateData = {
@@ -490,7 +490,28 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
             return false;
         }
 
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data); 
+        if (asideData && asideData.type === 'groupedcontent') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
+                if (item.id === asideData.id) {
+                    item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, ...response.data)
+                }
+            })
+        } else if (asideData && asideData.type == 'element-aside') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == parentUrn.manifestUrn) {
+                    item.elementdata.bodymatter.splice(index, 0, ...response.data)
+                } else if (item.type == "element-aside" && item.id == asideData.id) {
+                    item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
+                        if (ele.id === parentUrn.manifestUrn) {
+                            ele.contents.bodymatter.splice(index, 0, ...response.data)
+                        }
+                    })
+                }
+            })
+        }
+        else {
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data);
+        }
         
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,

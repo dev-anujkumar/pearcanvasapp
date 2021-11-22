@@ -1,7 +1,8 @@
 import {
   ERROR_POPUP,
   MULTIPLE_LINE_POETRY_ERROR_POPUP,
-  ELM_PORTAL_API_ERROR
+  ELM_PORTAL_API_ERROR,
+  ERROR_API_POPUP
 } from '../constants/Action_Constants'
 
 const INITIAL_STATE = {
@@ -45,6 +46,14 @@ export default function errorPopupReducer(state = INITIAL_STATE, action = INITIA
         isElmApiError: action.payload.isElmApiError
       }
     }
+    case ERROR_API_POPUP: {
+      return {
+        ...state,
+        show : action.payload.show,
+        message : action.payload.message
+      }
+    }
+    
     default:
       return state
   }
