@@ -47,7 +47,10 @@ export const updateNewVersionElementInStore = (paramObj) => {
     if (asideData?.type == 'showhide') {
         getShowhideParent({ asideData, dispatch, parentElementIndex: elementIndex, fetchSlateData })
     }
-    if(isBlockListElement){
+    if (asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType && isBlockListElement) {
+        asideData.indexes = indexes;
+        dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+    } else if(isBlockListElement) {
         const parentBlockListId = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].id
         const parentBlockListContentUrn = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].contentUrn
         dispatch(fetchSlateData(parentBlockListId,parentBlockListContentUrn, 0, {type:'manifestlist' ,indexes:indexes}, CONTAINER_VERSIONING, false));
