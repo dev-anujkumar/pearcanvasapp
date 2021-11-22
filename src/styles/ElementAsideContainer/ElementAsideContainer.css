@@ -1,7 +1,7 @@
 .figureLabel.cypress-editable {
     font-size: 14px !important;
     width: 74px !important;
-    border-bottom: 2px solid #737373;
+    border-bottom: 2px solid #737373 !important;
     margin: 8px 0 !important;
     margin-right:24px !important;
     padding: 15px 4px 6px 4px !important;
@@ -13,6 +13,9 @@
     overflow: hidden;
 }
 
+h4.figureLabel.cypress-editable.place-holder::before{
+    content: none !important;
+}
 .asideHeader{
     margin-bottom: 24px;
     margin-top: 16px;

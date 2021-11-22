@@ -503,7 +503,7 @@ class ElementAsideContainer extends Component {
  * 
  */
     renderTitleField = (asideHtmlData) => {
-        // if (this.state.showTitle) {
+        if (this.state.showTitle) {
             return (
                 <div className="asideHeader">
                     <header className="figure-header new-figure-image-header">
@@ -522,7 +522,7 @@ class ElementAsideContainer extends Component {
                     </div>
                 </div>
             )
-        // }
+        }
     }
 
 
@@ -557,7 +557,6 @@ class ElementAsideContainer extends Component {
     renderWorkExample = (designtype) => {
         return (
             <React.Fragment>
-                
                 <hr className={`aside-horizotal-break ${designtype == "workedexample2" ? 'aside-horizotal-break-green' : ""}`} />
                 {this.renderContainer(this.props)}
                 <hr className={`aside-break-bottom ${designtype == "workedexample2" ? 'aside-break-bottom-green' : ""}`}></hr>

@@ -12,7 +12,6 @@ import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContaine
 import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import { getShowHideElement, indexOfSectionType, findSectionType } from '../ShowHide/ShowHide_Helper';
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
-// import elementDataBank from '../CanvasWrapper/elementDataBank';
 import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
@@ -853,7 +852,7 @@ export const updateAsideNumber = (previousData, index) => (dispatch, getState) =
         },
         versionUrn: previousData.versionUrn,
         contentUrn: previousData.contentUrn,
-        status: previousData.status
+        status: updatedSlateLevelData.status
 
     }
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
