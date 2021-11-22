@@ -88,7 +88,6 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
     //         bodymatter[index] = listObjectTemplate;
     //     }
     // });
-    console.log('activeElement',activeElement,asideData)
     if(asideData.type==="manifestlist"){
         // let blockListData = checkBlockListElement({slateLevelData:slateLevelData,index:activeElement.index}, 'ENTER');
         // if (blockListData && Object.keys(blockListData).length && activeElement.elementType !== "manifestlist") {
