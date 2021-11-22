@@ -132,8 +132,8 @@ const SHOWHIDE = "SHOW_HIDE";
 // This mapping is used for conditional rendering of Paste Button inside Elements
 const CONDITIONAL_PASTE_SUPPORT = {
     [SHOW_HIDE] : { [ASIDE_SOURCE]: ['poetry', 'popup', 'showhide'], [WORKED_EXAMPLE]: ['poetry', 'popup', 'showhide']},
-    [MULTICOLUMN_SOURCE]: { [SHOWHIDE]: ['element-aside','citations'],[ASIDE_SOURCE]:['showhide'],[WORKED_EXAMPLE]:['showhide'] },
-    [ASIDE_SOURCE]: { [SHOWHIDE]: ['element-aside','citations']}
+    [MULTICOLUMN_SOURCE]: { [SHOWHIDE]: ['element-aside','citations','poetry'],[ASIDE_SOURCE]:['showhide'],[WORKED_EXAMPLE]:['showhide'] },
+    [ASIDE_SOURCE]: { [SHOWHIDE]: ['element-aside','citations','poetry']}
 }
 
 export const getPasteValidated = (separatorProps, sourceType, selectionType) => {

@@ -471,6 +471,8 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
                 containerSnapshotsInShowhide(wipData, innerIndex, { asideData, parentUrn }, actionStatus, item, SHType)
             } else if (item?.type === CITATION_GROUP) {
                 containerSnapshotsInShowhide(wipData, innerIndex, { asideData, parentUrn }, actionStatus, item, SHType)
+            } else if (item?.type === POETRY_ELEMENT) {
+                containerSnapshotsInShowhide(wipData, innerIndex, { asideData, parentUrn }, actionStatus, item, SHType)
             }
         })
     }
@@ -966,7 +968,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
  * @param {String} sectionId - Urn for section break
  * @returns {Object} Object that contains the element tag and elementUrn for snapshot 
 */
-export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}, parentPTObj) => {
+export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,popupInContainer,slateManifestVersioning, popupSlate, parentElement, containerElement = {}) => {
     const { asideData, parentUrn, showHideObj } = containerElement
     let elementData = {};
     let elementTag = `${tag.parentTag}${isHead ? ":" + isHead : ""}${tag.childTag ? ":" + tag.childTag : ""}`;
@@ -1058,7 +1060,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
         } 
         else if (showHideObj?.element?.type === SHOWHIDE || poetryAsideData?.type === SHOWHIDE) {
-            const showSectionType = showHideObj?.sectionType ? showHideObj?.sectionType : showHideObj?.element.sectionType
+            const showSectionType = showHideObj?.sectionType ? showHideObj?.sectionType : showHideObj?.element?.sectionType ? showHideObj?.element?.sectionType : showHideObj?.showHideType
             let section = showSectionType ? showSectionType : poetryAsideData?.sectionType;
             let shId = showHideObj?.element?.id ? showHideObj?.element?.id : poetryAsideData?.id;
             let showHideSection = getShowHideTag(section);
