@@ -33,7 +33,6 @@ class Sidebar extends Component {
         let syntaxhighlighting = this.props.activeElement.syntaxhighlighting;
         let podwidth = this.props.activeElement.podwidth;
         let asideNumberValue = this.props.activeElement?.asideNumber || false;
-        console.log("asideNumberValue",asideNumberValue);
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
