@@ -43,7 +43,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
-        if (showHideElement || asideParent?.type === 'showhide') { /** Glossary-Footnotes inside Show-Hide */
+        if (showHideElement || asideParent?.type === 'showhide' && (tempIndex.length == 4 && newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) { /** Glossary-Footnotes inside Show-Hide */
             //let showHideChild = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement, 'glossaryFootnote')
             //glossaryFootElem = showHideChild?.currentElement
             /* Get the element where footnote/Glossery is added */
@@ -141,7 +141,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                             glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata.bodymatter[tempIndex[1]]?.groupdata.bodymatter[tempIndex[2]]?.contents['creditsarray'][0] || {};
                             break;
                     }
-                } 
+                } else if (newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.sectionType][tempIndex[2]]?.type === 'poetry') { /* footnote for PE title inside SH element */
+                    switch (tempIndex[3]) {
+                        case "1":
+                            glossaryFootElem = newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.sectionType][tempIndex[2]]?.contents['formatted-title'] || {}
+                            break;
+                        case "4":
+                            glossaryFootElem = newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.sectionType][tempIndex[2]]?.contents['creditsarray'][0] || {}
+                            break;
+                    }
+                }
             }
         } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // MultiColumn->PS or MultiColumn->As->PS or MultiColumn->WE->PS
             let elementInside2C = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
@@ -552,7 +561,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             case 4:
                 if(newBodymatter[elemIndex[0]]?.type == "groupedcontent"){ /* contentURN for PE title inside multicolumn element */
                     parentEntityUrn = newBodymatter[elemIndex[0]]?.groupeddata?.bodymatter[elemIndex[1]]?.groupdata.bodymatter[elemIndex[2]]?.contentUrn
-                } else {
+                } 
+                else if (typeWithPopup === "poetry") { /* contentURN for PE title inside SH element */
+                    const showhideTypeVal = asideParent?.sectionType;
+                    parentEntityUrn = newBodymatter[elemIndex[0]]?.interactivedata[showhideTypeVal][elemIndex[2]]?.contents['formatted-title'].contentUrn
+                }
+                else {
                     parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contents.bodymatter[elemIndex[2]].contentUrn
                 }
                 break;
@@ -727,7 +741,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
 
-        if (showHideElement || asideParent?.type === 'showhide') {/** Glossary-Footnotes inside Show-Hide */
+        if (showHideElement || asideParent?.type === 'showhide'  && (tempIndex.length == 4 && newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) {/** Glossary-Footnotes inside Show-Hide */
             newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         } else if ((tempIndex.length == 5 || tempIndex.length == 6) && elementType == 'figure' && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
             let elementInSH = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]];
@@ -876,7 +890,23 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].contents['creditsarray'][0] = res.data
                             break;
                     }
-                } 
+                } else if (newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.sectionType][tempIndex[2]]?.type === 'poetry') { /* footnote for PE title inside SH element */
+                    switch (tempIndex[3]) {
+                        case "1":
+                            let responseElement = { ...res.data }
+                            newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['formatted-title']
+                            res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
+                            responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
+                            newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['formatted-title'] = responseElement;
+                            break;
+                        case "4":
+                            if (!newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['creditsarray']) {
+                                newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['creditsarray'] = [];
+                            }
+                            newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['creditsarray'][0] = res.data
+                            break;
+                    }
+                }
             }
         } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // MultiColumn->PS or MultiColumn->As->PS or MultiColumn->WE->PS
             if (res.data.html.hasOwnProperty('text')) {
