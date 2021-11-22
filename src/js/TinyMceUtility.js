@@ -136,7 +136,6 @@ export const getBLParentContainer = (bodymatter, start, end, indexes) => {
  */
 export const checkBlockListElement = (data, keypressed) => {
     const { slateLevelData, index } = data;
-    console.log('dataPassed',data,keypressed)
     let elementData = {};
     if (slateLevelData && Object.values(slateLevelData).length && index && keypressed) {
         const { contents } = Object.values(slateLevelData)[0];
@@ -159,12 +158,6 @@ export const checkBlockListElement = (data, keypressed) => {
                     indexToinsert = Number(indexes[indexes.length - 4]) + 1;
                     parentData = data.asideData.grandParentManifestList
                 }
-
-                console.log('dataReturn@@',{
-                    indexToinsert: indexToinsert,
-                    parentData: parentData
-                })
-
                 return {
                     indexToinsert: indexToinsert,
                     parentData: parentData
