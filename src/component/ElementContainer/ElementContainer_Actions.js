@@ -886,7 +886,7 @@ export const updateAsideNumber = (previousData, index) => (dispatch, getState) =
             const updatedSlateData = dispatch(updateAsideNumberInStore({
                 index,
                 updatedElement,
-                newSlateData
+                currentSlateData: newSlateData
             }, newVersionURN))
             currentParentData[config.slateManifestURN] = updatedSlateData?.currentSlateData
             dispatch({
