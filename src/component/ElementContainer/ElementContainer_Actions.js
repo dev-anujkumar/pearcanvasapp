@@ -882,7 +882,7 @@ export const updateAsideNumber = (previousData, index) => (dispatch, getState) =
             const newParentData = getState().appStore.slateLevelData;
             const parsedParentData = JSON.parse(JSON.stringify(newParentData));
             let newSlateData = parsedParentData[config.slateManifestURN];
-            const newVersionURN = res?.data?.versionUrn ?? ""
+            const newVersionURN = res?.data?.versionUrn && res.data.versionUrn.trim() !== "" ? res.data.versionUrn : ""
             const updatedSlateData = dispatch(updateAsideNumberInStore({
                 index,
                 updatedElement,
@@ -900,9 +900,12 @@ export const updateAsideNumber = (previousData, index) => (dispatch, getState) =
         const BLANK_PARA_VALUES = ['<p></p>', '<p><br></p>', '<p><br/></p>', '<br data-mce-bogus="1">', '<p><br data-mce-bogus="1"></p>',"<p class='paragraphNumeroUno'></p>"];
         let activeElementObject = {
             ...oldActiveElement,
-            elementId: res?.data?.versionUrn ?? dataToSend.id,
+            elementId: dataToSend.id,
             asideNumber: (!BLANK_PARA_VALUES.includes(titleHTML)) ? true : false
         };
+        if (res?.data?.versionUrn && (res?.data?.versionUrn.trim() !== "")) {
+            activeElementObject.elementId = res.data.versionUrn
+        }
         dispatch({
             type: 'SET_ACTIVE_ELEMENT',
             payload: activeElementObject
