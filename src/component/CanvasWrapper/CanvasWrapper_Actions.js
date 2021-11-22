@@ -221,7 +221,7 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type][element.subtype]["elementType"],
                     ...elementDataBank[element.type][element.subtype][element.designtype]
                 }
-                elementType.asideNumber = element?.html?.title && element.html.title !== "<p class='paragraphNumeroUno'></p>" || element.html.title !== "<p></p>" ? true : false
+                elementType.asideNumber = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" || element.html.title !== "<p></p>") ? true : false
                 break;
             case 'element-list': {
                 let type = element.type
