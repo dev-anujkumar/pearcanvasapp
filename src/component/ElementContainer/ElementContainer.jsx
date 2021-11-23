@@ -363,11 +363,18 @@ class ElementContainer extends Component {
             labeleHTML = labelDOM ? labelDOM.innerHTML : "",
             numberHTML = numberDOM ? numberDOM.innerHTML : "",
             titleHTML = titleDOM ? titleDOM.innerHTML : ""
+
         labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
         titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
         titleHTML = this.removeClassesFromHtml(titleHTML)
-        return titleHTML !== this.removeClassesFromHtml(previousElementData?.html?.title)
+        let oldTitleHTML = ""
+        if (!(previousElementData?.html?.title)) {
+            oldTitleHTML = createLabelNumberTitleModel("", "", "")
+        } else {
+            oldTitleHTML = this.removeClassesFromHtml(previousElementData?.html?.title)
+        }
+        return titleHTML !== oldTitleHTML
     }
 
     /**
@@ -745,7 +752,7 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ELEMENT_ASIDE:
-                if (this.asideDifference(this.props.index, previousElementData) || !previousElementData.hasOwnProperty("html")) {
+                if (this.asideDifference(this.props.index, previousElementData)) {
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
                     this.props.updateAsideNumber(previousElementData,this.props.index);
@@ -1384,7 +1391,7 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} placeholder={this.props.placeholder}/>;
+                    editor = <ElementAuthoring asideData = {this.props?.asideData} element={element} model={element.html} onListSelect={this.props.onListSelect} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} placeholder={this.props.placeholder}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
                     editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />;
@@ -1770,7 +1777,7 @@ class ElementContainer extends Component {
                     break;
 
                 case elementTypeConstant.BLOCK_LIST:
-                    editor = <BlockListWrapper indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} {...commonProps} />;
+                    editor = <BlockListWrapper grandParentManifestList={this.props?.currentManifestList} asideData={this.props?.asideData} indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} />;
                     labelText = 'BL'
                     break;
 
@@ -1998,7 +2005,9 @@ class ElementContainer extends Component {
             inputType,
             inputSubType,
             //type: enum type to be included
-            multiColumnType: (element.type === 'groupedcontent' && element?.groupeddata?.bodymatter) ? `${element?.groupeddata?.bodymatter.length}C` : undefined
+            multiColumnType: (element.type === 'groupedcontent' && element?.groupeddata?.bodymatter) ? `${element?.groupeddata?.bodymatter.length}C` : undefined,
+            //This property will be remove once BL will be supported in all container elements AS,WE,2C & 3C
+            containsBlockList: false
         }
 
         if ('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
@@ -2029,6 +2038,15 @@ class ElementContainer extends Component {
             getAlfrescositeResponse(id, (response) => {
                 detailsToSet['alfrescoSiteData'] = response
             })
+        }
+        /**
+         Check if Copied ShowHide contains any BlockList Element
+         Note:- This piece of code and also the propertry named 
+            as 'containsBlockList' in const detailsToSet will be removed once BL will be supported  in AS,WE,2C & 3C
+        */
+        if(element?.type === 'showhide') {
+            let elementsList = [...element?.interactivedata?.show.concat(...element?.interactivedata?.hide)]
+            detailsToSet['containsBlockList'] = elementsList.some(item => item.type === 'manifestlist')
         }
 
         console.log("Element Details action to be dispatched from here", detailsToSet)
