@@ -28,11 +28,20 @@ class ElementAsideContainer extends Component {
         this.state = {
             sectionFocus: false,
             btnClassName: "",
+            showTitle: this.props?.asideTitleData?.isAsideNumber || false,
+            elementId: this.props.elementId 
         }
         this.asideRef = React.createRef();
     }
 
- 
+    static getDerivedStateFromProps = (nextProps, prevState) => {
+        if (nextProps?.asideTitleData?.elementId === prevState?.elementId && nextProps.asideTitleData?.isAsideNumber != prevState?.showTitle) {
+            return {
+                showTitle: nextProps.asideTitleData.isAsideNumber
+            };
+        }
+        return null;
+    }
     handleFocus = (e) => {
         // if(e.target && !(e.target.classList.contains('elemDiv-hr') )){
         //     return false;
@@ -660,7 +669,7 @@ ElementAsideContainer.propTypes = {
 const mapStateToProps = state => {
     return {
         searchUrn: state.searchReducer.searchTerm,
-        isAsideNumber: state.appStore.isAsideNumber
+        asideTitleData: state.appStore.asideTitleData
     };
 };
 

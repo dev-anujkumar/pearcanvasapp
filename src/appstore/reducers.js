@@ -100,7 +100,10 @@ const INITIAL_STATE = {
         smartlinks: ["No Label", "Custom"],
         video: ["No Label", "Custom"]
     },
-    isAsideNumber:false
+    asideTitleData: {
+        isAsideNumber:false,
+        elementId: ""
+    }
 };
 
 const INITIAL_ACTION = {
@@ -352,7 +355,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case CHECK_ASIDE_NUMBER:
             return{
                 ...state,
-                isAsideNumber: action.payload
+                asideTitleData: action.payload
             }
 
         default:
