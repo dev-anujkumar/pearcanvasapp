@@ -22,6 +22,7 @@ import {
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
     UPDATE_LOB_PERMISSIONS,
+    UPDATE_LOB_WORKFLOW,
     SET_PROJECT_SHARING_ROLE,
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
@@ -392,6 +393,21 @@ export const getProjectDetails = () => (dispatch, getState) => {
                 }
             }).catch(error => {
                 console.log("Get LOB permissions API Failed!!")
+            })
+            // Api to get LOB Workflow roles
+            const workflowRoleURL = `${config.REACT_APP_API_URL}v1/lobs/workflow/${lineOfBusiness}`;
+            axios.get(workflowRoleURL, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then(response => {
+                dispatch({
+                    type: UPDATE_LOB_WORKFLOW,
+                    payload: response.data
+                })
+            }).catch(error => {
+                console.log("Get Workflow role API Failed!!")
             })
 
             // call api to get usage types
