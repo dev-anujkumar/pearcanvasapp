@@ -9700,7 +9700,7 @@ describe('------------------------------Test TINY_MCE_EDITOR case: tagName - fig
         instance2.createNestedBlockList();
         expect(spycreateNestedBlockList).toHaveBeenCalled()
     });
-    it('makeBqReplace method - if condition ', () => {
+    xit('makeBqReplace method - if condition ', () => {
         const BQpositionElement = document.createElement('div');
         BQpositionElement.id = 'BQposition';
         const spymakeBqReplace = jest.spyOn(instance2, 'makeBqReplace')
