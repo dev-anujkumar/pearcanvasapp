@@ -17,7 +17,7 @@ import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe } from '../../constants/utility';
 import { labelHtmlData } from '../../constants/Element_Constants';
-
+import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 // IMPORT - Assets //
 
 let random = guid();
@@ -35,10 +35,13 @@ class ElementAsideContainer extends Component {
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
-        if (nextProps?.asideTitleData?.elementId === prevState?.elementId && nextProps.asideTitleData?.isAsideNumber != prevState?.showTitle) {
+        if ((nextProps?.asideTitleData?.elementId === prevState?.elementId) && (nextProps.asideTitleData?.isAsideNumber != prevState?.showTitle)) {
             return {
                 showTitle: nextProps.asideTitleData.isAsideNumber
             };
+        }else  if (nextProps?.asideTitleData?.elementId !== prevState?.elementId) {
+            console.log('nextProps.asideTitleData',nextProps.asideTitleData,nextProps.element)
+            console.log('aside else if',nextProps.asideTitleData.elementId !== prevState?.elementId)
         }
         return null;
     }
@@ -642,7 +645,15 @@ class ElementAsideContainer extends Component {
         )
     }
 
-
+    handleAsideBlur = () => {
+        const { element } = this.props;
+        const newToggleValue = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true: false
+        this.setState({
+            showTitle: newToggleValue
+        })
+        this.props.enableAsideNumbering(false, '')
+        this.props.handleBlur();
+    }
     /**
      * render | renders title and slate wrapper
      */
@@ -652,7 +663,7 @@ class ElementAsideContainer extends Component {
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         return (
-            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
+            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.handleAsideBlur} ref={this.asideRef}>
                 {this.renderTitleField(asideHtmlData)}
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
@@ -677,6 +688,7 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     {
-        swapElement
+        swapElement,
+        enableAsideNumbering
     }
 )(ElementAsideContainer);

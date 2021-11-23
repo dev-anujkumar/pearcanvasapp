@@ -64,6 +64,7 @@ class Sidebar extends Component {
             //let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption
+            let toggleAsideNumber = nextProps.isAsideNumber
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 //numberStartFrom = nextProps.activeElement.startNumber;
@@ -71,6 +72,7 @@ class Sidebar extends Component {
                 //bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false
+               toggleAsideNumber = nextProps.activeElement.asideNumber
             }
 
             return {
@@ -87,7 +89,7 @@ class Sidebar extends Component {
                 podOption: podOption,
                 usageType: nextProps.activeElement.usageType,
                 hasAsideNumber: nextProps.activeElement.asideNumber,
-                toggleAsideNumber: nextProps.isAsideNumber
+                toggleAsideNumber: toggleAsideNumber
             };
         }
 
