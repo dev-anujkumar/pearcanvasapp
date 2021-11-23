@@ -781,9 +781,6 @@ const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
                 newBodymatter[tmpIndex[0]] = updatedElement
                 break;
             case 3:
-                newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]] = updatedElement
-                break;
-            case 4:
                 if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
                     newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
                 }
@@ -814,6 +811,7 @@ const prepareAsideTitleForUpdate = (index) => {
 }
 export const updateAsideNumber = (previousData, index) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
+    const activeElementId=getState().appStore.activeElement.elementId;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
     let elementEntityUrn = "", updatedElement
@@ -830,7 +828,7 @@ export const updateAsideNumber = (previousData, index) => (dispatch, getState) =
         updatedElement,
         currentSlateData
     }
-    const updatedData = dispatch(updateAsideNumberInStore(updateParams))
+    const updatedData = dispatch(updateAsideNumberInStore(updateParams,activeElementId))
     if (previousData?.contentUrn) {
         elementEntityUrn = previousData.contentUrn
     }
@@ -847,14 +845,14 @@ export const updateAsideNumber = (previousData, index) => (dispatch, getState) =
     config.isSavingElement = true
     let dataToSend;
     dataToSend = {
-        id: previousData.id,
+        id: activeElementId,
         projectUrn: config.projectUrn,
         subtype: previousData.subtype,
         type: previousData.type,
         html: {
             title: titleHTML
         },
-        versionUrn: previousData.versionUrn,
+        versionUrn: activeElementId,
         contentUrn: previousData.contentUrn,
         status: updatedSlateLevelData.status
 
