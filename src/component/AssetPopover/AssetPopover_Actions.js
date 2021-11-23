@@ -11,6 +11,7 @@ import {
 import config from '../../config/config.js'
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
+import { getLatestVersion, slateLinkDetails } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 let currentlySearching = false;
 let searchterm = "";
 
@@ -147,12 +148,11 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
         dispatch({
           type: IMAGES_FROM_API,
           payload: {
-            images: [
-              ...(data.images ? data.images : []),
-              ...(data.audios ? data.audios : []),
-              ...(data.videos ? data.videos : []),
-              ...(data.interactives ? data.interactives : [])
-            ],
+            images: [...(data.images ?? [])],
+            audios: [...(data.audios ?? [])],
+            videos: [...(data.videos ?? [])],
+            interactives: [...(data.interactives ?? [])],
+            asides: [...(data.elementAsides ?? [])],
             searchTerm: searchterm,
             timeByAPI: performance.now() - time1
           }
@@ -224,38 +224,49 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
       }
     })
 
-    let data = await response.json()
-    if (data.length) {
+    let data = await response?.json()
+    if (data.length && response?.status == 200) {
       let latestIndex = 0;
-      for(let index = 1; index < data.length; index++) {
+      for (let index = 1; index < data.length; index++) {
         let isAfter = moment(data[index].createdDate).isAfter(data[latestIndex].createdDate);
-        if(isAfter) {
+        if (isAfter) {
           latestIndex = index;
         }
       }
       let workId = data[latestIndex].versionUrn;
 
-        currentlyLinkedData = await getElementVersionContent(workId)
-        cb(currentlyLinkedData)
- 
+      currentlyLinkedData = await getElementVersionContent(workId)
+      cb(currentlyLinkedData)
+
     } else {
-      sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-      cb(currentlyLinkedData);
+      try {
+        currentlyLinkedData = await getElementVersionContent(id)
+        cb(currentlyLinkedData)
+      } catch (err1) {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+        cb(currentlyLinkedData);
+        console.error("err from narrative api 1", err1)
+      }
     }
 
   } catch (err) {
-    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-    cb(currentlyLinkedData);
-    console.log("err from narrative api", err)
+    try {
+      currentlyLinkedData = await getElementVersionContent(id)
+      cb(currentlyLinkedData)
+    } catch (err1) {
+      sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+      cb(currentlyLinkedData);
+      console.error("err from narrative api 2", err1)
+    }
   }
-
-
 }
 
-export const getElementVersionContent = async (workId) =>{
-  let workUrl = config.NARRATIVE_API_ENDPOINT+"v2/" + workId + "/content"
+export const getElementVersionContent = async (elementId) =>{
+
   let currentlyLinkedData = {};
-  try {
+  if(elementId?.match(/work/g)){
+    try {
+      let workUrl = config.NARRATIVE_API_ENDPOINT+"v2/" + elementId + "/content"
       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
       let response = await fetch(workUrl, {
         method: 'GET',
@@ -272,7 +283,23 @@ export const getElementVersionContent = async (workId) =>{
           return currentlyLinkedData
     } catch (err) {
       sendDataToIframe({'type': HideLoader,'message': { status: false }});        
-      console.log("err from narrative api", err)
+      console.log("err from narrative api 3", err)
       return currentlyLinkedData
     }
+  }else{
+    try {
+      sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+      const apiRespponse = await slateLinkDetails(elementId)
+      sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+      if (apiRespponse) {
+        currentlyLinkedData.id = apiRespponse?.containerUrn;
+        currentlyLinkedData.title = apiRespponse?.unformattedTitle?.en;
+      }
+      return currentlyLinkedData
+    } catch (err) {
+      sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+      console.log("err from narrative api 4", err)
+      return currentlyLinkedData
+    }
+  }
 }

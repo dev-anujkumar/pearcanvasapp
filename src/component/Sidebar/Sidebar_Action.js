@@ -7,6 +7,7 @@ import {
     ERROR_POPUP,
     GET_TCM_RESOURCES,
     AUTHORING_ELEMENT_UPDATE,
+    CHECK_ASIDE_NUMBER 
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -364,6 +365,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
           activeElementObject.startNumber= res.data.figuredata.startNumber
            activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
             
+        }
+        if(newElementData.primaryOption=='primary-aside-aside'){
+            const hasAsideNumber = (res.data?.html?.title && res.data.html.title !== "<p class='paragraphNumeroUno'></p>") ? true : false
+            activeElementObject.asideNumber= hasAsideNumber
         }
         dispatch({
             type: FETCH_SLATE_DATA,
@@ -911,4 +916,11 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
        elementEntityUrn, currentSlateData
     }
 
+}
+
+export const enableAsideNumbering = (isNumbered) => (dispatch) => {
+    dispatch({
+        type: CHECK_ASIDE_NUMBER,
+        payload: isNumbered
+    });
 }

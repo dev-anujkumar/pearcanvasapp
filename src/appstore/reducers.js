@@ -51,7 +51,8 @@ import {
     UPDATE_OLD_FIGUREIMAGE_INFO,
     UPDATE_OLD_SMARTLINK_INFO,
     UPDATE_OLD_AUDIOVIDEO_INFO,
-    UPDATE_FIGURE_DROPDOWN_OPTIONS
+    UPDATE_FIGURE_DROPDOWN_OPTIONS,
+    CHECK_ASIDE_NUMBER
 } from '../constants/Action_Constants';
 
 /**
@@ -98,7 +99,8 @@ const INITIAL_STATE = {
         image: ["No Label", "Custom"],
         smartlinks: ["No Label", "Custom"],
         video: ["No Label", "Custom"]
-    }
+    },
+    isAsideNumber:false
 };
 
 const INITIAL_ACTION = {
@@ -346,6 +348,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 figureDropdownData: action.payload
+            }
+        case CHECK_ASIDE_NUMBER:
+            return{
+                ...state,
+                isAsideNumber: action.payload
             }
 
         default:
