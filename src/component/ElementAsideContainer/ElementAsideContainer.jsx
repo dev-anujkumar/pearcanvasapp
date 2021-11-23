@@ -515,11 +515,11 @@ class ElementAsideContainer extends Component {
  * 
  */
     renderTitleField = (asideHtmlData) => {
-        if (this.state.showTitle) {
+        // if (this.state.showTitle || true) {
             return (
                 <div className="asideHeader">
                     <header className="figure-header new-figure-image-header">
-                        <div className='image-label'>
+                        <div className="image-label">
                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t1`} placeholder="Label" tagName={'h4'} className={" figureLabel "} model={asideHtmlData?.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                             <label className={checkHTMLdataInsideString(asideHtmlData?.formattedLabel) ? "transition-none" : "floating-label"}>Label</label>
                         </div>
@@ -534,7 +534,7 @@ class ElementAsideContainer extends Component {
                     </div>
                 </div>
             )
-        }
+        // }
     }
 
 

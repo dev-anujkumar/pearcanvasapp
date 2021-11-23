@@ -891,7 +891,7 @@ export const updateStoreInCanvas = (params) => {
     if (config.tcmStatus) {
         //This check will be removed once Blocklist will support TCM
         const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
-        if(asideData.type !== "manifestlist") {
+        if(asideData?.type !== "manifestlist") {
         if(!isBlockListElement) {
             if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
                 const tcmDataArgs = {
