@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import PropTypes, { element } from 'prop-types';
 import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
@@ -752,6 +752,7 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ELEMENT_ASIDE:
+                console.log("active.element",this.props.activeElement,previousElementData);
                 if (this.asideDifference(this.props.index, previousElementData)) {
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
