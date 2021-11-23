@@ -776,10 +776,10 @@ const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
             case 2:
                 newBodymatter[tmpIndex[0]] = updatedElement
                 break;
+            // case 3:
+            //     newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]] = updatedElement
+            //     break;
             case 3:
-                newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]] = updatedElement
-                break;
-            case 4:
                 if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
                     newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
                 }
