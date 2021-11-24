@@ -39,7 +39,7 @@ export default function ElementContainerType(props) {
 
     const renderMenu = (propsData) => {
         let { elementType, text, showPlayscript, showDiscussion, asideData, elementIndex } = props;
-        const indexOfElement =  elementIndex.toString().split('-') || [];
+        const indexOfElement =  props?.elementIndex ? elementIndex.toString().split('-') : [];
         if (!showDiscussion) {
             propsData = propsData.filter( (obj) => {
                 return obj.text !== 'Add Discussion';
