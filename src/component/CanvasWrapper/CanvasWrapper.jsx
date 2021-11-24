@@ -40,6 +40,7 @@ import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementBu
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import {markedIndexPopup} from '../MarkIndexPopup/MarkIndex_Action';
+import {fetchProjectFigures} from '../FigureHeader/AutoNumberActions';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -331,6 +332,7 @@ export default connect(
         setProjectSubscriptionDetails,
         fetchFigureDropdownOptions,
         isOwnersSubscribedSlate,
-        markedIndexPopup
+        markedIndexPopup,
+        fetchProjectFigures
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
