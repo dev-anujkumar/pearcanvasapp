@@ -49,10 +49,7 @@
   
   .modal__close {
     position: absolute;
-    right: 1em;
-    top: 1.4em;
-    width: 3.1em;
-    height: 1.1em;
+    right: 3em;
     cursor: pointer;
   }
   
@@ -61,13 +58,12 @@
     content: '';
     position: absolute;
     width: 4px;
-    height: 2.5em;
-    background: #ccc;
+    height: 1.5em;
+    background: #fafafa;
     display: block;
     transform: rotate(45deg);
     left: 50%;
-    margin: -3px 0 0 -1px;
-    top: 0;
+    top: 7px;
   }
   
   .modal__close:hover:after,
@@ -139,26 +135,29 @@
   /* start */
   .containerApo {
       position: fixed;
-      width: 740px;
-      top: 12%;
+      width: 716px;
+      top: 10.4%;
       right: 0;
       outline: 0;
       /* bottom: 0; */
-      left: 18%;    
-      /* overflow: auto; */
+      left: 23.8%;    
+      overflow: auto;
       background: #fff;
       background-color: white;
       /* padding: 1em 2em; */
       z-index: 1500;  
-      min-height: 60px;
+      min-height: 48px;
       max-height: 500px;
       transition: top 0.4s, opacity 0.4s;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
   
   .modalHeader {
-      height: 60px;
-      background-color: black;
+    width: 716px;
+    height: 48px;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #005a70;
   }
   
   .modalSubHeader {
@@ -184,14 +183,13 @@
   }
 
   .modalBody {
-    min-height: 100px;
-    max-height: 300px;
+    min-height: 241px;
+    max-height: fit-content;
     background-color: white;
-    overflow-y: scroll;
   }
   
   .modalFooter {
-    height: 60px;
+    height: 68px;
   
   }
   
@@ -236,33 +234,37 @@
   }
   
   .myButton {
-    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf));
-    background:-moz-linear-gradient(top, #ededed 5%, #dfdfdf 100%);
-    background:-webkit-linear-gradient(top, #ededed 5%, #dfdfdf 100%);
-    background:-o-linear-gradient(top, #ededed 5%, #dfdfdf 100%);
-    background:-ms-linear-gradient(top, #ededed 5%, #dfdfdf 100%);
-    background:linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf',GradientType=0);
-    background-color:#ededed;
-    border:1px solid #dcdcdc;
+    border-radius: 2px;
+    border: solid 1px #dcdcdc;
+    background-color: #fff;
+    height: 36px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    justify-content: center;
+    padding: 8px 20px;
+    border: solid 1px #dcdcdc;
+    background: #fff;
     display:inline-block;
     cursor:pointer;
-    color:#777777;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size:15px;
+    color:#005a70;
     font-weight:bold;
-    padding:8px 24px;
     text-decoration:none;
-    margin-right: 14px;
-    margin-top: 10px;
+    margin-right: 10px;
+    margin-top: 16px;
     float: right !important;
   }
 
+  .myButton:hover {
+    border: 1px solid #005a70;
+}
+
   .myButton[disabled]{
-    border: 1px ridge gray;
-    background-color:white;
-    color: black;
-    opacity: 0.3;
+    border:solid 1px #dcdcdc;
+    background-color:#fff;
+    color: #005a70;
+    opacity: 0.5;
     cursor: default;
   }
 
@@ -290,11 +292,10 @@
     float: none;
     z-index: auto;
     width: 85%;
-    height: auto;
+    height: -webkit-fill-available;
     position: static;
     cursor: text;
     opacity: 1;
-    margin: 10px;
     padding: 10px 20px 10px 30px;
     overflow: visible;
     border: 1px solid #b7b7b7;
@@ -354,5 +355,5 @@
 
   img.seach_icon{
     position: absolute;
-    margin: 22px;
+    margin: 8px;
   }

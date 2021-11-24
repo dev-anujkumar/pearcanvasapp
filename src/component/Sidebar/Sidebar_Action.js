@@ -7,6 +7,7 @@ import {
     ERROR_POPUP,
     GET_TCM_RESOURCES,
     AUTHORING_ELEMENT_UPDATE,
+    CHECK_ASIDE_NUMBER 
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -365,6 +366,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
            activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
             
         }
+        if(newElementData.primaryOption=='primary-aside-aside'){
+            const hasAsideNumber = (res.data?.html?.title && res.data.html.title !== "<p class='paragraphNumeroUno'></p>") ? true : false
+            activeElementObject.asideNumber= hasAsideNumber
+        }
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -672,7 +677,12 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             config.isSavingElement = false
         } else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-            updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex], dataToSend)
+            if (dataToUpdate.asideData.parent && dataToUpdate.asideData.parent.type==="showhide") {
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex[0]].interactivedata[dataToUpdate.asideData.parent.showHideType][dataToUpdate.slateLevelBLIndex[2]], dataToSend)
+            }
+            else {
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex[0]], dataToSend)
+            }
             dispatch({
                 type: AUTHORING_ELEMENT_UPDATE,
                 payload: {
@@ -906,4 +916,11 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
        elementEntityUrn, currentSlateData
     }
 
+}
+
+export const enableAsideNumbering = (isAsideNumber,elementId) => (dispatch) => {
+    dispatch({
+        type: CHECK_ASIDE_NUMBER,
+        payload: {isAsideNumber,elementId}
+    });
 }

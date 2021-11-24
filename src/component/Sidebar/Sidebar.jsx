@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { conversionElement, setBCEMetadata ,updateBlockListMetadata,updateContainerMetadata} from './Sidebar_Action';
+import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateContainerMetadata, enableAsideNumbering } from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
@@ -32,6 +32,7 @@ class Sidebar extends Component {
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting = this.props.activeElement.syntaxhighlighting;
         let podwidth = this.props.activeElement.podwidth;
+        let asideNumberValue = this.props.activeElement?.asideNumber || false;
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
@@ -49,7 +50,9 @@ class Sidebar extends Component {
             bceNumberStartFrom: startNumber,
             podOption: false,
             podValue: podwidth,
-            usageType: this.props.activeElement.usageType
+            usageType: this.props.activeElement.usageType,
+            hasAsideNumber: asideNumberValue,
+            toggleAsideNumber: asideNumberValue
         };
     }
 
@@ -61,6 +64,7 @@ class Sidebar extends Component {
             //let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption
+            let toggleAsideNumber = nextProps.isAsideNumber
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 //numberStartFrom = nextProps.activeElement.startNumber;
@@ -68,6 +72,7 @@ class Sidebar extends Component {
                 //bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false
+               toggleAsideNumber = nextProps.activeElement.asideNumber
             }
 
             return {
@@ -82,7 +87,9 @@ class Sidebar extends Component {
                 syntaxHighlightingToggleValue: nextProps.activeElement.syntaxhighlighting,
                 podValue: podValue,
                 podOption: podOption,
-                usageType: nextProps.activeElement.usageType
+                usageType: nextProps.activeElement.usageType,
+                hasAsideNumber: nextProps.activeElement.asideNumber,
+                toggleAsideNumber: toggleAsideNumber
             };
         }
 
@@ -103,7 +110,7 @@ class Sidebar extends Component {
         podValue: POD_DEFAULT_VALUE,
         podOption: false,
       });
-
+      const {asideData} = this.props;
       if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
         if (this.props.activeElement.elementWipType == "manifestlist") {
         let blockListMetaDataPayload = {
@@ -119,10 +126,11 @@ class Sidebar extends Component {
             labelText,
             blockListElement:true,
             toolbar: elementList[this.state.activeElementType][value].toolbar,
-            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-")[0],
+            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
             dataToSend:{
                 columnnumber : value.split('-')[value.split('-').length-1]
-            }
+            },
+            asideData:asideData
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
@@ -521,6 +529,15 @@ class Sidebar extends Component {
                 </div>
                 return attributions;
             }
+            if ((this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample")) {
+               attributions = <div className="asideNumberHeading">
+                    <div className="toggleAsideNumber">Label, Number, Title</div>
+                    <div className="setting-value" onClick={!hasReviewerRole() && !config.savingInProgress && this.handleAsideNumber}>
+                        <div className={`asideSlider ${(this.state.hasAsideNumber || this.state.toggleAsideNumber == true) ? 'on' : 'off'}${this.state.hasAsideNumber == true ? ' disabled-toggle' : ''}`}></div>
+                    </div>
+                </div>
+                return attributions;
+            }
 
             attributions = <div className="attributions">
                 {attributions}
@@ -551,6 +568,17 @@ class Sidebar extends Component {
             this.props.setBCEMetadata('startNumber', e.target.value);
             this.setState({ bceNumberStartFrom: e.target.value })
         }
+    }
+
+    handleAsideNumber=()=>{
+        if(this.state.hasAsideNumber == true){
+            return false
+        }
+        const newToggleValue = this.state.toggleAsideNumber
+        this.props.enableAsideNumbering(!newToggleValue,this.state.activeElementId)
+        this.setState=({
+            toggleAsideNumber: !newToggleValue
+        });
     }
 
     saveElementAttributes = () => {
@@ -848,7 +876,9 @@ const mapStateToProps = state => {
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
         elementData: state.tcmReducer.elementData,
-        tcmStatus: state.tcmReducer.tcmStatus
+        tcmStatus: state.tcmReducer.tcmStatus,
+        asideData:state.appStore.asideData,
+        isAsideNumber: state.appStore.asideTitleData.isAsideNumber
     };
 };
 
@@ -861,6 +891,7 @@ export default connect(
         setBCEMetadata,
         tcmButtonHandler,
         updateContainerMetadata,
-        updateBlockListMetadata
+        updateBlockListMetadata,
+        enableAsideNumbering
     }
 )(Sidebar);
