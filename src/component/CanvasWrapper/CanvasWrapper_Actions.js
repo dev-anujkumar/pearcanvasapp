@@ -22,11 +22,15 @@ import {
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
     UPDATE_LOB_PERMISSIONS,
+    UPDATE_LOB_WORKFLOW,
     SET_PROJECT_SHARING_ROLE,
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
-    UPDATE_FIGURE_DROPDOWN_OPTIONS
+    UPDATE_FIGURE_DROPDOWN_OPTIONS,
+    ERROR_API_POPUP
 } from '../../constants/Action_Constants';
+import { SLATE_API_ERROR } from '../../constants/Element_Constants';
+
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
@@ -104,7 +108,7 @@ export const findElementType = (element, index) => {
                         } else {
                             let figureType = figureData[element['figuretype']];
                             let figureAlignment = figureType[element['alignment']]
-                            subType = figureAlignment['imageDimension']
+                            subType = element['alignment'] === 'actual-size' ? element?.subtype : figureAlignment['imageDimension']
                         }
                         if(element.figuretype === "image" || element.figuretype === "table" || element.figuretype === "mathImage"){
                             if(element.figuredata && !element.figuredata.podwidth){
@@ -218,6 +222,7 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type][element.subtype]["elementType"],
                     ...elementDataBank[element.type][element.subtype][element.designtype]
                 }
+                elementType.asideNumber = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" || element.html.title !== "<p></p>") ? true : false
                 break;
             case 'element-list': {
                 let type = element.type
@@ -389,6 +394,21 @@ export const getProjectDetails = () => (dispatch, getState) => {
             }).catch(error => {
                 console.log("Get LOB permissions API Failed!!")
             })
+            // Api to get LOB Workflow roles
+            const workflowRoleURL = `${config.REACT_APP_API_URL}v1/lobs/workflow/${lineOfBusiness}`;
+            axios.get(workflowRoleURL, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then(response => {
+                dispatch({
+                    type: UPDATE_LOB_WORKFLOW,
+                    payload: response.data
+                })
+            }).catch(error => {
+                console.log("Get Workflow role API Failed!!")
+            })
 
             // call api to get usage types
             
@@ -517,7 +537,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(slateData => {  
+    }).then(slateData => { 
          /* Slate tag issue */
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
@@ -611,6 +631,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         let index = versioning.indexes[0];
                         newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     }
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+                } else if (versioning?.type === "manifestlist" && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]] = Object.values(slateData.data)[0];
+
                     return dispatch({
                         type: AUTHORING_ELEMENT_UPDATE,
                         payload: {
@@ -782,7 +813,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             let searchTerm = queryStrings.get('searchElement') || '';
             dispatch(getContainerData(searchTerm));
         }
-    });
+    })
+    .catch(err => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+        dispatch({type: ERROR_API_POPUP, payload:{show: true,message:SLATE_API_ERROR}})
+        console.error('Error in fetch Slate api', err);
+    })
+   
 };
 
 export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => {
@@ -1383,7 +1420,16 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                             }
                         })
                     })
-                } 
+                } else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents[poetryField] = [response.data]
+                            element2.contents[poetryField][0].html.text = elemNode.innerHTML
+                            element2.contents[poetryField][0].elementdata.text = elemNode.innerText
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
+                    })
+                }
                 else {
                 if(!targetPoetryElement.contents[poetryField]){
                     targetPoetryElement.contents[poetryField] = [];
@@ -1423,6 +1469,15 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                             }
                         })
                     })
+                } else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents[poetryField] = response.data
+                            element2.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                            element2.contents[poetryField].elementdata.text = elemNode.innerText
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
+                    })
                 } else {
                 targetPoetryElement.contents[poetryField] = response.data
                 targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
@@ -1455,6 +1510,14 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                                 targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
                             }
                         })
+                    })
+                }  else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents["formatted-title"] = response.data
+                            element2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
                     })
                 }
                 else {

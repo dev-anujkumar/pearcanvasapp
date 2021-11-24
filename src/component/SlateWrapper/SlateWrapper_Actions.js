@@ -246,6 +246,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         })
                     })
                 }
+                /* To update redux store while creating new element inside SH->Block Poetry->Stanza */
+                else if(poetryData?.parent?.type === "showhide" && item.id === poetryData?.parent?.id){
+                    item?.interactivedata[poetryData?.parent?.showHideType].map((ele) => {
+                        if(ele?.id === poetryData?.id) {
+                            ele?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                        }
+                    });
+                }
             })  
         }
         else if (asideData && asideData.type === 'groupedcontent') {
@@ -266,50 +274,102 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         /*  Local store update for block list and Text inside block list for multiple levels. */
         else if((type==='MANIFEST_LIST' || type==='TEXT') && blockListDetails!==null){
             const indexes = blockListDetails.indexOrder.split('-');
-            let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter;
-            if(indexes.length===3){ // Block list on 1 level nesting
-             initialdata.splice(index, 0, createdElementData)
+            let initialdata = {};
+            if(asideData.parent && asideData.parent.type === "showhide"){
+                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
+                 if (indexes.length === 5) { // Block list on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 7) { // Block list on 2 level nesting
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 9) { // Block list on 3 level nesting
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // level 4 
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
             }
-            else if(indexes.length===5){ // Block list on 2 level nesting
-             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter.splice(index, 0, createdElementData)
-            }
-            else if(indexes.length===7){ // Block list on 3 level nesting
-             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
-            }
-            else{ // level 4 
-             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+            else{
+                let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter;
+                if (indexes.length === 3) { // Block list on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 5) { // Block list on 2 level nesting
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 7) { // Block list on 3 level nesting
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // level 4 
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
             }
          } 
          /*  Local store update for manifest list item inside block list for multiple levels. */
          else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="ENTER"){
              const indexes = blockListDetails.indexOrder.split('-');
-             let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
-             if(indexes.length===3){ // Manifest List Item on 1 level nesting
-              initialdata.splice(index, 0, createdElementData)
+             let initialdata = {};
+             if(asideData.parent && asideData.parent.type === "showhide"){
+                  initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
+                 if (indexes.length === 5) { // Block list on 1 level nesting
+                     initialdata.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 7) { // Manifest List Item on 2 level nesting
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 9) { // Manifest List Item on 3 level nesting
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else { // Manifest List Item on 4 level nesting
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
              }
-             else if(indexes.length===5){ // Manifest List Item on 2 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
-             else if(indexes.length===7){ // Manifest List Item on 3 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
-             else{ // Manifest List Item on 4 level nesting
-                 initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
+            else{
+                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
+                 if (indexes.length === 3) { // Manifest List Item on 1 level nesting
+                     initialdata.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 5) { // Manifest List Item on 2 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 7) { // Manifest List Item on 3 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else { // Manifest List Item on 4 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+            }
+            
           } 
          /*  Local store update for manifest list item inside block list for multiple levels. */
           else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="SHIFT+TAB"){
              const indexes = blockListDetails.indexOrder.split('-');
-             let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
-             if(indexes.length===5){ // Manifest List Item on 1 level nesting
-              initialdata.splice(index, 0, createdElementData)
+             let initialdata = {};
+             if(asideData.parent && asideData.parent.type === "showhide"){
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
+                if (indexes.length === 7) { // Manifest List Item on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 9) { // Manifest List Item on 2 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // Manifest List Item on 3 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
              }
-             else if(indexes.length===7){ // Manifest List Item on 2 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
-             else{ // Manifest List Item on 3 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
+            else{
+                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
+                 if (indexes.length === 5) { // Manifest List Item on 1 level nesting
+                     initialdata.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 7) { // Manifest List Item on 2 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else { // Manifest List Item on 3 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+            }
           } 
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
@@ -374,9 +434,9 @@ export const appendElementInsideShowhide = (shObj, key, asideData, innerkey, ind
  * @param {Array} powerPasteData Elements to be pasted
  * @param {Number} index index of insertion
  */
-export const createPowerPasteElements = (powerPasteData, index) => async (dispatch, getState) => {
+export const createPowerPasteElements = (powerPasteData, index, parentUrn, asideData) => async (dispatch, getState) => {
     let data = []
-    let slateEntityUrn = config.slateEntityURN
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -411,8 +471,8 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
         while (indexOfElement < response.data.length) {
             if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1){
                 const containerElement = {
-                    asideData: null,
-                    parentUrn: null,
+                    asideData: asideData?asideData:null,
+                    parentUrn: parentUrn?parentUrn:null,
                     poetryData: null
                 };
                 const slateData = {
@@ -438,7 +498,28 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
             return false;
         }
 
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data); 
+        if (asideData && asideData.type === 'groupedcontent') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
+                if (item.id === asideData.id) {
+                    item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, ...response.data)
+                }
+            })
+        } else if (asideData && asideData.type == 'element-aside') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == parentUrn.manifestUrn) {
+                    item.elementdata.bodymatter.splice(index, 0, ...response.data)
+                } else if (item.type == "element-aside" && item.id == asideData.id) {
+                    item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
+                        if (ele.id === parentUrn.manifestUrn) {
+                            ele.contents.bodymatter.splice(index, 0, ...response.data)
+                        }
+                    })
+                }
+            })
+        }
+        else {
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data);
+        }
         
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
@@ -604,6 +685,13 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                                 })
 
                             })
+                        // handling local redux state for swapping of stanzas inside SH->Poetry  
+                        } else if (element?.type === "showhide" && sectionType) {
+                            element?.interactivedata[sectionType].forEach((eachElement)=>{
+                                if(eachElement?.type === "poetry" && eachElement?.id === poetryId) {
+                                    eachElement.contents.bodymatter.move(oldIndex, newIndex);
+                                }
+                            });
                         }
                     });
                 }
@@ -1146,6 +1234,9 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             if (sectionType || (asideData?.sectionType)) {
                 let section = sectionType ? sectionType : asideData?.sectionType;
                 _requestData.content[0].sectionType = section;
+            }
+            if (selection?.element?.type === 'element-aside' && selection?.element?.html?.title) {
+                _requestData.content[0].html = selection.element.html
             }
         }
 

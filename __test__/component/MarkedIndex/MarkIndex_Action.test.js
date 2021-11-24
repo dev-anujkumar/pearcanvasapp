@@ -1,8 +1,12 @@
+import axios from 'axios';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as actions from '../../../src/component/MarkIndexPopup/MarkIndex_Action';
 import  mockData  from "../../../src/appstore/mockdata.js";
+import {crossRefResponse} from '../../testData/mockData';
 import { JSDOM } from 'jsdom';
+
+jest.mock('axios');
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -92,28 +96,28 @@ describe('Tests marked index action', () => {
  
 
    it('should test marked index in para', async() => {
-        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext',2, undefined,'term text--', "element-authoredtext", undefined, true);
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext',2, undefined,'<p>ndex</p>', "element-authoredtext", undefined, true);
         const item = await result(store.dispatch);
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>ndex</p>');
    });
 
     it('should test marked index in 2C ', async() => {
-        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','6-0-0', undefined,'term text--', "element-authoredtext", undefined, true);
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','7-0-0', undefined,'<p>index</p>', "element-authoredtext", undefined, true);
         const item = await result(store.dispatch);
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
    });
 
    it('should test marked index in aside ', async() => {
-        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','7-0', undefined,'term text--', "element-authoredtext", undefined, true);
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','8-0', undefined,'<p>index</p>', "element-authoredtext", undefined, true);
         const item = await result(store.dispatch);
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
     });
 
     it('should test marked index in aside of 2C', async() => {
-        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','8-0-0-0', undefined,'index', "element-authoredtext", undefined, true);
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','9-0-0-0', undefined,'index', "element-authoredtext", undefined, true);
         const item = await result(store.dispatch);
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('index');
@@ -133,7 +137,7 @@ describe('Tests marked index action', () => {
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual("<p>index23</p>");
     });
 
-    it('should test updateMarkedIndexStore', async() => {
+    it('should test updateMarkedIndexStore', () => {
         const glossaryFootElem = {
             contentUrn: "urn:pearson:entity:a7aeb98e-44ac-421d-84b6-fe547b51001f",
             elementdata: {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "", glossaryentries: []},
@@ -167,5 +171,22 @@ describe('Tests marked index action', () => {
         let item = actions.updateMarkedIndexStore('<p mark-index-id="urn:pearson:work:1c4d7884-139f-42f6-bce3-4327c2eb8ef5">index</p>', glossaryFootElem, glossaaryFootnoteValue, 0);
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual("<p>index23</p>");
+    });
+
+    it("Should test getCrossReferenceValues", async () => {
+        const resp = crossRefResponse;
+        axios.get.mockResolvedValue(resp);
+
+        let result = actions.getCrossReferenceValues();
+        let item = await result(store.dispatch);
+        expect(item.type).toEqual('UPDATE_CROSS_REFERENCE_VALUES');
+    })
+
+    it("Should test getCrossReferenceValues - fail case", async () => {
+        axios.get.mockRejectedValue("Something went wrong");
+
+        let result = actions.getCrossReferenceValues();
+        let item = await result(store.dispatch);
+        expect(item.type).toEqual('UPDATE_CROSS_REFERENCE_VALUES');
     });
 });

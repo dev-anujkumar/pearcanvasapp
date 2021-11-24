@@ -242,18 +242,18 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
             figureObj.html.title = createLabelNumberTitleModel('', '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
         }
         figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
-    } else {
-        if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
-            figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
-            figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
-        }
-    }
-    // ................................XX...........................................
+     } else if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
+             figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj?.html?.subtitle?.replace("<p>", '')?.replace("</p>", ''));
+             figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
+     }
+
     let data = {};
+     if(figureObj?.html && figureObj?.html?.title){
         figureObj.html.title = figureObj.html.title.replace(/(\r\n|\n|\r)/gm, '');
         data.formattedLabel = getTitleSubtitleModel(figureObj.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
         data.formattedNumber = getTitleSubtitleModel(figureObj.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
         data.formattedTitle = getTitleSubtitleModel(figureObj.html.title, "formatted-subtitle", "figure");
+     }
     return data;
 }
 
@@ -644,9 +644,8 @@ export const releaseOwnerPopup=(data)=>{
 export const isOwnerRole = (projectSharingRole, isSubscribed) => {
     if (projectSharingRole === "OWNER" && isSubscribed) {
         return true
-    }else{
-        return false
     }
+    return false
 }
 
 /**It checks whether its a Subscriber project or not
@@ -656,7 +655,6 @@ export const isOwnerRole = (projectSharingRole, isSubscribed) => {
 export const isSubscriberRole = (projectSharingRole, isSubscribed) => {
     if (projectSharingRole === "SUBSCRIBER" && isSubscribed) {
         return true
-    }else{
-        return false
     }
+    return false
 }

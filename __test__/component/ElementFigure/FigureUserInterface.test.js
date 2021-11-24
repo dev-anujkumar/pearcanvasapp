@@ -55,6 +55,11 @@ describe('Testing FigureUserInterface component', () => {
             launchAlfrescoPopup: true,
             editor: true,
             Permission: false
+        },assessmentReducer:{
+            'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456': {
+                'assessmentStatus':'final',
+                "showUpdateStatus": true
+            }
         },
         appStore: {
             figureDropdownData: [],
@@ -579,8 +584,8 @@ describe('Testing FigureUserInterface component', () => {
             FigureUserInterfaceInstance.changeFigureLabel('Figure', 'Table');
             let instance = elementFigureUserInterface.instance();
             expect(instance).toBeDefined();
-          });
-          it('changeFigureLabel case if', () => {
+        });
+        it('changeFigureLabel case if', () => {
             document.getElementById = () => {
                 return {
                     innerHTML: 'test'
@@ -617,17 +622,15 @@ describe('Testing FigureUserInterface component', () => {
             FigureUserInterfaceInstance.changeFigureLabel('Table', 'Figure');
             let instance = elementFigureUserInterface.instance();
             expect(instance).toBeDefined();
-          });
-
-          it('toggleHyperlinkEditable case if', () => {
+        });
+        it('toggleHyperlinkEditable case if', () => {
             const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
             const FigureUserInterfaceInstance = elementFigureUserInterface.find('FigureUserInterface').instance();
             FigureUserInterfaceInstance.toggleHyperlinkEditable('show', '1-0');
             let instance = elementFigureUserInterface.instance();
             expect(instance).toBeDefined();
-          });
-
-          it('without data element for conditional coverage', () => {
+        });
+        it('without data element for conditional coverage', () => {
             let props = {
                 model: newSmartLinkObjWithData,
                 index: 1,
@@ -660,7 +663,72 @@ describe('Testing FigureUserInterface component', () => {
             const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
             let instance = elementFigureUserInterface.instance();
             expect(instance).toBeDefined();
-          });
+        });
+    })
+    describe('Conditional Coverage for FigureUserInterface', () => {
+        let props2 = {
+            model: newSmartLinkObjWithData,
+            index: "",
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            permissions: ['add_multimedia_via_alfresco'],
+            element: {
+                figuretype: 'interactive',
+                figuredata: {
+                    hasOwnProperty: jest.fn(()=> true),
+                    path:'test path',
+                    interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                    interactivetype:'3rd-party',
+                    posterimage:{
+                        imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                        path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                     },
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+            }
+        }
+        let elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props2} /></Provider>)
+        let FigureUserInterfaceInstance = elementFigureUserInterface.find('FigureUserInterface').instance();
+
+        it('Conditional Coverage for method generateAddAssetJSX() for figureType `mmi-elm` with asset data', () => {
+            FigureUserInterfaceInstance.generateAddAssetJSX(null,'assetTitle','addButtonText',null,null,'assetPath',"mmi-elm")
+        })
+
+        it('Conditional Coverage for method generateAddAssetJSX() for figureType `mmi` with asset data', () => {
+            FigureUserInterfaceInstance.generateAddAssetJSX(null,'assetTitle','addButtonText',null,null,'assetPath',"mmi")
+        })
+
+        it('Conditional Coverage for method generateUpdateAssetJSX() for figureType `mmi-elm` with asset data', () => {
+            FigureUserInterfaceInstance.generateUpdateAssetJSX(props2.element,null,null,'assetPath:',null,null,null,'assetID:',null,null,null,"mmi-elm")
+        })
+
+        it('Conditional Coverage for method generateUpdateAssetJSX() for figureType `mmi-elm` without asset data', () => {
+            FigureUserInterfaceInstance.generateUpdateAssetJSX(props2.element,null,null,null,null,null,null,null,null,null,null,"mmi-elm")
+        })
+
+        it('Conditional Coverage for method generateUpdateAssetJSX() for figureType `mmi` with asset data', () => {
+            FigureUserInterfaceInstance.generateUpdateAssetJSX(props2.element,null,null,'assetPath:',null,null,null,'assetID:',null,null,null,"mmi")
+        })
+
+        it('Conditional Coverage for method generateUpdateAssetJSX() for figureType `mmi` without asset data', () => {
+            FigureUserInterfaceInstance.generateUpdateAssetJSX(props2.element,null,null,null,null,null,null,null,null,null,null,"mmi")
+        })
+
+        it('Conditional Coverage for method generateUpdateAssetJSX() for figureType `other` with asset data', () => {
+            FigureUserInterfaceInstance.generateUpdateAssetJSX(props2.element,null,null,'assetPath:',null,null,null,'assetID:',null,null,null,"other")
+        })
+
+        it('Conditional Coverage for method generateUpdateAssetJSX() for figureType `other` without asset data', () => {
+            FigureUserInterfaceInstance.generateUpdateAssetJSX(props2.element,null,null,null,null,null,null,null,null,null,null,"other")
+        })
+
+        it('Conditional Coverage for method generateUpdateAssetJSX() for figureType `other` with asset data and alfresco site url', () => {
+            FigureUserInterfaceInstance.generateUpdateAssetJSX(props2.element,null,null,'assetPath:',null,null,null,'assetID:',null,'alfrescositeURL',null,"other")
+        })
     })
 
 });

@@ -325,7 +325,7 @@ class FigureImage extends Component {
     }
 
     changeFigureLabel = (figureLabelValue, data) => {
-        if (!(figureLabelValue === data)) {
+        if (figureLabelValue !== data) {
             this.setState({ figureLabelValue: data });
             let dropdownOptions = [];
             for (let option of this.state.figureLabelData) {
@@ -467,7 +467,13 @@ class FigureImage extends Component {
         } else if (figureLabelFromApi !== '' && figureLabelValue === 'Custom') {
             figureLabelValue = 'Custom';
         }
-
+        let imgWidth = ''
+        let imgHeight = ''
+        if(this.props?.model?.figuredata && this.props.model.alignment === 'actual-size'){
+            imgWidth = this.props.model.figuredata?.width && this.props.model.figuredata?.width !== '' ? `${this.props.model.figuredata?.width}px` : ''
+            imgHeight = this.props.model.figuredata?.height && this.props.model.figuredata?.height !== '' ? `${this.props.model.figuredata?.height}px` : ''
+        }
+        const actualSizeClass = this.props.model.figuredata?.width > '600' ? "" : "img-actual-size";
         return (
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
@@ -551,12 +557,15 @@ class FigureImage extends Component {
                                 <div id="figure_add_div" className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                                     {
                                         this.props.model.figuredata && this.props.model.figuredata.imageid ?
-                                            <img src={this.state.imgSrc ? this.state.imgSrc : (this.props.model.figuredata.path && this.props.model.figuredata.path !== "" ? this.props.model.figuredata.path : '')}
-                                                data-src={this.state.imgSrc}
-                                                title=""
-                                                alt=""
-                                                className={imageDimension + ' lazyload'}
-                                                draggable="false" />
+                                        <img src={this.state.imgSrc ? this.state.imgSrc : (this.props?.model?.figuredata?.path !== "" ? this.props.model.figuredata.path : '')}
+                                        data-src={this.state.imgSrc}
+                                        title=""
+                                        alt=""
+                                        className={imageDimension + ' lazyload ' + actualSizeClass}
+                                        draggable="false" 
+                                        width={imgWidth}
+                                        height={imgHeight}
+                                        />
                                             : <div className='figurebutton' onClick={this.addFigureResource}>Select an Image</div>
                                     }
 

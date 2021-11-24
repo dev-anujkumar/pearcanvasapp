@@ -107,6 +107,13 @@ figure,.element-container{
     display: table;
 }
 
+.divImageActualSize{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
+}
+
 /* figure 25% image*/
 .divImage25Text{
     background-color: transparent;
@@ -270,6 +277,12 @@ img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage
     list-style:inherit !important;
     display: list-item;
     text-align: -webkit-match-parent;
+}
+
+.pearson-component.image.figureData.table-figure-data ul li.listItemNumeroUnoBullet::before{
+    counter-increment: section;
+    content: counter(section, disc);
+    font-size: 0px;
 }
 .pearson-component.image.figureData.table-figure-data ol li{
     list-style:inherit !important; 
@@ -570,3 +583,9 @@ th ol li.listItemNumeroUnoNone:before {
     margin-top: 3px;
     border-bottom: 3px solid blue;
   }
+
+  .pearson-component.image.figureData.table-figure-data ul li.listItemNumeroUnoBullet::before {
+    counter-increment: section;
+    content: counter(section, disc);
+    font-size: 0px;
+}

@@ -51,11 +51,6 @@
     border:none;
   } 
 
-.mentions.reply-mention .mentions__control{
-  background-color: #fffffe;
-  border: none;
-}
-
   .mentions.reply-mention .mentions__input{
     padding: 10px;
     padding-right: 40px;

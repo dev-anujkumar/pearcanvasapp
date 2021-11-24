@@ -128,6 +128,9 @@ const elementDataBank = {
             },
             "image75Text" : {
                 "secondaryOption" : "secondary-image-figure-three-quarter"
+            },
+            "imageactualsize" : {
+                "secondaryOption" : "secondary-image-figure-actual"
             }
         },
         "mathImage" : {
@@ -144,6 +147,9 @@ const elementDataBank = {
             },
             "imageFullscreenMathImage" : {
                 "secondaryOption" : "secondary-image-equation-full"
+            },
+            "imageactualsizeMathImage" : {
+                "secondaryOption" : "secondary-image-equation-actual"
             }
         },
         "authoredtext" : {
@@ -182,6 +188,9 @@ const elementDataBank = {
             "imageFullscreenTableImage" : {
                 "secondaryOption" : "secondary-image-table-full"
             },
+            "imageactualsizeTableImage" : {
+                "secondaryOption" : "secondary-image-table-actual"
+            }
         },
         "video" : {
             "elementType" : "video-audio",

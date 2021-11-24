@@ -67,8 +67,8 @@ describe('Testing Markedindex component with props', () => {
         MarkIndexPopupInstance.onBlur = jest.fn()
         wrapper.find('#markedindex-editor').simulate('focus', (null, 'remove'))
         wrapper.find('#markedindex-editor').simulate('blur', (null, 'remove'))
-        wrapper.find('#index-secondlevel-attacher').simulate('focus', (null, 'remove'))
-        wrapper.find('#index-secondlevel-attacher').simulate('blur', (null, 'remove'))
+        // wrapper.find('#index-secondlevel-attacher').simulate('focus', (null, 'remove'))
+        // wrapper.find('#index-secondlevel-attacher').simulate('blur', (null, 'remove'))
         expect(wrapper).toHaveLength(1);
         expect(MarkIndexPopupInstance).toBeDefined();
     })

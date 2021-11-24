@@ -9,12 +9,15 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import { guid } from '../../constants/utility.js';
-import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
 import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
+import TinyMceEditor from "../../component/tinyMceEditor";
+import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe } from '../../constants/utility';
+import { labelHtmlData } from '../../constants/Element_Constants';
+
 // IMPORT - Assets //
 
 let random = guid();
@@ -24,12 +27,12 @@ class ElementAsideContainer extends Component {
         super(props);
         this.state = {
             sectionFocus: false,
-            btnClassName: ""
-
+            btnClassName: "",
         }
         this.asideRef = React.createRef();
     }
 
+ 
     handleFocus = (e) => {
         // if(e.target && !(e.target.classList.contains('elemDiv-hr') )){
         //     return false;
@@ -295,6 +298,7 @@ class ElementAsideContainer extends Component {
                     showDeleteElemPopup={this.props.showDeleteElemPopup}
                     permissions={this.props.permissions}
                     userRole={this.props.userRole}
+                    handleCopyPastePopup={this.props.handleCopyPastePopup}
                 />
                 <Sortable
                     options={{
@@ -384,6 +388,7 @@ class ElementAsideContainer extends Component {
                             userRole={this.props.userRole}
                             pasteElement={this.props.pasteElement}
                             source={ASIDE_SOURCE}
+                            handleCopyPastePopup={this.props.handleCopyPastePopup}
                         />
                     )
                 } else {
@@ -409,6 +414,7 @@ class ElementAsideContainer extends Component {
                                     userRole={this.props.userRole}
                                     pasteElement={this.props.pasteElement}
                                     source={ASIDE_SOURCE}
+                                    handleCopyPastePopup={this.props.handleCopyPastePopup}
                                 />
                                 {this.section(element, index)}
                                 </>
@@ -440,6 +446,7 @@ class ElementAsideContainer extends Component {
                                         userRole={this.props.userRole}
                                         pasteElement={this.props.pasteElement}
                                         source={ASIDE_SOURCE}
+                                        handleCopyPastePopup={this.props.handleCopyPastePopup}
                                     />
                                     }
                                     <ElementContainer
@@ -474,6 +481,7 @@ class ElementAsideContainer extends Component {
                                         userRole={this.props.userRole}
                                         pasteElement={this.props.pasteElement}
                                         source={ASIDE_SOURCE}
+                                        handleCopyPastePopup={this.props.handleCopyPastePopup}
                                     />
                                 </React.Fragment>
                             )
@@ -488,6 +496,58 @@ class ElementAsideContainer extends Component {
             console.log("error", error)
         }
     }
+
+/**
+ * 
+ * @discription - this function render title fields
+ * 
+ */
+    renderTitleField = (asideHtmlData) => {
+        // if (this.state.showTitle || true) {
+            return (
+                <div className="asideHeader">
+                    <header className="figure-header new-figure-image-header">
+                        <div className="image-label">
+                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t1`} placeholder="Label" tagName={'h4'} className={" figureLabel "} model={asideHtmlData?.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedLabel) ? "transition-none" : "floating-label"}>Label</label>
+                        </div>
+                        <div className="floating-number-group">
+                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t2`} placeholder="Number" tagName={'h4'} className={" figureNumber "} model={asideHtmlData?.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
+                        </div>
+                    </header>
+                    <div className="floating-title-group">
+                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t3`} placeholder="Title" tagName={'h4'} className={" figureTitle "} model={asideHtmlData?.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                        <label className={checkHTMLdataInsideString(asideHtmlData?.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                    </div>
+                </div>
+            )
+        // }
+    }
+
+
+
+    
+    onFigureElementFieldFocus = (id) => {
+        let labelElement = document.getElementById(`cypress-${id}`);
+        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+            labelElement?.nextElementSibling?.classList?.add('label-color-change');
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) {
+            labelElement?.nextElementSibling?.classList?.add('transition-none');
+        }
+    }
+
+    onFigureElementFieldBlur = (id) => {
+        let labelElement = document.getElementById(`cypress-${id}`);
+        if (labelElement?.nextElementSibling) {
+            labelElement?.nextElementSibling?.classList?.remove('label-color-change');
+        }
+        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+        }
+    }
+
+
     /**
   * 
   * @discription - This function is renders workexample
@@ -542,6 +602,20 @@ class ElementAsideContainer extends Component {
 
         }
     }
+
+
+    onFigureImageFieldBlur = (id) => {
+        let labelElement = document.getElementById(`cypress-${id}`);
+        if (labelElement?.nextElementSibling) {
+            labelElement?.nextElementSibling?.classList?.remove('label-color-change');
+        }
+        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+        }
+    }
+
+    
+
     /**
   * 
   * @discription - This function is renders aside container
@@ -549,7 +623,6 @@ class ElementAsideContainer extends Component {
   */
 
     renderAside = (designtype) => {
-
         return (
             <React.Fragment>
                 {this.borderTop(designtype)}
@@ -566,10 +639,12 @@ class ElementAsideContainer extends Component {
      */
     render() {
         const { element } = this.props;
+        let asideHtmlData = getLabelNumberTitleHTML(element);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         return (
             <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
+                {this.renderTitleField(asideHtmlData)}
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
         );
@@ -584,7 +659,8 @@ ElementAsideContainer.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        searchUrn: state.searchReducer.searchTerm
+        searchUrn: state.searchReducer.searchTerm,
+        isAsideNumber: state.appStore.isAsideNumber
     };
 };
 
