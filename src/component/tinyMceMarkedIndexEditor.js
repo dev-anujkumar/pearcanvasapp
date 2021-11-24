@@ -138,8 +138,10 @@ export class ReactMarkedIndexEditor extends React.Component {
           tinymce.$(`#${this.props.markedLabelId}`).removeClass('floating-title')
         }
         if(editor.id === 'markedindex-0'){
-          tinymce.$('.printIndex-save-button').removeClass('disabled')
+          tinymce.$('.printIndex-save-button').removeClass('disabled');
+          document.getElementById('markedindex-cross-reference').setAttribute('contenteditable', true);
         }
+        console.log("===> tinymce.$('#markedindex-cross-reference'): ",tinymce.$('#markedindex-cross-reference'))
       }
       else {
         activeElement.classList.add('place-holder')
@@ -148,7 +150,8 @@ export class ReactMarkedIndexEditor extends React.Component {
           tinymce.$(`#${this.props.markedLabelId}`).removeClass('transition-none')
         }
         if(editor.id === 'markedindex-0'){
-          tinymce.$('.printIndex-save-button').addClass('disabled')
+          tinymce.$('.printIndex-save-button').addClass('disabled');
+          document.getElementById('markedindex-cross-reference').setAttribute('contenteditable', false);
         }
       }
     }
@@ -461,7 +464,7 @@ export class ReactMarkedIndexEditor extends React.Component {
         */
         document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
 
-        if (document.getElementById(activeEditorId)) {
+        if (document.getElementById(activeEditorId) && e.target.id !== "markedindex-cross-reference") {
           document.getElementById(activeEditorId).contentEditable = true;
         }
       }
@@ -499,6 +502,11 @@ export class ReactMarkedIndexEditor extends React.Component {
       markIndexCurrentValue = propsGlossaryFootNoteCurrentValue;
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
+    // let isContentDisable = true;
+    // if (this.props.id === "markedindex-cross-reference"){
+    //   const indexEntry = document.getElementById('markedindex-0')?.innerHTML;
+    //   if(!indexEntry) isContentDisable = false;
+    // } 
     return (
         <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
     )
