@@ -1397,8 +1397,10 @@ export class TinyMceEditor extends Component {
                     // SHIFT + TAB key press handling for BlockList element
                     e.preventDefault();
                     const { index } = this.props;
+                    let parentElement = this.props?.asideData?.parent;
                     // restricting SHIFT + TAB operation on first level BL
                     if (index && typeof index === 'string' && index.includes('-') && index.split("-").length <= 3) return;
+                    if (index && typeof index === 'string' && index.includes('-') && parentElement && parentElement.type === "showhide" && index.split("-").length <= 5) return;
                     blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
