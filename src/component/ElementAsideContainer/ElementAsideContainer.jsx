@@ -39,9 +39,6 @@ class ElementAsideContainer extends Component {
             return {
                 showTitle: nextProps.asideTitleData.isAsideNumber
             };
-        }else  if (nextProps?.asideTitleData?.elementId !== prevState?.elementId) {
-            // console.log('nextProps.asideTitleData',nextProps.asideTitleData,nextProps.element)
-            // console.log('aside else if',nextProps.asideTitleData.elementId !== prevState?.elementId)
         }
         return null;
     }
