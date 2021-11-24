@@ -646,6 +646,20 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             else if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.sectionType = showHideType;
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
+                // checking for poetry element inside SH element to pass some extra parameters inside update request
+                if (elementType && elementType === 'poetry' && parentElement?.interactivedata) {
+                    parentElement?.interactivedata?.[showHideType].forEach(poetryElement => {
+                        if(poetryElement?.type === 'poetry') {
+                            if(poetryElement?.contents?.['formatted-title']?.id === previousElementData.id) {
+                                dataToReturn["metaDataField"] = "formattedTitle";
+                            }
+                            if(poetryElement?.contents?.creditsarray && poetryElement?.contents?.creditsarray.length && poetryElement?.contents?.creditsarray[0]["id"] === previousElementData.id) {
+                                dataToReturn["sectionType"] = "creditsarray";
+                            }
+                        }
+                    });
+                    dataToReturn["elementType"] = "Poetry";
+                }
             }
             break;
         case elementTypeConstant.FIGURE:
@@ -703,7 +717,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     }
     /* On update the inner elements of SH; add section type */
      if(asideData?.type === elementTypeConstant.SHOW_HIDE || elementType === elementTypeConstant.SHOW_HIDE) {
-        dataToReturn.sectionType = showHideType || asideData?.sectionType;
+        if(dataToReturn?.elementType !== 'Poetry') dataToReturn.sectionType = showHideType || asideData?.sectionType;
         if(parentElement?.type === "groupedcontent") {
             dataToReturn["elementParentEntityUrn"] = containerContext?.props?.element?.contentUrn;
         }

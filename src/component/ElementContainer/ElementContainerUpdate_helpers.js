@@ -601,6 +601,23 @@ export const updateElementInStore = (paramsObj) => {
                         _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
                     }
                 }
+            } else if(element?.type === SHOW_HIDE && asideData?.type === 'poetry' && element?.id == asideData?.grandParent?.asideData?.id) { /**updation of stanza inside PE element inside SH */
+                const sectionType = asideData?.showHideType;
+                element?.interactivedata?.[sectionType].forEach((showHideData, showHideIndex) => {
+                    if(showHideData?.type === 'poetry' && showHideData?.id === asideData?.id) {
+                        const newPoetryBodymatter = showHideData?.contents?.bodymatter.map((stanza) => {
+                            if (stanza.id === elementId) {
+                                stanza = {
+                                    ...stanza,
+                                    ...updatedData,
+                                    tcm: _slateObject.tcm ? true : false,
+                                };
+                            }
+                            return stanza;
+                        });
+                        element.interactivedata[sectionType][showHideIndex].contents.bodymatter = newPoetryBodymatter;
+                    }
+                });
             }
             //else if (element.type === SHOW_HIDE) { 
             //    /* When showhide Element is placed on slate not inside other container */
@@ -665,7 +682,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
     const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const isPopupOrShowhideElement = (allowedParentType.includes(parentElement?.type) || (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
+    const isPopupOrShowhideElement = ((allowedParentType.includes(parentElement?.type) && !updatedData?.elementType)|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
