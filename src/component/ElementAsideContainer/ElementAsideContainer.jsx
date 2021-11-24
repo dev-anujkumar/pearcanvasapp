@@ -648,7 +648,6 @@ class ElementAsideContainer extends Component {
         this.setState({
             showTitle: newToggleValue
         })
-        this.props.enableAsideNumbering(false, '')
         this.props.handleBlur();
     }
     /**
