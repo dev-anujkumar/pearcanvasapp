@@ -40,8 +40,8 @@ class ElementAsideContainer extends Component {
                 showTitle: nextProps.asideTitleData.isAsideNumber
             };
         }else  if (nextProps?.asideTitleData?.elementId !== prevState?.elementId) {
-            console.log('nextProps.asideTitleData',nextProps.asideTitleData,nextProps.element)
-            console.log('aside else if',nextProps.asideTitleData.elementId !== prevState?.elementId)
+            // console.log('nextProps.asideTitleData',nextProps.asideTitleData,nextProps.element)
+            // console.log('aside else if',nextProps.asideTitleData.elementId !== prevState?.elementId)
         }
         return null;
     }
@@ -515,7 +515,7 @@ class ElementAsideContainer extends Component {
  * 
  */
     renderTitleField = (asideHtmlData) => {
-        // if (this.state.showTitle || true) {
+        if (this.state.showTitle) {
             return (
                 <div className="asideHeader">
                     <header className="figure-header new-figure-image-header">
@@ -534,7 +534,7 @@ class ElementAsideContainer extends Component {
                     </div>
                 </div>
             )
-        // }
+        }
     }
 
 
