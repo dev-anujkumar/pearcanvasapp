@@ -102,12 +102,14 @@ export const c4PublishObj = {
     publishSlate: function (project, section, cite) {
         const startTime = performance.now();
         var content_url = config_object.CTOOL_PUBSLATE;
+        let proactiveSlatePreview = config_object?.PROACTIVE_SLATE_PREVIEW_STATUS ? config_object.PROACTIVE_SLATE_PREVIEW_STATUS : false;
         let content_data = {};
         content_data["projectManifest"] = project;
         content_data["sectionManifest"] = section;
         content_data["citeManifest"] = cite;
         content_data["requester"] = config_object.userEmail;//"requester": "james.cooney@pearson.com",
         content_data["timestamp"] = new Date().toISOString();//"timestamp": "2017-04-23T18:25:43.511Z"
+        content_data["proactiveSlatePreview"] = proactiveSlatePreview;
         ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', false);
 
         window.addEventListener('beforeunload', (e) => {
