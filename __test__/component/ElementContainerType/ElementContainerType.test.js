@@ -42,28 +42,28 @@ describe('ContainerType Component', () => {
 
 describe('Component renders List according to LOB permissions', () => {
     it('Playscript option renders when LOB permission is true', () => {
-        const wrapper = mount(<ElementContainerType  showPlayscript={true} data={blocktextList} />)
+        const wrapper = mount(<ElementContainerType showPlayscript={true} data={blocktextList} />)
         const texts = wrapper.find('li').map((node) => node.text());
         const includes = texts.includes("Playscript");
         expect(includes).toBe(true);
     })
 
     it('Playscript option does not renders when LOB permission is false', () => {
-        const wrapper = mount(<ElementContainerType  showPlayscript={false} data={blocktextList} />)
+        const wrapper = mount(<ElementContainerType showPlayscript={false} data={blocktextList} />)
         const texts = wrapper.find('li').map((node) => node.text());
         const includes = texts.includes("Playscript");
         expect(includes).toBe(false);
     })
 
     it('Add Discussion option renders when LOB permission is true', () => {
-        const wrapper = mount(<ElementContainerType  showDiscussion={true} data={interactiveList} />)
+        const wrapper = mount(<ElementContainerType showDiscussion={true} data={interactiveList} />)
         const texts = wrapper.find('li').map((node) => node.text());
         const includes = texts.includes("Add Discussion");
         expect(includes).toBe(true);
     })
 
     it('Add Discussion option does not renders when LOB permission is false', () => {
-        const wrapper = mount(<ElementContainerType  showDiscussion={false} data={interactiveList} />)
+        const wrapper = mount(<ElementContainerType showDiscussion={false} data={interactiveList} />)
         const texts = wrapper.find('li').map((node) => node.text());
         const includes = texts.includes("Add Discussion");
         expect(includes).toBe(false);
@@ -72,9 +72,24 @@ describe('Component renders List according to LOB permissions', () => {
 
 describe('Component renders list in Multicolumn', () => {
     it('Add Show/Hide option renders when Element type is 2C || 3C', () => {
-        const wrapper = mount(<ElementContainerType  elementType="group" text="interactive-elem-button" data={interactiveList} />)
+        const wrapper = mount(<ElementContainerType elementType="group" text="interactive-elem-button" data={interactiveList} />)
         const texts = wrapper.find('li').map((node) => node.text());
         const includes = texts.includes("Add Show Hide");
+        expect(includes).toBe(true);
+    })
+})
+
+describe('Component renders list in Show/Hide', () => {
+    it('When Show/Hide is already in Container like Aside,WE,2C or 3C', () => {
+        const wrapper = mount(<ElementContainerType  elementType="showhide" data={blocktextList} elementIndex="0-0-0-1" />)
+        const texts = wrapper.find('li').map((node) => node.text());
+        const includes = texts.includes("Block List");
+        expect(includes).toBe(false);
+    })
+    it('When Show/Hide is on Slate Level', () => {
+        const wrapper = mount(<ElementContainerType  elementType="showhide" data={blocktextList} elementIndex="0-0-0" />)
+        const texts = wrapper.find('li').map((node) => node.text());
+        const includes = texts.includes("Block List");
         expect(includes).toBe(true);
     })
 })

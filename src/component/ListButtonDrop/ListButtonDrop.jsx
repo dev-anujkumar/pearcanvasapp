@@ -31,7 +31,7 @@ const ListButtonDrop = (props) => {
                 <LowerAlphaListIconBox {...props} />
                 <UpperRomanListIconBox {...props} />
                 <LowerRomanListIconBox {...props} />
-                {!isElementInsideBlocklist(activeElement, slateData) && <NoStyleListIconBox {...props} />}
+                {!isElementInsideBlocklist({index:activeElement.index,data:props}, slateData) && <NoStyleListIconBox {...props} />}
             </div>
             <div className="list-input-layer" id="list-input-layer">
                 <div className="topText">Start with</div>
