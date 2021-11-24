@@ -102,7 +102,7 @@ export const c4PublishObj = {
     publishSlate: function (project, section, cite) {
         const startTime = performance.now();
         var content_url = config_object.CTOOL_PUBSLATE;
-        let proactiveSlatePreview = config_object?.PROACTIVE_SLATE_PREVIEW_STATUS === "true" ? "true" : "false";
+        let proactiveSlatePreview = config_object?.PROACTIVE_SLATE_PREVIEW_STATUS ? config_object.PROACTIVE_SLATE_PREVIEW_STATUS : "false";
         let content_data = {};
         content_data["projectManifest"] = project;
         content_data["sectionManifest"] = section;
