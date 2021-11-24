@@ -52,7 +52,7 @@ let config = {
     LEARNOSITY_CONTENT_BRIDGE_API: 'https://contentapis-staging.pearsoncms.net/learnositycontentbridge-api/lcb/v1/bank2projapi/',
     ALFRESCO_EDIT_ENDPOINT: "https://usppewip.cms.pearson.com/share/page/document-details?nodeRef=workspace://SpacesStore/",
     ALFRESCO_EDIT_METADATA:"https://staging.api.pearson.com/content/cmis/uswip-aws/",
-    PROACTIVE_SLATE_PREVIEW_STATUS: false
+    PROACTIVE_SLATE_PREVIEW_STATUS: "false"
 };
 
 if (process.env.NODE_ENV === "development") {
