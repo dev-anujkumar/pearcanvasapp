@@ -17,10 +17,6 @@
     content: none !important;
 }
 
-.aside-container h4.figureLabel.cypress-editable.mce-content-body.mce-edit-focus{
-    border-bottom: 2px solid #005a70 !important;
-}
-
 .asideHeader{
     margin-bottom: 24px;
     margin-top: 16px;
