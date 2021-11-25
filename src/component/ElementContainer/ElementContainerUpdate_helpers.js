@@ -39,7 +39,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
         CONTAINER_VERSIONING = "containerVersioning",
         PARENTELEMENT_TYPES = ["poetry", "showhide", "citations", "groupedcontent"]
 
-    const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
+    const isBlockListElement  = isElementInsideBlocklist({index:elementIndex,data:{asideData:asideData}},newslateData)
     if (updatedData && updatedData.pageNumberRef) {
         versionedData.pageNumberRef = updatedData.pageNumberRef
     }
@@ -47,7 +47,10 @@ export const updateNewVersionElementInStore = (paramObj) => {
     if (asideData?.type == 'showhide') {
         getShowhideParent({ asideData, dispatch, parentElementIndex: elementIndex, fetchSlateData })
     }
-    if(isBlockListElement){
+    if (asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType && isBlockListElement) {
+        asideData.indexes = indexes;
+        dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+    } else if(isBlockListElement) {
         const parentBlockListId = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].id
         const parentBlockListContentUrn = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].contentUrn
         dispatch(fetchSlateData(parentBlockListId,parentBlockListContentUrn, 0, {type:'manifestlist' ,indexes:indexes}, CONTAINER_VERSIONING, false));
@@ -70,6 +73,10 @@ export const updateNewVersionElementInStore = (paramObj) => {
         asideData.indexes = indexes;
         asideData.type = 'citations';
         dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+    }
+    else if (asideData?.type == "poetry" && asideData?.grandParent?.asideData?.type === 'showhide') {
+        dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+        /* Condition for update Approved poetry inside S/H */ 
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
         if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5) && asideData.type === "poetry") {
@@ -118,7 +125,7 @@ export const updateElementInStore = (paramsObj) => {
         elementId = updatedData.id;
 
     const iList = elementIndex?.toString()?.split("-") || [];
-    const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
+    const isBlockListElement  = isElementInsideBlocklist({index:elementIndex,data:{asideData:asideData}},newslateData)
 
     /* update the store on update of showhide elements inside container elements */
     if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
@@ -563,19 +570,54 @@ export const updateElementInStore = (paramsObj) => {
                 })
             }
             else if(isBlockListElement){
-                const indexes = elementIndex.split("-");
-                if(indexes.length===3){
-                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]] = updatedData
-                }
-                else if(indexes.length===5){
-                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
-                }
-                else if(indexes.length===7){
-                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                let indexes;
+                if(asideData.parent && asideData.parent.type==="showhide"){
+                    indexes = parentElement.index.split("-")
+                    if(indexes.length===5){
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                    }
+                    else if(indexes.length===7){
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                    }
+                    else if(indexes.length===9){
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                    }
+                    else{
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
+                    }
                 }
                 else{
-                    _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                    indexes = elementIndex.split("-");
+                    if(indexes.length===3){
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]] = updatedData
+                    }
+                    else if(indexes.length===5){
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                    }
+                    else if(indexes.length===7){
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                    }
+                    else{
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                    }
                 }
+            } else if(element?.type === SHOW_HIDE && asideData?.type === 'poetry' && element?.id == asideData?.grandParent?.asideData?.id) { /**updation of stanza inside PE element inside SH */
+                const sectionType = asideData?.showHideType;
+                element?.interactivedata?.[sectionType].forEach((showHideData, showHideIndex) => {
+                    if(showHideData?.type === 'poetry' && showHideData?.id === asideData?.id) {
+                        const newPoetryBodymatter = showHideData?.contents?.bodymatter.map((stanza) => {
+                            if (stanza.id === elementId) {
+                                stanza = {
+                                    ...stanza,
+                                    ...updatedData,
+                                    tcm: _slateObject.tcm ? true : false,
+                                };
+                            }
+                            return stanza;
+                        });
+                        element.interactivedata[sectionType][showHideIndex].contents.bodymatter = newPoetryBodymatter;
+                    }
+                });
             }
             //else if (element.type === SHOW_HIDE) { 
             //    /* When showhide Element is placed on slate not inside other container */
@@ -640,11 +682,12 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
     const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const isPopupOrShowhideElement = (allowedParentType.includes(parentElement?.type) || (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
+    const isPopupOrShowhideElement = ((allowedParentType.includes(parentElement?.type) && !updatedData?.elementType)|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
-    
+    //This check will be removed once Blocklist will support TCM
+    if (asideData.type !== "manifestlist") {
     if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
         const containerElement = {
             asideData,
@@ -671,7 +714,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
         }
         config.isCreateGlossary = false
-    }
+    }}
     return false
 }
 
@@ -865,6 +908,7 @@ export const updateStoreInCanvas = (params) => {
     if (config.tcmStatus) {
         //This check will be removed once Blocklist will support TCM
         const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
+        if(asideData?.type !== "manifestlist") {
         if(!isBlockListElement) {
             if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
                 const tcmDataArgs = {
@@ -872,7 +916,7 @@ export const updateStoreInCanvas = (params) => {
                 }
                 prepareDataForUpdateTcm(tcmDataArgs);
             }
-        }
+        }}
     }
     const commonArgs = { updatedData, asideData, dispatch, elementIndex, parentElement, newslateData }
     if(versionedData){

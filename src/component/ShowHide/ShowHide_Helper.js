@@ -1,6 +1,6 @@
 import config from '../../config/config.js';
 import { VIDEO, IMAGE, TEXT, TABLE_EDITOR, BLOCKCODE, ELEMENT_DIALOGUE, FIGURE_MML, SMARTLINK,
-    MMI_ELM, ELEMENT_DISCUSSION, INTERACTIVE, WORKED_EXAMPLE, CONTAINER, CITATION } from '../SlateWrapper/SlateWrapperConstants.js';
+    MMI_ELM, ELEMENT_DISCUSSION, INTERACTIVE, WORKED_EXAMPLE, CONTAINER, CITATION, MANIFEST_LIST,POETRY } from '../SlateWrapper/SlateWrapperConstants.js';
 import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const showHideConstants = {
@@ -381,6 +381,8 @@ function getElementType(type2BAdded) {
         case "interactive-elem": return INTERACTIVE;
         case "container-elem": return CONTAINER;
         case "citations-group-elem": return CITATION;
+        case "blocklist-elem" :return MANIFEST_LIST
+        case "poetry-elem": return POETRY;
         default: return type2BAdded;
     }
 }

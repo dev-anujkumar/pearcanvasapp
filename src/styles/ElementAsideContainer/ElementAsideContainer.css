@@ -1,3 +1,27 @@
+.aside-container.figureLabel.cypress-editable {
+    font-size: 14px !important;
+    width: 74px !important;
+    border-bottom: 2px solid #737373 !important;
+    margin: 8px 0 !important;
+    margin-right:24px !important;
+    padding: 15px 4px 6px 4px !important;
+    font-weight: 500 !important;
+    height: 40px;
+    z-index: 1;
+    font-family: 'Open Sans', sans-serif !important;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.aside-container h4.figureLabel.cypress-editable.place-holder::before{
+    content: none !important;
+}
+
+.asideHeader{
+    margin-bottom: 24px;
+    margin-top: 16px;
+}
+
 
 .aside-horizotal-break{
     border: 4px solid black; 
@@ -83,4 +107,8 @@
 }
 .element-container {
     position:relative;
+}
+
+aside.remove-margin-top{
+    margin-top: 0em;
 }
