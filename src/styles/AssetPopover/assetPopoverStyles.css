@@ -370,7 +370,25 @@
     display: flex;
     margin: 7px;
     align-items: center;
+    overflow-wrap: anywhere;
   }
   .modalInputField{
     display: flex;
   }
+
+.modalBody::-webkit-scrollbar-thumb {
+    border-radius: 21px;
+    -webkit-box-shadow: inset 0 0 6px transparent;
+    background-color: #4e4e4e;
+}
+
+.modalBody::-webkit-scrollbar {
+  width: 6px;
+  background-color: transparent;
+}
+
+.modalBody::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px transparent;
+  border-radius: 14px;
+  background-color: transparent;
+}
