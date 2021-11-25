@@ -19,6 +19,7 @@ import ElementConstants, {
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
+import { startPdfConversion } from '../PdfSlate/CyprssPlusAction';
 
 const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN } = ElementConstants;
 
@@ -752,6 +753,9 @@ export const processAndStoreUpdatedResponse = async (params) => {
         updateStore(argObj)
     }
     
+    if(config.isCypressPlusEnabled){
+        startPdfConversion();
+    }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     config.isSavingElement = false
     customEvent.trigger('glossaryFootnoteSave', responseData.id); 
