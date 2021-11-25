@@ -3,7 +3,11 @@ const INITIAL_STATE = {
     showApoCurrentlyLinked : false,        // Show or not currently linked part of the window
     showApoBody : false,                   // Show or not APO Body
     showApoFooter : true,                  // Show or not APO footer
-    figures : [],                          // Array of search Results from API
+    figures : [],  
+    videos:[],
+    audios:[],
+    interactives:[],
+    asides:[],                        // Array of search Results from API
     selectedFigureValue : {},              // Name of Selected Figure
     noSearchResultFound : false,           // If Error or No search results found from API
     figureIsSelected : false,              // Figure is selected or not
@@ -31,15 +35,23 @@ export default function assetPopoverReducer (state = INITIAL_STATE, action = INI
                 showApoFooter : true,
                 showApoBody : false,
                 noSearchResultFound : true,
-                figures : [],
+                figures: [],
+                videos: [],
+                audios: [],
+                interactives: [],
+                asides: [],
                 selectedFigureValue : '',
                 figureIsSelected : false
             }
         }
-        case 'IMAGES_FROM_API': {             //Seacrch For figures
+        case 'IMAGES_FROM_API': {        //Seacrch For figures
             return {
                 ...state,
                 figures : action.payload.images,
+                videos: action.payload.videos,
+                audios:action.payload.audios,
+                interactives:action.payload.interactives,
+                asides:action.payload.asides,
                 searchTerm : action.payload.searchTerm,
                 noSearchResultFound : false,
                 showApoBody : true,
@@ -51,6 +63,10 @@ export default function assetPopoverReducer (state = INITIAL_STATE, action = INI
             return {
                 ...state,
                 figures : [],
+                audios:[],
+                videos:[],
+                interactives:[],
+                asides:[],
                 noSearchResultFound : true,
                 showApoBody : false
             }
