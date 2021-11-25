@@ -267,7 +267,7 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'selectedAlfrescoAssetData' :
                     console.log('ASSET DATA FROM ALFRESCO', message.asset)
-                    if(message?.asset && message.asset.length > 1) {
+                    if(message?.asset?.length > 0) {
                         message.asset = message.asset[0]
                     }
                     if(message.isEditor){
