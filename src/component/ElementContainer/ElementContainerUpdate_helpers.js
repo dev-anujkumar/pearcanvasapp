@@ -670,7 +670,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     //This check will be removed once Blocklist will support TCM
-    if (asideData.type !== "manifestlist") {
+    if (asideData?.type !== "manifestlist") {
     if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
         const containerElement = {
             asideData,
@@ -891,7 +891,7 @@ export const updateStoreInCanvas = (params) => {
     if (config.tcmStatus) {
         //This check will be removed once Blocklist will support TCM
         const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
-        if(asideData.type !== "manifestlist") {
+        if(asideData?.type !== "manifestlist") {
         if(!isBlockListElement) {
             if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
                 const tcmDataArgs = {
