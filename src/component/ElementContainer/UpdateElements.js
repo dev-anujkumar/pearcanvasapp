@@ -653,9 +653,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         if(poetryElement?.type === 'poetry') {
                             if(poetryElement?.contents?.['formatted-title']?.id === previousElementData.id) {
                                 dataToReturn["metaDataField"] = "formattedTitle";
+                                dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
                             }
                             if(poetryElement?.contents?.creditsarray && poetryElement?.contents?.creditsarray.length && poetryElement?.contents?.creditsarray[0]["id"] === previousElementData.id) {
                                 dataToReturn["sectionType"] = "creditsarray";
+                                dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
                             }
                         }
                     });
