@@ -1367,14 +1367,23 @@ export class TinyMceEditor extends Component {
 
             // Block list events
             if (blockListData && Object.keys(blockListData).length) {
-                const { index } = this.props;
+                const { index,asideData } = this.props;
                 const getSelectedElement = document.getElementById(`cypress-${index}`);
                 // setting the placeholder when textcontent is cleared from element authored text to prevent placecholder overlapping on backspace delete
-                if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length===3) {
-                    getSelectedElement.setAttribute('placeholder', 'Type Something');
-                }
-                if(tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length>3){
-                    getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
+                if (asideData?.parent && asideData?.parent.type === "showhide"){
+                    if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length===5) {
+                        getSelectedElement.setAttribute('placeholder', 'Type Something');
+                    }
+                    if(tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length>5){
+                        getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
+                    }
+                }else{
+                    if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length===3) {
+                        getSelectedElement.setAttribute('placeholder', 'Type Something');
+                    }
+                    if(tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length>3){
+                        getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
+                    }
                 }
                 // SHIFT + ENTER key press handling for BlockList element
                 if (key === 13 && e.shiftKey) {
