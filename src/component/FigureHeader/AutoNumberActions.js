@@ -14,7 +14,11 @@ const commonHeaders = {
  */
  export const fetchProjectFigures = () => dispatch => {
     axios.get(`${config.ASSET_POPOVER_ENDPOINT}v4/${config.projectUrn}/images`, {
-        headers: commonHeaders
+        headers: {
+            "ApiKey": config.STRUCTURE_APIKEY,
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
     }).then(response => {
         if (response?.data?.numberOfImages > 0) {
             const projectContent = response.data.contents
@@ -25,14 +29,10 @@ const commonHeaders = {
             if (projectContent['backMatter']?.length > 0) {
                 imagesData = getContentInFMandBM(projectContent, 'backMatter', imagesData)
             }
-            if(projectContent['bodyMatter']?.length > 0){
-                imagesData = {
-                    ...imagesData,
-                    'bodyMatter' : []
-                }
-               // const bodyMatterData = getbodyMatterContent(projectContent['bodyMatter'],imagesData)
+            if (projectContent['bodyMatter']?.length > 0) {
+                getContentInBodyMatter(projectContent['bodyMatter'], imagesData)
             }
-            console.log('imagesData222',imagesData)
+            console.log('imagesData>>>>',imagesData)
             dispatch({
                 type: 'GET_ALL_FIGURE_ELEMENTS',
                 payload: {
@@ -55,37 +55,63 @@ const commonHeaders = {
 
 };
 
-const getbodyMatterContent  = (bodyMatterContent,imagesData) =>{
-    if(bodyMatterContent.contents?.bodyMatter?.length > 0){
-        bodyMatterContent.contents?.bodyMatter?.forEach(container=>{
-            if(container?.label === 'part'){
-                if(container['frontMatter']?.length>0){
-                    imagesData[container.contentUrn] = container['frontMatter'].concat(container.contents.bodyMatter)
+const slateTypes = ['container-introduction', 'section', 'appendixslate', 'cover', 'titlepage', 'copyright', 'listofcontents']
+
+const getContentInBodyMatter  = (bodyMatterContent,imagesData) =>{
+    if(bodyMatterContent?.length > 0){
+        bodyMatterContent?.forEach(container => {
+            if (container?.label === 'part') {
+                if (container?.contents['frontMatter']?.length > 0) {
+                    /** Get Media Elements on PART-IS */
+                    const mediaElementOnPartIS = getImagesInsideSlates(container.contents['frontMatter'][0].contents.bodyMatter) || []
+                    imagesData[container.contentUrn] = mediaElementOnPartIS
                 }
-                if(container['bodyMatter']?.length>0){
-                    // container = {
-                    //     ...container,
-                    //     bodyMatter: bodyMatter
-                    // }
+                if (container?.contents['bodyMatter']?.length > 0) {
+                    container.contents['bodyMatter']?.forEach((innerContainer) => {
+                        imagesData = getContentInChapter(innerContainer, '', imagesData)
+                    })
                 }
             }
-            else if(container?.label === 'chapter'){
-                const bodyMatter = Object.values(container)?.flat();
-                delete container['frontMatter']
-                container = {
-                    ...container,
-                    bodyMatter: bodyMatter
-                }
+            else if (container?.label === 'chapter') {
+                imagesData = getContentInChapter(container, '', imagesData)
             }
             else if (slateTypes.indexOf(container?.label) > -1) {
-
+                const slateMediaElements = getImagesInsideSlates(container.contents.bodyMatter) || []
+                imagesData['bodyMatter'] = [
+                    ...imagesData['bodyMatter'],
+                    ...slateMediaElements
+                ]
             }
         })
-
     }
+    return imagesData
 }
 
-const getContainerMediaElementsList = (container, imagesData, matterType) => {
+const getContentInChapter = (apiContent, matterType, imagesData) => {
+    const bodyMatter = Object.values(apiContent?.contents)?.flat();
+    apiContent = {
+        ...apiContent,
+        contents: {bodyMatter: bodyMatter}
+    }
+    if (apiContent?.contents['bodyMatter']?.length > 0) {
+        console.log(apiContent.label,apiContent.contentUrn)
+        apiContent.contents['bodyMatter']?.forEach((container) => {
+            if ((container?.label === 'module' || container?.label === 'appendix') && container?.contents?.bodyMatter?.length > 0) {
+                getContainerMediaElementsList(container, imagesData, 'bodyMatter',apiContent.contentUrn)
+            }
+            else if (slateTypes.indexOf(container?.label) > -1 && container?.contents?.bodyMatter?.length > 0) {
+                const slateMediaElements = getImagesInsideSlates(container.contents.bodyMatter) || []
+                imagesData[container.contentUrn] = [
+                    ...(imagesData[container.contentUrn] || []),
+                    ...slateMediaElements
+                ]
+            }
+        })
+    }
+    return imagesData
+}
+
+const getContainerMediaElementsList = (container, imagesData, matterType, parentEntityUrn) => {
     if (container?.contents?.bodyMatter?.length > 0) {
         container?.contents?.bodyMatter?.forEach((innerContainer) => {
             if (slateTypes.indexOf(innerContainer?.label) > -1 && innerContainer?.contents?.bodyMatter?.length > 0) {
@@ -95,9 +121,16 @@ const getContainerMediaElementsList = (container, imagesData, matterType) => {
                         ...imagesData[matterType],
                         ...slateMediaElements
                     ]
-                } else {
+                }
+                else if (parentEntityUrn) {
+                    imagesData[parentEntityUrn] = [
+                        ...(imagesData[parentEntityUrn] || []),
+                        ...slateMediaElements
+                    ]
+                }
+                else {
                     imagesData[container.contentUrn] = [
-                        ...imagesData[container.contentUrn],
+                        ...(imagesData[container.contentUrn] || []),
                         ...slateMediaElements
                     ]
                 }
@@ -105,9 +138,6 @@ const getContainerMediaElementsList = (container, imagesData, matterType) => {
         })
     }
 }
-
-const slateTypes = ['container-introduction', 'section', 'appendixslate', 'cover', 'titlepage', 'copyright', 'listofcontents']
-
 
 const getImagesInsideSlates = (bodyMatter, imagesList = []) => {
     if (bodyMatter?.length > 0) {
@@ -132,49 +162,7 @@ const getImagesInsideSlates = (bodyMatter, imagesList = []) => {
     }
     return imagesList
 }
-const getMediaElementInAsideWEPopup = (containerData, imagesList) => {
-    if (containerData?.contents?.bodyMatter?.length > 0) {
-        containerData?.contents?.bodyMatter.forEach(element => {
-            if (element.type === 'figure') {
-                imagesList.push(ele)
-            } else if (element.type === 'container') {
-                getImagesInsideSlates(containerBodyMatter(element), imagesList)
-            }
-        })
-    }
-    return imagesList
-}
-const getMediaElementInMultiColumn = (containerData, imagesList) => {
-    if (containerData?.groupeddata?.bodyMatter?.length > 0) {
-        containerData?.groupeddata?.bodyMatter.forEach(colData => {
-            if (colData.type === 'container') {
-                if (colData?.groupdata?.bodyMatter?.length > 0) {
-                    colData?.groupdata?.bodyMatter.forEach(element => {
-                        if (element.type === 'figure') {
-                            imagesList.push(ele2)
-                        } else if (element.type === 'container') {
-                            getImagesInsideSlates(containerBodyMatter(element), imagesList)
-                        }
-                    })
-                }
-            }
-        })
-    }
-    return imagesList
-}
-const getMediaElementInShowhide = (containerData, imagesList) => {
-    const showHideContent = containerBodyMatter(containerData)
-    if (showHideContent?.length > 0) {
-        showHideContent.forEach(element => {
-            if (element.type === 'figure') {
-                imagesList.push(element)
-            } else if (element.type === 'container') {
-                getImagesInsideSlates(containerBodyMatter(element), imagesList)
-            }
-        })
-    }
-    return imagesList
-}
+
 const containerBodyMatter = (container) => {
     let dataToReturn = []
     switch (container.label) {
@@ -190,6 +178,52 @@ const containerBodyMatter = (container) => {
             break;
     }
     return dataToReturn
+}
+
+const getMediaElementInAsideWEPopup = (containerData, imagesList) => {
+    if (containerData?.contents?.bodyMatter?.length > 0) {
+        containerData?.contents?.bodyMatter.forEach(element => {
+            if (element.type === 'figure') {
+                imagesList.push(element)
+            } else if (element.type === 'container' && element.contents.bodyMatter) {
+                getImagesInsideSlates(containerBodyMatter(element.contents.bodyMatter), imagesList)
+            }
+        })
+    }
+    return imagesList
+}
+
+const getMediaElementInMultiColumn = (containerData, imagesList) => {
+    if (containerData?.groupeddata?.bodyMatter?.length > 0) {
+        containerData?.groupeddata?.bodyMatter.forEach(colData => {
+            if (colData.type === 'container') {
+                if (colData?.groupdata?.bodyMatter?.length > 0) {
+                    colData?.groupdata?.bodyMatter.forEach(element => {
+                        if (element.type === 'figure') {
+                            imagesList.push(element)
+                        } else if (element.type === 'container') {
+                            getImagesInsideSlates(containerBodyMatter(element), imagesList)
+                        }
+                    })
+                }
+            }
+        })
+    }
+    return imagesList
+}
+
+const getMediaElementInShowhide = (containerData, imagesList) => {
+    const showHideContent = containerBodyMatter(containerData)
+    if (showHideContent?.length > 0) {
+        showHideContent.forEach(element => {
+            if (element.type === 'figure') {
+                imagesList.push(element)
+            } else if (element.type === 'container') {
+                getImagesInsideSlates(containerBodyMatter(element), imagesList)
+            }
+        })
+    }
+    return imagesList
 }
 
 const getContentInFMandBM = (apiContent, matterType, imagesData) => {
