@@ -1810,6 +1810,15 @@ class ElementContainer extends Component {
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                        {permissions && permissions.includes('notes_adding') 
+                        && (this.props.element.type === 'element-pdf' 
+                        ? (config.isCypressPlusEnabled 
+                        ? ((this.props.element.elementdata.conversionstatus)
+                        ? <Button type="edit-button-to-open-pdf-in-CypressPlus" btnClassName={btnClassName}  elementType={element?.type} />
+                        : <Button type="edit-button-to-open-pdf-in-CypressPlus" btnClassName={btnClassName}  elementType={element?.type} onClick={() => window.alert("Conversion Status is not available")}/>)
+                        : null)
+                        : null)
+                        }
                         {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
                             if (this.props.projectUsers.length === 0) {
                                 this.props.getProjectUsers();

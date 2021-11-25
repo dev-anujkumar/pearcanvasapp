@@ -14,6 +14,12 @@ describe('Testing Button component with props', () => {
         expect(component.find('span.btn-element').hasClass('split-icon')).toBe(false);
         expect(component.find('svg#Capa_1').exists()).toBe(true);
     })
+     // test case for Edit button component to open Cypress+. CYPLS-196
+  it('render Edit Button Component to open Cypress Plus', () => {
+    const component = mount(<Button type={buttonTypes.EDIT_BUTTON_CYPLS} labelText='UL' />)
+    expect(component.find('span.btn-element').hasClass('edit-in-cypressPlus')).toBe(true)
+    expect(component.find('svg#Capa_1').exists()).toBe(true)
+  })
     it('render comment-flag Button component  ', () => {
         const component = mount(<Button type={buttonTypes.COMMENT_FLAG} labelText="UL" />);
         expect(component.find('span.btn-element').hasClass('flag-icon')).toBe(true);

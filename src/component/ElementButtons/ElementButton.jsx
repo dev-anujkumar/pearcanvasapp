@@ -15,6 +15,7 @@ import {
     noteFlag , 
     tcmIcon, 
     addNote, 
+    editInCypressPlus,
     textIcon, 
     imageIcon, 
     interativeIcon, 
@@ -67,6 +68,11 @@ class ElementButton extends Component {
                     {addNote}
                     </span>
                 break;
+            case buttonTypes.EDIT_BUTTON_CYPRESSSPLUS:
+                buttonJSX = <span className={`btn-element small edit-in-cypressPlus ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementTypeClassName}`} title="Edit in cypress+" onClick={clickHandlerFn}>
+                    {editInCypressPlus}
+                    </span>
+                break; 
             case buttonTypes.COMMENT_FLAG:
                 buttonJSX = <span className={`btn-element small flag-icon ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
                     {noteFlag}
