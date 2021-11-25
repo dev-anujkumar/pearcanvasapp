@@ -1813,9 +1813,9 @@ class ElementContainer extends Component {
                         {permissions && permissions.includes('notes_adding') 
                         && (this.props.element.type === 'element-pdf' 
                         ? (config.isCypressPlusEnabled 
-                        ? ((this.props.element.elementdata.conversionstatus)
-                        ? <Button type="edit-button-to-open-pdf-in-CypressPlus" btnClassName={btnClassName}  elementType={element?.type} />
-                        : <Button type="edit-button-to-open-pdf-in-CypressPlus" btnClassName={btnClassName}  elementType={element?.type} onClick={() => window.alert("Conversion Status is not available")}/>)
+                        ? (this.props.element.elementdata.conversionstatus
+                        ? <Button type="edit-button-to-open-pdf-in-CypressPlus" btnClassName={btnClassName}  elementType={element?.type} onClick={() => window.open('http://localhost:3000/cypress-plus?project_d_urn=urn:pearson:distributable:1e6af9bd-6e4b-41ce-82a6-80c30249dcb7&project_e_urn=urn:pearson:entity:5e95c0d3-2700-445c-8419-c934ac864e0d&project_w_urn=urn:pearson:work:3df9122b-781b-46de-b975-b4d5b4d1b4d4', '_blank')}/>
+                        : <Button type="edit-button-to-open-pdf-in-CypressPlus" btnClassName={btnClassName}  elementType={element?.type} />)
                         : null)
                         : null)
                         }
