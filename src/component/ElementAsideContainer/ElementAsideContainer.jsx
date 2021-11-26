@@ -699,7 +699,6 @@ class ElementAsideContainer extends Component {
                 }
             }
         }
-        console.log('focusOnOtherElement', focusOnOtherElement, 'focusOnToolbar', focusOnToolbar, 'newToggleValue', newToggleValue)
         if (!newToggleValue && focusInLabel && focusInNumber && focusInTitle) {
             if ((this.props.elementId !== this.props?.activeElement?.elementId) || (this.props.elementId === this.props?.activeElement?.elementId && (focusOnOtherElement))) { 
                 this.props.enableAsideNumbering(newToggleValue, element.id);
