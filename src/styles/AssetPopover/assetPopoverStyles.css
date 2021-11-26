@@ -142,8 +142,6 @@
       /* bottom: 0; */
       left: 23.8%;    
       overflow: auto;
-      background: #fff;
-      background-color: white;
       /* padding: 1em 2em; */
       z-index: 1500;  
       min-height: 48px;
@@ -165,8 +163,8 @@
     font-size: 15.1156px;
     font-family: sans-serif;
     pointer-events: none;
-    opacity: 0.9;
-    border-bottom-style: ridge;
+    opacity: 4;
+    /* border-bottom-style: ridge */
   }
   
   .blockerBgDiv {
@@ -192,9 +190,9 @@
     justify-content: end;
     align-items: center;
     height: 68px;
-    padding: 10px;
+    padding: 16px;
     border-top: solid 1px #d8d8d8;
-  
+    background-color: #fff;
   }
   
   .modalCard {

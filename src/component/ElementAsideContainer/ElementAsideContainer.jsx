@@ -99,7 +99,7 @@ class ElementAsideContainer extends Component {
      * @param {string} element -object of element
      */
 
-    renderContainer({ element: _containerData },designtype) {
+    renderContainer({ element: _containerData },designtype,isDiffDesignType) {
         try {
             if (_containerData !== null && _containerData !== undefined) {
                 if (Object.values(_containerData).length > 0) {
@@ -119,7 +119,7 @@ class ElementAsideContainer extends Component {
                     } */
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
-                        <div className={`container-aside ${designtype === "asideSidebar05" ? designtype : ''}`} data-id={_containerId} container-type={_containerType}>
+                        <div className={`container-aside ${isDiffDesignType ? designtype : ''}`} data-id={_containerId} container-type={_containerType}>
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
@@ -662,11 +662,11 @@ class ElementAsideContainer extends Component {
   * @param {string} designtype -string to select type of aside container
   */
 
-    renderAside = (designtype) => {
+    renderAside = (designtype,isDiffDesignType) => {
         return (
             <React.Fragment>
                 {this.borderTop(designtype)}
-                {this.renderContainer(this.props,designtype)}
+                {this.renderContainer(this.props,designtype,isDiffDesignType)}
                 <div className={designtype + "BorderBottom"} />
             </React.Fragment>
 
@@ -716,10 +716,12 @@ class ElementAsideContainer extends Component {
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
         let labelMargin = showTitleField ? 'remove-margin-top' : ''
+        let diffDesignType =["asideSidebar05" ,"asideSidebarFeature"]
+        let isDiffDesignType= diffDesignType.includes(designtype);
         return (
-            <aside className={`${labelMargin} ${designtype !=="asideSidebar05" ? designtype :''} aside-container`} tabIndex="0" ref={this.asideRef}>
+            <aside className={`${labelMargin} ${ isDiffDesignType ? '' : designtype } aside-container`} tabIndex="0" ref={this.asideRef}>
                 {this.renderTitleField(asideHtmlData)}
-                {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
+                {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype,isDiffDesignType)}
             </aside>
         );
     }

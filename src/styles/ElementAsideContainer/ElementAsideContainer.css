@@ -130,3 +130,15 @@ aside.asideSidebar05{
     margin-left: auto;
     border-top: 7px solid #007494;
 }
+
+aside.asideSidebarFeature{
+    display: none;
+}
+
+.container-aside.asideSidebarFeature{
+    background-color: #f0f0f0;
+    max-width: 680px;
+    padding: 0em 2em 0.25em 2em;
+    margin: 24px auto 3em auto;
+    border-top: 1px solid #000000;
+}
