@@ -695,7 +695,8 @@ class ElementAsideContainer extends Component {
         let asideHtmlData = getLabelNumberTitleHTML(element);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
-        let labelMargin = this.state.showTitle ? 'remove-margin-top' : ''
+        let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
+        let labelMargin = showTitleField ? 'remove-margin-top' : ''
         return (
             <aside className={`${labelMargin} ${designtype} aside-container`} tabIndex="0" ref={this.asideRef}>
                 {this.renderTitleField(asideHtmlData)}
