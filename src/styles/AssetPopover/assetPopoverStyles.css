@@ -62,7 +62,7 @@
     background: #fafafa;
     display: block;
     transform: rotate(45deg);
-    left: 50%;
+    left: 12px;
     top: 7px;
   }
   
@@ -202,16 +202,13 @@
   .modalCard {
     background-color: white;
     padding-left: 15px;
-    font-size: 15.1156px;
-    font-family: 'Open Sans';
-    min-height: 40px;
+    min-height: 20px;
     max-height: fit-content;
   }
 
   .figureCount {
     font-size: 14px;
     font-family: 'Open Sans';
-    margin-bottom: 5px;
     font-weight: 600;
     margin-top: 24px;
     padding-left: 15px;
@@ -298,7 +295,7 @@
     box-sizing: content-box;
     float: none;
     z-index: auto;
-    width: 85%;
+    width: 88%;
     height: -webkit-fill-available;
     position: static;
     cursor: text;
@@ -372,7 +369,9 @@
   }
   .modalText{
     display: flex;
-    margin: 7px;
+    margin: 5px;
+    font-size: 14px;
+    font-family: 'Open Sans';
     align-items: center;
     overflow-wrap: anywhere;
   }
