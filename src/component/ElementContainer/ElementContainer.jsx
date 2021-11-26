@@ -154,10 +154,6 @@ class ElementContainer extends Component {
             }
             this.props.fetchAssessmentMetadata('interactive', 'fromElementContainer', interactiveData);
         }
-        if(element?.type === 'element-aside'){
-            const showAsideTitle =  element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false
-            this.props.enableAsideNumbering(showAsideTitle,element.id)
-        }
         document.addEventListener('click', () => {
             this.setState({ showCopyPopup: false })
         });

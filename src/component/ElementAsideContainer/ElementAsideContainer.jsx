@@ -54,7 +54,7 @@ class ElementAsideContainer extends Component {
 
     handleClickOutside = (event) => {
         if (this.asideRef && !this.asideRef.current.contains(event.target)) {
-            this.handleAsideBlur();
+            this.handleAsideBlur(event);
         }
     }
 
@@ -674,7 +674,7 @@ class ElementAsideContainer extends Component {
         )
     }
 
-    handleAsideBlur = () => {
+    handleAsideBlur = (evt) => {
         this.props.handleBlur();
         const { element, index } = this.props;
         let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false; 
@@ -682,9 +682,29 @@ class ElementAsideContainer extends Component {
         let labelElement = document.getElementById(`cypress-${index}-t1`);
         let numberElement = document.getElementById(`cypress-${index}-t2`);
         let titleElement = document.getElementById(`cypress-${index}-t3`);
-        let isAsideNumber = this.setFieldsForAside(element, this.props.asideTitleData);
-        if (!newToggleValue && labelHtmlData.includes(labelElement?.innerHTML) && labelHtmlData.includes(numberElement?.innerHTML) && labelHtmlData.includes(titleElement?.innerHTML)) {
-            this.props.enableAsideNumbering(newToggleValue, element.id);
+        const focusInLabel = labelHtmlData.includes(labelElement?.innerHTML)
+        const focusInNumber = labelHtmlData.includes(numberElement?.innerHTML)
+        const focusInTitle = labelHtmlData.includes(titleElement?.innerHTML)
+        let focusOnToolbar = false, focusOnOtherElement = false
+        if (evt?.path?.length > 0) {
+            const evtNodes = evt.path
+            const activeNodeIndex = evtNodes[0]?.id?.split('-')
+            if (activeNodeIndex?.length > 1 && activeNodeIndex[0] === 'cypress' && activeNodeIndex[1] !== index) {
+                focusOnOtherElement = true
+            }
+            else {
+                for (let evtNode of evtNodes.values()) {
+                    if (evtNode?.classList?.contains('toolbar-container')) {
+                        focusOnToolbar = true
+                    }
+                }
+            }
+        }
+        console.log('focusOnOtherElement', focusOnOtherElement, 'focusOnToolbar', focusOnToolbar, 'newToggleValue', newToggleValue)
+        if (!newToggleValue && focusInLabel && focusInNumber && focusInTitle) {
+            if ((this.props.elementId !== this.props?.activeElement?.elementId) || (this.props.elementId === this.props?.activeElement?.elementId && (focusOnOtherElement))) { 
+                this.props.enableAsideNumbering(newToggleValue, element.id);
+            }
         }
     }
     /**
@@ -715,7 +735,8 @@ ElementAsideContainer.propTypes = {
 const mapStateToProps = state => {
     return {
         searchUrn: state.searchReducer.searchTerm,
-        asideTitleData: state.appStore.asideTitleData
+        asideTitleData: state.appStore.asideTitleData,
+        activeElement: state.appStore.activeElement
     };
 };
 
