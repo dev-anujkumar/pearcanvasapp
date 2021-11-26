@@ -22,7 +22,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -879,6 +879,17 @@ class ElementContainer extends Component {
         const { SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT } = elementTypeConstant;
         const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
         let parentElement
+        /* Update label/number/title/ of aside */
+        if (calledFrom && calledFrom === "asideElement") {
+            let hasAsideTitleData = element?.html?.title && (element?.html?.title !== "<p class='paragraphNumeroUno'></p>" && element?.html?.title !== "<p></p>") ? true : false;
+            const newToggleValue = hasAsideTitleData ? true : false;
+            let labelElement = document.getElementById(`cypress-${this.props.index}-t1`);
+            let numberElement = document.getElementById(`cypress-${this.props.index}-t2`);
+            let titleElement = document.getElementById(`cypress-${this.props.index}-t3`);
+            if (!newToggleValue && labelHtmlData.includes(labelElement?.innerHTML) && labelHtmlData.includes(numberElement?.innerHTML) && labelHtmlData.includes(titleElement?.innerHTML)) {
+                this.props.enableAsideNumbering(newToggleValue, element.id);
+            }
+        }
         /* Update title/credit of block poetry inside multicolumn */
         if (containerParent && this.props?.parentElement?.type == "groupedcontent" && this.props?.element?.type == "poetry") {
             this.props.parentElement?.groupeddata?.bodymatter.map((ele) => {

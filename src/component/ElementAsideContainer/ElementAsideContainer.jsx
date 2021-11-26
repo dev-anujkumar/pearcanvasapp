@@ -13,11 +13,9 @@ import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
-import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
+import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe } from '../../constants/utility';
-import { labelHtmlData } from '../../constants/Element_Constants';
-import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 // IMPORT - Assets //
 
 let random = guid();
@@ -100,7 +98,7 @@ class ElementAsideContainer extends Component {
      * @param {string} element -object of element
      */
 
-    renderContainer({ element: _containerData }) {
+    renderContainer({ element: _containerData },designtype) {
         try {
             if (_containerData !== null && _containerData !== undefined) {
                 if (Object.values(_containerData).length > 0) {
@@ -120,7 +118,7 @@ class ElementAsideContainer extends Component {
                     } */
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
-                        <div className="container-aside" data-id={_containerId} container-type={_containerType}>
+                        <div className={`container-aside ${designtype === "asideSidebar05" ? designtype : ''}`} data-id={_containerId} container-type={_containerType}>
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
@@ -599,7 +597,7 @@ class ElementAsideContainer extends Component {
         return (
             <React.Fragment>
                 <hr className={`aside-horizotal-break ${designtype == "workedexample2" ? 'aside-horizotal-break-green' : ""}`} />
-                {this.renderContainer(this.props)}
+                {this.renderContainer(this.props,"")}
                 <hr className={`aside-break-bottom ${designtype == "workedexample2" ? 'aside-break-bottom-green' : ""}`}></hr>
             </React.Fragment>
         )
@@ -667,7 +665,7 @@ class ElementAsideContainer extends Component {
         return (
             <React.Fragment>
                 {this.borderTop(designtype)}
-                {this.renderContainer(this.props)}
+                {this.renderContainer(this.props,designtype)}
                 <div className={designtype + "BorderBottom"} />
             </React.Fragment>
 
@@ -718,7 +716,7 @@ class ElementAsideContainer extends Component {
         let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
         let labelMargin = showTitleField ? 'remove-margin-top' : ''
         return (
-            <aside className={`${labelMargin} ${designtype} aside-container`} tabIndex="0" ref={this.asideRef}>
+            <aside className={`${labelMargin} ${designtype !=="asideSidebar05" ? designtype :''} aside-container`} tabIndex="0" ref={this.asideRef}>
                 {this.renderTitleField(asideHtmlData)}
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
@@ -745,6 +743,5 @@ export default connect(
     mapStateToProps,
     {
         swapElement,
-        enableAsideNumbering
     }
 )(ElementAsideContainer);
