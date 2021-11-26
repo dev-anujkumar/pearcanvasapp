@@ -716,7 +716,7 @@ class ElementAsideContainer extends Component {
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
         let labelMargin = showTitleField ? 'remove-margin-top' : ''
-        let diffDesignType =["asideSidebar05" ,"asideSidebarFeature"]
+        let diffDesignType = ["asideSidebar04", "asideSidebar05", "asideSidebarFeature", "asideActivity"]
         let isDiffDesignType= diffDesignType.includes(designtype);
         return (
             <aside className={`${labelMargin} ${ isDiffDesignType ? '' : designtype } aside-container`} tabIndex="0" ref={this.asideRef}>
