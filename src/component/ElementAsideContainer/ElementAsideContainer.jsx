@@ -28,20 +28,51 @@ class ElementAsideContainer extends Component {
         this.state = {
             sectionFocus: false,
             btnClassName: "",
-            showTitle: this.props?.asideTitleData?.isAsideNumber || false,
-            elementId: this.props.elementId 
+            showTitle: this.setFieldsForAside(this.props?.element, this.props?.asideTitleData),
+            elementId: this.props.elementId,
+            asideTitleData: []
         }
         this.asideRef = React.createRef();
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
-        if ((nextProps?.asideTitleData?.elementId === prevState?.elementId) && (nextProps.asideTitleData?.isAsideNumber != prevState?.showTitle)) {
+        if ((nextProps.asideTitleData != prevState?.asideTitleData)) {
             return {
-                showTitle: nextProps.asideTitleData.isAsideNumber
+                asideTitleData: nextProps.asideTitleData
             };
         }
         return null;
     }
+
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    handleClickOutside = (event) => {
+        if (this.asideRef && !this.asideRef.current.contains(event.target)) {
+            this.handleAsideBlur();
+        }
+    }
+
+    setFieldsForAside = (element, asideTitleData) => {
+        if (element && asideTitleData) {
+            const asideObj = asideTitleData.filter(obj => {
+                return obj.elementId === element.id;
+              })
+            if (asideObj.length) {
+                return asideObj[0].isAsideNumber;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     handleFocus = (e) => {
         // if(e.target && !(e.target.classList.contains('elemDiv-hr') )){
         //     return false;
@@ -512,7 +543,8 @@ class ElementAsideContainer extends Component {
  * 
  */
     renderTitleField = (asideHtmlData) => {
-        if (this.state.showTitle) {
+        let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
+        if (showTitleField) {
             return (
                 <div className="asideHeader">
                     <header className="figure-header new-figure-image-header">
@@ -643,12 +675,17 @@ class ElementAsideContainer extends Component {
     }
 
     handleAsideBlur = () => {
-        const { element } = this.props;
-        const newToggleValue = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true: false
-        this.setState({
-            showTitle: newToggleValue
-        })
         this.props.handleBlur();
+        const { element, index } = this.props;
+        let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false; 
+        const newToggleValue = hasAsideTitleData ? true : false;
+        let labelElement = document.getElementById(`cypress-${index}-t1`);
+        let numberElement = document.getElementById(`cypress-${index}-t2`);
+        let titleElement = document.getElementById(`cypress-${index}-t3`);
+        let isAsideNumber = this.setFieldsForAside(element, this.props.asideTitleData);
+        if (!newToggleValue && labelHtmlData.includes(labelElement?.innerHTML) && labelHtmlData.includes(numberElement?.innerHTML) && labelHtmlData.includes(titleElement?.innerHTML)) {
+            this.props.enableAsideNumbering(newToggleValue, element.id);
+        }
     }
     /**
      * render | renders title and slate wrapper
@@ -660,7 +697,7 @@ class ElementAsideContainer extends Component {
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         let labelMargin = this.state.showTitle ? 'remove-margin-top' : ''
         return (
-            <aside className={`${labelMargin} ${designtype} aside-container`} tabIndex="0" onBlur={this.handleAsideBlur} ref={this.asideRef}>
+            <aside className={`${labelMargin} ${designtype} aside-container`} tabIndex="0" ref={this.asideRef}>
                 {this.renderTitleField(asideHtmlData)}
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
