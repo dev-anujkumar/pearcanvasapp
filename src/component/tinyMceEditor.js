@@ -1708,7 +1708,7 @@ export class TinyMceEditor extends Component {
                         editor.targetElm.classList.remove('place-holder');
                     }
                 }
-                if (self.props?.element?.type != 'figure') {
+                if (self.props?.element?.type != 'figure' && self.props?.element?.type !== 'element-aside') {
                     items.push(blankLineOption)
                 }
                 callback(items);

@@ -183,13 +183,15 @@
   }
 
   .modalBody {
-    min-height: 241px;
-    max-height: fit-content;
+    overflow: auto;
     background-color: white;
+    min-height: fit-content;
+    max-height: 300px;
   }
   
   .modalFooter {
     height: 68px;
+    padding: 10px;
   
   }
   
@@ -198,7 +200,8 @@
     padding-left: 15px;
     font-size: 15.1156px;
     font-family: sans-serif;
-    height: 40px;
+    min-height: 40px;
+    max-height: fit-content;
   }
 
   .figureCount {
@@ -341,6 +344,8 @@
   .ErrorComp {
     text-align: center;
     padding-top: 20px;
+    justify-content: center;
+    align-items: center;
   }
 
   p.APOSearchResultText{
@@ -357,3 +362,33 @@
     position: absolute;
     margin: 8px;
   }
+  .modalInput{
+    display: flex;
+    align-items: center;
+  }
+  .modalText{
+    display: flex;
+    margin: 7px;
+    align-items: center;
+    overflow-wrap: anywhere;
+  }
+  .modalInputField{
+    display: flex;
+  }
+
+.modalBody::-webkit-scrollbar-thumb {
+    border-radius: 21px;
+    -webkit-box-shadow: inset 0 0 6px transparent;
+    background-color: #4e4e4e;
+}
+
+.modalBody::-webkit-scrollbar {
+  width: 6px;
+  background-color: transparent;
+}
+
+.modalBody::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px transparent;
+  border-radius: 14px;
+  background-color: transparent;
+}

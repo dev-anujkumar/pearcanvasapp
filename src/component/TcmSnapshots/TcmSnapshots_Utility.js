@@ -472,7 +472,7 @@ const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, isPopupSl
             } else if (item?.type === CITATION_GROUP) {
                 containerSnapshotsInShowhide(wipData, innerIndex, { asideData, parentUrn }, actionStatus, item, SHType)
             } else if (item?.type === POETRY_ELEMENT) {
-                containerSnapshotsInShowhide(wipData, innerIndex, { asideData, parentUrn }, actionStatus, item, SHType)
+                containerSnapshotsInShowhide(wipData, innerIndex, { asideData, parentUrn, slateManifest: defaultKeys?.slateUrn}, actionStatus, item, SHType)
             }
         })
     }
@@ -2060,7 +2060,8 @@ export const containerSnapshotsInShowhide = (wipData, index, containerElement, a
             currentElement: item,
             element: wipData,
             showHideType: SHType
-        }
+        },
+        slateManifest: containerElement?.slateManifest
     }
     let type = item.type === "citations" ? "CITATION" : "CONTAINER";
     prepareTcmSnapshots(item, actionStatus, containerElement, type, index);

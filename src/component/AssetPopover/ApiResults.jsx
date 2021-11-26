@@ -60,7 +60,6 @@ class ApiResults extends React.Component {
             <div>
                 <h3 className="figureCount">Assets Matched</h3>
                 {this.apiResultsJsx(assetPopoverData, selectedFigure, ValueToBeSearch)}
-                <hr />
             </div>
         )
     }
