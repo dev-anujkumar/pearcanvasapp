@@ -133,8 +133,10 @@ class AssetPopoverSearch extends React.Component {
     currentlyLinkedJsx = () => {
         return (<section className="modalSubHeader">
             <h3 className="currentlyLinkedHeader"><i>Currently Linked to-</i></h3>
-            <input type='radio' disabled name='selectedradio' checked className="currentlyLinkedRadio" />
-            <span> {this.props.currentlyLinkedImageData.title}</span>
+            <div className="modalLinkedField">
+            <div className ="modalInput" ><input type='radio' disabled name='selectedradio' checked /></div>
+            <span className="modalText"> {this.props.currentlyLinkedImageData.title}</span>
+            </div>
         </section>
         )
     }
@@ -178,8 +180,8 @@ class AssetPopoverSearch extends React.Component {
                 } else {
                     if (!isSearchResultFound && shouldShowApoBody) {
                         return <section className="modalFooter">
-                            <button disabled={!isFigureSelected} className="myButton" onClick={() => this.apoSearchSave(this.props.apoObject, this.props.selectedFigureValue)}>Save</button>
                             <button  className="myButton" onClick={this.apoSearchClose}>Cancel</button>
+                            <button disabled={!isFigureSelected} className="myButton" onClick={() => this.apoSearchSave(this.props.apoObject, this.props.selectedFigureValue)}>Save</button>
                         </section>
                     }
                 }

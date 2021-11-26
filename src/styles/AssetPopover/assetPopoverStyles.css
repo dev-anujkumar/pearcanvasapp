@@ -161,11 +161,9 @@
   }
   
   .modalSubHeader {
-    height: 64px;
     background-color: #f5f5f5;
     font-size: 15.1156px;
     font-family: sans-serif;
-    margin-bottom: 10px;
     pointer-events: none;
     opacity: 0.9;
     border-bottom-style: ridge;
@@ -225,6 +223,11 @@
     transform-origin: 0% 0%;
     margin-bottom: 10px;
   }
+
+  .modalLinkedField{
+    display: flex;
+    margin-left: 16px;
+  }
   .currentlyLinkedRadio {
     clip: unset !important;
     width: 20px !important;
@@ -257,7 +260,7 @@
     color:#005a70;
     font-weight:bold;
     text-decoration:none;
-    margin-right: 10px;
+    margin-left: 10px;
   }
 
   .myButton:hover {
