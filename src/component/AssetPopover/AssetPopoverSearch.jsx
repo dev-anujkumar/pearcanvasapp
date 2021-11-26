@@ -210,7 +210,7 @@ class AssetPopoverSearch extends React.Component {
                 <div className="containerApo">
                     <section className="modalHeader header__search-bar">
                         <img className="seach_icon" src={searchIcon} />
-                        <input className="searchBarApo" placeholder="Search figures, asides, worked exmaples etc..." type="text" readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
+                        <input className="searchBarApo" placeholder="Search figures, asides, worked examples etc..." type="text" readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
                         <label className="modal__close" onClick={this.apoSearchClose}></label>
                     </section>
 
