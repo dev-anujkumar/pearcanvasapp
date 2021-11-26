@@ -1312,7 +1312,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                         callCutCopySnapshotAPI(tcmSnapshotPayload)
                     }
                 }
-                if (selection.operationType === 'copy' && selection?.element?.type === 'element-aside') {
+                if (selection?.element?.type === 'element-aside') {
                     const { element } = selection;
                     let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false;
                     const newToggleValue = hasAsideTitleData ? true : false;

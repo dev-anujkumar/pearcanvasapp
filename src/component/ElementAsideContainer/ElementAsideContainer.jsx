@@ -688,11 +688,18 @@ class ElementAsideContainer extends Component {
         if (evt?.path?.length > 0) {
             const evtNodes = evt.path
             const activeNodeIndex = evtNodes[0]?.id?.split('-')
-            if (activeNodeIndex?.length > 1 && activeNodeIndex[0] === 'cypress' && activeNodeIndex[1] !== index) {
-                focusOnOtherElement = true
+            if (activeNodeIndex?.length > 1) {
+                if ((activeNodeIndex[0] === 'cypress' && activeNodeIndex[1] !== index)) {
+                    focusOnOtherElement = true
+                }
             }
             else {
                 for (let evtNode of evtNodes.values()) {
+                    if (evtNode?.classList?.contains('element-container') && (evtNode?.classList?.contains('as'))) {
+                        if (this.props.elementId !== evtNode?.dataset.id) {
+                            focusOnOtherElement = true
+                        }
+                    }
                     if (evtNode?.classList?.contains('toolbar-container')) {
                         focusOnToolbar = true
                     }
