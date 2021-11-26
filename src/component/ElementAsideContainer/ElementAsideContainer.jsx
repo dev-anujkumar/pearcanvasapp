@@ -648,7 +648,6 @@ class ElementAsideContainer extends Component {
         this.setState({
             showTitle: newToggleValue
         })
-        this.props.enableAsideNumbering(false, '')
         this.props.handleBlur();
     }
     /**
@@ -659,8 +658,9 @@ class ElementAsideContainer extends Component {
         let asideHtmlData = getLabelNumberTitleHTML(element);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
+        let labelMargin = this.state.showTitle ? 'remove-margin-top' : ''
         return (
-            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.handleAsideBlur} ref={this.asideRef}>
+            <aside className={`${labelMargin} ${designtype} aside-container`} tabIndex="0" onBlur={this.handleAsideBlur} ref={this.asideRef}>
                 {this.renderTitleField(asideHtmlData)}
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>

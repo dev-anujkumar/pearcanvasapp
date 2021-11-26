@@ -369,13 +369,12 @@ class ElementContainer extends Component {
         titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
         titleHTML = this.removeClassesFromHtml(titleHTML)
         let oldTitleHTML = ""
-        let filteredHTML=titleHTML?.replace("<p>", '')?.replace("</p>", '');
         if (!(previousElementData?.html?.title)) {
             oldTitleHTML = createLabelNumberTitleModel("", "", "")
         } else {
             oldTitleHTML = this.removeClassesFromHtml(previousElementData?.html?.title)
         }
-        return (titleHTML !== oldTitleHTML && filteredHTML !== "")
+        return titleHTML !== oldTitleHTML
     }
 
     /**
