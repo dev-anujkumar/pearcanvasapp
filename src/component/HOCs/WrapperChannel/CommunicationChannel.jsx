@@ -266,7 +266,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleUnlinkedLOData(message)
                     break;
                 case 'selectedAlfrescoAssetData' :
-                    console.log('ASSET DATA FROM ALFRESCO', message.asset)
                     //Check if message.asset is array
                     if (message.asset && Array.isArray(message.asset) && message.asset?.length > 0) {
                         message.asset = message.asset[0]
@@ -274,6 +273,32 @@ function CommunicationChannel(WrappedComponent) {
                     else if (message.assets && Array.isArray(message.assets) && message.assets?.length > 0) {
                         message.asset = message.assets[0]
                     }
+                    let changedSiteUrl = false, changedAlfrescoData = {}
+                    if (message.site && Object.keys(message.site)?.length > 0) {
+                        if (message.site?.citeNodeRef !== config.alfrescoMetaData?.alfresco?.nodeRef) {
+                            changedSiteUrl = true
+                            changedAlfrescoData = {
+                                guid: message.site?.citeNodeRef,
+                                title: message.site?.citeTitle,
+                                id: message.site?.citeName,
+                                visibility: message.site?.citeVisibility
+                            }
+                        }
+                        message = {
+                            ...message,
+                            changedSiteUrl,
+                            changedAlfrescoData
+                        }
+                    }
+                    if (this.props?.alfrescoReducer?.savedElement) {
+                        message = {
+                            ...message,
+                            ...savedElement
+                        }
+                    }
+                    message.launchAlfrescoPopup = false
+                    console.log('alfrescoReducer', this.props.alfrescoReducer)
+                    console.log('ASSET DATA FROM ALFRESCO message.asset', message.asset)
                     if(message.isEditor){
                         this.handleEditorSave(message)
                     }
@@ -285,9 +310,9 @@ function CommunicationChannel(WrappedComponent) {
                     }
                     this.props.saveSelectedAssetData(message)
                     break;
-                case 'saveAlfrescoDataToConfig' : 
-                config.alfrescoMetaData = message
-                break;
+                case 'saveAlfrescoDataToConfig':
+                    config.alfrescoMetaData = message
+                    break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
                     break;
