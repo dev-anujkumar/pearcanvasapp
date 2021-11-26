@@ -16,6 +16,7 @@ import { checkSlateLock } from "../../js/slateLockUtility.js"
 import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe } from '../../constants/utility';
+import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 // IMPORT - Assets //
 
 let random = guid();
