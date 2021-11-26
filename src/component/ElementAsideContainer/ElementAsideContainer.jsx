@@ -743,5 +743,6 @@ export default connect(
     mapStateToProps,
     {
         swapElement,
+        enableAsideNumbering
     }
 )(ElementAsideContainer);
