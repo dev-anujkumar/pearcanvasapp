@@ -13,6 +13,8 @@ import { clearAssetPopoverLink } from './openApoFunction.js';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import searchIcon from './asset_popover_search_icon.svg';
 import { customEvent } from '../../js/utils';
+import { showTocBlocker, disableHeader} from '../../js/toggleLoader';
+
 class AssetPopoverSearch extends React.Component {
     constructor(props) {
         super(props);
@@ -30,6 +32,8 @@ class AssetPopoverSearch extends React.Component {
         }
         this.props.apoSearchClose();
         sendDataToIframe({ 'type': 'enableToc', 'message': {} });
+        this.props.showBlocker(false);
+        disableHeader(false);
     }
 
     /**
@@ -189,11 +193,18 @@ class AssetPopoverSearch extends React.Component {
         this.apoSearchClose();
     }
 
+    handleBlur=()=>{
+        this.props.showBlocker(true);
+        showTocBlocker(true);
+        disableHeader(true);
+    }
+
     render() {
         const stateImageData = this.props.figures;
         const { showApoFooter, showApoBody, figureIsSelected, showApoCurrentlyLinked, noSearchResultFound, searchTerm } = this.props;
         return (
             <div>
+                {this.handleBlur()}
                 <div className="containerApo">
                     <section className="modalHeader header__search-bar">
                         <img className="seach_icon" src={searchIcon} />
