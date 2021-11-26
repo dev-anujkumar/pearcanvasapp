@@ -268,8 +268,11 @@ function CommunicationChannel(WrappedComponent) {
                 case 'selectedAlfrescoAssetData' :
                     console.log('ASSET DATA FROM ALFRESCO', message.asset)
                     //Check if message.asset is array
-                    if(message?.asset?.length > 0) {
+                    if (message.asset && Array.isArray(message.asset) && message.asset?.length > 0) {
                         message.asset = message.asset[0]
+                    }
+                    else if (message.assets && Array.isArray(message.assets) && message.assets?.length > 0) {
+                        message.asset = message.assets[0]
                     }
                     if(message.isEditor){
                         this.handleEditorSave(message)
