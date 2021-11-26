@@ -50,6 +50,9 @@
 .btn-element.flag-icon {
     background-color: #fa5d54;
 }
+.btn-element.edit-in-cypressPlus {
+    background-color: grey;
+}
 
 .btn-element.delete-icon {
     padding: 5px;

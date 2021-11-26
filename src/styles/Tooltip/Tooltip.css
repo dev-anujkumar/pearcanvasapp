@@ -235,5 +235,21 @@
 .container-aside .tooltip .tooltip-poc {
     margin-left: -65px;
 }
-
-
+.tooltip .tooltiptext.tooltip-editInCypresSPlus {
+    left: 50%;
+    width: 100px;
+    top: 100%;
+    margin-left: -50px;
+}
+.tooltip .tooltip-editInCypresSPlus::after {
+    bottom: 100%;
+    left: 50%;
+    height: 25px;
+    border-color: transparent transparent black transparent;
+    content: " ";
+    position: absolute;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    
+}
