@@ -1766,6 +1766,52 @@ describe('Tests Slate Wrapper Actions', () => {
         expect(type).toBe('AUTHORING_ELEMENT_CREATED');
     });
 
+    it('createElement action - poetryData --- testing 3', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+                        contents: {
+                            bodymatter: [{
+                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40g",
+                                interactivedata: {
+                                    show: [{
+                                        id: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f'
+                                    }]
+                                }
+                            }]
+                        }
+                    }
+                },
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const asideDataMock = {
+            type: ''
+        }
+        const poetryData = {
+            id: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f',
+            type: 'poetry',
+            parent: {
+                type: 'showhide',
+                showHideType: 'show',
+                id: 'urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40g'
+            }
+        };
+        const cb = jest.fn();
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: { contents: { bodymatter: [{ id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f" }] } } }));
+        await store3.dispatch(actions.createElement('', 0, { manifestUrn: config.projectUrn }, asideDataMock, 1, '', cb, poetryData));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('AUTHORING_ELEMENT_CREATED');
+    });
+
     it('createElement action - !asideData block testing', async () => {
         initialState3 = {
             appStore: {
@@ -2700,6 +2746,36 @@ describe('Tests Slate Wrapper Actions', () => {
         await store3.dispatch(actions.swapElement(dataObj, jest.fn()));
     })
 
+    it('swapElement  action - blockpoetry inside S/H - if block', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: sectionBreakMockSlateData,
+                popupSlateData: {
+                    type: ""
+                },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        const dataObj = {
+            sectionType: "show",
+            poetryId: "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a1",
+            containerTypeElem: 'pe',
+            elementIndex: '1-0-1',
+            swappedElementData: {
+                id: "urn:pearson:work:8a3e6ed2-e67b-4222-bf20-da5fddcaf929",
+                contentUrn: "urn:pearson:entity:a4ecf47d-44b5-4555-acf3-e9445c6d2fd1"
+            },
+            type: 'pe',
+            currentSlateEntityUrn: "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157bs4aw"
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ status: '200' }));
+        await store3.dispatch(actions.swapElement(dataObj, jest.fn()));
+        const { type } = store3.getActions()[0];
+        expect(type).toBe('SWAP_ELEMENT');
+    });
     it('swapElement  action - Stanza inside PE inside S/H', async () => {
         initialState3 = {
             appStore: {

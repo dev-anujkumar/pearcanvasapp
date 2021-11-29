@@ -1331,6 +1331,30 @@ export const createstoreWithFigure = {
                                     "tcm": true,
                                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                },
+                                {
+                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                                    "type": "poetry",
+                                    "subtype": "",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": "asdfasdfasdf"
+                                    },
+                                    "headers": [
+                                        {
+                                            "charStart": 0,
+                                            "charEnd": -1,
+                                            "level": 4
+                                        }
+                                    ],
+                                    "html": {
+                                        "text": "<h5 class=\"heading5NummerEins\">Heading 5</h5>"
+                                    },
+                                    "comments": true,
+                                    "tcm": true,
+                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
                                 }
                             ],
                             "hide": [
@@ -2145,6 +2169,29 @@ export const sectionBreakMockSlateData = {
                                         "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d230"
                                     }
                                 ]
+                            }
+                        }, {
+                            "id": "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a1",
+                            "type": "poetry",
+                            "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                            "versionUrn": "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a0",
+                            "contentUrn": "urn:pearson:entity:e1d634f7-3edf-4f57-9e45-a351ae35b2b6",
+                            "contents": {
+                                "bodymatter": [{
+                                    "id": "urn:pearson:work:3a25600b-fd17-4bec-8757-e1ca9ffcfcd9",
+                                    "type": "element-citation",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": ""
+                                    },
+                                    "html": {
+                                        "text": "<p class=\"paragraphNumeroUnoCitation\"><br></p>"
+                                    },
+                                    "versionUrn": "urn:pearson:work:3a25600b-fd17-4bec-8757-e1ca9ffcfcd9",
+                                    "contentUrn": "urn:pearson:entity:7ab462bf-f9ad-42db-a0d4-c2f35e509cdd",
+                                    "status": "wip"
+                                }]
                             }
                         }
                     ],
