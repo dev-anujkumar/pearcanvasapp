@@ -1178,7 +1178,28 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
-
+            const textLength = tinymce?.activeEditor?.selection?.getNode()?.textContent?.length;
+            const cursorLength = window.getSelection().anchorOffset;
+            // const textLength = tinymce?.activeEditor?.selection.getRng().startOffset?.length;
+            console.log("the cursour length is ", cursorLength, textLength);
+            if(e.keyCode === 38) {
+                if(cursorLength === 0) {
+                    console.log("up arrwo and 0")
+                }
+                else {
+                    e.stopPropagation();
+                    // e.preventDefault();
+                }
+            }
+            if(e.keyCode === 40) {
+                if(cursorLength === textLength) {
+                    console.log("down arrwo and last")
+                }
+                else {
+                    e.stopPropagation();
+                    // e.preventDefault();
+                }
+            }
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
             if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                 const keyCode = e.keyCode || e.which;
@@ -4158,6 +4179,8 @@ export class TinyMceEditor extends Component {
         
     }
     normalKeyDownHandler = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
