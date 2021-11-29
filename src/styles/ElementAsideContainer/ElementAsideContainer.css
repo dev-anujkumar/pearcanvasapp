@@ -112,3 +112,63 @@
 aside.remove-margin-top{
     margin-top: 0em;
 }
+
+
+.container-aside.asideSidebar05{
+    background-color: #ececec;
+    max-width: 680px;
+    padding-top: 0em;
+    padding-right: 2em;
+    padding-bottom: 0.2em;
+    padding-left: 2em;
+    margin-top: 24px;
+    margin-right: auto;
+    margin-bottom: 32px;
+    margin-left: auto;
+    border-top: 7px solid #007494;
+}
+
+div.asideSidebar01BorderTop {
+    border-top: 7px solid #FFB81C !important;
+}
+
+div.asideSidebar02BorderTop {
+    border-top: 7px solid #007FA3 !important;
+}
+
+div.asideSidebar03BorderTop {
+    border-top: 7px solid #d40b0b !important;
+}
+
+div.asideTacticBoxBorderTop {
+    border-top: 7px solid #000 !important;
+}
+
+
+.container-aside.asideSidebarFeature{
+    background-color: #f0f0f0;
+    max-width: 680px;
+    padding: 0em 2em 0.25em 2em;
+    margin: 24px auto 3em auto;
+    border-top: 1px solid #000000;
+}
+
+.container-aside.asideSidebar04{
+    background-color: transparent;
+    max-width: 680px;
+    padding-right: 2em;
+    padding-left: 2em;
+    margin: 3em auto auto auto;
+}
+
+div.asideSidebar04BorderBottom, div.asideActivityBorderBottom{
+    margin: auto auto 3em auto !important;
+}
+
+.container-aside.asideActivity{
+    background-color: #fff;
+    max-width: 680px;
+    margin: 3em auto auto auto;
+    padding-right: 2em;
+    padding-left: 2em;
+}
