@@ -754,7 +754,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
     }
     
     if(config.isCypressPlusEnabled){
-        startPdfConversion();
+        startPdfConversion(updatedData.id);
     }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     config.isSavingElement = false
