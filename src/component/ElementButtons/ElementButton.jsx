@@ -70,12 +70,10 @@ class ElementButton extends Component {
                     </span>
                 break;
             case buttonTypes.EDIT_BUTTON_CYPRESSSPLUS:
-                buttonJSX = <Tooltip direction='editInCypresSPlus' tooltipText='Edit in Cypress+'>
-                    <span className={`btn-element small edit-in-cypressPlus ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small edit-in-cypressPlus ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementTypeClassName}`} title="Edit in Cypress+" onClick={clickHandlerFn}>
                         {editInCypressPlus}
                     </span>
-                </Tooltip>
-                break; 
+                break;
             case buttonTypes.COMMENT_FLAG:
                 buttonJSX = <span className={`btn-element small flag-icon ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
                     {noteFlag}
