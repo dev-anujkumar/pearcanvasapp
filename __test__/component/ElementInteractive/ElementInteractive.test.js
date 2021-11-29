@@ -1409,10 +1409,7 @@ describe("Testing methods", () => {
         let tempComponent = mount(<Provider store={store}><Interactive {...tempProps} /></Provider>);
         let elementInteractiveInstance = tempComponent.find('Interactive').instance();
         let e = {
-            stopPropagation :jest.fn(),
-            target: {
-                classList: ["actionPU"]
-            }
+            stopPropagation :jest.fn()
         }
         let value = {}
         elementInteractiveInstance.togglePopup(e,value)
