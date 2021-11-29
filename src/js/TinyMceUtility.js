@@ -143,7 +143,7 @@ export const checkBlockListElement = (data, keypressed) => {
             let indexes = index.split("-");
             let parentElement = data?.asideData?.parent;
 
-            if (parentElement && parentElement.type === "showhide") {
+            if (parentElement && parentElement.type === "showhide" && data?.asideData.type==="manifestlist") {
                 let indexToinsert = null;
                 let parentData = {};
                 if (keypressed === "TAB") {
