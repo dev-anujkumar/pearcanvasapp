@@ -29,7 +29,7 @@ class ElementAsideContainer extends Component {
             btnClassName: "",
             showTitle: this.setFieldsForAside(this.props?.element, this.props?.asideTitleData),
             elementId: this.props.elementId,
-            asideTitleData: []
+            asideTitleData: this.props.asideTitleData
         }
         this.asideRef = React.createRef();
     }

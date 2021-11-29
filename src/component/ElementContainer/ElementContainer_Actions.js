@@ -769,7 +769,7 @@ const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
     let tmpIndex = typeof index === 'number' ? index : index.split("-")
     let indexesLen = tmpIndex.length
     let newBodymatter = currentSlateData.contents.bodymatter
-    if (updatedId !== "") { /** Update Aside Id for versioning */
+    if (updatedId && updatedId !== "") { /** Update Aside Id for versioning */
         updatedElement.id = updatedId
         updatedElement.versionUrn = updatedId
     }
