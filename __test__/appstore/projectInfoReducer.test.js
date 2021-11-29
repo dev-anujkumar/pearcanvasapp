@@ -16,9 +16,9 @@ const INITIAL_STATE = {
 
 describe("Testing LOB permissions", () => {
 
-    // it('should return the initial state', () => {
-    //     expect(projectInfo(undefined, {})).toEqual(INITIAL_STATE);
-    // });
+    it('should return the initial state', () => {
+        expect(projectInfo(INITIAL_STATE, {})).toEqual(INITIAL_STATE);
+    });
 
     it('UPDATE_LOB_PERMISSIONS', () => {
         let output = {

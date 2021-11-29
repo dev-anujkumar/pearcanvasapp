@@ -177,9 +177,9 @@ const expectedState7={
 };
 describe('testing Asset Popover Reducer cases -->', () => {
 
-    // it('should return the initial state', () => {
-    //     expect(reducer(undefined, {})).toEqual(INITIAL_STATE);
-    // });
+    it('should return the initial state', () => {
+        expect(reducer(INITIAL_STATE, {})).toEqual(INITIAL_STATE);
+    });
     it('Test 1- TOGGLE_APO_SEARCH', () => {
         reducer(INITIAL_STATE, {
             type: 'TOGGLE_APO_SEARCH',
