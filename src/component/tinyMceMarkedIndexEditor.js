@@ -139,9 +139,7 @@ export class ReactMarkedIndexEditor extends React.Component {
         }
         if(editor.id === 'markedindex-0'){
           tinymce.$('.printIndex-save-button').removeClass('disabled');
-          document.getElementById('markedindex-cross-reference').setAttribute('contenteditable', true);
         }
-        console.log("===> tinymce.$('#markedindex-cross-reference'): ",tinymce.$('#markedindex-cross-reference'))
       }
       else {
         activeElement.classList.add('place-holder')
@@ -151,7 +149,6 @@ export class ReactMarkedIndexEditor extends React.Component {
         }
         if(editor.id === 'markedindex-0'){
           tinymce.$('.printIndex-save-button').addClass('disabled');
-          document.getElementById('markedindex-cross-reference').setAttribute('contenteditable', false);
         }
       }
     }
@@ -167,9 +164,7 @@ export class ReactMarkedIndexEditor extends React.Component {
           lableElement.classList.remove('hide-cross-ref-label');
       }
 
-      if(this.props.isFilterCrossRefNeeded){
         this.props.filterCrossRef(value);
-      }
     }
   }
 /**
@@ -464,7 +459,7 @@ export class ReactMarkedIndexEditor extends React.Component {
         */
         document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
 
-        if (document.getElementById(activeEditorId) && e.target.id !== "markedindex-cross-reference") {
+        if (document.getElementById(activeEditorId)) {
           document.getElementById(activeEditorId).contentEditable = true;
         }
       }
@@ -489,7 +484,13 @@ export class ReactMarkedIndexEditor extends React.Component {
         document.getElementById(currentTarget.id).innerHTML = termText;
       }
       tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
-    })
+    });
+
+    if(e.target.id === "markedindex-cross-reference"){
+      const indexEntry = document.getElementById('markedindex-0')?.innerHTML.replace('<br data-mce-bogus="1">', "");
+      if(indexEntry) document.getElementById("markedindex-cross-reference").contentEditable = true;
+      else document.getElementById("markedindex-cross-reference").contentEditable = false;
+    }
   }
 
   render() {
@@ -502,11 +503,6 @@ export class ReactMarkedIndexEditor extends React.Component {
       markIndexCurrentValue = propsGlossaryFootNoteCurrentValue;
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
-    // let isContentDisable = true;
-    // if (this.props.id === "markedindex-cross-reference"){
-    //   const indexEntry = document.getElementById('markedindex-0')?.innerHTML;
-    //   if(!indexEntry) isContentDisable = false;
-    // } 
     return (
         <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
     )
