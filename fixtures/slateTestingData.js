@@ -2800,7 +2800,91 @@ export const slateWithCitationElement ={
                         "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
                         "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
                     },
-                    { ...multiColumnContainer }
+                    { ...multiColumnContainer },
+                    {
+                        "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0e",
+                        "type": "showhide",
+                        "interactivedata": {
+                            "show": [{
+                                id: 'urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b',
+                                type: 'poetry',
+                                contents: {
+                                    bodymatter: [{
+                                        id: 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c'
+                                    }]
+                                }
+                            }]
+                        },
+                        "subtype": "",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            "text": ""
+                        },
+                        "html": {
+                            "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                        },
+                        "comments": true,
+                        "tcm": true,
+                        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                    },
+                    {
+                        "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0e",
+                        "type": "showhide",
+                        "interactivedata": {
+                            "show": [{
+                                id: 'urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b',
+                                type: '',
+                                contents: {
+                                    bodymatter: [{
+                                        id: 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c'
+                                    }]
+                                }
+                            }]
+                        },
+                        "subtype": "",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            "text": ""
+                        },
+                        "html": {
+                            "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                        },
+                        "comments": true,
+                        "tcm": true,
+                        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                    },
+                    {
+                        "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0e",
+                        "type": "showhide",
+                        "interactivedata": {
+                            "show": [{
+                                id: 'urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b',
+                                type: 'poetry',
+                                contents: {
+                                    bodymatter: [{
+                                        id: 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220d'
+                                    }]
+                                }
+                            }]
+                        },
+                        "subtype": "",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "elementdata": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            "text": ""
+                        },
+                        "html": {
+                            "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                        },
+                        "comments": true,
+                        "tcm": true,
+                        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                    }
                 ]
             }
         

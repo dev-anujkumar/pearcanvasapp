@@ -255,6 +255,27 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
             spyUpdateNewVersionElementInStore.mockClear()
         })
+        it("Versioned element - asideData - showhide - updateNewVersionElementInStore", () => {
+            let args = { 
+                updatedData: {...updatedData, pageNumberRef: "1"}, 
+                asideData: {
+                    ...asideData,
+                    type: 'showhide'
+                },
+                dispatch: jest.fn(),
+                versionedData: {...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b"},
+                elementIndex: "1-2-2",
+                parentElement,
+                fetchSlateData: jest.fn(),
+                newslateData: slateLevelData.slateLevelData,
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+            updateHelpers.updateNewVersionElementInStore(args)
+            expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+            spyUpdateNewVersionElementInStore.mockClear()
+        })
         it("Versioned element - showhide - updateNewVersionElementInStore", () => {
             let store = mockStore(() => initialState);
             let args = { 
@@ -2064,6 +2085,37 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                }
+            }
+            const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+            updateHelpers.updateElementInStore(args)
+            expect(spyupdateElementInStore).toHaveBeenCalled()
+            spyupdateElementInStore.mockClear()
+        })
+        it("updateElementInStore - parentElement - showhide - poetry", () => {
+            let store = mockStore(() => initialState2);
+            let args = { 
+                updatedData: {
+                    id: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220c",
+                    slateVersionUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f",
+                    sectionType: "postertextobject"
+                },
+                asideData: {
+                    ...asideData,
+                    showHideType: 'show',
+                    type: 'poetry',
+                    grandParent: {
+                        asideData: {
+                            id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0e"
+                        }
+                    }
+                },
+                elementIndex: "0-0-0-0",
+                showHideType: 'show',
+                parentElement: { type: ""},
+                dispatch: store.dispatch,
+                newslateData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithCitationElement.slateLevelData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"]
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
