@@ -161,10 +161,6 @@ it('testing------- resolveComment failed response action',()=>{
     });
 
     return store.dispatch(actions.resolveComment(commentUrn,resolveOrOpen,elementId)).then(() => {
-        // const { type, payload } = store.getActions()[0];
-        // expect(store.getActions()).toEqual(expectedActions);
-        // expect(type).toBe(RESOLVE_COMMENT);
-        // expect(payload.commentUrn).toBe(commentUrn);
         store.getActions();
     });
 })
@@ -193,10 +189,6 @@ it('testing------- replyComment  action',()=>{
 
     return store.dispatch(actions.replyComment(commentUrn,reply,elementId)).then(() => {
         store.getActions();
-        // const { type, payload } = store.getActions()[0];
-        // expect(store.getActions()).toEqual(expectedActions);
-        // expect(type).toBe(RESOLVE_COMMENT);
-        // expect(payload.commentUrn).toBe(commentUrn);
     });
 })
 
@@ -224,10 +216,6 @@ it('testing------- replyComment failed response action',()=>{
 
     return store.dispatch(actions.replyComment(commentUrn,reply,elementId)).then(() => {
         store.getActions();
-        // const { type, payload } = store.getActions()[0];
-        // expect(store.getActions()).toEqual(expectedActions);
-        // expect(type).toBe(RESOLVE_COMMENT);
-        // expect(payload.commentUrn).toBe(commentUrn);
     });
 })
 
@@ -236,7 +224,6 @@ it('testing------- fetchComments  action',()=>{
     let contenttUrn = "urn:pearson:entity:010d2056-b55a-453a-ac39-7c6cc9d87e85",
         title= "title",
         currentWorkId= 1234
-    //   elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"
     const expectedActions = [{
         type: FETCH_COMMENTS,
         payload: {
@@ -255,7 +242,6 @@ it('testing------- fetchComments  action',()=>{
         const { type, payload } = store.getActions()[0];
         store.getActions();
         expect(type).toBe(FETCH_COMMENTS);
-        // expect(payload.commentUrn).toBe(commentUrn);
     });
 })
 
@@ -264,7 +250,6 @@ it('testing------- fetchComments failed response action',()=>{
     let contenttUrn = "urn:pearson:entity:010d2056-b55a-453a-ac39-7c6cc9d87e85",
         title= "title",
         currentWorkId= 1234
-    //   elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"
     const expectedActions = [{
         type: FETCH_COMMENTS,
         payload: {
@@ -280,10 +265,7 @@ it('testing------- fetchComments failed response action',()=>{
     });
 
     return store.dispatch(actions.fetchComments(contenttUrn,title)).then(() => {
-        // const { type, payload } = store.getActions()[0];
         store.getActions();
-        // expect(type).toBe(FETCH_COMMENTS);
-        // expect(payload.commentUrn).toBe(commentUrn);
     });
 })
 
@@ -307,7 +289,6 @@ it('testing------- updateRole  action',()=>{
     });
 
     return store.dispatch(actions.updateRole(commentUrn,newRole, elementId)).then(() => {
-        // expect(store.getActions()[0]).toEqual(expectedActions[0]);
         store.getActions();
     });
 })
@@ -331,7 +312,6 @@ it('testing------- updateRole failed response action',()=>{
     });
 
     return store.dispatch(actions.updateRole(commentUrn,newRole, elementId)).then(() => {
-        // expect(store.getActions()[0]).toEqual(expectedActions[0]);
         store.getActions();
     });
 })
@@ -390,11 +370,6 @@ it('testing------- updateComment failed response  action',()=>{
     });
 
     return store.dispatch(actions.updateComment(commentUrn,updateComment,elementId)).then(() => {
-        // store.getActions()[0].payload.updateComment = "test";
-        // const { type, payload } = store.getActions()[0];
-        // expect(store.getActions()).toEqual(expectedActions);
-        // expect(type).toBe(UPDATE_COMMENT);
-        // expect(payload.commentUrn).toBe(commentUrn);
         store.getActions()
     });
 })
@@ -438,8 +413,6 @@ it('testing------- getProjectUsers failed response action',()=>{
     });
 
     return store.dispatch(actions.getProjectUsers(ENTITY_URN)).then(() => {
-        // const { type, payload } = store.getActions()[0];
-        // expect(type).toBe(GET_PROJECT_USER);
         store.getActions()
     });
 })
@@ -488,8 +461,6 @@ it('testing------- updateAssignee failed response  action',()=>{
     });
 
     return store.dispatch(actions.updateAssignee(commentUrn, newAssignee, elementId)).then(() => {
-        // const { type, payload } = store.getActions()[0];
-        // expect(type).toBe(UPDATE_ASSIGNEE);
         store.getActions();
     });
 })
