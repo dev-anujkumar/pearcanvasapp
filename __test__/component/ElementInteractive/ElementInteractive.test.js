@@ -1398,7 +1398,7 @@ describe("Testing methods", () => {
             permissions:['add_multimedia_via_alfresco'],
             model: {
                 figuredata:{
-                    interactiveformat :"mmi",
+                    interactiveformat :"ELM_INT",
                     interactiveparentid:'urn:pearson:work:98e2b84c-132e-44f0-a9ae-1871c16ab6e8',
                     interactiveid:'urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec'
                 }
@@ -1408,10 +1408,13 @@ describe("Testing methods", () => {
         };
         let tempComponent = mount(<Provider store={store}><Interactive {...tempProps} /></Provider>);
         let elementInteractiveInstance = tempComponent.find('Interactive').instance();
-        let e ={
-            stopPropagation :jest.fn()
+        let e = {
+            stopPropagation :jest.fn(),
+            target: {
+                classList: ["actionPU"]
+            }
         }
-        let value ={}
+        let value = {}
         elementInteractiveInstance.togglePopup(e,value)
     })
     it('testing togglePopup else case',()=>{
