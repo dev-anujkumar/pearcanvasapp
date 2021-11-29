@@ -1813,11 +1813,10 @@ class ElementContainer extends Component {
                         {permissions && permissions.includes('notes_adding') 
                         && (this.props.element.type === 'element-pdf' 
                         ? (config.isCypressPlusEnabled
-                        ? (this.props.element.elementdata.conversionstatus
-                        ? <Button type="edit-button-to-open-pdf-in-CypressPlus" btnClassName={btnClassName}  elementType={element?.type} onClick={this.handleEditInCypressPlus}/>
-                        : <Button type="edit-button-to-open-pdf-in-CypressPlus" btnClassName={btnClassName}  elementType={element?.type} />)
-                        : null)
-                        : null)
+                        ? (!(this.props.element.elementdata.conversionstatus)
+                        ? <Button type="edit-button-to-open-pdf-in-CypressPlus" btnClassName={btnClassName}  elementType={element?.type} onClick={this.handleEditInCypressPlus}/> :'') 
+                        :'') 
+                        :'')
                         }
                         {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
                             if (this.props.projectUsers.length === 0) {
