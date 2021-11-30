@@ -307,17 +307,23 @@ describe('Testing TinyMceUtility', () => {
     });
 
     it('Test - isNestingLimitReached - if block', () => {
+        let asideData = {
+            type: 'showhide'
+        }
         const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
         const indexes = "0"
-        tinyMceFn.isNestingLimitReached(indexes);
+        tinyMceFn.isNestingLimitReached(indexes,asideData);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     })
 
     it('Test - isNestingLimitReached - else block', () => {
+        let asideData = {
+            type: 'showhide'
+        }
         const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
         const indexes = "1-0-1"
-        tinyMceFn.isNestingLimitReached(indexes);
+        tinyMceFn.isNestingLimitReached(indexes,asideData);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     })

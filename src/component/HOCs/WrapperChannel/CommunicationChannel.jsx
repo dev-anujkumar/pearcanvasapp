@@ -124,6 +124,7 @@ function CommunicationChannel(WrappedComponent) {
                     config.ssoToken = message.ssoToken;
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
+                    config.isCypressPlusEnabled = message.isCypressPlusEnabled;
                     config.projectEntityUrn = message.entityUrn;
                     config.isCypressPlusEnabled = message.isCypressPlusEnabled;
                     config.alfrescoMetaData = message;
@@ -268,6 +269,9 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'selectedAlfrescoAssetData' :
                     console.log('ASSET DATA FROM ALFRESCO', message.asset)
+                    // if(message?.asset?.length > 0) {
+                    //     message.asset = message.asset[0]
+                    // }
                     if(message.isEditor){
                         this.handleEditorSave(message)
                     }

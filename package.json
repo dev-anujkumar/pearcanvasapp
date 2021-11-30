@@ -15,8 +15,6 @@
         "test:watch": "jest --watch --runInBand --detectOpenHandles",
         "test:coverage": "jest --coverage --detectOpenHandles --forceExit  "
     },
-    "author": "Magic EdTech",
-    "license": "ISC",
     "devDependencies": {
         "@babel/cli": "^7.0.0",
         "@babel/core": "^7.0.0",
