@@ -797,7 +797,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
     }
     /**Cypress plus code  for conversion of pdf */
     if(config.isCypressPlusEnabled){
-        startPdfConversion(updatedData.id);
+        startPdfConversion(updatedData?.id);
     }
     
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
