@@ -1011,14 +1011,18 @@ describe('Test for element container component', () => {
             ],
             parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
         };
+        let event= {
+            stopPropagation:()=>{}
+        }
+        let elementId = 'urn:perason:work:1234567' 
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         it('Test-handleEditInCypressPlus Function', () => {
             const spyhandleEditInCypressPlus = jest.spyOn(elementContainerInstance, 'handleEditInCypressPlus')
-            elementContainerInstance.handleEditInCypressPlus(true);
+            elementContainerInstance.handleEditInCypressPlus(event,elementId);
             elementContainerInstance.forceUpdate();
             elementContainer.update();
-            expect(spyhandleEditInCypressPlus).toHaveBeenCalledWith(true)
+            expect(spyhandleEditInCypressPlus).toHaveBeenCalledWith(event,elementId)
             spyhandleEditInCypressPlus.mockClear()
         })
        
