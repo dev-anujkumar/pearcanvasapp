@@ -46,7 +46,6 @@ import pasteIcon from '../../images/ElementButtons/contentPaste.png'
 import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
 import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
 import ElementConstants from '../ElementContainer/ElementConstants'; 
-import Tooltip from '../Tooltip'
 class ElementButton extends Component {
    
   /**
@@ -69,11 +68,9 @@ class ElementButton extends Component {
                     </span>
                 break;
             case buttonTypes.EDIT_BUTTON_CYPRESSSPLUS:
-            buttonJSX = <Tooltip direction='editInCypressPlus' tooltipText='Edit in Cypress+'>
-                <span className={`btn-element small edit-button-to-open-pdf-in-CypressPlus ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
+            buttonJSX =<span className={`btn-element small edit-button-cypressplus ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementTypeClassName}`} title="Edit in Cypress+" onClick={clickHandlerFn}>
                     {editInCypressPlus}
                 </span>
-            </Tooltip>
         break; 
             case buttonTypes.COMMENT_FLAG:
                 buttonJSX = <span className={`btn-element small flag-icon ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>

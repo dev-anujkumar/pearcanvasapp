@@ -1810,8 +1810,8 @@ class ElementContainer extends Component {
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={(e) => this.handleCommentPopup(true, e)} />}
-                        {permissions && permissions.includes('notes_adding') && element.type === 'element-pdf' && config.isCypressPlusEnabled && element.elementdata.conversionstatus
-                        && <Button type="edit-button-to-open-pdf-in-CypressPlus" btnClassName={btnClassName}  elementType={element?.type} onClick={this.handleEditInCypressPlus}/>
+                        {element.type === elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && element.elementdata.conversionstatus
+                        && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
                         {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
                             if (this.props.projectUsers.length === 0) {
@@ -2033,8 +2033,10 @@ class ElementContainer extends Component {
      /**
      * @description - This function is for opening edit  button in Cypress Plus
      */
-    handleEditInCypressPlus = () =>{
-        window.open('http://localhost:3000/cypress-plus?project_d_urn=urn:pearson:distributable:1e6af9bd-6e4b-41ce-82a6-80c30249dcb7&project_e_urn=urn:pearson:entity:5e95c0d3-2700-445c-8419-c934ac864e0d&project_w_urn=urn:pearson:work:3df9122b-781b-46de-b975-b4d5b4d1b4d4', '_blank')
+    handleEditInCypressPlus = (e,elementId) =>{
+        e.stopPropagation();
+        console.log(config.CYPRESS_PLUS_URL,"cypressss plussss",config)
+        window.open(`http://localhost:3000/cypress-plus?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`, '_blank')
     }
     /**
      * @description - This function is for handling click event on the label button.
