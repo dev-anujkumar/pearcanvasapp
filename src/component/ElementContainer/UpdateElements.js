@@ -643,18 +643,21 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 let manifestListItemIndex = asideData.index.split('-');
                 dataToReturn["elementParentEntityUrn"] = asideData?.parentManifestList?.listdata?.bodymatter[manifestListItemIndex[manifestListItemIndex.length-2]]?.contentUrn
             }
-            else if(parentElement && parentElement?.type === "showhide" && showHideType){
+            else if(parentElement && parentElement.type === "showhide" && showHideType){
+                const poetryElementTypes = ['poetry', 'stanza', 'element-authoredtext'];
                 dataToReturn.sectionType = showHideType;
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
                 // checking for poetry element inside SH element to pass some extra parameters inside update request
-                if (elementType && elementType === 'poetry' && parentElement?.interactivedata) {
+                if (elementType && poetryElementTypes.includes(elementType) && parentElement?.interactivedata) {
                     parentElement?.interactivedata?.[showHideType].forEach(poetryElement => {
                         if(poetryElement?.type === 'poetry') {
                             if(poetryElement?.contents?.['formatted-title']?.id === previousElementData.id) {
                                 dataToReturn["metaDataField"] = "formattedTitle";
+                                dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
                             }
                             if(poetryElement?.contents?.creditsarray && poetryElement?.contents?.creditsarray.length && poetryElement?.contents?.creditsarray[0]["id"] === previousElementData.id) {
                                 dataToReturn["sectionType"] = "creditsarray";
+                                dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
                             }
                         }
                     });

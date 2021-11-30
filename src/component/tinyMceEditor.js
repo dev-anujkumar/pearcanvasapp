@@ -557,8 +557,8 @@ export class TinyMceEditor extends Component {
                     break;
                 case "mceShowCharmap":
                     let coOrds = editor.selection.getBoundingClientRect();
-                    clickedX = coOrds.left;
-                    clickedY = coOrds.top + coOrds.height / 2;
+                    clickedX = coOrds?.left;
+                    clickedY = coOrds?.top + coOrds?.height / 2;
                     let elementId = tinymce.activeEditor ? tinymce.activeEditor.id : '';
                     let blockqt = document.querySelector('#' + elementId + ' blockquote p.paragraphNummerEins');
                     if (!blockqt || blockqt.innerText.trim()) {
@@ -1708,7 +1708,7 @@ export class TinyMceEditor extends Component {
                         editor.targetElm.classList.remove('place-holder');
                     }
                 }
-                if (self.props?.element?.type != 'figure') {
+                if (self.props?.element?.type != 'figure' && self.props?.element?.type !== 'element-aside') {
                     items.push(blankLineOption)
                 }
                 callback(items);
@@ -3417,7 +3417,7 @@ export class TinyMceEditor extends Component {
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
         }
-        else if ((blockListData && Object.keys(blockListData).length) || this.props?.asideData?.type === "manifestlist") {
+        else if (this.props?.asideData?.type === "manifestlist") {
             toolbar = config.blockListToolbar
         }
         else {

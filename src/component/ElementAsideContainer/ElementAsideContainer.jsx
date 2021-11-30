@@ -13,11 +13,10 @@ import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
-import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
+import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe } from '../../constants/utility';
-import { labelHtmlData } from '../../constants/Element_Constants';
-import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
+import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 // IMPORT - Assets //
 
 let random = guid();
@@ -28,20 +27,51 @@ class ElementAsideContainer extends Component {
         this.state = {
             sectionFocus: false,
             btnClassName: "",
-            showTitle: this.props?.asideTitleData?.isAsideNumber || false,
-            elementId: this.props.elementId 
+            showTitle: this.setFieldsForAside(this.props?.element, this.props?.asideTitleData),
+            elementId: this.props.elementId,
+            asideTitleData: this.props.asideTitleData
         }
         this.asideRef = React.createRef();
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
-        if ((nextProps?.asideTitleData?.elementId === prevState?.elementId) && (nextProps.asideTitleData?.isAsideNumber != prevState?.showTitle)) {
+        if ((nextProps.asideTitleData != prevState?.asideTitleData)) {
             return {
-                showTitle: nextProps.asideTitleData.isAsideNumber
+                asideTitleData: nextProps.asideTitleData
             };
         }
         return null;
     }
+
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    handleClickOutside = (event) => {
+        if (this.asideRef && !this.asideRef.current.contains(event.target)) {
+            this.handleAsideBlur(event);
+        }
+    }
+
+    setFieldsForAside = (element, asideTitleData) => {
+        if (element && asideTitleData) {
+            const asideObj = asideTitleData.filter(obj => {
+                return obj.elementId === element.id;
+              })
+            if (asideObj.length) {
+                return asideObj[0].isAsideNumber;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     handleFocus = (e) => {
         // if(e.target && !(e.target.classList.contains('elemDiv-hr') )){
         //     return false;
@@ -69,7 +99,7 @@ class ElementAsideContainer extends Component {
      * @param {string} element -object of element
      */
 
-    renderContainer({ element: _containerData }) {
+    renderContainer({ element: _containerData },designtype,isDiffDesignType) {
         try {
             if (_containerData !== null && _containerData !== undefined) {
                 if (Object.values(_containerData).length > 0) {
@@ -89,7 +119,7 @@ class ElementAsideContainer extends Component {
                     } */
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
-                        <div className="container-aside" data-id={_containerId} container-type={_containerType}>
+                        <div className={`container-aside ${isDiffDesignType ? designtype : ''}`} data-id={_containerId} container-type={_containerType}>
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
@@ -512,7 +542,8 @@ class ElementAsideContainer extends Component {
  * 
  */
     renderTitleField = (asideHtmlData) => {
-        if (this.state.showTitle) {
+        let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
+        if (showTitleField) {
             return (
                 <div className="asideHeader">
                     <header className="figure-header new-figure-image-header">
@@ -567,7 +598,7 @@ class ElementAsideContainer extends Component {
         return (
             <React.Fragment>
                 <hr className={`aside-horizotal-break ${designtype == "workedexample2" ? 'aside-horizotal-break-green' : ""}`} />
-                {this.renderContainer(this.props)}
+                {this.renderContainer(this.props,"")}
                 <hr className={`aside-break-bottom ${designtype == "workedexample2" ? 'aside-break-bottom-green' : ""}`}></hr>
             </React.Fragment>
         )
@@ -631,24 +662,55 @@ class ElementAsideContainer extends Component {
   * @param {string} designtype -string to select type of aside container
   */
 
-    renderAside = (designtype) => {
+    renderAside = (designtype,isDiffDesignType) => {
         return (
             <React.Fragment>
                 {this.borderTop(designtype)}
-                {this.renderContainer(this.props)}
+                {this.renderContainer(this.props,designtype,isDiffDesignType)}
                 <div className={designtype + "BorderBottom"} />
             </React.Fragment>
 
         )
     }
 
-    handleAsideBlur = () => {
-        const { element } = this.props;
-        const newToggleValue = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true: false
-        this.setState({
-            showTitle: newToggleValue
-        })
+    handleAsideBlur = (evt) => {
         this.props.handleBlur();
+        const { element, index } = this.props;
+        let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false; 
+        const newToggleValue = hasAsideTitleData ? true : false;
+        let labelElement = document.getElementById(`cypress-${index}-t1`);
+        let numberElement = document.getElementById(`cypress-${index}-t2`);
+        let titleElement = document.getElementById(`cypress-${index}-t3`);
+        const focusInLabel = labelHtmlData.includes(labelElement?.innerHTML)
+        const focusInNumber = labelHtmlData.includes(numberElement?.innerHTML)
+        const focusInTitle = labelHtmlData.includes(titleElement?.innerHTML)
+        let focusOnToolbar = false, focusOnOtherElement = false
+        if (evt?.path?.length > 0) {
+            const evtNodes = evt.path
+            const activeNodeIndex = evtNodes[0]?.id?.split('-')
+            if (activeNodeIndex?.length > 1) {
+                if ((activeNodeIndex[0] === 'cypress' && activeNodeIndex[1] !== index)) {
+                    focusOnOtherElement = true
+                }
+            }
+            else {
+                for (let evtNode of evtNodes.values()) {
+                    if (evtNode?.classList?.contains('element-container') && (evtNode?.classList?.contains('as'))) {
+                        if (this.props.elementId !== evtNode?.dataset.id) {
+                            focusOnOtherElement = true
+                        }
+                    }
+                    if (evtNode?.classList?.contains('toolbar-container')) {
+                        focusOnToolbar = true
+                    }
+                }
+            }
+        }
+        if (!newToggleValue && focusInLabel && focusInNumber && focusInTitle) {
+            if ((this.props.elementId !== this.props?.activeElement?.elementId) || (this.props.elementId === this.props?.activeElement?.elementId && (focusOnOtherElement))) { 
+                this.props.enableAsideNumbering(newToggleValue, element.id);
+            }
+        }
     }
     /**
      * render | renders title and slate wrapper
@@ -658,11 +720,14 @@ class ElementAsideContainer extends Component {
         let asideHtmlData = getLabelNumberTitleHTML(element);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
-        let labelMargin = this.state.showTitle ? 'remove-margin-top' : ''
+        let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
+        let labelMargin = showTitleField ? 'remove-margin-top' : ''
+        let diffDesignType = ["asideSidebar04", "asideSidebar05", "asideSidebarFeature", "asideActivity"]
+        let isDiffDesignType= diffDesignType.includes(designtype);
         return (
-            <aside className={`${labelMargin} ${designtype} aside-container`} tabIndex="0" onBlur={this.handleAsideBlur} ref={this.asideRef}>
+            <aside className={`${labelMargin} ${ isDiffDesignType ? '' : designtype } aside-container`} tabIndex="0" ref={this.asideRef}>
                 {this.renderTitleField(asideHtmlData)}
-                {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
+                {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype,isDiffDesignType)}
             </aside>
         );
     }
@@ -677,7 +742,8 @@ ElementAsideContainer.propTypes = {
 const mapStateToProps = state => {
     return {
         searchUrn: state.searchReducer.searchTerm,
-        asideTitleData: state.appStore.asideTitleData
+        asideTitleData: state.appStore.asideTitleData,
+        activeElement: state.appStore.activeElement
     };
 };
 
