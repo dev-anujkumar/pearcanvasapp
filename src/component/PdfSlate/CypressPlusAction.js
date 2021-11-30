@@ -1,7 +1,8 @@
 import config from "../../config/config"
-import axios from 'axios'
+import axios from 'axios' 
 
   const startPdfConversion = (wUrn) => {
+    try{
     let url = `${config.REACT_APP_API_URL}v1/enable-cypress-plus/${config.projectUrn}/cypress-plus/enable?workUrn=${wUrn}&slateUrn=${config.slateManifestURN}`
     return axios.post(url, {},
         {
@@ -11,6 +12,9 @@ import axios from 'axios'
             }
         }
     )
-  }
-
-  export {startPdfConversion}
+  }  
+   catch(error){
+  console.log(error)
+}
+}
+export {startPdfConversion}
