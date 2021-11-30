@@ -366,9 +366,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
            activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
             
         }
-        if(newElementData.primaryOption=='primary-aside-aside'){
-            const hasAsideNumber = (res.data?.html?.title && res.data.html.title !== "<p class='paragraphNumeroUno'></p>") ? true : false
-            activeElementObject.asideNumber= hasAsideNumber
+        const asideElementTypes = ['element-aside', 'element-workedexample'];
+        if (asideElementTypes.includes(newElementData.elementType)) {
+            const hasAsideNumber = (res.data?.html?.title && (res.data?.html?.title !== "<p class='paragraphNumeroUno'></p>" && res.data?.html?.title !== "<p></p>")) ? true : false;
+            activeElementObject.asideNumber = hasAsideNumber
         }
         dispatch({
             type: FETCH_SLATE_DATA,

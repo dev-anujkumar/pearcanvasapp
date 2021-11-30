@@ -3417,7 +3417,7 @@ export class TinyMceEditor extends Component {
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
             toolbar = config.poetryStanzaToolbar;
         }
-        else if ((blockListData && Object.keys(blockListData).length) || this.props?.asideData?.type === "manifestlist") {
+        else if (this.props?.asideData?.type === "manifestlist") {
             toolbar = config.blockListToolbar
         }
         else {
