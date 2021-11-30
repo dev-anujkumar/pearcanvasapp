@@ -140,7 +140,29 @@ export const checkBlockListElement = (data, keypressed) => {
     if (slateLevelData && Object.values(slateLevelData).length && index && keypressed) {
         const { contents } = Object.values(slateLevelData)[0];
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
-            const indexes = index.split("-");
+            let indexes = index.split("-");
+            let parentElement = data?.asideData?.parent;
+
+            if (parentElement && parentElement.type === "showhide" && data?.asideData.type==="manifestlist") {
+                let indexToinsert = null;
+                let parentData = {};
+                if (keypressed === "TAB") {
+                    indexToinsert = Number(indexes[indexes.length - 1]) + 1;
+                    parentData = data.parentManifestListItem;
+                }
+                else if (keypressed === 'ENTER') {
+                    indexToinsert = Number(indexes[indexes.length - 2]) + 1;
+                    parentData = data.asideData.parentManifestList;
+                }
+                else if (keypressed === 'SHIFT+TAB') {
+                    indexToinsert = Number(indexes[indexes.length - 4]) + 1;
+                    parentData = data.asideData.grandParentManifestList
+                }
+                return {
+                    indexToinsert: indexToinsert,
+                    parentData: parentData
+                }
+            }
             if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
                 elementData = {
                     indexToinsert: Number(indexes[indexes.length - 1]) + 1,
@@ -155,8 +177,9 @@ export const checkBlockListElement = (data, keypressed) => {
     return elementData;
 }
 
-export const isNestingLimitReached = (index) => {
-    const BLOCK_LIST_NESTING_LIMIT = 4  // This is default block list nesting limit.
+export const isNestingLimitReached = (index,asideData) => {
+    let BLOCK_LIST_NESTING_LIMIT = 4  // This is default block list nesting limit.
+    if(asideData.parent && asideData.parent.type==="showhide") BLOCK_LIST_NESTING_LIMIT = 5;
     if(typeof index === 'string' && index.includes('-') && index.split("-").length< BLOCK_LIST_NESTING_LIMIT * 2){
         return false;
     }
@@ -170,11 +193,16 @@ export const isNestingLimitReached = (index) => {
  * @returns {Boolean} return whether selected element is inside blocklist or not
  */
 export const isElementInsideBlocklist = (activeElement, slateData) => {
-    const { index } = activeElement;
+    const { index,data } = activeElement;
     if (slateData && Object.values(slateData).length && index) {
         const { contents } = Object.values(slateData)[0];
         if (contents && contents?.bodymatter && contents?.bodymatter?.length && typeof index === 'string' && index.includes('-')) {
             const indexes = index.split("-");
+            let parentElement = data?.asideData?.parent;
+
+            if (parentElement && parentElement.type === "showhide" && data.asideData.parentManifestList) {
+                return true;
+            }
             if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
                 return true;
             }

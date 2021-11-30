@@ -36,7 +36,7 @@ import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
-
+import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -246,6 +246,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         })
                     })
                 }
+                /* To update redux store while creating new element inside SH->Block Poetry->Stanza */
+                else if(poetryData?.parent?.type === "showhide" && item.id === poetryData?.parent?.id){
+                    item?.interactivedata[poetryData?.parent?.showHideType].map((ele) => {
+                        if(ele?.id === poetryData?.id) {
+                            ele?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                        }
+                    });
+                }
             })  
         }
         else if (asideData && asideData.type === 'groupedcontent') {
@@ -266,50 +274,102 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         /*  Local store update for block list and Text inside block list for multiple levels. */
         else if((type==='MANIFEST_LIST' || type==='TEXT') && blockListDetails!==null){
             const indexes = blockListDetails.indexOrder.split('-');
-            let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter;
-            if(indexes.length===3){ // Block list on 1 level nesting
-             initialdata.splice(index, 0, createdElementData)
+            let initialdata = {};
+            if(asideData.parent && asideData.parent.type === "showhide"){
+                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
+                 if (indexes.length === 5) { // Block list on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 7) { // Block list on 2 level nesting
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 9) { // Block list on 3 level nesting
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // level 4 
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
             }
-            else if(indexes.length===5){ // Block list on 2 level nesting
-             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter.splice(index, 0, createdElementData)
-            }
-            else if(indexes.length===7){ // Block list on 3 level nesting
-             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
-            }
-            else{ // level 4 
-             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+            else{
+                let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter;
+                if (indexes.length === 3) { // Block list on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 5) { // Block list on 2 level nesting
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 7) { // Block list on 3 level nesting
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // level 4 
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
             }
          } 
          /*  Local store update for manifest list item inside block list for multiple levels. */
          else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="ENTER"){
              const indexes = blockListDetails.indexOrder.split('-');
-             let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
-             if(indexes.length===3){ // Manifest List Item on 1 level nesting
-              initialdata.splice(index, 0, createdElementData)
+             let initialdata = {};
+             if(asideData.parent && asideData.parent.type === "showhide"){
+                  initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
+                 if (indexes.length === 5) { // Block list on 1 level nesting
+                     initialdata.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 7) { // Manifest List Item on 2 level nesting
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 9) { // Manifest List Item on 3 level nesting
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else { // Manifest List Item on 4 level nesting
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
              }
-             else if(indexes.length===5){ // Manifest List Item on 2 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
-             else if(indexes.length===7){ // Manifest List Item on 3 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
-             else{ // Manifest List Item on 4 level nesting
-                 initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
+            else{
+                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
+                 if (indexes.length === 3) { // Manifest List Item on 1 level nesting
+                     initialdata.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 5) { // Manifest List Item on 2 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 7) { // Manifest List Item on 3 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else { // Manifest List Item on 4 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+            }
+            
           } 
          /*  Local store update for manifest list item inside block list for multiple levels. */
           else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="SHIFT+TAB"){
              const indexes = blockListDetails.indexOrder.split('-');
-             let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
-             if(indexes.length===5){ // Manifest List Item on 1 level nesting
-              initialdata.splice(index, 0, createdElementData)
+             let initialdata = {};
+             if(asideData.parent && asideData.parent.type === "showhide"){
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
+                if (indexes.length === 7) { // Manifest List Item on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 9) { // Manifest List Item on 2 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // Manifest List Item on 3 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
              }
-             else if(indexes.length===7){ // Manifest List Item on 2 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
-             else{ // Manifest List Item on 3 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
+            else{
+                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
+                 if (indexes.length === 5) { // Manifest List Item on 1 level nesting
+                     initialdata.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 7) { // Manifest List Item on 2 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else { // Manifest List Item on 3 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+            }
           } 
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
@@ -625,6 +685,13 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                                 })
 
                             })
+                        // handling local redux state for swapping of stanzas inside SH->Poetry  
+                        } else if (element?.type === "showhide" && sectionType) {
+                            element?.interactivedata[sectionType].forEach((eachElement)=>{
+                                if(eachElement?.type === "poetry" && eachElement?.id === poetryId) {
+                                    eachElement.contents.bodymatter.move(oldIndex, newIndex);
+                                }
+                            });
                         }
                     });
                 }
@@ -1168,6 +1235,9 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 let section = sectionType ? sectionType : asideData?.sectionType;
                 _requestData.content[0].sectionType = section;
             }
+            if (selection?.element?.type === 'element-aside' && selection?.element?.html?.title) {
+                _requestData.content[0].html = selection.element.html
+            }
         }
 
         if('manifestationUrn' in selection.element) {
@@ -1240,6 +1310,32 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     let tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
                     if (selection?.operationType === 'copy' || (selection?.operationType === 'cut' && responseData[0]?.status === 'wip')) {
                         callCutCopySnapshotAPI(tcmSnapshotPayload)
+                    }
+                }
+                if (selection?.element?.type === 'element-aside') {
+                    const { element } = selection;
+                    let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false;
+                    const newToggleValue = hasAsideTitleData ? true : false;
+                    const asideTitleData = getState()?.appStore?.asideTitleData
+                    const setFieldsForAside = (elem, titleData) => {
+                        if (elem && titleData) {
+                            const asideObj = titleData.filter(obj => {
+                                return obj.elementId === elem.id;
+                            })
+                            if (asideObj.length) {
+                                return asideObj[0].isAsideNumber;
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    const asideTitleStatus = setFieldsForAside(element, asideTitleData)
+                    dispatch(enableAsideNumbering(newToggleValue, element.id));
+                    if (asideTitleStatus) {
+                        dispatch(enableAsideNumbering(asideTitleStatus, responseData[0]?.id));
                     }
                 }
                 /******************************/
