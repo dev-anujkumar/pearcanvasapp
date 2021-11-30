@@ -2036,7 +2036,7 @@ class ElementContainer extends Component {
     handleEditInCypressPlus = (e,elementId) =>{
         e.stopPropagation();
         console.log(config.CYPRESS_PLUS_URL,"cypressss plussss",config)
-        window.open(`http://localhost:3000/cypress-plus?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`, '_blank')
+        window.open(`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`, '_blank')
     }
     /**
      * @description - This function is for handling click event on the label button.
