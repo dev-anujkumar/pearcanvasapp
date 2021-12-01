@@ -155,7 +155,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
         /** updateBodymatter | Used for TCM Snapshots */
-        let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+        let updateBodymatter = getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
         const helperArgs = { 
             updatedData,
             asideData,

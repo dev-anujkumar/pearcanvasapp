@@ -1,5 +1,5 @@
 let cypressConfig = {
-    ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
+    ssoToken: "u1cOYBZMHAa9XdcnGQ63ErHjcwI.*AAJTSQACMDIAAlNLABxMcCtHRGV5TFZlS0VQTDBzVHFZcFZhQWFYVUk9AAR0eXBlAANDVFMAAlMxAAIwNQ..*",
     alfrescoMetaData : {},
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : null,
@@ -90,7 +90,8 @@ let cypressConfig = {
     isSavingElement:false,
     tcmslatemanifest:"",
     saveElmOnAS: false,
-    fullName:'c5test01'
+    fullName:'c5test01',
+    isCypressPlusEnabled:false
 }
 
 

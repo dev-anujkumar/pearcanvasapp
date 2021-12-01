@@ -43,7 +43,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
-        if (showHideElement || asideParent?.type === 'showhide' && (tempIndex.length == 4 && newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) { /** Glossary-Footnotes inside Show-Hide */
+        if (showHideElement || asideParent?.type === 'showhide' && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) { /** Glossary-Footnotes inside Show-Hide */
             //let showHideChild = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement, 'glossaryFootnote')
             //glossaryFootElem = showHideChild?.currentElement
             /* Get the element where footnote/Glossery is added */
@@ -741,7 +741,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
 
-        if (showHideElement || asideParent?.type === 'showhide'  && (tempIndex.length == 4 && newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) {/** Glossary-Footnotes inside Show-Hide */
+        if (showHideElement || asideParent?.type === 'showhide'  && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) {/** Glossary-Footnotes inside Show-Hide */
             newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         } else if ((tempIndex.length == 5 || tempIndex.length == 6) && elementType == 'figure' && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
             let elementInSH = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]];
