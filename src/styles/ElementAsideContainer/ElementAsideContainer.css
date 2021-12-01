@@ -13,7 +13,7 @@
     overflow: hidden;
 }
 
-.aside-container h4.figureLabel.cypress-editable.place-holder::before{
+.asideHeader h4.figureLabel.cypress-editable.place-holder::before{
     content: none !important;
 }
 
