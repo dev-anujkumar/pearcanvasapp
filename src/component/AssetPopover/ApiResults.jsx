@@ -15,6 +15,8 @@ class ApiResults extends React.Component {
     apiResultsJsx = (assetPopoverData, selectedFigure, ValueToBeSearch) => {
         let cardForApiResults
         var tempFiguresForResults = [], figureDataLength
+        let type = Object.keys(assetPopoverData)
+        type = type[0].charAt(0).toUpperCase() + type[0].slice(1)
         const AssetDetails = Object.values(assetPopoverData);
         let filteredDetails = AssetDetails.filter(assetType => {
             if (Array.isArray(assetType) && assetType?.length >= 1) {
@@ -34,32 +36,49 @@ class ApiResults extends React.Component {
             });
         }
         figureDataLength = tempFiguresForResults.length;
+        let assetTypeTitle = type + " " + `(${figureDataLength})`
 
-        if (this.state.figureDataLength != figureDataLength) {
-            this.setState({
-                figureDataLength: figureDataLength
-            })
-        }
+        // if (this.state.figureDataLength != figureDataLength) {
+        //     this.setState({
+        //         figureDataLength: figureDataLength
+        //     })
+        // }
+        
         //If number figureforresults has 1> elements then muild cards otherwise 
         //No result found for this search term
         if (figureDataLength >= 1) {
-            cardForApiResults = tempFiguresForResults.map((value, index) => {
-                const assetTitle = value?.title ? value.title : value?.unformattedTitle?.en ? value.unformattedTitle.en : "";
-                return <FigureCard forInputKey={index} key={index} figureDetails={value} title={assetTitle} path={value.path ?? assetTitle} selectedFigure={selectedFigure} />
-            });
-        } else {
-            let errorMsg = "No Match found! ";
-            cardForApiResults = <ErrorComp errorMsg={errorMsg} />
+            cardForApiResults = <>
+                <h3 className="figureCount">{assetTypeTitle}</h3>
+                {
+                    tempFiguresForResults.map((value, index) => {
+                        const assetTitle = value?.title ? value.title : value?.unformattedTitle?.en ? value.unformattedTitle.en : "";
+                        return <FigureCard forInputKey={index} key={index} figureDetails={value} title={assetTitle} path={value.path ?? assetTitle} selectedFigure={selectedFigure} />
+                    })
+                }
+            </>
         }
+        // else {
+        //     let errorMsg = "No Match found! ";
+        //     cardForApiResults = <ErrorComp errorMsg={errorMsg} />
+        // }
         return cardForApiResults;
     }
 
+    renderByAssetType = (assetPopoverData, selectedFigure, ValueToBeSearch) => {
+        let assetTypes = Object.keys(assetPopoverData);
+        let assetData
+        return assetTypes.map((assetType) => {
+            assetData = {}
+            assetData[`${assetType}`] = assetPopoverData[`${assetType}`]
+            return this.apiResultsJsx(assetData, selectedFigure, ValueToBeSearch)
+        })
+    }
+
     render() {
-        const {selectedFigure, ValueToBeSearch,assetPopoverData} = this.props;
+        const {assetPopoverData, selectedFigure, ValueToBeSearch} = this.props;
         return (
             <div>
-                <h3 className="figureCount">Assets Matched</h3>
-                {this.apiResultsJsx(assetPopoverData, selectedFigure, ValueToBeSearch)}
+                {this.renderByAssetType(assetPopoverData, selectedFigure, ValueToBeSearch)}
             </div>
         )
     }
