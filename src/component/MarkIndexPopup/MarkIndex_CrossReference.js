@@ -34,8 +34,8 @@ export const CrossReference = ({crossRefValue}) => {
     }
 
     const handleDropDownClick = () => {
-        const crossRefData = document.getElementById("markedindex-cross-reference").innerHTML.replace('<br data-mce-bogus="1">', "");
-        const indexEntryData = document.getElementById("markedindex-0").innerHTML.replace('<br data-mce-bogus="1">', "").replace('&nbsp;', "");
+        const crossRefData = document.getElementById("markedindex-cross-reference").innerHTML?.replace('<br data-mce-bogus="1">', "");
+        const indexEntryData = document.getElementById("markedindex-0").innerHTML?.replace('<br data-mce-bogus="1">', "")?.replace('&nbsp;', "");
         if(crossRefData.length > 2 && !popUpStatus && indexEntryData) changePopUpStatus(true);
     }
 
