@@ -13,7 +13,7 @@ import { clearAssetPopoverLink } from './openApoFunction.js';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import searchIcon from './asset_popover_search_icon.svg';
 import { customEvent } from '../../js/utils';
-import { showTocBlocker, disableHeader} from '../../js/toggleLoader';
+import { disableHeader,hideToc} from '../../js/toggleLoader';
 
 class AssetPopoverSearch extends React.Component {
     constructor(props) {
@@ -197,6 +197,7 @@ class AssetPopoverSearch extends React.Component {
 
     handleBlur=()=>{
         this.props.showBlocker(true);
+        hideToc();
         disableHeader(true);
     }
 
