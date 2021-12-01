@@ -90,7 +90,10 @@ let cypressConfig = {
     isSavingElement:false,
     tcmslatemanifest:"",
     saveElmOnAS: false,
-    fullName:'c5test01'
+    fullName:'c5test01',
+    autoNumberingDetails: {},
+    imageIndex: {},
+    imageCount: 1
 }
 
 

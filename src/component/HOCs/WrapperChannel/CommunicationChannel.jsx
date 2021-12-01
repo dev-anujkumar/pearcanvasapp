@@ -759,6 +759,9 @@ function CommunicationChannel(WrappedComponent) {
                 isSubscribed: false,
                 owner: {}
             }
+            if(message?.autoNumberingDetails){
+                config.autoNumberingDetails = message.autoNumberingDetails
+            }
             // reset owner slate popup flag on slate change
             this.resetOwnerSlatePopupFlag();
             if (message['category'] === 'titleChange') {

@@ -1,5 +1,10 @@
 import config from '../../config/config.js';
 import axios from 'axios';
+// import { getContentInFMandBM, getContentInBodyMatter } from './mediaElementDataMapper.js';
+import {
+    SET_AUTO_NUMBER_TOGGLE,
+    GET_ALL_FIGURE_ELEMENTS
+} from '../../constants/Action_Constants.js';
 /**
  * 
  */
@@ -32,23 +37,47 @@ const commonHeaders = {
             if (projectContent['bodyMatter']?.length > 0) {
                 getContentInBodyMatter(projectContent['bodyMatter'], imagesData)
             }
+
+            if(Object.values(imagesData)?.length > 0){
+                Object.values(imagesData)[0][0] = {
+                    ... (Object.values(imagesData)[0][0]),
+                    "numberedandlabel": true,
+                }
+                Object.values(imagesData).forEach((imgArray, index) => {
+                    imgArray = imgArray?.map(img => {
+                        img["numberedandlabel"] = true
+                        img["displayedlabel"] = "Figure"
+                        return img
+                    })
+                    if (index === 2) {
+                        imgArray[0]["manualoverride"] = { "overridenumbervalue": "1",
+                        "overridelabelvalue": "Illustration" }
+                    }
+                    if (index === 4) {
+                        imgArray[0]["numberedandlabel"] = false
+                    }
+                    if (index === 3) {
+                        imgArray[0]["manualoverride"] = { "resumenumbervalue": 40 }
+                    }
+                })
+            }
             console.log('imagesData>>>>',imagesData)
             dispatch({
-                type: 'GET_ALL_FIGURE_ELEMENTS',
+                type: GET_ALL_FIGURE_ELEMENTS,
                 payload: {
                     images: imagesData
                 }
             });
         } else {
             dispatch({
-                type: 'GET_ALL_FIGURE_ELEMENTS',
+                type: GET_ALL_FIGURE_ELEMENTS,
                 payload: {}
             });
         }
     }).catch(error => {
         console.log('Error in fetching list of figures in the project>>>> ', error)
         dispatch({
-            type: 'GET_ALL_FIGURE_ELEMENTS',
+            type: GET_ALL_FIGURE_ELEMENTS,
             payload: {}
         });
     })
@@ -57,8 +86,8 @@ const commonHeaders = {
 
 const slateTypes = ['container-introduction', 'section', 'appendixslate', 'cover', 'titlepage', 'copyright', 'listofcontents']
 
-const getContentInBodyMatter  = (bodyMatterContent,imagesData) =>{
-    if(bodyMatterContent?.length > 0){
+const getContentInBodyMatter = (bodyMatterContent, imagesData) => {
+    if (bodyMatterContent?.length > 0) {
         bodyMatterContent?.forEach(container => {
             if (container?.label === 'part') {
                 if (container?.contents['frontMatter']?.length > 0) {
@@ -91,13 +120,13 @@ const getContentInChapter = (apiContent, matterType, imagesData) => {
     const bodyMatter = Object.values(apiContent?.contents)?.flat();
     apiContent = {
         ...apiContent,
-        contents: {bodyMatter: bodyMatter}
+        contents: { bodyMatter: bodyMatter }
     }
     if (apiContent?.contents['bodyMatter']?.length > 0) {
-        console.log(apiContent.label,apiContent.contentUrn)
+        console.log(apiContent.label, apiContent.contentUrn)
         apiContent.contents['bodyMatter']?.forEach((container) => {
             if ((container?.label === 'module' || container?.label === 'appendix') && container?.contents?.bodyMatter?.length > 0) {
-                getContainerMediaElementsList(container, imagesData, 'bodyMatter',apiContent.contentUrn)
+                getContainerMediaElementsList(container, imagesData, 'bodyMatter', apiContent.contentUrn)
             }
             else if (slateTypes.indexOf(container?.label) > -1 && container?.contents?.bodyMatter?.length > 0) {
                 const slateMediaElements = getImagesInsideSlates(container.contents.bodyMatter) || []
