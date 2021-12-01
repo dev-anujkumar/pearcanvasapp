@@ -198,3 +198,7 @@ export const UPDATE_FIGURE_DROPDOWN_OPTIONS = 'UPDATE_FIGURE_DROPDOWN_OPTIONS';
 
 /*--------------Aside Label, Number, Title fields------------------ */
 export const CHECK_ASIDE_NUMBER = 'CHECK_ASIDE_NUMBER';
+
+/*---------------- AutoNumbering Media Elements ------------------------*/
+export const SET_AUTO_NUMBER_TOGGLE = 'SET_AUTO_NUMBER_TOGGLE';
+export const GET_ALL_FIGURE_ELEMENTS = 'GET_ALL_FIGURE_ELEMENTS';

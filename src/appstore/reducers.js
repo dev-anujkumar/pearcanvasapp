@@ -96,7 +96,7 @@ const INITIAL_STATE = {
     oldAudioVideoDataForCompare: {},
     figureDropdownData: {
         audio: ["No Label", "Custom"],
-        image: ["No Label", "Custom"],
+        image: ['Figure', 'Table', 'Equation'],
         smartlinks: ["No Label", "Custom"],
         video: ["No Label", "Custom"]
     },
