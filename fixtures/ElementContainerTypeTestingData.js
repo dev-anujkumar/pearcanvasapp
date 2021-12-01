@@ -7,39 +7,43 @@ export const blocktextList = [
         "buttonType": "blockcode-elem",
         "text": "Block Code"
     },
-    { 
+    {
         "buttonType": "poetry-elem",
-        "text": "Block Poetry" 
+        "text": "Block Poetry"
     },
-    { 
+    {
         "buttonType": "element-dialogue",
-        "text": "Playscript" 
+        "text": "Playscript"
+    },
+    {
+        "buttonType": 'blocklist-elem',
+        "text": 'Block List'
     }
 ];
 
 export const interactiveList = [
-    { 
-        "buttonType": "elm-interactive-elem", 
-        "text": "Add Elm Interactive" 
+    {
+        "buttonType": "elm-interactive-elem",
+        "text": "Add Elm Interactive"
     },
-    { 
-        "buttonType": "interactive-elem", 
-        "text": "Add Quad Interactive" 
+    {
+        "buttonType": "interactive-elem",
+        "text": "Add Quad Interactive"
     },
-    { 
-        "buttonType": "smartlink-elem", 
-        "text": "Add Smart Link" 
+    {
+        "buttonType": "smartlink-elem",
+        "text": "Add Smart Link"
     },
-    { 
-        "buttonType": "show-hide-elem", 
-        "text": "Add Show Hide" 
+    {
+        "buttonType": "show-hide-elem",
+        "text": "Add Show Hide"
     },
-    { 
-        "buttonType": "popup-elem", 
-        "text": "Add Pop Up" 
+    {
+        "buttonType": "popup-elem",
+        "text": "Add Pop Up"
     },
-    { 
-        "buttonType": "element-discussion", 
-        "text": "Add Discussion" 
+    {
+        "buttonType": "element-discussion",
+        "text": "Add Discussion"
     }
 ];

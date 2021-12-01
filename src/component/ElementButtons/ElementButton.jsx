@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import '../../styles/ElementButtons/ElementButton.css'
 
 import buttonTypes from './ButtonTypes.js'
-
+import Tooltip from '../Tooltip';
 import { 
     stageDirectionIcon,
     dialougeElementIcon,
@@ -44,6 +44,7 @@ import colorText from '../../images/ElementButtons/colorText.svg'
 import closeContainer from '../../images/ElementButtons/container_close.png';
 import pasteIcon from '../../images/ElementButtons/contentPaste.png'
 import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
+import ButtonTypes from './ButtonTypes.js';
 import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
 import ElementConstants from '../ElementContainer/ElementConstants'; 
 class ElementButton extends Component {
@@ -68,10 +69,10 @@ class ElementButton extends Component {
                     </span>
                 break;
             case buttonTypes.EDIT_BUTTON_CYPRESSSPLUS:
-            buttonJSX =<span className={`btn-element small edit-button-cypressplus ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementTypeClassName}`} title="Edit in Cypress+" onClick={clickHandlerFn}>
+                buttonJSX = <Tooltip direction='picker' tooltipText="Edit in Cypress+"><span className={`btn-element small ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
                     {editInCypressPlus}
-                </span>
-        break; 
+                </span></Tooltip>
+                break;
             case buttonTypes.COMMENT_FLAG:
                 buttonJSX = <span className={`btn-element small flag-icon ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
                     {noteFlag}
