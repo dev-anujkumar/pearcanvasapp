@@ -4112,7 +4112,10 @@ export class TinyMceEditor extends Component {
                 if (tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].tagName === 'P') {
                     model = tempDiv.children[0].innerHTML;
                 }
-                model = removeBOM(model)
+                if(this.props.element.type !== 'figure'){
+                    model = removeBOM(model)
+                }
+
                 if (this.props.poetryField && this.props.poetryField === 'formatted-title') {
                     if (!classes.includes('poetryHideLabel')) {
                         classes = classes + ' poetryHideLabel';

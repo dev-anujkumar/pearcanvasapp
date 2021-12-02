@@ -3,8 +3,8 @@ import config from '../../config/config'
 export const AUTO_NUMBER_SETTING_DEFAULT = 'Default Auto-number'
 export const AUTO_NUMBER_SETTING_RESUME_NUMBER = 'Resume numbernig with'
 export const AUTO_NUMBER_SETTING_REMOVE_NUMBER = 'Remove lable & number'
-export const AUTO_NUMBER_SETTING_OVERRIDE_NUMBER = 'Override lable & number'
-export const AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER = 'Override number only'
+export const AUTO_NUMBER_SETTING_OVERRIDE_NUMBER = 'Override number only'
+export const AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER = 'Override lable & number'
 
 export const setAutoNumberSettingValue = (element) => {
     if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) {

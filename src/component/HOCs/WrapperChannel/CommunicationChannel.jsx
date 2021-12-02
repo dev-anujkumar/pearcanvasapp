@@ -759,8 +759,9 @@ function CommunicationChannel(WrappedComponent) {
                 isSubscribed: false,
                 owner: {}
             }
-            if(message?.autoNumberingDetails){
-                config.autoNumberingDetails = message.autoNumberingDetails
+            console.log('message.node',message.node)
+            if(message?.node?.autoNumberingDetails){
+                config.autoNumberingDetails = message.node.autoNumberingDetails
             }
             // reset owner slate popup flag on slate change
             this.resetOwnerSlatePopupFlag();
