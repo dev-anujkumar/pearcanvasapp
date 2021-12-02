@@ -87,6 +87,26 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
 
+    it("onPasteSuccess - poetryData - parentUrn", async () => {
+        const store = mockStore(() => initialState);
+        const params = {
+            responseData: responseData,
+            index: 3,
+            dispatch: jest.fn(),
+            getState: store.getState,
+            poetryData: {
+                type: 'poetry',
+                parent: {
+                    showHideType: 'show'
+                },
+                parentUrn: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b'
+            }
+        }
+        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
+        helperMethods.onPasteSuccess(params);
+        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
+    });
+
     it("onPasteSuccess - cut operation", async () => {
         let initialState1 = { ...initialState };
         const checkElementExistence = jest.fn();
