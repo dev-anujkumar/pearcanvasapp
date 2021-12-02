@@ -197,7 +197,6 @@ class AssetPopoverSearch extends React.Component {
 
     handleBlur=()=>{
         this.props.showBlocker(true);
-        showTocBlocker(true);
         disableHeader(true);
     }
 
