@@ -137,6 +137,12 @@
     font-size: 14px;
     
   }
+  .slate_assessment_label_enhanced{
+    float: left;
+    width: 25%;
+    font-size: 14px;
+    margin-top: 5%;
+  }
   .slate_assessment_data_details{
     float: left;
     width: 75%;
@@ -155,7 +161,21 @@
     white-space: normal; 
     height:auto; 
   }
-
+  .slate_assessment_title_enhanced{
+    overflow:hidden;
+    font-size: 17px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    white-space: nowrap;
+    margin-top: 6%;
+    
+  }
+  .slate_assessment_title_enhanced:hover{
+    overflow: visible; 
+    white-space: normal; 
+    height:auto; 
+  }
   .slate_assessment_data_id{
     font-size: 14px;
     overflow:hidden;
