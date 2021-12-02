@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { discussionCloseIcon, searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
+import { Tooltip } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+
+const TitleTooltip = withStyles({
+  tooltip: {
+    fontSize: "11px",
+    marginLeft: "40px",
+    fontWeight: "100",
+    marginBottom: "10px"
+  }
+})(Tooltip);
 
 const getSelectedItemFromId = (id) => {
   return undefined;
@@ -95,9 +106,11 @@ const DiscussionDialog = ({
                         name={elemendId + "-" + item.discussionUrn}
                         value={item.title}
                       />
+                      <TitleTooltip  title={item.title}>
                       <label htmlFor={item.title} className="radioLabelDiscussion">
                         {item.title}
                       </label>
+                      </TitleTooltip>
                     </div>
                   </td>
                   <td>{item.discussionUrn}</td>
