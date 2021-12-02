@@ -14,8 +14,6 @@ import { labelHtmlData } from '../../constants/Element_Constants';
 
 export const FigureHeader = (props) => {
     const AUTO_NUMBER_SETTING_DROPDOWN_VALUES = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
-    // const { searchClass, searchId, maxInputLimit, placeholderText, searchValueHandler } = props;
-    // const [figureDropDown, setFigureDropDown] = useState(false);
     const slateAncestors = useSelector((state) => state.appStore.currentSlateAncestorData)
     const figImageList = useSelector((state) => state.autoNumberReducer.figImageList)
 
@@ -27,7 +25,6 @@ export const FigureHeader = (props) => {
     const [labelNumberSettingDropDown, setLabelNumberSettingDropDown] = useState(false);
     const [showLabelField, setShowLabelField] = useState(true);
     const [showNumberField, setShowNumberField] = useState(true);
-    // wrapperRef = React.createRef();
     useEffect(() => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
         setLabelNumberSetting(dropdownVal)
@@ -105,7 +102,6 @@ export const FigureHeader = (props) => {
     const imgLabelValue = figureLabelValue//props.model?.displayedLabel ?? 'Figure'
     const containerNumber = getContainerNumber(slateAncestors)
     const imgNumberValue = config.imageCount++
-    // const autoNumberSetting = figureNumberLabelValue
     const previewData = getLabelNumberPreview(props.model, { containerNumber, imgLabelValue, imgNumberValue })
     const { figureHtmlData, previewClass, figLabelClass, figTitleClass  } = props
 

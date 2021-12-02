@@ -220,6 +220,10 @@ pointer-events: none;
 .asideSlider.on {
     background-color: rgba(0, 90, 112, 0.30);
 }
+.asideSlider.on.disabled-toggle {
+    opacity: 0.5;
+    pointer-events: none;
+}
 .asideSlider.on:after {
     left: 16px;
     background-color: #005A70;

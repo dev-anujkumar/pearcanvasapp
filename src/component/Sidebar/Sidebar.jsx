@@ -32,7 +32,6 @@ class Sidebar extends Component {
         let startNumber = this.props.activeElement.startNumber || "1";
         let syntaxhighlighting = this.props.activeElement.syntaxhighlighting;
         let podwidth = this.props.activeElement.podwidth;
-        let asideNumberValue = this.props.activeElement?.asideNumber || false;
         this.state = {
             elementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
@@ -51,7 +50,6 @@ class Sidebar extends Component {
             podOption: false,
             podValue: podwidth,
             usageType: this.props.activeElement.usageType,
-            asideNumber: asideNumberValue
         };
     }
 
@@ -71,7 +69,7 @@ class Sidebar extends Component {
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false
             }
-
+            
             return {
                 elementDropdown: elementDropdown,
                 activeElementId: nextProps.activeElement.elementId,
@@ -85,12 +83,27 @@ class Sidebar extends Component {
                 podValue: podValue,
                 podOption: podOption,
                 usageType: nextProps.activeElement.usageType,
-                asideNumber: nextProps.activeElement.asideNumber
             };
         }
 
         return null;
     }
+
+    setToggleForAside = (activeElement, asideTitleData) => {
+        if (activeElement && asideTitleData) {
+            const asideObj = asideTitleData.filter(obj => {
+                return obj.elementId === activeElement.elementId;
+              })
+            if (asideObj.length) {
+                return asideObj[0].isAsideNumber;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     handlePrimaryOptionChange = (e) => {
       let value = e.target.getAttribute("data-value");
       let secondaryelementList =
@@ -421,11 +434,15 @@ class Sidebar extends Component {
     }
 
     attributions = () => {
+        let toggleAsideNumber = false;
+        if (this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample") {
+            toggleAsideNumber = this.setToggleForAside(this.props.activeElement, this.props.asideTitleData);
+        }
+        let hasAsideTitleData = this.props?.activeElement?.asideNumber || false;
         let attributions = '';
         let attributionsObject = {};
         let attributionsList = [];
         if (this.state.activeElementType) {
-            // console.log("active-props",this.props);
             let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
             let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
             if ((primaryOptionList.text && primaryOptionList.text === "Quad Interactive") && (this.props.activeElement.altText && this.props.activeElement.altText != "")) {
@@ -526,11 +543,11 @@ class Sidebar extends Component {
                 </div>
                 return attributions;
             }
-            if ((this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample") && this.props.activeElement.elementId) {
-                attributions = <div className="asideNumberHeading">
+            if ((this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample")) {
+               attributions = <div className="asideNumberHeading">
                     <div className="toggleAsideNumber">Label, Number, Title</div>
-                    <div className="setting-value" onClick={!hasReviewerRole() && !config.savingInProgress && this.handleAsideNumber}>
-                        <div className={`asideSlider ${this.state.asideNumber == true ? 'on' : 'off'}`}></div>
+                    <div className="setting-value" onClick={() => this.handleAsideNumber(toggleAsideNumber)}>
+                        <div className={`asideSlider ${toggleAsideNumber ? 'on' : 'off'}${hasAsideTitleData === true ? ' disabled-toggle' : ''}`}></div>
                     </div>
                 </div>
                 return attributions;
@@ -567,14 +584,15 @@ class Sidebar extends Component {
         }
     }
 
-    handleAsideNumber=()=>{
-        const newToggleValue = this.state.asideNumber
-        console.log("newToggleValue",newToggleValue);
-        this.props.setBCEMetadata('asideNumber',newToggleValue)
-        this.props.enableAsideNumbering(newToggleValue)
-        this.setState=({
-            asideNumber: newToggleValue
-        });
+    handleAsideNumber = (toggleAsideNumber) => {
+        let hasAsideTitleData = this.props?.activeElement?.asideNumber || false;
+        if(hasAsideTitleData === true){
+            return false
+        }
+        if (!hasReviewerRole() && !config.savingInProgress) {
+            let newToggleValue = toggleAsideNumber;
+            this.props.enableAsideNumbering(!newToggleValue, this.state.activeElementId);
+        }
     }
 
     saveElementAttributes = () => {
@@ -873,7 +891,8 @@ const mapStateToProps = state => {
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
         elementData: state.tcmReducer.elementData,
         tcmStatus: state.tcmReducer.tcmStatus,
-        asideData:state.appStore.asideData
+        asideData:state.appStore.asideData,
+        asideTitleData: state.appStore.asideTitleData
     };
 };
 

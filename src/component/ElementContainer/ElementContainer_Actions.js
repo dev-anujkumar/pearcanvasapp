@@ -155,7 +155,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
         /** updateBodymatter | Used for TCM Snapshots */
-        let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+        let updateBodymatter = getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
         const helperArgs = { 
             updatedData,
             asideData,
@@ -769,7 +769,7 @@ const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
     let tmpIndex = typeof index === 'number' ? index : index.split("-")
     let indexesLen = tmpIndex.length
     let newBodymatter = currentSlateData.contents.bodymatter
-    if (updatedId?.trim !== "") { /** Update Aside Id for versioning */
+    if (updatedId && updatedId !== "") { /** Update Aside Id for versioning */
         updatedElement.id = updatedId
         updatedElement.versionUrn = updatedId
     }
@@ -806,7 +806,6 @@ const prepareAsideTitleForUpdate = (index) => {
     labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
     numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
     titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
-
     return titleHTML
 }
 export const updateAsideNumber = (previousData, index) => (dispatch, getState) => {
@@ -817,6 +816,10 @@ export const updateAsideNumber = (previousData, index) => (dispatch, getState) =
     let elementEntityUrn = "", updatedElement
     let titleHTML = prepareAsideTitleForUpdate(index);
 
+    if(activeElementId ==="" && previousData.id === ""){
+        return null;
+    }
+    
     updatedElement = {
         ...previousData,
         html: {

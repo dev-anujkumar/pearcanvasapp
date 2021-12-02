@@ -172,7 +172,7 @@ figure,.element-container{
     display: table;
 }
 
-.divImageActualSize{
+.divImageActualSize, .divImageActualSizeTableImage, .divImageActualSizeMathImage{
     background-color: transparent;
     padding-top: 0;
     margin: 2.5em auto;
