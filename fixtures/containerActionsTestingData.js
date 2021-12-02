@@ -794,6 +794,18 @@ export const slateLevelData = {
                                             }
                                         ]
                                     }
+                                },{
+                                    id: "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4eb",
+                                    type: "figure",
+                                    figuretype: "tableasmarkup",
+                                    status: "wip",
+                                    schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+                                    figuredata: {
+                                        tableasHTML: '<table style="border-collapse: collapse; width: 1146.4px; word-break: break-all; outline: none; text-align: left;" data-mce-style="border-collapse: collapse; width: 100%;" class="mce-item-table" contenteditable="false" data-mce-selected="1"><tbody><tr><td style="width: 573.2px; outline: none;">22</td><td style="width: 573.2px; outline: none;"><br></td></tr></tbody></table>'
+                                    },
+                                    versionUrn: "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4ea",
+                                    contentUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbd"
+            
                                 }
                         ]
                         },

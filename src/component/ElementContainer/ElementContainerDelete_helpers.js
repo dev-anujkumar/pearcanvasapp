@@ -279,7 +279,7 @@ export const deleteBlockListElement = (elementId, elementData) => {
 }
 
 /* Delete Element inside WE and aside */
-const delInsideWE = (item, asideData, parentUrn, elmId) => {
+export const delInsideWE = (item, asideData, parentUrn, elmId) => {
     /* Delete elements inside 2C:WE/AS */
     if (item.id === asideData?.id) {
         item?.elementdata?.bodymatter?.forEach((ele,index) => {
