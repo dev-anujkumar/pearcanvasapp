@@ -901,11 +901,10 @@ export const updateStoreInCanvas = (params) => {
         elementIndex,
         showHideType,
         parentElement,
-        fetchSlateData
+        fetchSlateData,
+        newslateData
     } = params
     //direct dispatching in store
-    const parentData = getState().appStore.slateLevelData;
-    const newslateData = JSON.parse(JSON.stringify(parentData));
    
     //tcm update code
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;

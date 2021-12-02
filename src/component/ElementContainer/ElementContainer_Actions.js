@@ -156,6 +156,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
         /** updateBodymatter | Used for TCM Snapshots */
         let updateBodymatter = getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
+        const slateParentData = getState().appStore.slateLevelData;
+        const newslateData = JSON.parse(JSON.stringify(slateParentData));
         const helperArgs = { 
             updatedData,
             asideData,
@@ -165,7 +167,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             versionedData: null,
             elementIndex,
             showHideType,
-            parentElement
+            parentElement,
+            newslateData
         }
         updateStoreInCanvas(helperArgs)
         let updatedData1 = JSON.parse(JSON.stringify(updatedData))
