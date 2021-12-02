@@ -487,9 +487,12 @@ export class ReactMarkedIndexEditor extends React.Component {
     });
 
     if(e.target.id === "markedindex-cross-reference"){
-      const indexEntry = document.getElementById('markedindex-0')?.innerHTML.replace('<br data-mce-bogus="1">', "");
-      if(indexEntry) document.getElementById("markedindex-cross-reference").contentEditable = true;
-      else document.getElementById("markedindex-cross-reference").contentEditable = false;
+      const indexEntry = document.getElementById('markedindex-0')?.innerHTML?.replace('<br data-mce-bogus="1">', "")?.replace('&nbsp;', "");
+      if(indexEntry) {
+        document.getElementById("markedindex-cross-reference").contentEditable = true;
+      } else { 
+        document.getElementById("markedindex-cross-reference").contentEditable = false;
+      }
     }
   }
 

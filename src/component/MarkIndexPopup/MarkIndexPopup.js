@@ -67,7 +67,7 @@ componentWillUnmount() {
 
 
 
-    return !(newEntryDom.isEqualNode(oldEntryDom) && newSubEntryDom.isEqualNode(oldSubEntryDom) && newCrossRefDom.isEqualNode(oldCrossRefDom))
+    return (!(newEntryDom.isEqualNode(oldEntryDom) && newSubEntryDom.isEqualNode(oldSubEntryDom) && newCrossRefDom.isEqualNode(oldCrossRefDom)) && newEntry !== "<p></p>")
   }
 
   saveContent = (crossReferences, crossRefValues) => {
