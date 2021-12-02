@@ -1,8 +1,13 @@
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import * as tcmSnapshotUtility from '../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js';
 import tcmTestData from '../../../fixtures/tcmSnapshotTestData.js';
 import config from '../../../src/config/config.js';
 import { showHide } from '../../../fixtures/ElementSHowHideData.js';
 import { poetryElem } from '../../../fixtures/ElementPoetryTestData.js';
+import { container } from 'webpack';
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshot_Actions.js', () => {
    return {
     getLatestVersion: ()=>{
@@ -19,6 +24,22 @@ jest.mock('../../../src/component/TcmSnapshots/ElementSnapshot_Utility.js', () =
         setSemanticsSnapshots: jest.fn(),
     }
 })
+
+// jest.mock('../../appstore/store.js', () => {
+//     return {
+//         getState: () => {
+//             return {
+//                 appStore: {
+//                     asideData: {
+//                         parent: {
+//                             type: "groupedcontent"
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// })
 
 describe('-----------------------Test TcmSnapshots_Utility Functions-----------------------', () => {
     config.projectUrn="urn:pearson:distributable:ff18cbc0-ab3f-4c7e-9ed0-84eb34f4e126"
@@ -1221,6 +1242,511 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
         })
         
     })
+
+    describe('Test-6-Function--##81--checkContainerPopupVersion', () => {
+        it('Test-6.1-Function--##82--checkContainerPopupVersion - No Bodymatter', () => {
+            let containerElement = {
+                popupAsideData: {
+                    element: {
+                        status: "approved",
+                        elementdata: {
+                            bodymatter: [
+                                {
+                                    id: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f0",
+                                    status: "approved"
+                                }
+                            ]
+                        }
+                    },
+                    contentUrn: "content1",
+                    id: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f"
+                },
+                popupParentUrn : {
+                    manifestUrn: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f0"
+                }
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'checkContainerPopupVersion');
+            tcmSnapshotUtility.checkContainerPopupVersion(containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(containerElement);
+        })
+    })
+
+    // describe('Test-6-Function--##94--tcmSnapshotsOnDefaultSlate', () => {
+    //     it('Test-6.1-Function--##95--tcmSnapshotsOnDefaultSlate - No Bodymatter', () => {
+    //         config.isPopupSlate = true;
+    //         const actionStatus = {
+    //             action:"create",
+    //             status:"accepted",
+    //             fromWhere:"create"
+    //         }
+    //         const snapshotsData = {
+    //             wipData: {
+    //                 type: "element-aside",
+    //                 interactivedata: {
+    //                     show: [
+    //                         {
+    //                             type: "element-aside"
+    //                         }
+    //                     ]
+    //                 },
+    //                 elementdata: {
+    //                     bodymatter: [
+    //                         {
+    //                             type: "manifest",
+    //                             contents: {
+    //                                 bodymatter: [
+    //                                     {
+    //                                         type: "showhide"
+    //                                     }
+    //                                 ]
+    //                             }
+    //                         }
+    //                     ]
+    //                 }
+    //             },
+    //             slateManifestVersioning : {},
+    //             popupInContainer: null,
+    //             actionStatus,
+    //             tag: {},
+    //             elementId: {
+    //                 parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+    //             }
+    //         }
+            
+    //         config.isPopupSlate=false;
+    //         // const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsOnDefaultSlate');
+    //         tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, {}, null, true, {}, 1, false);
+    //         // expect(spyFunction).toHaveBeenCalledWith(snapshotsData, null, {}, null, true, {}, 1, false);
+    //     })
+    // })
+
+    describe('Test-6-Function--##91--tcmSnapshotsInContainerElements', () => {
+        it('Test-6.1-Function--##92--tcmSnapshotsInContainerElements - No Bodymatter', () => {
+            let containerElement = {
+                showHideObj: {
+                    currentElement: {
+                        type: "citations",
+                        contents: {
+                            bodymatter: [
+                                {
+                                    
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+            let snapshotsData = {
+                elementId: {
+                    childId: "urn:pearson:work:as242342asd3:32sf43sdd"
+                },
+                tag: {
+                    parentTag: "SH",
+                    childTag : "P"
+                },
+                elementId: {
+                    parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+                },
+                wipData: {
+                    type: "citations"
+                }
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInContainerElements');
+            tcmSnapshotUtility.tcmSnapshotsInContainerElements(containerElement, snapshotsData, {}, 0, true, null);
+            expect(spyFunction).toHaveBeenCalledWith(containerElement, snapshotsData, {}, 0, true, null);
+        })
+
+        it('Test-6.1-Function--##94--tcmSnapshotsInContainerElements - No Bodymatter', () => {
+            let containerElement = {
+                showHideObj: {
+                    currentElement: {
+                        type: "citations",
+                        contents: {
+                            bodymatter: [
+                                {
+                                    
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+            let snapshotsData = {
+                elementId: {
+                    childId: "urn:pearson:work:as242342asd3:32sf43sdd"
+                },
+                tag: {
+                    parentTag: "SH",
+                    childTag : "P"
+                },
+                elementId: {
+                    parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+                },
+                wipData: {
+                    type: "else case"
+                }
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInContainerElements');
+            tcmSnapshotUtility.tcmSnapshotsInContainerElements(containerElement, snapshotsData, {}, 0, true, null);
+            expect(spyFunction).toHaveBeenCalledWith(containerElement, snapshotsData, {}, 0, true, null);
+        })
+
+        it('Test-6.1-Function--##95--tcmSnapshotsInContainerElements - No Bodymatter', () => {
+            let containerElement = {
+                showHideObj: {
+                    containerinSH: {
+
+                    }
+                },
+                asideData: {
+                    parent: {
+                        type: "showhide"
+                    },
+                    element: {
+                        type: "element-aside"
+                    },
+                    figureIn2cAside: {
+                        isExist: true,
+                        asideData: {
+                            type: "element-aside",
+                            subtype: "workedexample",
+                            element: {
+                                elementdata: {
+                                    bodymatter: [
+                                        {
+                                            id: 1
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            let snapshotsData = {
+                elementId: {
+                    childId: "urn:pearson:work:as242342asd3:32sf43sdd"
+                },
+                tag: {
+                    parentTag: "SH",
+                    childTag : "P"
+                },
+                elementId: {
+                    parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+                },
+                wipData: {
+                    type: "citations"
+                }
+            }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInContainerElements');
+            tcmSnapshotUtility.tcmSnapshotsInContainerElements(containerElement, snapshotsData, {}, 0, true, null);
+            expect(spyFunction).toHaveBeenCalledWith(containerElement, snapshotsData, {}, 0, true, null);
+        })
+
+    })
+
+    describe('Test-6-Function--##98--prepareSnaphotPoetry', () => {
+
+        it('Test-6.1-Function--##99--prepareSnaphotPoetry - No Bodymatter', () => {
+            let containerElement =  {
+                asideData: {
+                    grandParent: {
+                        asideData: {
+                            parent: {
+                                type: "showhide"
+                            }
+                        },
+                        parentUrn: {
+                            manifestUrn: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f0"
+                        }
+                    }
+                }
+            }
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareSnaphotPoetry');
+            tcmSnapshotUtility.prepareSnaphotPoetry(containerElement, {}, 0, {});
+            expect(spyFunction).toHaveBeenCalledWith(containerElement, {}, 0, {});
+
+        })
+
+    })
+
+    describe('Test-6-Function--##401--tcmSnapshotsForUpdate', () => {
+
+        it('Test-6.1-Function--##401--tcmSnapshotsForUpdate - No Bodymatter', () => {
+            config.isPopupSlate = true;
+            // config.slateManifestUrn = 
+            let elementUpdateData = {
+                CurrentSlateStatus: 'wip',
+                currentParentData: { 'urn:pearson:manifest:21bcd0e7-b4f9-48ae-938a-2e144d461df7': {} },
+                response: {
+                  id: 'urn:pearson:work:d95c23b0-f7b8-4fab-8979-5d00125bf9cb',
+                  type: 'element-authoredtext',
+                  schema: 'http://schemas.pearson.com/wip-authoring/element/1',
+                  elementdata: {},
+                  html: {}
+                },
+                slateManifestUrn: 'urn:pearson:manifest:21bcd0e7-b4f9-48ae-938a-2e144d461df7',
+                updateBodymatter: [ {} ],
+                updatedId: 'urn:pearson:work:d95c23b0-f7b8-4fab-8979-5d00125bf9cb'
+            };
+            let containerElement = {
+                asideData: {
+                    type: "showhide"
+                },
+                metaDataField: "formattedTitle",
+                sectionType: "postertextobject",
+                parentElement: {},
+                showHideObj
+            }
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+
+        })
+
+        it('Test-6.1-Function--##402--tcmSnapshotsForUpdate - No Bodymatter', () => {
+            config.isPopupSlate - true;
+            let elementUpdateData = {
+                CurrentSlateStatus: 'wip',
+                currentParentData: { 'urn:pearson:manifest:21bcd0e7-b4f9-48ae-938a-2e144d461df7': {} },
+                response: {
+                  id: 'urn:pearson:work:d95c23b0-f7b8-4fab-8979-5d00125bf9cb',
+                  type: 'element-authoredtext',
+                  schema: 'http://schemas.pearson.com/wip-authoring/element/1',
+                  elementdata: {},
+                  html: {}
+                },
+                slateManifestUrn: 'urn:pearson:manifest:21bcd0e7-b4f9-48ae-938a-2e144d461df7',
+                updateBodymatter: [ {} ],
+                updatedId: 'urn:pearson:work:d95c23b0-f7b8-4fab-8979-5d00125bf9cb'
+            };
+            let containerElement = {
+                asideData: {
+                    type: "poetry"
+                }
+            }
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+
+        })
+
+        it('Test-6.1-Function--##404--tcmSnapshotsForUpdate - No Bodymatter', () => {
+            config.isPopupSlate - true;
+            let elementUpdateData = {
+                CurrentSlateStatus: 'wip',
+                currentParentData: { 'urn:pearson:manifest:21bcd0e7-b4f9-48ae-938a-2e144d461df7': {} },
+                response: {
+                  id: 'urn:pearson:work:d95c23b0-f7b8-4fab-8979-5d00125bf9cb',
+                  type: 'element-authoredtext',
+                  schema: 'http://schemas.pearson.com/wip-authoring/element/1',
+                  elementdata: {},
+                  html: {}
+                },
+                slateManifestUrn: 'urn:pearson:manifest:21bcd0e7-b4f9-48ae-938a-2e144d461df7',
+                updateBodymatter: [ {} ],
+                updatedId: 'urn:pearson:work:d95c23b0-f7b8-4fab-8979-5d00125bf9cb'
+            };
+            let containerElement = {
+                asideData: {
+                    type: "else case"
+                }
+            }
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+
+        })
+
+    })
+
+    describe('Test-6-Function--##111--prepareTcmSnapshots', () => {
+
+        it('Test-6.1-Function--##112--prepareTcmSnapshots - No Bodymatter', () => {
+            let wipData= {
+                type: "poetry",
+                contents: {
+                    bodymatter: [
+                        {
+                            id: 1
+                        }
+                    ]
+                }
+            }
+            let containerElement = {
+                parentUrn: {
+                    elementType: "group"
+                }
+            }
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareTcmSnapshots');
+            tcmSnapshotUtility.prepareTcmSnapshots(wipData, {}, containerElement, "", 0, null, null);
+            // expect(spyFunction).toHaveBeenCalledWith(wipData, {}, containerElement, "", 0, null, null);
+
+        })
+
+        it('Test-6.1-Function--##112--prepareTcmSnapshots - No Bodymatter', () => {
+            let wipData= {
+                type: "figure",
+                contents: {
+                    bodymatter: [
+                        {
+                            id: 1
+                        }
+                    ]
+                }
+            }
+            let containerElement = {
+                parentUrn: {
+                    elementType: "group"
+                },
+                asideData: {
+                    figureIn2cAside: {
+                        isExist: true,
+                        asideData: {
+                            parent: {
+                                type: "groupedcontent"
+                            }
+                        }
+                    }
+                }
+            }
+            let actionStatus = {
+                action: "update"
+            }
+            
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareTcmSnapshots');
+            tcmSnapshotUtility.prepareTcmSnapshots(wipData, actionStatus, containerElement, "", 0, null, null);
+        })
+
+        // it('Test-6.1-Function--##114--prepareTcmSnapshots - No Bodymatter', () => {
+        //     // let store = mockStore(() => initialState);
+        //     let wipData= {
+        //         type: "figure",
+        //         contents: {
+        //             bodymatter: [
+        //                 {
+        //                     id: 1
+        //                 }
+        //             ]
+        //         }
+        //     }
+        //     let containerElement = {
+        //         parentUrn: {
+        //             elementType: "group"
+        //         },
+        //         asideData: {
+        //             figureIn2cAside: {
+        //                 isExist: true,
+        //                 asideData: {
+        //                     parent: {
+        //                         type: "groupedcontent"
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     let actionStatus = {
+        //         action: "delete"
+        //     }
+            
+        //     const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareTcmSnapshots');
+        //     tcmSnapshotUtility.prepareTcmSnapshots(wipData, actionStatus, containerElement, "", 0, null, null);
+        // })
+
+    })
+
+
+    describe('Test-6-Function--##84--tcmSnapshotsElementsInPopupInContainer', () => {
+
+        it('Test-6.1-Function--##85--tcmSnapshotsElementsInPopupInContainer - No Bodymatter', () => {
+            config.popupParentElement = {
+                // parentElement:{
+                //     type: "popup"
+                // },
+                popupAsideData: {
+                    element: {
+                        status: "approved",
+                        elementdata: {
+                            bodymatter: [
+                                {
+                                    id: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f0",
+                                    status: "approved"
+                                }
+                            ]
+                        }
+                    },
+                    contentUrn: "content1",
+                    id: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f",
+                    parent: {
+                        type: "groupedcontent"
+                    }
+                },
+                popupParentUrn : {
+                    manifestUrn: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f0"
+                }
+            }
+            let snapshotsData = {
+                wipData: showHide,
+                slateManifestVersioning : {},
+                // popupInContainer: null,
+                actionStatus: {
+
+                },
+                tag: {},
+                elementId: {
+                    parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+                }
+            }
+            let defaultKeys = {
+                action:"create",
+                status:"accepted",
+                fromWhere:"delete"
+            }
+            let containerElement = {
+                popupAsideData: {
+                    element: {
+                        status: "approved",
+                        elementdata: {
+                            bodymatter: [
+                                {
+                                    id: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f0",
+                                    status: "approved"
+                                }
+                            ]
+                        }
+                    },
+                    contentUrn: "content1",
+                    id: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f"
+                },
+                popupParentUrn : {
+                    manifestUrn: "urn:pearson:manifest:7d788d17-fc4e-4cf5-8581-8f6d1ee971f0"
+                }
+            }
+            let type = "element-authoredtext"
+            let index = 0
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsElementsInPopupInContainer');
+            tcmSnapshotUtility.tcmSnapshotsElementsInPopupInContainer(snapshotsData, defaultKeys, containerElement, type,index);
+            expect(spyFunction).toHaveBeenCalledWith(snapshotsData, defaultKeys, containerElement, type,index);
+
+        })
+
+    })
+
+    // {
+    //     wipData: {
+    //         id: "urn:pearson:work:3525235-324323-4432sfe31"
+    //     },
+    //     slateManifestVersioning : {},
+    //     popupInContainer: null,
+    //     actionStatus,
+    //     tag: { childTag: 'P' },
+    //     elementId: { parentId : "" }
+    // }
         
     describe('Test-6-Function--6--fetchManifestStatus', () => {
         const { slate1, slate2 } = tcmTestData
@@ -1751,6 +2277,91 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
         //     config.isPopupSlate=false;
         //     // const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsOnDefaultSlate');
         //     tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, { asideDate: {subtype: "workedexample"}}, null, true, {}, 1, false);
+        //     // expect(spyFunction).toHaveBeenCalledWith(snapshotsData, null, {}, null, true, {}, 1, false);
+        // })
+        // it('tcmSnapshotsOnDefaultSlate##86 - element-aside case', () => {
+        //     config.isPopupSlate = true;
+        //     const actionStatus = {
+        //         action:"create",
+        //         status:"accepted",
+        //         fromWhere:"create"
+        //     }
+        //     const snapshotsData = {
+        //         wipData: {
+        //             type: "element-aside",
+        //             elementdata: {
+        //                 bodymatter: [
+        //                     {
+        //                         type: "manifest",
+        //                         contents: {
+        //                             bodymatter: [
+        //                                 {
+        //                                     type: "showhide"
+        //                                 }
+        //                             ]
+        //                         }
+        //                     }
+        //                 ]
+        //             }
+        //         },
+        //         slateManifestVersioning : {},
+        //         popupInContainer: null,
+        //         actionStatus,
+        //         tag: {},
+        //         elementId: {
+        //             parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+        //         }
+        //     }
+            
+        //     config.isPopupSlate=false;
+        //     // const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsOnDefaultSlate');
+        //     tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, {}, null, true, {}, 1, false);
+        //     // expect(spyFunction).toHaveBeenCalledWith(snapshotsData, null, {}, null, true, {}, 1, false);
+        // })
+        // it('tcmSnapshotsOnDefaultSlate##87 - element-aside case', () => {
+        //     config.isPopupSlate = true;
+        //     const actionStatus = {
+        //         action:"create",
+        //         status:"accepted",
+        //         fromWhere:"create"
+        //     }
+        //     const snapshotsData = {
+        //         wipData: {
+        //             type: "element-aside",
+        //             interactivedata: {
+        //                 show: [
+        //                     {
+        //                         type: "element-aside"
+        //                     }
+        //                 ]
+        //             },
+        //             elementdata: {
+        //                 bodymatter: [
+        //                     {
+        //                         type: "manifest",
+        //                         contents: {
+        //                             bodymatter: [
+        //                                 {
+        //                                     type: "showhide"
+        //                                 }
+        //                             ]
+        //                         }
+        //                     }
+        //                 ]
+        //             }
+        //         },
+        //         slateManifestVersioning : {},
+        //         popupInContainer: null,
+        //         actionStatus,
+        //         tag: {},
+        //         elementId: {
+        //             parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+        //         }
+        //     }
+            
+        //     config.isPopupSlate=false;
+        //     // const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsOnDefaultSlate');
+        //     tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, {}, null, true, {}, 1, false);
         //     // expect(spyFunction).toHaveBeenCalledWith(snapshotsData, null, {}, null, true, {}, 1, false);
         // })
         it('tcmSnapshotsOnDefaultSlate##1 - poetry_element case', () => {
