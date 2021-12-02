@@ -26,25 +26,28 @@ export const setAutoNumberSettingValue = (element) => {
 }
 
 
-export const getLabelNumberPreview = (element, { containerNumber, imgLabelValue, imgNumberValue }, autoNumberSetting) => {
+export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue }) => {
     if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) {
         return ""
     }
     else if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
-        return `${imgLabelValue} ${containerNumber}.${imgNumberValue}`
+        return `${imgLabelValue} ${imgNumberValue}`
     }
     return ""
 }
 
 export const getContainerNumber = (slateAncestors) => {
     const containerEntityUrn = getContainerEntityUrn(slateAncestors)
+    console.log('containerEntityUrn',containerEntityUrn)
     switch (containerEntityUrn) {
         case 'FrontMatter':
             return 'F'
         case 'BackMatter':
             return 'B'
         case 'Part':
-            return 'P'
+            const partEntityUrn = containerEntityUrn?.split('-')?.[1]
+            const partNumber = config?.autoNumberingDetails?.partOrderList[partEntityUrn]
+            return partNumber ? `P.${partNumber}` : 'P'
         default:
             return config?.autoNumberingDetails?.chapterOrderList[containerEntityUrn] || '1'
     }
@@ -53,21 +56,55 @@ export const getContainerNumber = (slateAncestors) => {
 export const getContainerEntityUrn = (slateAncestors) =>{
     const moduleTypes = ['module', 'appendix']
     const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate']
+    console.log('slateAncestors',slateAncestors,slateAncestors?.matterType)
     if (slateAncestors?.matterType !== 'BodyMatter') {
         return slateAncestors.matterType
     }
     else if (slateTypes.includes(slateAncestors?.label)) {//"container-introduction", 
-        if ((slateAncestors?.label === "container-introduction") || (slateAncestors?.ancestors?.label === 'part')) {
-            return 'Part'
+        if ((slateAncestors?.label === "container-introduction") && (slateAncestors?.ancestor?.label === 'part')) {
+            return `Part-${slateAncestors?.ancestor?.entityUrn}`
         }
-        else if ((slateAncestors?.label === "container-introduction") || (slateAncestors?.ancestors?.label === 'chapter')) {
-            return slateAncestors?.ancestors?.contentUrn
+        else if ((slateAncestors?.label === "container-introduction") || (slateAncestors?.ancestor?.label === 'chapter')) {
+            return slateAncestors?.ancestor?.entityUrn
         }
-        else if (moduleTypes.includes(slateAncestors?.ancestors?.label)) {
-            if (slateAncestors?.ancestors?.ancestors?.label === 'chapter') {
-                return slateAncestors?.ancestors?.ancestors?.contentUrn
+        else if (moduleTypes.includes(slateAncestors?.ancestor?.label)) {
+            if (slateAncestors?.ancestor?.ancestor?.label === 'chapter') {
+                return slateAncestors?.ancestor?.ancestor?.entityUrn
             }
         }
     }
     return slateAncestors.contentUrn
+}
+
+export const getLabelNumberFieldValue = (element, figureLabelValue, containerNumber) => {
+    if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) {
+        return {
+            label: "",
+            number: ""
+        }
+    }
+    else if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
+        if (element.hasOwnProperty('manualoverride') && Object.keys(element.manualoverride)?.length > 0) {
+            if (element.manualoverride.hasOwnProperty('overridenumbervalue') && element.manualoverride.hasOwnProperty('overridelabelvalue')) {
+                return {
+                    label: element.manualoverride.overridelabelvalue,
+                    number: `${containerNumber}.${element.manualoverride.overridenumbervalue}`
+                }
+            } else if (element.manualoverride.hasOwnProperty('overridenumbervalue')) {
+                return {
+                    label: figureLabelValue,
+                    number: `${containerNumber}.${element.manualoverride.overridenumbervalue}`
+                }
+            } else if (element.manualoverride.hasOwnProperty('resumenumbervalue')) {
+                return {
+                    label: figureLabelValue,
+                    number: `${containerNumber}.${element.manualoverride.resumenumbervalue}`
+                }
+            }
+        }
+        return {
+            label: figureLabelValue,
+            number: `${containerNumber}.100`
+        }
+    }
 }

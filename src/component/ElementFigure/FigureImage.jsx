@@ -68,10 +68,10 @@ class FigureImage extends Component {
         //figureNumberLabelValue = dropdownValueAtIntialize(this.props.figureNumberDropdownData.image, figureHtmlData.formattedLabel);
         //this.setState({ figureNumberLabelValue: figureNumberLabelValue });
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
-        console.log('this.props.figImageList', this.props.figImageList)
+        // console.log('this.props.figImageList', this.props.figImageList)
         const dropdownVal = setAutoNumberSettingValue(this.props.model)
-        console.log('this.props.model', this.props.model)
-        console.log('dropdownVal', dropdownVal)
+        // console.log('this.props.model', this.props.model)
+        // console.log('dropdownVal', dropdownVal)
         this.setState({
             figureNumberLabelValue: dropdownVal
         })
@@ -472,12 +472,18 @@ class FigureImage extends Component {
             imgHeight = this.props.model.figuredata?.height && this.props.model.figuredata?.height !== '' ? `${this.props.model.figuredata?.height}px` : ''
         }
         const actualSizeClass = this.props.model.figuredata?.width > '600' ? "" : "img-actual-size";
-        const imgLabelValue = this.props.model?.displayedLabel ?? 'Figure'
-        const containerNumber = getContainerNumber(this.props.slateAncestors)
-        const imgNumberValue = config.imageCount++
-        const autoNumberSetting = figureNumberLabelValue
-        const previewData = getLabelNumberPreview(model, { containerNumber, imgLabelValue, imgNumberValue }, autoNumberSetting)
-
+        // const imgLabelValue = this.props.model?.displayedLabel ?? 'Figure'
+        // const containerNumber = getContainerNumber(this.props.slateAncestors)
+        // const imgNumberValue = config.imageCount++
+        // const autoNumberSetting = figureNumberLabelValue
+        // const previewData = getLabelNumberPreview(model, { containerNumber, imgLabelValue, imgNumberValue }, autoNumberSetting)
+        // const containerNumber = getContainerNumber(slateAncestors)
+        // const autoNumberFieldsData = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)
+        // const figIndexParent = config.modIndex[this.cursorData.ParentEntityUrn];
+        // let figIndex = -1
+        // if(figIndexParent){
+        //     figIndex = Object.keys(modIndexParent).indexOf(this.props.item.entityUrn)
+        // }
         return (
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
@@ -490,6 +496,8 @@ class FigureImage extends Component {
                                 previewClass={previewClass}
                                 figLabelClass={figLabelClass}
                                 figTitleClass={figTitleClass}
+                                onFigureImageFieldFocus={this.onFigureImageFieldFocus}
+                                onFigureImageFieldBlur={this.onFigureImageFieldBlur}
                             />
                             {/* <header className="figure-header new-figure-image-header">
                             <div className='figure-label-number-field'>

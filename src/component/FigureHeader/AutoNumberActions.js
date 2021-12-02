@@ -5,6 +5,7 @@ import {
     SET_AUTO_NUMBER_TOGGLE,
     GET_ALL_FIGURE_ELEMENTS
 } from '../../constants/Action_Constants.js';
+import { prepareAutoNumberList } from './AutoNumber_helperFunctions';
 /**
  * 
  */
@@ -50,7 +51,7 @@ const commonHeaders = {
                         return img
                     })
                     if (index === 2) {
-                        imgArray[0]["manualoverride"] = { "overridenumbervalue": "1",
+                        imgArray[0]["manualoverride"] = { "overridenumbervalue": "2A",
                         "overridelabelvalue": "Illustration" }
                     }
                     if (index === 4) {
@@ -61,7 +62,10 @@ const commonHeaders = {
                     }
                 })
             }
-            console.log('imagesData>>>>',imagesData)
+            console.log('imagesData>>>>', imagesData)
+            const updatedIndexList = prepareAutoNumberList(imagesData)
+            console.log('updatedIndexList', updatedIndexList)
+            config.imageIndex = updatedIndexList
             dispatch({
                 type: GET_ALL_FIGURE_ELEMENTS,
                 payload: {

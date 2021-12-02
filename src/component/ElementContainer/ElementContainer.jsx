@@ -2250,7 +2250,7 @@ class ElementContainer extends Component {
                     element.numberedandlabel = false
                     break;
                 case "urn:pearson:entity:a2d00244-2201-4c2d-b457-2289e8f3a89d":
-                    element.manualoverride = { overridenumbervalue: '1', overridelabelvalue: 'Illustration' }
+                    element.manualoverride = { overridenumbervalue: '2A', overridelabelvalue: 'Illustration' }
                     break;
             }
         }

@@ -7,7 +7,7 @@ import config from '../../config/config';
 import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import dropdown_arrow_icon from '../../images/FigureHeader/dropdown-arrow.svg';
-import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from './AutoNumber_helperFunctions';
+import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, getLabelNumberFieldValue } from './AutoNumber_helperFunctions';
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, removeUnoClass } from '../../constants/utility';
 import { labelHtmlData } from '../../constants/Element_Constants';
 
@@ -17,7 +17,7 @@ export const FigureHeader = (props) => {
     const slateAncestors = useSelector((state) => state.appStore.currentSlateAncestorData)
     const figImageList = useSelector((state) => state.autoNumberReducer.figImageList)
 
-    const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedLabel ??'Figure');
+    const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedLabel ?? 'Figure');
     const [figureLabelData, setFigureLabelData] = useState(['Figure', 'Table', 'Equation']);//props.figureDropdownData
     const [labelNumberSetting, setLabelNumberSetting] = useState('Default Auto-number');
     //const [labelNumberSettingList, setLabelNumberSettingList] = useState(AUTO_NUMBER_SETTING_DROPDOWN_VALUES);
@@ -99,11 +99,12 @@ export const FigureHeader = (props) => {
         }
     }
 
-    const imgLabelValue = figureLabelValue//props.model?.displayedLabel ?? 'Figure'
     const containerNumber = getContainerNumber(slateAncestors)
-    const imgNumberValue = config.imageCount++
-    const previewData = getLabelNumberPreview(props.model, { containerNumber, imgLabelValue, imgNumberValue })
-    const { figureHtmlData, previewClass, figLabelClass, figTitleClass  } = props
+    const autoNumberFieldsData = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)
+    const imgLabelValue = autoNumberFieldsData.label//props.model?.displayedLabel ?? 'Figure'
+    const imgNumberValue = autoNumberFieldsData.number//onfig.imageCount++
+    const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue })
+    const { figureHtmlData, previewClass, figLabelClass, figTitleClass } = props
 
     return (
         <>
@@ -138,7 +139,7 @@ export const FigureHeader = (props) => {
                         <ul>
                             {figureLabelData.map((label, i) => {
                                 return (
-                                    <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label)}}>{label}</li>
+                                    <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>{label}</li>
                                 )
 
                             })}
@@ -166,7 +167,7 @@ export const FigureHeader = (props) => {
             <div className="preview">
                 <label className={"transition-none"}>Preview</label>
                 <form className={previewClass} noValidate autoComplete="off" >
-                    <TextField id="filled-full-width" label="Preview Data" placeholder="Preview Data" multiline variant="filled" value={previewData} fullWidth />
+                    <TextField id="filled-full-width" placeholder="Preview Data" multiline variant="filled" value={previewData} fullWidth />
                 </form>
             </div>
             <div className="floating-title-group">
