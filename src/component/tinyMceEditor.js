@@ -715,7 +715,7 @@ export class TinyMceEditor extends Component {
                 }
             }
             /** Open Alfresco Picker to update inline image in list on double-click*/
-            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT && blockListData && Object.keys(blockListData).length))) {
+            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT ))) {
                 const imageArgs = {
                     id: e.target?.dataset?.id,
                     handleBlur:this.handleBlur
