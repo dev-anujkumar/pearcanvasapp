@@ -100,7 +100,7 @@ beforeEach(() => {
 })
 
 //ApiResults test cases
-describe('Test ApiResults', () => {
+xdescribe('Test ApiResults', () => {
     it('Have ApiResults function', () => {
         wrapper.setState({
             figureDataLength : 2
