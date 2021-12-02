@@ -174,6 +174,13 @@ export function ElementSaprator(props) {
         pasteRender = true;
         operationType = props.elementSelection.operationType || '';
     }
+    /** 
+     Hide Paste Button for Container Elements when there is BL inside ShowHide
+     Note:- This will removed once BL will be supported in AS,WE,2C & 3C 
+    */
+    if(['element-aside','groupedcontent'].indexOf(props?.asideData?.type) > -1 && props?.elementSelection?.containsBlockList) {
+        pasteRender = false;
+    }
     /* @hideSplitSlateIcon@ hide split slate icon in following list of elements */
     const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
     let hideElementSeperator = isSubscriberRole(props?.projectSubscriptionDetails?.projectSharingRole,props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? 'hideToolbar' : ''
@@ -346,6 +353,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     showPlayscript={props.showPlayscript}
                     showDiscussion={props.showDiscussion}
                     asideData={props.asideData}
+                    elementIndex={props.index}
                 >
                 </ElementContainerType>
             }
@@ -366,7 +374,8 @@ export function typeOfContainerElements(elem, props) {
     /* Do not show Citation Group option if inside Multicolumn  */
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
     /* Do not show SH and Pop up option if Aside/WE is inside SH  */
-    if (asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) {
+    /* Do not show block poetry option inside SH if SH is inside Aside/WE/MultiColumn */
+    if ((asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) || (asideData?.grandParent?.asideData && Object.keys(asideData.grandParent.asideData).length)) {
         switch (elem?.buttonType) {
             case "interactive-elem-button":
                 newData = {

@@ -88,20 +88,23 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
     //         bodymatter[index] = listObjectTemplate;
     //     }
     // });
-    let blockListData = checkBlockListElement({slateLevelData:slateLevelData,index:activeElement.index}, 'ENTER');
-    if (blockListData && Object.keys(blockListData).length && activeElement.elementType !== "manifestlist") {
-       let data = {
-        blockListData: blockListData.parentData,
-        blockListElement:true,
-        dataToSend:{
-            "listtype": type==='disc'? "unordered" :"ordered",
-            "subtype": type,
-            "startNumber": startvalue // Earlier it was a string as discussed it PCAT-12326 comments. Now acc. to discussions changing it back to integer.
-        },
-        slateLevelBLIndex:activeElement.index.split("-")[0]
-       }
-       dispatch(updateBlockListMetadata(data))
-    }
+    if(asideData.type==="manifestlist"){
+        // let blockListData = checkBlockListElement({slateLevelData:slateLevelData,index:activeElement.index}, 'ENTER');
+        // if (blockListData && Object.keys(blockListData).length && activeElement.elementType !== "manifestlist") {
+           let data = {
+            blockListData: asideData.element,
+            blockListElement:true,
+            dataToSend:{
+                "listtype": type==='disc'? "unordered" :"ordered",
+                "subtype": type,
+                "startNumber": startvalue // Earlier it was a string as discussed it PCAT-12326 comments. Now acc. to discussions changing it back to integer.
+            },
+            slateLevelBLIndex:activeElement.index.split("-"),
+            asideData:asideData
+           }
+           dispatch(updateBlockListMetadata(data))
+        }
+    // }
     else{
         dispatch(conversionElement({
             elementId: activeElement.elementId,
