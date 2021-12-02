@@ -36,10 +36,6 @@ componentWillMount() {
   document.addEventListener('mousedown', this.handleClickOutside);
 }
 
-componentWillUnmount() {
-  document.removeEventListener('mousedown', this.handleClickOutside);
-}
-
   componentDidMount(){
     this.props.getCrossReferenceValues();
   }
@@ -182,6 +178,7 @@ componentWillUnmount() {
         tinymce.$('.wrs_modal_desktop').remove();
       }
     }
+    document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   render() {
