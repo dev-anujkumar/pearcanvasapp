@@ -19,7 +19,7 @@ export const FigureHeader = (props) => {
     const slateAncestors = useSelector((state) => state.appStore.currentSlateAncestorData)
     const figImageList = useSelector((state) => state.autoNumberReducer.figImageList)
 
-    const [figureLabelValue, setFigureLabelValue] = useState('Figure');
+    const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedLabel ??'Figure');
     const [figureLabelData, setFigureLabelData] = useState(['Figure', 'Table', 'Equation']);//props.figureDropdownData
     const [labelNumberSetting, setLabelNumberSetting] = useState('Default Auto-number');
     //const [labelNumberSettingList, setLabelNumberSettingList] = useState(AUTO_NUMBER_SETTING_DROPDOWN_VALUES);
@@ -102,7 +102,7 @@ export const FigureHeader = (props) => {
         }
     }
 
-    const imgLabelValue = props.model?.displayedLabel ?? 'Figure'
+    const imgLabelValue = figureLabelValue//props.model?.displayedLabel ?? 'Figure'
     const containerNumber = getContainerNumber(slateAncestors)
     const imgNumberValue = config.imageCount++
     // const autoNumberSetting = figureNumberLabelValue

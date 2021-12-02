@@ -23,11 +23,13 @@ import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
+import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions.js';
+import FigureHeader from '../FigureHeader/FigureHeader.jsx';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
 //const BLANK_NUMBER_LABEL_OPTIONS = ['Default Auto-number', 'Override number only'];
-const BLANK_NUMBER_LABEL_OPTIONS = ["Default Auto-number", "Resume numbering with", "Remove label & number", "Override label & number", "Override number only"]
+const BLANK_NUMBER_LABEL_OPTIONS = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
 
 class FigureImage extends Component {
     constructor(props) {
@@ -40,7 +42,7 @@ class FigureImage extends Component {
             figureLabelValue: 'No Label',
             figureNumberLabelValue: 'Default Auto-number',
             figureLabelData: this.props.figureDropdownData,
-            //figureNumberLabelData: this.props.figureNumberDropdownData,
+            figureNumberLabelData: [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER],
             figureDropDown: false,
             figureNumberDropDown: false,
             deleteassetPopup: false
@@ -62,10 +64,17 @@ class FigureImage extends Component {
         this.setState({ figureLabelValue: figureLabelValue });
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
 
-        let figureNumberLabelValue = this.state;
+        // let figureNumberLabelValue = this.state;
         //figureNumberLabelValue = dropdownValueAtIntialize(this.props.figureNumberDropdownData.image, figureHtmlData.formattedLabel);
         //this.setState({ figureNumberLabelValue: figureNumberLabelValue });
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
+        console.log('this.props.figImageList', this.props.figImageList)
+        const dropdownVal = setAutoNumberSettingValue(this.props.model)
+        console.log('this.props.model', this.props.model)
+        console.log('dropdownVal', dropdownVal)
+        this.setState({
+            figureNumberLabelValue: dropdownVal
+        })
     }
 
     componentWillUnmount() {
@@ -356,18 +365,7 @@ class FigureImage extends Component {
     changeFigureNumberLabel = (figureNumberLabelValue, data) => {
         if (!(figureNumberLabelValue === data)) {
             this.setState({ figureNumberLabelValue: data });
-            let dropdownOptions = [];
-            for (let option of this.state.figureNumberLabelData) {
-                if (!BLANK_Number_LABEL_OPTIONS.includes(option)) {
-                    dropdownOptions.push(option);
-                }
-            }
-            if (dropdownOptions.includes(data)) {
-                document.getElementById(`cypress-${this.props.index}-0`).innerHTML = `${data}`;
-            } else {
-                document.getElementById(`cypress-${this.props.index}-0`).innerHTML = '';
-            }
-            this.props.handleBlur();
+            let dropdownOptions = this.state.figureNumberLabelData
         }
     }
 
@@ -474,13 +472,26 @@ class FigureImage extends Component {
             imgHeight = this.props.model.figuredata?.height && this.props.model.figuredata?.height !== '' ? `${this.props.model.figuredata?.height}px` : ''
         }
         const actualSizeClass = this.props.model.figuredata?.width > '600' ? "" : "img-actual-size";
+        const imgLabelValue = this.props.model?.displayedLabel ?? 'Figure'
+        const containerNumber = getContainerNumber(this.props.slateAncestors)
+        const imgNumberValue = config.imageCount++
+        const autoNumberSetting = figureNumberLabelValue
+        const previewData = getLabelNumberPreview(model, { containerNumber, imgLabelValue, imgNumberValue }, autoNumberSetting)
+
         return (
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
-                            <header className="figure-header new-figure-image-header">
+                            <FigureHeader
+                                {...this.props}
+                                figureHtmlData={figureHtmlData}
+                                previewClass={previewClass}
+                                figLabelClass={figLabelClass}
+                                figTitleClass={figTitleClass}
+                            />
+                            {/* <header className="figure-header new-figure-image-header">
                             <div className='figure-label-number-field'>
                                     <span className={`label ${this.state.figureNumberDropDown ? 'active' : ''}`}>Label & Number Settings</span>
                                     <div className="figure-label-number" onClick={this.handleFigureNumberDropdown}>
@@ -493,7 +504,7 @@ class FigureImage extends Component {
                                         <ul>
                                             {BLANK_NUMBER_LABEL_OPTIONS.map((label, i) => {
                                                 return (
-                                                    <li key={i} onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
+                                                    <li key={i} onClick={() => { this.changeFigureNumberLabel(figureNumberLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
                                                 )
 
                                             })}
@@ -519,23 +530,23 @@ class FigureImage extends Component {
                                             })}
                                         </ul>
                                     </div>
-                                }
-                                {
+                                } */}
+                                {/* {
                                     figureLabelValue === 'Custom' ?
-                                        <div className='image-label'>
-                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                                            <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
-                                        </div>
-                                        :
-                                        <div className='image-label hide-field'>
-                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                                            <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
-                                        </div>
-                                }
+                                    <div className='image-label'>
+                                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                        <label className={checkHTMLdataInsideString(imgLabelValue) ? "transition-none" : "floating-label"}>Label Name</label>
+                                    </div>
+                                    :
+                                    <div className='image-label hide-field'>
+                                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                        <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
+                                    </div>
+                                } */}
 
-                                <div className="floating-number-group">
+                                {/* <div className="floating-number-group">
                                     <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
+                                    <label className={checkHTMLdataInsideString(imgNumberValue) ? "transition-none" : "floating-number"}>Number</label>
                                 </div>
 
                             </header>
@@ -543,7 +554,7 @@ class FigureImage extends Component {
                                 <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Preview</label>
 
                                 <form className={previewClass} noValidate autoComplete="off" >
-                                    <TextField  id="filled-full-width" label="PreviewData" variant="filled" fullWidth />
+                                    <TextField  id="filled-full-width" label="Preview Data" placeholder="Preview Data" multiline variant="filled" value={previewData} fullWidth />
 
                                 </form>
 
@@ -551,7 +562,7 @@ class FigureImage extends Component {
                             <div className="floating-title-group">
                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                                 <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
-                            </div>
+                            </div> */}
                             <div className="figure-image-container">
 
                                 <div id="figure_add_div" className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
@@ -627,7 +638,9 @@ const mapStateToProps = (state) => {
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isCiteChanged: state.alfrescoReducer.isCiteChanged,
         changedSiteData: state.alfrescoReducer.changedSiteData,
-        figureDropdownData: state.appStore.figureDropdownData
+        figureDropdownData: state.appStore.figureDropdownData,
+        figImageList: state.autoNumberReducer.figImageList,
+        slateAncestors: state.appStore.currentSlateAncestorData 
     }
 }
 
