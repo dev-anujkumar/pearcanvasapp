@@ -80,6 +80,6 @@ describe('1. PDF Slate test cases', () => {
 			showDetails:true
 		};
 		const component = mount(<PdfSlateComponent {...props} />);
-		expect(component.find('.slate_assessment_label_enhanced')).toHaveLength(1);
+		expect(component.find('.enhanced_label')).toHaveLength(1);
 	});
 });

@@ -16,7 +16,7 @@ function PdfSlateComponent(props)  {
 							<div className="slate_assessment_data_id">ID: { pdfId }</div>
 							{(!config.showCypressPlus || !config.isCypressPlusEnabled ) && (<div className="slate_assessment_change_button" onClick={ OpenAlfresco }>Change PDF</div>)}
 						</div>
-						{config.isCypressPlusEnabled && 
+						{config.isCypressPlusEnabled && config.showCypressPlus &&
 						<>
 							<div className="slate_assessment_data_label enhanced_label">Cypress+ Enhanced</div>
 							<div className="slate_assessment_data_details">
