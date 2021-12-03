@@ -811,17 +811,18 @@ const prepareAsideTitleForUpdate = (index) => {
     titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
     return titleHTML
 }
-export const updateAsideNumber = (previousData, index) => (dispatch, getState) => {
+export const updateAsideNumber = (previousData, index,elementId) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
-    const activeElementId=getState().appStore.activeElement.elementId;
+    const activeElementId=elementId;
+    console.log("activeElementId",elementId);
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
     let elementEntityUrn = "", updatedElement
     let titleHTML = prepareAsideTitleForUpdate(index);
 
-    if(activeElementId ==="" && previousData.id === ""){
-        return null;
-    }
+    // if(activeElementId ==="" && previousData.id === ""){
+    //     return null;
+    // }
     
     updatedElement = {
         ...previousData,
@@ -913,10 +914,10 @@ export const updateAsideNumber = (previousData, index) => (dispatch, getState) =
         if (res?.data?.versionUrn && (res?.data?.versionUrn.trim() !== "")) {
             activeElementObject.elementId = res.data.versionUrn
         }
-        dispatch({
-            type: 'SET_ACTIVE_ELEMENT',
-            payload: activeElementObject
-        });
+        // dispatch({
+        //     type: 'SET_ACTIVE_ELEMENT',
+        //     payload: activeElementObject
+        // });
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
         config.savingInProgress = false
