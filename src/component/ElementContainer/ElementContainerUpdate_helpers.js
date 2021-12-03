@@ -798,7 +798,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
         updateStore(argObj)
     }
     /**Cypress plus code  for conversion of pdf */
-    if( updatedData?.type == elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.showCypressPlus){
+    if( updatedData?.type == elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS){
         startPdfConversion(updatedData?.id);
     }
     

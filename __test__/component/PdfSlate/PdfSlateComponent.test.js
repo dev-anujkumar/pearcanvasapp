@@ -34,7 +34,7 @@ describe('1. PDF Slate test cases', () => {
     });	
 	it('1.2 Test if Change PDF button is disable', () => {
 		config.isCypressPlusEnabled = false;
-		config.showCypressPlus = true;
+		config.SHOW_CYPRESS_PLUS = true;
 		let props = {
 			index:0,
 			permissions: ["elements_add_remove"],
@@ -59,7 +59,7 @@ describe('1. PDF Slate test cases', () => {
 	});
 	it('1.3 Test of Cypress+ Enhanced in Cypress', () => {
 		config.isCypressPlusEnabled = true;
-		config.showCypressPlus= true
+		config.SHOW_CYPRESS_PLUS= true
 		let props = {
 			index:0,
 			permissions: ["elements_add_remove"],

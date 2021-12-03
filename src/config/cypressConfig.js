@@ -91,9 +91,7 @@ let cypressConfig = {
     tcmslatemanifest:"",
     saveElmOnAS: false,
     fullName:'c5test01',
-    isCypressPlusEnabled:true,
-    showCypressPlus:true
-    
+    isCypressPlusEnabled:true 
 }
 
 
