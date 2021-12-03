@@ -12,6 +12,7 @@ class ApiResults extends React.Component {
         }
     }
 
+    //This functions finds any matching assets according to search value
     findMatchingAssets = (assetPopoverData, ValueToBeSearch) => {
         let tempFiguresForResults = []
         const AssetDetails = Object.values(assetPopoverData);
@@ -35,6 +36,7 @@ class ApiResults extends React.Component {
         return tempFiguresForResults
     }
 
+    //This function renders Asset Type & its matching Assets List
     apiResultsJsx = (assetData, selectedFigure, ValueToBeSearch) => {
         let cardForApiResults
         let assetType = Object.keys(assetData)
@@ -42,7 +44,7 @@ class ApiResults extends React.Component {
         let matchingAssets = this.findMatchingAssets(assetData, ValueToBeSearch)
         let assetTypeTitle = assetType + " " + `(${matchingAssets.length})`
         
-        //If number figureforresults has 1> elements then muild cards otherwise
+        //If number matching Assets has 1> elements then List of matching assets is displayed
         if (matchingAssets.length >= 1) {
             cardForApiResults = <>
                 <h3 className="figureCount">{assetTypeTitle}</h3>
@@ -57,6 +59,7 @@ class ApiResults extends React.Component {
         return cardForApiResults;
     }
 
+    //This function calls apiResultsJsx for each Asset Type for eg Figures,Audios,Videos & etc
     renderByAssetType = (assetPopoverData, selectedFigure, ValueToBeSearch) => {
         let assetTypes = Object.keys(assetPopoverData);
         let assetData
