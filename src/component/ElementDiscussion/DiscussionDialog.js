@@ -14,7 +14,7 @@ const TitleTooltip = withStyles({
     fontSize: "11px",
     marginLeft: "20px",
     fontWeight: "50",
-    marginTop: "-5px"
+    marginTop: "5px"
   }
 })(Tooltip);
 
