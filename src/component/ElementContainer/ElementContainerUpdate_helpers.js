@@ -21,7 +21,7 @@ import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
 import { startPdfConversion } from '../PdfSlate/CypressPlusAction';
 
-const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -683,7 +683,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
     const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const isPopupOrShowhideElement = ((allowedParentType.includes(parentElement?.type) && !(updatedData?.metaDataField || updatedData?.sectionType === 'creditsarray'))|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
+    const isPopupOrShowhideElement = ((parentElement?.type === POOPUP_ELEMENT) || (parentElement?.type === SHOW_HIDE && !(updatedData?.metaDataField || updatedData?.sectionType === 'creditsarray'))|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
