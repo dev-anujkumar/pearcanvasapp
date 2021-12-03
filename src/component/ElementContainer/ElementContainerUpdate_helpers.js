@@ -21,6 +21,7 @@ import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
 import { startPdfConversion } from '../PdfSlate/CypressPlusAction';
 
+
 const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
@@ -796,7 +797,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
         updateStore(argObj)
     }
     /**Cypress plus code  for conversion of pdf */
-    if(config.isCypressPlusEnabled){
+    if( updatedData?.type == "element-pdf" && config.isCypressPlusEnabled){
         startPdfConversion(updatedData?.id);
     }
     
