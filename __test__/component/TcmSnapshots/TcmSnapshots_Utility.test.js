@@ -3403,4 +3403,74 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             expect(spyFunction).toHaveBeenCalled();
         })
     })
+    describe('containerSnapshotsInShowhide',()=>{
+        const actionStatus = {
+            action:"create",
+            status:"accepted",
+            fromWhere:"create"
+        }
+        const snapshotsData = {
+            wipData: {
+                type: "showhide",
+                interactivedata: {
+                    show: [
+                        {type: "element-aside"}
+                    ]
+                },
+                contents: {
+                    bodymatter: [{}]
+                },
+                elementdata: {
+                    bodymatter: [{}]
+                }
+            },
+            slateManifestVersioning : {},
+            popupInContainer: null,
+            actionStatus,
+            tag: {},
+            elementId: {
+                parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+            }
+        }
+        it('containerSnapshotsInShowhide if element type is not citations', () => {
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'containerSnapshotsInShowhide');
+            tcmSnapshotUtility.containerSnapshotsInShowhide(snapshotsData, 1, {}, actionStatus,{type:'test'},'abc');
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    })
+    describe('setSlateType',()=>{
+        const actionStatus = {
+            action:"create",
+            status:"accepted",
+            fromWhere:"create"
+        }
+        const snapshotsData = {
+            wipData: {
+                type: "showhide",
+                interactivedata: {
+                    show: [
+                        {type: "element-aside"}
+                    ]
+                },
+                contents: {
+                    bodymatter: [{}]
+                },
+                elementdata: {
+                    bodymatter: [{}]
+                }
+            },
+            slateManifestVersioning : {},
+            popupInContainer: null,
+            actionStatus,
+            tag: {},
+            elementId: {
+                parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+            }
+        }
+        it('setSlateType if element type is not citations', () => {
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setSlateType');
+            tcmSnapshotUtility.setSlateType(snapshotsData,{ figureIn2cAside: { isExist: true, asideData: { parent: [Object] } } },'abc');
+            expect(spyFunction).toHaveBeenCalled();
+        })
+    })
 })
