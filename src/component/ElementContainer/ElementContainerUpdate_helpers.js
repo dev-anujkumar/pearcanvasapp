@@ -20,6 +20,8 @@ import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
 import { startPdfConversion } from '../PdfSlate/CypressPlusAction';
+import elementTypeConstant from './ElementConstants';
+
 
 const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT } = ElementConstants;
 
@@ -796,7 +798,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
         updateStore(argObj)
     }
     /**Cypress plus code  for conversion of pdf */
-    if(config.isCypressPlusEnabled){
+    if( updatedData?.type == elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS){
         startPdfConversion(updatedData?.id);
     }
     
