@@ -138,7 +138,7 @@ export class ReactMarkedIndexEditor extends React.Component {
           tinymce.$(`#${this.props.markedLabelId}`).removeClass('floating-title')
         }
         if(editor.id === 'markedindex-0'){
-          tinymce.$('.printIndex-save-button').removeClass('disabled')
+          tinymce.$('.printIndex-save-button').removeClass('disabled');
         }
       }
       else {
@@ -148,7 +148,7 @@ export class ReactMarkedIndexEditor extends React.Component {
           tinymce.$(`#${this.props.markedLabelId}`).removeClass('transition-none')
         }
         if(editor.id === 'markedindex-0'){
-          tinymce.$('.printIndex-save-button').addClass('disabled')
+          tinymce.$('.printIndex-save-button').addClass('disabled');
         }
       }
     }
@@ -164,9 +164,7 @@ export class ReactMarkedIndexEditor extends React.Component {
           lableElement.classList.remove('hide-cross-ref-label');
       }
 
-      if(this.props.isFilterCrossRefNeeded){
         this.props.filterCrossRef(value);
-      }
     }
   }
 /**
@@ -486,7 +484,16 @@ export class ReactMarkedIndexEditor extends React.Component {
         document.getElementById(currentTarget.id).innerHTML = termText;
       }
       tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
-    })
+    });
+
+    if(e.target.id === "markedindex-cross-reference"){
+      const indexEntry = document.getElementById('markedindex-0')?.innerHTML?.replace('<br data-mce-bogus="1">', "")?.replace('&nbsp;', "");
+      if(indexEntry) {
+        document.getElementById("markedindex-cross-reference").contentEditable = true;
+      } else { 
+        document.getElementById("markedindex-cross-reference").contentEditable = false;
+      }
+    }
   }
 
   render() {

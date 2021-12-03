@@ -1851,6 +1851,10 @@ class ElementContainer extends Component {
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                     {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
+                        {permissions && permissions.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && element?.elementdata?.conversionstatus
+                        && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
+                        }
                         {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
                             if (this.props.projectUsers.length === 0) {
                                 this.props.getProjectUsers();
@@ -2079,7 +2083,13 @@ class ElementContainer extends Component {
         }
         this.props.getProjectUsers();
     }
-
+     /**
+     * @description - This function is for opening edit  button in Cypress Plus
+     */
+    handleEditInCypressPlus = (e,elementId) =>{
+        e.stopPropagation();
+        window.open(`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`, '_blank')
+    }
     /**
      * @description - This function is for handling click event on the label button.
      * @param {event}
