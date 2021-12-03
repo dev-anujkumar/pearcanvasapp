@@ -814,7 +814,6 @@ const prepareAsideTitleForUpdate = (index) => {
 export const updateAsideNumber = (previousData, index,elementId) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
     const activeElementId=elementId;
-    console.log("activeElementId",elementId);
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
     let elementEntityUrn = "", updatedElement
