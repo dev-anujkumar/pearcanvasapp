@@ -58,13 +58,6 @@ class ApiResults extends React.Component {
     }
 
     renderByAssetType = (assetPopoverData, selectedFigure, ValueToBeSearch) => {
-        //Aside Assets & Workedexamples Assets Segregated
-        if(assetPopoverData && assetPopoverData?.asides) {
-            let workedExampleAssets = assetPopoverData.asides.filter(asset => asset.subType === 'workedexample')
-            assetPopoverData['workedexamples'] = workedExampleAssets
-            let asideAssets = assetPopoverData.asides.filter(asset => asset.subType === 'sidebar')
-            assetPopoverData['asides'] = asideAssets
-        }
         let assetTypes = Object.keys(assetPopoverData);
         let assetData
         return assetTypes.map((assetType) => {
