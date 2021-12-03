@@ -818,10 +818,6 @@ export const updateAsideNumber = (previousData, index,elementId) => (dispatch, g
     let currentSlateData = currentParentData[config.slateManifestURN];
     let elementEntityUrn = "", updatedElement
     let titleHTML = prepareAsideTitleForUpdate(index);
-
-    // if(activeElementId ==="" && previousData.id === ""){
-    //     return null;
-    // }
     
     updatedElement = {
         ...previousData,
@@ -913,7 +909,7 @@ export const updateAsideNumber = (previousData, index,elementId) => (dispatch, g
         if (res?.data?.versionUrn && (res?.data?.versionUrn.trim() !== "")) {
             activeElementObject.elementId = res.data.versionUrn
         }
-        // dispatch({
+        // dispatch({  // commented for future reference
         //     type: 'SET_ACTIVE_ELEMENT',
         //     payload: activeElementObject
         // });
