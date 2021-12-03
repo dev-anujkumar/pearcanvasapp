@@ -18,9 +18,9 @@ function PdfSlateComponent(props)  {
 						</div>
 						{config.isCypressPlusEnabled && 
 						<>
-							<div className="slate_assessment_label_enhanced">Cypress+ Enhanced</div>
+							<div className="slate_assessment_data_label enhanced_label">Cypress+ Enhanced</div>
 							<div className="slate_assessment_data_details">
-								<div className="slate_assessment_title_enhanced">N/A</div>
+								<div className="slate_assessment_data_title enhanced_title">N/A</div>
 							</div>
 						</>}
 					</div>
