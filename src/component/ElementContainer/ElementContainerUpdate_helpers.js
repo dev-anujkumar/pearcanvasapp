@@ -19,6 +19,7 @@ import ElementConstants, {
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
+import { startPdfConversion } from '../PdfSlate/CypressPlusAction';
 
 const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN } = ElementConstants;
 
@@ -794,6 +795,10 @@ export const processAndStoreUpdatedResponse = async (params) => {
         }
         updateStore(argObj)
     }
+    /**Cypress plus code  for conversion of pdf */
+    if(config.isCypressPlusEnabled){
+        startPdfConversion(updatedData?.id);
+    }
     
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     config.isSavingElement = false
@@ -896,11 +901,10 @@ export const updateStoreInCanvas = (params) => {
         elementIndex,
         showHideType,
         parentElement,
-        fetchSlateData
+        fetchSlateData,
+        newslateData
     } = params
     //direct dispatching in store
-    const parentData = getState().appStore.slateLevelData;
-    const newslateData = JSON.parse(JSON.stringify(parentData));
    
     //tcm update code
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
