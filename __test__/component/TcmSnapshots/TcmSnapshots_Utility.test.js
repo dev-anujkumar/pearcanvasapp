@@ -3403,4 +3403,50 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             expect(spyFunction).toHaveBeenCalled();
         })
     })
+
+    // describe('Test-24#1 - fetchManifestStatus functions', () => {
+    //     const { slate1, slate2 } = tcmTestData
+    //     let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb",
+    //         manifest2 = "urn:pearson:manifest:2ec00412-840e-40bf-ae11-d399c5067c9a";
+    //     let bodymatter1 = slate1[manifest1].contents.bodymatter,
+    //         bodymatter2 = slate2[manifest2].contents.bodymatter;
+    //     it('14.1 - fetchManifestStatus', () => {
+    //         let bodymatter = [
+    //             {
+
+    //             }
+    //         ];
+    //         let containerElement = {
+    //             asideData: {
+    //                 element: {
+    //                     type: "citations"
+    //                 },
+    //                 parent: {
+    //                     type: "showhide"
+    //                 }
+    //             }
+    //         }
+    //         const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchManifestStatus');
+    //         tcmSnapshotUtility.fetchManifestStatus(bodymatter, containerElement);
+    //         expect(spyFunction).toHaveBeenCalled();
+
+    //     })
+    // })
+
+    describe('Test-24#1 - tcmSnapshotsForCreate functions', () => {
+        it('14.1 - tcmSnapshotsForCreate', () => {
+            config.isPopupSlate = true;
+            let elementCreateData = {
+                response: {
+                    figure: "different"
+                }
+            }
+            let dispatch = jest.fn();
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForCreate');
+            tcmSnapshotUtility.tcmSnapshotsForCreate({}, "", {}, dispatch, 0, "cut");
+            // expect(spyFunction).toHaveBeenCalled();
+
+        })
+    })
+
 })
