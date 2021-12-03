@@ -4,12 +4,17 @@ import { discussionCloseIcon, searchDisussion } from "../../images/ElementButton
 import { Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
+//Function for display tooltip in title
 const TitleTooltip = withStyles({
+  arrow: {
+    color: "black"
+  },
   tooltip: {
+    backgroundColor: "black",
     fontSize: "11px",
-    marginLeft: "40px",
-    fontWeight: "100",
-    marginBottom: "10px"
+    marginLeft: "20px",
+    fontWeight: "50",
+    marginTop: "-5px"
   }
 })(Tooltip);
 
@@ -106,7 +111,7 @@ const DiscussionDialog = ({
                         name={elemendId + "-" + item.discussionUrn}
                         value={item.title}
                       />
-                      <TitleTooltip  title={item.title}>
+                      <TitleTooltip  title={item.title} arrow>
                       <label htmlFor={item.title} className="radioLabelDiscussion">
                         {item.title}
                       </label>
