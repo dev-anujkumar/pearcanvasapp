@@ -126,7 +126,6 @@ function CommunicationChannel(WrappedComponent) {
                     config.citeUrn = message.citeUrn;
                     config.isCypressPlusEnabled = message.isCypressPlusEnabled;
                     config.projectEntityUrn = message.entityUrn;
-                    config.isCypressPlusEnabled = message.isCypressPlusEnabled;
                     config.alfrescoMetaData = message;
                     if (message?.alfresco?.repositoryFolder) {
                         let alfrescoRepository = message.alfresco.repositoryFolder?.split('/')?.[0] || message.alfresco.repositoryFolder
