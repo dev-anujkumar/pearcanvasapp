@@ -78,7 +78,8 @@ class ElementPoetry extends Component {
                                             swappedElementData: swappedElementData,
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'pe',
-                                            poetryId: this.props.element.id
+                                            poetryId: this.props.element.id,
+                                            sectionType: this?.props?.showHideType
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -162,6 +163,9 @@ class ElementPoetry extends Component {
         
         /* Adding parent id and type to update redux store while creating new element inside 2c->Block Poetry->Stanza */
         poetryData = (type === "groupedcontent") ? {...poetryData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
+        
+        /* Adding parent id , type and showHideType to update redux store while creating new element inside SH->Block Poetry->Stanza */
+        poetryData = (type === "showhide") ? { ...poetryData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType } } : poetryData;
         try {
             if (stanzas !== undefined) {
                 if (stanzas.length === 0) {
@@ -176,7 +180,8 @@ class ElementPoetry extends Component {
                            columnContentUrn,
                            parentContentUrn
                        },
-                       stanzaIndex : index
+                       stanzaIndex : index,
+                       showHideType: this.props?.showHideType
                    }
                     return (
                         <React.Fragment key={element.id}>                                   

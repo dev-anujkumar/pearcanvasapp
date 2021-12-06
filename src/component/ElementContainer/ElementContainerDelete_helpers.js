@@ -201,6 +201,15 @@ export const deleteFromStore = (params) => {
                         })
                       
                     })
+                /* To update redux store while deleting new element inside SH->Block Poetry->Stanza */
+                } else if (element?.type == "showhide" && element?.id === poetryData?.parent?.id) {
+                    element?.interactivedata[poetryData?.parent?.showHideType].map((ele) => {
+                        ele?.contents?.bodymatter.forEach((ele2, innerIndex) => {
+                            if (ele2.id === elmId) {
+                                ele.contents.bodymatter.splice(innerIndex, 1);
+                            }
+                        });
+                    });
                 }
             }
             else if (parentUrn && parentUrn.elementType == "manifest") {
@@ -236,6 +245,13 @@ export const deleteFromStore = (params) => {
                 }
                 if (element.id === parentUrn.manifestUrn) {
                     element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
+                }
+            } else if (asideData?.parent?.type === 'showhide' && element.id === asideData?.parent?.id && asideData?.type === "manifestlist") {
+                let section = asideData?.parent?.showHideType;
+                const indexes = asideData?.index?.toString()?.split("-") || [];
+                if (section && indexes.length >= 3) {
+                    let blElemInSh = element.interactivedata[section][indexes[2]];
+                    deleteBlockListElement(elmId, blElemInSh);
                 }
             } else if (element?.type === "manifestlist") {
                 deleteBlockListElement(elmId, element)

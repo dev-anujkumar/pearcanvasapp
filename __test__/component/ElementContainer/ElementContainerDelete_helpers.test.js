@@ -4,7 +4,7 @@ import * as deleteHelpers from '../../../src/component/ElementContainer/ElementC
 import { delInsideWe } from '../../../src/component/ElementContainer/ElementContainerDelete_helpers';
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
-import { slateLevelData, slateLevelDataWithApproved, newslateShowhideData } from "../../../fixtures/containerActionsTestingData";
+import { slateLevelData, slateLevelDataWithApproved, newslateShowhideData, showhidetestData } from "../../../fixtures/containerActionsTestingData";
 import { JSDOM } from 'jsdom'
 
 const middlewares = [thunk];
@@ -268,6 +268,21 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             newParentData: slateLevelData.slateLevelData
         }
         
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
+        deleteHelpers.deleteFromStore(args)
+        expect(spydeleteFromStore).toHaveBeenCalled()
+        spydeleteFromStore.mockClear()
+    })
+    it("deleteFromStore - inside poetry#3 ", () => {
+        let args = { 
+            asideData: null,
+            dispatch: jest.fn(),
+            elmId: "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67",
+            parentUrn: { elementType : "showhide" , id:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540"},
+            index: 3,
+            poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854", parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", showHideType:"show"}  },
+            newParentData: showhidetestData
+        }
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
         deleteHelpers.deleteFromStore(args)
         expect(spydeleteFromStore).toHaveBeenCalled()
