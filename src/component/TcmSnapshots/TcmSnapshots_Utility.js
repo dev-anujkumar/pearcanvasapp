@@ -668,7 +668,7 @@ const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultKeys,ind
  * @param {Object} snapshotsData - Initial Snapshots data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-const tcmSnapshotsCitationPoetry = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate) => {
+export const tcmSnapshotsCitationPoetry = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     let isHead = "", parentUrnToSend={};
@@ -826,7 +826,7 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerElement, type,index,operationType=null) => {
+export const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerElement, type,index,operationType=null) => {
     const { wipData, elementId, tag, actionStatus, slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn } = containerElement
     let popupParent = asideData ? asideData : poetryData ? poetryData : parentUrn;
@@ -1596,7 +1596,7 @@ export const fetchManifestStatus = (bodymatter, containerElement, type, indexes)
  * @param {Object} parentUrn 
  * @returns {Object} asideData with parent data 
  */
-function prepareParentData(asideData, parentUrn) {
+export function prepareParentData(asideData, parentUrn) {
     if(!asideData?.parent) {
         const { type, manifestUrn, columnName, contentUrn, mcId } = parentUrn?.multiColumnDetails;
         asideData.parent = {
