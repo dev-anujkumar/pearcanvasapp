@@ -903,14 +903,14 @@ export const updateStoreInCanvas = (params) => {
         elementIndex,
         showHideType,
         parentElement,
-        fetchSlateData,
-        newslateData
+        fetchSlateData
     } = params
     //direct dispatching in store
-   
+    const slateParentData = getState().appStore.slateLevelData;
+    const newslateData = JSON.parse(JSON.stringify(slateParentData));
     //tcm update code
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
-    const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
+    const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false;
     if (config.tcmStatus) {
         //This check will be removed once Blocklist will support TCM
         const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
