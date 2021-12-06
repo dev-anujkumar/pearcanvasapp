@@ -143,7 +143,6 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => async (dispatch, getState) => {
-    try {
         if(hasReviewerRole()){
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return ;
@@ -190,6 +189,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }
             }
         }
+        try {
         const response = await axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData1,
             {
