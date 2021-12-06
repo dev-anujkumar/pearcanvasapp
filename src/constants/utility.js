@@ -260,10 +260,10 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
 export const checkHTMLdataInsideString = (htmlNode) => {
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlNode;
-    if (tempDiv.firstChild.innerHTML === '<br>' || tempDiv.firstChild.innerHTML === '</br>') {
+    if (tempDiv?.firstChild?.innerHTML === '<br>' || tempDiv?.firstChild?.innerHTML === '</br>') {
         return '';
     } else { 
-        return tempDiv.firstChild.innerHTML;
+        return tempDiv?.firstChild?.innerHTML;
     }
 }
 
