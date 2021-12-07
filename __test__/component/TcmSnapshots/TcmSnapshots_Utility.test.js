@@ -3234,7 +3234,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
         },
         defaultKeys = {action: 'create'},
         containerElement = { 
-            metaDataField: {},
+            metaDataField: 'formattedTitleOnly',
             sectionType: "",
             parentElement: { popupdata: {"formatted-title": "title"} }
         }, type = 'POP_UP', index = 0, operationType = null;
@@ -3261,6 +3261,18 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, containerElement, type,index,operationType);
             expect(spyFunction).toHaveBeenCalled();
         })
+        it('Test-8.5 - no opration type passed', () => {
+            defaultKeys = {action: 'update'}; type = ""; containerElement.sectionType = "";
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInPopupElement');
+            tcmSnapshotUtility.tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, containerElement, type,index);
+            expect(spyFunction).toHaveBeenCalled();
+        })        
+        it('Test-8.6 - when operationType is cut', () => {
+            defaultKeys = {action: 'update'}; operationType='cut'
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsInPopupElement');
+            tcmSnapshotUtility.tcmSnapshotsInPopupElement(snapshotsData, defaultKeys, containerElement, type,index,operationType);
+            expect(spyFunction).toHaveBeenCalled();
+        })        
     });
     describe('Test - 9 tcmSnapshotsInContainerElements ', () => {
         let snapshotsData = {
