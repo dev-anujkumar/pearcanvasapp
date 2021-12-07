@@ -31,7 +31,7 @@ export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue }
         return ""
     }
     else if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
-        return `${imgLabelValue} ${imgNumberValue}`
+        return `${imgLabelValue} ${parentNumber}.${imgNumberValue}`
     }
     return ""
 }
@@ -118,16 +118,36 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, containerNum
 }
 
 export const prepareAutoNumberList = (imagesData) => {
-    const imagesList = { ...imagesData }
-    Object.keys(imagesList).forEach(key => {
-        imagesList[key] = imagesList[key]?.map(item => item.contentUrn)
+    const imagesList = { ...imagesData };
+    /** Destructure the ImageList into an array of Fig-EntityUrns in Order */
+    Object.keys(imagesList).forEach((key) => {
+        imagesList[key] = imagesList[key]?.map((item) => item.contentUrn);
     });
-    Object.keys(imagesList).forEach(key => {
-        imagesList[key] = imagesList[key]?.reduce(function(result, item, index, array) {
-            result[item] = index +1; //a, b, c
+    /** Get the number value for the Fig-Element based on aut-numbering wip values*/
+    //can be replaced with similar logic for getNodeIndex from toc
+    Object.keys(imagesList).forEach((key) => {
+        config.imgCount = 0;
+        imagesList[key] = imagesList[key]?.reduce(function (result, item, index, array) {
+            const activeItem = imagesData[key].find((img) => img.contentUrn === item);
+            let numberValue = config.imgCount;
+            if (activeItem) {
+                if (activeItem?.numberedandlabel === false) {
+                    numberValue = "";
+                } else if (activeItem?.manualoverride?.overridenumbervalue) {
+                    numberValue = activeItem.manualoverride.overridenumbervalue;
+                } else if (activeItem?.manualoverride?.resumenumbervalue) {
+                    numberValue = activeItem.manualoverride.resumenumbervalue;
+                    config.imgCount = activeItem.manualoverride.resumenumbervalue;
+                } else {
+                    numberValue = ++config.imgCount;
+                }
+            }
+            //console.log(item, 'numberValue', numberValue)
+            result[item] = numberValue; //{index: index +1, numberedandlabel: activeItem?.numberedandlabel};
             return result;
-          }, {}) 
+        },
+            {});
     });
-    console.log('imagesList',imagesList)
-    return imagesList
-}
+    //console.log("imagesList", imagesList);
+    return imagesList;
+};
