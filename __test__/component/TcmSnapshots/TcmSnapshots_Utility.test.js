@@ -128,61 +128,61 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
              expect(spyFunction).toHaveBeenCalledWith(aside, actionStatus,asideContainer,"SECTION_BREAK","");
          })
     });
-    describe('Test-3-Function--3--fetchElementWipData', () => {
+    xdescribe('Test-3-Function--3--fetchElementWipData', () => {
         const { slate1, slate2 } = tcmTestData
         let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb",
             manifest2 = "urn:pearson:manifest:2ec00412-840e-40bf-ae11-d399c5067c9a";
         let bodymatter1 = slate1[manifest1].contents.bodymatter,
             bodymatter2 = slate2[manifest2].contents.bodymatter;
 
-        it('Test-3.1-Function--3--fetchElementWipData - Paragraph in Slate', () => {
+        xit('Test-3.1-Function--3--fetchElementWipData - Paragraph in Slate', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
             tcmSnapshotUtility.fetchElementWipData(bodymatter1, 0, 'element-authoredtext')
             expect(spyFunction).toHaveBeenCalledWith(bodymatter1, 0, 'element-authoredtext')
         })
-        it('Test-3.2-Function--3--fetchElementWipData - Section-Break', () => {
+        xit('Test-3.2-Function--3--fetchElementWipData - Section-Break', () => {
             let entityUrn = "urn:pearson:entity:4e42d3a8-f794-4977-9e13-b1e76431d8bf"
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
             tcmSnapshotUtility.fetchElementWipData(bodymatter1, ["2"], 'element-aside', entityUrn)
             expect(spyFunction).toHaveBeenCalledWith(bodymatter1, ["2"], 'element-aside', entityUrn)
         })
-        it('Test-3.3-Function--3--fetchElementWipData - Stanza', () => {
+        xit('Test-3.3-Function--3--fetchElementWipData - Stanza', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
             tcmSnapshotUtility.fetchElementWipData(bodymatter2, "2-3-0", 'stanza')
             expect(spyFunction).toHaveBeenCalledWith(bodymatter2, "2-3-0", 'stanza')
 
         })
-        it('Test-3.4-Function--3--fetchElementWipData - Stanza', () => {
+        xit('Test-3.4-Function--3--fetchElementWipData - Stanza', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
             tcmSnapshotUtility.fetchElementWipData(bodymatter2, "0-1-2-3-0", 'stanza')
             expect(spyFunction).toHaveBeenCalledWith(bodymatter2, "0-1-2-3-0", 'stanza')
 
         })
-        it('Test-3.5-Function--3--fetchElementWipData - Stanza', () => {
+        xit('Test-3.5-Function--3--fetchElementWipData - Stanza', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
             tcmSnapshotUtility.fetchElementWipData(bodymatter2, "0-2-3-0", 'stanza')
             expect(spyFunction).toHaveBeenCalledWith(bodymatter2, "0-2-3-0", 'stanza')
 
         })
-        it('Test-3.6-Function--3--fetchElementWipData - Stanza', () => {
+        xit('Test-3.6-Function--3--fetchElementWipData - Stanza', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
             tcmSnapshotUtility.fetchElementWipData(bodymatter2, "3-0-2", 'showhide')
             expect(spyFunction).toHaveBeenCalledWith(bodymatter2, "3-0-2", 'showhide')
 
         })
-        it('Test-3.7-Function--3--fetchElementWipData - Stanza', () => {
+        xit('Test-3.7-Function--3--fetchElementWipData - Stanza', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
             tcmSnapshotUtility.fetchElementWipData(bodymatter2, "6-0-2-0", 'showhide')
             expect(spyFunction).toHaveBeenCalledWith(bodymatter2, "6-0-2-0", 'showhide')
 
         })
-        it('Test-3.8-Function--3--fetchElementWipData - Stanza', () => {
+        xit('Test-3.8-Function--3--fetchElementWipData - Stanza', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
             tcmSnapshotUtility.fetchElementWipData(bodymatter2, "7-0-2-0-0", 'showhide')
             expect(spyFunction).toHaveBeenCalledWith(bodymatter2, "7-0-2-0-0", 'showhide')
 
         })
-        it('Test-3.9-Function--3--fetchElementWipData - Stanza', () => {
+        xit('Test-3.9-Function--3--fetchElementWipData - Stanza', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchElementWipData');
             tcmSnapshotUtility.fetchElementWipData(bodymatter2, "8-0-2-0-0", 'showhide')
             expect(spyFunction).toHaveBeenCalledWith(bodymatter2, "8-0-2-0-0", 'showhide')
@@ -232,15 +232,15 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             expect(spyFunction).toHaveBeenCalledWith(bodymatter1, "0-0", 'popup')
         })
     });
-    describe('Test-4-Function--4--fetchParentData', () => {
+    xdescribe('Test-4-Function--4--fetchParentData', () => {
         let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb";
         let bodymatter1 = tcmTestData.slate1[manifest1].contents.bodymatter;
-        it('Test-4.1-Function--4--fetchParentData - Paragraph in Aside', () => {
+        xit('Test-4.1-Function--4--fetchParentData - Paragraph in Aside', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchParentData');
             tcmSnapshotUtility.fetchParentData(bodymatter1, ["1", "0"])
             expect(spyFunction).toHaveBeenCalledWith(bodymatter1, ["1", "0"])
         })
-        it('Test-4.2-Function--4--fetchParentData - Aside', () => {
+        xit('Test-4.2-Function--4--fetchParentData - Aside', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'fetchParentData');
             tcmSnapshotUtility.fetchParentData(bodymatter1, 1)
             expect(spyFunction).toHaveBeenCalledWith(bodymatter1, 1)
@@ -276,7 +276,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             expect(spyFunction).toHaveBeenCalledWith(bodymatter1, ["2", "1", "1"], {})
         })
     });
-    describe('Test-5-Function--5--checkContainerElementVersion', () => {
+    xdescribe('Test-5-Function--5--checkContainerElementVersion', () => {
         it('Test-5.1-Function--5--checkContainerElementVersion - parentStatus !== "approved"', () => {
             let versionStatus = {
                 parentStatus: "wip",
@@ -1046,7 +1046,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
 
         })
     });
-    describe('Test-22-Function--22--popupWipData', () => {
+    xdescribe('Test-22-Function--22--popupWipData', () => {
         const { slate1, slate2 } = tcmTestData
         let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb",
             manifest2 = "urn:pearson:manifest:2ec00412-840e-40bf-ae11-d399c5067c9a";
@@ -1079,7 +1079,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
 
         })
-        it('Test-22.4-Function--22--popupWipData', () => {
+        xit('Test-22.4-Function--22--popupWipData', () => {
             let bodymatter = bodymatter2
             let eleIndex = [3, 0, 2, 4]
             let operationType = "delet"
@@ -1088,7 +1088,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
 
         })
-        it('Test-22.5-Function-22--popupWipData', () => {
+        xit('Test-22.5-Function-22--popupWipData', () => {
             let bodymatter = bodymatter2
             let eleIndex = [0, 1, 2, 3, 4]
             let operationType = "delete"
@@ -1097,7 +1097,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'popupWipData');
             tcmSnapshotUtility.popupWipData(bodymatter, eleIndex, operationType, wipData);
         })
-        it('Test-22.6-Function--22--popupWipData', () => {
+        xit('Test-22.6-Function--22--popupWipData', () => {
             let bodymatter = bodymatter2
             let eleIndex = [0, 1]
             let operationType = "delete"
@@ -1109,7 +1109,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
     })
 
     describe('Test-16-Function--tcmSnapshotsOnDefaultSlate', () => {
-        it('Test-16.1-Function--tcmSnapshotsOnDefaultSlate', () => {
+        xit('Test-16.1-Function--tcmSnapshotsOnDefaultSlate', () => {
             config.isPopupSlate = true;
             const actionStatus = {
                 action:"create",
@@ -1158,7 +1158,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             
             tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, containerElement, null, true, {}, 1, false);
         })
-        it('Test-16.2-Function--tcmSnapshotsOnDefaultSlate', () => {
+        xit('Test-16.2-Function--tcmSnapshotsOnDefaultSlate', () => {
             config.isPopupSlate = true;
             const actionStatus = {
                 action:"create",
@@ -1211,7 +1211,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, containerElement, null, true, {}, 1, false);
         
         })
-        it('Test-16.3-Function--tcmSnapshotsOnDefaultSlate', () => {
+        xit('Test-16.3-Function--tcmSnapshotsOnDefaultSlate', () => {
             config.isPopupSlate = true;
             const actionStatus = {
                 action:"create",
@@ -1267,7 +1267,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, containerElement, null, true, {}, 1, "copy");
 
         })
-        it('Test-16.4-Function--tcmSnapshotsOnDefaultSlate', () => {
+        xit('Test-16.4-Function--tcmSnapshotsOnDefaultSlate', () => {
             config.isPopupSlate = true;
             const actionStatus = {
                 action:"create",
@@ -1325,7 +1325,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             }
             tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, containerElement, null, true, {}, 1, "copy");
         })
-        it('Test-16.5-Function--tcmSnapshotsOnDefaultSlate', () => {
+        xit('Test-16.5-Function--tcmSnapshotsOnDefaultSlate', () => {
             config.isPopupSlate = true;
             const actionStatus = {
                 action:"create",
@@ -1394,7 +1394,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
     })
 
     describe('Test-17-Function--tcmSnapshotsInContainerElements', () => {
-        it('Test-17.1-Function--tcmSnapshotsInContainerElements', () => {
+        xit('Test-17.1-Function--tcmSnapshotsInContainerElements', () => {
             let containerElement = {
                 showHideObj: {
                     currentElement: {
@@ -1429,7 +1429,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             expect(spyFunction).toHaveBeenCalledWith(containerElement, snapshotsData, {}, 0, true, null);
         
         })
-        it('Test-17.2-Function--tcmSnapshotsInContainerElements', () => {
+        xit('Test-17.2-Function--tcmSnapshotsInContainerElements', () => {
             let containerElement = {
                 showHideObj: {
                     currentElement: {
@@ -1464,7 +1464,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             expect(spyFunction).toHaveBeenCalledWith(containerElement, snapshotsData, {}, 0, true, null);
         
         })
-        it('Test-17.3-Function--tcmSnapshotsInContainerElements', () => {
+        xit('Test-17.3-Function--tcmSnapshotsInContainerElements', () => {
             let containerElement = {
                 showHideObj: {
                     containerinSH: {
@@ -1519,7 +1519,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
     })
 
     describe('Test-18-Function--prepareSnaphotPoetry', () => {
-        it('Test-18.1-Function--prepareSnaphotPoetry', () => {
+        xit('Test-18.1-Function--prepareSnaphotPoetry', () => {
             let containerElement =  {
                 asideData: {
                     grandParent: {
@@ -1542,8 +1542,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
 
     })
 
-    describe('Test-19-Function--tcmSnapshotsForUpdate', () => {
-        it('Test-19.1-Function--tcmSnapshotsForUpdate', () => {
+    xdescribe('Test-19-Function--tcmSnapshotsForUpdate', () => {
+        xit('Test-19.1-Function--tcmSnapshotsForUpdate', () => {
             config.isPopupSlate = true;
             let elementUpdateData = {
                 CurrentSlateStatus: 'wip',
@@ -1967,7 +1967,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
         })
     })
 
-    describe('Test-6-Function--6--fetchManifestStatus', () => {
+    xdescribe('Test-6-Function--6--fetchManifestStatus', () => {
         const { slate1, slate2 } = tcmTestData
         let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb",
             manifest2 = "urn:pearson:manifest:2ec00412-840e-40bf-ae11-d399c5067c9a";
@@ -2204,7 +2204,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.prepareFigureElementSnapshots(setSemanticsSnapshotsData.figure, actionStatus, index);
             expect(spyFunction).toHaveBeenCalledWith(setSemanticsSnapshotsData.figure, actionStatus, index);
         })
-        it('tcmSnapshotsForUpdate', () => {
+        xit('tcmSnapshotsForUpdate', () => {
             let update = {
                 "CurrentSlateStatus": "wip",
                 "currentParentData": {
@@ -2222,7 +2222,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.tcmSnapshotsForUpdate(update,index);
             expect(spyFunction).toHaveBeenCalledWith(update,index);
         })
-        it('tcmSnapshotsForCreate', () => {
+        xit('tcmSnapshotsForCreate', () => {
             let update = { bodymatter : {},
             currentParentData: {"urn:pearson:manifest:21bcd0e7-b4f9-48ae-938a-2e144d461df7": {}},
             response: {id: "urn:pearson:work:1ebb31ac-8468-4d4c-b6ae-59fd69709870", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1", elementdata: {}, html: {}}
@@ -2367,7 +2367,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
         //     tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, {}, null, true, {}, 1, false);
         //     expect(spyFunction).toHaveBeenCalledWith(snapshotsData, null, {}, null, true, {}, 1, false);
         // })
-        it('tcmSnapshotsOnDefaultSlate - showhide case', () => {
+        xit('tcmSnapshotsOnDefaultSlate - showhide case', () => {
             config.isPopupSlate = true;
             const actionStatus = {
                 action:"create",
@@ -2390,7 +2390,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, {}, null, true, {}, 1, false);
             expect(spyFunction).toHaveBeenCalledWith(snapshotsData, null, {}, null, true, {}, 1, false);
         })
-        it('tcmSnapshotsOnDefaultSlate - poetry_element case', () => {
+        xit('tcmSnapshotsOnDefaultSlate - poetry_element case', () => {
             config.isPopupSlate = true;
             const actionStatus = {
                 action:"create",
@@ -2411,7 +2411,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.tcmSnapshotsOnDefaultSlate(snapshotsData, null, {}, null, true, {}, 1, false);
         
         })
-        it('tcmSnapshotsInContainerElements - versioning delete case', () => {
+        xit('tcmSnapshotsInContainerElements - versioning delete case', () => {
             config.isPopupSlate = true;
             const actionStatus = {
                 action:"create",
@@ -3341,7 +3341,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
         })
     })
     describe('Test-11 - prepareSnapshots_ShowHide functions', () => {
-        it('Test - 11.1 ', () => {
+        xit('Test - 11.1 ', () => {
            let wipData = {
                 "id":"urn:pearson:manifest:b7aca87b-cf1e-4677-8942-4ad00e5bfe1f",
                 "type":"popup",
@@ -3367,7 +3367,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
         })
     })
     describe('Test-12 - tcmSnapshotsOnDefaultSlate functions', () => {
-        it('Test - 12.1 tcmSnapshotsMultiColumn  if()', () => {
+        xit('Test - 12.1 tcmSnapshotsMultiColumn  if()', () => {
            let snapshotsData = {
             "tag":{ "parentTag":"POP" },
             "wipData":{
@@ -3472,7 +3472,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
     })
 
     describe('Test-24#1 - tcmSnapshotsForCreate functions', () => {
-        it('14.1 - tcmSnapshotsForCreate', () => {
+        xit('14.1 - tcmSnapshotsForCreate', () => {
             config.isPopupSlate = true;
             let elementCreateData = {
                 response: {
@@ -3516,7 +3516,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 parentId: "urn:pearson:work:3525235-324323-4432sfe31"
             }
         }
-        it('containerSnapshotsInShowhide if element type is not citations', () => {
+        xit('containerSnapshotsInShowhide if element type is not citations', () => {
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'containerSnapshotsInShowhide');
             tcmSnapshotUtility.containerSnapshotsInShowhide(snapshotsData, 1, {}, actionStatus,{type:'test'},'abc');
             expect(spyFunction).toHaveBeenCalled();
