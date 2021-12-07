@@ -3,7 +3,7 @@ import tcmTestData from '../../../fixtures/tcmSnapshotTestData.js';
 import config from '../../../src/config/config.js';
 import { showHide } from '../../../fixtures/ElementSHowHideData.js';
 import { poetryElem } from '../../../fixtures/ElementPoetryTestData.js';
-import { container } from 'webpack';
+
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshot_Actions.js', () => {
    return {
     getLatestVersion: ()=>{
@@ -2643,6 +2643,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.prepareAndSendTcmData(elementDetails, wipData, defaultKeys, defaultKeys, 1, "wip");
             expect(spyFunction).toHaveBeenCalledWith(elementDetails, wipData, defaultKeys, defaultKeys, 1, "wip");
         })
+        
         it('setElementTypeAndUrn - element-aside', async () => {
             config.isPopupSlate = true;
             const eleId = {
@@ -3641,5 +3642,83 @@ describe('Function--prepareParentData', () => {
         const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareParentData');
         tcmSnapshotUtility.prepareParentData(asideData,parentUrn1);
         expect(spyFunction).toHaveBeenCalledWith(asideData,parentUrn1);
+    })
+})
+
+describe("prepareMetablock funtion",()=>{
+    let element ={figuredata:{programlanguage:'abc',syntaxhighlighting:false,numbered:false}}
+    let actionStatus ={}
+    it("prepareMetablock",()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareMetablock');
+        tcmSnapshotUtility.prepareMetablock(element,actionStatus);
+        expect(spyFunction).toHaveBeenCalledWith(element,actionStatus);
+    })
+})
+describe("checkParentData funtion",()=>{
+    let containerElement ={poetryData:''}
+    it("checkParentData",()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'checkParentData');
+        tcmSnapshotUtility.checkParentData(containerElement);
+        expect(spyFunction).toHaveBeenCalledWith(containerElement);
+    })
+})
+describe("setDefaultKeys funtion",()=>{
+    config.tcmStatus=true
+    let actionStatus={}, isContainer={}, inPopupSlate={}, slatePopupManifestUrn={}, cutCopyParentUrn={}
+    it("setDefaultKeys",()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setDefaultKeys');
+        tcmSnapshotUtility.setDefaultKeys(actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn);
+        expect(spyFunction).toHaveBeenCalledWith(actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn);
+    })
+})
+describe("prepareFigureElementSnapshots funtion",()=>{
+    let actionStatus={}, element={type:'element-citation'}
+    it("prepareFigureElementSnapshots",()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareFigureElementSnapshots');
+        tcmSnapshotUtility.prepareFigureElementSnapshots(element, actionStatus, 1);
+        expect(spyFunction).toHaveBeenCalledWith(element, actionStatus, 1);
+    })
+    it("prepareFigureElementSnapshots when element not passed",()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareFigureElementSnapshots');
+        tcmSnapshotUtility.prepareFigureElementSnapshots('', actionStatus, 1);
+        expect(spyFunction).toHaveBeenCalledWith("", actionStatus, 1);
+    })
+})
+describe("checkElementsInPopupInContainer funtion",()=>{
+    it("checkElementsInPopupInContainer",()=>{
+        config.popupParentElement.parentElement['type']='test'
+        config.popupParentElement['popupParentUrn']='test'
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'checkElementsInPopupInContainer');
+        tcmSnapshotUtility.checkElementsInPopupInContainer();
+        expect(spyFunction).toHaveBeenCalledWith();
+    })
+})
+describe("setSlateType funtion",()=>{
+    let wipData={}, type={} ,containerElement={poetryData:true}
+    it("setSlateType",()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setSlateType');
+        tcmSnapshotUtility.setSlateType(wipData, containerElement, type);
+        expect(spyFunction).toHaveBeenCalledWith(wipData, containerElement, type);
+    })
+})
+describe("getAssessmentType funtion",()=>{
+    let key='tdx', isStandAlone=true
+    it("getAssessmentType is standalone",()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'getAssessmentType');
+        tcmSnapshotUtility.getAssessmentType(key, isStandAlone);
+        expect(spyFunction).toHaveBeenCalledWith(key, isStandAlone);
+    })
+    it("getAssessmentType is not standalone",()=>{
+        isStandAlone=false
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'getAssessmentType');
+        tcmSnapshotUtility.getAssessmentType(key, isStandAlone);
+        expect(spyFunction).toHaveBeenCalledWith(key, isStandAlone);
+    })
+})
+describe("getAssessmentStatus funtion",()=>{
+    let assessmentId='123'
+    it("getAssessmentStatus",()=>{
+        jest.spyOn(tcmSnapshotUtility, 'getAssessmentType');
+        tcmSnapshotUtility.getAssessmentStatus(assessmentId);
     })
 })
