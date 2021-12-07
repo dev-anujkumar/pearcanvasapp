@@ -911,7 +911,7 @@ export const checkContainerPopupVersion = async (containerElement) => {
  * @function checkElementsInPopupInContainer
  * @description Check if Popup Slate is inside a Container Element
 */
-const checkElementsInPopupInContainer = () => {
+export const checkElementsInPopupInContainer = () => {
     let isPopupInContainer = config.popupParentElement && config.popupParentElement.parentElement && config.popupParentElement.parentElement.type == 'popup' ? true : false;        
     let hasPopupAsideData = config.popupParentElement && ('popupAsideData' in config.popupParentElement && !isEmpty(config.popupParentElement.popupAsideData)) ? true : false;
     let hasPopupParentUrn = config.popupParentElement && ('popupParentUrn' in config.popupParentElement && !isEmpty(config.popupParentElement.popupParentUrn)) ? true : false;

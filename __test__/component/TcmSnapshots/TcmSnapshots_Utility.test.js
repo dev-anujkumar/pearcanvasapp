@@ -3643,3 +3643,47 @@ describe('Function--prepareParentData', () => {
         expect(spyFunction).toHaveBeenCalledWith(asideData,parentUrn1);
     })
 })
+
+describe('checkElementsInPopupInContainer-hasPopupParentUrn false case', () => {
+    config.popupParentElement = {
+            parentElement: {
+                type: "showhide"
+            },
+            popupParentUrn: {
+                urn: "urn"
+            }
+    }
+    it('checkElementsInPopupInContainer-hasPopupParentUrn false case', () => {
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'checkElementsInPopupInContainer');
+        tcmSnapshotUtility.checkElementsInPopupInContainer();
+    })
+    
+})
+
+describe('checkContainerPopupVersion-manifest urn not equal to popupAsideData id', () => {
+    let containerElement = {
+        popupAsideData: {
+            element: {
+                status: "approved",
+                elementdata: {
+                    bodymatter: [
+                        {
+                            id: 2,
+                            status: "notapproved"
+                        }
+                    ]
+                }
+            },
+            id: 1
+        },
+        popupParentUrn: {
+            manifestUrn: 2
+        }
+    }
+    it('checkContainerPopupVersion-manifest urn not equal to popupAsideData id', () => {
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'checkContainerPopupVersion');
+        tcmSnapshotUtility.checkContainerPopupVersion(containerElement);
+    })
+    
+})
+
