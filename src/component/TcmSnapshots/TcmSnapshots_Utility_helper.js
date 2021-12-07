@@ -1,7 +1,46 @@
 import { fetchElementsTag } from "./ElementSnapshot_Utility";
+import TcmConstants from "./TcmConstants";
 import { prepareAndSendTcmData, prepareTcmSnapshots, setElementTypeAndUrn } from "./TcmSnapshots_Utility";
 
 let operType = "";
+const {
+    elementType,
+    containerType,
+    AUTHORED_TEXT,
+    BLOCKFEATURE,
+    ELEMENT_LIST,
+    ELEMENT_ASIDE,
+    POETRY_ELEMENT,
+    POETRY_STANZA,
+    MULTI_COLUMN,
+    SECTION_BREAK,
+    WORKED_EXAMPLE,
+    CONTAINER_INTRO,
+    CITATION_GROUP,
+    CITATION_ELEMENT,
+    WE_MANIFEST,
+    SLATE,
+    MULTI_COLUMN_GROUP,
+    LEARNING_OBJECTIVE,
+    POP_UP,
+    POPUP_ELEMENT,
+    FORMATTED_TITLE,
+    formattedTitleField,
+    POSTER_TEXT_OBJ,
+    parentType,
+    bqAttrHtmlTrue,
+    bqAttrHtmlFalse,
+    bqHiddenText,
+    FIGURE,
+    ELEMENT_ASSESSMENT,
+    allowedFigureTypesForTCM,
+    SHOWHIDE,
+    SHOW_HIDE,
+    SMART_LINK, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT,
+    CONTAINER, WE_TYPE, ELEMENT_TYPE_PDF
+}
+    = TcmConstants;
+
 export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type,index, isPopupSlate,operationType=null) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
