@@ -17,6 +17,9 @@ const store = mockStore({
   },
   appStore : {
     permissions: permissions
+  },
+  projectInfo: {
+    workflowRole: null
   }
 });
 describe('Testing CommentsPanel component with props', () => {
@@ -25,11 +28,11 @@ describe('Testing CommentsPanel component with props', () => {
   describe('Testing rendering component with props', () => {
     it('should have search component', () => {
       expect(wrapper.find(".panel-navigation__header-title")).toHaveLength(1)
-    }),
+    })
 
-      it('Should have 1 comment canvas', () => {
-        expect(wrapper.find('.comments-canvas')).toHaveLength(1)
-      })
+    it('Should have 1 comment canvas', () => {
+      expect(wrapper.find('.comments-canvas')).toHaveLength(1)
+    })
 
   })
   describe('Testing component with comments', () => {

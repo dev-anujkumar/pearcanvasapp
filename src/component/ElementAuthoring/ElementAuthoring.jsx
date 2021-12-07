@@ -16,7 +16,7 @@ export class ElementAuthoring extends Component {
           index={this.props.index}
           elementId={this.props.elementId}
           element={this.props.element}
-          placeholder={this.props.placeholder || "Type Something..."}
+          placeholder={this.props.placeholder!==undefined?this.props.placeholder:"Type Something..."}
           className={className}
           model={model}
           tagName={this.props.tagName}

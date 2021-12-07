@@ -219,6 +219,7 @@
 
 .markedindex-secondlevel-header .tooltip .tooltiptext{
     height: auto;
+    word-break: break-all;
 }
 
 .markedindex-secondlevel-header .tooltip .tooltip-bottom::after{

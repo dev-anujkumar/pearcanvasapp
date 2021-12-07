@@ -94,7 +94,7 @@ let cypressConfig = {
     autoNumberingDetails: {},
     imageIndex: {},
     imageCount: 1,
-    isCypressPlusEnabled:false
+    isCypressPlusEnabled:true
 }
 
 
