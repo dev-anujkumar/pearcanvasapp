@@ -122,11 +122,12 @@ export const prepareAutoNumberList = (imagesData) => {
     Object.keys(imagesList).forEach(key => {
         imagesList[key] = imagesList[key]?.map(item => item.contentUrn)
     });
-    // Object.keys(imagesList).forEach(key => {
-    //     imagesList[key] = imagesList[key]?.reduce(function(result, item, index, array) {
-    //         result[index] = item; //a, b, c
-    //         return result;
-    //       }, {}) 
-    // });
+    Object.keys(imagesList).forEach(key => {
+        imagesList[key] = imagesList[key]?.reduce(function(result, item, index, array) {
+            result[item] = index +1; //a, b, c
+            return result;
+          }, {}) 
+    });
     console.log('imagesList',imagesList)
+    return imagesList
 }

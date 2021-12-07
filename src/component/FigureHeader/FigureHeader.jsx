@@ -29,8 +29,8 @@ export const FigureHeader = (props) => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
         setLabelNumberSetting(dropdownVal)
     }, [])
-    console.log('figImageList', figImageList)
-    console.log('config.imageIndex',config.imageIndex)
+    // console.log('figImageList', figImageList)
+    // console.log('config.imageIndex',config.imageIndex)
     /**---------------------------------------- */
     const handleCloseDropDrown = () => {
         setLabelDropDown(false)
@@ -111,12 +111,12 @@ export const FigureHeader = (props) => {
     }
 
     let figureIndex = figIndex > -1 ? figIndex + 1 : undefined;
-    console.log('figureIndex', figureIndex)
+    //console.log('figureIndex', figureIndex)
     const autoNumberFieldsData = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)
     const imgLabelValue = autoNumberFieldsData.label//props.model?.displayedLabel ?? 'Figure'
     const parentNumber = 'test'//getNumberValue(props.model, figureIndex, containerNumber, figIndexParent)//onfig.imageCount++
     let imgNumberValue = 'data'//getNumberData(figIndexParent,props.model)
-    console.log('imgNumberValue',imgNumberValue)
+    //console.log('imgNumberValue',imgNumberValue)
     imgNumberValue = `${props.model.contentUrn === "urn:pearson:entity:2abec94f-a2d7-4df9-bdac-4e233a37362c" ? 'P1.': parentNumber}${imgNumberValue}`
     if(labelNumberSetting === AUTO_NUMBER_SETTING_REMOVE_NUMBER ){
         imgNumberValue =''
