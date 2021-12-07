@@ -8,7 +8,7 @@ import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
 import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
 import { getTitleSubtitleModel } from '../../constants/utility';
-import { tcmSnapshotsOnDefaultSlate } from './TcmSnapshots_Utility_helper'
+import { tcmSnapshotsOnDefaultSlate } from './TcmSnapshotsOnDefaultSlate'
 /*************************Import Constants*************************/
 import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
@@ -767,7 +767,7 @@ export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerE
  * @param {Object} parentElement - Popup Element data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index) => {
+export const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index) => {
     let elementDetails;
     const { parentElement, sectionType } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
@@ -922,7 +922,7 @@ export const checkElementsInPopupInContainer = () => {
  * @function checkParentData = () =>
  * @description Check if Popup Slate is inside a Container Element
 */
-const checkParentData = (containerElement) => {
+export const checkParentData = (containerElement) => {
     let poetryData = containerElement && ((containerElement.poetryData != undefined ||containerElement.poetryData != null)  && !isEmpty(containerElement.poetryData)) ? true : false;
     let asideData = containerElement && ((containerElement.asideData != undefined ||containerElement.asideData != null)  && !isEmpty(containerElement.asideData)) ? true : false;
     let parentUrn = containerElement && ((containerElement.parentUrn != undefined ||containerElement.parentUrn != null)  && !isEmpty(containerElement.parentUrn)) ? true : false;
@@ -1161,7 +1161,7 @@ export const setSlateType = (wipData, containerElement, type) => {
     }
     return isContainer
 }
-const getAssessmentType = (key, isStandAlone) => {
+export const getAssessmentType = (key, isStandAlone) => {
     const assessmentType =  ASSESSMENT_TYPE.find(item => item.type === key);
     if(assessmentType) {
         return isStandAlone? assessmentType.standAloneLabel : assessmentType.label
@@ -1169,7 +1169,7 @@ const getAssessmentType = (key, isStandAlone) => {
     return key;
 }
 
-const getAssessmentStatus = (assessmentId) => {
+export const getAssessmentStatus = (assessmentId) => {
     if(assessmentId) {
         const assessmentData = store?.getState()?.assessmentReducer?.[assessmentId];
         const assessmentStatus = assessmentData?.assessmentStatus;
@@ -1322,7 +1322,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
     return snapshotData
 }
 
-const prepareMetablock = (element, actionStatus) => {
+export const prepareMetablock = (element, actionStatus) => {
     let programLang = element.figuredata.programlanguage && element.figuredata.programlanguage != 'Select' ? element.figuredata.programlanguage : ''
     let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == false ? 'OFF' : 'ON'
     let toggleNumber = element.figuredata.numbered == false ? 'OFF' : 'ON'
