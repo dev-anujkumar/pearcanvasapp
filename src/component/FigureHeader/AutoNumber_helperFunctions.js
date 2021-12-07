@@ -38,31 +38,39 @@ export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue }
 
 export const getContainerNumber = (slateAncestors) => {
     const containerEntityUrn = getContainerEntityUrn(slateAncestors)
-    console.log('containerEntityUrn',containerEntityUrn)
+    console.log('containerEntityUrn', containerEntityUrn)
     switch (containerEntityUrn) {
         case 'FrontMatter':
             return 'F'
         case 'BackMatter':
             return 'B'
-        case 'Part':
-            const partEntityUrn = containerEntityUrn?.split('-')?.[1]
-            const partNumber = config?.autoNumberingDetails?.partOrderList[partEntityUrn]
-            return partNumber ? `P.${partNumber}` : 'P'
+        // case 'Part':
+        // return 'P'
+        // const partEntityUrn = containerEntityUrn?.split('-')?.[1]
+        // const partNumber = config?.autoNumberingDetails?.partOrderList[partEntityUrn]
+        // return partNumber ? `P${partNumber}` : 'P'
         default:
-            return config?.autoNumberingDetails?.chapterOrderList[containerEntityUrn] || '1'
+            if (config?.autoNumberingDetails?.partOrderList?.hasOwnProperty(containerEntityUrn)) {
+                const partNumber = config?.autoNumberingDetails?.partOrderList[partEntityUrn]
+                return partNumber ? `P${partNumber}` : 'P'
+            }
+            else {
+                return config?.autoNumberingDetails?.chapterOrderList[containerEntityUrn] || '1'
+            }
     }
 }
 
 export const getContainerEntityUrn = (slateAncestors) =>{
     const moduleTypes = ['module', 'appendix']
     const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate']
-    console.log('slateAncestors',slateAncestors,slateAncestors?.matterType)
+    //console.log('slateAncestors',slateAncestors,slateAncestors?.matterType)
     if (slateAncestors?.matterType !== 'BodyMatter') {
         return slateAncestors.matterType
     }
     else if (slateTypes.includes(slateAncestors?.label)) {//"container-introduction", 
         if ((slateAncestors?.label === "container-introduction") && (slateAncestors?.ancestor?.label === 'part')) {
-            return `Part-${slateAncestors?.ancestor?.entityUrn}`
+            return slateAncestors?.ancestor?.entityUrn
+            // return `Part-${slateAncestors?.ancestor?.entityUrn}`
         }
         else if ((slateAncestors?.label === "container-introduction") || (slateAncestors?.ancestor?.label === 'chapter')) {
             return slateAncestors?.ancestor?.entityUrn
@@ -107,4 +115,18 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, containerNum
             number: `${containerNumber}.100`
         }
     }
+}
+
+export const prepareAutoNumberList = (imagesData) => {
+    const imagesList = { ...imagesData }
+    Object.keys(imagesList).forEach(key => {
+        imagesList[key] = imagesList[key]?.map(item => item.contentUrn)
+    });
+    // Object.keys(imagesList).forEach(key => {
+    //     imagesList[key] = imagesList[key]?.reduce(function(result, item, index, array) {
+    //         result[index] = item; //a, b, c
+    //         return result;
+    //       }, {}) 
+    // });
+    console.log('imagesList',imagesList)
 }
