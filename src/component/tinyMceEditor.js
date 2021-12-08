@@ -1184,6 +1184,7 @@ export class TinyMceEditor extends Component {
             console.log("the cursour length is ", cursorLength, textLength);
             if(e.keyCode === 38) {
                 if(cursorLength === 0) {
+                    e.preventDefault();
                     console.log("up arrwo and 0")
                 }
                 else {
@@ -1194,6 +1195,7 @@ export class TinyMceEditor extends Component {
             if(e.keyCode === 40) {
                 if(cursorLength === textLength) {
                     console.log("down arrwo and last")
+                    e.preventDefault();
                 }
                 else {
                     e.stopPropagation();
@@ -4179,8 +4181,6 @@ export class TinyMceEditor extends Component {
         
     }
     normalKeyDownHandler = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
         if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
