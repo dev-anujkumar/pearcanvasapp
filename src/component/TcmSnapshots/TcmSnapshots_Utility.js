@@ -6,38 +6,50 @@
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
-import { setSemanticsSnapshots, fetchElementsTag, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
+import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
 import { getTitleSubtitleModel } from '../../constants/utility';
-import { tcmSnapshotsOnDefaultSlate } from './TcmSnapshotsOnDefaultSlate'
 /*************************Import Constants*************************/
 import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
+import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
+import { indexOfSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
+import { MULTI_COLUMN_2C } from '../../constants/Element_Constants.js';
+import { tcmSnapshotsOnDefaultSlate } from './TcmSnapshotsOnDefaultSlate.js';
 
 
 let operType = "";
 const {
+    elementType,
     containerType,
+    AUTHORED_TEXT,
     BLOCKFEATURE,
+    ELEMENT_LIST,
     ELEMENT_ASIDE,
     POETRY_ELEMENT,
+    POETRY_STANZA,
     MULTI_COLUMN,
     SECTION_BREAK,
     WORKED_EXAMPLE,
     CONTAINER_INTRO,
     CITATION_GROUP,
     CITATION_ELEMENT,
+    WE_MANIFEST,
     SLATE,
     MULTI_COLUMN_GROUP,
+    LEARNING_OBJECTIVE,
     POP_UP,
     POPUP_ELEMENT,
+    FORMATTED_TITLE,
     formattedTitleField,
     POSTER_TEXT_OBJ,
+    parentType,
     bqAttrHtmlTrue,
     bqAttrHtmlFalse,
     bqHiddenText,
     FIGURE,
     ELEMENT_ASSESSMENT,
+    allowedFigureTypesForTCM,
     SHOWHIDE,
     SHOW_HIDE,
     SMART_LINK, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT,
@@ -225,7 +237,7 @@ export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerE
  * @param {Object} parentElement - Popup Element data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-export const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index) => {
+const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index) => {
     let elementDetails;
     const { parentElement, sectionType } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
@@ -285,7 +297,7 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-export const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerElement, type,index,operationType=null) => {
+const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerElement, type,index,operationType=null) => {
     const { wipData, elementId, tag, actionStatus, slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn } = containerElement
     let popupParent = asideData ? asideData : poetryData ? poetryData : parentUrn;
@@ -369,7 +381,7 @@ export const checkContainerPopupVersion = async (containerElement) => {
  * @function checkElementsInPopupInContainer
  * @description Check if Popup Slate is inside a Container Element
 */
-export const checkElementsInPopupInContainer = () => {
+const checkElementsInPopupInContainer = () => {
     let isPopupInContainer = config.popupParentElement && config.popupParentElement.parentElement && config.popupParentElement.parentElement.type == 'popup' ? true : false;        
     let hasPopupAsideData = config.popupParentElement && ('popupAsideData' in config.popupParentElement && !isEmpty(config.popupParentElement.popupAsideData)) ? true : false;
     let hasPopupParentUrn = config.popupParentElement && ('popupParentUrn' in config.popupParentElement && !isEmpty(config.popupParentElement.popupParentUrn)) ? true : false;
@@ -380,7 +392,7 @@ export const checkElementsInPopupInContainer = () => {
  * @function checkParentData = () =>
  * @description Check if Popup Slate is inside a Container Element
 */
-export const checkParentData = (containerElement) => {
+const checkParentData = (containerElement) => {
     let poetryData = containerElement && ((containerElement.poetryData != undefined ||containerElement.poetryData != null)  && !isEmpty(containerElement.poetryData)) ? true : false;
     let asideData = containerElement && ((containerElement.asideData != undefined ||containerElement.asideData != null)  && !isEmpty(containerElement.asideData)) ? true : false;
     let parentUrn = containerElement && ((containerElement.parentUrn != undefined ||containerElement.parentUrn != null)  && !isEmpty(containerElement.parentUrn)) ? true : false;
@@ -435,7 +447,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementId =  `${eleId.parentId}${eleId.columnId ? "+" + eleId.columnId : ""}${eleId.childId ? "+" + eleId.childId : ""}`
     }
 
-    if (parentElement?.parent?.type === SHOWHIDE) { // create Aside/CG in S/H || create elements in aside in s/h
+    if (parentElement?.parent?.type === SHOWHIDE && (parentElement?.element?.type !== POETRY_ELEMENT)) { // create Aside/CG in S/H || create elements in aside in s/h
         const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP]
         const elem = containerElement?.showHideObj?.currentElement?.type ? containerElement?.showHideObj?.currentElement : asideData;
         if ((containersInSH.includes(elem?.type)) || (containersInSH.includes(elem?.type) && asideData?.parent?.type === SHOWHIDE)) {
@@ -515,6 +527,14 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             //let grandParentTag = tag.grandParent.split(":")[0];
             elementTag = `${poetryParentURN?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
+        } 
+        else if (showHideObj?.element?.type === SHOWHIDE || poetryAsideData?.type === SHOWHIDE) {
+            const showSectionType = showHideObj?.sectionType ? showHideObj?.sectionType : showHideObj?.element?.sectionType ? showHideObj?.element?.sectionType : showHideObj?.showHideType
+            let section = showSectionType ? showSectionType : poetryAsideData?.sectionType;
+            let shId = showHideObj?.element?.id ? showHideObj?.element?.id : poetryAsideData?.id;
+            let showHideSection = getShowHideTag(section);
+            elementTag = `SH:${showHideSection}:${tag.parentTag}:${tag.childTag}`
+            elementId = `${shId}+${eleId.parentId}+${eleId.childId}`
         }
     }
 
@@ -619,7 +639,7 @@ export const setSlateType = (wipData, containerElement, type) => {
     }
     return isContainer
 }
-export const getAssessmentType = (key, isStandAlone) => {
+const getAssessmentType = (key, isStandAlone) => {
     const assessmentType =  ASSESSMENT_TYPE.find(item => item.type === key);
     if(assessmentType) {
         return isStandAlone? assessmentType.standAloneLabel : assessmentType.label
@@ -627,7 +647,7 @@ export const getAssessmentType = (key, isStandAlone) => {
     return key;
 }
 
-export const getAssessmentStatus = (assessmentId) => {
+const getAssessmentStatus = (assessmentId) => {
     if(assessmentId) {
         const assessmentData = store?.getState()?.assessmentReducer?.[assessmentId];
         const assessmentStatus = assessmentData?.assessmentStatus;
@@ -780,7 +800,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
     return snapshotData
 }
 
-export const prepareMetablock = (element, actionStatus) => {
+const prepareMetablock = (element, actionStatus) => {
     let programLang = element.figuredata.programlanguage && element.figuredata.programlanguage != 'Select' ? element.figuredata.programlanguage : ''
     let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == false ? 'OFF' : 'ON'
     let toggleNumber = element.figuredata.numbered == false ? 'OFF' : 'ON'
@@ -824,25 +844,3 @@ const isEmpty = (obj) => {
     }
     return false;
 }
-
-/**
- * 
- * @param {Object} asideData 
- * @param {Object} parentUrn 
- * @returns {Object} asideData with parent data 
- */
-export function prepareParentData(asideData, parentUrn) {
-    if(!asideData?.parent) {
-        const { type, manifestUrn, columnName, contentUrn, mcId } = parentUrn?.multiColumnDetails;
-        asideData.parent = {
-            type,
-            id: mcId || manifestUrn,
-            columnName,
-            parentContentUrn: contentUrn,
-            columnContentUrn: ""
-        }
-    }
-}
-
-
-

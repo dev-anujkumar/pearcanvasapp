@@ -12,7 +12,7 @@ import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
-const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP } = ElementConstants;
+const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP, POETRY_ELEMENT } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
     const {
@@ -155,8 +155,8 @@ export const onPasteSuccess = async (params) => {
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
     }
-    /* Paste Aside/WE/CG into S/H */
-    const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP];
+    /* Paste Aside/WE/CG/Poetry into S/H */
+    const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP, POETRY_ELEMENT];
     if (asideData?.type === SHOW_HIDE && containersInSH.includes(responseData?.type)) {
         const manifestUrn = parentUrn?.manifestUrn;
         try {
@@ -307,6 +307,12 @@ export const onPasteSuccess = async (params) => {
                             groupElem1.contents.bodymatter.splice(cutIndex, 0, responseData)
                         }
                     })
+                })
+            } else if (item?.type == "showhide") { /* paste stanza inside PE in ShowHide */
+                item?.interactivedata[poetryData?.parent?.showHideType].map((element) => {
+                    if (element?.type === 'poetry' && element?.id === poetryData?.parentUrn) {
+                        element.contents.bodymatter.splice(cutIndex, 0, responseData);
+                    }
                 })
             }
         })  

@@ -44,6 +44,28 @@ export const showHide = {
                     "tcm": true,
                     "feedback": false,
                     "comments": false
+                },
+                {
+                    "id": "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa38362",
+                    "type": "poetry",
+                    "subtype": "",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": ""
+                    },
+                    "html": {
+                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                    },
+                    "versionUrn": "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c",
+                    "contentUrn": "urn:pearson:entity:096be0c4-5f3d-4ae0-a5b7-52571b51dbc6",
+                    "status": "wip",
+                    "tcm": true,
+                    "feedback": false,
+                    "comments": false,
+                    "contents": {
+                        "bodymatter": []
+                    }
                 }
             ],
             "hide": [
