@@ -2174,3 +2174,52 @@ export default {
         }
     }
 }
+export const snapshotsData = {
+    wipData: {
+        id:'',
+        type: 'group',
+        subtype: "",
+        contentUrn:'',
+        interactivedata: {
+            'show': []
+        },
+        contents: {
+            bodymatter: [{}]
+        },
+        elementdata: {
+            bodymatter: [
+                {
+                    type:'manifest',
+                    id:'123',
+                    contents:{
+                        bodymatter:[
+                            {
+                                type:'element-list',
+                                id:'123'
+                            },
+                        ]
+                    }
+                },
+            ]
+        },      
+        groupeddata: {
+            bodymatter: [
+                {
+                groupdata:{
+                    bodymatter:[
+                        {
+                        type:'tcmSnapshotsMultiColumn'
+                        }
+                    ]
+                }
+                }
+            ]
+        }
+    },
+    tag: {
+        parentTag: "test"
+    },
+    elementId: {
+        parentId: "test"
+    }
+}
