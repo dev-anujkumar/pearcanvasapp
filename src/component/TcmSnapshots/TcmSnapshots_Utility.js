@@ -767,7 +767,7 @@ export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerE
  * @param {Object} parentElement - Popup Element data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index) => {
+export const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index) => {
     let elementDetails;
     const { parentElement, sectionType } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
