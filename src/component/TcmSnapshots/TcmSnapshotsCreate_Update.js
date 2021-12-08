@@ -1,4 +1,3 @@
-import { STORE_OLD_ASSET_FOR_TCM } from "../../constants/Action_Constants";
 import { generateWipDataForFigure } from "./ElementSnapshot_Utility";
 import { getLatestVersion } from "./TcmSnapshot_Actions";
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
@@ -7,8 +6,6 @@ import TcmConstants from "./TcmConstants";
 
 let operType = "";
 const {
-    elementType,
-    containerType,
     AUTHORED_TEXT,
     BLOCKFEATURE,
     ELEMENT_LIST,
@@ -18,29 +15,18 @@ const {
     MULTI_COLUMN,
     SECTION_BREAK,
     WORKED_EXAMPLE,
-    CONTAINER_INTRO,
     CITATION_GROUP,
     CITATION_ELEMENT,
     WE_MANIFEST,
-    SLATE,
     MULTI_COLUMN_GROUP,
     LEARNING_OBJECTIVE,
-    POP_UP,
     POPUP_ELEMENT,
     FORMATTED_TITLE,
-    formattedTitleField,
-    POSTER_TEXT_OBJ,
     parentType,
-    bqAttrHtmlTrue,
-    bqAttrHtmlFalse,
-    bqHiddenText,
     FIGURE,
     ELEMENT_ASSESSMENT,
     allowedFigureTypesForTCM,
     SHOWHIDE,
-    SHOW_HIDE,
-    SMART_LINK, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT,
-    CONTAINER, WE_TYPE, ELEMENT_TYPE_PDF
 }
     = TcmConstants;
 
