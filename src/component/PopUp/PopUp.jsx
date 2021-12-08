@@ -412,7 +412,11 @@ class PopUp extends React.Component {
             return (
                 <>
                     <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+<<<<<<< Updated upstream
                     <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{'Are you sure you want to proceed?'}</div>
+=======
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{'Do you want to proceed?'}</div>
+>>>>>>> Stashed changes
                 </>
             )
         }

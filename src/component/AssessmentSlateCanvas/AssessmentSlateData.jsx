@@ -12,7 +12,7 @@ import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
-import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON, FULL_ASSESSMENT_LEARNOSITY, Resource_Type, UPDATE_ASSESSMENT_TYPE } from './AssessmentSlateConstants.js';
+import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON, FULL_ASSESSMENT_LEARNOSITY, Resource_Type, UPDATE_ASSESSMENT_TYPE,CHANGE_USAGE_TYPE } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
@@ -37,7 +37,9 @@ class AssessmentSlateData extends Component {
             searchTitle: '',
             filterUUID: '',
             updateAssessmentTypePopup: false,
+            changeUsageTypePopup:false,
             updatedAssessmentType:'',
+            updatedUsageType:'',
             showUpdatePopup:false,
             isUpdateFinal:false,
             openUsageDropdown:false,
@@ -499,17 +501,34 @@ class AssessmentSlateData extends Component {
      * @param e - event triggered 
     */
     handleAssessmentUsageTypeChange = (usageType) => {
+        console.log("usageType",usageType)
+        const isElmLearnosity = (activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY) ? true : false
+        if (isElmLearnosity && assessmentReducer) {
+            const newUsageType = assessmentReducer[assessmentSlateObj.assessmentId]
+            if (assessmentReducer.dataFromElm) {
+                const { dataFromElm } = assessmentReducer;
+                this.setState({
+                    showChangeUsageTypePopup: true,
+                    updatedUsageType:newtype
+                });
+            }else{
+                setChangeUsageType()
+            }
+        }
 
+    }
+    setChangeUsageType(){
         this.setState({
             activeAssessmentUsageType: usageType,
             openUsageDropdown: false,
-            openAssessmentDropdown: false
+            openAssessmentDropdown: false,
+            changeUsageTypePopup: true
         });
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false) {
             this.props.handleAssessmentBlur(usageType)
         }
-
     }
+    
 
     /*** @description - This function is to set Placeholder values in AS
      * @param type - assessment format
@@ -607,6 +626,52 @@ class AssessmentSlateData extends Component {
         </>
         return usageType;
     }
+    /**@description -shows changeUsageType Popup when you select other UsageTypes in Final Slate */
+    showChangeUsageTypePopup = () => {
+        this.showCanvasBlocker(true);
+        return (
+            <PopUp
+                togglePopup={this.handleChangeUsageTypePopup}
+                dialogText={CHANGE_USAGE_TYPE}
+                warningHeaderText={`Warning`}
+                lOPopupClass="lo-warning-txt"
+                UsagePopup={true}
+                agree={this.setChangeUsageType}
+            />
+        )
+    }
+
+    /**@description handles cancel in changeUsageType Popup */
+    handleChangeUsageTypePopup = () => {
+        this.showCanvasBlocker(false);
+        this.setState({
+            changeUsageTypePopup: false,
+        })
+    }
+
+    /**-----@description function for updating UsageType on Clicking Proceed on the Popup */
+    setChangeUsageType = () => {
+        this.showCanvasBlocker(false);
+        this.setState({
+            changeUsageTypePopup: false,
+        })
+        const newUsageType = Object.keys(usageTypeList).find(key => usageTypeList[key] === this.state.updatedUsageType)
+        let dataToSend = {
+            newtype: newUsageType,
+            usageType: this.state.activeAssessmentUsageType,
+            calledFrom: "newUsageType"
+        }
+        this.props.handleAssessmentBlur(dataToSend, () => {
+            this.setState({
+                isUpdateFinal: true
+            })
+        this.props.setCurrentCiteTdx({});
+        this.AssessmentSearchTitle('', '');
+        this.props.setAssessmentFilterParams("", "");
+        });
+        this.setChangeUsageType(this.state.updatedUsageType);
+    }
+
 
     /**@description -shows updateAssessment Popup when you select other AssessmentTypes in Final Slate */
     showUpdateAssessmentTypePopup = () => {
@@ -726,6 +791,7 @@ class AssessmentSlateData extends Component {
                     {this.renderAssessmentSlate()}
                     {this.state.showUpdatePopup && this.showCustomPopup()}
                     {this.state.updateAssessmentTypePopup && this.showUpdateAssessmentTypePopup()}
+                    {this.state.changeUsageTypePopup && this.showchangeUsageTypePopup()}
                 </div>
             );
         } catch (error) {
