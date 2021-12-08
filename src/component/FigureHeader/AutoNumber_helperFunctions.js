@@ -27,10 +27,10 @@ export const setAutoNumberSettingValue = (element) => {
 
 
 export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue }) => {
-    if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) {
-        return ""
-    }
-    else if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
+    // if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) {
+    //     return ""
+    // } else 
+    if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
         return `${imgLabelValue} ${parentNumber}.${imgNumberValue}`
     }
     return ""
@@ -38,7 +38,6 @@ export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue }
 
 export const getContainerNumber = (slateAncestors) => {
     const containerEntityUrn = getContainerEntityUrn(slateAncestors)
-    console.log('containerEntityUrn', containerEntityUrn)
     switch (containerEntityUrn) {
         case 'FrontMatter':
             return 'F'
@@ -63,14 +62,12 @@ export const getContainerNumber = (slateAncestors) => {
 export const getContainerEntityUrn = (slateAncestors) =>{
     const moduleTypes = ['module', 'appendix']
     const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate']
-    //console.log('slateAncestors',slateAncestors,slateAncestors?.matterType)
     if (slateAncestors?.matterType !== 'BodyMatter') {
         return slateAncestors.matterType
     }
-    else if (slateTypes.includes(slateAncestors?.label)) {//"container-introduction", 
+    else if (slateTypes.includes(slateAncestors?.label)) {
         if ((slateAncestors?.label === "container-introduction") && (slateAncestors?.ancestor?.label === 'part')) {
             return slateAncestors?.ancestor?.entityUrn
-            // return `Part-${slateAncestors?.ancestor?.entityUrn}`
         }
         else if ((slateAncestors?.label === "container-introduction") || (slateAncestors?.ancestor?.label === 'chapter')) {
             return slateAncestors?.ancestor?.entityUrn
@@ -124,7 +121,7 @@ export const prepareAutoNumberList = (imagesData) => {
         imagesList[key] = imagesList[key]?.map((item) => item.contentUrn);
     });
     /** Get the number value for the Fig-Element based on aut-numbering wip values*/
-    //can be replaced with similar logic for getNodeIndex from toc
+    //can be replaced with the logic for getNodeIndex from toc
     Object.keys(imagesList).forEach((key) => {
         config.imgCount = 0;
         imagesList[key] = imagesList[key]?.reduce(function (result, item, index, array) {
