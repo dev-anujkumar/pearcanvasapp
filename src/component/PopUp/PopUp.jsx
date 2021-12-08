@@ -210,6 +210,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if (props.UsagePopup) {
+            return (
+                <div className={`dialog-buttons`}>
+                    <span className={`proceed-button`} onClick={(e) => props.agree(false, e)}>{props.proceedButton}</span>
+                    <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
         if(props.isOwnersSlate){
             return (
                 <div className={`dialog-buttons`}>
@@ -239,7 +247,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment||props.isDeleteAssetPopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment||props.isDeleteAssetPopup||props.UsagePopup) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -282,7 +290,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary  || props.isTCMCanvasPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate ||props.isDeleteAssetPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary  || props.isTCMCanvasPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate ||props.isDeleteAssetPopup||props.UsagePopup) {
             return null
         }
         else {
@@ -400,6 +408,14 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if (props.UsagePopup) {
+            return (
+                <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{'Are you sure you want to proceed?'}</div>
+                </>
+            )
+        }
         else if (props.isOwnersSlate) {
             return (
                 <>
@@ -424,7 +440,7 @@ class PopUp extends React.Component {
 
 
     renderTcmPopupIcons = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate ||props.isDeleteAssetPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate ||props.isDeleteAssetPopup||props.UsagePopup) {
             return null
         }
         else {
