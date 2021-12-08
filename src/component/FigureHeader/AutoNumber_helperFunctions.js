@@ -26,7 +26,7 @@ export const setAutoNumberSettingValue = (element) => {
 }
 
 
-export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue }) => {
+export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue }, parentNumber) => {
     // if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) {
     //     return ""
     // } else 

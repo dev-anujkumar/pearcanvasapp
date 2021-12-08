@@ -25,6 +25,10 @@ export const FigureHeader = (props) => {
     const [labelNumberSettingDropDown, setLabelNumberSettingDropDown] = useState(false);
     const [showLabelField, setShowLabelField] = useState(true);
     const [showNumberField, setShowNumberField] = useState(true);
+    // const [state,setState] = useState({
+    //     figureLabelValue: props.model?.displayedLabel ?? 'Figure',
+        
+    // })
     useEffect(() => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
         setLabelNumberSetting(dropdownVal)
@@ -99,7 +103,7 @@ export const FigureHeader = (props) => {
         }
     }
     const { figureHtmlData, previewClass, figLabelClass, figTitleClass, onFigureImageFieldBlur, onFigureImageFieldFocus } = props
-    const containerNumber = getContainerNumber(slateAncestors)
+    const containerNumber = getContainerNumber(slateAncestors) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
     const autoNumberFieldsData = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)
     const imgLabelValue = autoNumberFieldsData.label//props.model?.displayedLabel ?? 'Figure'
