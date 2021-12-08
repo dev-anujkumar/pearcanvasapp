@@ -48,9 +48,12 @@
   }
   
   .modal__close {
+    width: 24px;
+    height: 24px;
     position: absolute;
-    right: 3em;
+    top: 1em;
     cursor: pointer;
+    left: 57em;
   }
   
   .modal__close:after,
@@ -134,7 +137,7 @@
    */
   /* start */
   .containerApo {
-      position: fixed;
+      /* position: absolute; */
       width: 716px;
       top: 10.4%;
       right: 0;
@@ -203,7 +206,7 @@
   }
 
   .figureCount {
-    font-size: 14px;
+    font-size: 12px;
     font-family: sans-serif;
     font-weight: 600;
     margin-top: 24px;
