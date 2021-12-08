@@ -2222,15 +2222,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             tcmSnapshotUtility.tcmSnapshotsForUpdate(update,index);
             expect(spyFunction).toHaveBeenCalledWith(update,index);
         })
-        xit('tcmSnapshotsForCreate', () => {
-            let update = { bodymatter : {},
-            currentParentData: {"urn:pearson:manifest:21bcd0e7-b4f9-48ae-938a-2e144d461df7": {}},
-            response: {id: "urn:pearson:work:1ebb31ac-8468-4d4c-b6ae-59fd69709870", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1", elementdata: {}, html: {}}
-            }
-            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForCreate');
-            tcmSnapshotUtility.tcmSnapshotsForCreate(update,"TEXT");
-            expect(spyFunction).toHaveBeenCalledWith(update,"TEXT");
-        })
+        
         it('prepareTcmSnapshots  - popup element', () => {
             config.popupParentElement = {
                 parentElement:{
@@ -3481,22 +3473,6 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'setFigureElementContentSnapshot');
             tcmSnapshotUtility.setFigureElementContentSnapshot(element, actionStatus);
             expect(spyFunction).toHaveBeenCalled();
-        })
-    })
-
-    describe('Test-24#1 - tcmSnapshotsForCreate functions', () => {
-        xit('14.1 - tcmSnapshotsForCreate', () => {
-            config.isPopupSlate = true;
-            let elementCreateData = {
-                response: {
-                    figure: "different"
-                }
-            }
-            let dispatch = jest.fn();
-            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForCreate');
-            tcmSnapshotUtility.tcmSnapshotsForCreate({}, "", {}, dispatch, 0, "cut");
-            // expect(spyFunction).toHaveBeenCalled();
-
         })
     })
 
