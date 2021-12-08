@@ -39,7 +39,7 @@ import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } f
 /**
  * @description function will be called on image src add and fetch resources from Alfresco
  */
-export const handleC2MediaClick = (permissions, editor, element) => {
+export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlfrescoElement) => {
     let alfrescoPath = config.alfrescoMetaData;
     if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {
@@ -52,6 +52,11 @@ export const handleC2MediaClick = (permissions, editor, element) => {
                     elementId: element.id,
                     editor: true}
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                const messageDataToSaveInlineImage = {
+                    id: element.id,
+                    editor: true
+                }
+                saveSelectedAlfrescoElement(messageDataToSaveInlineImage);
             } else {
                 // props.accessDenied(true)
             }
