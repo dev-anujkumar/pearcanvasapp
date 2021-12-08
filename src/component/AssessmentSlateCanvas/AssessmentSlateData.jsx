@@ -502,21 +502,51 @@ class AssessmentSlateData extends Component {
     */
     handleAssessmentUsageTypeChange = (usageType) => {
         console.log("usageType",usageType)
-        const isElmLearnosity = (activeAssessmentType == PUF || activeAssessmentType == LEARNOSITY) ? true : false
-        if (isElmLearnosity && assessmentReducer) {
-            const newUsageType = assessmentReducer[assessmentSlateObj.assessmentId]
-            if (assessmentReducer.dataFromElm) {
-                const { dataFromElm } = assessmentReducer;
-                this.setState({
-                    showChangeUsageTypePopup: true,
-                    updatedUsageType:newtype
-                });
-            }else{
-                setChangeUsageType()
-            }
-        }
+        const { assessmentSlateObj, assessmentReducer } = this.props;
+        const newAssessmentData = assessmentReducer[assessmentSlateObj.assessmentId]
+        console.log("newAssessmentData.intendedUsage",newAssessmentData.intendedUsage)
+        console.log("newAssessmentData.intendedUsage condition",newAssessmentData.intendedUsage?.indexOf(usageType)>-1)
+        const isElmLearnosity = (this.state.activeAssessmentType == PUF || this.state.activeAssessmentType == LEARNOSITY) ? true : false
+        
+        if (isElmLearnosity && newAssessmentData.intendedUsage && !(newAssessmentData.intendedUsage.includes(usageType))) {
 
-    }
+            // if (isElmLearnosity && assessmentReducer) {
+            //     const newAssessmentData = assessmentReducer[assessmentSlateObj.assessmentId]
+            //     if (assessmentReducer.dataFromElm) {
+            //         const { dataFromElm } = assessmentReducer;
+            //         if ( dataFromElm.usageType && !(dataFromElm.intendedUsage === this.props.usageType)) {
+                        
+            //         } else if ();
+            //         }
+            //     } else if (assessmentSlateObj?.assessmentId && assessmentSlateObj.title && newAssessmentData?.assessmentTitle) {
+            //         this.updateElmLearnosityOnRefresh(prevProps, this.props)
+            //     }
+            // }
+
+            // // const newUsageType = assessmentReducer[this.state.activeAssessmentUsageType]
+            // if (assessmentReducer.dataFromElm) {
+            //     const { intendedUsage } = assessmentReducer;
+            this.setState({
+                showChangeUsageTypePopup: true,
+                // updatedUsageType:usageType
+                });
+        } else {
+            this.setChangeUsageType
+
+            // this.setState({
+            //     activeAssessmentUsageType: usageType,
+            //     openUsageDropdown: false,
+            //     openAssessmentDropdown: false,
+            //     changeUsageTypePopup: true
+            // });
+            // if (this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false) {
+            //             this.props.handleAssessmentBlur(usageType)
+            //         }
+                }
+            }
+        
+
+    
     setChangeUsageType(){
         this.setState({
             activeAssessmentUsageType: usageType,
@@ -593,7 +623,6 @@ class AssessmentSlateData extends Component {
 
     /*** @description This function is to show Approved/Unapproved Status on AS */
     showElmVersionStatus = () => {
-        console.log("response")
         let elmAssessment = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId];
         if (elmAssessment) {
             return (<ElmUpdateButton
