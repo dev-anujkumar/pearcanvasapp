@@ -124,6 +124,7 @@ function CommunicationChannel(WrappedComponent) {
                     config.ssoToken = message.ssoToken;
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
+                    config.isCypressPlusEnabled = message.isCypressPlusEnabled;
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
                     if (message?.alfresco?.repositoryFolder) {

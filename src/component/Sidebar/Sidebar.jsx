@@ -585,6 +585,10 @@ class Sidebar extends Component {
     }
 
     handleAsideNumber = (toggleAsideNumber) => {
+        let hasAsideTitleData = this.props?.activeElement?.asideNumber || false;
+        if(hasAsideTitleData === true){
+            return false
+        }
         if (!hasReviewerRole() && !config.savingInProgress) {
             let newToggleValue = toggleAsideNumber;
             this.props.enableAsideNumbering(!newToggleValue, this.state.activeElementId);
