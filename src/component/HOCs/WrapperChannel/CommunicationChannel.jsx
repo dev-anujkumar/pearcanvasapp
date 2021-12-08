@@ -293,7 +293,8 @@ function CommunicationChannel(WrappedComponent) {
                     if (this.props?.alfrescoReducer?.savedElement) {
                         message = {
                             ...message,
-                            ...savedElement
+                            ...this.props.alfrescoReducer?.savedElement,
+                            isEditor: this.props.alfrescoReducer.savedElement?.editor ?? undefined
                         }
                     }
                     message.launchAlfrescoPopup = false

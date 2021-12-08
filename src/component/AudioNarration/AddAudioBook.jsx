@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { showTocBlocker} from '../../js/toggleLoader'
 import config from '../../config/config';
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
-import { alfrescoPopup } from '../AlfrescoPopup/Alfresco_Action'
+import { alfrescoPopup, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
 import axios from 'axios';
 
 /**
@@ -75,8 +75,18 @@ class AddAudioBook extends React.Component {
                     let messageObj = { citeName:  citeName, 
                         citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
                         elementId: this.props.elementId,
-                        calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary }
+                        calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary 
+                    }
+
                         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                        const messageDataToSaveAudioBook = {
+                            id: this.props.elementId,
+                            calledFrom: 'NarrativeAudio',
+                            calledFromGlossaryFootnote: this.props.isGlossary,
+                            editor: undefined
+                        }
+                        this.props.saveSelectedAlfrescoElement(messageDataToSaveAudioBook);
+
                 } else {
                     this.props.accessDenied(true)
                 }
