@@ -27,7 +27,7 @@ const alfresco = {
    "associatedArt":[
       
    ],
-   "authorName":"Kapil Dev Arya",
+   "authorName":"c5test09",
    "bookCover":"https://cite-media-stg.pearson.com/legacy_paths/bd2def8c-e6b2-4822-aafb-7e75bfbfa90f/cover.jpg",
    "configObj":{
       "env":"dev",

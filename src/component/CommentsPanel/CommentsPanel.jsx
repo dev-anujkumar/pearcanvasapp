@@ -269,7 +269,6 @@ class CommentsPanel extends React.Component {
     renderComment = (commentObject) => {
         let { filters } = this.state;
         let {users} = this.props;
-        // console.log(users, "checking users ishant");
         let roles = this.getRoleOption(users);
         let finalFilteredComments = this.filterComments(commentObject, filters)
         if (finalFilteredComments && finalFilteredComments.length > 0) {

@@ -37,6 +37,9 @@ const BlockList = (props) => {
                  indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
                  placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? "Press Shift+Tab to move out" : "Type something...";
             }
+            if(item.type === "element-authoredtext" && item?.html?.text.includes('imageAssetContent')){
+                placeholder = '';
+            }
             return (
                 <ElementContainer
                     element={item}
