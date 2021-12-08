@@ -25,6 +25,9 @@ describe('Testing Markedindex cross-reference component with props', () => {
     });
 
     it('should test change popUpStatus', () => {
+        jest.spyOn(document, 'getElementById').mockImplementation(() => {
+            return { innerHTML: ""}
+        });
         wrapper.find('div.markedindex-secondlevel-label').simulate('click');
     });
 
