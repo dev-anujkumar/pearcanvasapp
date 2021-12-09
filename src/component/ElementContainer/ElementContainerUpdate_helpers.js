@@ -19,7 +19,7 @@ import ElementConstants, {
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
-import { startPdfConversion } from '../PdfSlate/CypressPlusAction';
+import { startPdfConversion,poolFunc} from '../PdfSlate/CypressPlusAction';
 import elementTypeConstant from './ElementConstants';
 
 
@@ -798,8 +798,11 @@ export const processAndStoreUpdatedResponse = async (params) => {
         updateStore(argObj)
     }
     /**Cypress plus code  for conversion of pdf */
-    if( updatedData?.type == elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS){
-        startPdfConversion(updatedData?.id);
+    if (updatedData?.type == elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS) {
+        const response = await startPdfConversion(updatedData?.id)
+        if (response?.data?.status === 'success') {
+            poolFunc(updatedData?.id);
+        }
     }
     
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
