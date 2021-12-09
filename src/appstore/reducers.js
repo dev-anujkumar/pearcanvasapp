@@ -100,10 +100,7 @@ const INITIAL_STATE = {
         smartlinks: ["No Label", "Custom"],
         video: ["No Label", "Custom"]
     },
-    asideTitleData: {
-        isAsideNumber:false,
-        elementId: ""
-    }
+    asideTitleData: []
 };
 
 const INITIAL_ACTION = {
@@ -353,10 +350,18 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 figureDropdownData: action.payload
             }
         case CHECK_ASIDE_NUMBER:
-            return{
+            let asideTitleData = state.asideTitleData;
+            asideTitleData = asideTitleData.filter(function (data) {
+                return data.elementId !== action.payload.elementId
+            })
+            return {
                 ...state,
-                asideTitleData: action.payload
+                asideTitleData: [...asideTitleData, action.payload]
             }
+            // return{
+            //     ...state,
+            //     asideTitleData: action.payload
+            // }
 
         default:
             return state;

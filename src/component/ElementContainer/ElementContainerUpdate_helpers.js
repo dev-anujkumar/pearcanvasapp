@@ -19,8 +19,11 @@ import ElementConstants, {
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
+import { startPdfConversion } from '../PdfSlate/CypressPlusAction';
+import elementTypeConstant from './ElementConstants';
 
-const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN } = ElementConstants;
+
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -682,7 +685,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
     const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const isPopupOrShowhideElement = ((allowedParentType.includes(parentElement?.type) && !updatedData?.elementType)|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
+    const isPopupOrShowhideElement = ((parentElement?.type === POOPUP_ELEMENT) || (parentElement?.type === SHOW_HIDE && !(updatedData?.metaDataField || updatedData?.sectionType === 'creditsarray'))|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
@@ -794,6 +797,10 @@ export const processAndStoreUpdatedResponse = async (params) => {
         }
         updateStore(argObj)
     }
+    /**Cypress plus code  for conversion of pdf */
+    if( updatedData?.type == elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS){
+        startPdfConversion(updatedData?.id);
+    }
     
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     config.isSavingElement = false
@@ -899,12 +906,11 @@ export const updateStoreInCanvas = (params) => {
         fetchSlateData
     } = params
     //direct dispatching in store
-    const parentData = getState().appStore.slateLevelData;
-    const newslateData = JSON.parse(JSON.stringify(parentData));
-   
+    const slateParentData = getState().appStore.slateLevelData;
+    const newslateData = JSON.parse(JSON.stringify(slateParentData));
     //tcm update code
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
-    const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false   
+    const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false;
     if (config.tcmStatus) {
         //This check will be removed once Blocklist will support TCM
         const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)

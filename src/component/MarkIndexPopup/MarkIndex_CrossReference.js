@@ -29,13 +29,26 @@ export const CrossReference = ({crossRefValue}) => {
         }
     };
 
-    const changePopUpStatus = () => {
-        setPopUpStatus(true);
+    const changePopUpStatus = value => {
+        setPopUpStatus(value);
+    }
+
+    const handleDropDownClick = () => {
+        const crossRefData = document.getElementById("markedindex-cross-reference").innerHTML?.replace('<br data-mce-bogus="1">', "");
+        const indexEntryData = document.getElementById("markedindex-0").innerHTML?.replace('<br data-mce-bogus="1">', "")?.replace('&nbsp;', "");
+        if(crossRefData.length > 2 && !popUpStatus && indexEntryData) changePopUpStatus(true);
     }
 
     const filterCrossRef = value => {
-        let newDropDown = dropDown.filter(word => word.includes(value));
-        setFilteredDropDown(newDropDown);
+        if(value?.length > 2){
+            if(!popUpStatus){
+                changePopUpStatus(true);
+            }
+            let newDropDown = dropDown.filter(word => word.includes(value));
+            setFilteredDropDown(newDropDown);
+        } else {
+            changePopUpStatus(false);
+        }
     }
 
     const handleSelectedCheckboxValue = (item) => {
@@ -72,7 +85,7 @@ export const CrossReference = ({crossRefValue}) => {
             <div className="markedindex-secondlevel-header">
                 <div id="index-secondlevel-attacher">
                     <Tooltip direction="bottom" showClass={crossRef.length === 0 ? true : false} tooltipText={crossRef.join(',')}>
-                        <div className="markedindex-secondlevel-label" onClick={changePopUpStatus}>
+                        <div className="markedindex-secondlevel-label" onClick={handleDropDownClick}>
                             <label className="cross-reference-lable">Cross Reference (See Also)</label>
                             <ReactMarkedIndexEditor className='markedindex-editor place-holder cross-reference' id='markedindex-cross-reference' markIndexCurrentValue={crossRef.join(',')} filterCrossRef={filterCrossRef} isFilterCrossRefNeeded={crossRefValue?.length > 0 ? false : true}/>
                             <label id="cross-ref" className={crossRef.length === 0 ? 'show-cross-ref-label' : 'hide-cross-ref-label'} onClick={focusOnPara}>None</label>

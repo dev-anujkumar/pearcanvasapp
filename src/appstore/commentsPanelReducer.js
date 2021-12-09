@@ -1,10 +1,3 @@
-/**
- * Module - CommentPanel Reducer
- * Description - All comments manupulation of comments panel lands here
- * Developer -yasmin agwan
- * Last modified - 21-08-2019
- */
-
 // IMPORT - Action constants //
 import {
     FETCH_COMMENTS,
