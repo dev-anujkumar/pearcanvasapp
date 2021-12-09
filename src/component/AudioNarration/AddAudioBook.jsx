@@ -72,8 +72,9 @@ class AddAudioBook extends React.Component {
                     const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                    const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
                     let messageObj = { citeName:  citeName, 
-                        citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                        citeNodeRef: citeNodeRef,
                         elementId: this.props.elementId,
                         calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary 
                     }
@@ -83,7 +84,8 @@ class AddAudioBook extends React.Component {
                             id: this.props.elementId,
                             calledFrom: 'NarrativeAudio',
                             calledFromGlossaryFootnote: this.props.isGlossary,
-                            editor: undefined
+                            editor: undefined,
+                            citeNodeRef: citeNodeRef
                         }
                         this.props.saveSelectedAlfrescoElement(messageDataToSaveAudioBook);
 

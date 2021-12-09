@@ -720,15 +720,17 @@ class Interactive extends React.Component {
                     const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                    const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
                     let messageObj = { citeName: citeName, 
-                        citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                        citeNodeRef: citeNodeRef, 
                         elementId: this.props.elementId,
                         currentAsset
                      }
                         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                         const messageDataToSaveSmartlink = {
                             id: this.props.elementId,
-                            editor: undefined
+                            editor: undefined,
+                            citeNodeRef: citeNodeRef
                         }
                         this.props.saveSelectedAlfrescoElement(messageDataToSaveSmartlink);
              }

@@ -17,7 +17,7 @@ import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Ele
 import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
-import { fetchParentData } from '../TcmSnapshots/TcmSnapshots_Utility_helper';
+import { fetchParentData } from '../TcmSnapshots/TcmSnapshotsOnDefaultSlate';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];

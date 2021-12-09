@@ -406,7 +406,8 @@ class ElementAudioVideo extends Component {
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                     const messageDataToSaveAudio = {
                         id: this.props.model.id,
-                        editor: undefined
+                        editor: undefined,
+                        citeNodeRef: nodeRefs
                     }
                     this.props.saveSelectedAlfrescoElement(messageDataToSaveAudio);
                 }
