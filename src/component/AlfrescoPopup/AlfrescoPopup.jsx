@@ -81,7 +81,7 @@ function AlfrescoPopup(props) {
         let messageObj = { citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef, elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,  calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote}
         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
         const messageDataToSave = {
-            id: rops.alfrescoElementId,
+            id: props.alfrescoElementId,
             calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,
             editor: editor,
             citeNodeRef: locationSiteDataNodeRef,
