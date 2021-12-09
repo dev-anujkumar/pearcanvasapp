@@ -58,7 +58,7 @@ class AddImageGlossary extends Component {
                     const messageDataToSave = {
                         id: this.props.elementId,
                         editor: undefined,
-                        citeNodeRef: nodeRefs,
+                        citeNodeRef: citeNodeRef,
                         calledFrom: 'GlossaryImage',
                         calledFromImageGlossaryFootnote: this.props.isImageGlossary
                     }

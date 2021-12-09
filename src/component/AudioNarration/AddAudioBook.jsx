@@ -131,6 +131,9 @@ const mapActionToProps = (dispatch) =>{
         alfrescoPopup: (payloadObj) => {
             dispatch(alfrescoPopup(payloadObj))
         },
+        saveSelectedAlfrescoElement: (payloadObj) => {
+            dispatch(saveSelectedAlfrescoElement(payloadObj))
+        }
     }
 }
 
