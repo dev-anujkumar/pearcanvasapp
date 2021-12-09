@@ -166,6 +166,16 @@ describe('1. PDF Slate test cases', () => {
 			spy.mockClear()
 		});
 	});
+	describe('1.3 Test componentWillUnmount Function', () => { 
+		it('1.2.1 Test If Case', () => { 
+			const compInstance = pdfSlateInstance(props);
+			expect(compInstance).toBeDefined();
+			const spy = jest.spyOn(compInstance, 'componentWillUnmount')
+			compInstance.componentWillUnmount();
+			expect(spy).toHaveBeenCalled();
+			spy.mockClear()
+		});
+	});
 	describe('1.4 Test OpenAlfresco Function', () => {
 		it('1.4.1 Test - Object.keys(alfrescoPath.alfresco).length > 0', () => {
 			config.alfrescoMetaData = alfresco;
