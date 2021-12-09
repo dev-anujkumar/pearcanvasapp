@@ -1,6 +1,6 @@
 // Helper methods
 import { customEvent } from '../../js/utils';
-import { tcmSnapshotsForUpdate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForUpdate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { updateAssessmentVersion } from '../../component/AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 //Constants
