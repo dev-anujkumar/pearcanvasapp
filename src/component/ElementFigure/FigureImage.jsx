@@ -287,7 +287,8 @@ class FigureImage extends Component {
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                     const messageDataToSave = {
                         id: this.props.elementId,
-                        editor: undefined
+                        editor: undefined,
+                        citeNodeRef: nodeRefs
                     }
                     this.props.saveSelectedAlfrescoElement(messageDataToSave);
                 }
