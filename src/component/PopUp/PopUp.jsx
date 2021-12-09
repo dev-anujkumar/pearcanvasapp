@@ -213,7 +213,7 @@ class PopUp extends React.Component {
         if (props.UsagePopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span className={`proceed-button`} onClick={(e) => props.agree(false, e)}>{props.proceedButton}</span>
+                    <span className={`lo-save-button`} onClick={(e) => props.agree(false, e)}>{props.proceedButton}</span>
                     <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )

@@ -501,64 +501,43 @@ class AssessmentSlateData extends Component {
      * @param e - event triggered 
     */
     handleAssessmentUsageTypeChange = (usageType) => {
-        console.log("usageType",usageType)
+
+        console.log("usageType", usageType)
         const { assessmentSlateObj, assessmentReducer } = this.props;
         const newAssessmentData = assessmentReducer[assessmentSlateObj.assessmentId]
-        console.log("newAssessmentData.intendedUsage",newAssessmentData.intendedUsage)
-        console.log("newAssessmentData.intendedUsage condition",newAssessmentData.intendedUsage?.indexOf(usageType)>-1)
+        console.log("newAssessmentData.intendedUsage", newAssessmentData.intendedUsage)
+
         const isElmLearnosity = (this.state.activeAssessmentType == PUF || this.state.activeAssessmentType == LEARNOSITY) ? true : false
-        
-        if (isElmLearnosity && newAssessmentData.intendedUsage && !(newAssessmentData.intendedUsage.includes(usageType))) {
+        let usageTypeList = this.props ?.assessmentReducer ?.usageTypeListData;
+        const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.label == usageType)
+        console.log("newAssessmentData.intendedUsage condition", (isElmLearnosity && newAssessmentData.intendedUsage && !(newAssessmentData.intendedUsage.includes(updatedUsageType.usagetype))))
+        if (isElmLearnosity && newAssessmentData.intendedUsage && !(newAssessmentData.intendedUsage.includes(updatedUsageType.usagetype))) {
+            console.log("inside_if_condition")
 
-            // if (isElmLearnosity && assessmentReducer) {
-            //     const newAssessmentData = assessmentReducer[assessmentSlateObj.assessmentId]
-            //     if (assessmentReducer.dataFromElm) {
-            //         const { dataFromElm } = assessmentReducer;
-            //         if ( dataFromElm.usageType && !(dataFromElm.intendedUsage === this.props.usageType)) {
-                        
-            //         } else if ();
-            //         }
-            //     } else if (assessmentSlateObj?.assessmentId && assessmentSlateObj.title && newAssessmentData?.assessmentTitle) {
-            //         this.updateElmLearnosityOnRefresh(prevProps, this.props)
-            //     }
-            // }
-
-            // // const newUsageType = assessmentReducer[this.state.activeAssessmentUsageType]
-            // if (assessmentReducer.dataFromElm) {
-            //     const { intendedUsage } = assessmentReducer;
             this.setState({
-                showChangeUsageTypePopup: true,
-                // updatedUsageType:usageType
-                });
+                changeUsageTypePopup: true,
+                updatedUsageType:usageType
+            });
         } else {
-            this.setChangeUsageType
-
-            // this.setState({
-            //     activeAssessmentUsageType: usageType,
-            //     openUsageDropdown: false,
-            //     openAssessmentDropdown: false,
-            //     changeUsageTypePopup: true
-            // });
-            // if (this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false) {
-            //             this.props.handleAssessmentBlur(usageType)
-            //         }
-                }
-            }
-        
-
-    
-    setChangeUsageType(){
+            this.setUpdateUsageType(usageType);
+            
+        }
+    }
+    /**@description - This Function sets the usageType 
+     * * @param usageType - the type of usage selected from the dropdown
+    */
+    setUpdateUsageType=(usageType)=> {
         this.setState({
             activeAssessmentUsageType: usageType,
             openUsageDropdown: false,
             openAssessmentDropdown: false,
-            changeUsageTypePopup: true
+            changeUsageTypePopup: false
         });
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false) {
-            this.props.handleAssessmentBlur(usageType)
+            // this.props.handleAssessmentBlur(usageType)
         }
     }
-    
+
 
     /*** @description - This function is to set Placeholder values in AS
      * @param type - assessment format
@@ -655,23 +634,42 @@ class AssessmentSlateData extends Component {
         </>
         return usageType;
     }
+    /**
+     * @description This function is used to toggle changeUsageTypePopup 
+     * @param {*} toggleValue Boolean value
+     * @param {*} event event object
+     */
+    togglechangeUsageTypePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            changeUsageTypePopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue);
+    }
     /**@description -shows changeUsageType Popup when you select other UsageTypes in Final Slate */
     showChangeUsageTypePopup = () => {
-        this.showCanvasBlocker(true);
-        return (
-            <PopUp
-                togglePopup={this.handleChangeUsageTypePopup}
-                dialogText={CHANGE_USAGE_TYPE}
-                warningHeaderText={`Warning`}
-                lOPopupClass="lo-warning-txt"
-                UsagePopup={true}
-                agree={this.setChangeUsageType}
-            />
-        )
+        if (this.state.changeUsageTypePopup) {
+            this.showCanvasBlocker(true);
+            return (
+                <PopUp
+                    togglePopup={this.togglechangeUsageTypePopup}
+                    active={true}
+                    dialogText={CHANGE_USAGE_TYPE}
+                    warningHeaderText={`Warning`}
+                    lOPopupClass="lo-warning-txt"
+                    UsagePopup={true}
+                    agree={this.setUpdateUsageType}
+                />
+            )
+        } else {
+            return null
+        }
     }
 
     /**@description handles cancel in changeUsageType Popup */
-    handleChangeUsageTypePopup = () => {
+    handleChangeUsageTypePopup = (toggleValue,evt) => {
         this.showCanvasBlocker(false);
         this.setState({
             changeUsageTypePopup: false,
@@ -684,11 +682,11 @@ class AssessmentSlateData extends Component {
         this.setState({
             changeUsageTypePopup: false,
         })
-        const newUsageType = Object.keys(usageTypeList).find(key => usageTypeList[key] === this.state.updatedUsageType)
+        const newUsageType = Object.keys(UsageTypeDropdown).find(key => UsageTypeDropdown[key] === this.state.updatedUsageType)
         let dataToSend = {
             newtype: newUsageType,
             usageType: this.state.activeAssessmentUsageType,
-            calledFrom: "newUsageType"
+            calledFrom: "updateUsageType"
         }
         this.props.handleAssessmentBlur(dataToSend, () => {
             this.setState({
@@ -698,7 +696,7 @@ class AssessmentSlateData extends Component {
         this.AssessmentSearchTitle('', '');
         this.props.setAssessmentFilterParams("", "");
         });
-        this.setChangeUsageType(this.state.updatedUsageType);
+        this.setUpdateUsageType(this.state.updatedUsageType);
     }
 
 
@@ -806,7 +804,7 @@ class AssessmentSlateData extends Component {
                     <div className="clr"></div>
                 </div>
             </div>
-            {this.setUsageType(assessmentUsageType)}
+            {this.setUsageType(assessmentUsageType,'updateUsageType')}
             {this.setAssessmentType(assessmentUsageType, assessmentType,'updateAssessmentFormat')}
             {(this.state.activeAssessmentType == PUF || this.state.activeAssessmentType == LEARNOSITY) && this.showElmVersionStatus()}
         </div>
@@ -820,7 +818,7 @@ class AssessmentSlateData extends Component {
                     {this.renderAssessmentSlate()}
                     {this.state.showUpdatePopup && this.showCustomPopup()}
                     {this.state.updateAssessmentTypePopup && this.showUpdateAssessmentTypePopup()}
-                    {this.state.changeUsageTypePopup && this.showchangeUsageTypePopup()}
+                    {this.state.changeUsageTypePopup && this.showChangeUsageTypePopup()}
                 </div>
             );
         } catch (error) {
