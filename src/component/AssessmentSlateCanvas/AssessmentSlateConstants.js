@@ -64,7 +64,7 @@ export const SLATE_TYPE_ASSESSMENT = "assessment";
 
 /*----------------Popup ---------------------*/
 export const UPDATE_ASSESSMENT_TYPE= "Changing the Assessment type will lead to a change in the Assessment picker options for this Assessment Slate."
-export const CHANGE_USAGE_TYPE= "The usage type for the Elm assessment is different from the value set in the elm authoring portal. Are you sure you want to proceed?"
+export const CHANGE_USAGE_TYPE= "The usage type for the Elm assessment is different from the value set in the elm authoring portal."
 
 /*--------------- PDF Slate ----------------*/
 export const ELEMENT_TYPE_PDF = "element-pdf";

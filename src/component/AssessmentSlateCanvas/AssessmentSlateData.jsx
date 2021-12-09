@@ -533,10 +533,10 @@ class AssessmentSlateData extends Component {
             updatedUsageType:""
         });
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false) {
-            this.props.handleAssessmentBlur(usageType)
+            // this.props.handleAssessmentBlur(usageType)
         }
     }
-    
+
 
     /*** @description - This function is to set Placeholder values in AS
      * @param type - assessment format
@@ -632,6 +632,20 @@ class AssessmentSlateData extends Component {
         </div>
         </>
         return usageType;
+    }
+    /**
+     * @description This function is used to toggle changeUsageTypePopup 
+     * @param {*} toggleValue Boolean value
+     * @param {*} event event object
+     */
+    togglechangeUsageTypePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            changeUsageTypePopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue);
     }
     /**@description -shows changeUsageType Popup when you select other UsageTypes in Final Slate */
     showChangeUsageTypePopup = () => {
@@ -774,7 +788,7 @@ class AssessmentSlateData extends Component {
                     <div className="clr"></div>
                 </div>
             </div>
-            {this.setUsageType(assessmentUsageType)}
+            {this.setUsageType(assessmentUsageType,'updateUsageType')}
             {this.setAssessmentType(assessmentUsageType, assessmentType,'updateAssessmentFormat')}
             {(this.state.activeAssessmentType == PUF || this.state.activeAssessmentType == LEARNOSITY) && this.showElmVersionStatus()}
         </div>
