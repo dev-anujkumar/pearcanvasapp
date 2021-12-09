@@ -199,3 +199,7 @@ export const UPDATE_FIGURE_DROPDOWN_OPTIONS = 'UPDATE_FIGURE_DROPDOWN_OPTIONS';
 
 /*--------------Aside Label, Number, Title fields------------------ */
 export const CHECK_ASIDE_NUMBER = 'CHECK_ASIDE_NUMBER';
+
+/*--------------Cypress Puls Constants------------------ */
+export const COMPLETED = 'COMPLETED';
+export const FAILED = 'FAILED';
