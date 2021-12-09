@@ -22,6 +22,13 @@ const initialState = {
             primaryOption: "primary-list",
             secondaryOption: "secondary-list-1",
             index: 1
+        },
+        asideData: {
+            element: {
+                type: 'manifestlist',
+                index: '0-0-0-1',
+                contentUrn: 'urn:pearson:work:8a49e877-144a-4750-92d2-f1u5c8kd8e1a'
+            }
         }
     }
 }

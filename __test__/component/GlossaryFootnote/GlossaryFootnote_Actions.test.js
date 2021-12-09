@@ -248,6 +248,22 @@ describe('Tests commentsPanel action', () => {
                 
         await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','interactive','dsusiudfd','GLOSSARY','apple','fruit','image',''); 
        });
+       it('testing new func MARKEDINDEX', async () => {
+        document.querySelector = () => { return false; }
+        document.getElementById = ()=>{
+                        return {
+                        innerHTML:'tests',
+                        getElementsByTagName: () => {
+                            return {
+                                tagName: 'dfn',
+                                textContent: () => { return { slice: () => { return "" } } }
+                            }
+                        }
+                    }
+                    }
+                
+        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','interactive','dsusiudfd','MARKEDINDEX','apple','fruit','image',''); 
+       });
        xit('testing if there is an audio in glossary', async () => {
            document.querySelector = () => { return false; }
            document.getElementById = () => {

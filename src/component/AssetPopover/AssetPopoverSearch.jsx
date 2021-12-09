@@ -12,7 +12,10 @@ import ApiResults from './ApiResults.jsx';
 import { clearAssetPopoverLink } from './openApoFunction.js';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import searchIcon from './asset_popover_search_icon.svg';
+import closeIcon from './icon-close.svg';
 import { customEvent } from '../../js/utils';
+import { disableHeader,hideToc} from '../../js/toggleLoader';
+
 class AssetPopoverSearch extends React.Component {
     constructor(props) {
         super(props);
@@ -30,6 +33,8 @@ class AssetPopoverSearch extends React.Component {
         }
         this.props.apoSearchClose();
         sendDataToIframe({ 'type': 'enableToc', 'message': {} });
+        this.props.showBlocker(false);
+        disableHeader(false);
     }
 
     /**
@@ -129,8 +134,10 @@ class AssetPopoverSearch extends React.Component {
     currentlyLinkedJsx = () => {
         return (<section className="modalSubHeader">
             <h3 className="currentlyLinkedHeader"><i>Currently Linked to-</i></h3>
-            <input type='radio' disabled name='selectedradio' checked className="currentlyLinkedRadio" />
-            <span> {this.props.currentlyLinkedImageData.title}</span>
+            <div className="modalLinkedField">
+            <div className ="modalInput" ><input type='radio' disabled name='selectedradio' checked /></div>
+            <span className="modalText"> {this.props.currentlyLinkedImageData.title}</span>
+            </div>
         </section>
         )
     }
@@ -139,9 +146,19 @@ class AssetPopoverSearch extends React.Component {
      *Jsx for apo body or results from API 
      */
     apoBodyJsx = (ValueToBeSearch) => {
+        const assetArray = {
+            figures: this.props.figures,
+            audios: this.props.audios,
+            videos: this.props.videos,
+            interactives: this.props.interactives,
+            smartLinkInteractives: this.props.smartLinkInteractives,
+            asides: this.props.asides,
+            tables: this.props.tables,
+            workedExamples: this.props.workedExamples
+        }
         return (<section className="modalBody">
             <p className="APOSearchResultText">Search took about {this.props.timeByAPI ? this.props.timeByAPI.toFixed() : ' '} ms, Total hits: {this.props.figures ? this.props.figures.length : 0}</p>
-            <ApiResults selectedFigure={this.selectedFigure} ValueToBeSearch={ValueToBeSearch} figures={this.props.figures} />
+            <ApiResults assetPopoverData={assetArray} selectedFigure={this.selectedFigure} ValueToBeSearch={ValueToBeSearch}/>
         </section>
         )
     }
@@ -156,19 +173,19 @@ class AssetPopoverSearch extends React.Component {
                     if (!isSearchResultFound) {
                         return <section className="modalFooter">
                             <button disabled={!isFigureSelected} className="myButton" onClick={() => this.apoSearchSave(this.props.apoObject, this.props.selectedFigureValue)}>Update Link</button>
-                            <button disabled={!isFigureSelected} className="myButton" onClick={this.apoSearchClose}>Cancel</button>
+                            <button className="myButton" onClick={this.apoSearchClose}>Cancel</button>
                         </section>
                     } else {
                         return <section className="modalFooter">
                             <button disabled={!shouldOpenCurrentlyLinked || hasReviewerRole()} className="myButton" onClick={() => this.removeLink()}>Remove Link</button>
-                            <button disabled={!isFigureSelected} className="myButton" onClick={this.apoSearchClose}>Cancel</button>
+                            <button  className="myButton" onClick={this.apoSearchClose}>Cancel</button>
                         </section>
                     }
                 } else {
                     if (!isSearchResultFound && shouldShowApoBody) {
                         return <section className="modalFooter">
+                            <button  className="myButton" onClick={this.apoSearchClose}>Cancel</button>
                             <button disabled={!isFigureSelected} className="myButton" onClick={() => this.apoSearchSave(this.props.apoObject, this.props.selectedFigureValue)}>Save</button>
-                            <button disabled={!isFigureSelected} className="myButton" onClick={this.apoSearchClose}>Cancel</button>
                         </section>
                     }
                 }
@@ -182,16 +199,24 @@ class AssetPopoverSearch extends React.Component {
         this.apoSearchClose();
     }
 
+    handleBlur=()=>{
+        this.props.showBlocker(true);
+        hideToc();
+        disableHeader(true);
+    }
+
     render() {
         const stateImageData = this.props.figures;
         const { showApoFooter, showApoBody, figureIsSelected, showApoCurrentlyLinked, noSearchResultFound, searchTerm } = this.props;
         return (
-            <div>
+            <div style={{display: "inline-flex", left: "5%", position: "absolute"}}>
+                {this.handleBlur()}
                 <div className="containerApo">
                     <section className="modalHeader header__search-bar">
                         <img className="seach_icon" src={searchIcon} />
-                        <input className="searchBarApo" placeholder="Search for assets" type="text" readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
-                        <label className="modal__close" onClick={this.apoSearchClose}></label>
+                        <input className="searchBarApo" placeholder="Search figures, asides, worked examples etc..." type="text" readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
+                        <img className="modal__close" src={closeIcon} onClick={this.apoSearchClose}/>
+                        {/* <label className="modal__close" onClick={this.apoSearchClose}></label> */}
                     </section>
 
                     {showApoCurrentlyLinked ? this.currentlyLinkedJsx() : ''}
@@ -226,9 +251,16 @@ const mapActionToProps = {
  * Get State as a props here in this component
  */
 const mapStateToProps = (state, props) => {
-    const { figures, showApoCurrentlyLinked, showApoBody, showApoFooter, selectedFigureValue, noSearchResultFound, figureIsSelected, apoObject, searchTerm, figureDetails, timeByAPI, currentlyLinkedImageData } = state.assetPopOverSearch;
+    const { figures, videos, audios, interactives, smartLinkInteractives, asides, tables, workedExamples, showApoCurrentlyLinked, showApoBody, showApoFooter, selectedFigureValue, noSearchResultFound, figureIsSelected, apoObject, searchTerm, figureDetails, timeByAPI, currentlyLinkedImageData } = state.assetPopOverSearch;
     return {
         figures,
+        videos,
+        audios,
+        interactives,
+        smartLinkInteractives,
+        asides,
+        tables,
+        workedExamples,
         showApoCurrentlyLinked,
         showApoBody,
         showApoFooter,
