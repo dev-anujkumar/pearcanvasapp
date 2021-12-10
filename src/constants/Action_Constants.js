@@ -202,3 +202,4 @@ export const CHECK_ASIDE_NUMBER = 'CHECK_ASIDE_NUMBER';
 /*---------------- AutoNumbering Media Elements ------------------------*/
 export const SET_AUTO_NUMBER_TOGGLE = 'SET_AUTO_NUMBER_TOGGLE';
 export const GET_ALL_FIGURE_ELEMENTS = 'GET_ALL_FIGURE_ELEMENTS';
+export const GET_TOC_AUTO_NUMBERING_LIST = 'GET_TOC_AUTO_NUMBERING_LIST';

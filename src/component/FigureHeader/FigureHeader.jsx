@@ -16,6 +16,7 @@ export const FigureHeader = (props) => {
     const AUTO_NUMBER_SETTING_DROPDOWN_VALUES = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
     const slateAncestors = useSelector((state) => state.appStore.currentSlateAncestorData)
     const figImageList = useSelector((state) => state.autoNumberReducer.figImageList)
+    const autoNumberingDetails = useSelector((state) => state.autoNumberReducer.autoNumberingDetails)
 
     const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedLabel ?? 'Figure');
     const [figureLabelData, setFigureLabelData] = useState(['Figure', 'Table', 'Equation']);//props.figureDropdownData
@@ -103,13 +104,15 @@ export const FigureHeader = (props) => {
         }
     }
     const { figureHtmlData, previewClass, figLabelClass, figTitleClass, onFigureImageFieldBlur, onFigureImageFieldFocus } = props
-    const containerNumber = getContainerNumber(slateAncestors) //F,B,P1,23
+    const containerNumber = getContainerNumber(slateAncestors, autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
     const autoNumberFieldsData = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)
     const imgLabelValue = autoNumberFieldsData.label//props.model?.displayedLabel ?? 'Figure'
     const parentNumber = containerNumber//'test'//getNumberValue(props.model, figureIndex, containerNumber, figIndexParent)//onfig.imageCount++
-    let imgNumberValue = config.imageIndex[figIndexParent][props.model.contentUrn]//'data'//getNumberData(figIndexParent,props.model)
-
+    let imgNumberValue = ''//getNumberData(figIndexParent,props.model)
+    if(props.model.contentUrn){
+        imgNumberValue = config.imageIndex[figIndexParent][props.model.contentUrn]
+    }
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })
     return (
         <>

@@ -1,11 +1,13 @@
 import {
     SET_AUTO_NUMBER_TOGGLE,
-    GET_ALL_FIGURE_ELEMENTS
+    GET_ALL_FIGURE_ELEMENTS,
+    GET_TOC_AUTO_NUMBERING_LIST
 } from '../constants/Action_Constants.js';
 
 const INITIAL_STATE = {
     isAutoNumberingEnabled: false,
-    figImageList: []
+    figImageList: [],
+    autoNumberingDetails:{}
 }
 
 const INITIAL_ACTION = {
@@ -24,6 +26,11 @@ export default function autoNumberReducer (state = INITIAL_STATE, action = INITI
             return {
                 ...state,
                 isAutoNumberingEnabled: action.payload.isAutoNumberingEnabled
+            }
+        case GET_TOC_AUTO_NUMBERING_LIST:
+            return {
+                ...state,
+                autoNumberingDetails: action.payload
             }
         default:
             return state

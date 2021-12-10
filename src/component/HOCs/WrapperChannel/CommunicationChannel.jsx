@@ -781,6 +781,7 @@ function CommunicationChannel(WrappedComponent) {
             console.log('message.node',message.node)
             if (message?.node?.autoNumberingDetails) {
                 config.autoNumberingDetails = message.node.autoNumberingDetails
+                this.props.setTocContainersAutoNumberList(message.node.autoNumberingDetails)
             }
             // reset owner slate popup flag on slate change
             this.resetOwnerSlatePopupFlag();

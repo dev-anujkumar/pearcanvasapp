@@ -3,7 +3,8 @@ import axios from 'axios';
 import { getContentInFMandBM, getContentInBodyMatter } from './mediaElementDataMapper.js';
 import {
     SET_AUTO_NUMBER_TOGGLE,
-    GET_ALL_FIGURE_ELEMENTS
+    GET_ALL_FIGURE_ELEMENTS,
+    GET_TOC_AUTO_NUMBERING_LIST
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList } from './AutoNumber_helperFunctions';
 /**
@@ -72,6 +73,63 @@ const commonHeaders = {
                     images: imagesData
                 }
             });
+        } else {
+            dispatch({
+                type: GET_ALL_FIGURE_ELEMENTS,
+                payload: {}
+            });
+        }
+    }).catch(error => {
+        console.log('Error in fetching list of figures in the project>>>> ', error)
+        dispatch({
+            type: GET_ALL_FIGURE_ELEMENTS,
+            payload: {}
+        });
+    })
+
+};
+
+export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch => {
+    dispatch({
+        type: GET_TOC_AUTO_NUMBERING_LIST,
+        payload: autoNumberingDetails
+    });
+}
+
+export const isAutoNumberEnabled = (flag) => dispatch =>{
+    dispatch({
+        type: SET_AUTO_NUMBER_TOGGLE,
+        payload: {
+            isAutoNumberingEnabled: flag
+        }
+    });
+}
+
+
+export const fetchContainerFigures = (containerEntityUrn) => dispatch => {
+    axios.get(`${config.ASSET_POPOVER_ENDPOINT}v3/${config.projectUrn}/containers/${containerEntityUrn}/images`, {
+        headers: {
+            "ApiKey": config.STRUCTURE_APIKEY,
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(response => {
+        if (response?.data?.numberOfImages > 0) {
+        //     const projectContent = response.data.contents
+        //     let imagesData = {}
+        //     if (projectContent['bodyMatter']?.length > 0) {
+        //         getContentInBodyMatter(projectContent['bodyMatter'], imagesData)
+        //     }
+        //    console.log('imagesData>>>>', imagesData)
+        //     const updatedIndexList = prepareAutoNumberList(imagesData)
+        //     console.log('updatedIndexList', updatedIndexList)
+        //     config.imageIndex = updatedIndexList
+        //     dispatch({
+        //         type: GET_ALL_FIGURE_ELEMENTS,
+        //         payload: {
+        //             images: imagesData
+        //         }
+        //     });
         } else {
             dispatch({
                 type: GET_ALL_FIGURE_ELEMENTS,

@@ -36,12 +36,12 @@ export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue }
     return ""
 }
 
-export const getContainerNumber = (slateAncestors) => {
+export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
     const containerEntityUrn = getContainerEntityUrn(slateAncestors)
     switch (containerEntityUrn) {
-        case 'FrontMatter':
+        case 'frontMatter':
             return 'F'
-        case 'BackMatter':
+        case 'backMatter':
             return 'B'
         // case 'Part':
         // return 'P'
@@ -49,12 +49,12 @@ export const getContainerNumber = (slateAncestors) => {
         // const partNumber = config?.autoNumberingDetails?.partOrderList[partEntityUrn]
         // return partNumber ? `P${partNumber}` : 'P'
         default:
-            if (config?.autoNumberingDetails?.partOrderList?.hasOwnProperty(containerEntityUrn)) {
-                const partNumber = config?.autoNumberingDetails?.partOrderList[partEntityUrn]
+            if (autoNumberingDetails?.partOrderList?.hasOwnProperty(containerEntityUrn)) {
+                const partNumber = autoNumberingDetails?.partOrderList[partEntityUrn]
                 return partNumber ? `P${partNumber}` : 'P'
             }
             else {
-                return config?.autoNumberingDetails?.chapterOrderList[containerEntityUrn] || '1'
+                return autoNumberingDetails?.chapterOrderList[containerEntityUrn] || '1'
             }
     }
 }
@@ -63,7 +63,8 @@ export const getContainerEntityUrn = (slateAncestors) =>{
     const moduleTypes = ['module', 'appendix']
     const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate']
     if (slateAncestors?.matterType !== 'BodyMatter') {
-        return slateAncestors.matterType
+        const matterType = slateAncestors.matterType ==='FrontMatter' ? 'frontMatter' : slateAncestors.matterType ==='BackMatter' ? 'backMatter' :""
+        return matterType
     }
     else if (slateTypes.includes(slateAncestors?.label)) {
         if ((slateAncestors?.label === "container-introduction") && (slateAncestors?.ancestor?.label === 'part')) {
