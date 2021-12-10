@@ -16,7 +16,7 @@ import { setAssessmentUsageType, setAssessmentProperties, checkElmAssessmentStat
 import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
-import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX, Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, CITE, TDX, Resource_Type,CHANGE_USAGE_TYPE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions, setElmPickerData, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
@@ -36,6 +36,8 @@ class ElementSingleAssessment extends Component {
             assessmentTitle: this.props.model && getAssessmentTitle(this.props.model),
             elementType: this.props.model.figuredata.elementdata.assessmentformat || "",
             showSinglePopup:false,
+            changeUsageTypePopup:false,
+            updatedUsageType:'',
             setCurrentAssessment:{},
             parentPageNo:1,
             isReset: false,
@@ -163,15 +165,108 @@ class ElementSingleAssessment extends Component {
     handleAssessmentTypeChange = (usageType, e) => {
        if (this.state.activeAsseessmentUsageType !== usageType) {
             this.setState({
-                activeAsseessmentUsageType: usageType
+                activeAsseessmentUsageType: usageType,
+                changeUsageTypePopup: true,
             },()=>{
                 this.saveAssessment();
             });
         }
             this.setState({
                 asseessmentUsageTypeDropdown: false,
+                
             })
     }
+
+    /* *
+    ** @description - This function is to handle the Assessment Usage-type change
+     * @param usageType - the usage-type selected from the dropdown
+     * @param e - event triggered 
+    */
+    handleAssessmentUsageTypeChange = (usageType) => {
+
+        if (this.state.activeAsseessmentUsageType !== usageType) {
+            this.setState({
+                activeAsseessmentUsageType: usageType,
+                changeUsageTypePopup: true,
+                // updatedUsageType: usageType
+            });
+        }
+        else {
+            this.setChangeUsageType(usageType)
+        }
+    }
+        else {
+    this.setChangeUsageType(usageType)
+}
+    }
+
+
+    
+    setChangeUsageType(usageType){
+        this.setState({
+            activeAssessmentUsageType: usageType,
+            openUsageDropdown: false,
+            openAssessmentDropdown: false,
+            changeUsageTypePopup: false,
+            updatedUsageType:""
+        });
+        if (this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false) {
+            // this.props.handleAssessmentBlur(usageType)
+        }
+    }
+    /**
+     * @description This function is used to toggle changeUsageTypePopup 
+     * @param {*} toggleValue Boolean value
+     * @param {*} event event object
+     */
+    togglechangeUsageTypePopup = (toggleValue, event) => {
+        if (event) {
+            event.preventDefault();
+        }
+        this.setState({
+            changeUsageTypePopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue);
+    }
+    /**@description -shows changeUsageType Popup when you select other UsageTypes in Final Slate */
+    showChangeUsageTypePopup = () => {
+        this.showCanvasBlocker(true);
+        if(this.state.changeUsageTypePopup){
+            return (
+                <PopUp
+                    togglePopup={this.handleChangeUsageTypePopup}
+                    dialogText={CHANGE_USAGE_TYPE}
+                    warningHeaderText={`Warning`}
+                    lOPopupClass="lo-warning-txt"
+                    UsagePopup={true}
+                    proceedButton={'Proceed'}
+                    agree={this.updateUsageTypeAfterProceed}
+                    savedValue={this.state.updatedUsageType}
+                />
+            )
+        }
+        return null
+    }
+    
+    updateUsageTypeAfterProceed = (flag,evt) =>{
+        this.prohibitPropagation(evt);
+        this.showCanvasBlocker(false);
+        if(flag){
+            const usageType = this.state.updatedUsageType
+            this.setChangeUsageType(usageType)
+        }
+    }
+    /**@description handles cancel in changeUsageType Popup */
+    handleChangeUsageTypePopup = (toggleValue,evt) => {
+        this.prohibitPropagation(evt);
+        this.showCanvasBlocker(toggleValue);
+        this.setState({
+            changeUsageTypePopup: toggleValue,
+        })
+    }
+
+
+
 
     /*** @description - This function is to toggle the Assessment Dropdown menu*/
     toggleUsageTypeDropdown = () => {
@@ -533,6 +628,7 @@ class ElementSingleAssessment extends Component {
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
+                {this.state.changeUsageTypePopup && this.showChangeUsageTypePopup()}
                 {this.state.showElmUpdatePopup && this.showCustomPopup()}
                 {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType== CITE ? CITE : TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                 {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}     
