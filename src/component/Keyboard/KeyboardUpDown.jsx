@@ -12,6 +12,13 @@ const KeyboardUpDown = (props) => {
             dispatch(selectElement(element.id));
             const childElement = element.childNodes[1];
             childElement.click();
+            childElement.scrollIntoView({
+                behavior: 'auto',
+                block: 'center',
+                inline: 'center'
+            });
+
+
         }
     }
     const handleKeyDown = (event) => {
@@ -23,9 +30,7 @@ const KeyboardUpDown = (props) => {
                     if (currentValue.id === activeElement) {
                         selectedNodeIndex = currentIndex
                     }
-                }
-                );
-                console.log("Key down Main: Arrow Pressed", selectedNodeIndex,event.keyCode, activeElement, allInteractiveElements.length);
+                });
                 if (event.keyCode === 38 && selectedNodeIndex !== 0) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex - 1]);
 
