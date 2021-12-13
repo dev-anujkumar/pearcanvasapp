@@ -34,6 +34,7 @@ import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } f
             setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
         }
     }
+    alert("Only Image Type Assets can be added as Inline Image!");
     // return imgData;
 }
 /**

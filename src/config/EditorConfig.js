@@ -161,7 +161,7 @@ export const elementTypeOptions = Object.freeze({
 const insertImageHandler = (params) => {
     let { element, permissions, editor } = params;
     let blockListData = checkBlockListElement(params.props, "TAB");
-    if (element?.type === ElementConstants.ELEMENT_LIST || (element?.type === ElementConstants.AUTHORED_TEXT)) {
+    if (element?.type === ElementConstants.ELEMENT_LIST || (element?.type === ElementConstants.AUTHORED_TEXT) || (this?.props?.element?.type === "element-blockfeature") || (this?.props?.element?.type === "element-learningobjectives")) {
         handleC2MediaClick(permissions, editor, element);
     }
 }
