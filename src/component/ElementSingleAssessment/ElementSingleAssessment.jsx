@@ -163,42 +163,38 @@ class ElementSingleAssessment extends Component {
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
-       if (this.state.activeAsseessmentUsageType !== usageType) {
-            this.setState({
-                activeAsseessmentUsageType: usageType,
-                changeUsageTypePopup: true,
-            },()=>{
-                this.saveAssessment();
-            });
-        }
-            this.setState({
-                asseessmentUsageTypeDropdown: false,
-                
-            })
-    }
-
-    /* *
-    ** @description - This function is to handle the Assessment Usage-type change
-     * @param usageType - the usage-type selected from the dropdown
-     * @param e - event triggered 
-    */
-    handleAssessmentUsageTypeChange = (usageType) => {
-
         if (this.state.activeAsseessmentUsageType !== usageType) {
             this.setState({
                 activeAsseessmentUsageType: usageType,
                 changeUsageTypePopup: true,
-                // updatedUsageType: usageType
+            }, () => {
+                this.saveAssessment();
             });
         }
-        else {
-            this.setChangeUsageType(usageType)
-        }
+        this.setState({
+            asseessmentUsageTypeDropdown: false,
+
+        })
     }
-        else {
-    this.setChangeUsageType(usageType)
-}
-    }
+
+    
+//     handleAssessmentUsageTypeChange = (usageType) => {
+
+//         if (this.state.activeAsseessmentUsageType !== usageType) {
+//             this.setState({
+//                 activeAsseessmentUsageType: usageType,
+//                 changeUsageTypePopup: true,
+//                 // updatedUsageType: usageType
+//             });
+//         }
+//         else {
+//             this.setChangeUsageType(usageType)
+//         }
+//     }
+//         else {
+//     this.setChangeUsageType(usageType)
+// }
+//     }
 
 
     
