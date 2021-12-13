@@ -1014,6 +1014,8 @@ describe('Test for element container component', () => {
         let event= {
             stopPropagation:()=>{}
         }
+        config.isCypressPlusEnabled=true
+        config.SHOW_CYPRESS_PLUS=true
         let elementId = 'urn:perason:work:1234567' 
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();

@@ -508,7 +508,6 @@ describe('Testing functions', () => {
         separatorFunctions.typeOfContainerElements(element, props);
         expect(spyTypeOfContainerElements).toHaveBeenCalled()
     })
-
     it('Testing renderDropdownButtons function - else block', () => {
         const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
         const element = {
@@ -541,6 +540,24 @@ describe('Testing functions', () => {
                 type:"element-aside",
                 parent:{
                     type:'showhide'
+                }
+            }
+        }
+        const element = {
+            buttonType:'block-text-button'
+        }
+        separatorFunctions.typeOfContainerElements(element, props);
+        expect(spyTypeOfContainerElements).toHaveBeenCalled()
+    });
+    it('Testing renderDropdownButtons# function - Do not show block poetry option inside SH if SH is inside Aside/WE/MultiColumn', () => {
+        const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
+        const props = {
+            asideData:{
+                grandParent:{
+                    asideData:{
+                        type1:"type1",
+                        type2:"type2"
+                    }
                 }
             }
         }
