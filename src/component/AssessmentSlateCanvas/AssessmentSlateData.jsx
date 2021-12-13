@@ -210,13 +210,13 @@ class AssessmentSlateData extends Component {
     addPufAssessment = (pufObj) => {
         let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
         let dataToSend = pufObj;
-        if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
+        /**if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
             const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.usagetype == pufObj.usagetype)
             this.setState({
                 activeAssessmentUsageType: updatedUsageType ? updatedUsageType.label : this.state.activeAssessmentUsageType
             });
             dataToSend = { ...pufObj, usagetype: updatedUsageType ? updatedUsageType.label : this.state.activeAssessmentUsageType }
-        }
+        }*/
         this.props.addPufAssessment(dataToSend, this.state.activeAssessmentType, 'insert');
         const elmData = { targetId: pufObj.id }
         this.setState({
@@ -533,7 +533,7 @@ class AssessmentSlateData extends Component {
             updatedUsageType:""
         });
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false) {
-            // this.props.handleAssessmentBlur(usageType)
+            this.props.handleAssessmentBlur(usageType)
         }
     }
 

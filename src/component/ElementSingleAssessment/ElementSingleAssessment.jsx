@@ -163,34 +163,41 @@ class ElementSingleAssessment extends Component {
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
-        if(  this.state.activeAsseessmentUsageType === "" && this.state.activeAsseessmentUsageType !== usageType){
-            this.setState({
-                activeAsseessmentUsageType: usageType
-            }, () => {
-                this.saveAssessment();
-            })
-        }else if ( this.state.activeAsseessmentUsageType !== usageType) {
-            this.setState({
-                updatedUsageType: usageType,
-                changeUsageTypePopup: true,
-            });
+        const isElmLearnosity = (this.state.elementType == PUF || this.state.elementType == LEARNOSITY) ? true : false
+        if (isElmLearnosity && this.state.assessmentId) {
+            let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
+            const { assessmentReducer } = this.props;
+            const { assessmentId } = this.state
+            const newAssessmentData = assessmentReducer[assessmentId]
+            const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.label === usageType)
+            if (newAssessmentData.intendedUsage && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
+                this.setState({
+                    changeUsageTypePopup: true,
+                    updatedUsageType: usageType
+                });
+            }
+            else {
+                this.setChangeUsageType(usageType)
+            }
+        }
+        else if (this.state.activeAsseessmentUsageType !== usageType) {
+            this.setChangeUsageType(usageType)
         }
         this.setState({
-            asseessmentUsageTypeDropdown: false,
-
+            asseessmentUsageTypeDropdown: false
         })
     }
 
     
-    setChangeUsageType(usageType){
+    setChangeUsageType = (usageType) => {
         this.setState({
-            activeAsseessmentUsageType : usageType,
+            activeAsseessmentUsageType: usageType,
             openUsageDropdown: false,
             openAssessmentDropdown: false,
-            changeUsageTypePopup: false,
-        }), () => {
+            changeUsageTypePopup: false
+        }, () => {
             this.saveAssessment();
-        }          
+        })
     }
     /**
      * @description This function is used to toggle changeUsageTypePopup 
@@ -367,14 +374,14 @@ class ElementSingleAssessment extends Component {
         if(pufObj.elementUrn === this.props.elementId){
 
             let usageTypeList = this.props?.assessmentReducer?.usageTypeListData
-            if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
+            /**if (pufObj?.calledFrom == 'createElm' && pufObj.usagetype) {
                 showTocBlocker();
                 disableHeader(true);
                 const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.usagetype == pufObj.usagetype)
                 this.setState({
                     activeAssessmentUsageType: updatedUsageType ? updatedUsageType.label : this.state.activeAssessmentUsageType
                 });
-            }
+            }*/
             this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemTitle },
                 () => {
                     const itemData = {
