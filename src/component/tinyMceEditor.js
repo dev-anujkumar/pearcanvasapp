@@ -3633,6 +3633,13 @@ export class TinyMceEditor extends Component {
                     removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                     tinymce.remove(`#${ed_id}`)
                     wirisModalDesktopNode.remove();
+
+                    /** to resolvee the placeholder overlap issue after installing tinymce latest version */
+                    tinymceEditorNode.classList.add('place-holder')
+                    if(tinymceEditorNode && tinymceEditorNode.innerText.trim() !== "" && tinymceEditorNode.innerText.trim().length && tinymceEditorNode?.classList?.contains('place-holder')){
+                        tinymceEditorNode.classList.remove('place-holder')
+                    }
+
                     let edNode = document.getElementById(`${ed_id}`)
                     if (edNode) {
                         edNode.contentEditable = true;
