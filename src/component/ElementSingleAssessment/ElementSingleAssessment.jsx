@@ -163,12 +163,16 @@ class ElementSingleAssessment extends Component {
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
-        if (this.state.activeAsseessmentUsageType !== usageType) {
+        if(  this.state.activeAsseessmentUsageType === "" && this.state.activeAsseessmentUsageType !== usageType){
             this.setState({
-                activeAsseessmentUsageType: usageType,
-                changeUsageTypePopup: true,
+                activeAsseessmentUsageType: usageType
             }, () => {
                 this.saveAssessment();
+            })
+        }else if ( this.state.activeAsseessmentUsageType !== usageType) {
+            this.setState({
+                updatedUsageType: usageType,
+                changeUsageTypePopup: true,
             });
         }
         this.setState({
@@ -178,37 +182,15 @@ class ElementSingleAssessment extends Component {
     }
 
     
-//     handleAssessmentUsageTypeChange = (usageType) => {
-
-//         if (this.state.activeAsseessmentUsageType !== usageType) {
-//             this.setState({
-//                 activeAsseessmentUsageType: usageType,
-//                 changeUsageTypePopup: true,
-//                 // updatedUsageType: usageType
-//             });
-//         }
-//         else {
-//             this.setChangeUsageType(usageType)
-//         }
-//     }
-//         else {
-//     this.setChangeUsageType(usageType)
-// }
-//     }
-
-
-    
     setChangeUsageType(usageType){
         this.setState({
-            activeAssessmentUsageType: usageType,
+            activeAsseessmentUsageType : usageType,
             openUsageDropdown: false,
             openAssessmentDropdown: false,
             changeUsageTypePopup: false,
-            updatedUsageType:""
-        });
-        if (this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.changeLearningData === false) {
-            // this.props.handleAssessmentBlur(usageType)
-        }
+        }), () => {
+            this.saveAssessment();
+        }          
     }
     /**
      * @description This function is used to toggle changeUsageTypePopup 
