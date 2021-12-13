@@ -1187,28 +1187,23 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
+            
             const textLength = tinymce?.activeEditor?.selection?.getNode()?.textContent?.length;
             const cursorLength = window.getSelection().anchorOffset;
-            // const textLength = tinymce?.activeEditor?.selection.getRng().startOffset?.length;
-            console.log("the cursour length is ", cursorLength, textLength);
             if(e.keyCode === 38) {
                 if(cursorLength === 0) {
                     e.preventDefault();
-                    console.log("up arrwo and 0")
                 }
                 else {
                     e.stopPropagation();
-                    // e.preventDefault();
                 }
             }
             if(e.keyCode === 40) {
                 if(cursorLength === textLength) {
-                    console.log("down arrwo and last")
                     e.preventDefault();
                 }
                 else {
                     e.stopPropagation();
-                    // e.preventDefault();
                 }
             }
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */

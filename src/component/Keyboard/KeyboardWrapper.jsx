@@ -6,7 +6,8 @@ export const QUERY_SELECTOR = `cypress-keyboard`;
 
 const KeyboardWrapper = (props) => {
     const dispatch = useDispatch();
-    // React.memo vs React.useCallback
+
+    // id should be unique for all the elements.
     const id = `${QUERY_SELECTOR}-${props.index}`;
     return <div onFocus={() => {
         dispatch(selectElement(id));
