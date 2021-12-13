@@ -3,6 +3,7 @@ import { getLatestVersion } from "./TcmSnapshot_Actions";
 import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { prepareTcmSnapshots } from "./TcmSnapshots_Utility";
 import TcmConstants from "./TcmConstants";
+import config from '../../config/config';
 
 let operType = "";
 const {
