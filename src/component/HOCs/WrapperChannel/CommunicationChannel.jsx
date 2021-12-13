@@ -57,6 +57,9 @@ function CommunicationChannel(WrappedComponent) {
             let messageType = e.data.type;
             let message = e.data.message;
             switch (messageType) {
+                case 'tocContainersLabelUpdate':
+                    this.showNotificationOnCanvas(message);
+                    break;
                 case 'getPermissions':
                     this.sendingPermissions();
                     break;
@@ -124,6 +127,7 @@ function CommunicationChannel(WrappedComponent) {
                     config.ssoToken = message.ssoToken;
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
+                    config.isCypressPlusEnabled = message.isCypressPlusEnabled;
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
                     if (message?.alfresco?.repositoryFolder) {
@@ -267,6 +271,9 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'selectedAlfrescoAssetData' :
                     console.log('ASSET DATA FROM ALFRESCO', message.asset)
+                    // if(message?.asset?.length > 0) {
+                    //     message.asset = message.asset[0]
+                    // }
                     if(message.isEditor){
                         this.handleEditorSave(message)
                     }
@@ -333,6 +340,18 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setElmPickerData({})
             }
             hideBlocker();
+        }
+
+        showNotificationOnCanvas = (message) => {
+            let linkNotification = document.getElementById('link-notification');
+            if (linkNotification) {
+                linkNotification.innerText = message;
+                linkNotification.style.display = "block";
+                setTimeout(() => {
+                    linkNotification.style.display = "none";
+                    linkNotification.innerText = "";
+                }, 3000);
+            }
         }
 
         /**

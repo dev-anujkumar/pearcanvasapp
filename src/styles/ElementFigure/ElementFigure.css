@@ -107,7 +107,7 @@ figure,.element-container{
     display: table;
 }
 
-.divImageActualSize{
+.divImageActualSize, .divImageActualSizeTableImage, .divImageActualSizeMathImage{
     background-color: transparent;
     padding-top: 0;
     margin: 2.5em auto;
@@ -583,3 +583,9 @@ th ol li.listItemNumeroUnoNone:before {
     margin-top: 3px;
     border-bottom: 3px solid blue;
   }
+
+  .pearson-component.image.figureData.table-figure-data ul li.listItemNumeroUnoBullet::before {
+    counter-increment: section;
+    content: counter(section, disc);
+    font-size: 0px;
+}

@@ -1572,6 +1572,7 @@ class SlateWrapper extends Component {
                                 inputRef={inputRef}
                                 activeElement={this?.props?.activeElement}
                                 slateData={this?.props?.slateData}
+                                asideData={this?.props?.asideData}
                             />
                         )
                     }
@@ -1647,6 +1648,7 @@ const mapStateToProps = state => {
         removeGlossaryImage:state.appStore.removeGlossaryImage,
         projectSubscriptionDetails:state?.projectInfo,
         activeElement: state.appStore.activeElement,
+        asideData: state.appStore.asideData
     };
 };
 

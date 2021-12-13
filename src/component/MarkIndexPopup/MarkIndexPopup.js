@@ -36,10 +36,6 @@ componentWillMount() {
   document.addEventListener('mousedown', this.handleClickOutside);
 }
 
-componentWillUnmount() {
-  document.removeEventListener('mousedown', this.handleClickOutside);
-}
-
   componentDidMount(){
     this.props.getCrossReferenceValues();
   }
@@ -67,7 +63,7 @@ componentWillUnmount() {
 
 
 
-    return !(newEntryDom.isEqualNode(oldEntryDom) && newSubEntryDom.isEqualNode(oldSubEntryDom) && newCrossRefDom.isEqualNode(oldCrossRefDom))
+    return (!(newEntryDom.isEqualNode(oldEntryDom) && newSubEntryDom.isEqualNode(oldSubEntryDom) && newCrossRefDom.isEqualNode(oldCrossRefDom)) && newEntry !== "<p></p>")
   }
 
   saveContent = (crossReferences, crossRefValues) => {
@@ -104,6 +100,7 @@ componentWillUnmount() {
 
   getCrossRefData = () => {
     let crossRefValues = document.querySelector('#markedindex-cross-reference').innerHTML;
+    crossRefValues = crossRefValues.replace('<br data-mce-bogus="1">', '')
     let crossReferences = "";
     if(crossRefValues){
       let crossRefArray = crossRefValues.split(',');
@@ -181,6 +178,7 @@ componentWillUnmount() {
         tinymce.$('.wrs_modal_desktop').remove();
       }
     }
+    document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   render() {

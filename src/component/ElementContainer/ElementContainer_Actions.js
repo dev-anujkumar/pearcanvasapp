@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
@@ -9,10 +9,10 @@ import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ER
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
-import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
+import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowHide/ShowHide_Helper';
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
-
 import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
@@ -144,7 +144,6 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => async (dispatch, getState) => {
-    try {
         if(hasReviewerRole()){
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return ;
@@ -156,7 +155,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
         /** updateBodymatter | Used for TCM Snapshots */
-        let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+        let updateBodymatter = getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
         const helperArgs = { 
             updatedData,
             asideData,
@@ -191,6 +190,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }
             }
         }
+        try {
         const response = await axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData1,
             {
@@ -475,13 +475,15 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             bodymatter: currentSlateData.contents.bodymatter,
             response: createdElemData.data
         };
+        //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed 
+        if(type2BAdded !== "MANIFEST_LIST") {
         if (slateWrapperConstants?.elementType?.indexOf(type2BAdded) !== -1) {
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
             } else {
                 tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
             }
-        }
+        }}
         if (currentSlateData.status === 'approved') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -535,11 +537,13 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
 
         if (config.tcmStatus) {
             const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
+            //This check will be removed once BL will support TCM
+            if(type2BAdded !== "MANIFEST_LIST") {
             if (containersInSH.includes(type2BAdded)) {
                 prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);    
             } else {
                 prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
-            }
+            }}
         }
 
         dispatch({
@@ -691,10 +695,12 @@ export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
       })
     try {
         const res = await resp.json()
-        let statusString = res.status[0]
-        let splittedString = statusString.split("/")
+        let statusString = res?.status[0]
+        let splittedString = statusString?.split("/")
+        if(splittedString){
         let elementVersioningStatus = splittedString[splittedString.length - 1]
         config.elementStatus[elementWorkId] = elementVersioningStatus
+        }
     } catch (error) {
         console.error("Error in fetching element status", error)
     }
@@ -751,5 +757,170 @@ export const updateAudioVideoDataForCompare = (oldAudioVideoData) => (dispatch) 
     dispatch({
         type: UPDATE_OLD_AUDIOVIDEO_INFO,
         payload: oldAudioVideoData
+    })
+}
+
+const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
+    const {
+        index,
+        updatedElement,
+        currentSlateData,
+    } = updateParams;
+
+    let tmpIndex = typeof index === 'number' ? index : index.split("-")
+    let indexesLen = tmpIndex.length
+    let newBodymatter = currentSlateData.contents.bodymatter
+    if (updatedId && updatedId !== "") { /** Update Aside Id for versioning */
+        updatedElement.id = updatedId
+        updatedElement.versionUrn = updatedId
+    }
+    if (typeof tmpIndex === 'number') {
+        currentSlateData.contents.bodymatter[tmpIndex] = updatedElement
+    } else {
+        switch (indexesLen) {
+            case 2:
+                newBodymatter[tmpIndex[0]] = updatedElement
+                break;
+            case 3:
+                if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
+                    newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
+                }
+                else if (newBodymatter[tmpIndex[0]].type == "showhide") {
+                    newBodymatter[tmpIndex[0]].interactivedata[findSectionType(tmpIndex[1])][tmpIndex[2]] = updatedElement
+                }
+                break;
+        }
+    }
+
+    return {
+        currentSlateData
+    }
+}
+
+const prepareAsideTitleForUpdate = (index) => {
+    let labelDOM = document.getElementById(`cypress-${index}-t1`),
+        numberDOM = document.getElementById(`cypress-${index}-t2`),
+        titleDOM = document.getElementById(`cypress-${index}-t3`)
+    let labeleHTML = labelDOM ? labelDOM.innerHTML : "",
+        numberHTML = numberDOM ? numberDOM.innerHTML : "",
+        titleHTML = titleDOM ? titleDOM.innerHTML : ""
+    labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+    titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
+    return titleHTML
+}
+export const updateAsideNumber = (previousData, index,elementId) => (dispatch, getState) => {
+    const parentData = getState().appStore.slateLevelData;
+    const activeElementId=elementId;
+    const currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    let elementEntityUrn = "", updatedElement
+    let titleHTML = prepareAsideTitleForUpdate(index);
+    
+    updatedElement = {
+        ...previousData,
+        html: {
+            title: titleHTML
+        }
+    }
+    const updateParams = {
+        index,
+        updatedElement,
+        currentSlateData
+    }
+    const updatedData = dispatch(updateAsideNumberInStore(updateParams,activeElementId))
+    if (previousData?.contentUrn) {
+        elementEntityUrn = previousData.contentUrn
+    }
+    let updatedSlateLevelData = updatedData?.currentSlateData ?? parentData
+    currentParentData[config.slateManifestURN] = updatedSlateLevelData
+    dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: currentParentData
+        }
+    })
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+    config.conversionInProcess = true
+    config.isSavingElement = true
+    let dataToSend;
+    dataToSend = {
+        id: activeElementId,
+        projectUrn: config.projectUrn,
+        subtype: previousData.subtype,
+        type: previousData.type,
+        html: {
+            title: titleHTML
+        },
+        versionUrn: activeElementId,
+        contentUrn: previousData.contentUrn,
+        status: updatedSlateLevelData.status
+
+    }
+    let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
+    return axios.put(url, dataToSend, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(res => {
+        if (currentSlateData?.status === 'approved') {
+            if (currentSlateData.type === "popup") {
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
+            }
+            else {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            config.conversionInProcess = false
+            config.savingInProgress = false
+            config.isSavingElement = false
+        }
+        else {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            const newParentData = getState().appStore.slateLevelData;
+            const parsedParentData = JSON.parse(JSON.stringify(newParentData));
+            let newSlateData = parsedParentData[config.slateManifestURN];
+            const newVersionURN = res?.data?.versionUrn && res.data.versionUrn.trim() !== "" ? res.data.versionUrn : ""
+            const updatedSlateData = dispatch(updateAsideNumberInStore({
+                index,
+                updatedElement,
+                currentSlateData: newSlateData
+            }, newVersionURN))
+            currentParentData[config.slateManifestURN] = updatedSlateData?.currentSlateData
+            dispatch({
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: currentParentData
+                }
+            })
+        }
+        const oldActiveElement = getState()?.appStore?.activeElement;
+        const BLANK_PARA_VALUES = ['<p></p>', '<p><br></p>', '<p><br/></p>', '<br data-mce-bogus="1">', '<p><br data-mce-bogus="1"></p>',"<p class='paragraphNumeroUno'></p>"];
+        let activeElementObject = {
+            ...oldActiveElement,
+            elementId: dataToSend.id,
+            asideNumber: (!BLANK_PARA_VALUES.includes(titleHTML)) ? true : false
+        };
+        if (res?.data?.versionUrn && (res?.data?.versionUrn.trim() !== "")) {
+            activeElementObject.elementId = res.data.versionUrn
+        }
+        // dispatch({  // commented for future reference
+        //     type: 'SET_ACTIVE_ELEMENT',
+        //     payload: activeElementObject
+        // });
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        config.conversionInProcess = false
+        config.savingInProgress = false
+        config.isSavingElement = false
+    }).catch(err => {
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        dispatch({ type: ERROR_POPUP, payload: { show: true } })
+        config.conversionInProcess = false
+        config.savingInProgress = false
+        config.isSavingElement = false
+        console.error(" Error >> ", err)
     })
 }

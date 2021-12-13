@@ -7,15 +7,17 @@ import {
     ERROR_POPUP,
     GET_TCM_RESOURCES,
     AUTHORING_ELEMENT_UPDATE,
+    CHECK_ASIDE_NUMBER 
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
-import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+import { fetchParentData } from '../TcmSnapshots/TcmSnapshotsOnDefaultSlate';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
@@ -365,6 +367,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
            activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
             
         }
+        const asideElementTypes = ['element-aside', 'element-workedexample'];
+        if (asideElementTypes.includes(newElementData.elementType)) {
+            const hasAsideNumber = (res.data?.html?.title && (res.data?.html?.title !== "<p class='paragraphNumeroUno'></p>" && res.data?.html?.title !== "<p></p>")) ? true : false;
+            activeElementObject.asideNumber = hasAsideNumber
+        }
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -672,7 +679,12 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             config.isSavingElement = false
         } else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-            updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex], dataToSend)
+            if (dataToUpdate.asideData.parent && dataToUpdate.asideData.parent.type==="showhide") {
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex[0]].interactivedata[dataToUpdate.asideData.parent.showHideType][dataToUpdate.slateLevelBLIndex[2]], dataToSend)
+            }
+            else {
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex[0]], dataToSend)
+            }
             dispatch({
                 type: AUTHORING_ELEMENT_UPDATE,
                 payload: {
@@ -833,7 +845,8 @@ export const updateBLMetaData = (elementId, elementData, metaData) => {
 }
 
 
-const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch) => {
+const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch, getState) => {
+    const { appStore } =  getState();
     const {
         dataToUpdate,
         activeElement,
@@ -865,6 +878,10 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
                         updatedElement = newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]]
+                    } else if (newBodymatter[tmpIndex[0]]?.type == "showhide") {
+                        newBodymatter[tmpIndex[0]].interactivedata[appStore?.asideData?.sectionType][tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].interactivedata[appStore?.asideData?.sectionType][tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].interactivedata[appStore?.asideData?.sectionType][tmpIndex[2]]
                     } else {
                         newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
                         newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
@@ -901,4 +918,11 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
        elementEntityUrn, currentSlateData
     }
 
+}
+
+export const enableAsideNumbering = (isAsideNumber,elementId) => (dispatch) => {
+    dispatch({
+        type: CHECK_ASIDE_NUMBER,
+        payload: {isAsideNumber, elementId}
+    });
 }

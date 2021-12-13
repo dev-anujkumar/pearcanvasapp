@@ -89,10 +89,22 @@ class CommentsPanel extends React.Component {
             }
           }
         });
+        let workflowRoleOption = this.getWorkflowRoleOption(this.props.workflowRoles)
+        roleOptions = roleOptions.concat(workflowRoleOption)
         roleOptions.sort((a,b) => (b.label.toLowerCase() < a.label.toLowerCase() ? 1 : -1));
         return roleOptions;
       };
 
+      getWorkflowRoleOption = (workflowRoles) => {
+        let workflowRoleOptions = [];
+        for (const role in workflowRoles) {
+            if (workflowRoles[role]) {
+                workflowRoleOptions.push({ value: { roleName: role, filterType: 'role', label: role }, label: role });
+            }
+        }
+        workflowRoleOptions.sort((a, b) => (b.label.toLowerCase() < a.label.toLowerCase() ? 1 : -1));
+        return workflowRoleOptions
+    }
 
     /**
      * 
@@ -257,7 +269,6 @@ class CommentsPanel extends React.Component {
     renderComment = (commentObject) => {
         let { filters } = this.state;
         let {users} = this.props;
-        // console.log(users, "checking users ishant");
         let roles = this.getRoleOption(users);
         let finalFilteredComments = this.filterComments(commentObject, filters)
         if (finalFilteredComments && finalFilteredComments.length > 0) {
@@ -466,7 +477,8 @@ const mapStateToProps = state => {
         users: state.commentsPanelReducer.users,
         slateTitle: state.commentsPanelReducer.slateTitle,
         permissions : state.appStore.permissions,
-        roleId: state.appStore.roleId
+        roleId: state.appStore.roleId,
+        workflowRoles:state.projectInfo.workflowRole
     }
 };
 

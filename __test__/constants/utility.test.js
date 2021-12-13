@@ -366,11 +366,11 @@ describe('Testing Function - replaceWirisClassAndAttr', () => {
 })
 
 describe('Testing Function - getShowhideChildUrns', () => {
-    it('Case 1', () => {
+    xit('Case 1', () => {
         let result = getShowhideChildUrns(showHide);
         expect(result).toStrictEqual(["urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c", "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa38362", "urn:pearson:work:2b9dde07-1771-488a-b9f1-010af4a8961a", "urn:pearson:work:50994dd9-c556-415f-bee2-57fc4c4fb032"]);
     })
-    it('Case 2', () => {
+    xit('Case 2', () => {
         let newShowHide = delete showHide.interactivedata;
         let result = getShowhideChildUrns(newShowHide);
         expect(result).toStrictEqual(undefined);
@@ -378,7 +378,7 @@ describe('Testing Function - getShowhideChildUrns', () => {
 })
 
 describe('Testing Function - removeClassesFromHtml', () => {
-    it('Case 1', () => {
+    xit('Case 1', () => {
         let htmlData = "<p class='testing class'>blockquote</p>"
         let result = removeClassesFromHtml(htmlData);
         expect(result).toBe("<p>blockquote</p>");
