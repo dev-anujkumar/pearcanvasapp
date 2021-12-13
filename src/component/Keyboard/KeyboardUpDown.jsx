@@ -25,12 +25,12 @@ const KeyboardUpDown = (props) => {
                     }
                 }
                 );
-                console.log("Key down Main: Arrow Pressed", activeElement, allInteractiveElements.length);
-                if (event.keyCode === 38 && selectedNodeIndex !== allInteractiveElements.length) {
+                console.log("Key down Main: Arrow Pressed", selectedNodeIndex,event.keyCode, activeElement, allInteractiveElements.length);
+                if (event.keyCode === 38 && selectedNodeIndex !== 0) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex - 1]);
 
                 }
-                else if (event.keyCode === 40 && selectedNodeIndex !== 0) {
+                else if (event.keyCode === 40 && selectedNodeIndex !== allInteractiveElements.length) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex + 1]);
                 }
             }
