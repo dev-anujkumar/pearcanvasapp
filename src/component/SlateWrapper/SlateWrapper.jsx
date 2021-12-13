@@ -50,7 +50,7 @@ import store from '../../appstore/store';
 import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import {isOwnersSubscribedSlate} from '../CanvasWrapper/CanvasWrapper_Actions';
-import KeyboardUpDown from '../Keyboard/KeyboardUpDown';
+import KeyboardUpDown from '../Keyboard/KeyboardUpDown.jsx';
 
 let random = guid();
 
