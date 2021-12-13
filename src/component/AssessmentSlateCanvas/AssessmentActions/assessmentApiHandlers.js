@@ -127,7 +127,8 @@ const AssessmentAPIHandlers = {
             assessmentStatus: assessmentStatus,
             assessmentEntityUrn: responseData.entityUrn,
             targetId: assessmentData.targetId,
-            createdDate: responseData.dateCreated
+            createdDate: responseData.dateCreated,
+            intendedUsage: responseData.intendedUsage
         }
     },
     /** @description This function returns assessment-metadata for assessment with status-final */

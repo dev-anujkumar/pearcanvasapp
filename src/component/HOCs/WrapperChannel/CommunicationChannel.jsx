@@ -57,6 +57,9 @@ function CommunicationChannel(WrappedComponent) {
             let messageType = e.data.type;
             let message = e.data.message;
             switch (messageType) {
+                case 'tocContainersLabelUpdate':
+                    this.showNotificationOnCanvas(message);
+                    break;
                 case 'getPermissions':
                     this.sendingPermissions();
                     break;
@@ -367,6 +370,18 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setElmPickerData({})
             }
             hideBlocker();
+        }
+
+        showNotificationOnCanvas = (message) => {
+            let linkNotification = document.getElementById('link-notification');
+            if (linkNotification) {
+                linkNotification.innerText = message;
+                linkNotification.style.display = "block";
+                setTimeout(() => {
+                    linkNotification.style.display = "none";
+                    linkNotification.innerText = "";
+                }, 3000);
+            }
         }
 
         /**
