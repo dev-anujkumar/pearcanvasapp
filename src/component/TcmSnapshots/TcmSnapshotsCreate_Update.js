@@ -4,7 +4,6 @@ import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Action
 import { prepareTcmSnapshots } from "./TcmSnapshots_Utility";
 import TcmConstants from "./TcmConstants";
 import config from '../../config/config';
-
 let operType = "";
 const {
     AUTHORED_TEXT,

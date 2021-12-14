@@ -147,17 +147,18 @@ class AssetPopoverSearch extends React.Component {
      */
     apoBodyJsx = (ValueToBeSearch) => {
         const assetArray = {
-            figures: this.props.figures,
-            audios: this.props.audios,
-            videos: this.props.videos,
-            interactives: this.props.interactives,
-            smartLinkInteractives: this.props.smartLinkInteractives,
-            asides: this.props.asides,
-            tables: this.props.tables,
-            workedExamples: this.props.workedExamples
+            figures: this.props?.figures ? this.props.figures : [] ,
+            audios: this.props?.audios ? this.props.audios : [],
+            videos: this.props?.videos ? this.props.videos : [],
+            interactives: this.props?.interactives ? this.props.interactives : [],
+            smartLinkInteractives: this.props?.smartLinkInteractives ? this.props.smartLinkInteractives : [],
+            asides: this.props?.asides ? this.props.asides : [],
+            tables: this.props?.tables ? this.props.tables : [],
+            workedExamples: this.props?.workedExamples ? this.props.workedExamples : []
         }
+        let totalAssets = Object.values(assetArray).flat().length;
         return (<section className="modalBody">
-            <p className="APOSearchResultText">Search took about {this.props.timeByAPI ? this.props.timeByAPI.toFixed() : ' '} ms, Total hits: {this.props.figures ? this.props.figures.length : 0}</p>
+            <p className="APOSearchResultText">Search took about {this.props.timeByAPI ? this.props.timeByAPI.toFixed() : ' '} ms, Total hits: {totalAssets}</p>
             <ApiResults assetPopoverData={assetArray} selectedFigure={this.selectedFigure} ValueToBeSearch={ValueToBeSearch}/>
         </section>
         )
