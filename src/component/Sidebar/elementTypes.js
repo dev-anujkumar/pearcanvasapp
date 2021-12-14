@@ -507,7 +507,7 @@ export default {
         'primary-column-2': {
             text: '2-Column View',
             enum: 'COLUMN_VIEW_2',
-            toolbar: ['insertMedia'],
+            // toolbar: ['insertMedia'],
             subtype: {
                 'secondary-column-2': {
                     text: '2-Column View',
@@ -519,7 +519,7 @@ export default {
         'primary-column-3': {
             text: '3-Column View',
             enum: 'COLUMN_VIEW_3',
-            toolbar: ['insertMedia'],
+            // toolbar: ['insertMedia'],
             subtype: {
                 'secondary-column-3': {
                     text: '3-Column View',
@@ -531,7 +531,7 @@ export default {
         'primary-column-4': {
             text: '4-Column View',
             enum: 'COLUMN_VIEW_4',
-            toolbar: ['insertMedia'],
+            // toolbar: ['insertMedia'],
             subtype: {
                 'secondary-column-4': {
                     text: '4-Column View',
