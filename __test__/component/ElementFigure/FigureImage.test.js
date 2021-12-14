@@ -53,7 +53,7 @@ describe('Testing Figure image component', () => {
             permissions: ['add_multimedia_via_alfresco'],
             figureData:{
                 model:{
-                    figuretype:'image'
+                    figuretype:['image','table','mathImage','authoredtext']
                 }
             }
         }
@@ -366,15 +366,15 @@ describe('Testing Figure image component', () => {
         })
         it('Test- else case workflow when epsURL is not given', () => {
             let data = testDataFromNewAlfresco;
-            data["epsUrl"] = ''
-            data['id'] = ''
-            data.properties["exif:pixelXDimension"] = ''
-            data.properties["exif:pixelYDimension"] = ''
-            data.properties["cplg:altText"] = ''
+            data["epsUrl"] = '',
+            data['id'] = '',
+            data.properties["exif:pixelXDimension"] = '',
+            data.properties["exif:pixelYDimension"] = '',
+            data.properties["cplg:altText"] = '',
             data.properties['cplg:longDescription'] = ''
-            let defaultImageSrc = "https://cite-media-stg.pearson.com/legacy_paths/9b39bfd7-b73c-4b0f-b2c5-60e77ed17ce7/Page097a.jpg"
+            let DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/9b39bfd7-b73c-4b0f-b2c5-60e77ed17ce7/Page097a.jpg"
             elementFigureInstance.dataFromNewAlfresco(data)
-            expect(elementFigureInstance.state.imgSrc).toBe(defaultImageSrc)
+            expect(elementFigureInstance.state.imgSrc).toBe(DEFAULT_IMAGE_SOURCE)
         })
         it('Test componentWillUnmount', () => {
             jest.spyOn(elementFigureInstance, 'componentWillUnmount')
