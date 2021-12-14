@@ -6,30 +6,35 @@ export const AUTO_NUMBER_SETTING_REMOVE_NUMBER = 'Remove lable & number'
 export const AUTO_NUMBER_SETTING_OVERRIDE_NUMBER = 'Override number only'
 export const AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER = 'Override lable & number'
 
+export const LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES = {
+    AUTO_NUMBER_SETTING_DEFAULT: 'Default Auto-number',
+    AUTO_NUMBER_SETTING_RESUME_NUMBER: 'Resume numbernig with',
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER: 'Remove lable & number',
+    AUTO_NUMBER_SETTING_OVERRIDE_NUMBER: 'Override number only',
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER: 'Override lable & number'
+}
+
 export const setAutoNumberSettingValue = (element) => {
     if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) {
-        return AUTO_NUMBER_SETTING_REMOVE_NUMBER
+        return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_REMOVE_NUMBER
     }
     else if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
         if (element.hasOwnProperty('manualoverride') && Object.keys(element.manualoverride)?.length > 0) {
             if (element.manualoverride.hasOwnProperty('overridenumbervalue') && element.manualoverride.hasOwnProperty('overridelabelvalue')) {
-                return AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
+                return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
             } else if (element.manualoverride.hasOwnProperty('overridenumbervalue')) {
-                return AUTO_NUMBER_SETTING_OVERRIDE_NUMBER
+                return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_OVERRIDE_NUMBER
             } else if (element.manualoverride.hasOwnProperty('resumenumbervalue')) {
-                return AUTO_NUMBER_SETTING_RESUME_NUMBER
+                return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_RESUME_NUMBER
             }
         }
-        return AUTO_NUMBER_SETTING_DEFAULT
+        return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT
     }
-    return AUTO_NUMBER_SETTING_DEFAULT
+    return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT
 }
 
 
 export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue }, parentNumber) => {
-    // if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) {
-    //     return ""
-    // } else 
     if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
         return `${imgLabelValue} ${parentNumber}.${imgNumberValue}`
     }
@@ -43,18 +48,16 @@ export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
             return 'F'
         case 'backMatter':
             return 'B'
-        // case 'Part':
-        // return 'P'
-        // const partEntityUrn = containerEntityUrn?.split('-')?.[1]
-        // const partNumber = config?.autoNumberingDetails?.partOrderList[partEntityUrn]
-        // return partNumber ? `P${partNumber}` : 'P'
         default:
             if (autoNumberingDetails?.partOrderList?.hasOwnProperty(containerEntityUrn)) {
                 const partNumber = autoNumberingDetails?.partOrderList[partEntityUrn]
                 return partNumber ? `P${partNumber}` : 'P'
             }
             else {
-                return autoNumberingDetails?.chapterOrderList[containerEntityUrn] || '1'
+                if (containerEntityUrn) {
+                    return autoNumberingDetails?.chapterOrderList[containerEntityUrn] || '1'
+                }
+                return "1"
             }
     }
 }
@@ -79,43 +82,27 @@ export const getContainerEntityUrn = (slateAncestors) =>{
             }
         }
     }
-    return slateAncestors.contentUrn
+    return slateAncestors?.contentUrn || ""
 }
 
 export const getLabelNumberFieldValue = (element, figureLabelValue, containerNumber) => {
+    let elementLabel = figureLabelValue || element?.displayedlabel || ""
     if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) {
-        return {
-            label: "",
-            number: ""
-        }
+        elementLabel = ""
     }
     else if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
         if (element.hasOwnProperty('manualoverride') && Object.keys(element.manualoverride)?.length > 0) {
             if (element.manualoverride.hasOwnProperty('overridenumbervalue') && element.manualoverride.hasOwnProperty('overridelabelvalue')) {
-                return {
-                    label: element.manualoverride.overridelabelvalue,
-                    number: `${containerNumber}.${element.manualoverride.overridenumbervalue}`
-                }
-            } else if (element.manualoverride.hasOwnProperty('overridenumbervalue')) {
-                return {
-                    label: figureLabelValue,
-                    number: `${containerNumber}.${element.manualoverride.overridenumbervalue}`
-                }
-            } else if (element.manualoverride.hasOwnProperty('resumenumbervalue')) {
-                return {
-                    label: figureLabelValue,
-                    number: `${containerNumber}.${element.manualoverride.resumenumbervalue}`
-                }
+                elementLabel = element.manualoverride.overridelabelvalue
+            } else if ((element.manualoverride.hasOwnProperty('overridenumbervalue')) || (element.manualoverride.hasOwnProperty('resumenumbervalue'))) {
+                elementLabel = figureLabelValue
             }
         }
-        return {
-            label: figureLabelValue,
-            number: `${containerNumber}.100`
-        }
     }
+    return elementLabel
 }
 
-export const prepareAutoNumberList = (imagesData) => {
+export const prepareAutoNumberList = (imagesData, autoNumberElementsCount = {}, elementCount = {}) => {
     const imagesList = { ...imagesData };
     /** Destructure the ImageList into an array of Fig-EntityUrns in Order */
     Object.keys(imagesList).forEach((key) => {
@@ -124,10 +111,12 @@ export const prepareAutoNumberList = (imagesData) => {
     /** Get the number value for the Fig-Element based on aut-numbering wip values*/
     //can be replaced with the logic for getNodeIndex from toc
     Object.keys(imagesList).forEach((key) => {
-        config.imgCount = 0;
+        // autoNumberElementsCount[elementCount] = 0;
+        // config.imgCount = 0;
+        let count = 0
         imagesList[key] = imagesList[key]?.reduce(function (result, item, index, array) {
             const activeItem = imagesData[key].find((img) => img.contentUrn === item);
-            let numberValue = config.imgCount;
+            let numberValue = count;//config.autoNumberElementsCount[elementCount]//
             if (activeItem) {
                 if (activeItem?.numberedandlabel === false) {
                     numberValue = "";
@@ -135,9 +124,11 @@ export const prepareAutoNumberList = (imagesData) => {
                     numberValue = activeItem.manualoverride.overridenumbervalue;
                 } else if (activeItem?.manualoverride?.resumenumbervalue) {
                     numberValue = activeItem.manualoverride.resumenumbervalue;
-                    config.imgCount = activeItem.manualoverride.resumenumbervalue;
+                    //autoNumberElementsCount[elementCount] = activeItem.manualoverride.resumenumbervalue;
+                    count = activeItem.manualoverride.resumenumbervalue;
                 } else {
-                    numberValue = ++config.imgCount;
+                    //numberValue = ++autoNumberElementsCount[elementCount];
+                    numberValue = ++count
                 }
             }
             //console.log(item, 'numberValue', numberValue)
@@ -146,6 +137,6 @@ export const prepareAutoNumberList = (imagesData) => {
         },
             {});
     });
-    //console.log("imagesList", imagesList);
+    console.log("autoNumberElementsCount[elementCount]", autoNumberElementsCount[elementCount]);
     return imagesList;
 };

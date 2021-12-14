@@ -7,10 +7,17 @@ import config from '../../config/config';
 import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import dropdown_arrow_icon from '../../images/FigureHeader/dropdown-arrow.svg';
-import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, getLabelNumberFieldValue, getContainerEntityUrn, getFigureIndexDefault, getNumberValue, getNumberData } from './AutoNumber_helperFunctions';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getFigureIndexDefault, getNumberValue, getNumberData } from './AutoNumber_helperFunctions';
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, removeUnoClass } from '../../constants/utility';
 import { labelHtmlData } from '../../constants/Element_Constants';
 
+const { 
+    AUTO_NUMBER_SETTING_DEFAULT,
+    AUTO_NUMBER_SETTING_RESUME_NUMBER,
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export const FigureHeader = (props) => {
     const AUTO_NUMBER_SETTING_DROPDOWN_VALUES = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
@@ -34,8 +41,7 @@ export const FigureHeader = (props) => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
         setLabelNumberSetting(dropdownVal)
     }, [])
-    // console.log('figImageList', figImageList)
-    // console.log('config.imageIndex',config.imageIndex)
+
     /**---------------------------------------- */
     const handleCloseDropDrown = () => {
         setLabelDropDown(false)
@@ -106,12 +112,12 @@ export const FigureHeader = (props) => {
     const { figureHtmlData, previewClass, figLabelClass, figTitleClass, onFigureImageFieldBlur, onFigureImageFieldFocus } = props
     const containerNumber = getContainerNumber(slateAncestors, autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
-    const autoNumberFieldsData = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)
-    const imgLabelValue = autoNumberFieldsData.label//props.model?.displayedLabel ?? 'Figure'
+    const imgLabelValue = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)//props.model?.displayedLabel ?? 'Figure'
     const parentNumber = containerNumber//'test'//getNumberValue(props.model, figureIndex, containerNumber, figIndexParent)//onfig.imageCount++
     let imgNumberValue = ''//getNumberData(figIndexParent,props.model)
-    if(props.model.contentUrn){
-        imgNumberValue = config.imageIndex[figIndexParent][props.model.contentUrn]
+    if (props.model.contentUrn) {
+        //imgNumberValue = config.autoNumberElementsIndex.figureImageIndex[figIndexParent][props.model.contentUrn]
+        imgNumberValue = figIndexParent && config.imageIndex[figIndexParent][props.model.contentUrn]
     }
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })
     return (

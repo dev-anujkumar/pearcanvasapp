@@ -837,7 +837,11 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.fetchAudioNarrationForContainer(slateData)
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
-                this.props.fetchProjectFigures()
+                // this.props.fetchProjectFigures('IMAGE')
+                const mediaElement = ['IMAGE']//, 'AUDIO', 'VIDEO'
+                mediaElement.forEach(ele => {
+                    this.props.fetchProjectFigures(ele)
+                })
                 this.props.fetchSlateData(message.node.containerUrn, config.slateEntityURN, config.page, '', "");
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);
