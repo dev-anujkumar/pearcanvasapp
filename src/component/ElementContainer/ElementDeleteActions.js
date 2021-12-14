@@ -32,7 +32,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             }
         }
     ).then(async (response) => {
-        console.log('delete success')
+
         let newIndex = typeof eleIndex == 'number' ? eleIndex : eleIndex.split("-")
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
         hideBlocker()
