@@ -71,10 +71,11 @@ class ApiResults extends React.Component {
     }
 
     render() {
-        const {assetPopoverData, selectedFigure, ValueToBeSearch} = this.props;
+        const {assetPopoverData, selectedFigure, ValueToBeSearch, timeByAPI} = this.props;
         let matchingAssets = this.findMatchingAssets(assetPopoverData, ValueToBeSearch)
         return (
             <div>
+                <p className="APOSearchResultText">Search took about {timeByAPI ? timeByAPI.toFixed() : ' '} ms, Total hits: {matchingAssets.length}</p>
                 {matchingAssets.length >= 1 ? this.renderByAssetType(assetPopoverData, selectedFigure, ValueToBeSearch) : <ErrorComp errorMsg={"No Match found! "} />}
             </div>
         )
