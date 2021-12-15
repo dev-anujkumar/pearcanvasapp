@@ -126,7 +126,7 @@ const _Toolbar = props => {
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
                             </div>
                             {lodropdown &&
-                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} showCanvasBlocker={props.showCanvasBlocker}/>
+                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} lastAlignedExternalLO={props.lastAlignedExternalLO} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} showCanvasBlocker={props.showCanvasBlocker}/>
                             }
                         </div>
                     </div>
@@ -200,6 +200,7 @@ const mapStateToProps = (state) => {
         elemBorderToggle,
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
+        lastAlignedExternalLO:state.metadataReducer.lastAlignedExternalLO,
         slateType: state.appStore.slateType,
         setSlateEntity: state.appStore.setSlateEntity,
         isLOExist: state.metadataReducer.slateTagEnable,
