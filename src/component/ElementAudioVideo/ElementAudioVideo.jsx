@@ -13,7 +13,7 @@ import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../cons
 //import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import { hasReviewerRole, getLabelNumberTitleHTML, sendDataToIframe } from '../../constants/utility.js'
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
-import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
+import {alfrescoPopup, saveSelectedAssetData  , saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import PopUp from '../PopUp';
@@ -291,6 +291,12 @@ class ElementAudioVideo extends Component {
             // this.props.saveSelectedAssetData(payloadObj)
             //this.updateAlfrescoSiteUrl(alfrescoData)
         }}
+         // to blank the elementId and asset data after update
+         let payloadObj = {
+            asset: {},
+            id: ''
+        }
+        this.props.saveSelectedAssetData(payloadObj)
     }
 
     updateAlfrescoSiteUrl = () => {
@@ -345,14 +351,8 @@ class ElementAudioVideo extends Component {
         const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.dataFromAlfresco(alfrescoAssetData)
-            // to blank the elementId and asset data after update
-            const payloadObj = {
-                asset: {},
-                id: ''
-            }
-            this.props.saveSelectedAssetData(payloadObj)
         }
-    }
+    }        
     
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
@@ -404,6 +404,12 @@ class ElementAudioVideo extends Component {
                         elementId: this.props.elementId,
                         currentAsset }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                    const messageDataToSaveAudio = {
+                        id: this.props.model.id,
+                        editor: undefined,
+                        citeNodeRef: nodeRefs
+                    }
+                    this.props.saveSelectedAlfrescoElement(messageDataToSaveAudio);
                 }
                 else {
                     this.props.accessDenied(true)
@@ -526,6 +532,9 @@ const mapActionToProps = (dispatch) =>{
         },
         updateAudioVideoDataForCompare: (oldAudioVideoData) => {
             dispatch(updateAudioVideoDataForCompare(oldAudioVideoData))
+        },
+        saveSelectedAlfrescoElement: (payloadObj) => {
+            dispatch(saveSelectedAlfrescoElement(payloadObj))
         }
     }
 }
