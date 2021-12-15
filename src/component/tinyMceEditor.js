@@ -3121,7 +3121,7 @@ export class TinyMceEditor extends Component {
 
                 let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 //PCAT-9077 - duplicate toolbar issue on element creation
-                tinymce.remove()
+                //tinymce.remove()                                           /** Commenting this line as its creating placeholder overlap issue while creating the element */
                 tinymce.init(this.editorConfig).then((d) => {
                     if (this.editorRef.current) {
 
