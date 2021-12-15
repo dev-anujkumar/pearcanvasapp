@@ -33,6 +33,23 @@ export const setAutoNumberSettingValue = (element) => {
     return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT
 }
 
+export const getOverridedNumberValue = (element) => {
+    if ((element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) || (!element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true)) {
+        return undefined;
+    }
+    else if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
+        if (element.hasOwnProperty('manualoverride') && Object.keys(element.manualoverride)?.length > 0) {
+            if (element.manualoverride.hasOwnProperty('overridenumbervalue')) {
+                return element.manualoverride.overridenumbervalue;
+            } else if (element.manualoverride.hasOwnProperty('resumenumbervalue')) {
+                return element.manualoverride.resumenumbervalue;
+            }
+        }
+        return undefined;
+    }
+    return undefined;
+}
+
 
 export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue }, parentNumber) => {
     if (element.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
@@ -64,7 +81,7 @@ export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
 
 export const getContainerEntityUrn = (slateAncestors) =>{
     const moduleTypes = ['module', 'appendix']
-    const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate']
+    const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate', 'container-introduction']
     if (slateAncestors?.matterType !== 'BodyMatter') {
         const matterType = slateAncestors.matterType ==='FrontMatter' ? 'frontMatter' : slateAncestors.matterType ==='BackMatter' ? 'backMatter' :""
         return matterType
@@ -82,7 +99,7 @@ export const getContainerEntityUrn = (slateAncestors) =>{
             }
         }
     }
-    return slateAncestors?.contentUrn || ""
+    return slateAncestors?.contentUrn ?? ''
 }
 
 export const getLabelNumberFieldValue = (element, figureLabelValue, containerNumber) => {

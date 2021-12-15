@@ -48,7 +48,8 @@ import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentAc
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
-import ElementConstants from "../ElementContainer/ElementConstants.js"
+import ElementConstants from "../ElementContainer/ElementConstants.js";
+import { isAutoNumberEnabled } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
 
 export const findElementType = (element, index) => {
@@ -377,6 +378,12 @@ export const getProjectDetails = () => (dispatch, getState) => {
             })
         }
         const data = JSON.parse(JSON.stringify(response.data))
+        if (data?.parameters && Object.keys(data?.parameters).length > 0) {
+            let flag = data?.parameters?.enablenumberedandlabel || false;
+            dispatch(isAutoNumberEnabled(flag));
+        }
+        let flag = true;
+        dispatch(isAutoNumberEnabled(flag)); // by default set true figure autonumbering
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
             // Api to get LOB Permissions

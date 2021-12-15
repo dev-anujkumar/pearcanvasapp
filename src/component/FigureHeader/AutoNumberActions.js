@@ -38,7 +38,7 @@ export const fetchProjectFigures = (elementType) => dispatch => {
                 tablesList: [],
                 equationsList: []
             }
-            numberedElements = mediaElementAPI_Handler(projectContent, numberedElements).imagesList
+            numberedElements = mediaElementAPI_Handler(projectContent, numberedElements);
             console.log('numberedElements>>>>', numberedElements)
             let autoNumberElementsIndex = {},autoNumberElementsCount={} 
             const elementKeys = autoNumber_KeyMapper[elementType]
@@ -111,8 +111,8 @@ export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch
     });
 }
 
-export const isAutoNumberEnabled = (flag) => dispatch =>{
-    dispatch({
+export const isAutoNumberEnabled = (flag) => dispatch => {
+    return dispatch({
         type: SET_AUTO_NUMBER_TOGGLE,
         payload: {
             isAutoNumberingEnabled: flag

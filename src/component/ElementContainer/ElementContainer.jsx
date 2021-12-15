@@ -72,6 +72,7 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
+import { getOverridedNumberValue } from '../FigureHeader/AutoNumber_helperFunctions';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -400,7 +401,9 @@ class ElementContainer extends Component {
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+        if (!this.props.isAutoNumberingEnabled) {
+            titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+        }
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
@@ -414,6 +417,24 @@ class ElementContainer extends Component {
         let oldImage = this.props.oldImage;
         if (previousElementData.figuretype !== 'tableasmarkup') {
             oldImage = this.props.oldFigureDataForCompare.path;
+        }
+        if (this.props.isAutoNumberingEnabled) {
+            let isNumberDifferent = false;
+            let overridedNumber = getOverridedNumberValue(previousElementData);
+            if (overridedNumber) {
+                isNumberDifferent = overridedNumber !== numberHTML;
+            }
+            console.log("1111111111111", titleHTML, previousElementData.displayedlabel)
+        console.log("222222222222", this.removeClassesFromHtml(subtitleHTML), previousElementData.title.text)
+        console.log("333333333333", overridedNumber, numberHTML);
+            return (titleHTML !== previousElementData.displayedlabel ||
+                this.removeClassesFromHtml(subtitleHTML) !== previousElementData.title.text || isNumberDifferent ||
+                captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+                (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+                || podwidth !== (previousElementData.figuredata.podwidth ?
+                    previousElementData.figuredata.podwidth : '') && podwidth !== null
+            );
         }
 
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
@@ -766,7 +787,7 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props.autoNumberOption)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
@@ -2437,7 +2458,9 @@ const mapStateToProps = (state) => {
         oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare,
         oldAudioVideoDataForCompare: state.appStore.oldAudioVideoDataForCompare,
         markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
-        markedIndexValue: state.markedIndexReducer.markedIndexValue
+        markedIndexValue: state.markedIndexReducer.markedIndexValue,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
+        autoNumberOption: state.autoNumberReducer.autoNumberOption
     }
 }
 

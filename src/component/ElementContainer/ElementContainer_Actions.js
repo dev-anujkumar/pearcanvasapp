@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
@@ -740,6 +740,14 @@ export const updateFigureImageDataForCompare = (oldFigureData) => (dispatch) => 
     dispatch({
         type: UPDATE_OLD_FIGUREIMAGE_INFO,
         payload: oldFigureData
+    })
+}
+
+// it saves the auto number dropdown value of figure element for dropdown changes
+export const updateAutoNumberingDropdownForCompare = (value) => (dispatch) => {
+    dispatch({
+        type: UPDATE_AUTONUMBERING_DROPDOWN_VALUE,
+        payload: value
     })
 }
 

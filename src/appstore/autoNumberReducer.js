@@ -4,7 +4,9 @@ import {
     UPDATE_AUTO_NUMBER_SEQUENCE,
     GET_TOC_AUTO_NUMBERING_LIST,
     GET_ALL_AUTO_NUMBER_ELEMENTS,
-    UPDATE_AUTO_NUMBER_ELEMENTS_LIST
+    UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
+    GET_ALL_FIGURE_ELEMENTS,
+    UPDATE_AUTONUMBERING_DROPDOWN_VALUE
 } from '../constants/Action_Constants.js';
 
 const INITIAL_STATE = {
@@ -24,7 +26,9 @@ const INITIAL_STATE = {
         figureImageCount: 1,
         tableCount: 1,
         equationsCount: 1
-    }
+    },
+    figImageList: [],
+    autoNumberOption: ''
 }
 
 const INITIAL_ACTION = {
@@ -74,6 +78,11 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
                     ...autoNumberElementsCount,
                     [action.payload.mediaType]: action.payload.mediaCount
                 }
+            }
+        case UPDATE_AUTONUMBERING_DROPDOWN_VALUE:
+            return {
+                ...state,
+                autoNumberOption: action.payload
             }
         default:
             return state
