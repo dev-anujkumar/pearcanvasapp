@@ -1,4 +1,4 @@
-import { currentSlateLO, isLOExist, setCurrentModule, currentSlateLOMath,reRenderLO, currentSlateLOType, toggleLOWarningPopup } from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { currentSlateLO, updateLastAlignedLO, isLOExist, setCurrentModule, currentSlateLOMath,reRenderLO, currentSlateLOType, toggleLOWarningPopup } from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 
@@ -17,6 +17,23 @@ describe('Testing Actions', () => {
     let store = mockStore();
     store.dispatch(currentSlateLO(currentSlateLOData));
     expect(store.getActions()).toEqual(expectedActions);
+  })
+
+  it('Testing updateLastAlignedLO Action',()=>{
+    const updatedLastLO={}
+    let label={
+      en:"Construct and Solve Linear Equation"
+    }
+    updatedLastLO.id="urn:pearson:educationalgoal:f77c17cd-461a-447a-a592-b333eea0109f",
+    updatedLastLO.label=label,
+    updatedLastLO.subject="https://schema.pearson.com/ns/domains/mathematics"
+    const expectedActions =
+    [{
+      'payload': updatedLastLO ,
+      'type': "UPDATE_LAST_ALIGNED_LO",
+    }]
+  let store = mockStore();
+  store.dispatch(updateLastAlignedLO(updatedLastLO));
   })
 
   it('testing currentSlateLOMath function', () => {
