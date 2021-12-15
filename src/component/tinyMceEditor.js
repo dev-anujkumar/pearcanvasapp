@@ -4023,8 +4023,8 @@ export class TinyMceEditor extends Component {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
                 let cgTitleFieldData = {};
-                if (this.props?.asideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" && this.props?.currentElement?.type === "element-authoredtext") {
-                    cgTitleFieldData.asideData = this.props.asideData;
+                if (this.props?.citationAsideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" && this.props?.currentElement?.type === "element-authoredtext") {
+                    cgTitleFieldData.asideData = this.props.citationAsideData;
                     cgTitleFieldData.parentElement = this.props.parentElement;
                 }
                 setTimeout(() => {
@@ -4237,7 +4237,8 @@ const mapStateToProps = (state) => {
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isInlineEditor: state.alfrescoReducer.isInlineEditor,
         imageArgs: state.alfrescoReducer.imageArgs,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        asideData: state.appStore.asideData
     }
 }
 

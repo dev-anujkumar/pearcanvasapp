@@ -355,7 +355,7 @@ export const fetchFigureDropdownOptions = () => (dispatch) => {
 
 export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
-    console.log("the lob url is " + lobURL)
+    // console.log("the lob url is " + lobURL)
     return axios.get(lobURL, {
         headers: {
             "Content-Type": "application/json",
@@ -414,7 +414,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             
             const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
             const usageTypeUrl = `${config.STRUCTURE_API_URL}${usageTypeEndPoint}`;
-            console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
+            //console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
              axios.get(usageTypeUrl, {
                 headers: {
                     ApiKey:config.STRUCTURE_APIKEY,
@@ -423,7 +423,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     Authorization:config.CMDS_AUTHORIZATION
                 }
             }).then (usageTypeResponse => {
-                console.log("the usage type response is", usageTypeResponse);
+                //console.log("the usage type response is", usageTypeResponse);
                 const data = usageTypeResponse?.data;
                 if(Array.isArray(data)){
                     const usageType = data.map(item => ({label:item.label.en}))

@@ -30,7 +30,7 @@ const CGTinyMCE = (props) => {
         citationField  :  "formatted-title",
         createPopupUnit : (popupField, forceupdate, index, parentElement) => createPopupUnit(popupField, forceupdate, index, parentElement, props, context),
         parentElement : context.element,
-        asideData : props.asideData
+        citationAsideData : props.citationAsideData
     }
 
     return (
