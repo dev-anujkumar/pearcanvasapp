@@ -271,7 +271,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleUnlinkedLOData(message)
                     break;
                 case 'selectedAlfrescoAssetData' :
-                    console.log('ASSET DATA FROM ALFRESCO', message.asset)
                     // if(message?.asset?.length > 0) {
                     //     message.asset = message.asset[0]
                     // }

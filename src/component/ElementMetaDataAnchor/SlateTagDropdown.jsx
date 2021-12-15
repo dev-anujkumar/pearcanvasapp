@@ -198,19 +198,6 @@ class SlateTagDropdown extends React.Component {
         }
       })
 
-      console.log('passingData',{
-        'text': AlignToExternalFramework,
-        'data': currentSlateLOData,
-        'isLOExist': true,
-        'editAction': '',
-        'selectedLOs': selectedLOs,
-        'apiConstants': apiKeys_LO,
-        'externalLFUrn': externalLFUrn,
-        'currentSlateId': slateManifestURN,
-        'chapterContainerUrn': '',
-        'currentSlateLF': currentSlateLF,
-        'lastAlignedLo':lastAlignedLo
-      })
 
       this.props.closeLODropdown();
     }
