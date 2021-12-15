@@ -165,6 +165,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.currentSlateLO(message.LOList);
                     this.props.isLOExist(message);
                     this.props.currentSlateLOType(message.currentSlateLF);
+                    this.props.updateLastAlignedLO(message.lastAlignedLo)
                     break;
                 case 'loEditResponse':
                     this.setState({
@@ -671,6 +672,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.currentSlateLO(updatedSlateLOs);
                 this.props.currentSlateLOMath(updatedSlateLOs);
                 this.props.currentSlateLOType(updatedSlateLOs.length ? EXTERNAL_LF : "");
+                this.props.updateLastAlignedLO(message.lastAlignedExternalLO)
             }
         }
         handleLOData = (message) => {
