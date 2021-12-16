@@ -10,6 +10,7 @@ import {
     UPDATE_AUTO_NUMBER_ELEMENTS_LIST
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList } from './AutoNumber_helperFunctions';
+import { AUTO_NUMBER_ELEMENTS } from './AutoNumberConstants';
 /**
  * 
  */
@@ -40,17 +41,19 @@ export const fetchProjectFigures = (elementType) => dispatch => {
             }
             numberedElements = mediaElementAPI_Handler(projectContent, numberedElements);
             console.log('numberedElements>>>>', numberedElements)
-            let autoNumberElementsIndex = {},autoNumberElementsCount={} 
-            const elementKeys = autoNumber_KeyMapper[elementType]
-            autoNumberElementsIndex = setAutoNumberSequenceForElements(elementKeys, numberedElements, autoNumberElementsIndex)
-            const updatedIndexList = prepareAutoNumberList(numberedElements.imagesList)
-            console.log('updatedIndexList', updatedIndexList)
+            let autoNumberElementsIndex = {}
+            autoNumberElementsIndex = setAutoNumberSequenceForElements(numberedElements, autoNumberElementsIndex)
             console.log('autoNumberElementsIndex', autoNumberElementsIndex)
-            config.imageIndex = updatedIndexList
             dispatch({
                 type: GET_ALL_AUTO_NUMBER_ELEMENTS,
                 payload: {
                     numberedElements
+                }
+            });
+            dispatch({
+                type: SET_AUTO_NUMBER_SEQUENCE,
+                payload: {
+                    autoNumberElementsIndex
                 }
             });
         } else {
@@ -63,36 +66,37 @@ export const fetchProjectFigures = (elementType) => dispatch => {
 
 };
 
-const setAutoNumberSequenceForElements = (elementKeys, numberedElements, autoNumberElementsIndex) => {
+const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIndex) => {
     for (let labelType in numberedElements) {
         if (Object.prototype.hasOwnProperty.call(numberedElements, labelType)) {
-            autoNumberElementsIndex[elementKeys.eleIndex] = prepareAutoNumberList(numberedElements[labelType])
+            const Obj = prepareAutoNumberList(numberedElements[labelType])
+            autoNumberElementsIndex[autoNumber_IndexMapper[labelType].eleIndex] = Obj
         }
     }
     return autoNumberElementsIndex
 }
 
-const autoNumber_KeyMapper = {
-    'IMAGE': { eleIndex: 'figureImageIndex', eleCount: 'figureImageCount' },
-    'TABLE': { eleIndex: 'tableIndex', eleCount: 'tableCount' },
-    'EQUATIONS': { eleIndex: 'equationsIndex', eleCount: 'equationsCount' },
+const autoNumber_IndexMapper = {
+    'imagesList': { eleIndex: 'figureImageIndex', eleCount: 'figureImageCount' },
+    'tablesList': { eleIndex: 'tableIndex', eleCount: 'tableCount' },
+    'equationsList': { eleIndex: 'equationsIndex', eleCount: 'equationsCount' },
 }
 
 const getAPIUrl = (mediaType, containerEntityUrn) => {
     let endpointVersion = '',
         endpointExtension = ''
     switch (mediaType) {
-        case "AUDIO":
+        case AUTO_NUMBER_ELEMENTS.AUDIO:
             endpointVersion = 'v2'
             endpointExtension = 'audios'
             break;
-        case "VIDEO":
+        case AUTO_NUMBER_ELEMENTS.VIDEO:
             endpointVersion = 'v2'
             endpointExtension = 'videos'
             break;
-        case "TABLE_IMAGE":
-        case "MATH_IMAGE":
-        case "IMAGE":
+        case AUTO_NUMBER_ELEMENTS.IMAGE:
+        case AUTO_NUMBER_ELEMENTS.MATH_IMAGE:
+        case AUTO_NUMBER_ELEMENTS.MATH_IMAGE:
         default:
             endpointVersion = 'v3'
             endpointExtension = 'images'

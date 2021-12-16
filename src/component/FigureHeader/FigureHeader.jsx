@@ -9,9 +9,9 @@ import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import dropdown_arrow_icon from '../../images/FigureHeader/dropdown-arrow.svg';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getFigureIndexDefault, getNumberValue, getNumberData } from './AutoNumber_helperFunctions';
+import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
-
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_RESUME_NUMBER,
@@ -50,17 +50,23 @@ function useOutsideAlerter(ref, setLabelNumberSettingDropDown, setLabelDropDown)
 export const FigureHeader = (props) => {
     const AUTO_NUMBER_SETTING_DROPDOWN_VALUES = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
     const [slateAncestors, setSlateAncestors] = useState(props.currentSlateAncestorData || {});
-    const figImageList = useSelector((state) => state.autoNumberReducer.figImageList)
-    const autoNumberingDetails = useSelector((state) => state.autoNumberReducer.autoNumberingDetails)
-
     const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedLabel ?? 'Figure');
     const [figureLabelData, setFigureLabelData] = useState(['Figure', 'Table', 'Equation']);//props.figureDropdownData
     const [labelNumberSetting, setLabelNumberSetting] = useState(null);
-    //const [labelNumberSettingList, setLabelNumberSettingList] = useState(AUTO_NUMBER_SETTING_DROPDOWN_VALUES);
     const [labelDropDown, setLabelDropDown] = useState(false);
     const [labelNumberSettingDropDown, setLabelNumberSettingDropDown] = useState(false);
     const [showLabelField, setShowLabelField] = useState(true);
     const [showNumberField, setShowNumberField] = useState(true);
+    const [state, setState] = useState({
+        slateAncestors: props.currentSlateAncestorData || {},
+        figureLabelData: ['Figure', 'Table', 'Equation'],
+        figureLabelValue: props.model?.displayedLabel ?? 'Figure',
+        labelNumberSetting: null,
+        labelDropDown: false,
+        labelNumberSettingDropDown: false,
+        showLabelField: true,
+        showNumberField: true
+    });
     const settingDropdownWrapperRef = useRef(null);
     useOutsideAlerter(settingDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
     const labelDropdownWrapperRef = useRef(null);
@@ -117,49 +123,16 @@ export const FigureHeader = (props) => {
             setFigureLabelValue(newValue)
         }
     }
-    /**---------------------------------------- */
 
-    // const onFigureHeaderFieldFocus = (id) => {
-    //     let labelElement = document.getElementById(`cypress-${id}`);
-    //     if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
-    //         labelElement?.nextElementSibling?.classList?.add('label-color-change');
-    //     } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
-    //         labelElement?.nextElementSibling?.classList?.add('transition-none');
-    //     }
-    //     props.updateFigureImageDataForCompare(props.model.figuredata);
-    // }
 
-    // const onFigureHeaderFieldBlur = (id) => {
-    //     let labelElement = document.getElementById(`cypress-${id}`);
-    //     if (labelElement?.nextElementSibling) {
-    //         labelElement?.nextElementSibling?.classList?.remove('label-color-change');
-    //     }
-    //     if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
-    //         labelElement?.nextElementSibling?.classList?.remove('transition-none');
-    //     }
-    //     // BG-5081 fixes
-    //     if (id === '0-0' && labelElement?.innerHTML) {
-    //         let dropdownData = convertOptionsToLowercase(figureLabelData);
-    //         if (dropdownData.indexOf(labelElement?.innerHTML.toLowerCase()) > -1) {
-    //             let figureLabelVal = figureLabelValue;
-    //             let labelElementText = labelElement?.innerHTML.toLowerCase();
-    //             figureLabelVal = labelElementText.charAt(0).toUpperCase() + labelElementText.slice(1);
-    //             setFigureLabelValue(figureLabelVal)
-    //         }
-    //     }
-    // }
     const { figureHtmlData, previewClass, figLabelClass, figTitleClass, onFigureImageFieldBlur, onFigureImageFieldFocus } = props
-    const containerNumber = getContainerNumber(slateAncestors, autoNumberingDetails) //F,B,P1,23
+    const containerNumber = getContainerNumber(slateAncestors, props.autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
     const imgLabelValue = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)//props.model?.displayedLabel ?? 'Figure'
-    const parentNumber = containerNumber//'test'//getNumberValue(props.model, figureIndex, containerNumber, figIndexParent)//onfig.imageCount++
-    let imgNumberValue = ''//getNumberData(figIndexParent,props.model)
-    if (props.model.contentUrn) {
-        //imgNumberValue = config.autoNumberElementsIndex.figureImageIndex[figIndexParent][props.model.contentUrn]
-        imgNumberValue = figIndexParent && config.imageIndex[figIndexParent][props.model.contentUrn]
-    }
+    const parentNumber = containerNumber
+    let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })
-    console.log("zzzzzzzzzzzzzzz", figureHtmlData);
+    console.log("figure header content", figureHtmlData, previewData);
     return (
         <>
             <header className="figure-header new-figure-image-header">
@@ -235,7 +208,9 @@ export const FigureHeader = (props) => {
 const mapStateToProps = state => ({
     autoNumberOption: state.autoNumberReducer.autoNumberOption,
     currentSlateAncestorData: state.appStore.currentSlateAncestorData,
-    activeElement: state.appStore.activeElement
+    activeElement: state.appStore.activeElement,
+    autoNumberElementsIndex: state.autoNumberReducer.autoNumberElementsIndex,
+    autoNumberingDetails: state.autoNumberReducer.autoNumberingDetails
 })
 
 const mapActionsToProps = (dispatch) => {

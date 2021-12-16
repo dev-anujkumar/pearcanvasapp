@@ -1,0 +1,57 @@
+
+
+export const LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES = {
+    AUTO_NUMBER_SETTING_DEFAULT: 'Default Auto-number',
+    AUTO_NUMBER_SETTING_RESUME_NUMBER: 'Resume numbernig with',
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER: 'Remove lable & number',
+    AUTO_NUMBER_SETTING_OVERRIDE_NUMBER: 'Override number only',
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER: 'Override lable & number'
+}
+
+export const autoNumber_KeyMapper = {
+    'Figure': 'figureImageIndex',
+    'Table': 'tableIndex',
+    'Equations': 'equationsIndex'
+}
+
+export const autoNumber_IndexMapper = {
+    'imagesList': { eleIndex: 'figureImageIndex', eleCount: 'figureImageCount' },
+    'tablesList': { eleIndex: 'tableIndex', eleCount: 'tableCount' },
+    'equationsList': { eleIndex: 'equationsIndex', eleCount: 'equationsCount' },
+}
+export const moduleTypes = ['module', 'appendix']
+export const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate', 'container-introduction']
+
+export const MATTER_TYPES = {
+    FRONTMATTER  : 'FrontMatter',
+    BACKMATTER  : 'BackMatter',
+    BODYMATTER  : 'BodyMatter'
+  }
+
+export const CONTAINER_LABELS = {
+  FRONTMATTER  : 'frontMatter',
+  BACKMATTER  : 'backMatter',
+  BODYMATTER  : 'BodyMatter',
+  CONTAINER_INTRO  : 'container-introduction',
+  VOLUME  : 'volume',
+  PART  : 'part',
+  CHAPTER  : 'chapter',
+  MODULE  : 'module',
+  APPENDIX_MOD  : 'appendix'
+}
+
+export const AUTO_NUMBER_PROPERTIES = {
+    NUMBERED_AND_LABEL  : 'numberedandlabel',
+    MANUAL_OVERRIDE  : 'manualoverride',
+    OVERRIDE_NUMBER_VALUE  : 'overridenumbervalue',
+    RESUME_NUMBER_VALUE  : 'resumenumbervalue',
+    OVERRIDE_LABEL_VALUE  : 'overridelabelvalue',
+  }
+
+export const AUTO_NUMBER_ELEMENTS = {
+    AUDIO: "AUDIO",
+    VIDEO: "VIDEO",
+    IMAGE: "IMAGE",
+    TABLE_IMAGE: "TABLE_IMAGE",
+    MATH_IMAGE: "MATH_IMAGE"
+}
