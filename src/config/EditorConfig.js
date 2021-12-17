@@ -159,10 +159,10 @@ export const elementTypeOptions = Object.freeze({
 /** -------------------------------- Insert-Media Toolbar Handling -------------------------------- */
 /** Insert Image handler - calls Image Alfresco Picker */
 const insertImageHandler = (params) => {
-    let { element, permissions, editor } = params;
+    let { element, permissions, editor ,props} = params;
     let blockListData = checkBlockListElement(params.props, "TAB");
     if (element?.type === ElementConstants.ELEMENT_LIST || (element?.type === ElementConstants.AUTHORED_TEXT && blockListData && Object.keys(blockListData).length)) {
-        handleC2MediaClick(permissions, editor, element);
+        handleC2MediaClick(permissions, editor, element, props.saveSelectedAlfrescoElement);
     }
 }
 /** Insert Media-Selector Dropdown Handler */

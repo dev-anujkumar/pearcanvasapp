@@ -7,8 +7,9 @@ import { ELEMENT_PDF } from '../SlateWrapper/SlateWrapperConstants.js';
 import { ELEMENT_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import config from '../../config/config.js';
 import TinyMceEditor from '../tinyMceEditor.js';
-import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
+import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action';
 import { hideBlocker } from '../../js/toggleLoader';
+import { clearPool, poolFunc } from './CypressPlusAction.js';
 class PdfSlate extends Component {
     constructor(props) {
         super(props);
@@ -29,8 +30,11 @@ class PdfSlate extends Component {
 				filetitle: filetitle,
 				pdfId: assetid
 			})
+			if (config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && !this.props.element?.elementdata?.hasOwnProperty('conversionstatus')) {
+				poolFunc(this.props.element.id)
 		}
     }
+}
 
     componentDidUpdate(prevProps) {
         const {alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
@@ -43,6 +47,10 @@ class PdfSlate extends Component {
 			this.props.saveSelectedAssetData(payloadObj)
         }
     }
+
+	componentWillUnmount() {
+		clearPool()
+	}
 
 	/* --- Open alfresco Picker --- */
 	OpenAlfresco = () => {
@@ -143,7 +151,8 @@ class PdfSlate extends Component {
 const dispatchActions = {
     updateElement,
 	alfrescoPopup,
-	saveSelectedAssetData
+	saveSelectedAssetData,
+	saveSelectedAlfrescoElement
 
 }
 

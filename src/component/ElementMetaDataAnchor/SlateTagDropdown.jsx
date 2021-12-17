@@ -151,6 +151,7 @@ class SlateTagDropdown extends React.Component {
   prepareExtFrameworkData = () => {
     let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
     let currentSlateLOData = this.props.currentSlateLOData;
+    let lastAlignedLo = this.props.lastAlignedExternalLO;
     let apiKeys_LO = {
       'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
       'strApiKey': config.STRUCTURE_APIKEY,
@@ -164,14 +165,14 @@ class SlateTagDropdown extends React.Component {
       externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
     }
     return {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     }
   }
 
   /** Launch External LO Popup from Canvas*/
   launchExternalFrameworkPopup = (e) => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     } = this.prepareExtFrameworkData();
 
     const currentSlateLF=this.props.currentSlateLF;
@@ -185,6 +186,7 @@ class SlateTagDropdown extends React.Component {
         'message': {
           'text': AlignToExternalFramework,
           'data': currentSlateLOData,
+          'lastAlignedLo':lastAlignedLo,
           'isLOExist': true,
           'editAction': '',
           'selectedLOs': selectedLOs,
@@ -195,6 +197,8 @@ class SlateTagDropdown extends React.Component {
           'currentSlateLF': currentSlateLF
         }
       })
+
+
       this.props.closeLODropdown();
     }
 

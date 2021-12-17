@@ -237,7 +237,7 @@ export class CitationGroup extends Component {
         return (
             <>
                 <header>
-                    <CGTinyMCE createPopupUnit = {this.props.createPopupUnit} asideData = {asideData} parentElement = {this.context.element} />
+                    <CGTinyMCE createPopupUnit = {this.props.createPopupUnit} citationAsideData = {asideData} parentElement = {this.context.element} />
                 </header>
                 <div >
                     {this.renderCitationElementContainer(context)}

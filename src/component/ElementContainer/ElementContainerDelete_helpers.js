@@ -1,10 +1,6 @@
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { 
     prepareTcmSnapshots,
-    fetchElementWipData,
-    checkContainerElementVersion,
-    fetchManifestStatus, 
-    prepareSnapshots_ShowHide
 } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 //Constants
 import { 
@@ -18,6 +14,7 @@ import tinymce from 'tinymce'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper.js';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
+import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 import {getContainerEntityUrn,updateAutoNumberSequenceOnDelete, updateAutoNumberSequenceOnDeleteInContainers} from '../FigureHeader/AutoNumber_helperFunctions';
 export const onDeleteSuccess = (params) => {

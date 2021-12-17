@@ -14,9 +14,11 @@ import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
-import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+import { fetchParentData } from '../TcmSnapshots/TcmSnapshotsOnDefaultSlate';
+import { checkContainerElementVersion, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];

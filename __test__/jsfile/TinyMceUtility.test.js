@@ -27,6 +27,7 @@ let mockEditor = {
         id: "imageId",
         handleBlur: jest.fn()
     },
+    saveSelectedAlfrescoElement= jest.fn(),
     mockImgData = {
         'assetType': "image",
         'uniqueID': "imageId",
@@ -105,7 +106,7 @@ jest.mock('../../src/js/utils.js', () => ({
 describe('Testing TinyMceUtility', () => {
     it('Test - handleC2MediaClick - List Element', () => {
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
-        tinyMceFn.handleC2MediaClick(permissions, mockEditor, mockImageArgs);
+        tinyMceFn.handleC2MediaClick(permissions, mockEditor, mockImageArgs, saveSelectedAlfrescoElement);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear()
     });
@@ -187,7 +188,7 @@ describe('Testing TinyMceUtility', () => {
         }
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
         axios.get = await jest.fn().mockImplementationOnce(() => Promise.reject({}));
-        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs);
+        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs, saveSelectedAlfrescoElement);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });
@@ -214,7 +215,7 @@ describe('Testing TinyMceUtility', () => {
         }
         let data = {
             id: "",
-            epsUrl: "",
+            epsUrl: "dfe",
             properties: {
                 "cplg:altText": "",
                 'cplg:longDescription': "",
