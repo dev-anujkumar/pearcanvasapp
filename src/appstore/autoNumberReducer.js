@@ -1,4 +1,5 @@
 import {
+    SLATE_FIGURE_ELEMENTS,
     SET_AUTO_NUMBER_TOGGLE,
     SET_AUTO_NUMBER_SEQUENCE,
     UPDATE_AUTO_NUMBER_SEQUENCE,
@@ -25,6 +26,7 @@ const INITIAL_STATE = {
         audioIndex: {},
         videoIndex: {}
     },
+    slateFigureList:[],
     autoNumberOption: ''
 }
 
@@ -81,6 +83,14 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 autoNumberOption: action.payload
+            }
+        case SLATE_FIGURE_ELEMENTS:
+            return {
+                ...state,
+                slateFigureList: [
+                    ...state.slateFigureList,
+                    ...action.payload.slateFigures
+                ]
             }
         default:
             return state

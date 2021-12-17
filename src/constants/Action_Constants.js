@@ -201,6 +201,10 @@ export const UPDATE_AUTONUMBERING_DROPDOWN_VALUE = 'UPDATE_AUTONUMBERING_DROPDOW
 /*--------------Aside Label, Number, Title fields------------------ */
 export const CHECK_ASIDE_NUMBER = 'CHECK_ASIDE_NUMBER';
 
+/*--------------Cypress Puls Constants------------------ */
+export const COMPLETED = 'COMPLETED';
+export const FAILED = 'FAILED';
+
 /*---------------- AutoNumbering Media Elements ------------------------*/
 export const SET_AUTO_NUMBER_TOGGLE = 'SET_AUTO_NUMBER_TOGGLE';
 export const GET_ALL_AUTO_NUMBER_ELEMENTS = 'GET_ALL_AUTO_NUMBER_ELEMENTS';
@@ -208,6 +212,4 @@ export const GET_TOC_AUTO_NUMBERING_LIST = 'GET_TOC_AUTO_NUMBERING_LIST';
 export const UPDATE_AUTO_NUMBER_SEQUENCE = 'UPDATE_AUTO_NUMBER_SEQUENCE';
 export const UPDATE_AUTO_NUMBER_ELEMENTS_LIST = 'UPDATE_AUTO_NUMBER_ELEMENTS_LIST';
 export const SET_AUTO_NUMBER_SEQUENCE = 'SET_AUTO_NUMBER_SEQUENCE';
-/*--------------Cypress Puls Constants------------------ */
-export const COMPLETED = 'COMPLETED';
-export const FAILED = 'FAILED';
+export const SLATE_FIGURE_ELEMENTS = 'SLATE_FIGURE_ELEMENTS';

@@ -2,10 +2,9 @@
  * Prepare API data to get media elements based on Type
  */
 
-import { containerElements } from './AutoNumberConstants';
+import { containerElements, autoNumberElementsAllowed } from './AutoNumberConstants';
 const slateTypes = ['container-introduction', 'section', 'appendixslate', 'cover', 'titlepage', 'copyright', 'listofcontents']
 
-const autoNumberElementsAllowed = ['figure']
 /**
  * Common API Data handler for all elements supporting Auto-numbering
  * @param {*} projectContent 

@@ -1,5 +1,5 @@
 
-
+export const autoNumberElementsAllowed = ['figure']
 export const LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES = {
     AUTO_NUMBER_SETTING_DEFAULT: 'Default Auto-number',
     AUTO_NUMBER_SETTING_RESUME_NUMBER: 'Resume numbernig with',
