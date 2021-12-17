@@ -24,6 +24,13 @@ export const autoNumber_IndexMapper = {
 export const moduleTypes = ['module', 'appendix']
 export const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate', 'container-introduction']
 
+export const containerElements = {
+  ASIDE: 'element-aside',
+  POPUP: 'popup',
+  SHOW_HIDE: 'showhide',
+  MULTI_COLUMN: 'groupedcontent',
+  MANIFEST: 'manifest'
+}
 export const MATTER_TYPES = {
     FRONTMATTER  : 'FrontMatter',
     BACKMATTER  : 'BackMatter',
