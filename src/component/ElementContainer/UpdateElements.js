@@ -9,6 +9,7 @@ import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel, getTitleSubtitleModel } from '../../constants/utility';
 import { AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions';
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { setAutonumberingValuesForPayload } from '../FigureHeader/AutoNumber_helperFunctions';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -56,28 +57,10 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = titleHTML;
-    if (isAutoNumberingEnabled) {
-        switch (autoNumberOption) {
-            case AUTO_NUMBER_SETTING_RESUME_NUMBER:
-                numberedandlabel = true;
-                manualoverride = { "resumenumbervalue": numberHTML };
-                break;
-            case AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER:
-                numberedandlabel = true;
-                manualoverride = { "overridelabelvalue": titleHTML, "overridenumbervalue": numberHTML };
-                break;
-            case AUTO_NUMBER_SETTING_OVERRIDE_NUMBER:
-                numberedandlabel = true;
-                manualoverride = { "overridenumbervalue": numberHTML };
-                break;
-            case AUTO_NUMBER_SETTING_REMOVE_NUMBER:
-                numberedandlabel = false;
-                manualoverride = {};
-                break;
-            case AUTO_NUMBER_SETTING_DEFAULT:
-                numberedandlabel = true;
-                break;
-        }
+    if (isAutoNumberingEnabled && autoNumberOption) {
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
     }
 
     captionHTML = replaceUnwantedtags(captionHTML, true);
@@ -132,9 +115,9 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     if (isAutoNumberingEnabled) {
         data = {
             ...data,
-            title : {
-                ...indivisualData,
-                text: `<p>${titleHTML}</p>`
+            html : {
+                ...data.html,
+                title: `<p>${subtitleHTML}</p>`
             },
             numberedandlabel : numberedandlabel,
             displayedlabel : displayedlabel,

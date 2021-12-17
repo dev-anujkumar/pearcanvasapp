@@ -72,7 +72,7 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
-import { getOverridedNumberValue } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getOverridedNumberValue, getContainerEntityUrn, getNumberData } from '../FigureHeader/AutoNumber_helperFunctions';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -420,15 +420,24 @@ class ElementContainer extends Component {
         }
         if (this.props.isAutoNumberingEnabled) {
             let isNumberDifferent = false;
+            let imgNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
             if (overridedNumber) {
-                isNumberDifferent = overridedNumber !== numberHTML;
+                console.log("for check purpose", parseInt(overridedNumber) !== parseInt(numberHTML))
+                isNumberDifferent = parseInt(overridedNumber) !== parseInt(numberHTML);
+            } else {
+                const figIndexParent = getContainerEntityUrn(this.props.currentSlateAncestorData);
+                if (figIndexParent) {
+                    imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {})
+                    isNumberDifferent = parseInt(imgNumberValue) !== parseInt(numberHTML);
+                }
             }
+            subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             console.log("1111111111111", titleHTML, previousElementData.displayedlabel)
-        console.log("222222222222", this.removeClassesFromHtml(subtitleHTML), previousElementData.title.text)
-        console.log("333333333333", overridedNumber, numberHTML);
+        console.log("222222222222", this.removeClassesFromHtml(subtitleHTML), this.removeClassesFromHtml(previousElementData.html.title))
+        console.log("333333333333", overridedNumber, imgNumberValue, numberHTML, isNumberDifferent);
             return (titleHTML !== previousElementData.displayedlabel ||
-                this.removeClassesFromHtml(subtitleHTML) !== previousElementData.title.text || isNumberDifferent ||
+                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
@@ -2460,7 +2469,8 @@ const mapStateToProps = (state) => {
         markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
         markedIndexValue: state.markedIndexReducer.markedIndexValue,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
-        autoNumberOption: state.autoNumberReducer.autoNumberOption
+        autoNumberOption: state.autoNumberReducer.autoNumberOption,
+        autoNumberElementsIndex: state.autoNumberReducer.autoNumberElementsIndex,
     }
 }
 
