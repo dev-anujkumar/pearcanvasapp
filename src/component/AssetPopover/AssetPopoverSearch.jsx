@@ -156,7 +156,6 @@ class AssetPopoverSearch extends React.Component {
             tables: this.props?.tables ? this.props.tables : [],
             workedExamples: this.props?.workedExamples ? this.props.workedExamples : []
         }
-        let totalAssets = Object.values(assetArray).flat().length;
         return (<section className="modalBody">
             <p className="APOSearchResultText">Total hits: {totalAssets}</p>
             <ApiResults assetPopoverData={assetArray} selectedFigure={this.selectedFigure} ValueToBeSearch={ValueToBeSearch}/>

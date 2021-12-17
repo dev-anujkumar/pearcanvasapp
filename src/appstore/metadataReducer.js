@@ -15,7 +15,8 @@ const INIT_STATE = {
         externalLF:[]
     },
     currentSlateLF:"",
-    loWarningPopupData: {}
+    loWarningPopupData: {},
+    lastAlignedExternalLO:{}
 }
 
 const INITIAL_ACTION = {
