@@ -820,5 +820,155 @@ describe('Testing Element Single Assessment - ELM ASSESSMENTS - Elm Functions', 
         expect(component).toHaveLength(1);
         let instance = component.instance();
         expect(instance).toBeDefined();
+    });
+});
+describe(" Test 4 render changeUsageTypePopup ", () => {
+    let newProps2 = {
+        model: singleAssessmentElmDefault,
+        index: "1",
+        usagetype: "Practice",
+        elementId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+        handleFocus: jest.fn(),
+        onClick: jest.fn(),
+        handleBlur: jest.fn(),
+        showBlocker: jest.fn(),
+        openCustomPopup: jest.fn(),
+        permissions: userPermissions,
+        checkEntityUrn: jest.fn(),
+        fetchAssessmentMetadata: jest.fn(),
+        updateAssessmentVersion: jest.fn(),
+        fetchAssessmentLatestVersion: jest.fn(),
+        setNewItemFromElm: jest.fn(),
+        setElmPickerData: jest.fn(),
+        fetchAssessmentVersions: jest.fn().mockImplementationOnce(()=>{return true})
+    };
+    let cb = jest.fn();
+    let assessmentRed3 = {
+        "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464": {
+            activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            assessmentStatus: "final",
+            assessmentTitle: "Quiz: 7.4 Developing Relationships",
+            assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86",
+            latestVersion: {
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+                title: "latestTitle",
+                status: 'wip',
+                latestCleanVersion: true
+
+            },
+            secondLatestVersion: {
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec569",
+                title: "latestTitle"
+            },
+            latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
+            items: [
+                {
+                    oldItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                    latestItemId: "urn:pearson:work:eb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+                    latestItemTitle: "item-title"
+                }
+            ],
+            showUpdateStatus: false
+        },
+        usageTypeListData: [{usagetype: "homework", label: "Homework"}]
+    }
+    let pufObj = {
+        assessmentId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+        title: "Test Puf",
+        assessmentFormat: "puf",
+        usagetype: "Homework"
+    }
+    let usageType = "Homework"
+    let nextProps = {
+        handleAssessmentBlur: jest.fn(),
+        ...props
+    }
+    let props = {
+        model: singleAssessmentCITEDefault,
+        index: "1",
+        usagetype: "Homework",
+        handleFocus: function () { },
+        onClick: () => { },
+        handleBlur: function () { },
+        showBlocker: jest.fn(),
+        openCustomPopup: jest.fn(),
+        permissions: userPermissions,
+    };
+
+    let singleAssessment = mount(<Provider store={store}><ElementSingleAssessment {...props} /></Provider>);
+    const singleAssessmentInstance = singleAssessment.find('ElementSingleAssessment').instance();
+    const component11 = mount(<Provider store={store}><ElementSingleAssessment model={singleAssessmentCITEDefault} index=""
+        {...nextProps}
+        model={singleAssessmentCITEDefault}
+        assessmentSlateObj={pufObj}
+        assessmentData={true}
+        assessmentDataPopup={false}
+        usageType="Homework"
+    /></Provider>)
+    
+    singleAssessmentInstance.setState({
+        showElmComponent: false,
+        activeAssessmentUsageType: 'Homework'
     })
-});  
+    component11.update();
+    singleAssessmentInstance.forceUpdate();
+    it('Test 4.1-handleAssessmentTypeChange', () => {
+        jest.spyOn(singleAssessmentInstance, 'handleAssessmentTypeChange')
+        singleAssessmentInstance.handleAssessmentTypeChange(usageType);
+        // expect(singleAssessmentInstance.props.assessmentData).toBe(true)
+        expect(singleAssessmentInstance.state.showElmComponent).toBe(false)
+        expect(singleAssessmentInstance.state.activeAssessmentUsageType).toBe('Homework')
+        // expect(singleAssessmentInstance.props.assessmentDataPopup).toBe(false)
+    })
+    it('Test 4.2-togglechangeUsageTypePopup', () => {
+        let event = {
+            stopPropagation: jest.fn(),
+            togglechangeUsageTypePopup: jest.fn(),
+            preventDefault: jest.fn()
+        }
+        jest.spyOn(singleAssessmentInstance, 'togglechangeUsageTypePopup')
+        singleAssessmentInstance.togglechangeUsageTypePopup(event);
+        expect(singleAssessmentInstance.togglechangeUsageTypePopup).toHaveBeenCalled();
+
+
+    })
+    it('Test 4.3-render showchangeUsageTypePopup', () => {
+        jest.spyOn(singleAssessmentInstance, 'showChangeUsageTypePopup')
+        singleAssessmentInstance.setState({
+            changeUsageTypePopup: true
+        })
+        singleAssessmentInstance.showChangeUsageTypePopup();
+        expect(singleAssessmentInstance.showChangeUsageTypePopup).toHaveBeenCalled();
+    })
+    it('Test 4.4-else condtion in showchangeUsageTypePopup', () => {
+
+        jest.spyOn(singleAssessmentInstance, 'showChangeUsageTypePopup')
+        singleAssessmentInstance.setState({
+            changeUsageTypePopup: false
+        })
+        singleAssessmentInstance.showChangeUsageTypePopup();
+        expect(singleAssessmentInstance.showChangeUsageTypePopup).toHaveBeenCalled();
+        expect(singleAssessmentInstance.state.changeUsageTypePopup).toBe(false);
+    })
+    it('Test 4.5- handleChangeUsageTypePopup', () => {
+        jest.spyOn(singleAssessmentInstance, 'handleChangeUsageTypePopup')
+        singleAssessmentInstance.setState({
+            changeUsageTypePopup: false
+        })
+        singleAssessmentInstance.handleChangeUsageTypePopup();
+        expect(singleAssessmentInstance.handleChangeUsageTypePopup).toHaveBeenCalled();
+    });
+    it('Test 4.6- setChangeUsageType', () => {
+        let format = 'puf'
+        let usagetype = "Homework"
+        jest.spyOn(singleAssessmentInstance, 'updateUsageTypeAfterProceed');
+        jest.spyOn(singleAssessmentInstance, 'setChangeUsageType');
+        singleAssessmentInstance.setState({
+            changeUsageTypePopup: false
+        });
+        singleAssessmentInstance.updateUsageTypeAfterProceed();
+        singleAssessmentInstance.setChangeUsageType(format);
+        expect(singleAssessmentInstance.updateUsageTypeAfterProceed).toHaveBeenCalled();
+        expect(singleAssessmentInstance.setChangeUsageType).toHaveBeenCalled();
+    });
+});

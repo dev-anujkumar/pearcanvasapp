@@ -57,6 +57,9 @@ function CommunicationChannel(WrappedComponent) {
             let messageType = e.data.type;
             let message = e.data.message;
             switch (messageType) {
+                case 'tocContainersLabelUpdate':
+                    this.showNotificationOnCanvas(message);
+                    break;
                 case 'getPermissions':
                     this.sendingPermissions();
                     break;
@@ -162,6 +165,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.currentSlateLO(message.LOList);
                     this.props.isLOExist(message);
                     this.props.currentSlateLOType(message.currentSlateLF);
+                    this.props.updateLastAlignedLO(message.lastAlignedLo)
                     break;
                 case 'loEditResponse':
                     this.setState({
@@ -267,24 +271,54 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleUnlinkedLOData(message)
                     break;
                 case 'selectedAlfrescoAssetData' :
-                    console.log('ASSET DATA FROM ALFRESCO', message.asset)
-                    // if(message?.asset?.length > 0) {
-                    //     message.asset = message.asset[0]
-                    // }
-                    if(message.isEditor){
+                    //Check if message.asset is array
+                    if (message.asset && Array.isArray(message.asset) && message.asset?.length > 0) {
+                        message.asset = message.asset[0]
+                    }
+                    else if (message.assets && Array.isArray(message.assets) && message.assets?.length > 0) {
+                        message.asset = message.assets[0]
+                    }
+                    if (this.props?.alfrescoReducer?.savedElement) {
+                        message = {
+                            ...message,
+                            ...this.props.alfrescoReducer?.savedElement,
+                            isEditor: this.props.alfrescoReducer.savedElement?.editor ?? undefined
+                        }
+                        let changedSiteUrl = false, changedAlfrescoData = {}
+                        if (message.site && Object.keys(message.site)?.length > 0) {
+                            const projectAlfrescoNodeRef = this.props.alfrescoReducer?.savedElement?.citeNodeRef ?? ""
+                            if (message.site?.citeNodeRef !== projectAlfrescoNodeRef) {
+                                changedSiteUrl = true
+                                changedAlfrescoData = {
+                                    guid: message.site?.citeNodeRef,
+                                    title: message.site?.title,
+                                    id: message.site?.citeName,
+                                    visibility: message.site?.visibility
+                                }
+                            }
+                            message = {
+                                ...message,
+                                changedSiteUrl,
+                                changedAlfrescoData
+                            }
+                        }
+                    }
+                    message.launchAlfrescoPopup = false
+                    console.log('Message from Alfresco', message)
+                    if (message.isEditor) {
                         this.handleEditorSave(message)
                     }
-                     if (message.calledFrom === "NarrativeAudio" || message.calledFromGlossaryFootnote) {
+                    if (message.calledFrom === "NarrativeAudio" || message.calledFromGlossaryFootnote) {
                         this.handleAudioData(message)
                     }
-                    if(message.calledFrom === "GlossaryImage" || message.calledFromImageGlossaryFootnote ) {
+                    if (message.calledFrom === "GlossaryImage" || message.calledFromImageGlossaryFootnote) {
                         this.handleImageData(message)
                     }
                     this.props.saveSelectedAssetData(message)
                     break;
-                case 'saveAlfrescoDataToConfig' : 
-                config.alfrescoMetaData = message
-                break;
+                case 'saveAlfrescoDataToConfig':
+                    config.alfrescoMetaData = message
+                    break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
                     break;
@@ -337,6 +371,18 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setElmPickerData({})
             }
             hideBlocker();
+        }
+
+        showNotificationOnCanvas = (message) => {
+            let linkNotification = document.getElementById('link-notification');
+            if (linkNotification) {
+                linkNotification.innerText = message;
+                linkNotification.style.display = "block";
+                setTimeout(() => {
+                    linkNotification.style.display = "none";
+                    linkNotification.innerText = "";
+                }, 3000);
+            }
         }
 
         /**
@@ -626,6 +672,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.currentSlateLO(updatedSlateLOs);
                 this.props.currentSlateLOMath(updatedSlateLOs);
                 this.props.currentSlateLOType(updatedSlateLOs.length ? EXTERNAL_LF : "");
+                this.props.updateLastAlignedLO(message.lastAlignedExternalLO)
             }
         }
         handleLOData = (message) => {

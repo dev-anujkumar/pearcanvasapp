@@ -24,7 +24,7 @@ import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent } from '../SlateWrapper/SlateWrapper_Actions'
-import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType,updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 import { fetchAudioNarrationForContainer ,audioGlossaryPopup, saveDataFromAlfresco, showWrongAudioPopup} from '../AudioNarration/AudioNarration_Actions'
@@ -272,7 +272,7 @@ const mapStateToProps = state => {
         markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
         markedIndexValue: state.markedIndexReducer.markedIndexValue,
         markedIndexGlossary: state.markedIndexReducer.markedIndexGlossary,
-
+        alfrescoReducer: state.alfrescoReducer
     };
 };
 
@@ -288,6 +288,7 @@ export default connect(
         getSlateLockStatus,
         handleSplitSlate,
         currentSlateLO,
+        updateLastAlignedLO,
         currentSlateLOMath,
         isLOExist,
         setUpdatedSlateTitle,
