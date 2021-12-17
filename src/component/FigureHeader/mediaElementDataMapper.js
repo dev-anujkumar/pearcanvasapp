@@ -117,26 +117,30 @@ const getContainerMediaElementsList = (container, matterType, numberedElements, 
  * @param {*} imagesList 
  * @returns 
  */
-const getImagesInsideSlates = (bodyMatter, numberedElements = {}) => {
+const getImagesInsideSlates = (bodyMatter, numberedElements = {}, isImageInsideContainer = "",containerDetails=[]) => {
     if (Object.keys(numberedElements).length < 1) {
-        numberedElements = { tablesList: [], equationsList: [], imagesList: [] }
+        numberedElements = { tablesList: [], equationsList: [], imagesList: [],audiosList:[],videosList:[]  }
+    }
+    if (isImageInsideContainer) {
+        containerDetails.push(isImageInsideContainer)
     }
     if (bodyMatter?.length > 0) {
         bodyMatter?.forEach(element => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
-                numberedElements = prepareElementList(element, numberedElements)
+                numberedElements = prepareElementList(element, numberedElements,containerDetails)
+                containerDetails=[]
             }
             else if (element.type === 'container') {
                 switch (element.label) {
                     case 'showhide':
-                        numberedElements = getMediaElementInShowhide(element, numberedElements)
+                        numberedElements = getMediaElementInShowhide(element, numberedElements, containerDetails)
                         break;
                     case 'groupedcontent':
-                        numberedElements = getMediaElementInMultiColumn(element, numberedElements)
+                        numberedElements = getMediaElementInMultiColumn(element, numberedElements, containerDetails)
                         break;
                     case 'popup':
                     case "element-aside":
-                        numberedElements = getMediaElementInAsideWEPopup(element, numberedElements)
+                        numberedElements = getMediaElementInAsideWEPopup(element, numberedElements, containerDetails)
                         break;
                 }
             }
@@ -145,12 +149,28 @@ const getImagesInsideSlates = (bodyMatter, numberedElements = {}) => {
     return numberedElements
 }
 
-const prepareElementList = (element, numberedElements = {}) => {
+const prepareElementList = (element, numberedElements = {},containerDetails) => {
     if (Object.keys(numberedElements).length < 1) {
-        numberedElements = { tablesList: [], equationsList: [], imagesList: [] }
+        numberedElements = { tablesList: [], equationsList: [], imagesList: [],audiosList:[],videosList:[] }
     }
+    if(containerDetails?.length>0){
+        element.containerDetails = [...containerDetails]
+        containerDetails=[]
+    }
+    // if (element.figuretype == 'audio') {
+    //     element.displayedlabel = 'Audio'
+    // }
+    // if (element.figuretype == 'video') {
+    //     element.displayedlabel = 'Video'
+    // }
     if (element.displayedlabel) {
         switch (element.displayedlabel) {
+            case 'Audio':
+                numberedElements['audiosList'].push(element)
+                break;
+            case 'Video':
+                numberedElements['videosList'].push(element)
+                break;
             case 'Table':
                 numberedElements['tablesList'].push(element)
                 break;
@@ -197,13 +217,16 @@ const containerBodyMatter = (container) => {
  * @param {*} imagesList 
  * @returns 
  */
-const getMediaElementInAsideWEPopup = (containerData, numberedElements) => {
+const getMediaElementInAsideWEPopup = (containerData, numberedElements,containerDetails=[]) => {
+   
     if (containerData?.contents?.bodyMatter?.length > 0) {
         containerData?.contents?.bodyMatter.forEach(element => {
             if (element.type === 'figure') {
-                numberedElements = prepareElementList(element, numberedElements)
+                containerDetails?.push(containerData.contentUrn)
+                numberedElements = prepareElementList(element, numberedElements,containerDetails)
+                containerDetails=[]
             } else if (element.type === 'container' && element.contents.bodyMatter) {
-                numberedElements = getImagesInsideSlates(containerBodyMatter(element), numberedElements) || numberedElements
+                numberedElements = getImagesInsideSlates(containerBodyMatter(element), numberedElements, containerData.contentUrn, containerDetails) || numberedElements
             }
         })
     }
@@ -216,16 +239,18 @@ const getMediaElementInAsideWEPopup = (containerData, numberedElements) => {
  * @param {*} imagesList 
  * @returns 
  */
-const getMediaElementInMultiColumn = (containerData, numberedElements) => {
+const getMediaElementInMultiColumn = (containerData, numberedElements,containerDetails=[]) => {
+    containerDetails?.push(containerData.contentUrn)
     if (containerData?.contents?.bodyMatter?.length > 0) {
         containerData?.contents?.bodyMatter.forEach(colData => {
             if (colData.type === 'container') {
                 if (colData?.contents?.bodyMatter?.length > 0) {
                     colData?.contents?.bodyMatter.forEach(element => {
                         if (element.type === 'figure') {
-                            numberedElements = prepareElementList(element, numberedElements)
+                            numberedElements = prepareElementList(element, numberedElements,containerDetails)
+                            containerDetails=[]
                         } else if (element.type === 'container') {
-                            numberedElements = getImagesInsideSlates(containerBodyMatter(element), numberedElements) || numberedElements
+                            numberedElements = getImagesInsideSlates(containerBodyMatter(element), numberedElements, containerData.contentUrn, containerDetails) || numberedElements
                         }
                     })
                 }
@@ -241,14 +266,16 @@ const getMediaElementInMultiColumn = (containerData, numberedElements) => {
  * @param {*} imagesList 
  * @returns 
  */
-const getMediaElementInShowhide = (containerData, numberedElements) => {
+const getMediaElementInShowhide = (containerData, numberedElements,containerDetails=[]) => {
+    containerDetails?.push(containerData.contentUrn)
     const showHideContent = containerBodyMatter(containerData)
     if (showHideContent?.length > 0) {
         showHideContent.forEach(element => {
             if (element.type === 'figure') {
-                numberedElements = prepareElementList(element, numberedElements)
+                numberedElements = prepareElementList(element, numberedElements,containerDetails)
+                containerDetails=[]
             } else if (element.type === 'container') {
-                numberedElements = getImagesInsideSlates(containerBodyMatter(element), numberedElements) || numberedElements
+                numberedElements = getImagesInsideSlates(containerBodyMatter(element), numberedElements, containerData.contentUrn, containerDetails) || numberedElements
             }
         })
     }

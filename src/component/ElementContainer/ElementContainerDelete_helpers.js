@@ -19,7 +19,7 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper.js';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
-
+import {getContainerEntityUrn,updateAutoNumberSequenceOnDelete, updateAutoNumberSequenceOnDeleteInContainers} from '../FigureHeader/AutoNumber_helperFunctions';
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -44,6 +44,19 @@ export const onDeleteSuccess = (params) => {
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
+    
+    // if(type == 'popup'||type=='showhide'||type=='groupedcontent'||type=='element-aside'){
+    //     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
+    //     const autoNumberedElements = getState().autonumberElements.autoNumberedElements
+    //     updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, getState, dispatch)
+    // }
+    // else if (type == 'figure') { //type == 'popup'//type=='showhide'//type=='groupedcontent//type==''element-aside
+    //     //reset auto-numbering
+    //     const slateAncestors = getState().appStore.currentSlateAncestorData
+    //     const autoNumberedElements = getState().autonumberElements.autoNumberedElements
+    //     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
+    //     updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements, dispatch)
+    // }
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const tcmDeleteArgs = {
         deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,

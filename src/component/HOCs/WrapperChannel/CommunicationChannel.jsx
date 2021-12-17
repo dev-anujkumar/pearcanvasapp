@@ -838,7 +838,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
                 // this.props.fetchProjectFigures('IMAGE')
-                const mediaElement = ['IMAGE']//, 'AUDIO', 'VIDEO'
+                const mediaElement = ['IMAGE']//,'AUDIO', 'VIDEO'
                 mediaElement.forEach(ele => {
                     this.props.fetchProjectFigures(ele)
                 })

@@ -5,7 +5,6 @@ import {
     GET_TOC_AUTO_NUMBERING_LIST,
     GET_ALL_AUTO_NUMBER_ELEMENTS,
     UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
-    GET_ALL_FIGURE_ELEMENTS,
     UPDATE_AUTONUMBERING_DROPDOWN_VALUE
 } from '../constants/Action_Constants.js';
 
@@ -14,20 +13,18 @@ const INITIAL_STATE = {
     autoNumberedElements: {
         imagesList: [],
         tablesList: [],
-        equationsList: []
+        equationsList: [],
+        audiosList:[],
+        videosList:[]
     },
     autoNumberingDetails: {},
     autoNumberElementsIndex: {
         figureImageIndex: {},
         tableIndex: {},
-        equationsIndex: {}
+        equationsIndex: {},
+        audioIndex: {},
+        videoIndex: {}
     },
-    autoNumberElementsCount: {
-        figureImageCount: 1,
-        tableCount: 1,
-        equationsCount: 1
-    },
-    figImageList: [],
     autoNumberOption: ''
 }
 
@@ -41,7 +38,10 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
         case GET_ALL_AUTO_NUMBER_ELEMENTS:
             return {
                 ...state,
-                autoNumberedElements: action.payload.numberedElements
+                autoNumberedElements: {
+                    ...state.autoNumberedElements,
+                    ...action.payload.numberedElements
+                }
             }
         case SET_AUTO_NUMBER_TOGGLE:
             return {
@@ -56,8 +56,10 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
         case SET_AUTO_NUMBER_SEQUENCE:
             return {
                 ...state,
-                autoNumberElementsIndex: action.payload.autoNumberElementsIndex,
-                autoNumberElementsCount: action.payload.autoNumberElementsCount
+                autoNumberElementsIndex: {
+                    ...state.autoNumberElementsIndex,
+                    ...action.payload.autoNumberElementsIndex
+                }
             }
         case UPDATE_AUTO_NUMBER_ELEMENTS_LIST:
             return {
@@ -73,10 +75,6 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
                 autoNumberElementsIndex: {
                     ...autoNumberElementsIndex,
                     [action.payload.mediaType]: action.payload.mediaIndex
-                },
-                autoNumberElementsCount: {
-                    ...autoNumberElementsCount,
-                    [action.payload.mediaType]: action.payload.mediaCount
                 }
             }
         case UPDATE_AUTONUMBERING_DROPDOWN_VALUE:

@@ -15,9 +15,11 @@ export const autoNumber_KeyMapper = {
 }
 
 export const autoNumber_IndexMapper = {
-    'imagesList': { eleIndex: 'figureImageIndex', eleCount: 'figureImageCount' },
-    'tablesList': { eleIndex: 'tableIndex', eleCount: 'tableCount' },
-    'equationsList': { eleIndex: 'equationsIndex', eleCount: 'equationsCount' },
+  'imagesList': 'figureImageIndex',
+  'tablesList': 'tableIndex',
+  'equationsList': 'equationsIndex',
+  'audiosList': 'audioIndex',
+  'videosList': 'videoIndex'
 }
 export const moduleTypes = ['module', 'appendix']
 export const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate', 'container-introduction']

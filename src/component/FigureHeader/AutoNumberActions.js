@@ -10,7 +10,7 @@ import {
     UPDATE_AUTO_NUMBER_ELEMENTS_LIST
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList } from './AutoNumber_helperFunctions';
-import { AUTO_NUMBER_ELEMENTS } from './AutoNumberConstants';
+import { AUTO_NUMBER_ELEMENTS, autoNumber_IndexMapper } from './AutoNumberConstants';
 /**
  * 
  */
@@ -37,31 +37,28 @@ export const fetchProjectFigures = (elementType) => dispatch => {
             let numberedElements = {
                 imagesList: [],
                 tablesList: [],
-                equationsList: []
+                equationsList: [],
+                audiosList:[],
+                videosList:[],
             }
             numberedElements = mediaElementAPI_Handler(projectContent, numberedElements);
             console.log('numberedElements>>>>', numberedElements)
-            let autoNumberElementsIndex = {}
-            autoNumberElementsIndex = setAutoNumberSequenceForElements(numberedElements, autoNumberElementsIndex)
-            console.log('autoNumberElementsIndex', autoNumberElementsIndex)
+            getAutoNumberSequence(numberedElements,dispatch)
+            //autoNumberElementsIndex = setAutoNumberSequenceForElements(numberedElements, autoNumberElementsIndex)
+            //console.log('autoNumberElementsIndex', autoNumberElementsIndex)
             dispatch({
                 type: GET_ALL_AUTO_NUMBER_ELEMENTS,
                 payload: {
                     numberedElements
                 }
             });
-            dispatch({
-                type: SET_AUTO_NUMBER_SEQUENCE,
-                payload: {
-                    autoNumberElementsIndex
-                }
-            });
+
         } else {
-            commonDispatch(dispatch, GET_ALL_FIGURE_ELEMENTS, {})
+            commonDispatch(dispatch, GET_ALL_AUTO_NUMBER_ELEMENTS, {})
         }
     }).catch(error => {
         console.log('Error in fetching list of figures in the project>>>> ', error)
-        commonDispatch(dispatch, GET_ALL_FIGURE_ELEMENTS, {})
+        commonDispatch(dispatch, GET_ALL_AUTO_NUMBER_ELEMENTS, {})
     })
 
 };
@@ -70,16 +67,22 @@ const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIn
     for (let labelType in numberedElements) {
         if (Object.prototype.hasOwnProperty.call(numberedElements, labelType)) {
             const Obj = prepareAutoNumberList(numberedElements[labelType])
-            autoNumberElementsIndex[autoNumber_IndexMapper[labelType].eleIndex] = Obj
+            autoNumberElementsIndex[autoNumber_IndexMapper[labelType]] = Obj
         }
     }
     return autoNumberElementsIndex
 }
 
-const autoNumber_IndexMapper = {
-    'imagesList': { eleIndex: 'figureImageIndex', eleCount: 'figureImageCount' },
-    'tablesList': { eleIndex: 'tableIndex', eleCount: 'tableCount' },
-    'equationsList': { eleIndex: 'equationsIndex', eleCount: 'equationsCount' },
+export const getAutoNumberSequence = (numberedElements, dispatch) => {
+    let autoNumberElementsIndex = {}
+    autoNumberElementsIndex = setAutoNumberSequenceForElements(numberedElements, autoNumberElementsIndex)
+    console.log('autoNumberElementsIndex', autoNumberElementsIndex)
+    dispatch({
+        type: SET_AUTO_NUMBER_SEQUENCE,
+        payload: {
+            autoNumberElementsIndex
+        }
+    });
 }
 
 const getAPIUrl = (mediaType, containerEntityUrn) => {

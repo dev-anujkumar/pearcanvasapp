@@ -1,6 +1,14 @@
 import config from '../../config/config'
 import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_KeyMapper } from './AutoNumberConstants';
-
+import {
+    SET_AUTO_NUMBER_TOGGLE,
+    SET_AUTO_NUMBER_SEQUENCE,
+    UPDATE_AUTO_NUMBER_SEQUENCE,
+    GET_TOC_AUTO_NUMBERING_LIST,
+    GET_ALL_AUTO_NUMBER_ELEMENTS,
+    UPDATE_AUTO_NUMBER_ELEMENTS_LIST
+} from '../../constants/Action_Constants.js';
+import {getAutoNumberSequence} from './AutoNumberActions';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL,
@@ -153,4 +161,43 @@ export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => 
         }
     }
     return ''
+}
+
+export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, numberedElements, dispatch) => {
+    if (parentIndex && contentUrn && numberedElements) {
+        for (let labelType in numberedElements) {
+            if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
+                if(numberedElements[labelType][parentIndex]?.indexOf(contentUrn)>-1){
+                    delete numberedElements[labelType][parentIndex][contentUrn]
+                }
+                break;
+            }
+        }
+    }
+    dispatch({
+        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+        payload: {
+            numberedElements
+        }
+    });
+    getAutoNumberSequence(numberedElements, dispatch)
+}
+
+export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex,contentUrn, getState, dispatch) => {
+    const numberedElements = getState().autonumberElements.autoNumberedElements
+    if (contentUrn && numberedElements) {
+        for (let labelType in numberedElements) {
+            if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
+                numberedElements[labelType][parentIndex] = numberedElements[labelType][parentIndex]?.filter(ele => ((!ele.containerData) || (ele.containerData?.length < 1) || ele?.containerData?.indexOf(contentUrn) < 0))
+                break;
+            }
+        }
+    }
+    dispatch({
+        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+        payload: {
+            numberedElements
+        }
+    });
+    getAutoNumberSequence(numberedElements, dispatch)
 }
