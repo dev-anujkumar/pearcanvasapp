@@ -21,18 +21,23 @@ import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } f
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
     const imgData = `<img imageid="urn:pearson:alfresco:${uniqID}" src=${epsURL} height="150" width="112"  class="imageAssetContent" data-id="${imageID}"/>`;
     const imageTypes = ["image", "table", "mathImage", "authoredtext"];
-    if (imageTypes.indexOf(figureType) > -1) {
-        if (imageArgs?.id && editor?.targetElm) {
-            let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
-            if (getImgNode) {
-                getImgNode.outerHTML = imgData;
-                imageArgs.handleBlur(null, true);
+    if(figureType === "image"){
+        if (imageTypes.indexOf(figureType) > -1) {
+            if (imageArgs?.id && editor?.targetElm) {
+                let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
+                if (getImgNode) {
+                    getImgNode.outerHTML = imgData;
+                    imageArgs.handleBlur(null, true);
+                }
+            }
+            else {
+                editor.insertContent(imgData);
+                setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
             }
         }
-        else {
-            editor.insertContent(imgData);
-            setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
-        }
+    }
+    else{
+        alert("Only Image Type Assets can be added as Inline Image!");
     }
     // return imgData;
 }
