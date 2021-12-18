@@ -37,6 +37,7 @@ const { SHOW_HIDE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
+import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -392,7 +393,45 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
-        
+        /** [PCAT-9953] ---------------------------- Auto-Numbering handling ------------------------------*/
+        const listofslateData = getState().autoNumberReducer.slateFigureList;
+        if (type === 'IMAGE') {// || type==='VIDEO' 
+            console.log('listofslateData', listofslateData)
+            let parentIndex = ""
+            if(asideData?.index){//7,0,2
+                let parentIndex= asideData.index?.split('-')
+            }
+            if(listofslateData){
+                const prevFigures1 = listofslateData.filter(fig => {
+                    let eleIndex = fig.index
+                    if (typeof fig.index === 'number') {
+                        return eleIndex < index
+                    }
+                    // else if (parentIndex[0] < eleIndex[0]) { //7,2
+
+                    //     if(eleIndex?.length < parentIndex?.length){ //[1,1]
+                    //         // && 
+                    //     }
+                    //     return fig
+                    // }
+                })
+                console.log('prevFigures', prevFigures1)
+            }
+        }
+        else if(listofslateData?.length){
+            //reset indexes of images on a slate when any elemnt is created on a slate
+            const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
+            const slateFigures = getImagesInsideSlates(bodyMatter)
+            if (slateFigures) {
+                dispatch({
+                    type: SLATE_FIGURE_ELEMENTS,
+                    payload: {
+                        slateFigures
+                    }
+                });
+            }
+        }
+        /**------------------------------------------------------------------------------------------------*/
         if (cb) {
             cb();
         }   
