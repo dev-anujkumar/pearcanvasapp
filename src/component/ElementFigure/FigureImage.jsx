@@ -58,7 +58,7 @@ class FigureImage extends Component {
                 alfrescoSiteData: { ...response }
             })
         })
-        let figureHtmlData = getLabelNumberTitleHTML(this.props.model);
+        let figureHtmlData = this.props.isAutoNumberingEnabled ? { formattedLabel: `<p>${this.props.model.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.model);
         let figureLabelValue = this.state;
         figureLabelValue = dropdownValueAtIntialize(this.props.figureDropdownData.image, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
@@ -431,7 +431,7 @@ class FigureImage extends Component {
     }
 
     render() {
-        const { model } = this.props;
+        const { model, isAutoNumberingEnabled } = this.props;
         let elementFigureAlignment = ''
         if (model && model.figuretype) {
             switch (model.figuretype) {
@@ -459,7 +459,7 @@ class FigureImage extends Component {
 
         let figureHtmlData = getLabelNumberTitleHTML(model);
         let { figureLabelValue } = this.state;
-        let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
+        let figureLabelFromApi = isAutoNumberingEnabled ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
 
         if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
@@ -490,8 +490,6 @@ class FigureImage extends Component {
                                 previewClass={previewClass}
                                 figLabelClass={figLabelClass}
                                 figTitleClass={figTitleClass}
-                                onFigureImageFieldFocus={this.onFigureImageFieldFocus}
-                                onFigureImageFieldBlur={this.onFigureImageFieldBlur}
                             />
                             <div className="figure-image-container">
 
@@ -573,7 +571,8 @@ const mapStateToProps = (state) => {
         changedSiteData: state.alfrescoReducer.changedSiteData,
         figureDropdownData: state.appStore.figureDropdownData,
         figImageList: state.autoNumberReducer.figImageList,
-        slateAncestors: state.appStore.currentSlateAncestorData 
+        slateAncestors: state.appStore.currentSlateAncestorData,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled
     }
 }
 

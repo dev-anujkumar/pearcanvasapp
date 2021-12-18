@@ -17,6 +17,14 @@ const {
     OVERRIDE_NUMBER_VALUE
 } = AUTO_NUMBER_PROPERTIES;
 
+const { 
+    AUTO_NUMBER_SETTING_DEFAULT,
+    AUTO_NUMBER_SETTING_RESUME_NUMBER,
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
+
 export const setAutoNumberSettingValue = (element) => {
     if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == false) {
         return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_REMOVE_NUMBER
@@ -51,6 +59,42 @@ export const getOverridedNumberValue = (element) => {
         return undefined;
     }
     return undefined;
+}
+
+export const setAutonumberingValuesForPayload = (autoNumberOption, titleHTML, numberHTML) => {
+    let objToReturn = {};
+    switch (autoNumberOption) {
+        case AUTO_NUMBER_SETTING_RESUME_NUMBER:
+            objToReturn = {
+                numberedandlabel : true,
+                manualoverride : { "resumenumbervalue": numberHTML }
+            }
+            break;
+        case AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER:
+            objToReturn = {
+                numberedandlabel : true,
+                manualoverride : { "overridelabelvalue": titleHTML, "overridenumbervalue": numberHTML }
+            }
+            break;
+        case AUTO_NUMBER_SETTING_OVERRIDE_NUMBER:
+            objToReturn = {
+                numberedandlabel : true,
+                manualoverride : { "overridenumbervalue": numberHTML }
+            }
+            break;
+        case AUTO_NUMBER_SETTING_REMOVE_NUMBER:
+            objToReturn = {
+                numberedandlabel : false,
+                manualoverride : { }
+            }
+            break;
+        case AUTO_NUMBER_SETTING_DEFAULT:
+            objToReturn = {
+                numberedandlabel : true
+            }
+            break;
+    }
+    return objToReturn;
 }
 
 
