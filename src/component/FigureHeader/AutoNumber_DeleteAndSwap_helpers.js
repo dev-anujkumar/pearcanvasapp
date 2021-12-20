@@ -2,6 +2,7 @@ import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
 import { autoNumber_KeyMapper } from './AutoNumberConstants';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import {
+    SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
@@ -100,20 +101,28 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
             dispatch({
                 type: SLATE_FIGURE_ELEMENTS,
                 payload: {
-                    slateFigures
+                    slateFigures //2,3 - contentUrn
                 }
             });
         }
         if (swappedElementData?.type === 'figure' && swappedElementData?.hasOwnProperty('displayedlabel')) {
             if (slateFigures || slateFigures?.length > 0) {
                 const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === swappedElementData.displayedlabel)
+                const figureIndexOnSlate = activeLabelFigures.indexOf(ele => ele.contentUrn === swappedElementData.contentUrn)
                 if (activeLabelFigures?.length > 1) {
+                    let refIndex = ""
+                    if (figureIndexOnSlate == activeLabelFigures.length - 1) {
+                        refIndex = figureIndexOnSlate
+                    }
+                    else {
+                        refIndex = figureIndexOnSlate + 1
+                    }
                     //find the closest image now and then add the new img at that index
-                    const referenceFigure = activeLabelFigures[1].contentUrn
+                    const referenceFigure = activeLabelFigures[refIndex].contentUrn
                     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
                     const labelType = autoNumber_KeyMapper[swappedElementData.displayedlabel]
                     if (figureParentEntityUrn && numberedElements) {
-                        numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][parentIndex]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
+                        numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
                     }
                     if (referenceFigure) {
                         const refImageIndex = numberedElements[labelType][figureParentEntityUrn].indexOf(ele => ele.contentUrn === referenceFigure)
