@@ -3121,7 +3121,7 @@ export class TinyMceEditor extends Component {
 
                 let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 //PCAT-9077 - duplicate toolbar issue on element creation
-                //tinymce.remove()                                           /** Commenting this line as its creating placeholder overlap issue while creating the element */
+                tinymce.remove()
                 tinymce.init(this.editorConfig).then((d) => {
                     if (this.editorRef.current) {
 
@@ -3633,13 +3633,6 @@ export class TinyMceEditor extends Component {
                     removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                     tinymce.remove(`#${ed_id}`)
                     wirisModalDesktopNode.remove();
-
-                    /** to resolvee the placeholder overlap issue after installing tinymce latest version */
-                    tinymceEditorNode?.classList?.add('place-holder')
-                    if(tinymceEditorNode && tinymceEditorNode.innerText.trim() !== "" && tinymceEditorNode.innerText.trim().length && tinymceEditorNode?.classList?.contains('place-holder')){
-                        tinymceEditorNode?.classList.remove('place-holder')
-                    }
-
                     let edNode = document.getElementById(`${ed_id}`)
                     if (edNode) {
                         edNode.contentEditable = true;
