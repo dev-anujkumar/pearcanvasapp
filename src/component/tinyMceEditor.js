@@ -4098,7 +4098,7 @@ export class TinyMceEditor extends Component {
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;
-        let isContainsImage =  this.props?.model?.text.match(/<img/)?.input.includes('class="imageAssetContent');
+        let isContainsImage =  this.props?.model?.text?.match(/<img/)?.input?.includes('class="imageAssetContent');
         if(!isContainsImage){
             classes += ' ' + this.placeHolderClass;
         }
