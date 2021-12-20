@@ -157,7 +157,7 @@ class AssetPopoverSearch extends React.Component {
             workedExamples: this.props?.workedExamples ? this.props.workedExamples : []
         }
         return (<section className="modalBody">
-            <ApiResults assetPopoverData={assetArray} selectedFigure={this.selectedFigure} ValueToBeSearch={ValueToBeSearch} timeByAPI={this.props.timeByAPI}/>
+             <ApiResults assetPopoverData={assetArray} selectedFigure={this.selectedFigure} ValueToBeSearch={ValueToBeSearch} timeByAPI={this.props.timeByAPI}/>
         </section>
         )
     }
