@@ -27,7 +27,7 @@ import { ELM_UPDATE_BUTTON, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_MSG, ELM_INT,Resou
 import PopUp from '../PopUp';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
-import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action';
+import {alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action';
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper';
 import { updateSmartLinkDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
@@ -119,12 +119,7 @@ class Interactive extends React.Component {
             }
         }
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
-            this.dataFromAlfresco(alfrescoAssetData)
-            const payloadObj = {
-                asset: {}, 
-                id: ''
-            }
-            this.props.saveSelectedAssetData(payloadObj)
+            this.dataFromAlfresco(alfrescoAssetData)   
         }
     }
 
@@ -644,6 +639,11 @@ class Interactive extends React.Component {
             }
             }
         }
+        const payloadObj = {
+            asset: {}, 
+            id: ''
+        }
+        this.props.saveSelectedAssetData(payloadObj)
     }
 
     updateAlfrescoSiteUrl = () => {
@@ -720,12 +720,19 @@ class Interactive extends React.Component {
                     const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                    const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
                     let messageObj = { citeName: citeName, 
-                        citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                        citeNodeRef: citeNodeRef, 
                         elementId: this.props.elementId,
                         currentAsset
                      }
                         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                        const messageDataToSaveSmartlink = {
+                            id: this.props.elementId,
+                            editor: undefined,
+                            citeNodeRef: citeNodeRef
+                        }
+                        this.props.saveSelectedAlfrescoElement(messageDataToSaveSmartlink);
              }
             else{
                 this.props.accessDenied(true)
@@ -921,6 +928,9 @@ const mapActionToProps = (dispatch) => {
         },
         updateSmartLinkDataForCompare: (oldSmartLinkData) => {
             dispatch(updateSmartLinkDataForCompare(oldSmartLinkData))
+        },
+        saveSelectedAlfrescoElement: (payloadObj) => {
+            dispatch(saveSelectedAlfrescoElement(payloadObj))
         }
     }
 }

@@ -1,3 +1,4 @@
+import { initial } from 'lodash';
 import metadataReducer from '../../src/appstore/metadataReducer';
 
 const INIT_STATE = {
@@ -12,7 +13,8 @@ const INIT_STATE = {
         externalLF:[]
     },
     currentSlateLF:"",
-    loWarningPopupData: {}
+    loWarningPopupData: {},
+    lastAlignedExternalLO:{}
 }
 
 const currentSlateLOData = { currentSlateLOData: "",
@@ -21,6 +23,13 @@ showModule:false,
 currentSlateLODataMath:"",
 showSlateLockPopup: false,
 isRenderMetdataLO:false
+}
+
+const lastAlignedLO={
+    ...INIT_STATE,
+    id: "urn:pearson:educationalgoal:f77c17cd-461a-447a-a592-b333eea0109f",
+    label: { en: "Construct and Solve Linear Equation" },
+    subject: "https://schema.pearson.com/ns/domains/mathematics"
 }
 
 const getLOState = { 
@@ -40,6 +49,19 @@ describe('testing meta data Reducer cases --', () => {
                  currentSlateLOData
             
         })).toEqual(getLOState);
+    })
+    it('UPDATE_LAST_ALIGNED_LO',()=>{
+        let state6= INIT_STATE;
+        let label={
+            en:"Construct and Solve Linear Equation"
+        }
+        state6.lastAlignedExternalLO.id ="urn:pearson:educationalgoal:f77c17cd-461a-447a-a592-b333eea0109f",
+        state6.lastAlignedExternalLO.label = label ,
+        state6.lastAlignedExternalLO.subject="https://schema.pearson.com/ns/domains/mathematics"
+        expect(metadataReducer(INIT_STATE,{
+            type: 'UPDATE_LAST_ALIGNED_LO',
+            payload:  lastAlignedLO
+        })).toEqual(state6)
     })
     it('SLATE_TAG_ENABLE', () => {
         let state1 = INIT_STATE;

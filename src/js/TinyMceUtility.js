@@ -13,7 +13,7 @@ import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } f
   */
  export const dataFromAlfresco = (data, editor, imageArgs) => {
     let imageData = data;
-    let epsURL = imageData.epsUrl? imageData.epsUrl : "";
+    let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "" ;
     let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
     let uniqID = imageData.id ? imageData.id : "";
     let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
@@ -21,25 +21,30 @@ import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } f
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
     const imgData = `<img imageid="urn:pearson:alfresco:${uniqID}" src=${epsURL} height="150" width="112"  class="imageAssetContent" data-id="${imageID}"/>`;
     const imageTypes = ["image", "table", "mathImage", "authoredtext"];
-    if (imageTypes.indexOf(figureType) > -1) {
-        if (imageArgs?.id && editor?.targetElm) {
-            let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
-            if (getImgNode) {
-                getImgNode.outerHTML = imgData;
-                imageArgs.handleBlur(null, true);
+    if(figureType === "image"){
+        if (imageTypes.indexOf(figureType) > -1) {
+            if (imageArgs?.id && editor?.targetElm) {
+                let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
+                if (getImgNode) {
+                    getImgNode.outerHTML = imgData;
+                    imageArgs.handleBlur(null, true);
+                }
+            }
+            else {
+                editor.insertContent(imgData);
+                setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
             }
         }
-        else {
-            editor.insertContent(imgData);
-            setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
-        }
+    }
+    else{
+        alert("Only Image Type Assets can be added as Inline Image!");
     }
     // return imgData;
 }
 /**
  * @description function will be called on image src add and fetch resources from Alfresco
  */
-export const handleC2MediaClick = (permissions, editor, element) => {
+export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlfrescoElement) => {
     let alfrescoPath = config.alfrescoMetaData;
     if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {
@@ -47,11 +52,18 @@ export const handleC2MediaClick = (permissions, editor, element) => {
                 let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
                 const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                 const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
                 let messageObj = { citeName: citeName, 
-                    citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                    citeNodeRef: citeNodeRef, 
                     elementId: element.id,
                     editor: true}
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                const messageDataToSaveInlineImage = {
+                    id: element.id,
+                    editor: true,
+                    citeNodeRef: citeNodeRef
+                }
+                saveSelectedAlfrescoElement(messageDataToSaveInlineImage);
             } else {
                 // props.accessDenied(true)
             }

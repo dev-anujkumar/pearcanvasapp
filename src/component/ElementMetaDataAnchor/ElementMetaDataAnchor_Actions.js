@@ -11,6 +11,15 @@ export const currentSlateLO = (currentSlateLOData) =>  (dispatch, getState) => {
     })
 }
 
+export const updateLastAlignedLO = (lastAlignedExternalLO) =>  (dispatch, getState) => {
+    return dispatch({
+        type: 'UPDATE_LAST_ALIGNED_LO',
+        payload: {
+            lastAlignedExternalLO: lastAlignedExternalLO
+        }
+    })
+}
+
 export const currentSlateLOMath = (currentSlateLODataMath) =>  (dispatch, getState) => {
     return dispatch({
         type: 'CURRENT_SLATE_LO_DATA_MATH',
