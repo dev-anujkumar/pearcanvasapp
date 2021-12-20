@@ -9,10 +9,12 @@ const KeyboardWrapper = (props) => {
 
     // alphanumeric, id should be unique for all the elements.
     const id = `${QUERY_SELECTOR}-${props.index}`;
+    if(props.enable)
     return <div onFocus={() => {
         // element is directly clicked via mouse
         dispatch(selectElement(id));
     }} id={id}> {props.children} </div>
+    else return <>{props.children}</>
 }
 
 export default KeyboardWrapper;
