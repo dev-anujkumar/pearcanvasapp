@@ -1,3 +1,4 @@
+import config from '../../config/config';
 import { containerElements, autoNumberElementsAllowed } from './AutoNumberConstants';
 
 /**
@@ -16,7 +17,8 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                 } else {
                     element.indexPos = index
                 }
-                numberedElements.push({contentUrn: element.contentUrn, index: element.indexPos, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype })
+                element.slateEntityUrn = getSlateEntityUrn()
+                numberedElements.push({ ...element })
             }
             else if (Object.values(containerElements).indexOf(element.type) > -1) {
                 element.indexPos = [...parentIndex]
@@ -76,7 +78,8 @@ const getMediaElementInPopup = (containerData, numberedElements) => {
             if (element.type === 'figure') {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
-                numberedElements.push({contentUrn: element.contentUrn, index: element.indexPos, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype })
+                element.slateEntityUrn = getSlateEntityUrn()
+                numberedElements.push({...element})
             } else if (element.type === 'manifest' && element.contents.bodymatter) {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
@@ -98,7 +101,8 @@ const getMediaElementInAsideWE = (containerData, numberedElements) => {
             if (element.type === 'figure') {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
-                numberedElements.push({contentUrn: element.contentUrn, index: element.indexPos, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype })
+                element.slateEntityUrn = getSlateEntityUrn()
+                numberedElements.push({...element})
             } else if (element.type === 'manifest' && element.contents.bodymatter) {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
@@ -123,7 +127,8 @@ const getMediaElementInMultiColumn = (containerData, numberedElements) => {
                         if (element.type === 'figure') {
                             containerData.indexPos.push(index)
                             element.indexPos = [...containerData.indexPos]
-                            numberedElements.push({contentUrn: element.contentUrn, index: element.indexPos, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype })
+                            element.slateEntityUrn = getSlateEntityUrn()
+                            numberedElements.push({...element})
                         } else if (element.type === 'container') {
                             containerData.indexPos.push(index)
                             element.indexPos = [...containerData.indexPos]
@@ -150,7 +155,8 @@ const getMediaElementInShowhide = (containerData, numberedElements, containerInd
             if (element.type === 'figure') {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
-                numberedElements.push({contentUrn: element.contentUrn, index: element.indexPos, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype })
+                element.slateEntityUrn = getSlateEntityUrn()
+                numberedElements.push({...element})
             } else if (element.type === 'container') {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
@@ -158,4 +164,8 @@ const getMediaElementInShowhide = (containerData, numberedElements, containerInd
             }
         })
     }
+}
+
+const getSlateEntityUrn = () => {
+    return config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN ? config.slateEntityURN : ""
 }

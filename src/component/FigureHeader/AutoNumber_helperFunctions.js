@@ -25,6 +25,11 @@ const {
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
+/**
+ * This function is responsible for setting the value in "Label&Number Settings" Dropdown
+ * @param {*} element 
+ * @returns 
+ */
 export const setAutoNumberSettingValue = (element) => {
     if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == false) {
         return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_REMOVE_NUMBER
@@ -44,13 +49,18 @@ export const setAutoNumberSettingValue = (element) => {
     return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT
 }
 
+/**
+ * 
+ * @param {*} element 
+ * @returns 
+ */
 export const getOverridedNumberValue = (element) => {
     if ((element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == false) || (!element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true)) {
         return undefined;
     }
     else if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
         if (element.hasOwnProperty(MANUAL_OVERRIDE) && Object.keys(element[MANUAL_OVERRIDE])?.length > 0) {
-            if (element.manualoverride.hasOwnProperty(OVERRIDE_NUMBER_VALUE)) {
+            if (element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_NUMBER_VALUE)) {
                 return element[MANUAL_OVERRIDE][OVERRIDE_NUMBER_VALUE];
             } else if (element[MANUAL_OVERRIDE].hasOwnProperty()) {
                 return element[MANUAL_OVERRIDE][RESUME_NUMBER_VALUE];
@@ -61,6 +71,13 @@ export const getOverridedNumberValue = (element) => {
     return undefined;
 }
 
+/**
+ * Prepare the payload for updating Auto-numbered Element
+ * @param {*} autoNumberOption 
+ * @param {*} titleHTML 
+ * @param {*} numberHTML 
+ * @returns 
+ */
 export const setAutonumberingValuesForPayload = (autoNumberOption, titleHTML, numberHTML) => {
     let objToReturn = {};
     switch (autoNumberOption) {
@@ -97,7 +114,12 @@ export const setAutonumberingValuesForPayload = (autoNumberOption, titleHTML, nu
     return objToReturn;
 }
 
-
+/**
+ * This function returns the content to be shown in Preview Div
+ * @param {*} element 
+ * @param {*} param1 
+ * @returns 
+ */
 export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber }) => {
     if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
         return `${imgLabelValue} ${parentNumber}.${imgNumberValue}`
@@ -105,6 +127,12 @@ export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, 
     return ""
 }
 
+/**
+ * This function returns the Number of TOC Container which is prefix for Element's Number Field
+ * @param {*} slateAncestors 
+ * @param {*} autoNumberingDetails 
+ * @returns 
+ */
 export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
     const containerEntityUrn = getContainerEntityUrn(slateAncestors)
     switch (containerEntityUrn) {
@@ -126,6 +154,12 @@ export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
     }
 }
 
+/**
+ * This function returns the current slate's TOC Container EntityUrn 
+ * whose Number will be prefixed with the auto-numbered element
+ * @param {*} slateAncestors 
+ * @returns 
+ */
 export const getContainerEntityUrn = (slateAncestors) =>{
 
     if (slateAncestors?.matterType !== MATTER_TYPES.BODYMATTER) {
@@ -148,6 +182,13 @@ export const getContainerEntityUrn = (slateAncestors) =>{
     return slateAncestors?.contentUrn ?? ''
 }
 
+/**
+ * This function returns the Label Field Value for the auto-numbered Element
+ * @param {*} element 
+ * @param {*} figureLabelValue 
+ * @param {*} containerNumber 
+ * @returns 
+ */
 export const getLabelNumberFieldValue = (element, figureLabelValue, containerNumber) => {
     let elementLabel = figureLabelValue || element?.displayedlabel || ""
     if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == false) {
@@ -165,6 +206,11 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, containerNum
     return elementLabel
 }
 
+/**
+ * This function prepares the auto-number sequence for Elements
+ * @param {*} imagesData 
+ * @returns 
+ */
 export const prepareAutoNumberList = (imagesData) => {
     let imagesList = { ...imagesData };
     /** Destructure the ImageList into an array of Fig-EntityUrns in Order */
@@ -197,6 +243,13 @@ export const prepareAutoNumberList = (imagesData) => {
     return imagesList;
 };
 
+/**
+ * This function returns the Number Field Value for the auto-numbered Element
+ * @param {*} parentIndex 
+ * @param {*} element 
+ * @param {*} autoNumberElementsIndex 
+ * @returns 
+ */
 export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => {
     if (parentIndex && element && autoNumberElementsIndex) {
         let labelType = autoNumber_KeyMapper[element?.displayedlabel || 'Figure']
@@ -207,41 +260,3 @@ export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => 
     return ''
 }
 
-export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, numberedElements, dispatch) => {
-    if (parentIndex && contentUrn && numberedElements) {
-        for (let labelType in numberedElements) {
-            if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
-                if(numberedElements[labelType][parentIndex]?.indexOf(contentUrn)>-1){
-                    delete numberedElements[labelType][parentIndex][contentUrn]
-                }
-                break;
-            }
-        }
-    }
-    dispatch({
-        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-        payload: {
-            numberedElements
-        }
-    });
-    getAutoNumberSequence(numberedElements, dispatch)
-}
-
-export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex,contentUrn, getState, dispatch) => {
-    const numberedElements = getState().autonumberElements.autoNumberedElements
-    if (contentUrn && numberedElements) {
-        for (let labelType in numberedElements) {
-            if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
-                numberedElements[labelType][parentIndex] = numberedElements[labelType][parentIndex]?.filter(ele => ((!ele.containerData) || (ele.containerData?.length < 1) || ele?.containerData?.indexOf(contentUrn) < 0))
-                break;
-            }
-        }
-    }
-    dispatch({
-        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-        payload: {
-            numberedElements
-        }
-    });
-    getAutoNumberSequence(numberedElements, dispatch)
-}

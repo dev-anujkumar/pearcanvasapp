@@ -16,7 +16,7 @@ import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Hel
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
-import {getContainerEntityUrn,updateAutoNumberSequenceOnDelete, updateAutoNumberSequenceOnDeleteInContainers} from '../FigureHeader/AutoNumber_helperFunctions';
+import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -42,18 +42,15 @@ export const onDeleteSuccess = (params) => {
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
     
-    // if(type == 'popup'||type=='showhide'||type=='groupedcontent'||type=='element-aside'){
-    //     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    //     const autoNumberedElements = getState().autonumberElements.autoNumberedElements
-    //     updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, getState, dispatch)
-    // }
-    // else if (type == 'figure') { //type == 'popup'//type=='showhide'//type=='groupedcontent//type==''element-aside
-    //     //reset auto-numbering
-    //     const slateAncestors = getState().appStore.currentSlateAncestorData
-    //     const autoNumberedElements = getState().autonumberElements.autoNumberedElements
-    //     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    //     updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements, dispatch)
-    // }
+    /** ---------------------------- Auto-Numbering handling ------------------------------*/
+    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+    const autoNumberParams = {
+        getState,
+        dispatch,
+        isAutoNumberingEnabled
+    }
+    handleAutoNumberingOnDelete(autoNumberParams)
+    /**-----------------------------------------------------------------------------------*/
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const tcmDeleteArgs = {
         deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
