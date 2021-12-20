@@ -4,7 +4,7 @@ import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
-
+import { getAutoNumberSequence } from './AutoNumberActions';
 export const handleAutoNumberingOnDelete = (params) => {
     const {
         contentUrn,
@@ -124,6 +124,7 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
                                 numberedElements
                             }
                         });
+                        getAutoNumberSequence(numberedElements, dispatch)
                     }
                 }
             }
