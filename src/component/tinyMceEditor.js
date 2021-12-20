@@ -248,7 +248,7 @@ export class TinyMceEditor extends Component {
                             var MLtext = document.querySelector('#' + tinymce.activeEditor.id + ' > p > img') || document.querySelector('#' + tinymce.activeEditor.id + ' > img')
                             if (MLtext) {
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
-                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(MLtext)
+                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?.append(MLtext)
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
@@ -4098,7 +4098,11 @@ export class TinyMceEditor extends Component {
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;
-        classes += ' ' + this.placeHolderClass;
+        let isContainsImage =  this.props?.model?.text.match(/<img/)?.input.includes('class="imageAssetContent');
+        if(!isContainsImage){
+            classes += ' ' + this.placeHolderClass;
+        }
+        
         /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
