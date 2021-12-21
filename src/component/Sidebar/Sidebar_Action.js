@@ -665,6 +665,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
     }).then(res => {
         const newParentData = getState().appStore.slateLevelData;
         const parsedParentData = JSON.parse(JSON.stringify(newParentData));
+        const slateLevelBLIndex = (typeof dataToUpdate.slateLevelBLIndex === 'number') ? [`${dataToUpdate.slateLevelBLIndex}`] : dataToUpdate.slateLevelBLIndex;
         if (parsedParentData[config.slateManifestURN]?.status === 'approved') {
             if (parsedParentData.type === "popup") {
                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
@@ -681,10 +682,10 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
         } else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             if (dataToUpdate.asideData.parent && dataToUpdate.asideData.parent.type==="showhide") {
-                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex[0]].interactivedata[dataToUpdate.asideData.parent.showHideType][dataToUpdate.slateLevelBLIndex[2]], dataToSend)
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].interactivedata[dataToUpdate.asideData.parent.showHideType][slateLevelBLIndex[2]], dataToSend)
             }
             else {
-                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex[0]], dataToSend)
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]], dataToSend)
             }
             dispatch({
                 type: AUTHORING_ELEMENT_UPDATE,
