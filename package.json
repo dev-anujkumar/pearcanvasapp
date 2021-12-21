@@ -102,7 +102,7 @@
         "redux-logger": "^3.0.6",
         "redux-thunk": "^2.3.0",
         "sortablejs": "^1.10.0",
-        "tinymce": "^5.10.2",
+        "tinymce": "../cypress-tinymce",
         "utils": "^0.3.1"
     },
     "jest": {
