@@ -41,6 +41,15 @@ class ApiResults extends React.Component {
         let cardForApiResults
         let assetType = Object.keys(assetData)
         assetType = assetType[0].charAt(0).toUpperCase() + assetType[0].slice(1)
+        switch(assetType){
+            case "SmartLinkInteractives":
+                assetType = "Smartlinks";
+                break;
+            case "WorkedExamples":
+                assetType = "Worked Examples";
+                break;
+            default:
+        }
         let matchingAssets = this.findMatchingAssets(assetData, ValueToBeSearch)
         let assetTypeTitle = assetType + " " + `(${matchingAssets.length})`
         
@@ -75,6 +84,7 @@ class ApiResults extends React.Component {
         let matchingAssets = this.findMatchingAssets(assetPopoverData, ValueToBeSearch)
         return (
             <div>
+                <p className="APOSearchResultText">Total hits: {matchingAssets.length}</p>
                 {matchingAssets.length >= 1 ? this.renderByAssetType(assetPopoverData, selectedFigure, ValueToBeSearch) : <ErrorComp errorMsg={"No Match found! "} />}
             </div>
         )

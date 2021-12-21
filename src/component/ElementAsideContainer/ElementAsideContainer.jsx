@@ -676,7 +676,7 @@ class ElementAsideContainer extends Component {
     handleAsideBlur = (evt) => {
         this.props.handleBlur();
         const { element, index } = this.props;
-        console.log("props",this.props);
+
         let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false; 
         const newToggleValue = hasAsideTitleData ? true : false;
         let labelElement = document.getElementById(`cypress-${index}-t1`);

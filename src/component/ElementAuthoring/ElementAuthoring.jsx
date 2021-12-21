@@ -12,31 +12,33 @@ export class ElementAuthoring extends Component {
     const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue, openMarkedIndexPopUp, markedIndexValue } = this.props
      return (
        <KeyboardWrapper enable={this.props.tagName !=="blockquote"} index={this.props.index}>
-          <TinyMceEditor
-            openAssetPopoverPopUp ={openAssetPopoverPopUp}
-            openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
-            index={this.props.index}
-            elementId={this.props.elementId}
-            element={this.props.element}
-            placeholder={this.props.placeholder || "Type Something..."}
-            className={className}
-            model={model}
-            tagName={this.props.tagName}
-            handleEditorFocus={this.props.handleFocus}
-            handleBlur = {this.props.handleBlur}
-            slateLockInfo={slateLockInfo}
-            onListSelect={this.props.onListSelect}
-            permissions={this.props.permissions}
-            glossaryFootnoteValue={glossaryFootnoteValue}
-            glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-            handleAudioPopupLocation ={this.props.handleAudioPopupLocation}
-            handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
-            showHideType = {this.props?.showHideType}
-            parentElement={this.props?.parentElement}
-            openMarkedIndexPopUp = {openMarkedIndexPopUp}
-            markedIndexValue={markedIndexValue}
-          />
+           <TinyMceEditor
+          openAssetPopoverPopUp ={openAssetPopoverPopUp}
+          openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
+          index={this.props.index}
+          elementId={this.props.elementId}
+          element={this.props.element}
+          placeholder={this.props.placeholder!==undefined?this.props.placeholder:"Type Something..."}
+          className={className}
+          model={model}
+          tagName={this.props.tagName}
+          handleEditorFocus={this.props.handleFocus}
+          handleBlur = {this.props.handleBlur}
+          slateLockInfo={slateLockInfo}
+          onListSelect={this.props.onListSelect}
+          permissions={this.props.permissions}
+          glossaryFootnoteValue={glossaryFootnoteValue}
+          glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+          handleAudioPopupLocation ={this.props.handleAudioPopupLocation}
+          handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
+          showHideType = {this.props?.showHideType}
+          parentElement={this.props?.parentElement}
+          openMarkedIndexPopUp = {openMarkedIndexPopUp}
+          markedIndexValue={markedIndexValue}
+          parentManifestListItem={this?.props?.parentManifestListItem}
+        />
        </KeyboardWrapper>
+       
     )
 
     

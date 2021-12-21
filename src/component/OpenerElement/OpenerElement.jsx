@@ -10,7 +10,7 @@ import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
 import axios from 'axios';
-import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
+import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 
 class OpenerElement extends Component {
@@ -50,7 +50,7 @@ class OpenerElement extends Component {
         hideTocBlocker();
         disableHeader(false);
         let imageData = data;
-        let epsURL = imageData.epsUrl? imageData.epsUrl : "";
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "" ;
         let uniqID = imageData.id ? imageData.id : "";
         let imageId = `urn:pearson:alfresco:${uniqID}`;
         let figureType = data?.content?.mimeType?.split('/')[0]
@@ -134,10 +134,19 @@ class OpenerElement extends Component {
                 let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId            
                 const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
-                let messageObj = { citeName: citeName, 
-                    citeNodeRef: alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid, 
-                    elementId: this.props.elementId }
+                    const citeNodeRef = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
+                    let messageObj = {
+                        citeName: citeName,
+                        citeNodeRef: citeNodeRef,
+                        elementId: this.props.elementId
+                    }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                    const messageDataToSave = {
+                        id: this.props.elementId,
+                        editor: undefined,
+                        citeNodeRef: citeNodeRef
+                    }
+                    this.props.saveSelectedAlfrescoElement(messageDataToSave);
             }
             else{
                 this.props.accessDenied(true)
@@ -517,6 +526,9 @@ const mapActionToProps = (dispatch) =>{
         saveSelectedAssetData: (payloadObj) => {
             dispatch(saveSelectedAssetData(payloadObj))
         },
+        saveSelectedAlfrescoElement: (payloadObj) => {
+            dispatch(saveSelectedAlfrescoElement(payloadObj))
+        }
     }
 }
 

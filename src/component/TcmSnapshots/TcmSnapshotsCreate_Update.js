@@ -4,7 +4,6 @@ import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Action
 import { prepareTcmSnapshots } from "./TcmSnapshots_Utility";
 import TcmConstants from "./TcmConstants";
 import config from '../../config/config';
-
 let operType = "";
 const {
     AUTHORED_TEXT,
@@ -230,7 +229,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
         wipData = bodymatter[eleIndex];
-        if (wipData.subtype === WORKED_EXAMPLE) {  /** Delete Section-Break */
+        if (wipData?.subtype === WORKED_EXAMPLE) {  /** Delete Section-Break */
             wipData.elementdata.bodymatter.map((item, innerIndex) => {
                 if (item.type == WE_MANIFEST && entityUrn == item.contentUrn) {
                     wipData = bodymatter[eleIndex].elementdata.bodymatter[innerIndex]
