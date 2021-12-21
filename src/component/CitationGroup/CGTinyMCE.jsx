@@ -53,8 +53,13 @@ export const createPopupUnit = (popupField, forceupdate, index, parentElement, p
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.popupCreationCallInProgress = true;
     let cgTitleFieldData = {};
-    if (props.asideData?.parent?.type === "showhide") {
-        cgTitleFieldData.asideData = props.asideData;
+    // PCAT-12764 - changed the name of asideData in props to citationAsideData for fixing bug 
+    // if (props.asideData?.parent?.type === "showhide") {
+    //     cgTitleFieldData.asideData = props.asideData;
+    //     cgTitleFieldData.parentElement = context.element;
+    // }
+    if (props?.citationAsideData?.parent?.type === "showhide") {
+        cgTitleFieldData.asideData = props.citationAsideData;
         cgTitleFieldData.parentElement = context.element;
     }
     props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(true, currentElementData, index, null, null, cgTitleFieldData), index, config.slateManifestURN, null, cgTitleFieldData)
