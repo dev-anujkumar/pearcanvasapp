@@ -58,9 +58,17 @@ export const AUTO_NUMBER_PROPERTIES = {
   }
 
 export const AUTO_NUMBER_ELEMENTS = {
-    AUDIO: "AUDIO",
-    VIDEO: "VIDEO",
-    IMAGE: "IMAGE",
-    TABLE_IMAGE: "TABLE_IMAGE",
-    MATH_IMAGE: "MATH_IMAGE"
+  AUDIO: "AUDIO",
+  VIDEO: "VIDEO",
+  IMAGE: "IMAGE",
+  TABLE_IMAGE: "TABLE_IMAGE",
+  MATH_IMAGE: "MATH_IMAGE"
+}
+
+export const DISPLAYED_LABELS = {
+  AUDIO: "Audio",
+  VIDEO: "Video",
+  IMAGE: "Figure",
+  TABLE: "Table",
+  EQUATIONS: "Equations"
 }

@@ -11,7 +11,11 @@ const slateTypes = ['container-introduction', 'section', 'appendixslate', 'cover
  * @param {*} mediaData 
  * @returns 
  */
-export const mediaElementAPI_Handler = (projectContent, numberedElements) => { // projectContent = response.data.contents
+export const mediaElementAPI_Handler = (params, projectContent, numberedElements) => { // projectContent = response.data.contents
+    let {
+        elementType,
+        autoNumberedElements
+    } = params
     if (projectContent['frontMatter']?.length > 0) {
         numberedElements = getContentInFMandBM(projectContent, 'frontMatter', numberedElements)
     }
@@ -21,7 +25,34 @@ export const mediaElementAPI_Handler = (projectContent, numberedElements) => { /
     if (projectContent['bodyMatter']?.length > 0) {
         getContentInBodyMatter(projectContent['bodyMatter'], numberedElements)
     }
-    return numberedElements
+
+    switch (elementType) {
+        case 'IMAGE':
+            autoNumberedElements = {
+                ...autoNumberedElements,
+                imagesList: numberedElements.imagesList,
+                tablesList: numberedElements.tablesList,
+                equationsList: numberedElements.equationsList
+            }
+            break;
+        case 'AUDIO':
+            autoNumberedElements = {
+                ...autoNumberedElements,
+                audiosList: numberedElements.audiosList
+            }
+            break;
+        case 'VIDEO':
+            autoNumberedElements = {
+                ...autoNumberedElements,
+                videosList: numberedElements.videosList
+            }
+            break;
+        default:
+            autoNumberedElements = numberedElements
+            break;
+    }
+    console.log('updatedNumberElements', autoNumberedElements)
+    return autoNumberedElements
 }
 
 /**
@@ -252,7 +283,7 @@ const getMediaElementInMultiColumn = (slateEntityUrn, containerData, numberedEle
                             numberedElements = prepareElementList(element, numberedElements, slateEntityUrn)
                         } else if (element.type === 'container') {
                             element.parentDetails.push(element.contentUrn)
-                            numberedElements = getImagesInsideSlates(slateEntityUrn, containerBodyMatter(element), numberedElements, true, parentDetails) || numberedElements
+                            numberedElements = getImagesInsideSlates(slateEntityUrn, containerBodyMatter(element), numberedElements, element.parentDetails) || numberedElements
                         }
                     })
                 }
@@ -277,7 +308,7 @@ const getMediaElementInShowhide = (slateEntityUrn, containerData, numberedElemen
                 numberedElements = prepareElementList(element, numberedElements, slateEntityUrn)
             } else if (element.type === 'container') {
                 element.parentDetails.push(element.contentUrn)
-                numberedElements = getImagesInsideSlates(slateEntityUrn, containerBodyMatter(element), numberedElements, true, parentDetails) || numberedElements
+                numberedElements = getImagesInsideSlates(slateEntityUrn, containerBodyMatter(element), numberedElements, element.parentDetails) || numberedElements
             }
         })
     }

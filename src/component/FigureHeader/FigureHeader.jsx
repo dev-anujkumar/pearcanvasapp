@@ -165,7 +165,6 @@ export const FigureHeader = (props) => {
     const parentNumber = containerNumber
     let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })
-    console.log("figure header content", figureHtmlData, previewData);
     return (
         <>
             <header className="figure-header new-figure-image-header">

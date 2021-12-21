@@ -23,7 +23,7 @@ const commonHeaders = {
 /**
  * This API fetches the Learning Framework(s) linked to the project
  */
-export const fetchProjectFigures = (elementType) => dispatch => {
+export const fetchProjectFigures = (elementType) => (dispatch, getState) => {
     const url = getAPIUrl(elementType)
     axios.get(url, {
         headers: {
@@ -41,11 +41,10 @@ export const fetchProjectFigures = (elementType) => dispatch => {
                 audiosList:[],
                 videosList:[],
             }
-            numberedElements = mediaElementAPI_Handler(projectContent, numberedElements);
+            let oldAutoNumberedElements = getState().autoNumberReducer.autoNumberedElements
+            numberedElements = mediaElementAPI_Handler({elementType,autoNumberedElements: oldAutoNumberedElements}, projectContent, numberedElements);
             console.log('numberedElements>>>>', numberedElements)
             getAutoNumberSequence(numberedElements,dispatch)
-            //autoNumberElementsIndex = setAutoNumberSequenceForElements(numberedElements, autoNumberElementsIndex)
-            //console.log('autoNumberElementsIndex', autoNumberElementsIndex)
             dispatch({
                 type: GET_ALL_AUTO_NUMBER_ELEMENTS,
                 payload: {
@@ -57,7 +56,7 @@ export const fetchProjectFigures = (elementType) => dispatch => {
             commonDispatch(dispatch, GET_ALL_AUTO_NUMBER_ELEMENTS, {})
         }
     }).catch(error => {
-        console.log('Error in fetching list of figures in the project>>>> ', error)
+        console.error('Error in fetching list of figures in the project>>>> ', error)
         commonDispatch(dispatch, GET_ALL_AUTO_NUMBER_ELEMENTS, {})
     })
 
@@ -122,7 +121,7 @@ export const isAutoNumberEnabled = (flag) => dispatch => {
     return dispatch({
         type: SET_AUTO_NUMBER_TOGGLE,
         payload: {
-            isAutoNumberingEnabled: flag
+            isAutoNumberingEnabled: flag && config.ENABLE_AUTO_NUMBER_CONTENT
         }
     });
 }
@@ -145,7 +144,7 @@ export const fetchContainerFigures = (containerEntityUrn) => dispatch => {
             });
         }
     }).catch(error => {
-        console.log('Error in fetching list of figures in the project>>>> ', error)
+        console.error('Error in fetching list of figures in the project>>>> ', error)
         dispatch({
             type: UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
             payload: {}

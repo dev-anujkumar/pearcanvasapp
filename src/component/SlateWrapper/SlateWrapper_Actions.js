@@ -401,7 +401,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 
         }
         //reset indexes of images on a slate when any elemnt is created on a slate
-        const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
+        const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter
         const slateFigures = getImagesInsideSlates(bodyMatter)
         if (slateFigures) {
             dispatch({

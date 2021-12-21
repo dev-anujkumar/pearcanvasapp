@@ -260,3 +260,13 @@ export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => 
     return ''
 }
 
+export const getSlateEntityUrn = () => {
+    return config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN ? config.slateEntityURN : ""
+}
+
+export const getAutoNumberedElement = (element) =>{
+    return{
+        ...element,
+        slateEntityURN: getSlateEntityUrn()
+    }
+}
