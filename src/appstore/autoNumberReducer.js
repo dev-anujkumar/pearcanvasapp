@@ -67,7 +67,7 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 autoNumberedElements: {
-                    ...autoNumberedElements,
+                    ...state.autoNumberedElements,
                     [action.payload.mediaType]: action.payload.mediaList
                 }
             }

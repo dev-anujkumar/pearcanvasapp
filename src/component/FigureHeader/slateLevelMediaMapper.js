@@ -44,7 +44,7 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
     return numberedElements
 }
 
-const containerBodyMatter = (container) => {
+export const containerBodyMatter = (container) => {
     let dataToReturn = []
     switch (container.type) {
         case containerElements.SHOW_HIDE:
@@ -52,10 +52,10 @@ const containerBodyMatter = (container) => {
             if (container?.interactivedata?.hasOwnProperty(SHOWHIDE_SECTION.SHOW)) {
                 showHideData = showHideData.concat(container?.interactivedata[SHOWHIDE_SECTION.SHOW])
             }
-            if (container?.contents?.hasOwnProperty(SHOWHIDE_SECTION.HIDE)) {
+            if (container?.interactivedata?.hasOwnProperty(SHOWHIDE_SECTION.HIDE)) {
                 showHideData = showHideData.concat(container?.interactivedata[SHOWHIDE_SECTION.HIDE])
             }
-            dataToReturn = showHideData
+            dataToReturn = showHideData;
             break;
         case containerElements.GROUP:
             dataToReturn = container?.groupdata?.bodymatter ?? []
@@ -66,12 +66,12 @@ const containerBodyMatter = (container) => {
         case containerElements.MANIFEST:
         case containerElements.POPUP:
         default:
-            dataToReturn = container?.contents?.bodymatter ?? []
+            dataToReturn = container?.contents?.bodymatter ?? [];
             break;
     }
-    return dataToReturn
+    return dataToReturn;
 }
-const getMediaElementInPopup = (containerData, numberedElements) => {
+export const getMediaElementInPopup = (containerData, numberedElements) => {
     if (containerData?.contents?.bodymatter?.length > 0) {
         containerData?.contents?.bodymatter.forEach((element, index) => {
             element.indexPos = containerData.indexPos.push(index)
@@ -95,7 +95,7 @@ const getMediaElementInPopup = (containerData, numberedElements) => {
  * @param {*} imagesList 
  * @returns 
  */
-const getMediaElementInAsideWE = (containerData, numberedElements) => {
+export const getMediaElementInAsideWE = (containerData, numberedElements) => {
     if (containerData?.elementdata?.bodymatter?.length > 0) {
         containerData?.elementdata?.bodymatter.forEach((element, index) => {
             if (element.type === ELEMENT_TYPES.FIGURE) {
@@ -118,7 +118,7 @@ const getMediaElementInAsideWE = (containerData, numberedElements) => {
  * @param {*} imagesList 
  * @returns 
  */
-const getMediaElementInMultiColumn = (containerData, numberedElements) => {
+export const getMediaElementInMultiColumn = (containerData, numberedElements) => {
     if (containerData?.groupeddata?.bodymatter?.length > 0) {
         containerData?.groupeddata?.bodymatter.forEach(colData => {
             if (colData.type === containerElements.GROUP) {
@@ -147,7 +147,7 @@ const getMediaElementInMultiColumn = (containerData, numberedElements) => {
  * @param {*} imagesList 
  * @returns 
  */
-const getMediaElementInShowhide = (containerData, numberedElements, containerIndex) => {
+export const getMediaElementInShowhide = (containerData, numberedElements, containerIndex) => {
     const showHideContent = containerBodyMatter(containerData)
     if (showHideContent?.length > 0) {
         showHideContent.forEach((element, index) => {

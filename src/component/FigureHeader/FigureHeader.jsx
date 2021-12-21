@@ -52,7 +52,7 @@ function useOutsideAlerter(ref, setLabelNumberSettingDropDown, setLabelDropDown)
 export const FigureHeader = (props) => {
     const AUTO_NUMBER_SETTING_DROPDOWN_VALUES = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
     const [slateAncestors, setSlateAncestors] = useState(props.currentSlateAncestorData || {});
-    const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedLabel ?? 'Figure');
+    const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedlabel ?? 'Figure');
     const [figureLabelData, setFigureLabelData] = useState(['Figure', 'Table', 'Equation']);//props.figureDropdownData
     const [labelNumberSetting, setLabelNumberSetting] = useState(null);
     const [labelDropDown, setLabelDropDown] = useState(false);
@@ -156,7 +156,7 @@ export const FigureHeader = (props) => {
         //     }
         // }
     }
-    const { figureHtmlData, previewClass, figLabelClass, figTitleClass, onFigureImageFieldBlur, onFigureImageFieldFocus } = props
+    const { figureHtmlData, previewClass, figLabelClass, figTitleClass } = props
     const containerNumber = getContainerNumber(slateAncestors, props.autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
     const imgLabelValue = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)//props.model?.displayedLabel ?? 'Figure'
