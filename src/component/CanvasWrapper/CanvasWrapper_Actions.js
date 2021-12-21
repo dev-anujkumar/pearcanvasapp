@@ -42,7 +42,7 @@ import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAll
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
@@ -355,7 +355,7 @@ export const fetchFigureDropdownOptions = () => (dispatch) => {
 
 export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
-    console.log("the lob url is " + lobURL)
+    // console.log("the lob url is " + lobURL)
     return axios.get(lobURL, {
         headers: {
             "Content-Type": "application/json",
@@ -414,7 +414,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             
             const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
             const usageTypeUrl = `${config.STRUCTURE_API_URL}${usageTypeEndPoint}`;
-            console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
+            //console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
              axios.get(usageTypeUrl, {
                 headers: {
                     ApiKey:config.STRUCTURE_APIKEY,
@@ -423,7 +423,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     Authorization:config.CMDS_AUTHORIZATION
                 }
             }).then (usageTypeResponse => {
-                console.log("the usage type response is", usageTypeResponse);
+                //console.log("the usage type response is", usageTypeResponse);
                 const data = usageTypeResponse?.data;
                 if(Array.isArray(data)){
                     const usageType = data.map(item => ({label:item.label.en}))

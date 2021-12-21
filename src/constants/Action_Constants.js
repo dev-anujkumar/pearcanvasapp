@@ -165,6 +165,7 @@ export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
 export const SET_ALFRESCO_POPUP = "SET_ALFRESCO_POPUP"
 export const SAVE_ALFRESCO_ASSET_DATA = "SAVE_ALFRESCO_ASSET_DATA"
 export const SAVE_INLINE_IMAGE_DATA = "SAVE_INLINE_IMAGE_DATA"
+export const SAVE_ALFRESCO_ELEMENT = "SAVE_ALFRESCO_ELEMENT"
 
 /* ---------------  Figure Glossary ------------------------*/
 export const SET_FIGURE_GLOSSARY = "SET_FIGURE_GLOSSARY";
@@ -198,3 +199,7 @@ export const UPDATE_FIGURE_DROPDOWN_OPTIONS = 'UPDATE_FIGURE_DROPDOWN_OPTIONS';
 
 /*--------------Aside Label, Number, Title fields------------------ */
 export const CHECK_ASIDE_NUMBER = 'CHECK_ASIDE_NUMBER';
+
+/*--------------Cypress Puls Constants------------------ */
+export const COMPLETED = 'COMPLETED';
+export const FAILED = 'FAILED';

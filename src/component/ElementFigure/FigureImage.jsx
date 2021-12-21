@@ -13,7 +13,7 @@ import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
-import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
+import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action';
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
@@ -285,6 +285,12 @@ class FigureImage extends Component {
                         currentAsset
                     }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                    const messageDataToSave = {
+                        id: this.props.elementId,
+                        editor: undefined,
+                        citeNodeRef: nodeRefs
+                    }
+                    this.props.saveSelectedAlfrescoElement(messageDataToSave);
                 }
                 else {
                     this.props.accessDenied(true)
@@ -545,6 +551,9 @@ const mapActionToProps = (dispatch) => {
         updateFigureImageDataForCompare: (oldFigureData) => {
             dispatch(updateFigureImageDataForCompare(oldFigureData))
         },
+        saveSelectedAlfrescoElement: (payloadObj) => {
+            dispatch(saveSelectedAlfrescoElement(payloadObj))
+        }
     }
 }
 

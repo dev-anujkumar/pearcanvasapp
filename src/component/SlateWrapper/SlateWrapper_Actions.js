@@ -23,7 +23,7 @@ import {
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
@@ -36,7 +36,7 @@ import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
-
+import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -1310,6 +1310,32 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     let tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
                     if (selection?.operationType === 'copy' || (selection?.operationType === 'cut' && responseData[0]?.status === 'wip')) {
                         callCutCopySnapshotAPI(tcmSnapshotPayload)
+                    }
+                }
+                if (selection?.element?.type === 'element-aside') {
+                    const { element } = selection;
+                    let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false;
+                    const newToggleValue = hasAsideTitleData ? true : false;
+                    const asideTitleData = getState()?.appStore?.asideTitleData
+                    const setFieldsForAside = (elem, titleData) => {
+                        if (elem && titleData) {
+                            const asideObj = titleData.filter(obj => {
+                                return obj.elementId === elem.id;
+                            })
+                            if (asideObj.length) {
+                                return asideObj[0].isAsideNumber;
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    const asideTitleStatus = setFieldsForAside(element, asideTitleData)
+                    dispatch(enableAsideNumbering(newToggleValue, element.id));
+                    if (asideTitleStatus) {
+                        dispatch(enableAsideNumbering(asideTitleStatus, responseData[0]?.id));
                     }
                 }
                 /******************************/

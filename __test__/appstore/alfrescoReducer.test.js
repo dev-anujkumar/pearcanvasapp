@@ -3,7 +3,8 @@ import reducer from '../../src/appstore/alfrescoReducer';
 import {
     SET_ALFRESCO_POPUP,
     SAVE_ALFRESCO_ASSET_DATA,
-    SAVE_INLINE_IMAGE_DATA
+    SAVE_INLINE_IMAGE_DATA,
+    SAVE_ALFRESCO_ELEMENT
 } from '../../src/constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -19,7 +20,8 @@ const INITIAL_STATE = {
     isInlineEditorOpen: false,
     locationData: {},
     calledFromGlossaryFootnote: false,
-    calledFromImageGlossaryFootnote: false
+    calledFromImageGlossaryFootnote: false,
+    savedElement:{}
 }
 
 const INITIAL_ACTION = {
@@ -29,7 +31,6 @@ const INITIAL_ACTION = {
 
 describe('Test alfrescoReducer', () => {
     it('SET_ALFRESCO_POPUP', () => {
-        
         reducer(INITIAL_STATE, {
             type: SET_ALFRESCO_POPUP,
             payload: {
@@ -55,6 +56,15 @@ describe('Test alfrescoReducer', () => {
                 changedAlfrescoData: {},
                 editor: {},
                 launchAlfrescoPopup: false
+            }
+        })
+    })
+    it('SAVE_ALFRESCO_ELEMENT', () => {
+        
+        reducer(INITIAL_STATE, {
+            type: SAVE_ALFRESCO_ELEMENT,
+            payload: {
+                savedElement:{}
             }
         })
     })

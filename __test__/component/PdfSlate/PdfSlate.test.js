@@ -27,7 +27,7 @@ const alfresco = {
    "associatedArt":[
       
    ],
-   "authorName":"Kapil Dev Arya",
+   "authorName":"c5test09",
    "bookCover":"https://cite-media-stg.pearson.com/legacy_paths/bd2def8c-e6b2-4822-aafb-7e75bfbfa90f/cover.jpg",
    "configObj":{
       "env":"dev",
@@ -162,6 +162,16 @@ describe('1. PDF Slate test cases', () => {
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'componentDidMount')
 			compInstance.componentDidMount();
+			expect(spy).toHaveBeenCalled();
+			spy.mockClear()
+		});
+	});
+	describe('1.3 Test componentWillUnmount Function', () => { 
+		it('1.2.1 Test If Case', () => { 
+			const compInstance = pdfSlateInstance(props);
+			expect(compInstance).toBeDefined();
+			const spy = jest.spyOn(compInstance, 'componentWillUnmount')
+			compInstance.componentWillUnmount();
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear()
 		});

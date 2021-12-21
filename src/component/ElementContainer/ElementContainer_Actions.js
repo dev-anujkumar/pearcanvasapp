@@ -9,8 +9,8 @@ import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ER
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
-import { prepareSnapshots_ShowHide, tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { getShowHideElement, indexOfSectionType, findSectionType } from '../ShowHide/ShowHide_Helper';
+import { tcmSnapshotsForCreate, prepareSnapshots_ShowHide} from '../TcmSnapshots/TcmSnapshotsCreate_Update';
+import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowHide/ShowHide_Helper';
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
@@ -143,7 +143,6 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => async (dispatch, getState) => {
-    try {
         if(hasReviewerRole()){
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return ;
@@ -155,7 +154,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
         /** updateBodymatter | Used for TCM Snapshots */
-        let updateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter;
+        let updateBodymatter = getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
         const helperArgs = { 
             updatedData,
             asideData,
@@ -190,6 +189,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }
             }
         }
+        try {
         const response = await axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData1,
             {
@@ -769,7 +769,7 @@ const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
     let tmpIndex = typeof index === 'number' ? index : index.split("-")
     let indexesLen = tmpIndex.length
     let newBodymatter = currentSlateData.contents.bodymatter
-    if (updatedId !== "") { /** Update Aside Id for versioning */
+    if (updatedId && updatedId !== "") { /** Update Aside Id for versioning */
         updatedElement.id = updatedId
         updatedElement.versionUrn = updatedId
     }
@@ -808,17 +808,13 @@ const prepareAsideTitleForUpdate = (index) => {
     titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
     return titleHTML
 }
-export const updateAsideNumber = (previousData, index) => (dispatch, getState) => {
+export const updateAsideNumber = (previousData, index,elementId) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
-    const activeElementId=getState().appStore.activeElement.elementId;
+    const activeElementId=elementId;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
     let elementEntityUrn = "", updatedElement
     let titleHTML = prepareAsideTitleForUpdate(index);
-
-    if(activeElementId ==="" && previousData.id === ""){
-        return null;
-    }
     
     updatedElement = {
         ...previousData,
@@ -910,10 +906,10 @@ export const updateAsideNumber = (previousData, index) => (dispatch, getState) =
         if (res?.data?.versionUrn && (res?.data?.versionUrn.trim() !== "")) {
             activeElementObject.elementId = res.data.versionUrn
         }
-        dispatch({
-            type: 'SET_ACTIVE_ELEMENT',
-            payload: activeElementObject
-        });
+        // dispatch({  // commented for future reference
+        //     type: 'SET_ACTIVE_ELEMENT',
+        //     payload: activeElementObject
+        // });
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
         config.savingInProgress = false

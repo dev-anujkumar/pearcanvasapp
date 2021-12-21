@@ -644,7 +644,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 dataToReturn["elementParentEntityUrn"] = asideData?.parentManifestList?.listdata?.bodymatter[manifestListItemIndex[manifestListItemIndex.length-2]]?.contentUrn
             }
             else if(parentElement && parentElement.type === "showhide" && showHideType){
-                const poetryElementTypes = ['poetry', 'stanza'];
+                const poetryElementTypes = ['poetry', 'stanza', 'element-authoredtext'];
                 dataToReturn.sectionType = showHideType;
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
                 // checking for poetry element inside SH element to pass some extra parameters inside update request
@@ -653,9 +653,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         if(poetryElement?.type === 'poetry') {
                             if(poetryElement?.contents?.['formatted-title']?.id === previousElementData.id) {
                                 dataToReturn["metaDataField"] = "formattedTitle";
+                                dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
                             }
                             if(poetryElement?.contents?.creditsarray && poetryElement?.contents?.creditsarray.length && poetryElement?.contents?.creditsarray[0]["id"] === previousElementData.id) {
                                 dataToReturn["sectionType"] = "creditsarray";
+                                dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
                             }
                         }
                     });
@@ -679,7 +681,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
-                      //  console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
+
                         dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:

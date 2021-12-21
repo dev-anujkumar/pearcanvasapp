@@ -10,7 +10,7 @@ import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader'
 import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
-import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions';
+import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 /**
@@ -37,10 +37,10 @@ class PopUp extends React.Component {
      */
     transformHtmlForCallout = (html) => {
         const calloutClasses = ["calloutOne", "calloutTwo", "calloutThree", "calloutFour"];
-        const calloutContent = ["Callout: Option 1","Callout: Option 2","Callout: Option 3","Callout: Option 4"]
+        const calloutContent = ["Callout: Option 1", "Callout: Option 2", "Callout: Option 3", "Callout: Option 4"]
         let newHtml = html;
         calloutClasses.forEach((item, index) => {
-        var myRegExp = new RegExp(`class="${item}"`,'g');
+            var myRegExp = new RegExp(`class="${item}"`, 'g');
             newHtml = newHtml.replace(myRegExp, `title="${calloutContent[index]}" class="${item}"`)
         });
         return newHtml;
@@ -58,11 +58,11 @@ class PopUp extends React.Component {
             this.modelRef.current.querySelector("input, textarea").focus();
         }
         /**  Event Listner on glossary footnotes */
-        if(this.props.isTCMCanvasPopup && this.contentRef !== null){
-        this.contentRef.current.addEventListener("click", (e) => {
-            refVal.processGlossaryFootnotes(e)
-        });
-    }
+        if (this.props.isTCMCanvasPopup && this.contentRef !== null) {
+            this.contentRef.current.addEventListener("click", (e) => {
+                refVal.processGlossaryFootnotes(e)
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -78,14 +78,14 @@ class PopUp extends React.Component {
     }
 
     /**  Function to open the TCM SPA on click of glossary and footnotes*/
-    
-    processGlossaryFootnotes = (e) =>{
-        if (e.target.matches('a') && e.target.getAttribute('data-footnoteelementid') 
-        || e.target.matches('ins') && e.target.closest('a') && e.target.closest('a').getAttribute('data-footnoteelementid') 
-        || e.target.matches('ins') && e.target.closest('dfn')
-        || e.target.matches('em') && e.target.parentNode && e.target.parentNode.tagName == 'DFN' 
-        || e.target.matches('dfn')
-         ) {
+
+    processGlossaryFootnotes = (e) => {
+        if (e.target.matches('a') && e.target.getAttribute('data-footnoteelementid')
+            || e.target.matches('ins') && e.target.closest('a') && e.target.closest('a').getAttribute('data-footnoteelementid')
+            || e.target.matches('ins') && e.target.closest('dfn')
+            || e.target.matches('em') && e.target.parentNode && e.target.parentNode.tagName == 'DFN'
+            || e.target.matches('dfn')
+        ) {
             if (config.isSavingElement) {
                 return false
             }
@@ -123,12 +123,12 @@ class PopUp extends React.Component {
             )
         } else
             if (props.showDeleteElemPopup) {
-                if(props.isOwnerSlate){
-                    return(
+                if (props.isOwnerSlate) {
+                    return (
                         <div className={`dialog-buttons ${props.assessmentClass}`}>
-                        <span className="lo-save-button" onClick={props.deleteElement}>{props.proceedButton}</span>
-                        <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
-                    </div>
+                            <span className="lo-save-button" onClick={props.deleteElement}>{props.proceedButton}</span>
+                            <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                        </div>
                     )
                 }
                 return (
@@ -210,14 +210,22 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-        if(props.isOwnersSlate){
+        if (props.UsagePopup) {
+            return (
+                <div className={`dialog-buttons`}>
+                    <span className={`lo-save-button`} onClick={(e) => props.agree(true,e)}>{props.proceedButton}</span>
+                    <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
+        if (props.isOwnersSlate) {
             return (
                 <div className={`dialog-buttons`}>
                     <span className={`lo-save-button`} onClick={(e) => props.proceed(this.state.isChecked, false, e)}>{props.proceedButton}</span>
                     <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
-        }else if(props.isSubscribersSlate){
+        } else if (props.isSubscribersSlate) {
             return (
                 <div className={`subscriberSlate-buttons`}>
                     <span className="lo-save-button" onClick={(e) => props.togglePopup(false, e)}>OK</span>
@@ -239,7 +247,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment||props.isDeleteAssetPopup) {
+        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -260,11 +268,11 @@ class PopUp extends React.Component {
                     toggleWordPasteProceed={this.toggleWordPasteProceed}
                 />
             )
-        }else if(props.withCheckBox){
-            const {isChecked}=this.state
-            return(
+        } else if (props.withCheckBox) {
+            const { isChecked } = this.state
+            return (
                 <div className="OwnersSlateInputLine">
-                    <input className="OwnersSlateCheckBox" type="checkbox"  checked={isChecked} onChange={this.handleChange} />
+                    <input className="OwnersSlateCheckBox" type="checkbox" checked={isChecked} onChange={this.handleChange} />
                     <p>{DO_NOT_SHOW_TXT}</p>
                 </div>
             )
@@ -282,7 +290,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary  || props.isTCMCanvasPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate ||props.isDeleteAssetPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup) {
             return null
         }
         else {
@@ -342,7 +350,7 @@ class PopUp extends React.Component {
                 <div className={`dialog-window ${props.slateLockClass}`} >{props.dialogText}</div>
             )
         }
-        else if (props.imageGlossary || props.wrongImage ) {
+        else if (props.imageGlossary || props.wrongImage) {
             return (
                 <div className={`dialog-window ${props.imageRemoveClass}`} >{props.dialogText}</div>
             )
@@ -362,7 +370,7 @@ class PopUp extends React.Component {
         }
         else if (props.isDeleteAssetPopup) {
             return (
-            <div className={`dialog-window ${props.isDeleteAssetClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window ${props.isDeleteAssetClass}`} >{props.dialogText}</div>
             )
         }
         else if (props.altText) {
@@ -400,6 +408,14 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if (props.UsagePopup) {
+            return (
+                <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{'Are you sure you want to proceed?'}</div>
+                </>
+            )
+        }
         else if (props.isOwnersSlate) {
             return (
                 <>
@@ -411,7 +427,7 @@ class PopUp extends React.Component {
         else if (props.isSubscribersSlate) {
             return (
                 <>
-                    <div className={`${props.lOPopupClass}`}>This is a subscribed content and cannot be edited.<br/><br/>If you wish to edit the content, please use <strong>Copy Content</strong> feature from TOC or go to the owner project. Kindly note that the edits in owner project will be reflected for all the subscribers</div>
+                    <div className={`${props.lOPopupClass}`}>This is a subscribed content and cannot be edited.<br /><br />If you wish to edit the content, please use <strong>Copy Content</strong> feature from TOC or go to the owner project. Kindly note that the edits in owner project will be reflected for all the subscribers</div>
                 </>
             )
         }
@@ -424,7 +440,7 @@ class PopUp extends React.Component {
 
 
     renderTcmPopupIcons = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate ||props.isDeleteAssetPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup) {
             return null
         }
         else {
@@ -437,13 +453,13 @@ class PopUp extends React.Component {
     }
 
     renderCommentPanelInput = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isTCMCanvasPopup ||props.isDeleteAssetPopup) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isTCMCanvasPopup || props.isDeleteAssetPopup || props.UsagePopup) {
             return null
         }
         else {
             if (props.isAddComment) {
                 return (
-                    <CommentMention projectUsers={props.projectUsers} comment={props.comment} handleCommentChange={props.handleChange} isAddComment={props.isAddComment}/>
+                    <CommentMention projectUsers={props.projectUsers} comment={props.comment} handleCommentChange={props.handleChange} isAddComment={props.isAddComment} />
                 )
             }
         }
@@ -486,7 +502,7 @@ PopUp.defaultProps = {
     yesButton: "Yes",
     cancelBtnText: "Cancel",
     deleteInstruction: "Are you sure you want to delete, this action cannot be undone?",
-    proceedButton:"Proceed"
+    proceedButton: "Proceed"
 
 }
 

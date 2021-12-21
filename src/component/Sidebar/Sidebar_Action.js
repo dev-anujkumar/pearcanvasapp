@@ -14,9 +14,11 @@ import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
-import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+import { fetchParentData } from '../TcmSnapshots/TcmSnapshotsOnDefaultSlate';
+import { checkContainerElementVersion, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
@@ -366,9 +368,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
            activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
             
         }
-        if(newElementData.primaryOption=='primary-aside-aside'){
-            const hasAsideNumber = (res.data?.html?.title && res.data.html.title !== "<p class='paragraphNumeroUno'></p>") ? true : false
-            activeElementObject.asideNumber= hasAsideNumber
+        const asideElementTypes = ['element-aside', 'element-workedexample'];
+        if (asideElementTypes.includes(newElementData.elementType)) {
+            const hasAsideNumber = (res.data?.html?.title && (res.data?.html?.title !== "<p class='paragraphNumeroUno'></p>" && res.data?.html?.title !== "<p></p>")) ? true : false;
+            activeElementObject.asideNumber = hasAsideNumber
         }
         dispatch({
             type: FETCH_SLATE_DATA,
@@ -921,6 +924,6 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
 export const enableAsideNumbering = (isAsideNumber,elementId) => (dispatch) => {
     dispatch({
         type: CHECK_ASIDE_NUMBER,
-        payload: {isAsideNumber,elementId}
+        payload: {isAsideNumber, elementId}
     });
 }
