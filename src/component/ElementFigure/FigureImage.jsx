@@ -428,7 +428,10 @@ class FigureImage extends Component {
             imgWidth = this.props.model.figuredata?.width && this.props.model.figuredata?.width !== '' ? `${this.props.model.figuredata?.width}px` : ''
             imgHeight = this.props.model.figuredata?.height && this.props.model.figuredata?.height !== '' ? `${this.props.model.figuredata?.height}px` : ''
         }
+        const imageFigureTypes = ["image","mathImage","table"]
         const actualSizeClass = this.props.model.figuredata?.width > '600' ? "" : "img-actual-size";
+        const imageClass = imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ? "figure-image" : "";
+
         return (
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
@@ -480,7 +483,7 @@ class FigureImage extends Component {
                             </div>
                             <div className="figure-image-container">
 
-                                <div id="figure_add_div" className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
+                                <div id="figure_add_div" className={`pearson-component image figureData ${imageClass} ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                                     {
                                         this.props.model.figuredata && this.props.model.figuredata.imageid ?
                                         <img src={this.state.imgSrc ? this.state.imgSrc : (this.props?.model?.figuredata?.path !== "" ? this.props.model.figuredata.path : '')}
