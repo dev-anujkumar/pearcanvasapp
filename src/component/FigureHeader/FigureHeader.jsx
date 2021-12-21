@@ -86,8 +86,6 @@ export const FigureHeader = (props) => {
     useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
     }, [props.currentSlateAncestorData]);
-    // console.log('figImageList', figImageList)
-    // console.log('config.imageIndex',config.imageIndex)
     /**---------------------------------------- */
     const handleCloseDropDrown = () => {
         setLabelDropDown(false)

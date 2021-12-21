@@ -29,7 +29,12 @@ export const containerElements = {
   POPUP: 'popup',
   SHOW_HIDE: 'showhide',
   MULTI_COLUMN: 'groupedcontent',
-  MANIFEST: 'manifest'
+  MANIFEST: 'manifest',
+  GROUP: "group"
+}
+export const SHOWHIDE_SECTION = {
+  SHOW: 'show',
+  HIDE: 'hide'
 }
 export const MATTER_TYPES = {
     FRONTMATTER  : 'FrontMatter',
@@ -71,4 +76,8 @@ export const DISPLAYED_LABELS = {
   IMAGE: "Figure",
   TABLE: "Table",
   EQUATIONS: "Equations"
+}
+
+export const ELEMENT_TYPES = {
+  FIGURE: 'figure'
 }

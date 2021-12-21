@@ -197,7 +197,6 @@ export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
     const labelType = autoNumber_KeyMapper[swappedElementData.displayedlabel]
     if (slateFigures || slateFigures?.length > 1) {
         const elementsToSwap = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.containerData.indexOf(swappedElementData.contentUrn) > -1)
-        console.log('elementsToSwap>>>', elementsToSwap)
         const noOfElementsToSwap = elementsToSwap?.length
         if (noOfElementsToSwap > 0) {
             const elementUrnToSearch = elementsToSwap[noOfElementsToSwap - 1].contentUrn
