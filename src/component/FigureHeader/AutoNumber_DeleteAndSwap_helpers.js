@@ -11,19 +11,20 @@ export const handleAutoNumberingOnDelete = (params) => {
         contentUrn,
         getState,
         dispatch,
-        isAutoNumberingEnabled
+        isAutoNumberingEnabled,
+        type
     } = params
-    const slateAncestors = getState().appStore.currentSlateAncestorData
+    const slateAncestors = getState().appStore.currentSlateAncestorData;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
     const containerElements = ['popup','showhide','groupedcontent','element-aside' ]
     if(isAutoNumberingEnabled){
         if (containerElements.indexOf(type) > -1) {
             //reset auto-numbering
-            updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, getState, dispatch)
+            updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, slateAncestors, getState, dispatch)
         }
         else if (type == 'figure') {
             //reset auto-numbering
-            const autoNumberedElements = getState().autonumberElements.autoNumberedElements
+            const autoNumberedElements = getState().autoNumberReducer.autoNumberedElements;
             updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements, dispatch)
         }
     }
@@ -35,13 +36,15 @@ export const handleAutoNumberingOnDelete = (params) => {
  * @param {*} numberedElements 
  * @param {*} dispatch 
  */
- export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, numberedElements, dispatch) => {
+export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, numberedElements, dispatch) => {
 
     if (parentIndex && contentUrn && numberedElements) {
         for (let labelType in numberedElements) {
             if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
-                if(numberedElements[labelType][parentIndex]?.indexOf(contentUrn)>-1){
-                    delete numberedElements[labelType][parentIndex][contentUrn]
+                let index = numberedElements[labelType][parentIndex].findIndex(x => x.contentUrn === contentUrn);
+                if (index > -1) {
+                    console.log("we are in if");
+                    numberedElements[labelType][parentIndex].splice(index, 1);
                 }
                 break;
             }
@@ -63,13 +66,13 @@ export const handleAutoNumberingOnDelete = (params) => {
  * @param {*} getState 
  * @param {*} dispatch 
  */
-export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex,contentUrn, getState, dispatch) => {
+export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, contentUrn, slateAncestors, getState, dispatch) => {
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    const numberedElements = getState().autonumberElements.autoNumberedElements
+    const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     if (contentUrn && numberedElements) {
         for (let labelType in numberedElements) {
             if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
-                numberedElements[labelType][parentIndex] = numberedElements[labelType][parentIndex]?.filter(ele => ((!ele.containerData) || (ele.containerData?.length < 1) || ele?.containerData?.indexOf(contentUrn) < 0))
+                numberedElements[labelType][parentIndex] = numberedElements[labelType][parentIndex]?.filter(ele => ((!ele.parentDetails) || (ele.parentDetails?.length < 1) || ele?.parentDetails?.indexOf(contentUrn) < 0))
                 break;
             }
         }

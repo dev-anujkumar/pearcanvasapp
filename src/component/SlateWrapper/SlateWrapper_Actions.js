@@ -18,7 +18,6 @@ import {
     PAGE_NUMBER_LOADER,
     WIRIS_ALT_TEXT_POPUP,
     SLATE_FIGURE_ELEMENTS
-
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
@@ -40,6 +39,7 @@ import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { updateCreatedElementInAutonumberList, findNearestMediaElement, handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -397,21 +397,57 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         })
         /** ---------------------------- Auto-Numbering handling ------------------------------*/
         const listofslateData = getState().autoNumberReducer.slateFigureList;
-        if (type === 'IMAGE') {// || type==='VIDEO' 
-
-        }
-        //reset indexes of images on a slate when any elemnt is created on a slate
-        const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
-        const slateFigures = getImagesInsideSlates(bodyMatter)
-        if (slateFigures) {
-            dispatch({
-                type: SLATE_FIGURE_ELEMENTS,
-                payload: {
-                    slateFigures
+        let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
+        const slateAncestorData = getState().appStore.currentSlateAncestorData;
+        let elementsList = {};
+        if (type === 'IMAGE') {
+            const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
+            let slateFigures = getImagesInsideSlates(bodyMatter);
+            if (slateFigures) {
+                dispatch({
+                    type: SLATE_FIGURE_ELEMENTS,
+                    payload: {
+                        slateFigures
+                    }
+                });
+            }
+            
+            let figureObj = slateFigures.find(x => x.contentUrn === createdElementData.contentUrn);
+            elementsList = autoNumberedElementsObj.imagesList;
+            console.log("newly created figure object", figureObj);
+            if (figureObj.indexPos == 0) {
+                if (Object.keys(elementsList).length > 0) {
+                    elementsList[slateAncestorData.ancestor.entityUrn].splice(figureObj.indexPos, 0, createdElementData);
+                } else {
+                    elementsList = {
+                        [slateAncestorData.ancestor.entityUrn]: []
+                    }
+                    elementsList[slateAncestorData.ancestor.entityUrn].push(createdElementData);
                 }
-            });
+                updateCreatedElementInAutonumberList('imagesList', elementsList, autoNumberedElementsObj, dispatch);
+            } else if (figureObj.indexPos > 0) {
+                let count = 0;
+                slateFigures.forEach(item => {
+                    item.indexPos = count;
+                    count++;
+                });
+                let nearestElementObj = findNearestMediaElement(slateFigures, figureObj, 'image');
+
+                if (nearestElementObj) {
+                    let index = elementsList[slateAncestorData.ancestor.entityUrn].findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
+                    elementsList[slateAncestorData.ancestor.entityUrn].splice(index + 1, 0, createdElementData);
+                    updateCreatedElementInAutonumberList('imagesList', elementsList, autoNumberedElementsObj, dispatch);
+                } else {
+                    elementsList[slateAncestorData.ancestor.entityUrn].splice(figureObj.indexPos, 0, createdElementData);
+                    updateCreatedElementInAutonumberList('imagesList', elementsList, autoNumberedElementsObj, dispatch);
+                }
+                console.log("cccccccccccc", slateFigures, nearestElementObj, createdElementData);
+                console.log("ddddddddddddddd", elementsList);
+            } else if (Array.isArray(figureObj.indexPos)) {
+                handleAutonumberingForElementsInContainers(bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch)
+            }
         }
-        /**-----------------------------------------------------------------------------------*/
+        /**------------------------------------------------------------------------------------------------*/
         if (cb) {
             cb();
         }   

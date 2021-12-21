@@ -427,8 +427,8 @@ class ElementContainer extends Component {
                 isNumberDifferent = parseInt(overridedNumber) !== parseInt(numberHTML);
             } else {
                 const figIndexParent = getContainerEntityUrn(this.props.currentSlateAncestorData);
-                if (figIndexParent) {
-                    imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {})
+                imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
+                if (figIndexParent && parseInt(imgNumberValue)) {
                     isNumberDifferent = parseInt(imgNumberValue) !== parseInt(numberHTML);
                 }
             }
