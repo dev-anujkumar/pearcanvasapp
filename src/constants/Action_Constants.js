@@ -203,3 +203,4 @@ export const CHECK_ASIDE_NUMBER = 'CHECK_ASIDE_NUMBER';
 /*--------------Cypress Puls Constants------------------ */
 export const COMPLETED = 'COMPLETED';
 export const FAILED = 'FAILED';
+export const ABORTED = 'ABORTED'
