@@ -138,7 +138,7 @@ export class ReactMarkedIndexEditor extends React.Component {
           tinymce.$(`#${this.props.markedLabelId}`).removeClass('floating-title')
         }
         if(editor.id === 'markedindex-0'){
-          tinymce.$('.printIndex-save-button').removeClass('disabled')
+          tinymce.$('.printIndex-save-button').removeClass('disabled');
         }
       }
       else {
@@ -148,9 +148,23 @@ export class ReactMarkedIndexEditor extends React.Component {
           tinymce.$(`#${this.props.markedLabelId}`).removeClass('transition-none')
         }
         if(editor.id === 'markedindex-0'){
-          tinymce.$('.printIndex-save-button').addClass('disabled')
+          tinymce.$('.printIndex-save-button').addClass('disabled');
         }
       }
+    }
+
+    if(editor.id === 'markedindex-cross-reference'){
+      let value = e.target.innerHTML.replace(/<br data-mce-bogus="1">/g, "");
+      let lableElement = document.getElementById('cross-ref');
+      if(value !== ""){
+          lableElement.classList.remove('show-cross-ref-label');
+          lableElement.classList.add('hide-cross-ref-label');
+      }else{
+          lableElement.classList.add('show-cross-ref-label');
+          lableElement.classList.remove('hide-cross-ref-label');
+      }
+
+        this.props.filterCrossRef(value);
     }
   }
 /**
@@ -470,7 +484,16 @@ export class ReactMarkedIndexEditor extends React.Component {
         document.getElementById(currentTarget.id).innerHTML = termText;
       }
       tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
-    })
+    });
+
+    if(e.target.id === "markedindex-cross-reference"){
+      const indexEntry = document.getElementById('markedindex-0')?.innerHTML?.replace('<br data-mce-bogus="1">', "")?.replace('&nbsp;', "");
+      if(indexEntry) {
+        document.getElementById("markedindex-cross-reference").contentEditable = true;
+      } else { 
+        document.getElementById("markedindex-cross-reference").contentEditable = false;
+      }
+    }
   }
 
   render() {
@@ -484,7 +507,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     return (
-        <p ref={this.editorRef} className={this.placeHolderClass}  onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue && markIndexCurrentValue }} ></p>
+        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
     )
   }
 }

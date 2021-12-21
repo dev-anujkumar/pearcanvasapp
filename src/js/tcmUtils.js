@@ -113,7 +113,7 @@ const TCMUtils = {
        
     }
     // PCAT-11983 - removing extra attributes from img tag to prevent duplicate tracking
-    if (imageAssetContents != null || imageAssetContents != undefined) {
+    if (imageAssetContents) {
       for (let index = 0; index < imageAssetContents.length; index++) {
         imageAssetContents[index] = imageAssetContents[index].replace(/ data-id=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ data-id=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ data-mce-src=\\"[a-zA-Z0-9-+_!@#$%^&*./, ?;:]*\\"/, '').replace(/ data-mce-src=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*./, ?;:]*\\\\\\"/, '');
         data = data.replace(tempimageAssetContents[index], imageAssetContents[index]);

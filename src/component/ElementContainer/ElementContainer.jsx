@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import PropTypes, { element } from 'prop-types';
 import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
@@ -16,13 +16,13 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -57,6 +57,7 @@ import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
+import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import ElementDialogue from '../ElementDialogue';
@@ -101,7 +102,7 @@ class ElementContainer extends Component {
     }
 
     getElementVersionStatus = (element, elementStatus) => {
-        if (element && element?.id && element.id.match(/work/g) && !elementStatus[element.id]) {
+        if (element && element?.id && element.id.match(/work/g) && elementStatus && !elementStatus.hasOwnProperty(element.id)) {
             // call element status API
             this.props.getElementStatus(element.id, this.props.index)
         }
@@ -152,6 +153,10 @@ class ElementContainer extends Component {
                 targetId: element?.figuredata?.interactiveid
             }
             this.props.fetchAssessmentMetadata('interactive', 'fromElementContainer', interactiveData);
+        }
+        if(element?.type === 'element-aside'){
+            const showAsideTitle =  element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false
+            this.props.enableAsideNumbering(showAsideTitle,element.id)
         }
         document.addEventListener('click', () => {
             this.setState({ showCopyPopup: false })
@@ -350,6 +355,28 @@ class ElementContainer extends Component {
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }
 
+
+    asideDifference=(index, previousElementData)=>{
+        let labelDOM = document.getElementById(`cypress-${index}-t1`),
+            numberDOM = document.getElementById(`cypress-${index}-t2`),
+            titleDOM = document.getElementById(`cypress-${index}-t3`),
+            labeleHTML = labelDOM ? labelDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
+            titleHTML = titleDOM ? titleDOM.innerHTML : ""
+
+        labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
+        titleHTML = this.removeClassesFromHtml(titleHTML)
+        let oldTitleHTML = ""
+        if (!(previousElementData?.html?.title)) {
+            oldTitleHTML = createLabelNumberTitleModel("", "", "")
+        } else {
+            oldTitleHTML = this.removeClassesFromHtml(previousElementData?.html?.title)
+        }
+        return titleHTML !== oldTitleHTML
+    }
+
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
@@ -480,9 +507,9 @@ class ElementContainer extends Component {
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
         let podwidth = this.props?.activeElement?.podwidth;
         let oldImage = this.props.oldImage;
-        if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
+        // if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
             oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
-        }
+        // }
 
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link" || previousElementData.figuredata.interactivetype === '3rd-party' || 
@@ -575,6 +602,7 @@ class ElementContainer extends Component {
         let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "");
         let oldImage = this.props.oldImage;
         oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
+
         // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -583,6 +611,8 @@ class ElementContainer extends Component {
             // (defaultImageUrl !== (previousElementData.figuredata.posterimage && previousElementData.figuredata.posterimage.path)) //PCAT-6815  fixes
         );
     }
+
+    // updateAside
 
     updateOpenerElement = (dataToSend) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
@@ -720,6 +750,14 @@ class ElementContainer extends Component {
                     }
                 }
                 break;
+
+            case elementTypeConstant.ELEMENT_ASIDE:
+                if (this.asideDifference(this.props.index, previousElementData) && previousElementData?.id !== "") {
+                    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                    config.isSavingElement = true
+                    this.props.updateAsideNumber(previousElementData,this.props.index);
+                }
+            break;
 
             case elementTypeConstant.FIGURE:
                 switch (previousElementData.figuretype) {
@@ -1127,9 +1165,11 @@ class ElementContainer extends Component {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         config.popupCreationCallInProgress = true
         if (!config.poetryElementCreationInProgress) {
+            const { showHideType } = this.props;
             config.poetryElementCreationInProgress = poetryField === "creditsarray" ? true : false
+            if(parentElement && Object.keys(parentElement).length && showHideType) parentElement["showHideType"] = showHideType;
             this.props.createPoetryUnit(poetryField, parentElement, (currentElementData) =>
-                this.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN, this.props?.element)
+                this.handleBlur(forceupdate, currentElementData, index, showHideType), index, config.slateManifestURN, this.props?.element)
         }
     }
 
@@ -1351,7 +1391,7 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring element={element} model={element.html} onListSelect={this.props.onListSelect} {...commonProps} placeholder={this.props.placeholder}/>;
+                    editor = <ElementAuthoring asideData = {this.props?.asideData} element={element} model={element.html} onListSelect={this.props.onListSelect} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} placeholder={this.props.placeholder}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
                     editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />;
@@ -1428,6 +1468,7 @@ class ElementContainer extends Component {
                         markedIndexValue= {this.props.markedIndexValue}
                         markedIndexPopup= {this.props.markedIndexPopup}
                         showHideType = {this.props.showHideType}
+                        handleCopyPastePopup={this.props.handleCopyPastePopup}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1580,6 +1621,7 @@ class ElementContainer extends Component {
                         userRole={this.props.userRole}
                         parentUrn={this.props?.parentUrn}
                         parentElement={this.props.parentElement}
+                        showHideType = {this.props.showHideType}
                     />
                     labelText = 'PE'
                     break;
@@ -1634,7 +1676,7 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup} />
                         </MultiColumnContext.Provider>;
                     } else {
                         labelText = MULTI_COLUMN_2C.ELEMENT_TAG_NAME
@@ -1655,7 +1697,7 @@ class ElementContainer extends Component {
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup} />
                         </MultiColumnContext.Provider>;
                     }
                     break;
@@ -1735,7 +1777,7 @@ class ElementContainer extends Component {
                     break;
 
                 case elementTypeConstant.BLOCK_LIST:
-                    editor = <BlockListWrapper indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} {...commonProps} />;
+                    editor = <BlockListWrapper grandParentManifestList={this.props?.currentManifestList} asideData={this.props?.asideData} indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} />;
                     labelText = 'BL'
                     break;
 
@@ -1809,6 +1851,10 @@ class ElementContainer extends Component {
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                     {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
+                        {permissions && permissions.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
+                        && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
+                        }
                         {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
                             if (this.props.projectUsers.length === 0) {
                                 this.props.getProjectUsers();
@@ -1963,7 +2009,9 @@ class ElementContainer extends Component {
             inputType,
             inputSubType,
             //type: enum type to be included
-            multiColumnType: (element.type === 'groupedcontent' && element?.groupeddata?.bodymatter) ? `${element?.groupeddata?.bodymatter.length}C` : undefined
+            multiColumnType: (element.type === 'groupedcontent' && element?.groupeddata?.bodymatter) ? `${element?.groupeddata?.bodymatter.length}C` : undefined,
+            //This property will be remove once BL will be supported in all container elements AS,WE,2C & 3C
+            containsBlockList: false
         }
 
         if ('operationType' in detailsToSet && detailsToSet.operationType === 'cut') {
@@ -1994,6 +2042,15 @@ class ElementContainer extends Component {
             getAlfrescositeResponse(id, (response) => {
                 detailsToSet['alfrescoSiteData'] = response
             })
+        }
+        /**
+         Check if Copied ShowHide contains any BlockList Element
+         Note:- This piece of code and also the propertry named 
+            as 'containsBlockList' in const detailsToSet will be removed once BL will be supported  in AS,WE,2C & 3C
+        */
+        if(element?.type === 'showhide') {
+            let elementsList = [...element?.interactivedata?.show.concat(...element?.interactivedata?.hide)]
+            detailsToSet['containsBlockList'] = elementsList.some(item => item.type === 'manifestlist')
         }
 
         console.log("Element Details action to be dispatched from here", detailsToSet)
@@ -2026,7 +2083,13 @@ class ElementContainer extends Component {
         }
         this.props.getProjectUsers();
     }
-
+     /**
+     * @description - This function is for opening edit  button in Cypress Plus
+     */
+    handleEditInCypressPlus = (e,elementId) =>{
+        e.stopPropagation();
+        window.open(`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`, '_blank')
+    }
     /**
      * @description - This function is for handling click event on the label button.
      * @param {event}
@@ -2316,6 +2379,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         getProjectUsers: () => {
             dispatch(getProjectUsers())
+        },
+        enableAsideNumbering: (data,id) => {
+            dispatch(enableAsideNumbering(data,id))
+        },
+        updateAsideNumber: (previousElementData, index) => {
+            dispatch(updateAsideNumber(previousElementData, index))
         }
     }
 }

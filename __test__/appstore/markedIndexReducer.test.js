@@ -4,7 +4,8 @@ const initialState = {
     markedIndexValue: "",
     markedIndexCurrentValue: "",
     elementIndex: "",
-    markedIndexGlossary: ""
+    markedIndexGlossary: "",
+    crossReferenceValues: []
 };
 
 describe('testing marked index reducer cases --', () => {
@@ -17,7 +18,8 @@ describe('testing marked index reducer cases --', () => {
             markedIndexValue: { "type": "", "popUpStatus": false },
             markedIndexCurrentValue: '',
             elementIndex: '',
-            markedIndexGlossary: {popUpStatus: false,  indexEntries: {}, markedIndexEntryURN: '', }
+            markedIndexGlossary: {popUpStatus: false,  indexEntries: {}, markedIndexEntryURN: '' },
+            crossReferenceValues: []
         }
         expect(markedIndexReducer()).toEqual(expectedState);
     });
@@ -56,6 +58,21 @@ describe('testing marked index reducer cases --', () => {
         }
         expect(markedIndexReducer(initialState, {
             type: "OPEN_MARKED_INDEX_ON_GLOSSARY",
+            payload: markedIndexData            
+        })).toEqual(expectedState);
+    });
+
+    it('Should update cross-reference values in the store', () => {
+        const markedIndexData = {
+            crossReferenceValues: [ 'index', 'sub-index']
+        };
+
+        let expectedState = {
+            ...initialState,
+            crossReferenceValues: [ 'index', 'sub-index']
+        }
+        expect(markedIndexReducer(initialState, {
+            type: "UPDATE_CROSS_REFERENCE_VALUES",
             payload: markedIndexData            
         })).toEqual(expectedState);
     })

@@ -72,24 +72,6 @@ ajax.put = function (url, data, cb, contentType, sync) {
     ajax.send(url, cb, 'PUT', data, contentType, sync);
 };
 
-export function publishContentDelay(content_url, pubConObj, pubApiKey, cb) {
-    content_url = config_object.C6PUB_ENDPOINT;
-    ajax.post(content_url, JSON.stringify(pubConObj), cb, 'application/json', false, pubApiKey);
-    let parsedResponse = JSON.parse(response.responseText);
-    if (parsedResponse && parsedResponse.ResponseMetadata.requestStatusCode === 200) {
-        let redis_url = config_object.C6REDIS_SERVER_UPDATE + pubConObj.requestid + '/status';
-        let inputObj = {};
-        inputObj.status = 'approved';
-        inputObj.distributable_urn = pubConObj.distributableVersionUrn;
-        inputObj.approver_name = pubConObj.requester;
-        inputObj.approved_date = pubConObj.timestamp;
-        inputObj.approve_date = pubConObj.timestamp;
-        ajax.put(redis_url, JSON.stringify(inputObj), pubCallBack, 'application/json', false);
-    } else {
-        pubCallBack(parsedResponse || 500);
-    }
-}
-
 export function publishTitleDelay(project, section, cite, callBack, isPreview) {
     var content_url = config_object.CTOOL_PUBTITLE;
     let content_data = {};
@@ -120,12 +102,14 @@ export const c4PublishObj = {
     publishSlate: function (project, section, cite) {
         const startTime = performance.now();
         var content_url = config_object.CTOOL_PUBSLATE;
+        let proactiveSlatePreview = config_object?.PROACTIVE_SLATE_PREVIEW_STATUS ? config_object.PROACTIVE_SLATE_PREVIEW_STATUS : "false";
         let content_data = {};
         content_data["projectManifest"] = project;
         content_data["sectionManifest"] = section;
         content_data["citeManifest"] = cite;
         content_data["requester"] = config_object.userEmail;//"requester": "james.cooney@pearson.com",
         content_data["timestamp"] = new Date().toISOString();//"timestamp": "2017-04-23T18:25:43.511Z"
+        content_data["proactiveSlatePreview"] = proactiveSlatePreview;
         ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', false);
 
         window.addEventListener('beforeunload', (e) => {
@@ -157,25 +141,9 @@ export const c4PublishObj = {
         }
         //}
     },
-
-    publishContent: function (pubConObj, pubCallBack) {
-        let content_url = config_object.C6PUB_ENDPOINT;
-        let pubApiKey = config_object.C6PUB_API_KEY;
-        try {
-            _.delay(() => {
-                publishContentDelay(content_url, pubConObj, pubApiKey,callback)
-            }, 150);
-            pubCallBack("");
-        }
-        catch (e) {
-            pubCallBack(e);
-        }
-
-    },
-
     publishTitle: function (project, section, cite, callBack, isPreview) {
         _.delay(() => {
             publishTitleDelay(project, section, cite, callBack, isPreview)
         }, 150);
-    },
+    }
 }

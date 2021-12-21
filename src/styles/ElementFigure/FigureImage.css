@@ -162,7 +162,7 @@ figure,.element-container{
     display:block !important;
 }
 
-.pearson-component.image.figureData img{
+.pearson-component.image.figureData img:not(.img-actual-size){
     width: 100%;
     text-align: center;
 }
@@ -170,6 +170,13 @@ figure,.element-container{
 .divCodeSnippetFigure.blockCodeFigure .figureCodeSnippet .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing .cypress-editable{
     line-height: 25px;
     display: table;
+}
+
+.divImageActualSize, .divImageActualSizeTableImage, .divImageActualSizeMathImage{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
 }
 
 /* figure 25% image*/

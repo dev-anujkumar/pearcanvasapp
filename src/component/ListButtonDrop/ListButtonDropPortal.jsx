@@ -63,7 +63,7 @@ class ListButtonDropPortal extends Component {
         try {
             this.startValue = null;
             this.selectedOption = null;
-            let blockListData = checkBlockListElement({slateLevelData:slateData,index:activeElement.index}, 'ENTER');
+            let blockListData = checkBlockListElement({slateLevelData:slateData,index:activeElement.index,asideData:this.props?.asideData}, 'ENTER');
             if (activeElement.elementWipType === 'element-list') {
                 const slateObject = slateData[config.slateManifestURN];
                 const { contents } = slateObject;
@@ -187,7 +187,13 @@ class ListButtonDropPortal extends Component {
                 this.selectedOption = listElement.subtype || null;
             }
             else if (blockListData && Object.keys(blockListData).length){
-                let metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[activeElement.index.split("-")[0]]);
+                let metaDataBlockList;
+                if(this?.props?.asideData.parent && this?.props?.asideData.parent.type==="showhide"){
+                    let indexes = activeElement.index.split("-");
+                    metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[this?.props?.asideData?.parent?.showHideType][indexes[2]]);
+                }else{
+                    metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[activeElement.index.split("-")[0]]);
+                }
                 if (metaDataBlockList && metaDataBlockList.length) {
                     this.startValue = metaDataBlockList[0].startValue
                     this.selectedOption = metaDataBlockList[0].selectedOption;

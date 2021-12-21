@@ -172,6 +172,13 @@ figure,.element-container{
     display: table;
 }
 
+.divImageActualSize, .divImageActualSizeTableImage, .divImageActualSizeMathImage{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
+}
+
 /* figure 25% image*/
 .divImage25Text{
     background-color: transparent;
@@ -552,6 +559,11 @@ th ol li.listItemNumeroUnoNone:before {
     min-height: 257px;
     display: flex;
 }
+
+.figure-wrapper-update-quad{
+    min-height: 188px
+}
+
 .figure-element-container{
     position: relative;
     top: 0;

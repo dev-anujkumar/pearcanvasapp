@@ -264,7 +264,7 @@ const initialState20 = {
     }
 }
 
-describe('Test - Sidebar_Actions',()=>{
+xdescribe('Test - Sidebar_Actions',()=>{
     describe('Test convertElement- paragraph', () => {
         let store = mockStore(() => initialState);
         it('Test Convert Element', () => {
@@ -1063,7 +1063,7 @@ describe('Test handleElementConversion- ShowHide in WE-Paragraph to List', () =>
         spyconversionElement.mockClear()
     });
 });
-describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
+xdescribe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
 
     it('Test convertElement  -we MOCK API CALL', async () => {
         let expectedRes = {
@@ -1144,7 +1144,7 @@ describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
         await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
     });
 });
-describe('1 Test convertElement ', () => {
+xdescribe('1 Test convertElement ', () => {
     const showHideObj = { index: "0-0",
         element: { contentUrn: "urn:pearson:entity:808c0c76-1786-455a-8410-4f250384b142" }
     };
@@ -1567,7 +1567,7 @@ describe('5 Test updateContainerMetadata ', () => {
         spyFunction.mockClear()
     });
     describe("element conversion in showhide",()=>{
-        it('handle conversion of As in SH',()=>{
+        xit('handle conversion of As in SH',()=>{
             let dispatch=()=>{}
             let store1 = mockStore(() => initialState20);
             let nextStore = slateData.SlateData5
