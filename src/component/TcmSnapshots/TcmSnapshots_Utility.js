@@ -742,10 +742,16 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
  */
 export const setFigureElementContentSnapshot = (element, actionStatus) => {
     let formattedLabel, formattedNumber, formattedTitle
-    formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
-    formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
+    let isAutoNumberingEnabled= store?.getState()?.autoNumberReducer?.isAutoNumberingEnabled ?? false;
+    let allowedFigureTypesForAutoNumbering=["image","table","mathImage","audio","video"]
     formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
-    
+    if (isAutoNumberingEnabled && allowedFigureTypesForAutoNumbering.includes(element?.figuretype) ) {
+        formattedLabel = "<p><br></p>",
+        formattedNumber = "<p><br></p>"
+    } else {
+        formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
+        formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
+    }
     let snapshotData = {
         title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
         figurenumber: handleBlankLineDom(formattedNumber, 'BlankLine') || "",
