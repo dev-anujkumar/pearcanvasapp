@@ -64,7 +64,7 @@ export const mediaElementAPI_Handler = (params, projectContent, numberedElements
  */
 export const getContentInBodyMatter = (bodyMatterContent, numberedElements) => {
     if (bodyMatterContent?.length > 0) {
-        Promise.all(bodyMatterContent?.map(container => {
+        bodyMatterContent?.forEach(container => {
             if (container?.label === CONTAINER_LABELS.PART) {
                 if (container?.contents['frontMatter']?.length > 0) {
                     /** Get Media Elements on PART-IS */
@@ -84,7 +84,7 @@ export const getContentInBodyMatter = (bodyMatterContent, numberedElements) => {
                 const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn },container.contents.bodyMatter) || []
                 numberedElements = getNumberedElementsList('bodyMatter', numberedElements, slateMediaElements)
             }
-        }))
+        })
     }
     return numberedElements
 }
@@ -125,7 +125,7 @@ const getContentInChapter = (apiContent, matterType, numberedElements) => {
  */
 const getContainerMediaElementsList = (container, matterType, numberedElements, parentEntityUrn) => {
     if (container?.contents?.bodyMatter?.length > 0) {
-       Promise.all( container?.contents?.bodyMatter?.map((innerContainer) => {
+       container?.contents?.bodyMatter?.forEach((innerContainer) => {
             if (slateTypes.indexOf(innerContainer?.label) > -1 && innerContainer?.contents?.bodyMatter?.length > 0) {
                 const slateMediaElements = getImagesInsideSlates(innerContainer.contentUrn, { isSlate: true, manifestURN: innerContainer.versionUrn, entityURN: innerContainer.contentUrn },innerContainer.contents.bodyMatter) || []
                 if (matterType === 'frontMatter' || matterType === 'backMatter') {
@@ -138,7 +138,7 @@ const getContainerMediaElementsList = (container, matterType, numberedElements, 
                     numberedElements = getNumberedElementsList(container.contentUrn, numberedElements, slateMediaElements)
                 }
             }
-        }))
+        })
     }
 }
 
@@ -338,7 +338,7 @@ const getMediaElementInShowhide = (slateEntityUrn, containerData, numberedElemen
 export const getContentInFMandBM = (apiContent, matterType, numberedElements) => {
     if (apiContent[matterType]?.length > 0) {
         numberedElements = getNumberedElementsList(matterType, numberedElements)
-        Promise.all(apiContent[matterType]?.map((container) => {
+        apiContent[matterType]?.forEach((container) => {
             if ((container?.label === CONTAINER_LABELS.MODULE || container?.label === CONTAINER_LABELS.APPENDIX_MOD) && container?.contents?.bodyMatter?.length > 0) {
                 getContainerMediaElementsList(container, matterType, numberedElements)
             }
@@ -346,7 +346,7 @@ export const getContentInFMandBM = (apiContent, matterType, numberedElements) =>
                 const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn }, container.contents.bodyMatter) || []
                 numberedElements = getNumberedElementsList(matterType, numberedElements, slateMediaElements)
             }
-        }))
+        })
     }
     return numberedElements
 }

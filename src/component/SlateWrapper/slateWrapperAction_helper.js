@@ -339,7 +339,7 @@ export const onPasteSuccess = async (params) => {
         }
     })
     /** ---------------------------- Auto-Numbering handling ------------------------------*/
-    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+    const isAutoNumberingEnabled = getState().autoNumberReducer?.isAutoNumberingEnabled;
     const autoNumberParams = {
         selectedElement: responseData,
         getState,
