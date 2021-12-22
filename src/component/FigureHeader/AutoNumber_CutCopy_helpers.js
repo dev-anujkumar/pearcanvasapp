@@ -1,5 +1,5 @@
 import { getContainerEntityUrn, getAutoNumberedElement } from './AutoNumber_helperFunctions';
-import { autoNumber_KeyMapper } from './AutoNumberConstants';
+import { autoNumber_KeyMapperElements } from './AutoNumberConstants';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
@@ -17,7 +17,8 @@ export const handleAutoNumberingOnCopyPaste = (params) => {
         dispatch,
         operationType,
         selectedElement,
-        isAutoNumberingEnabled
+        isAutoNumberingEnabled,
+        currentSlateData
     } = params
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
@@ -34,12 +35,12 @@ export const handleAutoNumberingOnCopyPaste = (params) => {
                 }
             });
         }
-        if(operationType == 'copy'){
+        if(operationType == 'copy' || operationType == 'cut'){
             if (containerElements.indexOf(selectedElement?.type) > -1) {
-                updateAutoNumberSequenceOnCopyContainers({ getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors })
+                updateAutoNumberSequenceOnCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevFselectedElementigures: slateFigures, slateAncestors })
             }
             else if (selectedElement?.type === 'figure') {
-                updateAutoNumberSequenceOnCopyElements({ getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors })
+                updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors })
             }
         }
 
@@ -57,11 +58,12 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
         slateFigures,
         slateAncestors,
         numberedElements,
-        selectedElement
+        selectedElement,
+        operationType
     } = params
     if (slateFigures || slateFigures?.length > 0) {
         const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === selectedElement.displayedlabel)
-        const figureIndexOnSlate = activeLabelFigures.indexOf(ele => ele.contentUrn === selectedElement.contentUrn)
+        const figureIndexOnSlate = activeLabelFigures.findIndex(ele => ele.contentUrn === selectedElement.contentUrn)
         if (activeLabelFigures?.length > 1) {
             let refIndex = ""
             if (figureIndexOnSlate == activeLabelFigures.length - 1) {
@@ -73,12 +75,14 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
             //find the closest image now and then add the new img at that index
             const referenceFigure = activeLabelFigures[refIndex].contentUrn
             const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-            const labelType = autoNumber_KeyMapper[selectedElement.displayedlabel]
-            if (figureParentEntityUrn && numberedElements) {
-                numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== selectedElement.contentUrn)
+            const labelType = autoNumber_KeyMapperElements[selectedElement.displayedlabel]
+            if (operationType == 'cut') {
+                if (figureParentEntityUrn && numberedElements) {
+                    numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== selectedElement.contentUrn)
+                }
             }
             if (referenceFigure) {
-                const refImageIndex = numberedElements[labelType][figureParentEntityUrn].indexOf(ele => ele.contentUrn === referenceFigure)
+                const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === referenceFigure)
                 numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, selectedElement)
                 dispatch({
                     type: GET_ALL_AUTO_NUMBER_ELEMENTS,
@@ -104,10 +108,11 @@ export const updateAutoNumberSequenceOnCopyContainers = (params) => {
         slateFigures,
         slateAncestors,
         numberedElements,
-        prevFselectedElementigures
+        prevFselectedElementigures,
+        operationType
     } = params;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    const labelType = autoNumber_KeyMapper[prevFselectedElementigures.displayedlabel]
+    const labelType = autoNumber_KeyMapperElements[prevFselectedElementigures.displayedlabel]
     if (slateFigures || slateFigures?.length > 1) {
         const elementsToSwap = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.containerData.indexOf(prevFselectedElementigures.contentUrn) > -1)
         const noOfElementsToSwap = elementsToSwap?.length

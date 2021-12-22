@@ -775,7 +775,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 const params = {
                     getState,
                     dispatch,
-                    currentSlateData,
+                    currentSlateData: newParentData[slateId],
                     swappedElementData
                 }
                 handleAutoNumberingOnSwapping(isAutoNumberingEnabled, params)

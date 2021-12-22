@@ -14,6 +14,13 @@ export const autoNumber_KeyMapper = {
     'Equations': 'equationsIndex'
 }
 
+export const autoNumber_KeyMapperElements = {
+  'Figure': 'imagesList',
+  'Table': 'property',
+  'Equations': 'equationsList'
+}
+
+
 export const autoNumber_IndexMapper = {
   'imagesList': 'figureImageIndex',
   'tablesList': 'tableIndex',

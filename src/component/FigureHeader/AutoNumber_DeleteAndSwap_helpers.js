@@ -1,5 +1,5 @@
 import { getContainerEntityUrn, getAutoNumberedElement } from './AutoNumber_helperFunctions';
-import { autoNumber_KeyMapper } from './AutoNumberConstants';
+import { autoNumber_KeyMapperElements } from './AutoNumberConstants';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
@@ -51,7 +51,6 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
             if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
                 let index = numberedElements[labelType][parentIndex].findIndex(x => x.contentUrn === contentUrn);
                 if (index > -1) {
-                    console.log("we are in if");
                     numberedElements[labelType][parentIndex].splice(index, 1);
                 }
                 break;
@@ -149,7 +148,7 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
     if (swappedElementData?.type === 'figure' && swappedElementData?.hasOwnProperty('displayedlabel')) {
         if (slateFigures || slateFigures?.length > 0) {
             const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === swappedElementData.displayedlabel)
-            const figureIndexOnSlate = activeLabelFigures.indexOf(ele => ele.contentUrn === swappedElementData.contentUrn)
+            const figureIndexOnSlate = activeLabelFigures.findIndex(ele => ele.contentUrn === swappedElementData.contentUrn)
             if (activeLabelFigures?.length > 1) {
                 let refIndex = ""
                 if (figureIndexOnSlate == activeLabelFigures.length - 1) {
@@ -161,7 +160,7 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
                 //find the closest image now and then add the new img at that index
                 const referenceFigure = activeLabelFigures[refIndex].contentUrn
                 const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-                const labelType = autoNumber_KeyMapper[swappedElementData.displayedlabel]
+                const labelType = autoNumber_KeyMapperElements[swappedElementData.displayedlabel]
                 if (figureParentEntityUrn && numberedElements) {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
                 }
@@ -196,7 +195,7 @@ export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
         swappedElementData
     } = params;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    const labelType = autoNumber_KeyMapper[swappedElementData.displayedlabel]
+    const labelType = autoNumber_KeyMapperElements[swappedElementData.displayedlabel]
     if (slateFigures || slateFigures?.length > 1) {
         const elementsToSwap = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.containerData.indexOf(swappedElementData.contentUrn) > -1)
         const noOfElementsToSwap = elementsToSwap?.length
@@ -205,15 +204,15 @@ export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
 
             Object.values(DISPLAYED_LABELS).forEach(label => {
                 const activeLabelElements = slateFigures?.filter(ele => ele.displayedlabel === label)
-                const indexToSearch = activeLabelElements?.indexOf(ele => ele.contentUrn === elementUrnToSearch)
+                const indexToSearch = activeLabelElements?.findIndex(ele => ele.contentUrn === elementUrnToSearch)
                 if (indexToSearch == (activeLabelElements?.length - 1)) {
                     const newUrnToSearch = elementsToSwap[0].contentUrn
-                    const indexToSearch2 = activeLabelElements?.indexOf(ele => ele.contentUrn === newUrnToSearch)
+                    const indexToSearch2 = activeLabelElements?.findIndex(ele => ele.contentUrn === newUrnToSearch)
                     const prevElement = activeLabelElements[indexToSearch2 - 1]?.contentUrn
                     if (prevElement) {
                         //delete old places
                         numberedElements[labelType][figureParentEntityUrn]?.splice(indexToSearch, noOfElementsToSwap)
-                        const refImageIndex = numberedElements[labelType][figureParentEntityUrn].indexOf(ele => ele.contentUrn === nextElement)
+                        const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === nextElement)
                         numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex + 1, 0, elementsToSwap)
                         dispatch({
                             type: GET_ALL_AUTO_NUMBER_ELEMENTS,
@@ -229,7 +228,7 @@ export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
                     if (nextElement) {
                         //delete old places
                         numberedElements[labelType][figureParentEntityUrn]?.splice(indexToSearch, noOfElementsToSwap)
-                        const refImageIndex = numberedElements[labelType][figureParentEntityUrn].indexOf(ele => ele.contentUrn === nextElement)
+                        const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === nextElement)
                         numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, elementsToSwap)
                         dispatch({
                             type: GET_ALL_AUTO_NUMBER_ELEMENTS,
