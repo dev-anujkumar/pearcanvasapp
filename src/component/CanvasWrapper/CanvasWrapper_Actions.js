@@ -347,10 +347,7 @@ export const fetchFigureDropdownOptions = () => (dispatch) => {
         if (Object.keys(dropdownOptionsObj).length > 0) {
             dispatch({
                 type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
-                payload: {
-                    ...dropdownOptionsObj,
-                    image: ['Figure', 'Table', 'Equation']
-                }
+                payload: dropdownOptionsObj
             })
         }
     }).catch(error => {
