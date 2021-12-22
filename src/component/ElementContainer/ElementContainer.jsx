@@ -2266,21 +2266,6 @@ class ElementContainer extends Component {
 
     render = () => {
         const { element } = this.props;
-        if (element?.figuretype) {
-            element["displayedlabel"] = 'Figure'
-            element["numberedandlabel"] = true
-            switch (element.contentUrn) {
-                case "urn:pearson:entity:3fd00159-7b4e-48dc-a864-14c6c0d43a11":
-                    element.manualoverride = { resumenumbervalue: 40 }
-                    break;
-                case "urn:pearson:entity:acff4d01-8907-4f46-b4ee-25725286bfd5":
-                    element.numberedandlabel = false
-                    break;
-                case "urn:pearson:entity:a2d00244-2201-4c2d-b457-2289e8f3a89d":
-                    element.manualoverride = { overridenumbervalue: '2A', overridelabelvalue: 'Illustration' }
-                    break;
-            }
-        }
         try {
             if (this.state.hasError) {
                 return (

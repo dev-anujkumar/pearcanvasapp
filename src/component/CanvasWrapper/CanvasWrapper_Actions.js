@@ -380,8 +380,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             let flag = data?.parameters?.enablenumberedandlabel || false;
             dispatch(isAutoNumberEnabled(flag));
         }
-        let flag = true;
-        dispatch(isAutoNumberEnabled(flag)); // by default set true figure autonumbering
+        dispatch(isAutoNumberEnabled(true)); // by default set true figure autonumbering
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
             // Api to get LOB Permissions
