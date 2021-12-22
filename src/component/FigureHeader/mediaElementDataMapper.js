@@ -11,7 +11,7 @@ import {getSlateLevelData} from './AutoNumberActions';
  * @param {*} mediaData 
  * @returns 
  */
-export const mediaElementAPI_Handler = async (params, projectContent, numberedElements) => { // projectContent = response.data.contents
+export const mediaElementAPI_Handler = (params, projectContent, numberedElements) => { // projectContent = response.data.contents
     let {
         elementType,
         autoNumberedElements,
@@ -19,13 +19,13 @@ export const mediaElementAPI_Handler = async (params, projectContent, numberedEl
     } = params
     config.atContainerLevel = atContainerLevel
     if (projectContent['frontMatter']?.length > 0) {
-        numberedElements = await getContentInFMandBM(projectContent, 'frontMatter', numberedElements)
+        numberedElements = getContentInFMandBM(projectContent, 'frontMatter', numberedElements)
     }
     if (projectContent['backMatter']?.length > 0) {
-        numberedElements = await getContentInFMandBM(projectContent, 'backMatter', numberedElements)
+        numberedElements = getContentInFMandBM(projectContent, 'backMatter', numberedElements)
     }
     if (projectContent['bodyMatter']?.length > 0) {
-        await getContentInBodyMatter(projectContent['bodyMatter'], numberedElements)
+        getContentInBodyMatter(projectContent['bodyMatter'], numberedElements)
     }
 
     switch (elementType) {
@@ -53,7 +53,7 @@ export const mediaElementAPI_Handler = async (params, projectContent, numberedEl
             autoNumberedElements = numberedElements
             break;
     }
-    return await autoNumberedElements
+    return autoNumberedElements
 }
 
 /**
@@ -62,26 +62,26 @@ export const mediaElementAPI_Handler = async (params, projectContent, numberedEl
  * @param {*} numberedElements 
  * @returns 
  */
-export const getContentInBodyMatter = async (bodyMatterContent, numberedElements) => {
+export const getContentInBodyMatter = (bodyMatterContent, numberedElements) => {
     if (bodyMatterContent?.length > 0) {
-        await Promise.all(bodyMatterContent?.map(async container => {
+        Promise.all(bodyMatterContent?.map(container => {
             if (container?.label === CONTAINER_LABELS.PART) {
                 if (container?.contents['frontMatter']?.length > 0) {
                     /** Get Media Elements on PART-IS */
-                    const mediaElementOnPartIS = await getImagesInsideSlates(container.contentUrn,{ isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn }, container.contents['frontMatter'][0].contents.bodyMatter) || []
+                    const mediaElementOnPartIS = getImagesInsideSlates(container.contentUrn,{ isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn }, container.contents['frontMatter'][0].contents.bodyMatter) || []
                     numberedElements = getNumberedElementsList(container.contentUrn, numberedElements, mediaElementOnPartIS)
                 }
                 if (container?.contents['bodyMatter']?.length > 0) {
-                    container.contents['bodyMatter']?.forEach(async (innerContainer) => {
-                        numberedElements = await getContentInChapter(innerContainer, '', numberedElements)
+                    container.contents['bodyMatter']?.forEach((innerContainer) => {
+                        numberedElements = getContentInChapter(innerContainer, '', numberedElements)
                     })
                 }
             }
             else if (container?.label === CONTAINER_LABELS.CHAPTER) {
-                numberedElements = await getContentInChapter(container, '', numberedElements)
+                numberedElements = getContentInChapter(container, '', numberedElements)
             }
             else if (slateTypes.indexOf(container?.label) > -1) {
-                const slateMediaElements = await getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn },container.contents.bodyMatter) || []
+                const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn },container.contents.bodyMatter) || []
                 numberedElements = getNumberedElementsList('bodyMatter', numberedElements, slateMediaElements)
             }
         }))
@@ -96,19 +96,19 @@ export const getContentInBodyMatter = async (bodyMatterContent, numberedElements
  * @param {*} numberedElements 
  * @returns 
  */
-const getContentInChapter = async (apiContent, matterType, numberedElements) => {
+const getContentInChapter = (apiContent, matterType, numberedElements) => {
     const bodyMatter = Object.values(apiContent?.contents)?.flat();
     apiContent = {
         ...apiContent,
         contents: { bodyMatter: bodyMatter }
     }
     if (apiContent?.contents['bodyMatter']?.length > 0) {
-        await Promise.all(apiContent.contents['bodyMatter']?.map(async (container) => {
+        Promise.all(apiContent.contents['bodyMatter']?.map((container) => {
             if ((container?.label === CONTAINER_LABELS.MODULE || container?.label === CONTAINER_LABELS.APPENDIX_MOD) && container?.contents?.bodyMatter?.length > 0) {
-                await getContainerMediaElementsList(container, 'bodyMatter', numberedElements, apiContent.contentUrn)
+                getContainerMediaElementsList(container, 'bodyMatter', numberedElements, apiContent.contentUrn)
             }
             else if (slateTypes.indexOf(container?.label) > -1 && container?.contents?.bodyMatter?.length > 0) {
-                const slateMediaElements = await getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn },container.contents.bodyMatter) || []
+                const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn },container.contents.bodyMatter) || []
                 numberedElements = getNumberedElementsList(apiContent.contentUrn, numberedElements, slateMediaElements)
             }
         }))
@@ -123,11 +123,11 @@ const getContentInChapter = async (apiContent, matterType, numberedElements) => 
  * @param {*} matterType 
  * @param {*} parentEntityUrn 
  */
-const getContainerMediaElementsList = async (container, matterType, numberedElements, parentEntityUrn) => {
+const getContainerMediaElementsList = (container, matterType, numberedElements, parentEntityUrn) => {
     if (container?.contents?.bodyMatter?.length > 0) {
-       await Promise.all( container?.contents?.bodyMatter?.map(async (innerContainer) => {
+       Promise.all( container?.contents?.bodyMatter?.map((innerContainer) => {
             if (slateTypes.indexOf(innerContainer?.label) > -1 && innerContainer?.contents?.bodyMatter?.length > 0) {
-                const slateMediaElements = await getImagesInsideSlates(innerContainer.contentUrn, { isSlate: true, manifestURN: innerContainer.versionUrn, entityURN: innerContainer.contentUrn },innerContainer.contents.bodyMatter) || []
+                const slateMediaElements = getImagesInsideSlates(innerContainer.contentUrn, { isSlate: true, manifestURN: innerContainer.versionUrn, entityURN: innerContainer.contentUrn },innerContainer.contents.bodyMatter) || []
                 if (matterType === 'frontMatter' || matterType === 'backMatter') {
                     numberedElements = getNumberedElementsList(matterType, numberedElements, slateMediaElements)
                 }
@@ -148,19 +148,19 @@ const getContainerMediaElementsList = async (container, matterType, numberedElem
  * @param {*} imagesList 
  * @returns 
  */
-const getImagesInsideSlates = async (slateEntityUrn, slateData, bodyMatter, numberedElements = {}, parentDetails = []) => {
+const getImagesInsideSlates = (slateEntityUrn, slateData, bodyMatter, numberedElements = {}, parentDetails = []) => {
     if (Object.keys(numberedElements).length < 1) {
         numberedElements = { tablesList: [], equationsList: [], imagesList: [], audiosList: [], videosList: [] }
     }
     let bodyMatterToIterarte = [...bodyMatter]//&& config.atContainerLevel && bodyMatter?.some(ele => Object.values(containerElements).indexOf(ele.type) > -1)
-    if (slateData.isSlate === true  && bodyMatter?.length > 0 ) {
-        const { manifestURN, entityURN } = slateData
-        const newBodyMatter = await getSlateLevelData(manifestURN, entityURN)
-        bodyMatterToIterarte = await (newBodyMatter?.length > 0 ? newBodyMatter : bodyMatter)
-    }
+    // if (slateData.isSlate === true  && bodyMatter?.length > 0 ) {
+    //     const { manifestURN, entityURN } = slateData
+    //     const newBodyMatter = await getSlateLevelData(manifestURN, entityURN)
+    //     bodyMatterToIterarte = await (newBodyMatter?.length > 0 ? newBodyMatter : bodyMatter)
+    // }
     console.log('bodyMatterToIterarte',bodyMatterToIterarte)
     if (bodyMatterToIterarte?.length > 0) {
-        bodyMatterToIterarte?.forEach(async element => {
+        bodyMatterToIterarte?.forEach(element => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
                 if (parentDetails?.length) {
                     element.parentDetails = parentDetails
@@ -172,18 +172,18 @@ const getImagesInsideSlates = async (slateEntityUrn, slateData, bodyMatter, numb
                     case containerElements.SHOW_HIDE:
                         element.parentDetails = [...parentDetails]
                         element.parentDetails.push(element.contentUrn)
-                        numberedElements = await getMediaElementInShowhide(slateEntityUrn, element, numberedElements)
+                        numberedElements = getMediaElementInShowhide(slateEntityUrn, element, numberedElements)
                         break;
                     case containerElements.MULTI_COLUMN:
                         element.parentDetails = [...parentDetails]
                         element.parentDetails.push(element.contentUrn)
-                        numberedElements = await getMediaElementInMultiColumn(slateEntityUrn, element, numberedElements)
+                        numberedElements = getMediaElementInMultiColumn(slateEntityUrn, element, numberedElements)
                         break;
                     case containerElements.POPUP:
                     case containerElements.ASIDE:
                         element.parentDetails = [...parentDetails]
                         element.parentDetails.push(element.contentUrn)
-                        numberedElements = await getMediaElementInAsideWEPopup(slateEntityUrn, element, numberedElements)
+                        numberedElements = getMediaElementInAsideWEPopup(slateEntityUrn, element, numberedElements)
                         break;
                 }
             }
@@ -224,7 +224,7 @@ const prepareElementList = (element, numberedElements = {}, slateEntityUrn) => {
     }
     return numberedElements
 }
-const containerBodyMatter = async (container) => {
+const containerBodyMatter = (container) => {
     let dataToReturn = []
     const containerProp = container.label ? container.label : container.type
     switch (containerProp) {
@@ -244,7 +244,7 @@ const containerBodyMatter = async (container) => {
             dataToReturn = groupProp?.bodyMatter ?? []
             break;
         case containerElements.POPUP:
-            dataToReturn = await getSlateLevelData(container.versionUrn, container.contentUrn)
+            dataToReturn = container?.contents?.bodyMatter ?? []
             break;
         case containerElements.ASIDE:
             const asideProp = container.label ? container?.contents : container?.elementdata
@@ -336,15 +336,15 @@ const getMediaElementInShowhide = (slateEntityUrn, containerData, numberedElemen
  * @param {*} numberedElements 
  * @returns 
  */
-export const getContentInFMandBM = async (apiContent, matterType, numberedElements) => {
+export const getContentInFMandBM = (apiContent, matterType, numberedElements) => {
     if (apiContent[matterType]?.length > 0) {
         numberedElements = getNumberedElementsList(matterType, numberedElements)
-        await Promise.all(apiContent[matterType]?.map(async (container) => {
+        Promise.all(apiContent[matterType]?.map((container) => {
             if ((container?.label === CONTAINER_LABELS.MODULE || container?.label === CONTAINER_LABELS.APPENDIX_MOD) && container?.contents?.bodyMatter?.length > 0) {
-                await getContainerMediaElementsList(container, matterType, numberedElements)
+                getContainerMediaElementsList(container, matterType, numberedElements)
             }
             else if (slateTypes.indexOf(container?.label) > -1 && container?.contents?.bodyMatter?.length > 0) {
-                const slateMediaElements = await getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn }, container.contents.bodyMatter) || []
+                const slateMediaElements = getImagesInsideSlates(container.contentUrn, { isSlate: true, manifestURN: container.versionUrn, entityURN: container.contentUrn }, container.contents.bodyMatter) || []
                 numberedElements = getNumberedElementsList(matterType, numberedElements, slateMediaElements)
             }
         }))
