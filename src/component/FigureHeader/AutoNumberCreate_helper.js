@@ -144,7 +144,6 @@ export const getImagesInsideElement = (bodyMatter, numberedElements = [], parent
             }
         })
     }
-    console.log('getImagesInsideElement', numberedElements)
     return numberedElements
 }
 
@@ -158,8 +157,6 @@ export const getImagesInsideElement = (bodyMatter, numberedElements = [], parent
 export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch) => {
     let mediaElementsInContainer = findMediaElementsInContainer(bodyMatter[figureObj.indexPos[0]], []);
     let figureObjInContainer = mediaElementsInContainer.find(x => x.contentUrn === createdElementData.contentUrn);
-    console.log("new console 111111", mediaElementsInContainer)
-    console.log("new console 222222", figureObjInContainer)
     if (mediaElementsInContainer.length && figureObjInContainer.index > 0) {
         let indexPos = figureObjInContainer.index;
         figureObjInContainer = {
@@ -178,8 +175,6 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
                 elementsList[slateAncestorData.ancestor.entityUrn].push(createdElementData);
             }
             updateCreatedElementInAutonumberList('imagesList', elementsList, autoNumberedElementsObj, dispatch);
-            console.log("cccccccccccc", mediaElementsInContainer, nearestElementObj, createdElementData);
-            console.log("ddddddddddddddd", elementsList);
         } else {
             let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, 'image');
             if (nearestElementObj) {
@@ -190,8 +185,6 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
                 elementsList[slateAncestorData.ancestor.entityUrn].splice(figureObj.index, 0, createdElementData);
                 updateCreatedElementInAutonumberList('imagesList', elementsList, autoNumberedElementsObj, dispatch);
             }
-            console.log("cccccccccccc", mediaElementsInContainer, nearestElementObj, createdElementData);
-            console.log("ddddddddddddddd", elementsList);
         }
     } else if (figureObjInContainer.index == 0) {
         figureObjInContainer = {
@@ -199,10 +192,6 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
             indexPos: figureObj.indexPos[0]
         }
         let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, 'image');
-        console.log("cccccccccccc", mediaElementsInContainer);
-        console.log("cccccccccccc22222222222", nearestElementObj);
-        console.log("ddddddddddddddd", slateFigures);
-        console.log("eeeeeeeeeeeeee", elementsList);
         if (nearestElementObj) {
             let index = elementsList[slateAncestorData.ancestor.entityUrn].findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
             elementsList[slateAncestorData.ancestor.entityUrn].splice(index + 1, 0, createdElementData);
@@ -210,9 +199,6 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
         } else {
             elementsList[slateAncestorData.ancestor.entityUrn].splice(0, 0, createdElementData);
             updateCreatedElementInAutonumberList('imagesList', elementsList, autoNumberedElementsObj, dispatch);
-            console.log("cccccccccccc", mediaElementsInContainer, nearestElementObj);
-            console.log("ddddddddddddddd", slateFigures);
-            console.log("eeeeeeeeeeeeee", elementsList);
         }
     }
 }

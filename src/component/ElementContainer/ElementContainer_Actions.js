@@ -520,7 +520,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             }
             let figureObj = slateFigures.find(figure => figure.contentUrn === createdElemData.data.contentUrn);
             elementsList = autoNumberedElementsObj.imagesList;
-            console.log("newly created figure object", figureObj);
             handleAutonumberingForElementsInContainers(newBodymatter, figureObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch);
         }
         /* let condition;

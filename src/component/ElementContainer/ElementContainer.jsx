@@ -418,12 +418,11 @@ class ElementContainer extends Component {
         if (previousElementData.figuretype !== 'tableasmarkup') {
             oldImage = this.props.oldFigureDataForCompare.path;
         }
-        if (this.props.isAutoNumberingEnabled) {
+        if (this.props.isAutoNumberingEnabled && (previousElementData.figuretype !== 'tableasmarkup')) {
             let isNumberDifferent = false;
             let imgNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
             if (overridedNumber) {
-                console.log("for check purpose", parseInt(overridedNumber) !== parseInt(numberHTML))
                 isNumberDifferent = parseInt(overridedNumber) !== parseInt(numberHTML);
             } else {
                 const figIndexParent = getContainerEntityUrn(this.props.currentSlateAncestorData);
@@ -433,9 +432,6 @@ class ElementContainer extends Component {
                 }
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-            console.log("1111111111111", titleHTML, previousElementData.displayedlabel)
-        console.log("222222222222", this.removeClassesFromHtml(subtitleHTML), this.removeClassesFromHtml(previousElementData.html.title))
-        console.log("333333333333", overridedNumber, imgNumberValue, numberHTML, isNumberDifferent);
             return (titleHTML !== previousElementData.displayedlabel ||
                 this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
