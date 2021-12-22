@@ -170,7 +170,7 @@ class ElementSingleAssessment extends Component {
             const { assessmentId } = this.state
             const newAssessmentData = assessmentReducer[assessmentId]
             const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.label === usageType)
-            if (newAssessmentData.intendedUsage && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
+            if (newAssessmentData?.intendedUsage.length>0 && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
                 this.setState({
                     changeUsageTypePopup: true,
                     updatedUsageType: usageType
