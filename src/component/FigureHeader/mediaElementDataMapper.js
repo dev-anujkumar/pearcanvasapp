@@ -17,7 +17,7 @@ export const mediaElementAPI_Handler = (params, projectContent, numberedElements
         autoNumberedElements,
         atContainerLevel
     } = params
-    config.atContainerLevel = atContainerLevel
+    // config.atContainerLevel = atContainerLevel
     if (projectContent['frontMatter']?.length > 0) {
         numberedElements = getContentInFMandBM(projectContent, 'frontMatter', numberedElements)
     }
@@ -158,7 +158,6 @@ const getImagesInsideSlates = (slateEntityUrn, slateData, bodyMatter, numberedEl
     //     const newBodyMatter = await getSlateLevelData(manifestURN, entityURN)
     //     bodyMatterToIterarte = await (newBodyMatter?.length > 0 ? newBodyMatter : bodyMatter)
     // }
-    console.log('bodyMatterToIterarte',bodyMatterToIterarte)
     if (bodyMatterToIterarte?.length > 0) {
         bodyMatterToIterarte?.forEach(element => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
