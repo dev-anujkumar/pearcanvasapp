@@ -53,7 +53,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
-    console.log("chal kya raha hai", isAutoNumberingEnabled, autoNumberOption);
+
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = titleHTML;

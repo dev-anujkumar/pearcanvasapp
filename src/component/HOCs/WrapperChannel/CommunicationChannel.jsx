@@ -810,7 +810,7 @@ function CommunicationChannel(WrappedComponent) {
                 isSubscribed: false,
                 owner: {}
             }
-            console.log('message.node',message.node)
+
             if (message?.node?.autoNumberingDetails) {
                 config.autoNumberingDetails = message.node.autoNumberingDetails
                 this.props.setTocContainersAutoNumberList(message.node.autoNumberingDetails)
