@@ -84,7 +84,7 @@ const getAllMediaElementInShowhide = (containerData, numberedElements) => {
                 numberedElements.push({ contentUrn: element.contentUrn, index: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype });
                 count++;
             } else if (element.type === 'element-aside') {
-                getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos])
+                getImagesInsideElement(containerBodyMatter(element), numberedElements, [...element.indexPos])
             }
         })
     }
@@ -97,20 +97,15 @@ const getAllMediaElementInShowhide = (containerData, numberedElements) => {
  * @returns 
  */
  const getAllMediaElementInMultiColumn = (containerData, numberedElements) => {
-    let count = 0;
     if (containerData?.groupeddata?.bodymatter?.length > 0) {
         containerData?.groupeddata?.bodymatter.forEach(colData => {
             if (colData?.groupdata?.bodymatter?.length > 0) {
                 colData?.groupdata?.bodymatter.forEach((element, index) => {
                     if (element.type === 'figure') {
-                        // containerData.indexPos.push(index)
-                        // element.indexPos = [...containerData.indexPos]
-                        numberedElements.push({ contentUrn: element.contentUrn, index: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype })
-                        count++;
+                        let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].index + 1 : 0;
+                        numberedElements.push({ contentUrn: element.contentUrn, index: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype });
                     } else if (element.type === 'showhide' || element.type === 'element-aside') {
-                        // containerData.indexPos.push(index)
-                        // element.indexPos = [...containerData.indexPos]
-                        getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos])
+                        getImagesInsideElement(containerBodyMatter(element), numberedElements, [...element.indexPos]);
                     }
                 })
             }

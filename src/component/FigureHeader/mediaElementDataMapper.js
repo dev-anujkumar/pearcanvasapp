@@ -297,7 +297,7 @@ const getMediaElementInMultiColumn = (slateEntityUrn, containerData, numberedEle
                             numberedElements = prepareElementList(element, numberedElements, slateEntityUrn)
                         } else if (element.type === 'container' || (Object.values(containerElements).indexOf(element.type) > -1)) {
                             element.parentDetails.push(element.contentUrn)
-                            numberedElements = getImagesInsideSlates(slateEntityUrn, {isSlate:false},containerBodyMatter(element), numberedElements, element.parentDetails) || numberedElements
+                            numberedElements = getImagesInsideSlates(slateEntityUrn, {isSlate:false},containerBodyMatter(element), numberedElements, containerData.parentDetails) || numberedElements
                         }
                     })
                 }
@@ -314,7 +314,7 @@ const getMediaElementInMultiColumn = (slateEntityUrn, containerData, numberedEle
  * @returns 
  */
 const getMediaElementInShowhide = (slateEntityUrn, containerData, numberedElements) => {
-    const showHideContent = containerBodyMatter(containerData)
+    const showHideContent = containerBodyMatter(containerData);
     if (showHideContent?.length > 0) {
         showHideContent.forEach(element => {
             element.parentDetails = containerData.parentDetails
