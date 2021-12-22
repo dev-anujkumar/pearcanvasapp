@@ -869,8 +869,8 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.fetchAudioNarrationForContainer(slateData)
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
-                // get data for auto-numbering
-                const mediaElement = ['IMAGE', 'AUDIO', 'VIDEO']
+                // get data for auto-numbering , 'AUDIO', 'VIDEO'
+                const mediaElement = ['IMAGE']
                 mediaElement.forEach(ele => {
                     this.props.fetchProjectFigures(ele)
                 })

@@ -31,7 +31,7 @@ export const fetchProjectFigures = (elementType) => (dispatch, getState) => {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(response => {
+    }).then(async response => {
         if (response?.data?.contents) {
             const projectContent = response.data.contents
             let numberedElements = {
@@ -42,7 +42,7 @@ export const fetchProjectFigures = (elementType) => (dispatch, getState) => {
                 videosList:[],
             }
             let oldAutoNumberedElements = getState().autoNumberReducer.autoNumberedElements
-            numberedElements = mediaElementAPI_Handler({elementType,autoNumberedElements: oldAutoNumberedElements}, projectContent, numberedElements);
+            numberedElements = await mediaElementAPI_Handler({elementType,autoNumberedElements: oldAutoNumberedElements}, projectContent, numberedElements);
             console.log('numberedElements>>>>', numberedElements)
             getAutoNumberSequence(numberedElements,dispatch)
             dispatch({
@@ -127,7 +127,7 @@ export const isAutoNumberEnabled = (flag) => dispatch => {
 }
 
 
-export const fetchContainerFigures = (containerEntityUrn) => dispatch => {
+export const fetchContainerFigures = (containerEntityUrn) => (dispatch,getState) => {
     axios.get(`${config.ASSET_POPOVER_ENDPOINT}v3/${config.projectUrn}/containers/${containerEntityUrn}/images`, {
         headers: {
             "ApiKey": config.STRUCTURE_APIKEY,
@@ -136,7 +136,16 @@ export const fetchContainerFigures = (containerEntityUrn) => dispatch => {
         }
     }).then(response => {
         if (response?.data?.contents) {
-
+            const projectContent = response.data.contents
+            let numberedElements = {
+                imagesList: [],
+                tablesList: [],
+                equationsList: [],
+                audiosList:[],
+                videosList:[],
+            }
+            let oldAutoNumberedElements = getState().autoNumberReducer.autoNumberedElements
+            numberedElements = mediaElementAPI_Handler({atContainerLevel:true,elementType:'IMAGE',autoNumberedElements: oldAutoNumberedElements}, projectContent, numberedElements);
         } else {
             dispatch({
                 type: UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
@@ -144,7 +153,7 @@ export const fetchContainerFigures = (containerEntityUrn) => dispatch => {
             });
         }
     }).catch(error => {
-        console.error('Error in fetching list of figures in the project>>>> ', error)
+        console.log('Error in fetching list of figures in the container>>>> ', error)
         dispatch({
             type: UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
             payload: {}
@@ -158,4 +167,22 @@ export const commonDispatch = (dispatch, type, payload) => {
         type: type,
         payload: payload
     });
+}
+
+
+export const getSlateLevelData = async (manifestURN, entityURN) => {
+
+    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`
+    await axios.get(apiUrl, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(async res => {
+        const slateData = Object.values(res.data)[0];
+        console.log('slateData',slateData)
+        return await slateData.contents.bodymatter
+    }).catch((err) => {
+        return []
+    })
 }

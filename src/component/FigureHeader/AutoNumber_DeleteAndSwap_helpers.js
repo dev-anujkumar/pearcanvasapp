@@ -20,8 +20,7 @@ export const handleAutoNumberingOnDelete = (params) => {
         contentUrn,
         getState,
         dispatch,
-        isAutoNumberingEnabled,
-        type
+        isAutoNumberingEnabled
     } = params
     const slateAncestors = getState().appStore.currentSlateAncestorData;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
