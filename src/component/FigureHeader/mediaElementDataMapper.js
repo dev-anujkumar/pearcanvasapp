@@ -247,12 +247,12 @@ const getMediaElementInMultiColumn = (slateEntityUrn, containerData, numberedEle
             if (colData.type === 'container') {
                 if (colData?.contents?.bodyMatter?.length > 0) {
                     colData?.contents?.bodyMatter.forEach(element => {
-                        element.parentDetails = containerData.parentDetails
+                        element.parentDetails = containerData.parentDetails;
                         if (element.type === 'figure') {
-                            numberedElements = prepareElementList(element, numberedElements, slateEntityUrn)
+                            numberedElements = prepareElementList(element, numberedElements, slateEntityUrn);
                         } else if (element.type === 'container') {
-                            element.parentDetails.push(element.contentUrn)
-                            numberedElements = getImagesInsideSlates(slateEntityUrn, containerBodyMatter(element), numberedElements, true, parentDetails) || numberedElements
+                            element.parentDetails.push(element.contentUrn);
+                            numberedElements = getImagesInsideSlates(slateEntityUrn, containerBodyMatter(element), numberedElements, true, containerData.parentDetails) || numberedElements;
                         }
                     })
                 }
@@ -269,15 +269,15 @@ const getMediaElementInMultiColumn = (slateEntityUrn, containerData, numberedEle
  * @returns 
  */
 const getMediaElementInShowhide = (slateEntityUrn, containerData, numberedElements) => {
-    const showHideContent = containerBodyMatter(containerData)
+    const showHideContent = containerBodyMatter(containerData);
     if (showHideContent?.length > 0) {
         showHideContent.forEach(element => {
-            element.parentDetails = containerData.parentDetails
+            element.parentDetails = containerData.parentDetails;
             if (element.type === 'figure') {
                 numberedElements = prepareElementList(element, numberedElements, slateEntityUrn)
             } else if (element.type === 'container') {
-                element.parentDetails.push(element.contentUrn)
-                numberedElements = getImagesInsideSlates(slateEntityUrn, containerBodyMatter(element), numberedElements, true, parentDetails) || numberedElements
+                element.parentDetails.push(element.contentUrn);
+                numberedElements = getImagesInsideSlates(slateEntityUrn, containerBodyMatter(element), numberedElements, true, containerData.parentDetails) || numberedElements;
             }
         })
     }
