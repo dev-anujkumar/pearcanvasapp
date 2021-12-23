@@ -430,7 +430,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item.indexPos = count;
                     count++;
                 });
-                let nearestElementObj = findNearestMediaElement(slateFigures, figureObj, 'image');
+                let nearestElementObj = findNearestMediaElement(slateFigures, figureObj, 'Figure');
 
                 if (nearestElementObj) {
                     let index = elementsList[slateAncestorData.ancestor.entityUrn].findIndex(x => x.contentUrn === nearestElementObj.contentUrn);

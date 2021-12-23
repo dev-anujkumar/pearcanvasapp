@@ -11,13 +11,13 @@ export const LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES = {
 export const autoNumber_KeyMapper = {
     'Figure': 'figureImageIndex',
     'Table': 'tableIndex',
-    'Equations': 'equationsIndex'
+    'Equation': 'equationsIndex'
 }
 
 export const autoNumber_KeyMapperElements = {
   'Figure': 'imagesList',
   'Table': 'property',
-  'Equations': 'equationsList'
+  'Equation': 'equationsList'
 }
 
 
@@ -28,6 +28,15 @@ export const autoNumber_IndexMapper = {
   'audiosList': 'audioIndex',
   'videosList': 'videoIndex'
 }
+
+export const autoNumber_ElementTypeKey = {
+  'Figure': 'imagesList',
+  'Table': 'tablesList',
+  'Equation': 'equationsList',
+  'Audio': 'audiosList',
+  'Video': 'videosList'
+}
+
 export const moduleTypes = ['module', 'appendix']
 export const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate', 'container-introduction']
 
@@ -82,7 +91,7 @@ export const DISPLAYED_LABELS = {
   VIDEO: "Video",
   IMAGE: "Figure",
   TABLE: "Table",
-  EQUATIONS: "Equations"
+  EQUATIONS: "Equation"
 }
 
 export const ELEMENT_TYPES = {
