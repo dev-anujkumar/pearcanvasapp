@@ -18,6 +18,7 @@ import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem,
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
+import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -345,6 +346,20 @@ function CommunicationChannel(WrappedComponent) {
                         }
                         this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
                     }
+                    break;
+                case 'ResetAutoNumberSequence':
+                    this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
+                    const slateAncestors = this.props?.currentSlateAncestorData
+                    const currentParentUrn = getContainerEntityUrn(slateAncestors)
+                    if (currentParentUrn === message.currentTocParentContainer) {
+                        this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
+                        // get data for auto-numbering , 'AUDIO', 'VIDEO'
+                        const mediaElement = ['IMAGE']
+                        mediaElement.forEach(ele => {
+                            this.props.fetchProjectFigures(ele)
+                        })
+                    }
+                    break;
             }
         }
 
@@ -812,7 +827,6 @@ function CommunicationChannel(WrappedComponent) {
             }
 
             if (message?.node?.autoNumberingDetails) {
-                config.autoNumberingDetails = message.node.autoNumberingDetails
                 this.props.setTocContainersAutoNumberList(message.node.autoNumberingDetails)
             }
             // reset owner slate popup flag on slate change
