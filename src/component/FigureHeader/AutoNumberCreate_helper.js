@@ -25,11 +25,11 @@ export const updateCreatedElementInAutonumberList = (mediaType, mediaList, autoN
     getAutoNumberSequence(autoNumberedElementsObj, dispatch)
 }
 
-export const findNearestMediaElement = (slateFigures, figureObj, elementType) => {
+export const findNearestMediaElement = (slateFigures, figureObj, elementType, index = '') => {
     let objToReturn = {};
-    let mainIndex = figureObj?.indexPos;
+    let mainIndex = figureObj.indexPos || index;
     for (let i = mainIndex - 1; i > -1; i--) {
-        if (slateFigures[i].figuretype === elementType) {
+        if (slateFigures[i].displayedlabel === elementType) {
             objToReturn = slateFigures[i];
             return objToReturn;
         }
@@ -163,7 +163,7 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
             ...figureObjInContainer,
             indexPos: indexPos
         }
-        let nearestElementObj = findNearestMediaElement(mediaElementsInContainer, figureObjInContainer, 'image');
+        let nearestElementObj = findNearestMediaElement(mediaElementsInContainer, figureObjInContainer, 'Figure');
         if (nearestElementObj) {
             if ((Object.keys(elementsList).length > 0) && slateAncestorData?.ancestor?.entityUrn && (Object.keys(elementsList).indexOf(slateAncestorData?.ancestor?.entityUrn) >-1)) {
                 let index = elementsList[slateAncestorData.ancestor.entityUrn].findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
@@ -177,7 +177,7 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
             }
             updateCreatedElementInAutonumberList('imagesList', elementsList, autoNumberedElementsObj, dispatch);
         } else {
-            let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, 'image');
+            let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, 'Figure');
             if (nearestElementObj) {
                 let index = elementsList[slateAncestorData.ancestor.entityUrn].findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
                 elementsList[slateAncestorData.ancestor.entityUrn].splice(index + 1, 0, createdElementData);

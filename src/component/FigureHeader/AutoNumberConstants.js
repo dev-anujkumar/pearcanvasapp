@@ -28,6 +28,15 @@ export const autoNumber_IndexMapper = {
   'audiosList': 'audioIndex',
   'videosList': 'videoIndex'
 }
+
+export const autoNumber_ElementTypeKey = {
+  'Figure': 'imagesList',
+  'Table': 'tablesList',
+  'Equation': 'equationsList',
+  'Audio': 'audiosList',
+  'Video': 'videosList'
+}
+
 export const moduleTypes = ['module', 'appendix']
 export const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate', 'container-introduction']
 

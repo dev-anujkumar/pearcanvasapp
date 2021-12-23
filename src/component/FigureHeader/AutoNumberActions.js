@@ -74,8 +74,7 @@ const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIn
 
 export const getAutoNumberSequence = (numberedElements, dispatch) => {
     let autoNumberElementsIndex = {}
-    autoNumberElementsIndex = setAutoNumberSequenceForElements(numberedElements, autoNumberElementsIndex)
-    console.log('autoNumberElementsIndex', autoNumberElementsIndex)
+    autoNumberElementsIndex = setAutoNumberSequenceForElements(numberedElements, autoNumberElementsIndex);
     dispatch({
         type: SET_AUTO_NUMBER_SEQUENCE,
         payload: {
@@ -121,7 +120,8 @@ export const isAutoNumberEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: SET_AUTO_NUMBER_TOGGLE,
         payload: {
-            isAutoNumberingEnabled: flag && configValue
+            // isAutoNumberingEnabled: flag && configValue
+            isAutoNumberingEnabled: flag
         }
     });
 }

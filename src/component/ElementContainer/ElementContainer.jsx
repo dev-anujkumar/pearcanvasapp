@@ -72,7 +72,7 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
-import { getOverridedNumberValue, getContainerEntityUrn, getNumberData } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -419,6 +419,9 @@ class ElementContainer extends Component {
             oldImage = this.props.oldFigureDataForCompare.path;
         }
         if (this.props.isAutoNumberingEnabled && (previousElementData.figuretype !== 'tableasmarkup')) {
+            if (titleHTML !== previousElementData.displayedlabel) {
+                this.props.updateAutonumberingOnElementTypeUpdate(titleHTML, previousElementData, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+            }
             let isNumberDifferent = false;
             let imgNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
@@ -2411,6 +2414,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateAsideNumber: (previousElementData, index) => {
             dispatch(updateAsideNumber(previousElementData, index))
+        },
+        updateAutonumberingOnElementTypeUpdate: (titleHTML, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
+            dispatch(updateAutonumberingOnElementTypeUpdate(titleHTML, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData))
         }
     }
 }
@@ -2452,6 +2458,9 @@ const mapStateToProps = (state) => {
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         autoNumberOption: state.autoNumberReducer.autoNumberOption,
         autoNumberElementsIndex: state.autoNumberReducer.autoNumberElementsIndex,
+        autoNumberedElements: state.autoNumberReducer.autoNumberedElements,
+        currentSlateAncestorData: state.appStore.currentSlateAncestorData,
+        slateLevelData: state.appStore.slateLevelData
     }
 }
 
