@@ -12,9 +12,6 @@ const KeyboardUpDown = (props) => {
             dispatch(selectElement(element.id));
             const childElement = element.childNodes[1];
             childElement.click();
-            // childElement.scrollIntoView();
-
-
         }
     }
     const handleKeyDown = (event) => {
