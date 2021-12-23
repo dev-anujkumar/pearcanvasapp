@@ -86,7 +86,7 @@ export const setAutonumberingValuesForPayload = (autoNumberOption, titleHTML, nu
         case AUTO_NUMBER_SETTING_RESUME_NUMBER:
             objToReturn = {
                 numberedandlabel : true,
-                manualoverride : { "resumenumbervalue": numberHTML }
+                manualoverride : { "resumenumbervalue": parseInt(numberHTML) }
             }
             break;
         case AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER:
@@ -237,6 +237,7 @@ export const prepareAutoNumberList = (imagesData) => {
                 } else if (activeItem?.[MANUAL_OVERRIDE]?.[OVERRIDE_NUMBER_VALUE]) {
                     numberValue = activeItem[MANUAL_OVERRIDE][OVERRIDE_NUMBER_VALUE];
                 } else if (activeItem?.[MANUAL_OVERRIDE]?.[RESUME_NUMBER_VALUE]) {
+                    numberValue = activeItem[MANUAL_OVERRIDE][RESUME_NUMBER_VALUE];
                     count = activeItem[MANUAL_OVERRIDE][RESUME_NUMBER_VALUE];
                 } else {
                     numberValue = ++count
@@ -312,4 +313,39 @@ export const updateAutonumberingOnElementTypeUpdate = (newLabel, element, autoNu
         payload: autoNumberedElements
     });
     getAutoNumberSequence(autoNumberedElements, dispatch);
+}
+
+export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements, currentSlateAncestorData) => (dispatch) => {
+    const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
+    if (figureParentEntityUrn && updatedData?.contentUrn && autoNumberedElements) {
+        for (let labelType in autoNumberedElements) {
+            if (autoNumberedElements[labelType]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[labelType][figureParentEntityUrn]) {
+                let index = autoNumberedElements[labelType][figureParentEntityUrn].findIndex(element => element.contentUrn === updatedData.contentUrn);
+                if (index > -1) {
+                    let figureObj = autoNumberedElements[labelType][figureParentEntityUrn][index];
+                    if (updatedData.hasOwnProperty(MANUAL_OVERRIDE) && updatedData[MANUAL_OVERRIDE] !== undefined && Object.keys(updatedData[MANUAL_OVERRIDE])?.length > 0) {
+                        figureObj = {
+                            ...figureObj,
+                            manualoverride: updatedData[MANUAL_OVERRIDE],
+                            numberedandlabel: updatedData[NUMBERED_AND_LABEL]
+                        }
+                    } else {
+                        figureObj = {
+                            ...figureObj,
+                            numberedandlabel: updatedData[NUMBERED_AND_LABEL]
+                        }
+                    }
+                    autoNumberedElements[labelType][figureParentEntityUrn][index] = figureObj;
+                }
+                break;
+            }
+        }
+    }
+    dispatch({
+        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+        payload: {
+            autoNumberedElements
+        }
+    });
+    getAutoNumberSequence(autoNumberedElements, dispatch)
 }

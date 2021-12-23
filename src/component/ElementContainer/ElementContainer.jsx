@@ -72,7 +72,7 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
-import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore } from '../FigureHeader/AutoNumber_helperFunctions';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -425,6 +425,9 @@ class ElementContainer extends Component {
             let isNumberDifferent = false;
             let imgNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
+            if (typeof(numberHTML) === 'string' && numberHTML.indexOf('.') !== -1) {
+                numberHTML = numberHTML.split('.')[1];
+            }
             if (overridedNumber) {
                 isNumberDifferent = parseInt(overridedNumber) !== parseInt(numberHTML);
             } else {
@@ -795,10 +798,13 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props.autoNumberOption)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props.autoNumberOption);
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
+                            if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && this.props.isAutoNumberingEnabled) {
+                                this.props.updateAutonumberingKeysInStore(dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData);
+                            }
                         }
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
@@ -2417,6 +2423,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateAutonumberingOnElementTypeUpdate: (titleHTML, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
             dispatch(updateAutonumberingOnElementTypeUpdate(titleHTML, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData))
+        },
+        updateAutonumberingKeysInStore: (dataToSend, autoNumberedElements, currentSlateAncestorData) => {
+            dispatch(updateAutonumberingKeysInStore(dataToSend, autoNumberedElements, currentSlateAncestorData))
         }
     }
 }

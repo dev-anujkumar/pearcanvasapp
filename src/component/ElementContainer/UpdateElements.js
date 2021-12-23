@@ -58,6 +58,9 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     let manualoverride = {};
     let displayedlabel = titleHTML;
     if (isAutoNumberingEnabled) {
+        if (typeof(numberHTML) === 'string' && numberHTML.indexOf('.') !== -1) {
+            numberHTML = numberHTML.split('.')[1];
+        }
         let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
@@ -83,6 +86,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     }  
 
     previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
+    previousElementData.hasOwnProperty('indexPos') ? delete previousElementData.indexPos : previousElementData;  // Key added for autonumbering
 
     let data = {
         ...previousElementData,
