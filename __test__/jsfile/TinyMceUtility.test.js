@@ -3,6 +3,7 @@ import * as tinyMceFn from '../../src/js/TinyMceUtility.js';
 import config from '../../src/config/config';
 import tinymce from 'tinymce/tinymce';
 import axios from 'axios';
+import configureStore from 'redux-mock-store';
 /**************************Declare Common Variables**************************/
 let mockQuerySelector = (selector) => {
     switch (selector) {
@@ -291,6 +292,48 @@ describe('Testing TinyMceUtility', () => {
         const spyFunc = jest.spyOn(tinyMceFn, 'dataFromAlfresco');
         tinyMceFn.dataFromAlfresco (data, mockEditor2);
         expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    });
+    it('Test - dataFromAlfresco  - when other asset type is selected Action is dispatched', () => {
+        const initialState = {}
+        const middlewares = []
+        const mockStore = configureStore(middlewares);
+        const store = mockStore(initialState);
+        let mockEditor2 = {
+            selection: {
+                setContent: () => { }
+            },
+            insertContent: () => { },
+            targetElm: { classList: { remove: () => { } }, querySelector:()=>{return {outerHTML:""}} }
+        };
+        let data = {
+            epsUrl:"iamge.mp3",            
+            id: "testid",
+            properties:{
+                "cplg:altText":"Alt Text",
+                'cplg:longDescription':"longDescription"
+            },
+            content:{mimeType: "mp3"}
+        };
+        const spyFunc = jest.spyOn(tinyMceFn, 'dataFromAlfresco');
+        const expectedPayload = {
+            type: 'MULTIPLE_LINE_POETRY_ERROR_POPUP',
+            payload: {
+                show: true,
+                message: 'Only Image Type Assets can be added as Inline Image!'
+            }
+        };
+        tinyMceFn.dataFromAlfresco(data, mockEditor2);
+        store.dispatch({
+            type: 'MULTIPLE_LINE_POETRY_ERROR_POPUP',
+            payload: {
+                show: true,
+                message: 'Only Image Type Assets can be added as Inline Image!'
+            }
+        });
+        const actions = store.getActions();
+        expect(spyFunc).toHaveBeenCalled();
+        expect(actions).toEqual([expectedPayload]);
         spyFunc.mockClear();
     });
     it('Test - checkForDataIdAttribute', () => {
