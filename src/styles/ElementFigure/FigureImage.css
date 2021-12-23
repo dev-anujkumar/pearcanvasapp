@@ -911,3 +911,8 @@ th ol li.listItemNumeroUnoNone:before {
     padding: 0 !important;
     font-size: 13px !important;
 }
+
+.figureNumber.disable-number-field{
+    border: none !important;
+    pointer-events: none;
+}

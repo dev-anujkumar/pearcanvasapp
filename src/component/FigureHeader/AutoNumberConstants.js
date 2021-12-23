@@ -3,9 +3,9 @@ export const autoNumberElementsAllowed = ['figure']
 export const LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES = {
     AUTO_NUMBER_SETTING_DEFAULT: 'Default Auto-number',
     AUTO_NUMBER_SETTING_RESUME_NUMBER: 'Resume numbering with',
-    AUTO_NUMBER_SETTING_REMOVE_NUMBER: 'Remove lable & number',
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER: 'Remove label & number',
     AUTO_NUMBER_SETTING_OVERRIDE_NUMBER: 'Override number only',
-    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER: 'Override lable & number'
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER: 'Override label & number'
 }
 
 export const autoNumber_KeyMapper = {
