@@ -117,11 +117,11 @@ export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch
     });
 }
 
-export const isAutoNumberEnabled = (flag) => dispatch => {
+export const isAutoNumberEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: SET_AUTO_NUMBER_TOGGLE,
         payload: {
-            isAutoNumberingEnabled: flag && config.ENABLE_AUTO_NUMBER_CONTENT
+            isAutoNumberingEnabled: flag && configValue
         }
     });
 }

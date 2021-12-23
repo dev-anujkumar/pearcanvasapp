@@ -91,8 +91,7 @@ let cypressConfig = {
     tcmslatemanifest:"",
     saveElmOnAS: false,
     fullName:'c5test01',
-    isCypressPlusEnabled:true,
-    ENABLE_AUTO_NUMBER_CONTENT: false
+    isCypressPlusEnabled:true
 }
 
 

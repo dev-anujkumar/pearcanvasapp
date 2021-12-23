@@ -434,14 +434,15 @@ class FigureImage extends Component {
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = isAutoNumberingEnabled ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
-
-        if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
-            figureLabelFromApi = figureLabelFromApi.toLowerCase();
-            figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
-        } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
-            figureLabelValue = 'No Label';
-        } else if (figureLabelFromApi !== '' && figureLabelValue === 'Custom') {
-            figureLabelValue = 'Custom';
+        if(!(isAutoNumberingEnabled)){
+            if (dropdownData.indexOf(figureLabelFromApi?.toLowerCase()) > -1) {
+                figureLabelFromApi = figureLabelFromApi?.toLowerCase();
+                figureLabelValue = figureLabelFromApi.charAt(0)?.toUpperCase() + figureLabelFromApi?.slice(1);
+            } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
+                figureLabelValue = 'No Label';
+            } else if (figureLabelFromApi !== '' && figureLabelValue === 'Custom') {
+                figureLabelValue = 'Custom';
+            }
         }
         let imgWidth = ''
         let imgHeight = ''

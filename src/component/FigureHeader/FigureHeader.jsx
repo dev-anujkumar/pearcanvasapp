@@ -145,17 +145,8 @@ export const FigureHeader = (props) => {
         if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.remove('transition-none');
         }
-        // BG-5081 fixes
-        // if (id === '0-0' && labelElement?.innerHTML) {
-        //     let dropdownData = convertOptionsToLowercase(figureLabelData);
-        //     if (dropdownData.indexOf(labelElement?.innerHTML.toLowerCase()) > -1) {
-        //         let figureLabelVal = figureLabelValue;
-        //         let labelElementText = labelElement?.innerHTML.toLowerCase();
-        //         figureLabelVal = labelElementText.charAt(0).toUpperCase() + labelElementText.slice(1);
-        //         setFigureLabelValue(figureLabelVal)
-        //     }
-        // }
     }
+
     const { figureHtmlData, previewClass, figLabelClass, figTitleClass } = props
     const containerNumber = getContainerNumber(slateAncestors, props.autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
@@ -163,6 +154,7 @@ export const FigureHeader = (props) => {
     const parentNumber = containerNumber
     let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })
+    imgNumberValue = imgNumberValue?.toString()
     return (
         <>
             <header className="figure-header new-figure-image-header">
