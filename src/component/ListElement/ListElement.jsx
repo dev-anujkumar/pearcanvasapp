@@ -63,7 +63,7 @@ export class ListElement extends Component {
                         saveContent={this.listWarningConfirmation}
                     />
                 }
-                <KeyboardWrapper index={this.props.index}>
+                <KeyboardWrapper enable index={this.props.index}>
                     <TinyMceEditor
                         openAssetPopoverPopUp={this.props.openAssetPopoverPopUp}
                         openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
