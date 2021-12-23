@@ -63,24 +63,7 @@ export const FigureHeader = (props) => {
     useOutsideAlerter(settingDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
     const labelDropdownWrapperRef = useRef(null);
     useOutsideAlerter(labelDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
-    // const updateDropdownOptions = () => {
-    //     let figureLabelDropdownVal = [];
-    //     switch (props.model.figuretype) {
-    //         case AUDIO:
-    //             figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Audio'] : props.figureDropdownData.audio;
-    //             break;
-    //         case VIDEO:
-    //             figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Video'] : props.figureDropdownData.video;
-    //             break;
-    //         case IMAGE: case TABLE: case MATH_IMAGE:
-    //             figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Figure', 'Table', 'Equation'] : props.figureDropdownData.video;
-    //             break;
-    //         default:
-    //             figureLabelDropdownVal = [];
-    //             break;
-    //     }
-    //     setFigureLabelData(figureLabelDropdownVal)
-    // }
+
     useEffect(() => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
         setLabelNumberSetting(dropdownVal)
