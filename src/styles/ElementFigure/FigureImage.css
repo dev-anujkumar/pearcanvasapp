@@ -907,6 +907,7 @@ th ol li.listItemNumeroUnoNone:before {
     margin: 0 12px;
 }
 .figure-preview textarea {
+    height: max-content !important;;
     padding: 0 !important;
-    font-size: 13px;
+    font-size: 13px !important;
 }
