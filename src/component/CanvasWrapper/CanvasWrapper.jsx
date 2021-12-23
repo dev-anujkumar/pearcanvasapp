@@ -273,7 +273,8 @@ const mapStateToProps = state => {
         markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
         markedIndexValue: state.markedIndexReducer.markedIndexValue,
         markedIndexGlossary: state.markedIndexReducer.markedIndexGlossary,
-        alfrescoReducer: state.alfrescoReducer
+        alfrescoReducer: state.alfrescoReducer,
+        currentSlateAncestorData: state.appStore.currentSlateAncestorData
     };
 };
 

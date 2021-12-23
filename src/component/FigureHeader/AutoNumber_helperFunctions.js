@@ -142,7 +142,7 @@ export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
             return 'B'
         default:
             if (autoNumberingDetails?.partOrderList?.hasOwnProperty(containerEntityUrn)) {
-                const partNumber = autoNumberingDetails?.partOrderList[partEntityUrn]
+                const partNumber = autoNumberingDetails?.partOrderList[containerEntityUrn]
                 return partNumber ? `P${partNumber}` : 'P'
             }
             else {
