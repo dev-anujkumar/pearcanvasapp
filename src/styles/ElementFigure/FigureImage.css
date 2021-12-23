@@ -894,3 +894,19 @@ th ol li.listItemNumeroUnoNone:before {
 .label-color-change {
     color: #005a70 !important;
 }
+.figure-preview div.MuiFilledInput-multiline {
+    padding: 15px !important;
+    margin: 5px 0px 10px 0px;
+}
+.figure-preview .MuiFilledInput-underline.Mui-disabled:before {
+    border-bottom-style: none;
+}
+
+.preview label{
+    color: #737373;
+    margin: 0 12px;
+}
+.figure-preview textarea {
+    padding: 0 !important;
+    font-size: 13px;
+}

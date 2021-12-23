@@ -35,7 +35,7 @@ export const setAutoNumberSettingValue = (element) => {
         return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_REMOVE_NUMBER
     }
     else if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
-        if (element.hasOwnProperty(MANUAL_OVERRIDE) && Object.keys(element[MANUAL_OVERRIDE])?.length > 0) {
+        if (element.hasOwnProperty(MANUAL_OVERRIDE) && element[MANUAL_OVERRIDE] !== undefined && Object.keys(element[MANUAL_OVERRIDE])?.length > 0) {
             if (element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_NUMBER_VALUE) && element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_LABEL_VALUE)) {
                 return LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
             } else if (element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_NUMBER_VALUE)) {
@@ -59,7 +59,7 @@ export const getOverridedNumberValue = (element) => {
         return undefined;
     }
     else if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
-        if (element.hasOwnProperty(MANUAL_OVERRIDE) && Object.keys(element[MANUAL_OVERRIDE])?.length > 0) {
+        if (element.hasOwnProperty(MANUAL_OVERRIDE) && element[MANUAL_OVERRIDE] !== undefined && Object.keys(element[MANUAL_OVERRIDE])?.length > 0) {
             if (element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_NUMBER_VALUE)) {
                 return element[MANUAL_OVERRIDE][OVERRIDE_NUMBER_VALUE];
             } else if (element[MANUAL_OVERRIDE].hasOwnProperty()) {
@@ -195,7 +195,7 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, containerNum
         elementLabel = ""
     }
     else if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
-        if (element.hasOwnProperty(MANUAL_OVERRIDE) && Object.keys(element[MANUAL_OVERRIDE])?.length > 0) {
+        if (element.hasOwnProperty(MANUAL_OVERRIDE) && element[MANUAL_OVERRIDE] !== undefined && Object.keys(element[MANUAL_OVERRIDE])?.length > 0) {
             if (element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_NUMBER_VALUE) && element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_LABEL_VALUE)) {
                 elementLabel = element[MANUAL_OVERRIDE].overridelabelvalue
             } else if ((element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_NUMBER_VALUE)) || (element[MANUAL_OVERRIDE].hasOwnProperty(RESUME_NUMBER_VALUE))) {

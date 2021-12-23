@@ -2,7 +2,7 @@
 export const autoNumberElementsAllowed = ['figure']
 export const LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES = {
     AUTO_NUMBER_SETTING_DEFAULT: 'Default Auto-number',
-    AUTO_NUMBER_SETTING_RESUME_NUMBER: 'Resume numbernig with',
+    AUTO_NUMBER_SETTING_RESUME_NUMBER: 'Resume numbering with',
     AUTO_NUMBER_SETTING_REMOVE_NUMBER: 'Remove lable & number',
     AUTO_NUMBER_SETTING_OVERRIDE_NUMBER: 'Override number only',
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER: 'Override lable & number'
@@ -11,13 +11,13 @@ export const LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES = {
 export const autoNumber_KeyMapper = {
     'Figure': 'figureImageIndex',
     'Table': 'tableIndex',
-    'Equations': 'equationsIndex'
+    'Equation': 'equationsIndex'
 }
 
 export const autoNumber_KeyMapperElements = {
   'Figure': 'imagesList',
   'Table': 'property',
-  'Equations': 'equationsList'
+  'Equation': 'equationsList'
 }
 
 
@@ -82,7 +82,7 @@ export const DISPLAYED_LABELS = {
   VIDEO: "Video",
   IMAGE: "Figure",
   TABLE: "Table",
-  EQUATIONS: "Equations"
+  EQUATIONS: "Equation"
 }
 
 export const ELEMENT_TYPES = {

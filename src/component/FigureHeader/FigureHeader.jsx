@@ -3,7 +3,6 @@
 */
 import React, { useRef, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useSelector } from 'react-redux';
 import config from '../../config/config';
 import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
@@ -12,7 +11,7 @@ import dropdown_arrow_icon from '../../images/FigureHeader/dropdown-arrow.svg';
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
-import { labelHtmlData } from '../../constants/Element_Constants';
+import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 
@@ -59,24 +58,33 @@ export const FigureHeader = (props) => {
     const [labelNumberSettingDropDown, setLabelNumberSettingDropDown] = useState(false);
     const [showLabelField, setShowLabelField] = useState(true);
     const [showNumberField, setShowNumberField] = useState(true);
-    const [state, setState] = useState({
-        slateAncestors: props.currentSlateAncestorData || {},
-        figureLabelData: ['Figure', 'Table', 'Equation'],
-        figureLabelValue: props.model?.displayedLabel ?? 'Figure',
-        labelNumberSetting: null,
-        labelDropDown: false,
-        labelNumberSettingDropDown: false,
-        showLabelField: true,
-        showNumberField: true
-    });
+
     const settingDropdownWrapperRef = useRef(null);
     useOutsideAlerter(settingDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
     const labelDropdownWrapperRef = useRef(null);
     useOutsideAlerter(labelDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
-
+    // const updateDropdownOptions = () => {
+    //     let figureLabelDropdownVal = [];
+    //     switch (props.model.figuretype) {
+    //         case AUDIO:
+    //             figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Audio'] : props.figureDropdownData.audio;
+    //             break;
+    //         case VIDEO:
+    //             figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Video'] : props.figureDropdownData.video;
+    //             break;
+    //         case IMAGE: case TABLE: case MATH_IMAGE:
+    //             figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Figure', 'Table', 'Equation'] : props.figureDropdownData.video;
+    //             break;
+    //         default:
+    //             figureLabelDropdownVal = [];
+    //             break;
+    //     }
+    //     setFigureLabelData(figureLabelDropdownVal)
+    // }
     useEffect(() => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
         setLabelNumberSetting(dropdownVal)
+        // updateDropdownOptions()
     }, [])
     useEffect(() => {
         if (props.activeElement.elementId === props.model.id) {
@@ -154,7 +162,7 @@ export const FigureHeader = (props) => {
     const parentNumber = containerNumber
     let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })
-    imgNumberValue = `${parentNumber}.${imgNumberValue?.toString()}`
+    imgNumberValue = `${imgNumberValue?.toString()}`
     return (
         <>
             <header className="figure-header new-figure-image-header">
@@ -215,9 +223,7 @@ export const FigureHeader = (props) => {
             </header>
             <div className="preview">
                 <label className={"transition-none"}>Preview</label>
-                <form className={previewClass} noValidate autoComplete="off" >
-                    <TextField id="filled-full-width" label="" placeholder="" multiline variant="filled" value={previewData} fullWidth />
-                </form>
+                <TextField disabled id="filled-disabled" className={"figure-preview"} variant="filled" placeholder="" defaultValue="" multiline value={previewData} fullWidth />
             </div>
             <div className="floating-title-group">
                 <TinyMceEditor onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
