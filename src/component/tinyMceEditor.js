@@ -1188,24 +1188,79 @@ export class TinyMceEditor extends Component {
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
             
-            const textLength = tinymce?.activeEditor?.selection?.getNode()?.textContent?.length;
-            const cursorLength = window.getSelection().anchorOffset;
-            if(e.keyCode === 38) {
-                if(cursorLength === 0) {
-                    e.preventDefault();
+            // get current node
+            // get innertext of current node
+            // check if current node has next element
+            // if current node has next element and down is press
+            // do nothing
+            // if current node does not have next element
+            // and cursor length is qual to 
+            const currentSelection = tinymce?.activeEditor?.selection;
+            const currentSelectedNode = currentSelection?.getNode();
+
+             const parentClass = currentSelectedNode.classList;
+            //  console.log("Parent class", parentClass);
+             if(parentClass.contains("paragraphNumeroUno") || parentClass.contains("pullQuoteNumeroUno") || parentClass.contains("listItemNumeroUnoBullet") || parentClass.contains("heading2learningObjectiveItem")) {
+                 const windowSelection = window.getSelection().anchorOffset;
+                 const selectionText = tinymce?.activeEditor?.selection?.getNode()?.textContent;
+                 const innerHtml = currentSelectedNode.innerText;
+                //  console.log("Selection is 00", selectionText, " inner html ", innerHtml);
+                //  console.log("windowSelection is 00", windowSelection, " inner html ", selectionText.length);
+                if(windowSelection === 0 && e.keyCode === 38) {
+                    
+                    // check if text content matches with starting of inner html
+                    // if yes: prevent default
+                    // if no : stop propogation
+                    // console.log("Inner html ", innerHtml, " Selection ", selectionText)
+                    if(innerHtml.startsWith(selectionText)) {
+                        // console.log("start matched");
+                        e.preventDefault()
+                    }
+                    else {
+                        e.stopPropagation()
+                    }
+                }
+                else if (windowSelection === selectionText.length && e.keyCode === 40) {
+                    
+                    // console.log("Inner html 2 ", innerHtml, " Selection ", selectionText)
+                    if(innerHtml.endsWith(selectionText)) {
+                        // console.log("last matched");
+                        e.preventDefault()
+                    }
+                    else {
+                        e.stopPropagation()
+                    }
+                    // check if text matches the end of inner html
+                    // if yes : prevent default
+                    // if no : stop propogation
                 }
                 else {
                     e.stopPropagation();
                 }
-            }
-            if(e.keyCode === 40) {
-                if(cursorLength === textLength) {
+
+                // selection is inside text;
+             }
+             else {
+                 // selection is in other elements
+                //  console.log("Seleciton is in other elements", currentSelectedNode.parentNode);
+                const parent = currentSelectedNode.parentNode;
+                const parentHTML = parent.innerText;
+                const childHTML = currentSelectedNode.innerText;
+                // console.log("Parent ",parentHTML , "child innder html ", childHTML, " ", e.keyCode);
+                
+                if(parentHTML.endsWith(childHTML) && e.keyCode === 40) {
+                    e.preventDefault();
+                }
+                else if (parentHTML.startsWith(childHTML) && e.keyCode === 38){
+                    // move to previous element
                     e.preventDefault();
                 }
                 else {
+                    // do normal flow
                     e.stopPropagation();
                 }
-            }
+             }
+            
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
             if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                 const keyCode = e.keyCode || e.which;

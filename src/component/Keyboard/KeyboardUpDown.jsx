@@ -38,7 +38,6 @@ const KeyboardUpDown = (props) => {
     useEffect(() => {
         keyboardUpDown.current.addEventListener('keydown', handleKeyDown);
         return () => {
-
             keyboardUpDown.current.removeEventListener('keydown', handleKeyDown);
         }
     }, [activeElement]);
