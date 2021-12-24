@@ -164,19 +164,19 @@ class ElementSingleAssessment extends Component {
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
         const isElmLearnosity = (this.state.elementType == PUF || this.state.elementType == LEARNOSITY) ? true : false
-        if (isElmLearnosity && this.state.assessmentId) {
+        if (isElmLearnosity && this.state.assessmentId && this.state.activeAsseessmentUsageType !== usageType) {
             let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
             const { assessmentReducer } = this.props;
             const { assessmentId } = this.state
             const newAssessmentData = assessmentReducer[assessmentId]
             const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.label === usageType)
-            if (newAssessmentData.intendedUsage && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
+            if (newAssessmentData?.intendedUsage.length>0 && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
                 this.setState({
                     changeUsageTypePopup: true,
                     updatedUsageType: usageType
                 });
             }
-            else {
+            else if (this.state.activeAsseessmentUsageType !== usageType) {
                 this.setChangeUsageType(usageType)
             }
         }
