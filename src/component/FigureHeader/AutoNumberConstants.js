@@ -11,13 +11,17 @@ export const LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES = {
 export const autoNumber_KeyMapper = {
     'Figure': 'figureImageIndex',
     'Table': 'tableIndex',
-    'Equation': 'equationsIndex'
+    'Equation': 'equationsIndex',
+    'Audio': 'audioIndex',
+    'Video': 'videoIndex'
 }
 
 export const autoNumber_KeyMapperElements = {
   'Figure': 'imagesList',
   'Table': 'property',
-  'Equation': 'equationsList'
+  'Equation': 'equationsList',
+  'Audio': 'audiosList',
+  'Video': 'videosList'
 }
 
 

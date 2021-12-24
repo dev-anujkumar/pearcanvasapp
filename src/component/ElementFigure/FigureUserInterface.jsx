@@ -25,7 +25,7 @@ import { add } from 'lodash';
 import RoundedButton from './Rounded_Button.jsx';
 import approvedIcon from './Assets/approved.svg';
 import unApprovedIcon from './Assets/unapproved.svg';
-
+import FigureHeader from '../FigureHeader/FigureHeader.jsx';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
@@ -52,7 +52,7 @@ class FigureUserInterface extends Component {
             })
         })
         this.updateDropdownOptions();
-        let figureHtmlData = getLabelNumberTitleHTML(this.props.element);
+        let figureHtmlData = this.checkForAutoNumberedContent(this.props.element) ? { formattedLabel: `<p>${this.props.element?.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.element);
         let figureLabelValue = this.state;
         figureLabelValue = dropdownValueAtIntialize(this.state.figureLabelData, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
@@ -63,6 +63,12 @@ class FigureUserInterface extends Component {
         }
     }
 
+    checkForAutoNumberedContent = (currentElement) =>{
+        if((currentElement?.figuretype === 'audio' || currentElement?.figuretype === 'video') && this.props?.isAutoNumberingEnabled){
+            return true
+        }
+        return false
+    }
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.handleClickOutside);
     }
@@ -77,10 +83,10 @@ class FigureUserInterface extends Component {
         let figureLabelData = [];
         switch (this.props.element.figuretype) {
             case AUDIO:
-                figureLabelData = this.props.figureDropdownData.audio;
+                figureLabelData = this.checkForAutoNumberedContent(this.props.element) ? ['Audio'] : this.props.figureDropdownData.audio;
                 break;
             case VIDEO:
-                figureLabelData = this.props.figureDropdownData.video;
+                figureLabelData = this.checkForAutoNumberedContent(this.props.element) ? ['Video'] : this.props.figureDropdownData.video;
                 break;
             case INTERACTIVE:
                 figureLabelData = this.props.figureDropdownData.smartlinks;
@@ -376,21 +382,22 @@ class FigureUserInterface extends Component {
     }
 
     render() {
-        const { element, permissions, openGlossaryFootnotePopUp, handleFocus, handleBlur, index, slateLockInfo, glossaryFootnoteValue, glossaaryFootnotePopup, elementId, alfrescoSite } = this.props;
+        const { element, permissions, openGlossaryFootnotePopUp, handleFocus, handleBlur, index, slateLockInfo, glossaryFootnoteValue, glossaaryFootnotePopup, elementId, alfrescoSite, isAutoNumberingEnabled } = this.props;
         let figureHtmlData = getLabelNumberTitleHTML(element);
         let { figureLabelValue } = this.state;
-        let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
+        let figureLabelFromApi = isAutoNumberingEnabled ? this.props.element.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
+        // let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
-        
-        if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
-            figureLabelFromApi = figureLabelFromApi.toLowerCase();
-            figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
-        } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
-            figureLabelValue = 'No Label';
-        } else if ((figureLabelFromApi !== '' && figureLabelValue === 'Custom') || (dropdownData.length === 0 && figureLabelFromApi !== '')) {
-            figureLabelValue = 'Custom';
+        if (!(this.checkForAutoNumberedContent(this.props.element))) {
+            if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
+                figureLabelFromApi = figureLabelFromApi.toLowerCase();
+                figureLabelValue = figureLabelFromApi.charAt(0).toUpperCase() + figureLabelFromApi.slice(1);
+            } else if (figureLabelFromApi === '' && figureLabelValue === 'No Label') {
+                figureLabelValue = 'No Label';
+            } else if ((figureLabelFromApi !== '' && figureLabelValue === 'Custom') || (dropdownData.length === 0 && figureLabelFromApi !== '')) {
+                figureLabelValue = 'Custom';
+            }
         }
-
         let divClass, figureClass, figLabelClass, figNumberClass, figTitleClass, dataType, captionDivClass, figCaptionClass, figCreditClass, id, imageDimension, hyperlinkClass;
         switch (element.figuretype) {
             case AUDIO:
@@ -469,7 +476,15 @@ class FigureUserInterface extends Component {
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
-                            <header className="figure-header new-figure-image-header">
+                            {this.checkForAutoNumberedContent(this.props.element) ?
+                                <FigureHeader
+                                    {...this.props}
+                                    model={this.props.element}
+                                    figureHtmlData={figureHtmlData}
+                                    previewClass={""}
+                                    figLabelClass={figLabelClass}
+                                    figTitleClass={figTitleClass}
+                                /> : <><header className="figure-header new-figure-image-header">
 
                                 <div className='figure-label-field'>
                                     <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
@@ -510,10 +525,10 @@ class FigureUserInterface extends Component {
                                 </div>
 
                             </header>
-                            <div className="floating-title-group">
-                                <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass} model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
-                                <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
-                            </div>
+                                <div className="floating-title-group">
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass} model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                                </div></>}
                             {
                                 element.figuretype === INTERACTIVE && imageDimension === '' ?
                                     <div>
@@ -567,6 +582,8 @@ const mapStateToProps = (state) => {
     return {
         figureDropdownData: state.appStore.figureDropdownData,
         assessmentReducer: state.assessmentReducer,
+        slateAncestors: state.appStore.currentSlateAncestorData,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled
     }
 }
 

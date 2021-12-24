@@ -22,7 +22,7 @@ import { checkContainerElementVersion, fetchManifestStatus, prepareSnapshots_Sho
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
-
+import { updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -201,7 +201,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         index: indexes[indexes.length - 1],
         slateEntity : appStore.parentUrn && Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
-
+    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled
+    if(isAutoNumberingEnabled && (outputPrimaryOptionEnum === 'AUDIO' || outputPrimaryOptionEnum === 'VIDEO')){
+        conversionDataToSend = {
+            ...conversionDataToSend,
+            displayedlabel: outputPrimaryOptionEnum === 'AUDIO' ? 'Audio' : 'Video'
+        }
+    }
     if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
     }
@@ -377,7 +383,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: FETCH_SLATE_DATA,
             payload: store
         });
-
+        if (isAutoNumberingEnabled && (outputPrimaryOptionEnum === 'AUDIO' || outputPrimaryOptionEnum === 'VIDEO')) {
+            const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements
+            const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData
+            updateAutonumberingOnElementTypeUpdate(res.data?.displayedlabel, res.data, autoNumberedElements, currentSlateAncestorData, store);
+        }
         /**
          * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
          * Setting the correct active element to solve this issue.

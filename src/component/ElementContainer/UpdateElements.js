@@ -56,7 +56,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
 
     let numberedandlabel = false;
     let manualoverride = {};
-    let displayedlabel = titleHTML;
+
     if (isAutoNumberingEnabled) {
         if (typeof(numberHTML) === 'string' && numberHTML.indexOf('.') !== -1) {
             numberHTML = numberHTML.split('.')[1];
@@ -65,7 +65,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
-
+    let displayedlabel = (manualoverride && Object.keys(manualoverride)?.length > 0) ? previousElementData?.displayedlabel : titleHTML // Object.keys(manualoverride)?.length > 0  && manualoverride.hasOwnProperty('overridelabelvalue') ?  ;
     captionHTML = replaceUnwantedtags(captionHTML, true);
     creditsHTML = replaceUnwantedtags(creditsHTML, true);
     subtitleHTML = replaceUnwantedtags(subtitleHTML, true);
@@ -703,7 +703,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)

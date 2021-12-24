@@ -52,7 +52,7 @@ export const FigureHeader = (props) => {
     const AUTO_NUMBER_SETTING_DROPDOWN_VALUES = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
     const [slateAncestors, setSlateAncestors] = useState(props.currentSlateAncestorData || {});
     const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedlabel ?? 'Figure');
-    const [figureLabelData, setFigureLabelData] = useState(['Figure', 'Table', 'Equation']);//props.figureDropdownData
+    const [figureLabelData, setFigureLabelData] = useState([]);//props.figureDropdownData
     const [labelNumberSetting, setLabelNumberSetting] = useState(null);
     const [labelDropDown, setLabelDropDown] = useState(false);
     const [labelNumberSettingDropDown, setLabelNumberSettingDropDown] = useState(false);
@@ -63,11 +63,28 @@ export const FigureHeader = (props) => {
     useOutsideAlerter(settingDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
     const labelDropdownWrapperRef = useRef(null);
     useOutsideAlerter(labelDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
-
+    const updateDropdownOptions = () => {
+        let figureLabelDropdownVal = [];
+        switch (props.model.figuretype) {
+            case AUDIO:
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Audio'] : props.figureDropdownData.audio;
+                break;
+            case VIDEO:
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Video'] : props.figureDropdownData.video;
+                break;
+            case IMAGE: case TABLE: case MATH_IMAGE:
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Figure', 'Table', 'Equation'] : props.figureDropdownData.video;
+                break;
+            default:
+                figureLabelDropdownVal = [];
+                break;
+        }
+        setFigureLabelData(figureLabelDropdownVal)
+    }
     useEffect(() => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
         setLabelNumberSetting(dropdownVal)
-        // updateDropdownOptions()
+        updateDropdownOptions()
     }, [])
     useEffect(() => {
         if (props.activeElement.elementId === props.model.id) {
@@ -124,7 +141,13 @@ export const FigureHeader = (props) => {
         } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
             labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
-        props.updateFigureImageDataForCompare(props.model.figuredata);
+        const imagetypes = ['image','table','mathImage']
+        if (imagetypes.indexOf(props?.model?.figuretype) > -1) {
+            props.updateFigureImageDataForCompare(props.model.figuredata);
+        } else if (props?.model?.figuretype == 'audio' || props?.model?.figuretype == 'video') {
+            props.updateAudioVideoDataForCompare(props.model.figuredata);
+        }
+
         props.updateAutoNumberingDropdownForCompare(labelNumberSetting);
     }
 
@@ -230,6 +253,9 @@ const mapActionsToProps = (dispatch) => {
     return {
         updateAutoNumberingDropdownForCompare: (value) => {
             dispatch(updateAutoNumberingDropdownForCompare(value))
+        },
+        updateAudioVideoDataForCompare: (value) => {
+            dispatch(updateAudioVideoDataForCompare(value))
         }
     }
 }

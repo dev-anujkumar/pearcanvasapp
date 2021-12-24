@@ -354,7 +354,7 @@ function CommunicationChannel(WrappedComponent) {
                     if (currentParentUrn === message.currentTocParentContainer) {
                         this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
                         // get data for auto-numbering , 'AUDIO', 'VIDEO'
-                        const mediaElement = ['IMAGE']
+                        const mediaElement = ['IMAGE','AUDIO', 'VIDEO']
                         mediaElement.forEach(ele => {
                             this.props.fetchProjectFigures(ele)
                         })
@@ -884,7 +884,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
                 // get data for auto-numbering , 'AUDIO', 'VIDEO'
-                const mediaElement = ['IMAGE']
+                const mediaElement = ['IMAGE','AUDIO', 'VIDEO']
                 mediaElement.forEach(ele => {
                     this.props.fetchProjectFigures(ele)
                 })
