@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import config from '../../config/config';
 import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
-import { updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
+import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import dropdown_arrow_icon from '../../images/FigureHeader/dropdown-arrow.svg';
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';

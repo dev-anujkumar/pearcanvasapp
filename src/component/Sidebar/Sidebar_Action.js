@@ -202,12 +202,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         slateEntity : appStore.parentUrn && Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
     const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled
-    if(isAutoNumberingEnabled && (outputPrimaryOptionEnum === 'AUDIO' || outputPrimaryOptionEnum === 'VIDEO')){
-        conversionDataToSend = {
-            ...conversionDataToSend,
-            displayedlabel: outputPrimaryOptionEnum === 'AUDIO' ? 'Audio' : 'Video'
-        }
-    }
     if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
     }
@@ -232,7 +226,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             "PearsonSSOSession": config.ssoToken
         }
     }).then(async res =>{
-        
         let parentData = store;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];

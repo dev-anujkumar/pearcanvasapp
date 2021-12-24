@@ -655,6 +655,7 @@ class ElementContainer extends Component {
                     isNumberDifferent = parseInt(imgNumberValue) !== parseInt(numberHTML);
                 }
             }
+            let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             return (titleHTML !== previousElementData.displayedlabel ||
                 this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent ||
