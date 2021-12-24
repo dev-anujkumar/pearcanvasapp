@@ -206,6 +206,10 @@ export class TinyMceEditor extends Component {
                         editor.selection.placeCaretAt(clickedX, clickedY);
                     }
 
+                    if(e.level && e.level.content.match(/<blockquote/)?.input.includes('class="blockquoteMarginalia') && e.level.content.match(/<img/)?.input.includes('class="imageAssetContent')){
+                        this.props.handleBlur(null, this.props.currentElement, this.props.index, null, eventTarget)
+                    }
+
                     let content = e.target.getContent({ format: 'text' }),
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
@@ -4076,13 +4080,9 @@ export class TinyMceEditor extends Component {
 
     processBlockquoteHtml = (model, element, lockCondition) => {
 
-        let activeEditorHTML = document.getElementById('cypress-' + this.props.index)?.innerHTML;
-        let isContainsImage = activeEditorHTML?.match(/<blockquote/)?.input.includes('class="blockquoteMarginalia"') && activeEditorHTML?.match(/<img/)?.input.includes('class="imageAssetContent')
-        let isTextExists = tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0] === '<p class="paragraphNummerEins" contenteditable="true"><br></p>'
         const temDiv = document.createElement('div');
         let hiddenBlock = this.generateHiddenElement();
         temDiv.innerHTML = model && model.text ? model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
-        
         if (element && element.elementdata && element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length) {
             tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
         }
