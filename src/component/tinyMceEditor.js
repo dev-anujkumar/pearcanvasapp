@@ -328,7 +328,7 @@ export class TinyMceEditor extends Component {
                 if (innerNode.childNodes.length) {
                     this.innerTextWithMathMl(innerNode)
                 } else {
-                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula'))) {
+                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula') || innerNode.classList.contains('imageAssetContent'))) {
                         this.clearFormateText = this.clearFormateText + innerNode.outerHTML;
                     } else {
                         this.clearFormateText = this.clearFormateText + innerNode.textContent
@@ -490,9 +490,8 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                         let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
                         let textToReplace = window.getSelection().toString()
-
                         if (isWirisIncluded) {
-                            if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula')) {
+                            if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula') || isWirisIncluded.classList.contains('imageAssetContent')) {
                                 textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`), '')
                                 this.clearFormateText = '';
                             }
@@ -720,6 +719,15 @@ export class TinyMceEditor extends Component {
                     id: e.target?.dataset?.id,
                     handleBlur:this.handleBlur
                 }
+
+                let temp = document.createElement("div");
+                temp.innerHTML = e.target?.outerHTML;
+                temp = temp.firstElementChild; 
+                let imageId =  temp.getAttribute("imageid")
+                if(!imageArgs.id && imageId){
+                    imageArgs.id = imageId;
+                }
+
                 let params = {
                     element: this.props.element,
                     permissions: this.props.permissions,
@@ -3882,7 +3890,6 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
-
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
@@ -4069,9 +4076,13 @@ export class TinyMceEditor extends Component {
 
     processBlockquoteHtml = (model, element, lockCondition) => {
 
+        let activeEditorHTML = document.getElementById('cypress-' + this.props.index)?.innerHTML;
+        let isContainsImage = activeEditorHTML?.match(/<blockquote/)?.input.includes('class="blockquoteMarginalia"') && activeEditorHTML?.match(/<img/)?.input.includes('class="imageAssetContent')
+        let isTextExists = tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0] === '<p class="paragraphNummerEins" contenteditable="true"><br></p>'
         const temDiv = document.createElement('div');
         let hiddenBlock = this.generateHiddenElement();
         temDiv.innerHTML = model && model.text ? model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
+        
         if (element && element.elementdata && element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length) {
             tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
         }
@@ -4086,7 +4097,6 @@ export class TinyMceEditor extends Component {
             tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
         }
         temDiv.innerHTML = removeBOM(temDiv.innerHTML)
-
         return temDiv;
 
     }
@@ -4098,7 +4108,7 @@ export class TinyMceEditor extends Component {
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;
-        let isContainsImage =  this.props?.model?.text?.match(/<img/)?.input?.includes('class="imageAssetContent');
+        let isContainsImage =  this.props?.model?.text?.match(/<img/)?.input.includes('class="imageAssetContent');
         if(!isContainsImage){
             classes += ' ' + this.placeHolderClass;
         }

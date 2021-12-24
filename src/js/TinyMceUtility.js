@@ -25,6 +25,9 @@ import store from '../appstore/store';
         if (imageTypes.indexOf(figureType) > -1) {
             if (imageArgs?.id && editor?.targetElm) {
                 let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
+                if(!getImgNode){
+                    getImgNode = editor.targetElm.querySelector(`img[imageid="${imageArgs.id}"]`)
+                }
                 if (getImgNode) {
                     getImgNode.outerHTML = imgData;
                     imageArgs.handleBlur(null, true);
