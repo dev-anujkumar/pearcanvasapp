@@ -3632,6 +3632,12 @@ export class TinyMceEditor extends Component {
                     removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                     tinymce.remove(`#${ed_id}`)
                     wirisModalDesktopNode.remove();
+
+                    if (tinymceEditorNode && tinymceEditorNode.innerText.trim() !== "" && tinymceEditorNode.innerText.trim().length && tinymceEditorNode?.classList?.contains('place-holder')) {
+                        tinymceEditorNode?.classList.remove('place-holder')
+                    } else if (tinymceEditorNode && tinymceEditorNode.innerText.trim() == "" && !tinymceEditorNode.innerText.trim().length && !tinymceEditorNode?.classList?.contains('place-holder')){
+                        tinymceEditorNode?.classList.add('place-holder')
+                    }
                     let edNode = document.getElementById(`${ed_id}`)
                     if (edNode) {
                         edNode.contentEditable = true;
