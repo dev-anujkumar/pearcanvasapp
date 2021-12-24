@@ -94,6 +94,10 @@ export const FigureHeader = (props) => {
     useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
     }, [props.currentSlateAncestorData]);
+    useEffect(() => {
+        updateDropdownOptions();
+        setFigureLabelValue(props.model?.displayedlabel ?? 'Figure');
+    }, [props.model.figuretype]);
     /**---------------------------------------- */
     const handleCloseDropDrown = () => {
         setLabelDropDown(false)
