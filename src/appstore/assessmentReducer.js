@@ -87,7 +87,8 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             return {
                 currentEditAssessment: state.currentEditAssessment,
                 latestItemAssessment: state.latestItemAssessment,
-                itemUpdateEvent: state.itemUpdateEvent
+                itemUpdateEvent: state.itemUpdateEvent,
+                usageTypeListData: state.usageTypeListData
             }
         case ELM_NEW_ITEM_DATA:
             return {
