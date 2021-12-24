@@ -211,6 +211,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             conversionDataToSend["elementParentEntityUrn"] = showHideObj.element.contentUrn;
         }
     }
+    if (isAutoNumberingEnabled && (outputPrimaryOptionEnum === 'AUDIO' || outputPrimaryOptionEnum === 'VIDEO')) {
+        conversionDataToSend = {
+            ...conversionDataToSend,
+            displayedlabel: outputPrimaryOptionEnum === 'AUDIO' ? 'Audio' : 'Video'      
+        }
+    }
+
     let parentEntityUrn = conversionDataToSend.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
@@ -377,9 +384,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             payload: store
         });
         if (isAutoNumberingEnabled && (outputPrimaryOptionEnum === 'AUDIO' || outputPrimaryOptionEnum === 'VIDEO')) {
-            const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements
-            const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData
-            updateAutonumberingOnElementTypeUpdate(res.data?.displayedlabel, res.data, autoNumberedElements, currentSlateAncestorData, store);
+            const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
+            const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
+            dispatch(updateAutonumberingOnElementTypeUpdate(res.data?.displayedlabel, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
         }
         /**
          * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
