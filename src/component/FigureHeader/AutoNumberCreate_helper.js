@@ -1,3 +1,4 @@
+import config from '../../config/config';
 import {
     SET_AUTO_NUMBER_TOGGLE,
     SET_AUTO_NUMBER_SEQUENCE,
@@ -8,7 +9,9 @@ import {
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
 import { containerBodyMatter, getMediaElementInMultiColumn, getMediaElementInPopup } from './slateLevelMediaMapper';
-import { containerElements, autoNumberElementsAllowed } from './AutoNumberConstants';
+import { containerElements, autoNumberElementsAllowed, autoNumber_ElementTypeToStoreKeysMapper } from './AutoNumberConstants';
+import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
+import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 
 export const updateCreatedElementInAutonumberList = (mediaType, mediaList, autoNumberedElementsObj, dispatch) => {
     dispatch({
@@ -148,6 +151,50 @@ export const getImagesInsideElement = (bodyMatter, numberedElements = [], parent
 }
 
 
+export const handleAutonumberingOnCreate = (type, createdElementData) => (dispatch, getState) => {
+    const listType = autoNumber_ElementTypeToStoreKeysMapper[type];
+    const labelType = createdElementData.displayedlabel;
+    let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
+    let slateAncestorData = getState().appStore.currentSlateAncestorData;
+    let bodyMatter = getState().appStore.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
+    let slateFigures = getImagesInsideSlates(bodyMatter);
+    let figureObj = slateFigures.find(element => element.contentUrn === createdElementData.contentUrn);
+    let elementsList = autoNumberedElementsObj[listType];
+    let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
+
+    if (figureObj.indexPos == 0) {
+        if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1)) {
+            elementsList[slateEntityForAutonumber]?.splice(figureObj.indexPos, 0, createdElementData);
+        } else {
+            elementsList = {
+                ...elementsList,
+                [slateEntityForAutonumber]: []
+            }
+            elementsList[slateEntityForAutonumber].push(createdElementData);
+        }
+        updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
+    } else if (figureObj.indexPos > 0) {
+        let count = 0;
+        slateFigures.forEach(item => {
+            item.indexPos = count;
+            count++;
+        });
+        let nearestElementObj = findNearestMediaElement(slateFigures, figureObj, labelType);
+
+        if (nearestElementObj) {
+            let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj.contentUrn);
+            elementsList[slateEntityForAutonumber]?.splice(index + 1, 0, createdElementData);
+            updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
+        } else {
+            elementsList[slateEntityForAutonumber]?.splice(figureObj.indexPos, 0, createdElementData);
+            updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
+        }
+    } else if (Array.isArray(figureObj.indexPos)) {
+        handleAutonumberingForElementsInContainers(bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch)
+    }
+}
+
+
 /**
  * Get List of Media Elements on a Slate
  * @param {*} bodyMatter 
@@ -159,6 +206,7 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
     let figureObjInContainer = mediaElementsInContainer.find(x => x.contentUrn === createdElementData.contentUrn);
     const listType = createdElementData?.figuretype === 'video' ? 'videosList' : 'imagesList'
     const labelType = createdElementData?.figuretype === 'video' ? "Video" : "Figure"
+    let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
     if (mediaElementsInContainer.length && figureObjInContainer.index > 0) {
         let indexPos = figureObjInContainer.index;
         figureObjInContainer = {
@@ -167,25 +215,25 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
         }
         let nearestElementObj = findNearestMediaElement(mediaElementsInContainer, figureObjInContainer, labelType);
         if (nearestElementObj) {
-            if ((Object.keys(elementsList).length > 0) && slateAncestorData?.ancestor?.entityUrn && (Object.keys(elementsList).indexOf(slateAncestorData?.ancestor?.entityUrn) > -1)) {
-                let index = elementsList[slateAncestorData.ancestor.entityUrn].findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
-                elementsList[slateAncestorData.ancestor.entityUrn].splice(index + 1, 0, createdElementData);
+            if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1)) {
+                let index = elementsList[slateEntityForAutonumber].findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
+                elementsList[slateEntityForAutonumber].splice(index + 1, 0, createdElementData);
             } else {
                 elementsList = {
                     ...elementsList,
-                    [slateAncestorData.ancestor.entityUrn]: []
+                    [slateEntityForAutonumber]: []
                 }
-                elementsList[slateAncestorData.ancestor.entityUrn].push(createdElementData);
+                elementsList[slateEntityForAutonumber].push(createdElementData);
             }
             updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
         } else {
             let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, labelType);
             if (nearestElementObj) {
-                let index = elementsList[slateAncestorData.ancestor.entityUrn].findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
-                elementsList[slateAncestorData.ancestor.entityUrn].splice(index + 1, 0, createdElementData);
+                let index = elementsList[slateEntityForAutonumber].findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
+                elementsList[slateEntityForAutonumber].splice(index + 1, 0, createdElementData);
                 updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
             } else {
-                elementsList[slateAncestorData.ancestor.entityUrn].splice(figureObj.index, 0, createdElementData);
+                elementsList[slateEntityForAutonumber].splice(figureObj.index, 0, createdElementData);
                 updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
             }
         }
@@ -196,11 +244,11 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
         }
         let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, labelType);
         if (nearestElementObj) {
-            let index = elementsList[slateAncestorData.ancestor.entityUrn]?.findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
-            elementsList[slateAncestorData.ancestor.entityUrn]?.splice(index + 1, 0, createdElementData);
+            let index = elementsList[slateEntityForAutonumber]?.findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
+            elementsList[slateEntityForAutonumber]?.splice(index + 1, 0, createdElementData);
             updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
         } else {
-            elementsList[slateAncestorData.ancestor.entityUrn]?.splice(0, 0, createdElementData);
+            elementsList[slateEntityForAutonumber]?.splice(0, 0, createdElementData);
             updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
         }
     }

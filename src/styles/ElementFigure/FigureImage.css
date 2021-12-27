@@ -104,7 +104,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 .figure-header .floating-number-group .figureNumber.cypress-editable {
     font-size: 14px !important;
     width:74px !important;
-    border-bottom: 2px solid #737373;
+    border-bottom: 2px solid #737373 !important;
     margin: 8px 0 !important;
     padding: 15px 4px 6px 4px !important;
     font-weight: 500 !important;
@@ -120,7 +120,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 .floating-caption-group .figureCaption.cypress-editable.mce-edit-focus,
 .floating-credit-group .figureCredit.cypress-editable.mce-edit-focus
 {
-    border-bottom: 2px solid #005a70;  
+    border-bottom: 2px solid #005a70 !important;  
 }
 .figureLabel.cypress-editable  em,.figureLabel.cypress-editable  em strong,.figureLabel.cypress-editable strong span{
     font-weight: 900 !important;

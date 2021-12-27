@@ -73,6 +73,7 @@ import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
 import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore } from '../FigureHeader/AutoNumber_helperFunctions';
+import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -662,8 +663,7 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage !== assetId)
-                || podwidth !== (previousElementData.figuredata.podwidth ?
-                    previousElementData.figuredata.podwidth : '') && podwidth !== null
+                || podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : undefined) && (podwidth !== null && podwidth !== undefined)
             );
         }
         // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
@@ -835,6 +835,9 @@ class ElementContainer extends Component {
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
                             if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && this.props.isAutoNumberingEnabled) {
                                 this.props.updateAutonumberingKeysInStore(dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData);
+                                if (previousElementData.numberedandlabel === false && dataToSend.numberedandlabel === true) {
+                                    this.props.handleAutonumberingOnCreate(dataToSend.displayedlabel.toUpperCase(), dataToSend);
+                                }
                             }
                         }
                         break;
@@ -847,6 +850,9 @@ class ElementContainer extends Component {
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
                             if (this.props.isAutoNumberingEnabled) {
                                 this.props.updateAutonumberingKeysInStore(dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData);
+                                if (previousElementData.numberedandlabel === false && dataToSend.numberedandlabel === true) {
+                                    this.props.handleAutonumberingOnCreate(dataToSend.displayedlabel.toUpperCase(), dataToSend);
+                                }
                             }
                         }
                         break;
@@ -2460,6 +2466,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateAutonumberingKeysInStore: (dataToSend, autoNumberedElements, currentSlateAncestorData) => {
             dispatch(updateAutonumberingKeysInStore(dataToSend, autoNumberedElements, currentSlateAncestorData))
+        },
+        handleAutonumberingOnCreate: (type, elementData) => {
+            dispatch(handleAutonumberingOnCreate(type, elementData))
         }
     }
 }

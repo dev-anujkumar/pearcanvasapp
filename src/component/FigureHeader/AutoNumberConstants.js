@@ -101,3 +101,11 @@ export const DISPLAYED_LABELS = {
 export const ELEMENT_TYPES = {
   FIGURE: 'figure'
 }
+
+export const autoNumber_ElementTypeToStoreKeysMapper = {
+  'FIGURE': 'imagesList',
+  'TABLE': 'tablesList',
+  'EQUATION': 'equationsList',
+  'AUDIO': 'audiosList',
+  'VIDEO': 'videosList'
+}

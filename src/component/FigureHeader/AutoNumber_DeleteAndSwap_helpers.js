@@ -20,13 +20,14 @@ export const handleAutoNumberingOnDelete = (params) => {
         contentUrn,
         getState,
         dispatch,
-        isAutoNumberingEnabled
+        isAutoNumberingEnabled,
+        asideData
     } = params
     const slateAncestors = getState().appStore.currentSlateAncestorData;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    const containerElements = ['popup','showhide','groupedcontent','element-aside' ]
+    const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside'];
     if (isAutoNumberingEnabled) {
-        if (containerElements.indexOf(type) > -1) {
+        if (asideData && asideData.type && containerElements.indexOf(asideData.type) > -1) {
             //reset auto-numbering
             updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, slateAncestors, getState, dispatch)
         }

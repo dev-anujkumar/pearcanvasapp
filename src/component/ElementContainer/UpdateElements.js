@@ -7,14 +7,17 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel, getTitleSubtitleModel } from '../../constants/utility';
-import { AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
-import { setAutonumberingValuesForPayload } from '../FigureHeader/AutoNumber_helperFunctions';
+import { setAutonumberingValuesForPayload, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
     mathml: [ ]
 }
+const { 
+    AUTO_NUMBER_SETTING_DEFAULT
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export const replaceUnwantedtags = (html,flag) => {
     let tempDiv = document.createElement('div'); 
@@ -57,7 +60,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     let numberedandlabel = false;
     let manualoverride = {};
 
-    if (isAutoNumberingEnabled) {
+    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
         if (typeof(numberHTML) === 'string' && numberHTML.indexOf('.') !== -1) {
             numberHTML = numberHTML.split('.')[1];
         }
@@ -65,7 +68,13 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
-    let displayedlabel = (manualoverride && Object.keys(manualoverride)?.length > 0) ? previousElementData?.displayedlabel : titleHTML // Object.keys(manualoverride)?.length > 0  && manualoverride.hasOwnProperty('overridelabelvalue') ?  ;
+    // let displayedlabel = (manualoverride && Object.keys(manualoverride)?.length > 0) ? previousElementData?.displayedlabel : titleHTML // Object.keys(manualoverride)?.length > 0  && manualoverride.hasOwnProperty('overridelabelvalue') ?  ;
+    let displayedlabel;
+    if (previousElementData.numberedandlabel === false && numberedandlabel === true) {
+        displayedlabel = getValueOfLabel(previousElementData.figuretype);
+    } else {
+        displayedlabel = titleHTML;
+    }
     captionHTML = replaceUnwantedtags(captionHTML, true);
     creditsHTML = replaceUnwantedtags(creditsHTML, true);
     subtitleHTML = replaceUnwantedtags(subtitleHTML, true);
@@ -116,7 +125,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
         inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
     }
-    if (isAutoNumberingEnabled) {
+    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
         data = {
             ...data,
             html : {

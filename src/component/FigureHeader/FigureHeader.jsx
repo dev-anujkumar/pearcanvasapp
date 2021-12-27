@@ -115,10 +115,13 @@ export const FigureHeader = (props) => {
             if (newSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 setShowLabelField(false)
                 setShowNumberField(false)
-            }
-            else {//if(newSettings === AUTO_NUMBER_SETTING_RESUME_NUMBER || newSettings === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER)
+            } else {
                 setShowLabelField(true)
                 setShowNumberField(true)
+            }
+            if (oldSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+                updateDropdownOptions();
+                setFigureLabelValue(figureLabelData[0]);
             }
             props.updateAutoNumberingDropdownForCompare(newSettings);
         }
