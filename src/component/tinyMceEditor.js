@@ -1209,6 +1209,7 @@ export class TinyMceEditor extends Component {
 
              const parentClass = currentSelectedNode.classList;
             //  console.log("Parent class", parentClass, currentSelection.getRng());
+            if(!this.props.isBlockList) {
              if(supportedClasses.some(item => parentClass.contains(item))) {
                  const windowSelection = currentSelection.getRng().endOffset;
                  const selectionText = currentSelectedNode?.textContent;
@@ -1274,6 +1275,9 @@ export class TinyMceEditor extends Component {
                     e.stopPropagation();
                 }
              }
+            }else {
+                e.stopPropagation();
+            }
             
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
             if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {

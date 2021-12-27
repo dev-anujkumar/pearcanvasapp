@@ -13,6 +13,7 @@ export class ElementAuthoring extends Component {
      return (
        <KeyboardWrapper enable={this.props.element?.elementdata?.type !== "blockquote" && !this.props.isBlockList} index={this.props.index}>
            <TinyMceEditor
+           isBlockList={this.props.isBlockList}
           openAssetPopoverPopUp ={openAssetPopoverPopUp}
           openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
           index={this.props.index}
