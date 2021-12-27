@@ -35,7 +35,7 @@ import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlo
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
-import { supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
+import { getDataFromLastTag, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -1203,7 +1203,7 @@ export class TinyMceEditor extends Component {
             //  console.log("Parent class", parentClass, currentSelection.getRng());
              if(supportedClasses.some(item => parentClass.contains(item))) {
                  const windowSelection = currentSelection.getRng().endOffset;
-                 const selectionText = tinymce?.activeEditor?.selection?.getNode()?.textContent;
+                 const selectionText = currentSelectedNode?.textContent;
                  const innerHtml = currentSelectedNode.innerText;
                 //  console.log("Selection is 00", selectionText, " inner html ", innerHtml);
                 //  console.log("windowSelection is 00", windowSelection, " inner html ", selectionText.length);
@@ -1221,10 +1221,10 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation()
                     }
                 }
-                else if (windowSelection === selectionText.length && e.keyCode === 40) {
-                    
-                    // console.log("Inner html 2 ", innerHtml, " Selection ", selectionText)
-                    if(innerHtml.endsWith(selectionText)) {
+                else if (e.keyCode === 40) {
+                    const lastString= getDataFromLastTag(currentSelectedNode);
+                    // console.log("Inner html 333",lastString, lastString.length, windowSelection);
+                    if(lastString.length === windowSelection) {
                         // console.log("last matched");
                         e.preventDefault()
                     }
