@@ -1215,10 +1215,10 @@ export class TinyMceEditor extends Component {
                     // console.log("Inner html ", innerHtml, " Selection ", selectionText)
                     if(innerHtml.startsWith(selectionText)) {
                         // console.log("start matched");
-                        e.preventDefault()
+                        e.preventDefault();
                     }
                     else {
-                        e.stopPropagation()
+                        e.stopPropagation();
                     }
                 }
                 else if (e.keyCode === 40) {
@@ -1226,10 +1226,15 @@ export class TinyMceEditor extends Component {
                     // console.log("Inner html 333",lastString, lastString.length, windowSelection);
                     if(lastString.length === windowSelection) {
                         // console.log("last matched");
-                        e.preventDefault()
+                        if(windowSelection === 0 && innerHtml.length > 0) {
+                            e.stopPropagation();
+                        }
+                        else {
+                            e.preventDefault();
+                        }
                     }
                     else {
-                        e.stopPropagation()
+                        e.stopPropagation();
                     }
                     // check if text matches the end of inner html
                     // if yes : prevent default
