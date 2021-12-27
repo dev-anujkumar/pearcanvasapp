@@ -11,7 +11,7 @@ export class ElementAuthoring extends Component {
   render() {
     const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue, openMarkedIndexPopUp, markedIndexValue } = this.props
      return (
-       <KeyboardWrapper enable={this.props.element?.elementdata?.type !== "blockquote"} index={this.props.index}>
+       <KeyboardWrapper enable={this.props.element?.elementdata?.type !== "blockquote" && !this.props.isBlockList} index={this.props.index}>
            <TinyMceEditor
           openAssetPopoverPopUp ={openAssetPopoverPopUp}
           openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
