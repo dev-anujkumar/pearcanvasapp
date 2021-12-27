@@ -163,7 +163,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => (dispat
     let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
 
     if (figureObj.indexPos == 0) {
-        if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1)) {
+        if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1)) {
             elementsList[slateEntityForAutonumber]?.splice(figureObj.indexPos, 0, createdElementData);
         } else {
             elementsList = {

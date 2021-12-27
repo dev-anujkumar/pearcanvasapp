@@ -103,6 +103,7 @@ export const ELEMENT_TYPES = {
 }
 
 export const autoNumber_ElementTypeToStoreKeysMapper = {
+  'IMAGE': 'imagesList',
   'FIGURE': 'imagesList',
   'TABLE': 'tablesList',
   'EQUATION': 'equationsList',
