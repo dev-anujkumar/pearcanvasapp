@@ -35,6 +35,7 @@ import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlo
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
+import { supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -1207,9 +1208,9 @@ export class TinyMceEditor extends Component {
             const currentSelectedNode = currentSelection?.getNode();
 
              const parentClass = currentSelectedNode.classList;
-            //  console.log("Parent class", parentClass);
-             if(parentClass.contains("paragraphNumeroUno") || parentClass.contains("pullQuoteNumeroUno") || parentClass.contains("listItemNumeroUnoBullet") || parentClass.contains("heading2learningObjectiveItem")) {
-                 const windowSelection = window.getSelection().anchorOffset;
+            //  console.log("Parent class", parentClass, currentSelection.getRng());
+             if(supportedClasses.some(item => parentClass.contains(item))) {
+                 const windowSelection = currentSelection.getRng().endOffset;
                  const selectionText = tinymce?.activeEditor?.selection?.getNode()?.textContent;
                  const innerHtml = currentSelectedNode.innerText;
                 //  console.log("Selection is 00", selectionText, " inner html ", innerHtml);
