@@ -40,6 +40,7 @@ import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementBu
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import {markedIndexPopup} from '../MarkIndexPopup/MarkIndex_Action';
+import { fetchProjectFigures, setTocContainersAutoNumberList } from '../FigureHeader/AutoNumberActions';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -272,7 +273,8 @@ const mapStateToProps = state => {
         markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
         markedIndexValue: state.markedIndexReducer.markedIndexValue,
         markedIndexGlossary: state.markedIndexReducer.markedIndexGlossary,
-        alfrescoReducer: state.alfrescoReducer
+        alfrescoReducer: state.alfrescoReducer,
+        currentSlateAncestorData: state.appStore.currentSlateAncestorData
     };
 };
 
@@ -332,6 +334,8 @@ export default connect(
         setProjectSubscriptionDetails,
         fetchFigureDropdownOptions,
         isOwnersSubscribedSlate,
-        markedIndexPopup
+        markedIndexPopup,
+        fetchProjectFigures,
+        setTocContainersAutoNumberList
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

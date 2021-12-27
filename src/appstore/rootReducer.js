@@ -19,6 +19,7 @@ import { selectionReducer } from './copyUrnReducer';
 import alfrescoReducer from './alfrescoReducer';
 import { projectInfo } from './projectInfoReducer';
 import markedIndexReducer from './markedIndexReducer';
+import autoNumberReducer from './autoNumberReducer';
 import {keyboardReducer} from './keyboardReducer';
 
 export default combineReducers({
@@ -43,5 +44,6 @@ export default combineReducers({
     alfrescoReducer,
     projectInfo,
     markedIndexReducer,
+    autoNumberReducer,
     keyboardReducer,
 });

@@ -16,8 +16,8 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     PAGE_NUMBER_LOADER,
-    WIRIS_ALT_TEXT_POPUP
-
+    WIRIS_ALT_TEXT_POPUP,
+    SLATE_FIGURE_ELEMENTS
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
@@ -37,6 +37,9 @@ const { SHOW_HIDE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
+import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { updateCreatedElementInAutonumberList, findNearestMediaElement, handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -392,7 +395,59 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
-        
+        /** ---------------------------- Auto-Numbering handling ------------------------------*/
+        let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
+        const slateAncestorData = getState().appStore.currentSlateAncestorData;
+        let elementsList = {};
+        if (type === 'IMAGE' || type === 'VIDEO') {
+            const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
+            let slateFigures = getImagesInsideSlates(bodyMatter);
+            if (slateFigures) {
+                dispatch({
+                    type: SLATE_FIGURE_ELEMENTS,
+                    payload: {
+                        slateFigures
+                    }
+                });
+            }
+            
+            const listType = type === 'VIDEO' ? 'videosList' : 'imagesList'
+            const labelType = type === 'VIDEO' ? "Video" : "Figure"
+            let figureObj = slateFigures.find(x => x.contentUrn === createdElementData.contentUrn);
+            elementsList = autoNumberedElementsObj[listType]
+
+            if (figureObj.indexPos == 0) {
+                if ((Object.keys(elementsList).length > 0) && slateAncestorData?.ancestor?.entityUrn && (Object.keys(elementsList).indexOf(slateAncestorData?.ancestor?.entityUrn) >-1)) {
+                    elementsList[slateAncestorData.ancestor.entityUrn]?.splice(figureObj.indexPos, 0, createdElementData);
+                } else  {
+                    elementsList = {
+                        ...elementsList,
+                        [slateAncestorData.ancestor.entityUrn]: []
+                    }
+                    elementsList[slateAncestorData.ancestor.entityUrn].push(createdElementData);
+                }
+                updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
+            } else if (figureObj.indexPos > 0) {
+                let count = 0;
+                slateFigures.forEach(item => {
+                    item.indexPos = count;
+                    count++;
+                });
+                let nearestElementObj = findNearestMediaElement(slateFigures, figureObj, labelType);
+
+                if (nearestElementObj) {
+                    let index = elementsList[slateAncestorData.ancestor.entityUrn]?.findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
+                    elementsList[slateAncestorData.ancestor.entityUrn]?.splice(index + 1, 0, createdElementData);
+                    updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
+                } else {
+                    elementsList[slateAncestorData.ancestor.entityUrn]?.splice(figureObj.indexPos, 0, createdElementData);
+                    updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
+                }
+            } else if (Array.isArray(figureObj.indexPos)) {
+                handleAutonumberingForElementsInContainers(bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch)
+            }
+        }
+        /**------------------------------------------------------------------------------------------------*/
         if (cb) {
             cb();
         }   
@@ -718,8 +773,16 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                         slateLevelData: newParentData,
                     }
                 })
-
-
+                /** ---------------------------- Auto-Numbering handling ------------------------------*/
+                const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+                const params = {
+                    getState,
+                    dispatch,
+                    currentSlateData: newParentData[slateId],
+                    swappedElementData
+                }
+                handleAutoNumberingOnSwapping(isAutoNumberingEnabled, params)
+                /**-----------------------------------------------------------------------------------*/
                 cb(newParentData)
             }
 

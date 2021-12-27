@@ -249,7 +249,7 @@ export class TinyMceEditor extends Component {
                             var MLtext = document.querySelector('#' + tinymce.activeEditor.id + ' > p > img') || document.querySelector('#' + tinymce.activeEditor.id + ' > img')
                             if (MLtext) {
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
-                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(MLtext)
+                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?.append(MLtext)
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
@@ -329,7 +329,7 @@ export class TinyMceEditor extends Component {
                 if (innerNode.childNodes.length) {
                     this.innerTextWithMathMl(innerNode)
                 } else {
-                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula'))) {
+                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula') || innerNode.classList.contains('imageAssetContent'))) {
                         this.clearFormateText = this.clearFormateText + innerNode.outerHTML;
                     } else {
                         this.clearFormateText = this.clearFormateText + innerNode.textContent
@@ -491,9 +491,8 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                         let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
                         let textToReplace = window.getSelection().toString()
-
                         if (isWirisIncluded) {
-                            if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula')) {
+                            if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula') || isWirisIncluded.classList.contains('imageAssetContent')) {
                                 textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`), '')
                                 this.clearFormateText = '';
                             }
@@ -716,11 +715,20 @@ export class TinyMceEditor extends Component {
                 }
             }
             /** Open Alfresco Picker to update inline image in list on double-click*/
-            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT && blockListData && Object.keys(blockListData).length))) {
+            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT ) || (this?.props?.element?.type === "element-blockfeature") || (this?.props?.element?.type === "element-learningobjectives"))) {
                 const imageArgs = {
                     id: e.target?.dataset?.id,
                     handleBlur:this.handleBlur
                 }
+
+                let temp = document.createElement("div");
+                temp.innerHTML = e.target?.outerHTML;
+                temp = temp.firstElementChild; 
+                let imageId =  temp.getAttribute("imageid")
+                if(!imageArgs.id && imageId){
+                    imageArgs.id = imageId;
+                }
+
                 let params = {
                     element: this.props.element,
                     permissions: this.props.permissions,
@@ -3961,7 +3969,6 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
-
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
@@ -4165,7 +4172,6 @@ export class TinyMceEditor extends Component {
             tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
         }
         temDiv.innerHTML = removeBOM(temDiv.innerHTML)
-
         return temDiv;
 
     }
@@ -4177,7 +4183,11 @@ export class TinyMceEditor extends Component {
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;
-        classes += ' ' + this.placeHolderClass;
+        let isContainsImage =  this.props?.model?.text?.match(/<img/)?.input.includes('class="imageAssetContent');
+        if(!isContainsImage){
+            classes += ' ' + this.placeHolderClass;
+        }
+        
         /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
@@ -4200,6 +4210,7 @@ export class TinyMceEditor extends Component {
                     model = tempDiv.children[0].innerHTML;
                 }
                 model = removeBOM(model)
+
                 if (this.props.poetryField && this.props.poetryField === 'formatted-title') {
                     if (!classes.includes('poetryHideLabel')) {
                         classes = classes + ' poetryHideLabel';

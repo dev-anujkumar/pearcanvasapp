@@ -7,7 +7,9 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel, getTitleSubtitleModel } from '../../constants/utility';
+import { AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions';
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { setAutonumberingValuesForPayload } from '../FigureHeader/AutoNumber_helperFunctions';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -34,7 +36,7 @@ export const replaceUnwantedtags = (html,flag) => {
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-export const generateCommonFigureData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+export const generateCommonFigureData = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),
         subtitleDOM = document.getElementById(`cypress-${index}-2`),
@@ -52,6 +54,18 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
+    let numberedandlabel = false;
+    let manualoverride = {};
+
+    if (isAutoNumberingEnabled) {
+        if (typeof(numberHTML) === 'string' && numberHTML.indexOf('.') !== -1) {
+            numberHTML = numberHTML.split('.')[1];
+        }
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
+    }
+    let displayedlabel = (manualoverride && Object.keys(manualoverride)?.length > 0) ? previousElementData?.displayedlabel : titleHTML // Object.keys(manualoverride)?.length > 0  && manualoverride.hasOwnProperty('overridelabelvalue') ?  ;
     captionHTML = replaceUnwantedtags(captionHTML, true);
     creditsHTML = replaceUnwantedtags(creditsHTML, true);
     subtitleHTML = replaceUnwantedtags(subtitleHTML, true);
@@ -72,6 +86,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     }  
 
     previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
+    previousElementData.hasOwnProperty('indexPos') ? delete previousElementData.indexPos : previousElementData;  // Key added for autonumbering
 
     let data = {
         ...previousElementData,
@@ -100,6 +115,19 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         },
         inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
         inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
+    }
+    if (isAutoNumberingEnabled) {
+        data = {
+            ...data,
+            html : {
+                ...data.html,
+                title: `<p>${subtitleHTML}</p>`
+            },
+            numberedandlabel : numberedandlabel,
+            displayedlabel : displayedlabel,
+            manualoverride : manualoverride
+        }
+        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT ? delete data.manualoverride : data;
     }
     return data
 }
@@ -565,7 +593,7 @@ export const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousEle
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, isAutoNumberingEnabled, autoNumberOption) => {
     let { appStore } = store.getState()
     let dataToReturn = {}
     switch (type){
@@ -671,11 +699,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)

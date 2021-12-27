@@ -11,6 +11,7 @@ import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
+import { handleAutoNumberingOnCopyPaste } from '../FigureHeader/AutoNumber_CutCopy_helpers';
 const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP, POETRY_ELEMENT } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
@@ -337,6 +338,18 @@ export const onPasteSuccess = async (params) => {
             slateLevelData: newParentData
         }
     })
+    /** ---------------------------- Auto-Numbering handling ------------------------------*/
+    const isAutoNumberingEnabled = getState().autoNumberReducer?.isAutoNumberingEnabled;
+    const autoNumberParams = {
+        selectedElement: responseData,
+        getState,
+        dispatch,
+        operationType,
+        isAutoNumberingEnabled,
+        currentSlateData: newParentData[config.slateManifestURN]
+    }
+    handleAutoNumberingOnCopyPaste(autoNumberParams)
+    /**-----------------------------------------------------------------------------------*/
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
 }
 /* Paste Element inside showhide */

@@ -18,6 +18,7 @@ import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem,
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
+import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -345,6 +346,20 @@ function CommunicationChannel(WrappedComponent) {
                         }
                         this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
                     }
+                    break;
+                case 'ResetAutoNumberSequence':
+                    this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
+                    const slateAncestors = this.props?.currentSlateAncestorData
+                    const currentParentUrn = getContainerEntityUrn(slateAncestors)
+                    if (currentParentUrn === message.currentTocParentContainer) {
+                        this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
+                        // get data for auto-numbering , 'AUDIO', 'VIDEO'
+                        const mediaElement = ['IMAGE','AUDIO', 'VIDEO']
+                        mediaElement.forEach(ele => {
+                            this.props.fetchProjectFigures(ele)
+                        })
+                    }
+                    break;
             }
         }
 
@@ -810,6 +825,10 @@ function CommunicationChannel(WrappedComponent) {
                 isSubscribed: false,
                 owner: {}
             }
+
+            if (message?.node?.autoNumberingDetails) {
+                this.props.setTocContainersAutoNumberList(message.node.autoNumberingDetails)
+            }
             // reset owner slate popup flag on slate change
             this.resetOwnerSlatePopupFlag();
             if (message['category'] === 'titleChange') {
@@ -864,6 +883,11 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.fetchAudioNarrationForContainer(slateData)
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
+                // get data for auto-numbering , 'AUDIO', 'VIDEO'
+                const mediaElement = ['IMAGE','AUDIO', 'VIDEO']
+                mediaElement.forEach(ele => {
+                    this.props.fetchProjectFigures(ele)
+                })
                 this.props.fetchSlateData(message.node.containerUrn, config.slateEntityURN, config.page, '', "");
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);

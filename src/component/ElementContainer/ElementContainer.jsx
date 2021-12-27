@@ -72,6 +72,7 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
+import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore } from '../FigureHeader/AutoNumber_helperFunctions';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -400,7 +401,9 @@ class ElementContainer extends Component {
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+        if (!this.props.isAutoNumberingEnabled) {
+            titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+        }
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
@@ -414,6 +417,35 @@ class ElementContainer extends Component {
         let oldImage = this.props.oldImage;
         if (previousElementData.figuretype !== 'tableasmarkup') {
             oldImage = this.props.oldFigureDataForCompare.path;
+        }
+        if (this.props.isAutoNumberingEnabled && (previousElementData.figuretype !== 'tableasmarkup')) {
+            if (titleHTML !== previousElementData.displayedlabel) {
+                this.props.updateAutonumberingOnElementTypeUpdate(titleHTML, previousElementData, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+            }
+            let isNumberDifferent = false;
+            let imgNumberValue = '';
+            let overridedNumber = getOverridedNumberValue(previousElementData);
+            if (typeof(numberHTML) === 'string' && numberHTML.indexOf('.') !== -1) {
+                numberHTML = numberHTML.split('.')[1];
+            }
+            if (overridedNumber) {
+                isNumberDifferent = parseInt(overridedNumber) !== parseInt(numberHTML);
+            } else {
+                const figIndexParent = getContainerEntityUrn(this.props.currentSlateAncestorData);
+                imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
+                if (figIndexParent && parseInt(imgNumberValue)) {
+                    isNumberDifferent = parseInt(imgNumberValue) !== parseInt(numberHTML);
+                }
+            }
+            subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+            return (titleHTML !== previousElementData.displayedlabel ||
+                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent ||
+                captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+                (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+                || podwidth !== (previousElementData.figuredata.podwidth ?
+                    previousElementData.figuredata.podwidth : '') && podwidth !== null
+            );
         }
 
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
@@ -594,7 +626,9 @@ class ElementContainer extends Component {
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+        if (!this.props.isAutoNumberingEnabled) {
+            titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+        }
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
@@ -602,7 +636,36 @@ class ElementContainer extends Component {
         let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "");
         let oldImage = this.props.oldImage;
         oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
-
+        if (this.props.isAutoNumberingEnabled) {
+            if (titleHTML !== previousElementData.displayedlabel) {
+                this.props.updateAutonumberingOnElementTypeUpdate(titleHTML, previousElementData, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+            }
+            let isNumberDifferent = false;
+            let imgNumberValue = '';
+            let overridedNumber = getOverridedNumberValue(previousElementData);
+            if (typeof (numberHTML) === 'string' && numberHTML.indexOf('.') !== -1) {
+                numberHTML = numberHTML.split('.')[1];
+            }
+            if (overridedNumber) {
+                isNumberDifferent = parseInt(overridedNumber) !== parseInt(numberHTML);
+            } else {
+                const figIndexParent = getContainerEntityUrn(this.props.currentSlateAncestorData);
+                imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
+                if (figIndexParent && parseInt(imgNumberValue)) {
+                    isNumberDifferent = parseInt(imgNumberValue) !== parseInt(numberHTML);
+                }
+            }
+            let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
+            subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+            return (titleHTML !== previousElementData.displayedlabel ||
+                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent ||
+                captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+                (oldImage !== assetId)
+                || podwidth !== (previousElementData.figuredata.podwidth ?
+                    previousElementData.figuredata.podwidth : '') && podwidth !== null
+            );
+        }
         // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -766,19 +829,25 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props.autoNumberOption);
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
+                            if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && this.props.isAutoNumberingEnabled) {
+                                this.props.updateAutonumberingKeysInStore(dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData);
+                            }
                         }
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
                         if (this.figureDifferenceAudioVideo(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props.autoNumberOption)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
+                            if (this.props.isAutoNumberingEnabled) {
+                                this.props.updateAutonumberingKeysInStore(dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData);
+                            }
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -2385,6 +2454,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateAsideNumber: (previousElementData, index) => {
             dispatch(updateAsideNumber(previousElementData, index))
+        },
+        updateAutonumberingOnElementTypeUpdate: (titleHTML, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
+            dispatch(updateAutonumberingOnElementTypeUpdate(titleHTML, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData))
+        },
+        updateAutonumberingKeysInStore: (dataToSend, autoNumberedElements, currentSlateAncestorData) => {
+            dispatch(updateAutonumberingKeysInStore(dataToSend, autoNumberedElements, currentSlateAncestorData))
         }
     }
 }
@@ -2422,7 +2497,13 @@ const mapStateToProps = (state) => {
         oldSmartLinkDataForCompare: state.appStore.oldSmartLinkDataForCompare,
         oldAudioVideoDataForCompare: state.appStore.oldAudioVideoDataForCompare,
         markedIndexCurrentValue: state.markedIndexReducer.markedIndexCurrentValue,
-        markedIndexValue: state.markedIndexReducer.markedIndexValue
+        markedIndexValue: state.markedIndexReducer.markedIndexValue,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
+        autoNumberOption: state.autoNumberReducer.autoNumberOption,
+        autoNumberElementsIndex: state.autoNumberReducer.autoNumberElementsIndex,
+        autoNumberedElements: state.autoNumberReducer.autoNumberedElements,
+        currentSlateAncestorData: state.appStore.currentSlateAncestorData,
+        slateLevelData: state.appStore.slateLevelData
     }
 }
 

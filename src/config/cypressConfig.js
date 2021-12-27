@@ -28,7 +28,7 @@ let cypressConfig = {
     ctaButtonSmartlinkContexts: ['pdf', 'web-link', 'pop-up-web-link'],
     isCO : false,
     isLOL:false,
-    toolBarList : ['undo', 'redo', 'insertMedia', 'formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
+    toolBarList : ['undo', 'redo','insertMedia','formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
     elementToolbar: [],
     showHideToolbar: ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','alignment','calloutIcon', 'IndexEntry'],
     revelToolbar : ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
@@ -91,7 +91,7 @@ let cypressConfig = {
     tcmslatemanifest:"",
     saveElmOnAS: false,
     fullName:'c5test01',
-    isCypressPlusEnabled:true 
+    isCypressPlusEnabled:true
 }
 
 
