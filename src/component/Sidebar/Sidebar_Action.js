@@ -681,12 +681,10 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             config.isSavingElement = false
         } else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-            //For nested BL inside SH i.e Slate->SH->BL->BL
-            if (dataToUpdate?.asideData?.parent?.type && dataToUpdate.asideData.parent.type === "showhide" && dataToUpdate?.asideData?.parent?.showHideType) {
-                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].interactivedata[dataToUpdate.asideData.parent.showHideType][slateLevelBLIndex[2]], dataToSend)
-            } //For Parent BL inside SH i.e Slate->SH->BL
-            else if (dataToUpdate?.asideData?.type && dataToUpdate.asideData.type === "showhide" && dataToUpdate?.asideData?.sectionType) {
-                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].interactivedata[dataToUpdate.asideData.sectionType][slateLevelBLIndex[2]], dataToSend)
+            //For Nested BL inside SH i.e Slate->SH->BL->BL || For Parent BL inside SH i.e Slate->SH->BL
+            if ((dataToUpdate?.asideData?.parent?.type && dataToUpdate.asideData.parent.type === "showhide" && dataToUpdate?.asideData?.parent?.showHideType) || (dataToUpdate?.asideData?.type && dataToUpdate.asideData.type === "showhide" && dataToUpdate?.asideData?.sectionType)) {
+                let showHideSection = dataToUpdate?.asideData?.parent?.showHideType ? dataToUpdate.asideData.parent.showHideType : dataToUpdate.asideData.sectionType;
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].interactivedata[showHideSection][slateLevelBLIndex[2]], dataToSend)
             } //For BL on Slate Level i.e Slate->BL
             else {
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]], dataToSend)
