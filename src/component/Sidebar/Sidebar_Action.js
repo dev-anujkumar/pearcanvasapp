@@ -675,6 +675,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
     }).then(res => {
         const newParentData = getState().appStore.slateLevelData;
         const parsedParentData = JSON.parse(JSON.stringify(newParentData));
+        const slateLevelBLIndex = (typeof dataToUpdate?.slateLevelBLIndex === 'number') ? [`${dataToUpdate.slateLevelBLIndex}`] : dataToUpdate.slateLevelBLIndex;
         if (parsedParentData[config.slateManifestURN]?.status === 'approved') {
             if (parsedParentData.type === "popup") {
                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
@@ -690,11 +691,13 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             config.isSavingElement = false
         } else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-            if (dataToUpdate.asideData.parent && dataToUpdate.asideData.parent.type==="showhide") {
-                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex[0]].interactivedata[dataToUpdate.asideData.parent.showHideType][dataToUpdate.slateLevelBLIndex[2]], dataToSend)
-            }
+            //For Nested BL inside SH i.e Slate->SH->BL->BL || For Parent BL inside SH i.e Slate->SH->BL
+            if ((dataToUpdate?.asideData?.parent?.type && dataToUpdate.asideData.parent.type === "showhide" && dataToUpdate?.asideData?.parent?.showHideType) || (dataToUpdate?.asideData?.type && dataToUpdate.asideData.type === "showhide" && dataToUpdate?.asideData?.sectionType)) {
+                let showHideSection = dataToUpdate?.asideData?.parent?.showHideType ? dataToUpdate.asideData.parent.showHideType : dataToUpdate.asideData.sectionType;
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].interactivedata[showHideSection][slateLevelBLIndex[2]], dataToSend)
+            } //For BL on Slate Level i.e Slate->BL
             else {
-                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex[0]], dataToSend)
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]], dataToSend)
             }
             dispatch({
                 type: AUTHORING_ELEMENT_UPDATE,
