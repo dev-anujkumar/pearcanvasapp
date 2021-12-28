@@ -56,6 +56,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     const { metaDataField, sectionType, parentElement, showHideObj } = containerElement;
     /* Get the element type */
     const typeOfElement = containerElement?.asideData?.type;
+    let tempIndex = elementIndex && typeof (elementIndex) !== 'number' && elementIndex.split('-');
     let wipData = {};
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
         wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
@@ -66,14 +67,14 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     */
     if(typeOfElement === SHOWHIDE) {
         containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex, currentSlateData);
-        wipData = containerElement?.showHideObj?.currentElement || {};
+        wipData =  containerElement?.showHideObj?.element?.interactivedata[containerElement?.sectionType][tempIndex[2]]  || {};
     } 
     else if(typeOfElement === POETRY_ELEMENT) {
         containerElement = prepareSnaphotPoetry(containerElement, response, elementIndex, currentSlateData);
         // for versioning case, we get the last data from wip
         // so initilizing the wip
-        wipData = containerElement?.poetryData?.currentElement || {};
-  
+        let lastIndex = tempIndex[tempIndex.length - 1]
+        wipData = containerElement?.poetryData?.element?.contents?.bodymatter[lastIndex] || {};
     }
     else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action, containerElement)
