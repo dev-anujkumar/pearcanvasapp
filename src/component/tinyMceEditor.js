@@ -1232,7 +1232,7 @@ export class TinyMceEditor extends Component {
 
                 // check if node and all the parents of node are end child
                 
-                moveCursor(e, currentSelectedNode, tinymceOffset);
+                moveCursor(e, selectionNode, tinymceOffset);
                 // if(isKWChild(currentSelectedNode)) {
                 //     e.preventDefault();
                 // }

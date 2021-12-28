@@ -31,9 +31,16 @@ export const moveCursor = (e, node, tinymceOffset) => {
 
 
 export const isFirtstChild = (node, tinymceOffset) => {
-    console.log("KeyDown Test 51: ", tinymceOffset, node, node?.parentNode, node?.parentNode?.firstChild)
-    if (node === node.parentNode.firstChild) {
-        return tinymceOffset === 0;
+    console.log("KeyDown Test 51: ", tinymceOffset, node, node?.parentNode, node?.parentNode?.firstChild);
+    const isKChild = isKWChild(node);
+    if(isKChild.isChild) {
+        console.log("KeyDown Test 52: ", node);
+        console.log("KeyDown Test 53: ", isKChild);
+        const firstNode = isKChild.node.firstChild.firstChild;
+        console.log("KeyDown Test 54: ", firstNode);
+        if(firstNode === node || firstNode.nodeName === "IMG") {
+            return tinymceOffset === 0
+        }
     }
     else return false;
 }
@@ -52,12 +59,17 @@ export const isLastChild = (node, tinymceOffset) => {
         console.log("KeyDown Test 22 ", node.textContent, node.textContent.length, tinymceOffset);
         console.log("KeyDown Test 23 ", node.firstChild);
         if (node.parentNode.firstChild === node) {
+            // fails in case of sub script and super script
             return node.textContent?.length === tinymceOffset
         }
         else {
             console.log("KeyDown Test Other Complex case 31", node, isKChild, tinymceOffset);
             console.log("KeyDown Test 32 ", node.textContent.length, tinymceOffset);
             console.log("KeyDown Test 33 ", isKChild.node);
+            console.log("KeyDown Test 34 ", isKChild.node.firstChild.lastChild);
+            if(isKChild.node.firstChild.lastChild === node) {
+                return node.textContent?.length === tinymceOffset
+            }
             return false;
             // check if there is no other child
             // if there is child
