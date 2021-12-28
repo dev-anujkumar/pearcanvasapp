@@ -38,6 +38,12 @@ export const isFirtstChild = (node, tinymceOffset) => {
     else return false;
 }
 
+
+
+const getLastNode = (node, parentIndex) => {
+
+}
+
 export const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
@@ -51,6 +57,7 @@ export const isLastChild = (node, tinymceOffset) => {
         else {
             console.log("KeyDown Test Other Complex case 31", node, isKChild, tinymceOffset);
             console.log("KeyDown Test 32 ", node.textContent.length, tinymceOffset);
+            console.log("KeyDown Test 33 ", isKChild.node);
             return false;
             // check if there is no other child
             // if there is child
@@ -66,10 +73,10 @@ export const isLastChild = (node, tinymceOffset) => {
 
 export const isKWChild = (node, index = 0) => {
     if (index === 6) {
-        return { isChild: false, index };
+        return { isChild: false, index, node };
     }
     else if (node.parentNode.id.startsWith(QUERY_SELECTOR)) {
-        return { isChild: true, index };
+        return { isChild: true, index, node };
     }
     else {
         return isKWChild(node.parentNode, index + 1);
