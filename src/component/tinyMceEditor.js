@@ -1211,25 +1211,7 @@ export class TinyMceEditor extends Component {
              const parentClass = currentSelectedNode.classList;
             //  console.log("Parent class", parentClass, currentSelection.getRng());
            
-                console.log("KeyDown Test 1, active node ", currentSelectedNode);
-                console.log("KeyDown Test 2, active node ", selectionNode);
-                console.log("KeyDown Test 3, child nodes ", currentSelectedNode.childNodes);
-                console.log("KeyDown Test 4, Selected node", selectionNode.childNodes);
-
-    
-                console.log("KeyDown Test 8, Parent node", selectionNode.parentNode);
-                console.log("KeyDown Test 9, Parent node", currentSelectedNode.parentNode);
-
-                console.log("KeyDown Test 10, Parent node", currentSelectedNode.parentNode.id);
-                console.log("KeyDown Test 11, Parent node", selectionNode.parentNode.id);
                 
-                console.log("KeyDown Test 12, Grand Parent node", currentSelectedNode.parentNode.parentNode.id);
-                console.log("KeyDown Test 13, Grand Parent node", selectionNode.parentNode.parentNode.id);
-
-
-                console.log("KeyDown Test 14, selectin value", currentSelection.getRng().endOffset);
-                console.log("KeyDown Test 15, selectionvalue", window.getSelection().anchorOffset);
-
                 // check if node and all the parents of node are end child
                 
                 moveCursor(e, selectionNode, tinymceOffset);
