@@ -38,14 +38,18 @@ const getNode = (n) => {
 
 export const isFirtstChild = (n, tinymceOffset) => {
     const node = getNode(n);
-    // console.log("KeyDown Test 51: ", tinymceOffset, node, node?.parentNode, node?.parentNode?.firstChild);
+    // // console.log("KeyDown Test 51: ", tinymceOffset, node, node?.parentNode, node?.parentNode?.firstChild);
      
     const isKChild = isKWChild(node);
     if(isKChild.isChild) {
-        // console.log("KeyDown Test 52: ", node);
-        // console.log("KeyDown Test 53: ", isKChild);
+        // // console.log("KeyDown Test 52: ", node);
+        // // console.log("KeyDown Test 53: ", isKChild);
         const firstNode = isKChild.node.firstChild.firstChild;
-        // console.log("KeyDown Test 54: ", firstNode, firstNode.nodeName);
+        // // console.log("KeyDown Test 54: ", firstNode, firstNode.nodeName);
+        if(firstNode.nodeName === "BR" && node.lastChild === node.firstChild) {
+            // para is empty
+            return true;
+        }
         if(firstNode === node || firstNode.nodeName === "IMG") {
             return tinymceOffset === 0
         }
@@ -53,25 +57,42 @@ export const isFirtstChild = (n, tinymceOffset) => {
     else return false;
 }
 
+const getNthLi = (node) => {
+    if(node && node.lastChild) {
+        return getNthLi(node.lastChild);
+    }
+    else {
+        return node;
+    }
+}
+
 
 export const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
         // if (isKChild.index === 1) {
-        // console.log("KeyDown Test 21 ", node, isKChild, tinymceOffset);
-        // console.log("KeyDown Test 22 ", node.textContent, node.textContent.length, tinymceOffset);
-        // console.log("KeyDown Test 23 ", node.firstChild);
-        if (node.parentNode.firstChild === node) {
+        // // console.log("KeyDown Test 21 ", node, isKChild, tinymceOffset);
+        // // console.log("KeyDown Test 22 ", node.textContent, node.textContent.length, tinymceOffset);
+        // // console.log("KeyDown Test 23 ", node.firstChild);
+        if(node.parentNode.nodeName === 'LI') {
+            // get last child of last node.
+            const nthChild = getNthLi(isKChild.node);
+            // // console.log("KeyDown Test 24 ", nthChild, node, node.firstChild);
+            if(nthChild === node) {
+                return node.textContent?.length === tinymceOffset
+            }
+        }
+        else if (node.parentNode.firstChild === node) {
             // fails in case of sub script and super script
             return node.textContent?.length === tinymceOffset
         }
         else {
-            // console.log("KeyDown Test Other Complex case 31", node, isKChild, tinymceOffset);
-            // console.log("KeyDown Test 32 ", node.textContent.length, tinymceOffset);
-            // console.log("KeyDown Test 33 ", isKChild.node);
-            // console.log("KeyDown Test 34 ", isKChild.node.firstChild.lastChild);
+            // // console.log("KeyDown Test Other Complex case 31", node, isKChild, tinymceOffset);
+            // // console.log("KeyDown Test 32 ", node.textContent.length, tinymceOffset);
+            // // console.log("KeyDown Test 33 ", isKChild.node);
+            // // console.log("KeyDown Test 34 ", isKChild.node.firstChild.lastChild);
             const lastChild = isKChild.node.firstChild.lastChild;
-            // console.log("KeyDown Test 35 ", lastChild, lastChild.nodeName)
+            // // console.log("KeyDown Test 35 ", lastChild, lastChild.nodeName)
             if(lastChild === node || lastChild.nodeName === 'IMG') {
                 return node.textContent?.length === tinymceOffset
             }
@@ -125,9 +146,9 @@ const getLastString = (text) => {
 }
 
 export const getDataFromLastTag = (text) => {
-    //    // console.log("the text is ", text.innerHTML, text.firstChild, text.firstChild.innerHTML);
+    //    // // console.log("the text is ", text.innerHTML, text.firstChild, text.firstChild.innerHTML);
     const mainString = replaceNbsps(text.innerHTML);
-    //    // console.log("the main string is ", mainString);
+    //    // // console.log("the main string is ", mainString);
     return getLastString(mainString);
 
     //    return text.innerText;
