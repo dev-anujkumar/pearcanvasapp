@@ -207,6 +207,10 @@ export class TinyMceEditor extends Component {
                         editor.selection.placeCaretAt(clickedX, clickedY);
                     }
 
+                    if(e.level && e.level.content.match(/<blockquote/)?.input.includes('class="blockquoteMarginalia') && e.level.content.match(/<img/)?.input.includes('class="imageAssetContent')){
+                        this.props.handleBlur(null, this.props.currentElement, this.props.index, null, eventTarget)
+                    }
+
                     let content = e.target.getContent({ format: 'text' }),
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
