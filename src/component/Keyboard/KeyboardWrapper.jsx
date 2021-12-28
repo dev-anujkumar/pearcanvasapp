@@ -29,15 +29,23 @@ export const moveCursor = (e, node, tinymceOffset) => {
     }
 }
 
+const getNode = (n) => {
+    if(n?.parentNode?.nodeName === 'LI') {
+        return n.parentNode;
+    }
+    else return n;
+}
 
-export const isFirtstChild = (node, tinymceOffset) => {
+export const isFirtstChild = (n, tinymceOffset) => {
+    const node = getNode(n);
     console.log("KeyDown Test 51: ", tinymceOffset, node, node?.parentNode, node?.parentNode?.firstChild);
+     
     const isKChild = isKWChild(node);
     if(isKChild.isChild) {
         console.log("KeyDown Test 52: ", node);
         console.log("KeyDown Test 53: ", isKChild);
         const firstNode = isKChild.node.firstChild.firstChild;
-        console.log("KeyDown Test 54: ", firstNode);
+        console.log("KeyDown Test 54: ", firstNode, firstNode.nodeName);
         if(firstNode === node || firstNode.nodeName === "IMG") {
             return tinymceOffset === 0
         }
@@ -45,11 +53,6 @@ export const isFirtstChild = (node, tinymceOffset) => {
     else return false;
 }
 
-
-
-const getLastNode = (node, parentIndex) => {
-
-}
 
 export const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
@@ -67,7 +70,9 @@ export const isLastChild = (node, tinymceOffset) => {
             console.log("KeyDown Test 32 ", node.textContent.length, tinymceOffset);
             console.log("KeyDown Test 33 ", isKChild.node);
             console.log("KeyDown Test 34 ", isKChild.node.firstChild.lastChild);
-            if(isKChild.node.firstChild.lastChild === node) {
+            const lastChild = isKChild.node.firstChild.lastChild;
+            console.log("KeyDown Test 35 ", lastChild, lastChild.nodeName)
+            if(lastChild === node || lastChild.nodeName === 'IMG') {
                 return node.textContent?.length === tinymceOffset
             }
             return false;
@@ -84,7 +89,7 @@ export const isLastChild = (node, tinymceOffset) => {
 
 
 export const isKWChild = (node, index = 0) => {
-    if (index === 6) {
+    if (index === 10) {
         return { isChild: false, index, node };
     }
     else if (node.parentNode.id.startsWith(QUERY_SELECTOR)) {
