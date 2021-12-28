@@ -35,6 +35,7 @@ import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlo
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
+import { getDataFromLastTag, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -1207,10 +1208,11 @@ export class TinyMceEditor extends Component {
             const currentSelectedNode = currentSelection?.getNode();
 
              const parentClass = currentSelectedNode.classList;
-            //  console.log("Parent class", parentClass);
-             if(parentClass.contains("paragraphNumeroUno") || parentClass.contains("pullQuoteNumeroUno") || parentClass.contains("listItemNumeroUnoBullet") || parentClass.contains("heading2learningObjectiveItem")) {
-                 const windowSelection = window.getSelection().anchorOffset;
-                 const selectionText = tinymce?.activeEditor?.selection?.getNode()?.textContent;
+            //  console.log("Parent class", parentClass, currentSelection.getRng());
+            if(!this.props.isBlockList) {
+             if(supportedClasses.some(item => parentClass.contains(item))) {
+                 const windowSelection = currentSelection.getRng().endOffset;
+                 const selectionText = currentSelectedNode?.textContent;
                  const innerHtml = currentSelectedNode.innerText;
                 //  console.log("Selection is 00", selectionText, " inner html ", innerHtml);
                 //  console.log("windowSelection is 00", windowSelection, " inner html ", selectionText.length);
@@ -1222,21 +1224,26 @@ export class TinyMceEditor extends Component {
                     // console.log("Inner html ", innerHtml, " Selection ", selectionText)
                     if(innerHtml.startsWith(selectionText)) {
                         // console.log("start matched");
-                        e.preventDefault()
+                        e.preventDefault();
                     }
                     else {
-                        e.stopPropagation()
+                        e.stopPropagation();
                     }
                 }
-                else if (windowSelection === selectionText.length && e.keyCode === 40) {
-                    
-                    // console.log("Inner html 2 ", innerHtml, " Selection ", selectionText)
-                    if(innerHtml.endsWith(selectionText)) {
+                else if (e.keyCode === 40) {
+                    const lastString= getDataFromLastTag(currentSelectedNode);
+                    // console.log("Inner html 333",lastString, lastString.length, windowSelection);
+                    if(lastString.length === windowSelection) {
                         // console.log("last matched");
-                        e.preventDefault()
+                        if(windowSelection === 0 && innerHtml.length > 0) {
+                            e.stopPropagation();
+                        }
+                        else {
+                            e.preventDefault();
+                        }
                     }
                     else {
-                        e.stopPropagation()
+                        e.stopPropagation();
                     }
                     // check if text matches the end of inner html
                     // if yes : prevent default
@@ -1268,6 +1275,9 @@ export class TinyMceEditor extends Component {
                     e.stopPropagation();
                 }
              }
+            }else {
+                e.stopPropagation();
+            }
             
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
             if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
@@ -4149,13 +4159,9 @@ export class TinyMceEditor extends Component {
 
     processBlockquoteHtml = (model, element, lockCondition) => {
 
-        let activeEditorHTML = document.getElementById('cypress-' + this.props.index)?.innerHTML;
-        let isContainsImage = activeEditorHTML?.match(/<blockquote/)?.input.includes('class="blockquoteMarginalia"') && activeEditorHTML?.match(/<img/)?.input.includes('class="imageAssetContent')
-        let isTextExists = tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0] === '<p class="paragraphNummerEins" contenteditable="true"><br></p>'
         const temDiv = document.createElement('div');
         let hiddenBlock = this.generateHiddenElement();
         temDiv.innerHTML = model && model.text ? model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
-        
         if (element && element.elementdata && element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length) {
             tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
         }
