@@ -205,7 +205,7 @@ export const FigureHeader = (props) => {
                         <span>{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                         {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
-                            <div className="figure-dropdown" style={{top: '10px', left: 0}} ref={labelDropdownWrapperRef} >
+                            <div className="figure-dropdown" style={{top: '9px', left: 0}} ref={labelDropdownWrapperRef} >
                                 <ul>
                                     {figureLabelData.map((label, i) => {
                                         return (
