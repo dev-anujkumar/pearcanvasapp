@@ -3998,7 +3998,8 @@ export class TinyMceEditor extends Component {
             let currentId = this.props.index;
             let node = document.getElementById('cypress-' + currentId);
             tempdiv.innerHTML = node ? node.innerHTML : '';
-            if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
+
+            if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length && !document.querySelector(`div#cypress-${this.props.index} .paragraphNummerEins`)?.innerHTML?.match(/<img/)?.input?.includes('class="imageAssetContent')) {
                 if (!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length) {
                     node.innerHTML = this.lastContent;
                 }
