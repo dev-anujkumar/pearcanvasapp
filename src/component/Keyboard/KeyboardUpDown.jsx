@@ -7,13 +7,25 @@ const KeyboardUpDown = (props) => {
     const keyboardUpDown = useRef(null);
     const activeElement = useSelector(state => state.keyboardReducer.selectedElement);
     const dispatch = useDispatch();
-    const getChildAndClick = (element) => {
+    const getChildAndClick = (element, enableScroll) => {
         if (element) {
             dispatch(selectElement(element.id));
             const childElement = element.childNodes[1];
+            if(enableScroll) {
+                const rect = element.getBoundingClientRect();
+                const parentNode = keyboardUpDown.current.parentNode;
+                const divHeight = parentNode.getBoundingClientRect().height;
+                parentNode.scroll(0, parentNode.top + divHeight);
+            }
             childElement.click();
+          
         }
     }
+
+    const shouldEnableScroll = (selectedNodeIndex, allElementLength) => {
+        return allElementLength ;
+    }
+
     const handleKeyDown = (event) => {
         if (event.keyCode === 38 || event.keyCode === 40) {
             const allInteractiveElements = document.querySelectorAll(`[id^='${QUERY_SELECTOR}-']`);
@@ -29,7 +41,8 @@ const KeyboardUpDown = (props) => {
 
                 }
                 else if (event.keyCode === 40 && selectedNodeIndex !== allInteractiveElements.length) {
-                    getChildAndClick(allInteractiveElements[selectedNodeIndex + 1]);
+                    const enableScroll = shouldEnableScroll(selectedNodeIndex, allInteractiveElements.length);
+                    getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], enableScroll);
                 }
             }
         }
