@@ -60,7 +60,19 @@ const isFirtstChild = (node, tinymceOffset) => {
         // console.log("KeyDown Test 53: ", isKChild);
         const firstNode = isKChild.node.firstChild.firstChild;
         // console.log("KeyDown Test 54: ", firstNode, isKChild.node.firstChild, isKChild.node.lastChild);
-        if(node?.parentNode?.nodeName === 'LI') {
+        if(node.nodeName === 'LI') {
+            // in case of empty list item, text node
+            // does not come, Li node comes
+            // console.log("KeyDown Test 55.1:  The node parent name is LI");
+            // const firstTextNode = firstNode.firstChild;
+            // console.log("KeyDown Test 56:  firstTextNode");
+            // console.log("KeyDown Test 57:  firstTextNode", firstNode);
+            if(firstNode === node) {
+            // console.log("KeyDown Test 58:  two node are equal");
+                return tinymceOffset === 0;
+            }
+        }
+        else if(node?.parentNode?.nodeName === 'LI') {
             // console.log("KeyDown Test 55:  The nod eparent name is LI");
             const firstTextNode = firstNode.firstChild;
             // console.log("KeyDown Test 56:  firstTextNode", firstTextNode);
@@ -87,6 +99,8 @@ const isFirtstChild = (node, tinymceOffset) => {
                 else return tinymceOffset == 0;
             }
             return tinymceOffset === 0;
+        }else {
+            return false;
         }
     }
     else return false;
@@ -120,7 +134,19 @@ const isLastChild = (node, tinymceOffset) => {
         // console.log("KeyDown Test 21 ", node, isKChild, tinymceOffset);
         // console.log("KeyDown Test 22 ", node.textContent, node.textContent.length, tinymceOffset);
         // console.log("KeyDown Test 23 ", node.firstChild);
-        if (node.parentNode.nodeName === 'LI') {
+        if(node.nodeName === 'LI') {
+            // in case of empty LI node name comes in node
+            // and nth child will point to BR
+            const nthChild = getNthLi(isKChild.node);
+            // console.log("KeyDown Test 24.0 ", node, nthChild.parentNode);
+            if (nthChild.parentNode === node) {
+                return true;
+            }
+        }
+        else if (node.parentNode.nodeName === 'LI') {
+            // in case li having text, we will get text node
+            // inside node.
+
             // get last child of last node.
             const nthChild = getNthLi(isKChild.node);
             // console.log("KeyDown Test 24 ", nthChild, node, node.firstChild);
