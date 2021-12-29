@@ -43,18 +43,7 @@ export const moveCursor = (e, node, tinymceOffset) => {
         e.stopPropagation();
     }
 }
-/**
- * In case of LI, we get node of Text node inside
- * LI, so so compare 2 nodes we are returning parent. 
- * @param {*} n 
- * @returns 
- */
-const getNode = (n) => {
-    if (RETURN_PARENT_FOR_NODES.includes(n?.parentNode?.nodeName)) {
-        return n.parentNode;
-    }
-    else return n;
-}
+
 
 /**
  * Check if node if first child
@@ -62,8 +51,7 @@ const getNode = (n) => {
  * @param {*} tinymceOffset : cursor selection point
  * @returns 
  */
-const isFirtstChild = (n, tinymceOffset) => {
-    const node = getNode(n);
+const isFirtstChild = (node, tinymceOffset) => {
     // console.log("KeyDown Test 51: ", tinymceOffset, node, node?.parentNode, node?.parentNode?.firstChild);
 
     const isKChild = isKWChild(node);
@@ -72,8 +60,18 @@ const isFirtstChild = (n, tinymceOffset) => {
         // console.log("KeyDown Test 53: ", isKChild);
         const firstNode = isKChild.node.firstChild.firstChild;
         // console.log("KeyDown Test 54: ", firstNode, isKChild.node.firstChild, isKChild.node.lastChild);
-
-        if (firstNode === node || firstNode.nodeName === "IMG") {
+        if(node?.parentNode?.nodeName === 'LI') {
+            // console.log("KeyDown Test 55:  The nod eparent name is LI");
+            const firstTextNode = firstNode.firstChild;
+            // console.log("KeyDown Test 56:  firstTextNode", firstTextNode);
+            // console.log("KeyDown Test 57:  firstTextNode", firstNode.firstChild);
+            if(firstTextNode === node) {
+            // console.log("KeyDown Test 58:  two node are equal");
+                return tinymceOffset === 0;
+            }
+            
+        }
+        else if (firstNode === node || firstNode?.nodeName === "IMG") {
             return tinymceOffset === 0
         }
         else if (firstNode === firstNode.parentNode.lastChild) {
@@ -140,7 +138,7 @@ const isLastChild = (node, tinymceOffset) => {
                 return textContent.length == tinymceOffset
             }
             return node.textContent?.length === tinymceOffset
-        } else if (node.parentNode.firstChild.lastChild === node.lastChild && node.lastChild.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
+        } else if (node.parentNode.firstChild.lastChild === node.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
             return true
         }
         else {
@@ -150,7 +148,7 @@ const isLastChild = (node, tinymceOffset) => {
             // console.log("KeyDown Test 34 ", isKChild.node.firstChild.lastChild);
             const lastChild = isKChild.node.firstChild.lastChild;
             // console.log("KeyDown Test 35 ", lastChild, lastChild.nodeName)
-            if (lastChild === node || lastChild.nodeName === 'IMG') {
+            if (lastChild === node || lastChild?.nodeName === 'IMG') {
                 return node.textContent?.length === tinymceOffset
             }
             return false;
