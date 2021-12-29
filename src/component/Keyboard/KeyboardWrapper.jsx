@@ -58,7 +58,7 @@ const getNode = (n) => {
  * @param {*} tinymceOffset : cursor selection point
  * @returns 
  */
-export const isFirtstChild = (n, tinymceOffset) => {
+const isFirtstChild = (n, tinymceOffset) => {
     const node = getNode(n);
     // // console.log("KeyDown Test 51: ", tinymceOffset, node, node?.parentNode, node?.parentNode?.firstChild);
      
@@ -101,7 +101,7 @@ const getNthLi = (node) => {
  * @returns 
  */
 
-export const isLastChild = (node, tinymceOffset) => {
+const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
         // if (isKChild.index === 1) {
@@ -150,7 +150,7 @@ export const isLastChild = (node, tinymceOffset) => {
  * @returns 
  */
 
-export const isKWChild = (node, index = 0) => {
+const isKWChild = (node, index = 0) => {
     if (index === 10) {
         return { isChild: false, index, node };
     }
