@@ -4,8 +4,6 @@ import { selectElement } from '../../appstore/keyboardReducer';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
 
-const RETURN_PARENT_FOR_NODES = ['LI'];
-
 /**
  * function decides to
  * move cursor to next line or next element
