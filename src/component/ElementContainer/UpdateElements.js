@@ -60,20 +60,17 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     let numberedandlabel = false;
     let manualoverride = {};
 
-    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
-        if (typeof(numberHTML) === 'string' && numberHTML.indexOf('.') !== -1) {
-            numberHTML = numberHTML.split('.')[1];
-        }
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML);
-        numberedandlabel = payloadKeys?.numberedandlabel;
-        manualoverride = payloadKeys?.manualoverride;
-    }
     // let displayedlabel = (manualoverride && Object.keys(manualoverride)?.length > 0) ? previousElementData?.displayedlabel : titleHTML // Object.keys(manualoverride)?.length > 0  && manualoverride.hasOwnProperty('overridelabelvalue') ?  ;
     let displayedlabel;
     if (previousElementData.numberedandlabel === false && numberedandlabel === true) {
         displayedlabel = getValueOfLabel(previousElementData.figuretype);
     } else {
         displayedlabel = titleHTML;
+    }
+    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
     }
     captionHTML = replaceUnwantedtags(captionHTML, true);
     creditsHTML = replaceUnwantedtags(creditsHTML, true);

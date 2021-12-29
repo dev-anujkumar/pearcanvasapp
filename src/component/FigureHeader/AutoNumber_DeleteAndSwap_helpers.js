@@ -34,7 +34,7 @@ export const handleAutoNumberingOnDelete = (params) => {
         else if (type == 'figure') {
             //reset auto-numbering
             const autoNumberedElements = getState().autoNumberReducer.autoNumberedElements;
-            updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements, dispatch)
+            dispatch(updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements))
         }
     }
 }
@@ -45,12 +45,12 @@ export const handleAutoNumberingOnDelete = (params) => {
  * @param {*} numberedElements 
  * @param {*} dispatch 
  */
-export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, numberedElements, dispatch) => {
+export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, numberedElements) => (dispatch) => {
 
     if (parentIndex && contentUrn && numberedElements) {
         for (let labelType in numberedElements) {
             if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
-                let index = numberedElements[labelType][parentIndex].findIndex(x => x.contentUrn === contentUrn);
+                let index = numberedElements[labelType][parentIndex].findIndex(figure => figure.contentUrn === contentUrn);
                 if (index > -1) {
                     numberedElements[labelType][parentIndex].splice(index, 1);
                 }

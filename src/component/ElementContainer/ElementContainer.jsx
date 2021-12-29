@@ -72,9 +72,14 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
-import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, updateAutonumberingOnOverridedCase } from '../FigureHeader/AutoNumber_helperFunctions';
+import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 
+const { 
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -420,17 +425,17 @@ class ElementContainer extends Component {
             oldImage = this.props.oldFigureDataForCompare.path;
         }
         if (this.props.isAutoNumberingEnabled && (previousElementData.figuretype !== 'tableasmarkup')) {
-            if (titleHTML !== previousElementData.displayedlabel) {
-                this.props.updateAutonumberingOnElementTypeUpdate(titleHTML, previousElementData, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+
+            if (previousElementData.numberedandlabel === false && (this.props.autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER)) {
+                let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption, titleHTML, numberHTML, true);
+                if (!isValidValues) return false;
             }
+
             let isNumberDifferent = false;
             let imgNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
-            if (typeof(numberHTML) === 'string' && numberHTML.indexOf('.') !== -1) {
-                numberHTML = numberHTML.split('.')[1];
-            }
-            if (overridedNumber) {
-                isNumberDifferent = parseInt(overridedNumber) !== parseInt(numberHTML);
+            if (overridedNumber && overridedNumber !== '') {
+                isNumberDifferent = overridedNumber !== numberHTML; 
             } else {
                 const figIndexParent = getContainerEntityUrn(this.props.currentSlateAncestorData);
                 imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
@@ -638,17 +643,18 @@ class ElementContainer extends Component {
         let oldImage = this.props.oldImage;
         oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
         if (this.props.isAutoNumberingEnabled) {
-            if (titleHTML !== previousElementData.displayedlabel) {
-                this.props.updateAutonumberingOnElementTypeUpdate(titleHTML, previousElementData, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+            
+            if (previousElementData.numberedandlabel === false && (this.props.autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER)) {
+                let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption, titleHTML, numberHTML, true);
+                if (!isValidValues) return false;
             }
+
             let isNumberDifferent = false;
             let imgNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
-            if (typeof (numberHTML) === 'string' && numberHTML.indexOf('.') !== -1) {
-                numberHTML = numberHTML.split('.')[1];
-            }
-            if (overridedNumber) {
-                isNumberDifferent = parseInt(overridedNumber) !== parseInt(numberHTML);
+            
+            if (overridedNumber && overridedNumber !== '') {
+                isNumberDifferent = overridedNumber !== numberHTML;
             } else {
                 const figIndexParent = getContainerEntityUrn(this.props.currentSlateAncestorData);
                 imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
@@ -834,10 +840,7 @@ class ElementContainer extends Component {
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
                             if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && this.props.isAutoNumberingEnabled) {
-                                this.props.updateAutonumberingKeysInStore(dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData);
-                                if (previousElementData.numberedandlabel === false && dataToSend.numberedandlabel === true) {
-                                    this.props.handleAutonumberingOnCreate(dataToSend.displayedlabel.toUpperCase(), dataToSend);
-                                }
+                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
                             }
                         }
                         break;
@@ -849,10 +852,7 @@ class ElementContainer extends Component {
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
                             if (this.props.isAutoNumberingEnabled) {
-                                this.props.updateAutonumberingKeysInStore(dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData);
-                                if (previousElementData.numberedandlabel === false && dataToSend.numberedandlabel === true) {
-                                    this.props.handleAutonumberingOnCreate(dataToSend.displayedlabel.toUpperCase(), dataToSend);
-                                }
+                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
                             }
                         }
                         break;
@@ -943,6 +943,22 @@ class ElementContainer extends Component {
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                 }
                 break;
+        }
+    }
+    
+    handleAutonumberAfterUpdate = (previousElementData, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
+        const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
+        if (!previousElementData?.numberedandlabel && dataToSend.numberedandlabel) {
+            this.props.handleAutonumberingOnCreate(dataToSend?.figuretype?.toUpperCase(), dataToSend);
+        } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) {
+            this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
+        } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && ((!dataToSend.hasOwnProperty('manualoverride')) || (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue')))) { 
+            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend?.displayedlabel, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
+        } else if ((previousElementData?.numberedandlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
+            // override case 
+            this.props.updateAutonumberingOnOverridedCase(dataToSend.figuretype.toUpperCase(), dataToSend, autoNumberedElements, currentSlateAncestorData);
+        } else {
+            this.props.updateAutonumberingKeysInStore(dataToSend, autoNumberedElements, currentSlateAncestorData);
         }
     }
 
@@ -2469,6 +2485,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         handleAutonumberingOnCreate: (type, elementData) => {
             dispatch(handleAutonumberingOnCreate(type, elementData))
+        },
+        updateAutonumberingOnOverridedCase: (elementType, element, autoNumberedElements, currentSlateAncestorData) => {
+            dispatch(updateAutonumberingOnOverridedCase(elementType, element, autoNumberedElements, currentSlateAncestorData))
+        },
+        updateAutoNumberSequenceOnDelete: (parentIndex, contentUrn, numberedElements) => {
+            dispatch(updateAutoNumberSequenceOnDelete(parentIndex, contentUrn, numberedElements))
         }
     }
 }
