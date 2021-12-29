@@ -1196,32 +1196,15 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
-            
-            // get current node
-            // get innertext of current node
-            // check if current node has next element
-            // if current node has next element and down is press
-            // do nothing
-            // if current node does not have next element
-            // and cursor length is qual to 
             const currentSelection = tinymce?.activeEditor?.selection;
-            const tinymceOffset = currentSelection.getRng().endOffset;
-            const currentSelectedNode = currentSelection?.getNode();
             const selectionNode = window.getSelection().anchorNode;
-             const parentClass = currentSelectedNode.classList;
-            //  console.log("Parent class", parentClass, currentSelection.getRng());
-           
-                
-                // check if node and all the parents of node are end child
-                
-                moveCursor(e, selectionNode, tinymceOffset);
-                // if(isKWChild(currentSelectedNode)) {
-                //     e.preventDefault();
-                // }
-                // else {
-                //     e.stopPropagation();
-                // }
-            
+            const tinymceOffset = currentSelection.getRng().endOffset;
+            /**
+             * get node vs window selection node
+             * window selection is accurate and gives 
+             * inner most node as compared to currentSelecction.getNode()
+             */
+            moveCursor(e, selectionNode, tinymceOffset);
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
             if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                 const keyCode = e.keyCode || e.which;
