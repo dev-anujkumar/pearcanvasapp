@@ -50,33 +50,33 @@ export const moveCursor = (e, node, tinymceOffset) => {
  * @returns 
  */
 const isFirtstChild = (node, tinymceOffset) => {
-    // console.log("KeyDown Test 51: ", tinymceOffset, node, node?.parentNode, node?.parentNode?.firstChild);
+    
 
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-        // console.log("KeyDown Test 52: ", node);
-        // console.log("KeyDown Test 53: ", isKChild);
+        
+        
         const firstNode = isKChild.node.firstChild.firstChild;
-        // console.log("KeyDown Test 54: ", firstNode, isKChild.node.firstChild, isKChild.node.lastChild);
+        
         if(node.nodeName === 'LI') {
             // in case of empty list item, text node
             // does not come, Li node comes
-            // console.log("KeyDown Test 55.1:  The node parent name is LI");
+            
             // const firstTextNode = firstNode.firstChild;
-            // console.log("KeyDown Test 56:  firstTextNode");
-            // console.log("KeyDown Test 57:  firstTextNode", firstNode);
+            
+            
             if(firstNode === node) {
-            // console.log("KeyDown Test 58:  two node are equal");
+            
                 return tinymceOffset === 0;
             }
         }
         else if(node?.parentNode?.nodeName === 'LI') {
-            // console.log("KeyDown Test 55:  The nod eparent name is LI");
+            
             const firstTextNode = firstNode.firstChild;
-            // console.log("KeyDown Test 56:  firstTextNode", firstTextNode);
-            // console.log("KeyDown Test 57:  firstTextNode", firstNode.firstChild);
+            
+            
             if(firstTextNode === node) {
-            // console.log("KeyDown Test 58:  two node are equal");
+            
                 return tinymceOffset === 0;
             }
             
@@ -85,13 +85,13 @@ const isFirtstChild = (node, tinymceOffset) => {
             return tinymceOffset === 0
         }
         else if (firstNode === firstNode.parentNode.lastChild) {
-            // console.log("KeyDown Test 55: First node is last node");
+            
             if (firstNode.nodeName === 'CODE') {
                 const uniCode = '\uFEFF';
-                // console.log("KeyDown Test 56: Node name is code");
+                
                 if (firstNode.textContent.indexOf(uniCode) === 0 && tinymceOffset === 1) {
-                    // console.log("KeyDown Test 57: Node Contains something");
-                    // console.log("KeyDown Test 58: Unicode exist");
+                    
+                    
                     return true;
                 }
                 else return tinymceOffset == 0;
@@ -129,14 +129,14 @@ const getNthLi = (node) => {
 const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-        // console.log("KeyDown Test 21 ", node, isKChild, tinymceOffset);
-        // console.log("KeyDown Test 22 ", node.textContent, node.textContent.length, tinymceOffset);
-        // console.log("KeyDown Test 23 ", node.firstChild);
+        
+        
+        
         if(node.nodeName === 'LI') {
             // in case of empty LI node name comes in node
             // and nth child will point to BR
             const nthChild = getNthLi(isKChild.node);
-            // console.log("KeyDown Test 24.0 ", node, nthChild.parentNode);
+            
             if (nthChild.parentNode === node) {
                 return true;
             }
@@ -147,7 +147,7 @@ const isLastChild = (node, tinymceOffset) => {
 
             // get last child of last node.
             const nthChild = getNthLi(isKChild.node);
-            // console.log("KeyDown Test 24 ", nthChild, node, node.firstChild);
+            
             if (nthChild === node) {
                 return node.textContent?.length === tinymceOffset
             }
@@ -158,7 +158,7 @@ const isLastChild = (node, tinymceOffset) => {
             // in case of inline image its showing + 1 offset value
             if (node.parentNode.nodeName === 'CODE') {
                 const textContent = node.textContent.replace(/\uFEFF/g, "");
-                // console.log("KeyDown Test 25 Text content", textContent.length, textContent)
+                
                 return textContent.length == tinymceOffset
             }
             return node.textContent?.length === tinymceOffset
@@ -166,12 +166,12 @@ const isLastChild = (node, tinymceOffset) => {
             return true
         }
         else {
-            // console.log("KeyDown Test Other Complex case 31", node, isKChild, tinymceOffset);
-            // console.log("KeyDown Test 32 ", node.textContent.length, tinymceOffset);
-            // console.log("KeyDown Test 33 ", isKChild.node);
-            // console.log("KeyDown Test 34 ", isKChild.node.firstChild.lastChild);
+            
+            
+            
+            
             const lastChild = isKChild.node.firstChild.lastChild;
-            // console.log("KeyDown Test 35 ", lastChild, lastChild.nodeName)
+            
             if (lastChild === node || lastChild?.nodeName === 'IMG') {
                 return node.textContent?.length === tinymceOffset
             }
