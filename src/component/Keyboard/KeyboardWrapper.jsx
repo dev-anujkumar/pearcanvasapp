@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
