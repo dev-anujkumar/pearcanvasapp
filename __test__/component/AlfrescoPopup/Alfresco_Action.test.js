@@ -27,6 +27,14 @@ describe('Test Actions', () => {
         expect(spyFunction).toHaveBeenCalled();
         spyFunction.mockClear();
     });
+    it('Test-1.4---saveSelectedAlfrescoElement', () => {
+        const spyFunction = jest.spyOn(AlfrescoActions, 'saveSelectedAlfrescoElement');
+        let result = AlfrescoActions.saveSelectedAlfrescoElement(true);
+        expect(result.type).toEqual('SAVE_ALFRESCO_ELEMENT');
+        expect(result.payload).toEqual(true);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
 });
 describe('Test fetchAlfrescoSiteDropdownList',()=>{
     it('Test-2.1---fetchAlfrescoSiteDropdownList-Then- with res.data', () => {

@@ -32,9 +32,10 @@ import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
 import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist }  from '../js/TinyMceUtility.js';
-import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
+import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
+import { getDataFromLastTag, isKWChild, isLastChild, moveCursor, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -206,6 +207,10 @@ export class TinyMceEditor extends Component {
                         editor.selection.placeCaretAt(clickedX, clickedY);
                     }
 
+                    if(e.level && e.level.content.match(/<blockquote/)?.input.includes('class="blockquoteMarginalia') && e.level.content.match(/<img/)?.input.includes('class="imageAssetContent')){
+                        this.props.handleBlur(null, this.props.currentElement, this.props.index, null, eventTarget)
+                    }
+
                     let content = e.target.getContent({ format: 'text' }),
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
@@ -248,7 +253,7 @@ export class TinyMceEditor extends Component {
                             var MLtext = document.querySelector('#' + tinymce.activeEditor.id + ' > p > img') || document.querySelector('#' + tinymce.activeEditor.id + ' > img')
                             if (MLtext) {
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
-                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(MLtext)
+                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?.append(MLtext)
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
@@ -328,7 +333,7 @@ export class TinyMceEditor extends Component {
                 if (innerNode.childNodes.length) {
                     this.innerTextWithMathMl(innerNode)
                 } else {
-                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula'))) {
+                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula') || innerNode.classList.contains('imageAssetContent'))) {
                         this.clearFormateText = this.clearFormateText + innerNode.outerHTML;
                     } else {
                         this.clearFormateText = this.clearFormateText + innerNode.textContent
@@ -490,9 +495,8 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                         let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
                         let textToReplace = window.getSelection().toString()
-
                         if (isWirisIncluded) {
-                            if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula')) {
+                            if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula') || isWirisIncluded.classList.contains('imageAssetContent')) {
                                 textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`), '')
                                 this.clearFormateText = '';
                             }
@@ -715,11 +719,20 @@ export class TinyMceEditor extends Component {
                 }
             }
             /** Open Alfresco Picker to update inline image in list on double-click*/
-            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT && blockListData && Object.keys(blockListData).length))) {
+            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT ) || (this?.props?.element?.type === "element-blockfeature") || (this?.props?.element?.type === "element-learningobjectives"))) {
                 const imageArgs = {
                     id: e.target?.dataset?.id,
                     handleBlur:this.handleBlur
                 }
+
+                let temp = document.createElement("div");
+                temp.innerHTML = e.target?.outerHTML;
+                temp = temp.firstElementChild; 
+                let imageId =  temp.getAttribute("imageid")
+                if(!imageArgs.id && imageId){
+                    imageArgs.id = imageId;
+                }
+
                 let params = {
                     element: this.props.element,
                     permissions: this.props.permissions,
@@ -727,7 +740,7 @@ export class TinyMceEditor extends Component {
                     imageArgs
                 }
                 this.props.saveInlineImageData(params)
-                handleC2MediaClick(this.props.permissions, editor, this.props.element);
+                handleC2MediaClick(this.props.permissions, editor, this.props.element, this.props.saveSelectedAlfrescoElement);
             }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
@@ -1187,7 +1200,15 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
-
+            const currentSelection = tinymce?.activeEditor?.selection;
+            const selectionNode = window.getSelection().anchorNode;
+            const tinymceOffset = currentSelection.getRng().endOffset;
+            /**
+             * get node vs window selection node
+             * window selection is accurate and gives 
+             * inner most node as compared to currentSelecction.getNode()
+             */
+            moveCursor(e, selectionNode, tinymceOffset);
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
             if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                 const keyCode = e.keyCode || e.which;
@@ -3882,7 +3903,6 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
-
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
@@ -3904,7 +3924,8 @@ export class TinyMceEditor extends Component {
             let currentId = this.props.index;
             let node = document.getElementById('cypress-' + currentId);
             tempdiv.innerHTML = node ? node.innerHTML : '';
-            if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
+
+            if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length && !document.querySelector(`div#cypress-${this.props.index} .paragraphNummerEins`)?.innerHTML?.match(/<img/)?.input?.includes('class="imageAssetContent')) {
                 if (!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length) {
                     node.innerHTML = this.lastContent;
                 }
@@ -4016,8 +4037,8 @@ export class TinyMceEditor extends Component {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
                 let cgTitleFieldData = {};
-                if (this.props?.asideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" && this.props?.currentElement?.type === "element-authoredtext") {
-                    cgTitleFieldData.asideData = this.props.asideData;
+                if (this.props?.citationAsideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" && this.props?.currentElement?.type === "element-authoredtext") {
+                    cgTitleFieldData.asideData = this.props.citationAsideData;
                     cgTitleFieldData.parentElement = this.props.parentElement;
                 }
                 setTimeout(() => {
@@ -4086,7 +4107,6 @@ export class TinyMceEditor extends Component {
             tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
         }
         temDiv.innerHTML = removeBOM(temDiv.innerHTML)
-
         return temDiv;
 
     }
@@ -4098,7 +4118,11 @@ export class TinyMceEditor extends Component {
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;
-        classes += ' ' + this.placeHolderClass;
+        let isContainsImage =  this.props?.model?.text?.match(/<img/)?.input.includes('class="imageAssetContent');
+        if(!isContainsImage){
+            classes += ' ' + this.placeHolderClass;
+        }
+        
         /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
@@ -4121,6 +4145,7 @@ export class TinyMceEditor extends Component {
                     model = tempDiv.children[0].innerHTML;
                 }
                 model = removeBOM(model)
+
                 if (this.props.poetryField && this.props.poetryField === 'formatted-title') {
                     if (!classes.includes('poetryHideLabel')) {
                         classes = classes + ' poetryHideLabel';
@@ -4230,11 +4255,12 @@ const mapStateToProps = (state) => {
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isInlineEditor: state.alfrescoReducer.isInlineEditor,
         imageArgs: state.alfrescoReducer.imageArgs,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        asideData: state.appStore.asideData
     }
 }
 
 export default connect(
     mapStateToProps,
-    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement }
+    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement, saveSelectedAlfrescoElement }
 )(TinyMceEditor);

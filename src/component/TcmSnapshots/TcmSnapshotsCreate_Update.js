@@ -56,6 +56,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     const { metaDataField, sectionType, parentElement, showHideObj } = containerElement;
     /* Get the element type */
     const typeOfElement = containerElement?.asideData?.type;
+    let tempIndex = elementIndex && typeof (elementIndex) !== 'number' && elementIndex.split('-');
     let wipData = {};
     if ((metaDataField || sectionType) && parentElement && parentElement.type == POPUP_ELEMENT) {
         wipData = metaDataField && parentElement.popupdata && parentElement.popupdata[FORMATTED_TITLE] ? parentElement.popupdata[FORMATTED_TITLE] : parentElement.popupdata && parentElement.popupdata.postertextobject[0] ? parentElement.popupdata.postertextobject[0] : wipData;
@@ -66,14 +67,14 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     */
     if(typeOfElement === SHOWHIDE) {
         containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex, currentSlateData);
-        wipData = containerElement?.showHideObj?.currentElement || {};
+        wipData =  containerElement?.showHideObj?.element?.interactivedata[containerElement?.sectionType][tempIndex[2]]  || {};
     } 
     else if(typeOfElement === POETRY_ELEMENT) {
         containerElement = prepareSnaphotPoetry(containerElement, response, elementIndex, currentSlateData);
         // for versioning case, we get the last data from wip
         // so initilizing the wip
-        wipData = containerElement?.poetryData?.currentElement || {};
-  
+        let lastIndex = tempIndex[tempIndex.length - 1]
+        wipData = containerElement?.poetryData?.element?.contents?.bodymatter[lastIndex] || {};
     }
     else {
         wipData = fetchElementWipData(updateBodymatter, elementIndex, response.type, "", actionStatus.action, containerElement)
@@ -229,7 +230,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
     if (typeof index === "number" || (Array.isArray(index) && index.length == 1)) {   /** Delete a container or an element at slate level */
         eleIndex = Array.isArray(index) ? index[0] : index;
         wipData = bodymatter[eleIndex];
-        if (wipData.subtype === WORKED_EXAMPLE) {  /** Delete Section-Break */
+        if (wipData?.subtype === WORKED_EXAMPLE) {  /** Delete Section-Break */
             wipData.elementdata.bodymatter.map((item, innerIndex) => {
                 if (item.type == WE_MANIFEST && entityUrn == item.contentUrn) {
                     wipData = bodymatter[eleIndex].elementdata.bodymatter[innerIndex]

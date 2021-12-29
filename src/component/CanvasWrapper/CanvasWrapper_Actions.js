@@ -27,7 +27,8 @@ import {
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
-    ERROR_API_POPUP
+    ERROR_API_POPUP,
+    SLATE_FIGURE_ELEMENTS
 } from '../../constants/Action_Constants';
 import { SLATE_API_ERROR } from '../../constants/Element_Constants';
 
@@ -48,9 +49,10 @@ import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentAc
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
-import ElementConstants from "../ElementContainer/ElementConstants.js"
+import ElementConstants from "../ElementContainer/ElementConstants.js";
+import { isAutoNumberEnabled } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
-
+import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -355,7 +357,7 @@ export const fetchFigureDropdownOptions = () => (dispatch) => {
 
 export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
-    console.log("the lob url is " + lobURL)
+    // console.log("the lob url is " + lobURL)
     return axios.get(lobURL, {
         headers: {
             "Content-Type": "application/json",
@@ -374,6 +376,11 @@ export const getProjectDetails = () => (dispatch, getState) => {
             })
         }
         const data = JSON.parse(JSON.stringify(response.data))
+        if (data?.parameters && Object.keys(data?.parameters).length > 0) {
+            let flag = data?.parameters?.enablenumberedandlabel || false;
+            dispatch(isAutoNumberEnabled(flag, config.ENABLE_AUTO_NUMBER_CONTENT));
+        }
+        dispatch(isAutoNumberEnabled(true, config.ENABLE_AUTO_NUMBER_CONTENT)); // by default set true figure autonumbering
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
             // Api to get LOB Permissions
@@ -414,7 +421,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             
             const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
             const usageTypeUrl = `${config.STRUCTURE_API_URL}${usageTypeEndPoint}`;
-            console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
+            //console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
              axios.get(usageTypeUrl, {
                 headers: {
                     ApiKey:config.STRUCTURE_APIKEY,
@@ -423,7 +430,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     Authorization:config.CMDS_AUTHORIZATION
                 }
             }).then (usageTypeResponse => {
-                console.log("the usage type response is", usageTypeResponse);
+                //console.log("the usage type response is", usageTypeResponse);
                 const data = usageTypeResponse?.data;
                 if(Array.isArray(data)){
                     const usageType = data.map(item => ({label:item.label.en}))
@@ -812,6 +819,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         if(queryStrings.get('searchElement') && getState().searchReducer.deeplink) {
             let searchTerm = queryStrings.get('searchElement') || '';
             dispatch(getContainerData(searchTerm));
+        }
+        /** Get List of Figures on a Slate for Auto-Numbering */
+        const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
+        const slateFigures = getImagesInsideSlates(bodyMatter)
+        if (slateFigures) {
+            dispatch({
+                type: SLATE_FIGURE_ELEMENTS,
+                payload: {
+                    slateFigures
+                }
+            });
         }
     })
     .catch(err => {

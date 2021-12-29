@@ -1,13 +1,13 @@
 import config from "../../config/config"
 import axios from 'axios'
 import { reloadSlate } from "../ElementContainer/AssessmentEventHandling"
-import { COMPLETED,FAILED } from "../../constants/Action_Constants"
+import { COMPLETED,FAILED,ABORTED } from "../../constants/Action_Constants"
 
 let pool
 const poolFunc = (wUrn) => {
   pool = setInterval(async () => {
     const conversionStatus = await pdfConversionStatus(wUrn)
-    if (conversionStatus === undefined || conversionStatus?.data?.status === COMPLETED || conversionStatus?.status === 404 || conversionStatus?.data?.status === FAILED) {
+    if (conversionStatus === undefined || conversionStatus?.data?.status === COMPLETED || conversionStatus?.data?.status === ABORTED||conversionStatus?.status === 404 || conversionStatus?.data?.status === FAILED) {
       clearPool()
       if (conversionStatus?.data?.status === COMPLETED) {
         reloadSlate()

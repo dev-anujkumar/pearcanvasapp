@@ -12,7 +12,7 @@ const TitleTooltip = withStyles({
   tooltip: {
     backgroundColor: "black",
     fontSize: "11px",
-    marginLeft: "20px",
+    marginLeft: "40px",
     fontWeight: "50",
     marginTop: "6px"
   }

@@ -1500,25 +1500,6 @@ describe('Function--checkContainerPopupVersion', () => {
         expect(spyFunction).toHaveBeenCalledWith(newContainerElement);
     })        
 })
-describe('Function--prepareParentData', () => {
-    let asideData={}
-    let parentUrn={
-        multiColumnDetails:{
-            type:'', manifestUrn:"", columnName:'', contentUrn:'', mcId:''
-        }
-    }
-    it('prepareParentData if condition', () => {
-        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareParentData');
-        tcmSnapshotUtility.prepareParentData(asideData,parentUrn);
-        expect(spyFunction).toHaveBeenCalledWith(asideData,parentUrn);
-    })
-    it('prepareParentData else condition', () => {
-        let parentUrn1={}
-        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareParentData');
-        tcmSnapshotUtility.prepareParentData(asideData,parentUrn1);
-        expect(spyFunction).toHaveBeenCalledWith(asideData,parentUrn1);
-    })
-})
 
 describe('checkElementsInPopupInContainer-hasPopupParentUrn false case', () => {
     config.popupParentElement = {

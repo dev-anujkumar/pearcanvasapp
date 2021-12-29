@@ -5,16 +5,17 @@ import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
-import { prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
+import { tcmSnapshotsForCreate, prepareSnapshots_ShowHide} from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowHide/ShowHide_Helper';
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
+import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
@@ -504,6 +505,23 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 shObject.interactivedata[type] = sectionOfSH;
             }   
         }
+        let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
+        const slateAncestorData = getState().appStore.currentSlateAncestorData;
+        let elementsList = {};
+        if (type2BAdded === 'IMAGE') {
+            let slateFigures = getImagesInsideSlates(newBodymatter);
+            if (slateFigures) {
+                dispatch({
+                    type: SLATE_FIGURE_ELEMENTS,
+                    payload: {
+                        slateFigures
+                    }
+                });
+            }
+            let figureObj = slateFigures.find(figure => figure.contentUrn === createdElemData.data.contentUrn);
+            elementsList = autoNumberedElementsObj.imagesList;
+            handleAutonumberingForElementsInContainers(newBodymatter, figureObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch);
+        }
         /* let condition;
         if (newIndex.length == 4) {
             condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
@@ -741,6 +759,14 @@ export const updateFigureImageDataForCompare = (oldFigureData) => (dispatch) => 
     dispatch({
         type: UPDATE_OLD_FIGUREIMAGE_INFO,
         payload: oldFigureData
+    })
+}
+
+// it saves the auto number dropdown value of figure element for dropdown changes
+export const updateAutoNumberingDropdownForCompare = (value) => (dispatch) => {
+    dispatch({
+        type: UPDATE_AUTONUMBERING_DROPDOWN_VALUE,
+        payload: value
     })
 }
 

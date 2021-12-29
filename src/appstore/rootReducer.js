@@ -19,6 +19,8 @@ import { selectionReducer } from './copyUrnReducer';
 import alfrescoReducer from './alfrescoReducer';
 import { projectInfo } from './projectInfoReducer';
 import markedIndexReducer from './markedIndexReducer';
+import autoNumberReducer from './autoNumberReducer';
+import {keyboardReducer} from './keyboardReducer';
 
 export default combineReducers({
     appStore: appReducer,
@@ -41,5 +43,7 @@ export default combineReducers({
     selectionReducer,
     alfrescoReducer,
     projectInfo,
-    markedIndexReducer   
+    markedIndexReducer,
+    autoNumberReducer,
+    keyboardReducer,
 });

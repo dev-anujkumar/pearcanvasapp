@@ -1,7 +1,7 @@
 import { sendDataToIframe } from '../constants/utility'
 import config from '../config/config';
 import { GET_ALL_SLATES_DATA, SET_CURRENT_SLATE_DATA } from '../constants/Action_Constants';
-let containerType = ['project', 'part', 'chapter', 'module','appendix']
+let containerType = ['project', 'part', 'chapter', 'module','appendix', 'volume']
 
 /**
  * @function fetchAllSlatesData
@@ -120,6 +120,24 @@ const setAllMatterContent = (processedData, childrenData) => {
                     if (item.contents) {
                         item.contents.forEach((data) => {
                             data = setChildContents(data, childrenData)
+                        })
+                    }
+                })
+            }
+        })
+        // PCAT-11901 - Ability to have an additional level of content - breadcrumbs handling for volume nested containers
+        processedData.forEach((container) => {
+            if (container.contents) {
+                container.contents.forEach((item) => {
+                    if (item.contents) {
+                        item.contents.forEach((data) => {
+                            if(data.contents && data.contents.length) {
+                                data.contents.forEach((nestedData) => {
+                                    data = setChildContents(nestedData, childrenData)
+                                })
+                            } else {
+                                data = setChildContents(data, childrenData)
+                            }
                         })
                     }
                 })

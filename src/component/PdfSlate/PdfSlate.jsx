@@ -7,7 +7,7 @@ import { ELEMENT_PDF } from '../SlateWrapper/SlateWrapperConstants.js';
 import { ELEMENT_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import config from '../../config/config.js';
 import TinyMceEditor from '../tinyMceEditor.js';
-import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
+import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action';
 import { hideBlocker } from '../../js/toggleLoader';
 import { clearPool, poolFunc } from './CypressPlusAction.js';
 class PdfSlate extends Component {
@@ -151,7 +151,8 @@ class PdfSlate extends Component {
 const dispatchActions = {
     updateElement,
 	alfrescoPopup,
-	saveSelectedAssetData
+	saveSelectedAssetData,
+	saveSelectedAlfrescoElement
 
 }
 

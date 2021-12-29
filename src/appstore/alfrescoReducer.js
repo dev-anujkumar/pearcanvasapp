@@ -1,7 +1,8 @@
 import {
     SET_ALFRESCO_POPUP,
     SAVE_ALFRESCO_ASSET_DATA,
-    SAVE_INLINE_IMAGE_DATA
+    SAVE_INLINE_IMAGE_DATA,
+    SAVE_ALFRESCO_ELEMENT
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -17,7 +18,8 @@ const INITIAL_STATE = {
     isInlineEditorOpen: false,
     locationData: {},
     calledFromGlossaryFootnote: false,
-    calledFromImageGlossaryFootnote: false
+    calledFromImageGlossaryFootnote: false,
+    savedElement:{}
 }
 
 const INITIAL_ACTION = {
@@ -57,6 +59,11 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
                 alfrescoAssetData: action.payload.asset,
                 launchAlfrescoPopup: action.payload.launchAlfrescoPopup,
                 isInlineEditor: action.payload.isInlineEditor
+            }
+        case SAVE_ALFRESCO_ELEMENT:
+            return {
+                ...state,
+                savedElement: action.payload
             }
         default:
             return state

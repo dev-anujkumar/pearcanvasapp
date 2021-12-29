@@ -237,7 +237,7 @@ export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerE
  * @param {Object} parentElement - Popup Element data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index) => {
+export const tcmSnapshotsPopupCTA = (snapshotsData, defaultKeys, containerElement,index) => {
     let elementDetails;
     const { parentElement, sectionType } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
@@ -297,7 +297,7 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerElement, type,index,operationType=null) => {
+export const tcmSnapshotsPopupInContainer = (snapshotsData, defaultKeys, containerElement, type,index,operationType=null) => {
     const { wipData, elementId, tag, actionStatus, slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn } = containerElement
     let popupParent = asideData ? asideData : poetryData ? poetryData : parentUrn;
@@ -381,7 +381,7 @@ export const checkContainerPopupVersion = async (containerElement) => {
  * @function checkElementsInPopupInContainer
  * @description Check if Popup Slate is inside a Container Element
 */
-const checkElementsInPopupInContainer = () => {
+export const checkElementsInPopupInContainer = () => {
     let isPopupInContainer = config.popupParentElement && config.popupParentElement.parentElement && config.popupParentElement.parentElement.type == 'popup' ? true : false;        
     let hasPopupAsideData = config.popupParentElement && ('popupAsideData' in config.popupParentElement && !isEmpty(config.popupParentElement.popupAsideData)) ? true : false;
     let hasPopupParentUrn = config.popupParentElement && ('popupParentUrn' in config.popupParentElement && !isEmpty(config.popupParentElement.popupParentUrn)) ? true : false;
@@ -392,7 +392,7 @@ const checkElementsInPopupInContainer = () => {
  * @function checkParentData = () =>
  * @description Check if Popup Slate is inside a Container Element
 */
-const checkParentData = (containerElement) => {
+export const checkParentData = (containerElement) => {
     let poetryData = containerElement && ((containerElement.poetryData != undefined ||containerElement.poetryData != null)  && !isEmpty(containerElement.poetryData)) ? true : false;
     let asideData = containerElement && ((containerElement.asideData != undefined ||containerElement.asideData != null)  && !isEmpty(containerElement.asideData)) ? true : false;
     let parentUrn = containerElement && ((containerElement.parentUrn != undefined ||containerElement.parentUrn != null)  && !isEmpty(containerElement.parentUrn)) ? true : false;
@@ -639,7 +639,7 @@ export const setSlateType = (wipData, containerElement, type) => {
     }
     return isContainer
 }
-const getAssessmentType = (key, isStandAlone) => {
+export const getAssessmentType = (key, isStandAlone) => {
     const assessmentType =  ASSESSMENT_TYPE.find(item => item.type === key);
     if(assessmentType) {
         return isStandAlone? assessmentType.standAloneLabel : assessmentType.label
@@ -647,7 +647,7 @@ const getAssessmentType = (key, isStandAlone) => {
     return key;
 }
 
-const getAssessmentStatus = (assessmentId) => {
+export const getAssessmentStatus = (assessmentId) => {
     if(assessmentId) {
         const assessmentData = store?.getState()?.assessmentReducer?.[assessmentId];
         const assessmentStatus = assessmentData?.assessmentStatus;
@@ -742,10 +742,16 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
  */
 export const setFigureElementContentSnapshot = (element, actionStatus) => {
     let formattedLabel, formattedNumber, formattedTitle
-    formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
-    formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
+    let isAutoNumberingEnabled= store?.getState()?.autoNumberReducer?.isAutoNumberingEnabled ?? false;
+    let allowedFigureTypesForAutoNumbering=["image","table","mathImage","audio","video"]
     formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
-    
+    if (isAutoNumberingEnabled && allowedFigureTypesForAutoNumbering.includes(element?.figuretype) ) {
+        formattedLabel = "<p><br></p>",
+        formattedNumber = "<p><br></p>"
+    } else {
+        formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
+        formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
+    }
     let snapshotData = {
         title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
         figurenumber: handleBlankLineDom(formattedNumber, 'BlankLine') || "",
@@ -800,7 +806,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
     return snapshotData
 }
 
-const prepareMetablock = (element, actionStatus) => {
+export const prepareMetablock = (element, actionStatus) => {
     let programLang = element.figuredata.programlanguage && element.figuredata.programlanguage != 'Select' ? element.figuredata.programlanguage : ''
     let toggleSyntaxhighlight = element.figuredata.syntaxhighlighting == false ? 'OFF' : 'ON'
     let toggleNumber = element.figuredata.numbered == false ? 'OFF' : 'ON'
