@@ -116,9 +116,11 @@ const isLastChild = (node, tinymceOffset) => {
                 return node.textContent?.length === tinymceOffset
             }
         }
-        else if (node.parentNode.firstChild === node) {
+        else if (node.parentNode.firstChild === node && isKChild.node.firstChild.lastChild.nodeName !== 'IMG') {
             // fails in case of sub script and super script
             return node.textContent?.length === tinymceOffset
+        } else if (node.parentNode.firstChild.lastChild === node.lastChild && node.lastChild.nodeName === 'IMG'){     /** condition to navigate down if image is at the last position in text elements */
+            return true
         }
         else {
             // // console.log("KeyDown Test Other Complex case 31", node, isKChild, tinymceOffset);
