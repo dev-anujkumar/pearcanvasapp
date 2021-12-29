@@ -287,6 +287,9 @@ function CommunicationChannel(WrappedComponent) {
                 case 'openInlineAlsfrescoPopup' :
                     this.props.alfrescoPopup(message);
                     break;
+                case 'spellCheckStatus':
+                    this.props.toggleSpellCheckAction()
+                    break;
                 case PROJECT_SHARING_ROLE:
                     if (message?.sharingContextRole) {
                         this.props.setProjectSharingRole(message.sharingContextRole);
