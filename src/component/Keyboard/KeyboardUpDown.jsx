@@ -11,16 +11,11 @@ const KeyboardUpDown = (props) => {
         if (element) {
             dispatch(selectElement(element.id));
             const childElement = element.childNodes[1];
-
-            // console.log("Keyboard Up Down Will be scrolling into this 1.5");
             if(enableScroll) {
-                // console.log("Keyboard Up Down Will be scrolling into this 2");
-                // childElement.scrollIntoView();
-                // keyboardUpDown.current.scroll(0, 200);
                 const rect = element.getBoundingClientRect();
-                keyboardUpDown.current.parentNode.scroll(0, rect.top + rect.height);
-                // console.log(keyboardUpDown.current.parentNode, rect);
-                // console.log("Scrolling to ", rect.top, rect)
+                const parentNode = keyboardUpDown.current.parentNode;
+                const divHeight = parentNode.getBoundingClientRect().height;
+                parentNode.scroll(0, parentNode.top + divHeight);
             }
             childElement.click();
           
@@ -28,7 +23,6 @@ const KeyboardUpDown = (props) => {
     }
 
     const shouldEnableScroll = (selectedNodeIndex, allElementLength) => {
-        // console.log("Keyboard Up Down Interactive Element is ",allElementLength, selectedNodeIndex, allElementLength === (selectedNodeIndex + 1));
         return allElementLength ;
     }
 
@@ -48,7 +42,6 @@ const KeyboardUpDown = (props) => {
                 }
                 else if (event.keyCode === 40 && selectedNodeIndex !== allInteractiveElements.length) {
                     const enableScroll = shouldEnableScroll(selectedNodeIndex, allInteractiveElements.length);
-                    // console.log("Keyboard Up The enable scroll is ", enableScroll);
                     getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], enableScroll);
                 }
             }
@@ -64,11 +57,7 @@ const KeyboardUpDown = (props) => {
     }, [activeElement]);
 
 
-    return <div style={{
-        border:1,
-        borderStyle:'solid',
-        borderColor: 'black'
-    }} ref={keyboardUpDown}> {props.children} </div>
+    return <div ref={keyboardUpDown}> {props.children} </div>
 }
 
 export default KeyboardUpDown;
