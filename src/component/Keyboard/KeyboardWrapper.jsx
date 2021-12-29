@@ -4,7 +4,12 @@ import { selectElement } from '../../appstore/keyboardReducer';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
 
-
+/**
+ * function decides to
+ * move cursor to next line or next element
+ * @param {*} e : event
+ * @param {*} move : boolean true or false.
+ */
 const updateCursor = (e, move) => {
     if (move) {
         e.preventDefault();
@@ -14,6 +19,12 @@ const updateCursor = (e, move) => {
     }
 }
 
+/**
+ * handle cursor movement for node
+ * @param {*} e : event of tinymce
+ * @param {*} node : selection node
+ * @param {*} tinymceOffset : selection offset
+ */
 export const moveCursor = (e, node, tinymceOffset) => {
     let move;
     if (e.keyCode === 38) {
@@ -28,7 +39,12 @@ export const moveCursor = (e, node, tinymceOffset) => {
         e.stopPropagation();
     }
 }
-
+/**
+ * In case of LI, we get node of Text node inside
+ * LI, so so compare 2 nodes we are returning parent. 
+ * @param {*} n 
+ * @returns 
+ */
 const getNode = (n) => {
     if(n?.parentNode?.nodeName === 'LI') {
         return n.parentNode;
@@ -36,6 +52,12 @@ const getNode = (n) => {
     else return n;
 }
 
+/**
+ * Check if node if first child
+ * @param {*} n 
+ * @param {*} tinymceOffset : cursor selection point
+ * @returns 
+ */
 export const isFirtstChild = (n, tinymceOffset) => {
     const node = getNode(n);
     // // console.log("KeyDown Test 51: ", tinymceOffset, node, node?.parentNode, node?.parentNode?.firstChild);
@@ -57,6 +79,11 @@ export const isFirtstChild = (n, tinymceOffset) => {
     else return false;
 }
 
+/**
+ * Get the last nth child, of node
+ * @param {*} node 
+ * @returns 
+ */
 const getNthLi = (node) => {
     if(node && node.lastChild) {
         return getNthLi(node.lastChild);
@@ -66,6 +93,13 @@ const getNthLi = (node) => {
     }
 }
 
+/**
+ * Check if node is the last child of 
+ * keyboard wrapper
+ * @param {*} node : node of which checking is sone
+ * @param {*} tinymceOffset : selection offset
+ * @returns 
+ */
 
 export const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
@@ -107,7 +141,14 @@ export const isLastChild = (node, tinymceOffset) => {
     }
 }
 
-
+/**
+ * Check if the node is child of Keyboard Wrapper, 
+ * if yes return the keyboiard warapper node
+ * and disptance from parent
+ * @param {*} node : checking which node is child of KW
+ * @param {*} index : Parent Distance
+ * @returns 
+ */
 
 export const isKWChild = (node, index = 0) => {
     if (index === 10) {
@@ -122,52 +163,6 @@ export const isKWChild = (node, index = 0) => {
 }
 
 
-
-const replaceNbsps = (text) => {
-    const removedSpaces = text.replace(/&nbsp;/g, ' ');
-    return removedSpaces.replace(/<br>/g, '');
-}
-
-const getLastString = (text) => {
-
-    const lastIndex = text.lastIndexOf("</");
-    if (lastIndex > -1) {
-        const lastIndex2 = text.lastIndexOf(">");
-        const lastTag = text.substring(lastIndex, lastIndex2 + 1);
-        const string = text.split(lastTag);
-        // // console.log("the string is ", string, string.length, string[0], string[1]);
-        const lastText = string[string.length - 1];
-        return lastText;
-    }
-    else {
-        return text;
-    }
-    // // console.log("Last index is ", lastIndex, lastIndex2, lastTag, lastText);
-}
-
-export const getDataFromLastTag = (text) => {
-    //    // // console.log("the text is ", text.innerHTML, text.firstChild, text.firstChild.innerHTML);
-    const mainString = replaceNbsps(text.innerHTML);
-    //    // // console.log("the main string is ", mainString);
-    return getLastString(mainString);
-
-    //    return text.innerText;
-}
-
-
-export const supportedClasses = [
-    "heading1NummerEins",
-    "paragraphNumeroUno",
-    "pullQuoteNumeroUno",
-    "listItemNumeroUnoBullet",
-    "heading2learningObjectiveItem",
-    "heading2NummerEins",
-    "heading1NummerEins",
-    "heading3NummerEins",
-    "heading4NummerEins",
-    "heading5NummerEins",
-    "heading6NummerEins"
-]
 
 const KeyboardWrapper = (props) => {
     const dispatch = useDispatch();
