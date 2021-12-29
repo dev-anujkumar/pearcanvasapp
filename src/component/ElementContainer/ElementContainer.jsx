@@ -25,7 +25,7 @@ import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } f
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
-import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, CanvasActiveElement } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
@@ -1850,7 +1850,7 @@ class ElementContainer extends Component {
                         {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} />}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                        {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.handleCommunication(e,element.id, this.props.index)} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                         {permissions && permissions.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
@@ -2082,6 +2082,14 @@ class ElementContainer extends Component {
             hideBlocker();
         }
         this.props.getProjectUsers();
+    }
+
+    handleCommunication = (event , elementId , index) => {
+        sendDataToIframe({
+            'type': CanvasActiveElement,
+            'message': {"id":elementId, "index":index}
+        }); 
+        this.handleCommentPopup(true, event);
     }
      /**
      * @description - This function is for opening edit  button in Cypress Plus
