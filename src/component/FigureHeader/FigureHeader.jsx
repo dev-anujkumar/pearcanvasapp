@@ -7,7 +7,6 @@ import config from '../../config/config';
 import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
-import dropdown_arrow_icon from '../../images/FigureHeader/dropdown-arrow.svg';
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
@@ -83,7 +82,8 @@ export const FigureHeader = (props) => {
     }
     useEffect(() => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
-        setLabelNumberSetting(dropdownVal)
+        setLabelNumberSetting(dropdownVal);
+        props.updateAutoNumberingDropdownForCompare(dropdownVal);
         updateDropdownOptions()
     }, [])
     useEffect(() => {
@@ -94,6 +94,10 @@ export const FigureHeader = (props) => {
     useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
     }, [props.currentSlateAncestorData]);
+    useEffect(() => {
+        updateDropdownOptions();
+        setFigureLabelValue(props.model?.displayedlabel ?? 'Figure');
+    }, [props.model.figuretype]);
     /**---------------------------------------- */
     const handleCloseDropDrown = () => {
         setLabelDropDown(false)
@@ -111,10 +115,13 @@ export const FigureHeader = (props) => {
             if (newSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 setShowLabelField(false)
                 setShowNumberField(false)
-            }
-            else {//if(newSettings === AUTO_NUMBER_SETTING_RESUME_NUMBER || newSettings === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER)
+            } else {
                 setShowLabelField(true)
                 setShowNumberField(true)
+            }
+            if (oldSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+                updateDropdownOptions();
+                setFigureLabelValue(figureLabelData[0]);
             }
             props.updateAutoNumberingDropdownForCompare(newSettings);
         }
@@ -170,7 +177,7 @@ export const FigureHeader = (props) => {
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })
     imgNumberValue = `${imgNumberValue?.toString()}`
     const newClass = labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? 'disable-number-field': '';
-    const removeLabelCondition = labelNumberSetting !== AUTO_NUMBER_SETTING_REMOVE_NUMBER ? true : false
+    const removeLabelCondition = labelNumberSetting !== AUTO_NUMBER_SETTING_REMOVE_NUMBER ? true : false;
     return (
         <>
             <header className="figure-header new-figure-image-header">
@@ -198,7 +205,7 @@ export const FigureHeader = (props) => {
                         <span>{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                         {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
-                            <div className="figure-dropdown" style={{top: '10px', left: 0}} ref={labelDropdownWrapperRef} >
+                            <div className="figure-dropdown" style={{top: '9px', left: 0}} ref={labelDropdownWrapperRef} >
                                 <ul>
                                     {figureLabelData.map((label, i) => {
                                         return (
@@ -225,7 +232,7 @@ export const FigureHeader = (props) => {
                 }
                 {removeLabelCondition && showNumberField && <div className="floating-number-group">
                     <TinyMceEditor contenteditable={labelNumberSetting !== AUTO_NUMBER_SETTING_DEFAULT} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber " + newClass} model={imgNumberValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                    <label className={"transition-none"}>Number</label>
+                    <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? "transition-none" : "floating-number"}>Number</label>
                 </div>}
 
             </header>

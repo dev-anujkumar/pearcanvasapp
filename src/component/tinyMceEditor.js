@@ -35,6 +35,7 @@ import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlo
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
+import { getDataFromLastTag, isKWChild, isLastChild, moveCursor, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -204,6 +205,10 @@ export class TinyMceEditor extends Component {
                             }
                         }
                         editor.selection.placeCaretAt(clickedX, clickedY);
+                    }
+
+                    if(e.level && e.level.content.match(/<blockquote/)?.input.includes('class="blockquoteMarginalia') && e.level.content.match(/<img/)?.input.includes('class="imageAssetContent')){
+                        this.props.handleBlur(null, this.props.currentElement, this.props.index, null, eventTarget)
                     }
 
                     let content = e.target.getContent({ format: 'text' }),
@@ -1195,80 +1200,15 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
-            
-            // get current node
-            // get innertext of current node
-            // check if current node has next element
-            // if current node has next element and down is press
-            // do nothing
-            // if current node does not have next element
-            // and cursor length is qual to 
             const currentSelection = tinymce?.activeEditor?.selection;
-            const currentSelectedNode = currentSelection?.getNode();
-
-             const parentClass = currentSelectedNode.classList;
-            //  console.log("Parent class", parentClass);
-             if(parentClass.contains("paragraphNumeroUno") || parentClass.contains("pullQuoteNumeroUno") || parentClass.contains("listItemNumeroUnoBullet") || parentClass.contains("heading2learningObjectiveItem")) {
-                 const windowSelection = window.getSelection().anchorOffset;
-                 const selectionText = tinymce?.activeEditor?.selection?.getNode()?.textContent;
-                 const innerHtml = currentSelectedNode.innerText;
-                //  console.log("Selection is 00", selectionText, " inner html ", innerHtml);
-                //  console.log("windowSelection is 00", windowSelection, " inner html ", selectionText.length);
-                if(windowSelection === 0 && e.keyCode === 38) {
-                    
-                    // check if text content matches with starting of inner html
-                    // if yes: prevent default
-                    // if no : stop propogation
-                    // console.log("Inner html ", innerHtml, " Selection ", selectionText)
-                    if(innerHtml.startsWith(selectionText)) {
-                        // console.log("start matched");
-                        e.preventDefault()
-                    }
-                    else {
-                        e.stopPropagation()
-                    }
-                }
-                else if (windowSelection === selectionText.length && e.keyCode === 40) {
-                    
-                    // console.log("Inner html 2 ", innerHtml, " Selection ", selectionText)
-                    if(innerHtml.endsWith(selectionText)) {
-                        // console.log("last matched");
-                        e.preventDefault()
-                    }
-                    else {
-                        e.stopPropagation()
-                    }
-                    // check if text matches the end of inner html
-                    // if yes : prevent default
-                    // if no : stop propogation
-                }
-                else {
-                    e.stopPropagation();
-                }
-
-                // selection is inside text;
-             }
-             else {
-                 // selection is in other elements
-                //  console.log("Seleciton is in other elements", currentSelectedNode.parentNode);
-                const parent = currentSelectedNode.parentNode;
-                const parentHTML = parent.innerText;
-                const childHTML = currentSelectedNode.innerText;
-                // console.log("Parent ",parentHTML , "child innder html ", childHTML, " ", e.keyCode);
-                
-                if(parentHTML.endsWith(childHTML) && e.keyCode === 40) {
-                    e.preventDefault();
-                }
-                else if (parentHTML.startsWith(childHTML) && e.keyCode === 38){
-                    // move to previous element
-                    e.preventDefault();
-                }
-                else {
-                    // do normal flow
-                    e.stopPropagation();
-                }
-             }
-            
+            const selectionNode = window.getSelection().anchorNode;
+            const tinymceOffset = currentSelection.getRng().endOffset;
+            /**
+             * get node vs window selection node
+             * window selection is accurate and gives 
+             * inner most node as compared to currentSelecction.getNode()
+             */
+            moveCursor(e, selectionNode, tinymceOffset);
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
             if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                 const keyCode = e.keyCode || e.which;
@@ -3984,7 +3924,8 @@ export class TinyMceEditor extends Component {
             let currentId = this.props.index;
             let node = document.getElementById('cypress-' + currentId);
             tempdiv.innerHTML = node ? node.innerHTML : '';
-            if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
+
+            if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length && !document.querySelector(`div#cypress-${this.props.index} .paragraphNummerEins`)?.innerHTML?.match(/<img/)?.input?.includes('class="imageAssetContent')) {
                 if (!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length) {
                     node.innerHTML = this.lastContent;
                 }
@@ -4149,13 +4090,9 @@ export class TinyMceEditor extends Component {
 
     processBlockquoteHtml = (model, element, lockCondition) => {
 
-        let activeEditorHTML = document.getElementById('cypress-' + this.props.index)?.innerHTML;
-        let isContainsImage = activeEditorHTML?.match(/<blockquote/)?.input.includes('class="blockquoteMarginalia"') && activeEditorHTML?.match(/<img/)?.input.includes('class="imageAssetContent')
-        let isTextExists = tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0] === '<p class="paragraphNummerEins" contenteditable="true"><br></p>'
         const temDiv = document.createElement('div');
         let hiddenBlock = this.generateHiddenElement();
         temDiv.innerHTML = model && model.text ? model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p></blockquote>';
-        
         if (element && element.elementdata && element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length) {
             tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
         }

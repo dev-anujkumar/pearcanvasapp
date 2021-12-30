@@ -39,7 +39,13 @@ import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
-import { updateCreatedElementInAutonumberList, findNearestMediaElement, handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
+import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
+import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES } from '../FigureHeader/AutoNumberConstants';
+
+const {
+    MANUAL_OVERRIDE,
+    NUMBERED_AND_LABEL
+} = AUTO_NUMBER_PROPERTIES;
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -396,9 +402,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         })
         /** ---------------------------- Auto-Numbering handling ------------------------------*/
-        let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
-        const slateAncestorData = getState().appStore.currentSlateAncestorData;
-        let elementsList = {};
+        
         if (type === 'IMAGE' || type === 'VIDEO') {
             const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
             let slateFigures = getImagesInsideSlates(bodyMatter);
@@ -410,42 +414,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     }
                 });
             }
+
+            dispatch(handleAutonumberingOnCreate(type, createdElementData));
             
-            const listType = type === 'VIDEO' ? 'videosList' : 'imagesList'
-            const labelType = type === 'VIDEO' ? "Video" : "Figure"
-            let figureObj = slateFigures.find(x => x.contentUrn === createdElementData.contentUrn);
-            elementsList = autoNumberedElementsObj[listType]
-
-            if (figureObj.indexPos == 0) {
-                if ((Object.keys(elementsList).length > 0) && slateAncestorData?.ancestor?.entityUrn && (Object.keys(elementsList).indexOf(slateAncestorData?.ancestor?.entityUrn) >-1)) {
-                    elementsList[slateAncestorData.ancestor.entityUrn]?.splice(figureObj.indexPos, 0, createdElementData);
-                } else  {
-                    elementsList = {
-                        ...elementsList,
-                        [slateAncestorData.ancestor.entityUrn]: []
-                    }
-                    elementsList[slateAncestorData.ancestor.entityUrn].push(createdElementData);
-                }
-                updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-            } else if (figureObj.indexPos > 0) {
-                let count = 0;
-                slateFigures.forEach(item => {
-                    item.indexPos = count;
-                    count++;
-                });
-                let nearestElementObj = findNearestMediaElement(slateFigures, figureObj, labelType);
-
-                if (nearestElementObj) {
-                    let index = elementsList[slateAncestorData.ancestor.entityUrn]?.findIndex(x => x.contentUrn === nearestElementObj.contentUrn);
-                    elementsList[slateAncestorData.ancestor.entityUrn]?.splice(index + 1, 0, createdElementData);
-                    updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-                } else {
-                    elementsList[slateAncestorData.ancestor.entityUrn]?.splice(figureObj.indexPos, 0, createdElementData);
-                    updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-                }
-            } else if (Array.isArray(figureObj.indexPos)) {
-                handleAutonumberingForElementsInContainers(bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch)
-            }
         }
         /**------------------------------------------------------------------------------------------------*/
         if (cb) {
@@ -1169,6 +1140,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
+        const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
 
         let slateEntityUrn = config.slateEntityURN;
         if(parentUrn && 'contentUrn' in parentUrn) { //sectionType && 
@@ -1267,12 +1239,33 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
 
-        if(selection.element.type === "figure") {
+        if (selection.element.type === "figure") {
             _requestData = {
                 "content": [{
                     ..._requestData.content[0],
                     "figuredata": selection.element.figuredata
                 }]
+            }
+            // Check for autonumbering parameters needs to send or not in request
+            if (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(selection?.element?.figuretype)) {
+                if (selection?.element.hasOwnProperty(MANUAL_OVERRIDE) && selection?.element[MANUAL_OVERRIDE] !== undefined && Object.keys(selection?.element[MANUAL_OVERRIDE])?.length > 0) {
+                    _requestData = {
+                        "content": [{
+                            ..._requestData.content[0],
+                            'displayedlabel': selection?.element?.displayedlabel,
+                            'manualoverride': selection?.element[MANUAL_OVERRIDE],
+                            'numberedandlabel': selection?.element[NUMBERED_AND_LABEL]
+                        }]
+                    }
+                } else {
+                    _requestData = {
+                        "content": [{
+                            ..._requestData.content[0],
+                            'displayedlabel': selection?.element?.displayedlabel,
+                            'numberedandlabel': selection?.element[NUMBERED_AND_LABEL]
+                        }]
+                    }
+                }
             }
         }
 
