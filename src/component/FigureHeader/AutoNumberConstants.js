@@ -16,6 +16,14 @@ export const autoNumber_KeyMapper = {
     'Video': 'videoIndex'
 }
 
+export const autoNumber_FigureTypeKeyMapper = {
+  'image': 'figureImageIndex',
+  'table': 'tableIndex',
+  'mathImage': 'equationsIndex',
+  'audio': 'audioIndex',
+  'video': 'videoIndex'
+}
+
 export const autoNumber_KeyMapperElements = {
   'Figure': 'imagesList',
   'Table': 'property',
@@ -101,3 +109,15 @@ export const DISPLAYED_LABELS = {
 export const ELEMENT_TYPES = {
   FIGURE: 'figure'
 }
+
+export const autoNumber_ElementTypeToStoreKeysMapper = {
+  'IMAGE': 'imagesList',
+  'FIGURE': 'imagesList',
+  'TABLE': 'tablesList',
+  'EQUATION': 'equationsList',
+  'AUDIO': 'audiosList',
+  'VIDEO': 'videosList',
+  'MATHIMAGE': 'equationsList'
+}
+
+export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage']

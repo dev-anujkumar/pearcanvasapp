@@ -50,7 +50,7 @@ export const onDeleteSuccess = (params) => {
         dispatch,
         contentUrn,
         isAutoNumberingEnabled,
-        type
+        asideData
     }
     handleAutoNumberingOnDelete(autoNumberParams)
     /**-----------------------------------------------------------------------------------*/
