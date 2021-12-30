@@ -144,14 +144,11 @@ const isLastChild = (node, tinymceOffset) => {
             if (node.parentNode.nodeName === 'CODE') {
                 const textContent = node.textContent.replace(/\uFEFF/g, "");
                 return textContent.length == tinymceOffset
+            } else if (node.parentNode?.firstChild?.lastChild === node?.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
+                return true
             }
             return node.textContent?.length === tinymceOffset
         } 
-        
-        else if (node.parentNode.firstChild.lastChild === node.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
-            return true
-        }
-
         else {
             const lastChild = isKChild.node.firstChild.lastChild;
 
