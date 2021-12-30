@@ -50,14 +50,9 @@ export const moveCursor = (e, node, tinymceOffset) => {
  * @returns 
  */
 const isFirtstChild = (node, tinymceOffset) => {
-
-
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-
-
         const firstNode = isKChild.node.firstChild.firstChild;
-
         if (node.nodeName === 'LI') {
             // in case of empty list item, text node
             // does not come, Li node comes
@@ -68,35 +63,33 @@ const isFirtstChild = (node, tinymceOffset) => {
         else if (node?.parentNode?.nodeName === 'LI') {
             const firstTextNode = firstNode.firstChild;
             if (firstTextNode === node) {
+                
                 return tinymceOffset === 0;
             }
         }
-
         else if (firstNode === node || firstNode?.nodeName === "IMG") {
             return tinymceOffset === 0
         }
-
         else if (firstNode === node?.parentNode?.parentNode && firstNode?.nodeName === 'SUP'){
             return true
         }
         else if (firstNode === firstNode.parentNode.lastChild) {
+            
             if (firstNode.nodeName === 'CODE') {
                 const uniCode = '\uFEFF';
+                
                 if (firstNode.textContent.indexOf(uniCode) === 0 && tinymceOffset === 1) {
                     return true;
                 }
                 else return tinymceOffset == 0;
             }
             return tinymceOffset === 0;
-        } 
-        
-        else {
+        } else {
             return false;
         }
     }
     else return false;
 }
-
 /**
  * Get the last nth child, of node
  * @param {*} node 
@@ -110,7 +103,6 @@ const getNthLi = (node) => {
         return node;
     }
 }
-
 /**
  * Check if node is the last child of 
  * keyboard wrapper
@@ -118,7 +110,6 @@ const getNthLi = (node) => {
  * @param {*} tinymceOffset : selection offset
  * @returns 
  */
-
 const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
@@ -126,16 +117,17 @@ const isLastChild = (node, tinymceOffset) => {
             // in case of empty LI node name comes in node
             // and nth child will point to BR
             const nthChild = getNthLi(isKChild.node);
+            
             if (nthChild.parentNode === node) {
                 return true;
             }
         }
-
         else if (node.parentNode.nodeName === 'LI') {
             // in case li having text, we will get text node
             // inside node.
             // get last child of last node.
             const nthChild = getNthLi(isKChild.node);
+            
             if (nthChild === node) {
                 return node.textContent?.length === tinymceOffset
             }
@@ -146,6 +138,7 @@ const isLastChild = (node, tinymceOffset) => {
             // in case of inline image its showing + 1 offset value
             if (node.parentNode.nodeName === 'CODE') {
                 const textContent = node.textContent.replace(/\uFEFF/g, "");
+                
                 return textContent.length == tinymceOffset
             } else if (node.parentNode?.firstChild?.lastChild === node?.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
                 return true
@@ -156,9 +149,25 @@ const isLastChild = (node, tinymceOffset) => {
         } 
         else {
             const lastChild = isKChild.node.firstChild.lastChild;
-
+            
+            
             if (lastChild === node || lastChild?.nodeName === 'IMG') {
                 return node.textContent?.length === tinymceOffset
+            }
+            else if (lastChild.nodeName === 'SPAN') {
+                const secondNode = lastChild?.previousSibling;
+                if (secondNode?.id === '_mce_caret') {
+                    
+                    
+                    if (secondNode?.previousSibling?.nodeName === 'SUP') {
+                        
+                        const a = secondNode?.previousSibling?.firstChild;
+                        if (a && a.nodeName === 'A' && a.hasAttribute('data-footnoteelementid')) {
+                            
+                            return true;
+                        }
+                    }
+                }
             }
             return false;
             // check if there is no other child
@@ -166,12 +175,10 @@ const isLastChild = (node, tinymceOffset) => {
             // 
         }
     }
-    
     else {
         return false;
     }
 }
-
 /**
  * Check if the node is child of Keyboard Wrapper, 
  * if yes return the keyboiard warapper node
@@ -180,7 +187,6 @@ const isLastChild = (node, tinymceOffset) => {
  * @param {*} index : Parent Distance
  * @returns 
  */
-
 const isKWChild = (node, index = 0) => {
     if (index === 10) {
         return { isChild: false, index, node };
@@ -194,10 +200,8 @@ const isKWChild = (node, index = 0) => {
 }
 
 
-
 const KeyboardWrapper = (props) => {
     const dispatch = useDispatch();
-
     // alphanumeric, id should be unique for all the elements.
     const id = `${QUERY_SELECTOR}-${props.index}`;
     if (props.enable)
@@ -207,5 +211,4 @@ const KeyboardWrapper = (props) => {
         }} id={id}> {props.children} </div>
     else return <>{props.children}</>
 }
-
 export default KeyboardWrapper;
