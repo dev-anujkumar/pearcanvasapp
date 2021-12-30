@@ -141,17 +141,16 @@ const isLastChild = (node, tinymceOffset) => {
         // this means that custom tag is added at the end
         else if (node.parentNode.firstChild === node && node.parentNode.lastChild === node) {
             // in case of inline image its showing + 1 offset value
+            console.log("TESTING ONE CONDITION")
             if (node.parentNode.nodeName === 'CODE') {
                 const textContent = node.textContent.replace(/\uFEFF/g, "");
                 return textContent.length == tinymceOffset
+            } else if (node.parentNode.firstChild.lastChild === node.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
+                console.log("TESTING TWO CONDITION")
+                return true
             }
             return node.textContent?.length === tinymceOffset
         } 
-        
-        else if (node.parentNode.firstChild.lastChild === node.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
-            return true
-        }
-
         else {
             const lastChild = isKChild.node.firstChild.lastChild;
 
