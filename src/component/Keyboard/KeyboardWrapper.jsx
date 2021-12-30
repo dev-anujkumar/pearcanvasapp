@@ -50,54 +50,44 @@ export const moveCursor = (e, node, tinymceOffset) => {
  * @returns 
  */
 const isFirtstChild = (node, tinymceOffset) => {
-    
+
 
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-        
-        
+
+
         const firstNode = isKChild.node.firstChild.firstChild;
-        
-        if(node.nodeName === 'LI') {
+
+        if (node.nodeName === 'LI') {
             // in case of empty list item, text node
             // does not come, Li node comes
-            
-            // const firstTextNode = firstNode.firstChild;
-            
-            
-            if(firstNode === node) {
-            
+            if (firstNode === node) {
                 return tinymceOffset === 0;
             }
         }
-        else if(node?.parentNode?.nodeName === 'LI') {
-            
+        else if (node?.parentNode?.nodeName === 'LI') {
             const firstTextNode = firstNode.firstChild;
-            
-            
-            if(firstTextNode === node) {
-            
+            if (firstTextNode === node) {
                 return tinymceOffset === 0;
             }
-            
         }
+
         else if (firstNode === node || firstNode?.nodeName === "IMG") {
             return tinymceOffset === 0
         }
+
         else if (firstNode === firstNode.parentNode.lastChild) {
-            
             if (firstNode.nodeName === 'CODE') {
                 const uniCode = '\uFEFF';
-                
                 if (firstNode.textContent.indexOf(uniCode) === 0 && tinymceOffset === 1) {
-                    
-                    
                     return true;
                 }
                 else return tinymceOffset == 0;
             }
             return tinymceOffset === 0;
-        }else {
+        } 
+        
+        else {
             return false;
         }
     }
@@ -129,25 +119,20 @@ const getNthLi = (node) => {
 const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-        
-        
-        
-        if(node.nodeName === 'LI') {
+        if (node.nodeName === 'LI') {
             // in case of empty LI node name comes in node
             // and nth child will point to BR
             const nthChild = getNthLi(isKChild.node);
-            
             if (nthChild.parentNode === node) {
                 return true;
             }
         }
+
         else if (node.parentNode.nodeName === 'LI') {
             // in case li having text, we will get text node
             // inside node.
-
             // get last child of last node.
             const nthChild = getNthLi(isKChild.node);
-            
             if (nthChild === node) {
                 return node.textContent?.length === tinymceOffset
             }
@@ -158,20 +143,15 @@ const isLastChild = (node, tinymceOffset) => {
             // in case of inline image its showing + 1 offset value
             if (node.parentNode.nodeName === 'CODE') {
                 const textContent = node.textContent.replace(/\uFEFF/g, "");
-                
                 return textContent.length == tinymceOffset
+            } else if (node.parentNode?.firstChild?.lastChild === node?.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
+                return true
             }
             return node.textContent?.length === tinymceOffset
-        } else if (node.parentNode.firstChild.lastChild === node.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
-            return true
-        }
+        } 
         else {
-            
-            
-            
-            
             const lastChild = isKChild.node.firstChild.lastChild;
-            
+
             if (lastChild === node || lastChild?.nodeName === 'IMG') {
                 return node.textContent?.length === tinymceOffset
             }
@@ -181,6 +161,7 @@ const isLastChild = (node, tinymceOffset) => {
             // 
         }
     }
+    
     else {
         return false;
     }

@@ -687,7 +687,13 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.currentSlateLO(updatedSlateLOs);
                 this.props.currentSlateLOMath(updatedSlateLOs);
                 this.props.currentSlateLOType(updatedSlateLOs.length ? EXTERNAL_LF : "");
-                this.props.updateLastAlignedLO(message.lastAlignedExternalLO)
+                this.props.updateLastAlignedLO(message.lastAlignedExternalLO);
+
+                let lastAlignedLosToSlates = JSON.parse(localStorage.getItem('lastAlignedLos'));
+                let slateUrn = config.slateManifestURN;
+                let newAlignment = {};
+                newAlignment[slateUrn] = message.lastAlignedExternalLO
+                localStorage.setItem('lastAlignedLos', JSON.stringify({...lastAlignedLosToSlates,...newAlignment}));
             }
         }
         handleLOData = (message) => {
