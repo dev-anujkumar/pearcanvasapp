@@ -12,9 +12,11 @@ export const QUERY_SELECTOR = `cypress-keyboard`;
  */
 const updateCursor = (e, move) => {
     if (move) {
+        // moves to next element
         e.preventDefault();
     }
     else {
+        // moves to next Element in DOM
         e.stopPropagation()
     }
 }
@@ -39,18 +41,7 @@ export const moveCursor = (e, node, tinymceOffset) => {
         e.stopPropagation();
     }
 }
-/**
- * In case of LI, we get node of Text node inside
- * LI, so so compare 2 nodes we are returning parent. 
- * @param {*} n 
- * @returns 
- */
-const getNode = (n) => {
-    if(n?.parentNode?.nodeName === 'LI') {
-        return n.parentNode;
-    }
-    else return n;
-}
+
 
 /**
  * Check if node if first child
@@ -58,41 +49,60 @@ const getNode = (n) => {
  * @param {*} tinymceOffset : cursor selection point
  * @returns 
  */
-const isFirtstChild = (n, tinymceOffset) => {
-    const node = getNode(n);
-    // // console.log("KeyDown Test 51: ", tinymceOffset, node, node?.parentNode, node?.parentNode?.firstChild);
-     
+const isFirtstChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
-    if(isKChild.isChild) {
-        // // console.log("KeyDown Test 52: ", node);
-        // // console.log("KeyDown Test 53: ", isKChild);
+    if (isKChild.isChild) {
         const firstNode = isKChild.node.firstChild.firstChild;
-        // // console.log("KeyDown Test 54: ", firstNode, firstNode.nodeName);
-        if(firstNode.nodeName === "BR" && node.lastChild === node.firstChild) {
-            // para is empty
-            return true;
+        if (node.nodeName === 'LI') {
+            // in case of empty list item, text node
+            // does not come, Li node comes
+            if (firstNode === node) {
+                return tinymceOffset === 0;
+            }
         }
-        if(firstNode === node || firstNode.nodeName === "IMG") {
+        else if (node?.parentNode?.nodeName === 'LI') {
+            const firstTextNode = firstNode.firstChild;
+            if (firstTextNode === node) {
+                
+                return tinymceOffset === 0;
+            }
+        }
+        else if (firstNode === node || firstNode?.nodeName === "IMG") {
             return tinymceOffset === 0
+        }
+        else if (firstNode === node?.parentNode?.parentNode && firstNode?.nodeName === 'SUP'){
+            return true
+        }
+        else if (firstNode === firstNode.parentNode.lastChild) {
+            
+            if (firstNode.nodeName === 'CODE') {
+                const uniCode = '\uFEFF';
+                
+                if (firstNode.textContent.indexOf(uniCode) === 0 && tinymceOffset === 1) {
+                    return true;
+                }
+                else return tinymceOffset == 0;
+            }
+            return tinymceOffset === 0;
+        } else {
+            return false;
         }
     }
     else return false;
 }
-
 /**
  * Get the last nth child, of node
  * @param {*} node 
  * @returns 
  */
 const getNthLi = (node) => {
-    if(node && node.lastChild) {
+    if (node && node.lastChild) {
         return getNthLi(node.lastChild);
     }
     else {
         return node;
     }
 }
-
 /**
  * Check if node is the last child of 
  * keyboard wrapper
@@ -100,35 +110,64 @@ const getNthLi = (node) => {
  * @param {*} tinymceOffset : selection offset
  * @returns 
  */
-
 const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-        // if (isKChild.index === 1) {
-        // // console.log("KeyDown Test 21 ", node, isKChild, tinymceOffset);
-        // // console.log("KeyDown Test 22 ", node.textContent, node.textContent.length, tinymceOffset);
-        // // console.log("KeyDown Test 23 ", node.firstChild);
-        if(node.parentNode.nodeName === 'LI') {
+        if (node.nodeName === 'LI') {
+            // in case of empty LI node name comes in node
+            // and nth child will point to BR
+            const nthChild = getNthLi(isKChild.node);
+            
+            if (nthChild.parentNode === node) {
+                return true;
+            }
+        }
+        else if (node.parentNode.nodeName === 'LI') {
+            // in case li having text, we will get text node
+            // inside node.
             // get last child of last node.
             const nthChild = getNthLi(isKChild.node);
-            // // console.log("KeyDown Test 24 ", nthChild, node, node.firstChild);
-            if(nthChild === node) {
+            
+            if (nthChild === node) {
                 return node.textContent?.length === tinymceOffset
             }
         }
-        else if (node.parentNode.firstChild === node) {
-            // fails in case of sub script and super script
+        // checking if node is first and last child of its parent
+        // this means that custom tag is added at the end
+        else if (node.parentNode.firstChild === node && node.parentNode.lastChild === node) {
+            // in case of inline image its showing + 1 offset value
+            if (node.parentNode.nodeName === 'CODE') {
+                const textContent = node.textContent.replace(/\uFEFF/g, "");
+                
+                return textContent.length == tinymceOffset
+            } else if (node.parentNode?.firstChild?.lastChild === node?.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
+                return true
+            } else if(isKChild.node?.firstChild?.firstElementChild?.nodeName === 'SUP'){
+                return true
+            }
             return node.textContent?.length === tinymceOffset
-        }
+        } 
         else {
-            // // console.log("KeyDown Test Other Complex case 31", node, isKChild, tinymceOffset);
-            // // console.log("KeyDown Test 32 ", node.textContent.length, tinymceOffset);
-            // // console.log("KeyDown Test 33 ", isKChild.node);
-            // // console.log("KeyDown Test 34 ", isKChild.node.firstChild.lastChild);
             const lastChild = isKChild.node.firstChild.lastChild;
-            // // console.log("KeyDown Test 35 ", lastChild, lastChild.nodeName)
-            if(lastChild === node || lastChild.nodeName === 'IMG') {
+            
+            
+            if (lastChild === node || lastChild?.nodeName === 'IMG') {
                 return node.textContent?.length === tinymceOffset
+            }
+            else if (lastChild.nodeName === 'SPAN') {
+                const secondNode = lastChild?.previousSibling;
+                if (secondNode?.id === '_mce_caret') {
+                    
+                    
+                    if (secondNode?.previousSibling?.nodeName === 'SUP') {
+                        
+                        const a = secondNode?.previousSibling?.firstChild;
+                        if (a && a.nodeName === 'A' && a.hasAttribute('data-footnoteelementid')) {
+                            
+                            return true;
+                        }
+                    }
+                }
             }
             return false;
             // check if there is no other child
@@ -140,7 +179,6 @@ const isLastChild = (node, tinymceOffset) => {
         return false;
     }
 }
-
 /**
  * Check if the node is child of Keyboard Wrapper, 
  * if yes return the keyboiard warapper node
@@ -149,7 +187,6 @@ const isLastChild = (node, tinymceOffset) => {
  * @param {*} index : Parent Distance
  * @returns 
  */
-
 const isKWChild = (node, index = 0) => {
     if (index === 10) {
         return { isChild: false, index, node };
@@ -163,10 +200,8 @@ const isKWChild = (node, index = 0) => {
 }
 
 
-
 const KeyboardWrapper = (props) => {
     const dispatch = useDispatch();
-
     // alphanumeric, id should be unique for all the elements.
     const id = `${QUERY_SELECTOR}-${props.index}`;
     if (props.enable)
@@ -176,5 +211,4 @@ const KeyboardWrapper = (props) => {
         }} id={id}> {props.children} </div>
     else return <>{props.children}</>
 }
-
 export default KeyboardWrapper;
