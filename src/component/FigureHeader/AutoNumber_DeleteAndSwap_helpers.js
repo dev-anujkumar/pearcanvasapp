@@ -53,8 +53,8 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
                 let index = numberedElements[labelType][parentIndex].findIndex(figure => figure.contentUrn === contentUrn);
                 if (index > -1) {
                     numberedElements[labelType][parentIndex].splice(index, 1);
+                    break;
                 }
-                break;
             }
         }
     }

@@ -7,7 +7,7 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel, getTitleSubtitleModel } from '../../constants/utility';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForAutonumbering } from '../FigureHeader/AutoNumberConstants';
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import { setAutonumberingValuesForPayload, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
 const indivisualData = {
@@ -61,11 +61,9 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     let manualoverride = {};
 
     // let displayedlabel = (manualoverride && Object.keys(manualoverride)?.length > 0) ? previousElementData?.displayedlabel : titleHTML // Object.keys(manualoverride)?.length > 0  && manualoverride.hasOwnProperty('overridelabelvalue') ?  ;
-    let displayedlabel;
-    if (previousElementData.numberedandlabel === false && numberedandlabel === true) {
-        displayedlabel = getValueOfLabel(previousElementData.figuretype);
-    } else {
-        displayedlabel = titleHTML;
+    let displayedlabel = previousElementData?.displayedlabel;
+    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+        displayedlabel = titleText;
     }
     if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
         let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
