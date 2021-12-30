@@ -13,3 +13,7 @@
 /*.pem
 /*.vscode
 /package-lock.json
+
+#Sonarqube
+/.scannerwork
+/sonar-project.properties
