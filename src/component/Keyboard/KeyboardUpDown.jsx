@@ -13,6 +13,14 @@ const KeyboardUpDown = (props) => {
         return allInteractiveElements[index];
     }
 
+    const getLastChild = (element) => {
+        if(element.lastChild) {
+            return getLastChild(element.lastChild);
+        } else {
+            return element.parentNode;
+        }
+    }
+
     const getChildAndClick = (element, index) => {
 
         const parentNode = keyboardUpDown.current.parentNode;
@@ -22,7 +30,23 @@ const KeyboardUpDown = (props) => {
             const childElement = element.childNodes[1];
             const scrollTo = element.getBoundingClientRect().top - divHeight / 3;
             parentNode.scrollBy(0, scrollTo);
-            childElement.click();
+            const lastChild = getLastChild(childElement?.firstChild);
+            if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
+                // for foot note
+                // add span at last and click on span
+                // childElement.click();
+                const span = document.createElement('span');
+                span.innerHTML = "<br>";
+                // const text = document.createTextNode(`<br>`);
+        
+                // span.appendChild(text);
+                childElement.firstChild.appendChild(span);
+                span.click();
+            }
+            else {
+                childElement.click();
+            }
+
 
         }
         else {
