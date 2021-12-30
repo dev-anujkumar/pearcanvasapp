@@ -125,11 +125,6 @@ export const setAutonumberingValuesForPayload = (autoNumberOption, titleHTML, nu
             isValid = true;
             break;
         case AUTO_NUMBER_SETTING_DEFAULT:
-            objToReturn = {
-                numberedandlabel : true
-            }
-            isValid = true;
-            break;
         default:
             objToReturn = {
                 numberedandlabel : true
