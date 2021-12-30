@@ -3373,18 +3373,10 @@ export class TinyMceEditor extends Component {
         let toolbar;
         switch (placeholder) {
             case "Number":
-                if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) {
-                    toolbar = config.labelNumberToolbarAutonumberMode;
-                } else {
-                    toolbar = config.figureNumberToolbar;
-                }
+                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureNumberToolbar;
                 break;
             case "Label Name":
-                if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) {
-                    toolbar = config.labelNumberToolbarAutonumberMode;
-                } else {
-                    toolbar = config.figureImageLabelToolbar;
-                }
+                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureImageLabelToolbar;
                 break;
             case "Title":
             case "Caption":

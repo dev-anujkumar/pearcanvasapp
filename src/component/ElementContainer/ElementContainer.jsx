@@ -75,7 +75,7 @@ import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
 import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, updateAutonumberingOnOverridedCase } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForImage, displayLabelsForAudioVideo } from '../FigureHeader/AutoNumberConstants';
 
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -447,7 +447,7 @@ class ElementContainer extends Component {
                 isNumberDifferent = imgNumberValue?.toString() !== numberHTML?.toString();
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-            if (!titleHTML || titleHTML === '' || !(['Figure', 'Table', 'Equation'].includes(titleHTML))) {
+            if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
@@ -671,7 +671,7 @@ class ElementContainer extends Component {
             }
             let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
-            if (!titleHTML || titleHTML === '' || !(['Audio', 'Video'].includes(titleHTML))) {
+            if (!titleHTML || titleHTML === '' || !(displayLabelsForAudioVideo.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
