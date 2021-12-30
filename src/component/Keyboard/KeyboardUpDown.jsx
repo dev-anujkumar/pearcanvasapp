@@ -37,9 +37,6 @@ const KeyboardUpDown = (props) => {
                 // childElement.click();
                 const span = document.createElement('span');
                 span.innerHTML = "<br>";
-                // const text = document.createTextNode(`<br>`);
-        
-                // span.appendChild(text);
                 childElement.firstChild.appendChild(span);
                 span.click();
             }
