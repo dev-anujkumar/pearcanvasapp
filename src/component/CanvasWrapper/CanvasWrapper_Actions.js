@@ -553,9 +553,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         let newVersionManifestId=Object.values(slateData.data)[0].id;
 
         /* This code will get the last aligned LO from the local storage and update the redux store */
-        let lastAlignedLosInStroage = JSON.parse(localStorage.getItem('lastAlignedLos'));
-        let lastAlignedLoForCurrentSlate = lastAlignedLosInStroage[newVersionManifestId];
-        dispatch(updateLastAlignedLO(lastAlignedLoForCurrentSlate));
+        let lastAlignedLos = localStorage.getItem('lastAlignedLos');
+        if(lastAlignedLos && lastAlignedLos.length > 0){
+            let lastAlignedLosInStroage = JSON.parse(lastAlignedLos);
+            let lastAlignedLoForCurrentSlate = lastAlignedLosInStroage[newVersionManifestId];
+            dispatch(updateLastAlignedLO(lastAlignedLoForCurrentSlate));
+        }
 
         if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")){
             config.slateManifestURN = newVersionManifestId
