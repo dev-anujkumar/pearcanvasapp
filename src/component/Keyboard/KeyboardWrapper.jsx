@@ -76,6 +76,9 @@ const isFirtstChild = (node, tinymceOffset) => {
             return tinymceOffset === 0
         }
 
+        else if (firstNode === node?.parentNode?.parentNode && firstNode?.nodeName === 'SUP'){
+            return true
+        }
         else if (firstNode === firstNode.parentNode.lastChild) {
             if (firstNode.nodeName === 'CODE') {
                 const uniCode = '\uFEFF';
@@ -145,6 +148,8 @@ const isLastChild = (node, tinymceOffset) => {
                 const textContent = node.textContent.replace(/\uFEFF/g, "");
                 return textContent.length == tinymceOffset
             } else if (node.parentNode?.firstChild?.lastChild === node?.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
+                return true
+            } else if(isKChild.node?.firstChild?.firstElementChild?.nodeName === 'SUP'){
                 return true
             }
             return node.textContent?.length === tinymceOffset
