@@ -164,8 +164,10 @@ export const getValueOfLabel = (figuretype) => {
  * @returns 
  */
 export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber }) => {
-    if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
+    if (parentNumber && element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
         return `${imgLabelValue} ${parentNumber}.${imgNumberValue}`
+    } else if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
+        return `${imgLabelValue} ${imgNumberValue}`
     }
     return ""
 }
@@ -190,9 +192,9 @@ export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
             }
             else {
                 if (containerEntityUrn) {
-                    return autoNumberingDetails?.chapterOrderList[containerEntityUrn] || '1'
+                    return autoNumberingDetails?.chapterOrderList[containerEntityUrn] || ''
                 }
-                return "1"
+                return ""
             }
     }
 }
