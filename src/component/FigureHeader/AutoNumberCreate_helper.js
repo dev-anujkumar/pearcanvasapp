@@ -9,7 +9,7 @@ import {
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
 import { containerBodyMatter, getMediaElementInMultiColumn, getMediaElementInPopup } from './slateLevelMediaMapper';
-import { containerElements, autoNumberElementsAllowed, autoNumber_ElementTypeToStoreKeysMapper } from './AutoNumberConstants';
+import { containerElements, autoNumberElementsAllowed, autoNumber_ElementTypeToStoreKeysMapper, autoNumber_ElementTypeKey } from './AutoNumberConstants';
 import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
@@ -265,4 +265,104 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
             updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
         }
     }
+}
+
+export const getAllSlatesListInsideParent = (inputArr, slatesArr) => {
+    inputArr.forEach(innerObj => {
+        if (innerObj.label === 'module') {
+            innerObj.contents.forEach(slateData => {
+                slatesArr.push(slateData);
+            })
+        } else {
+            slatesArr.push(innerObj);
+        }
+    })
+}
+
+/**
+ * Get List of Media Elements on a Slate
+ * @param {*} bodyMatter 
+ * @param {*} imagesList 
+ * @returns 
+ */
+ export const checkElementExistenceInOtherSlates = (createdElementData, slateEntityURN, getState, dispatch) => {
+    const allSlateData = getState().appStore?.allSlateData;
+    const slateAncestorData = getState().appStore?.currentSlateAncestorData;
+    const parentUrn = getContainerEntityUrn(slateAncestorData);
+    let autoNumberedElements = getState().autoNumberReducer?.autoNumberedElements;
+    const listType = autoNumber_ElementTypeKey[createdElementData?.displayedlabel];
+    let elementsList = autoNumberedElements[listType];
+    let parentEntityObject = {};
+    let slateKey = '';
+    let slatesArr = [];
+    let slateIndex;
+    let elementIndex;
+    if (parentUrn && allSlateData) {
+        for (let matterType in allSlateData) {
+            if (allSlateData[matterType] && allSlateData[matterType].length > 0) {
+                let index = allSlateData[matterType].findIndex(parentEntity => parentEntity.entityUrn === parentUrn);
+                if (index > -1) {
+                    parentEntityObject = allSlateData[matterType][index];
+                    getAllSlatesListInsideParent(parentEntityObject.contents, slatesArr);
+                    console.log('slatesArr slatesArr', slatesArr);
+                    if (slatesArr.length > 1) {
+                        slateIndex = slatesArr.findIndex(slate => slate.entityUrn === slateEntityURN);
+                        if (slateIndex === (slatesArr.length - 1)) {
+                            slateKey = 'above';
+                        } else {
+                            slateKey = 'below';
+                        }
+                    }
+                    if (slateKey) {
+                        if ((elementsList && Object.keys(elementsList).length > 0) && parentUrn && (Object.keys(elementsList).indexOf(parentUrn) > -1)) {
+                            if (slateKey === 'below') {
+                                elementIndex = findElementInNextSlates(slatesArr, slateIndex, elementsList, parentUrn, createdElementData?.displayedlabel);
+                                if (elementIndex > -1) {
+                                    elementsList[parentUrn].splice(elementIndex, 0, createdElementData);
+                                }
+                                if (elementIndex == -1) {
+                                    elementIndex = findElementInLastSlates(slatesArr, slateIndex, elementsList, parentUrn, createdElementData?.displayedlabel);
+                                    if (elementIndex > -1) {
+                                        elementsList[parentUrn].splice(elementIndex + 1, 0, createdElementData);
+                                    }
+                                }
+                            } else if (slateKey === 'above') {
+                                elementIndex = findElementInLastSlates(slatesArr, slateIndex, elementsList, parentUrn, createdElementData?.displayedlabel);
+                                if (elementIndex > -1) {
+                                    elementsList[parentUrn].splice(elementIndex + 1, 0, createdElementData);
+                                }
+                            }
+                        }
+                    }
+                    updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElements, dispatch);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+export const findElementInLastSlates = (slatesArr, slateIndex, elementsList, parentUrn, elementLabel) => {
+    let index;
+    for (let i = slateIndex - 1; i > -1; i--) {
+        let refrenceSlateEntityURN = slatesArr[i].entityUrn;
+        let initialIndex = elementsList[parentUrn].slice().reverse().findIndex(element => (element.slateEntityUrn === refrenceSlateEntityURN && element.displayedlabel === elementLabel));
+        index = initialIndex >= 0 ? (elementsList[parentUrn].length - 1) - initialIndex : initialIndex;
+        if (index > -1) {
+            return index;
+        }
+    }
+    return index;
+}
+
+export const findElementInNextSlates = (slatesArr, slateIndex, elementsList, parentUrn, elementLabel) => {
+    let index;
+    for (let i = slateIndex + 1; i < slatesArr.length; i++) {
+        let refrenceSlateEntityURN = slatesArr[i].entityUrn;
+        index = elementsList[parentUrn].findIndex(element => (element.slateEntityUrn === refrenceSlateEntityURN && element.displayedlabel === elementLabel));
+        if (index > -1) {
+            return index;
+        }
+    }
+    return index;
 }
