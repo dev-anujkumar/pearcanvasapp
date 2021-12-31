@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
+const supportedNodenames = ['SUP', 'S', 'STRONG', 'EM', 'U', 'SPAN', 'CODE', 'ABBR']
 
 /**
  * function decides to
@@ -73,6 +74,9 @@ const isFirtstChild = (node, tinymceOffset) => {
         else if (firstNode === node?.parentNode?.parentNode && firstNode?.nodeName === 'SUP'){
             return true
         }
+        else if(supportedNodenames.includes(firstNode.nodeName)){
+            return tinymceOffset === 0;
+        }
         else if (firstNode === firstNode.parentNode.lastChild) {
             
             if (firstNode.nodeName === 'CODE') {
@@ -112,6 +116,7 @@ const getNthLi = (node) => {
  */
 const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
+    const lastChild = isKChild.node.firstChild.lastChild;
     if (isKChild.isChild) {
         if (node.nodeName === 'LI') {
             // in case of empty LI node name comes in node
@@ -144,11 +149,12 @@ const isLastChild = (node, tinymceOffset) => {
                 return true
             } else if(isKChild.node?.firstChild?.firstElementChild?.nodeName === 'SUP'){
                 return true
+            } else if(lastChild.nodeName === 'SPAN' && supportedNodenames.includes(isKChild.node.firstChild.firstChild.nodeName)){
+                    return true
             }
             return node.textContent?.length === tinymceOffset
         } 
         else {
-            const lastChild = isKChild.node.firstChild.lastChild;
             
             
             if (lastChild === node || lastChild?.nodeName === 'IMG') {
@@ -168,6 +174,8 @@ const isLastChild = (node, tinymceOffset) => {
                         }
                     }
                 }
+            } else if (lastChild.nodeName === 'SPAN' && supportedNodenames.includes(isKChild.node.firstChild.firstChild.nodeName)) {
+                return true
             }
             return false;
             // check if there is no other child
