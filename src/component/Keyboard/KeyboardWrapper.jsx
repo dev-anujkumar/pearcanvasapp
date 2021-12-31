@@ -116,7 +116,7 @@ const getNthLi = (node) => {
  */
 const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
-    const lastChild = isKChild.node.firstChild.lastChild;
+    const lastChild = isKChild.node?.firstChild?.lastChild;
     if (isKChild.isChild) {
         if (node.nodeName === 'LI') {
             // in case of empty LI node name comes in node
@@ -149,7 +149,7 @@ const isLastChild = (node, tinymceOffset) => {
                 return true
             } else if(isKChild.node?.firstChild?.firstElementChild?.nodeName === 'SUP'){
                 return true
-            } else if(lastChild.nodeName === 'SPAN' && supportedNodenames.includes(isKChild.node.firstChild.firstChild.nodeName)){
+            } else if(lastChild?.nodeName === 'SPAN' && supportedNodenames.includes(isKChild.node?.firstChild?.firstChild?.nodeName)){
                     return true
             }
             return node.textContent?.length === tinymceOffset
@@ -174,7 +174,7 @@ const isLastChild = (node, tinymceOffset) => {
                         }
                     }
                 }
-            } else if (lastChild.nodeName === 'SPAN' && supportedNodenames.includes(isKChild.node.firstChild.firstChild.nodeName)) {
+            } else if (lastChild?.nodeName === 'SPAN' && supportedNodenames.includes(isKChild.node?.firstChild?.firstChild?.nodeName)) {
                 return true
             }
             return false;
