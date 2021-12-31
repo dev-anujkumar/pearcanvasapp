@@ -900,7 +900,7 @@ th ol li.listItemNumeroUnoNone:before {
     font-size: 13px !important;
 }
 
-.figureNumber.disable-number-field, .figureNumber.disable-number-field.cypress-editable {
+.figureNumber.disable-number-field, .figureNumber.disable-number-field.cypress-editable, .heading4ImageTextWidthNumberLabel.figureNumber.disable-number-field.cypress-editable {
     /* border: none !important; */
     pointer-events: none;
     border-bottom: none !important
