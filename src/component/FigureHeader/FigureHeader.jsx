@@ -184,7 +184,6 @@ export const FigureHeader = (props) => {
     imgNumberValue = `${imgNumberValue?.toString()}`
     const newClass = labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? 'disable-number-field': '';
     const removeLabelCondition = labelNumberSetting !== AUTO_NUMBER_SETTING_REMOVE_NUMBER ? true : false;
-    console.log("aaaaaaaaaa", imgLabelValue, checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`));
     return (
         <>
             <header className="figure-header new-figure-image-header">
