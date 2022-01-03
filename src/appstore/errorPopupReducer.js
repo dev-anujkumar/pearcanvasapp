@@ -31,6 +31,7 @@ export default function errorPopupReducer(state = INITIAL_STATE, action = INITIA
         message : 'The element you tried to create or update did not save. Please try again.'
       }
     }
+    case ERROR_API_POPUP:
     case MULTIPLE_LINE_POETRY_ERROR_POPUP: {
       return {
         ...state,
@@ -45,15 +46,7 @@ export default function errorPopupReducer(state = INITIAL_STATE, action = INITIA
         message: action.payload.errorMessage,
         isElmApiError: action.payload.isElmApiError
       }
-    }
-    case ERROR_API_POPUP: {
-      return {
-        ...state,
-        show : action.payload.show,
-        message : action.payload.message
-      }
-    }
-    
+    }    
     default:
       return state
   }
