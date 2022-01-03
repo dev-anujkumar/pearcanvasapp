@@ -425,14 +425,14 @@ class ElementContainer extends Component {
         if (previousElementData.figuretype !== 'tableasmarkup') {
             oldImage = this.props.oldFigureDataForCompare.path;
         }
-        if (this.props.isAutoNumberingEnabled && (previousElementData.figuretype !== 'tableasmarkup')) {
+        if (this.props?.isAutoNumberingEnabled && (previousElementData.figuretype !== 'tableasmarkup')) {
             // Not selecting remove label and number
-            if (this.props.autoNumberOption.entityUrn === previousElementData.contentUrn && this.props.autoNumberOption.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+            if (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
             // Selecting default case 
-            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData.manualoverride !== undefined && (this.props.autoNumberOption.entityUrn === previousElementData.contentUrn && this.props.autoNumberOption.option === AUTO_NUMBER_SETTING_DEFAULT)) {
+            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData.manualoverride !== undefined && (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT)) {
                 return true;
             }
 
@@ -650,12 +650,12 @@ class ElementContainer extends Component {
         oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
         if (this.props.isAutoNumberingEnabled) {
             // Not selecting remove label and number
-            if (this.props.autoNumberOption.entityUrn === previousElementData.contentUrn && this.props.autoNumberOption.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+            if (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
             // Selecting default case
-            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData.manualoverride !== undefined && (this.props.autoNumberOption.entityUrn === previousElementData.contentUrn && this.props.autoNumberOption.option === AUTO_NUMBER_SETTING_DEFAULT)) {
+            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData.manualoverride !== undefined && (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT)) {
                 return true;
             }
 
@@ -845,7 +845,7 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props.autoNumberOption.option);
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
@@ -857,7 +857,7 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
                         if (this.figureDifferenceAudioVideo(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props.autoNumberOption.option)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
