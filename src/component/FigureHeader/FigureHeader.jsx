@@ -83,7 +83,7 @@ export const FigureHeader = (props) => {
     useEffect(() => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
         setLabelNumberSetting(dropdownVal);
-        props.updateAutoNumberingDropdownForCompare(dropdownVal);
+        props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: dropdownVal});
         updateDropdownOptions()
     }, [])
     useEffect(() => {
@@ -112,7 +112,7 @@ export const FigureHeader = (props) => {
         handleCloseDropDrown();
         if (oldSettings !== newSettings) {
             setLabelNumberSetting(newSettings);
-            props.updateAutoNumberingDropdownForCompare(newSettings);
+            props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: newSettings});
             if (newSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 setShowLabelField(false)
                 setShowNumberField(false)
@@ -155,7 +155,7 @@ export const FigureHeader = (props) => {
             props.updateAudioVideoDataForCompare(props.model.figuredata);
         }
 
-        props.updateAutoNumberingDropdownForCompare(labelNumberSetting);
+        props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: labelNumberSetting});
     }
 
     const onFigureHeaderFieldBlur = (id) => {

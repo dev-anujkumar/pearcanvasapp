@@ -1210,6 +1210,16 @@ export class TinyMceEditor extends Component {
              * inner most node as compared to currentSelecction.getNode()
              */
             moveCursor(e, selectionNode, tinymceOffset);
+            /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering START xxxxxxxxxxxxxxxxxxx */
+            if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && this.props.placeholder === 'Number') {
+                if ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode !== 8 && e.keyCode !== 37 && e.keyCode !== 39)  {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
+            /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering STOP xxxxxxxxxxxxxxxxxxxx */
+
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
             if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                 const keyCode = e.keyCode || e.which;

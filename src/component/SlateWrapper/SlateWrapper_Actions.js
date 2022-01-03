@@ -39,7 +39,7 @@ import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
-import { handleAutonumberingOnCreate, checkElementExistenceInOtherSlates } from '../FigureHeader/AutoNumberCreate_helper';
+import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES } from '../FigureHeader/AutoNumberConstants';
 
 const {
@@ -416,7 +416,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
 
             dispatch(handleAutonumberingOnCreate(type, createdElementData));
-            // checkElementExistenceInOtherSlates(createdElementData, config.slateEntityURN, getState, dispatch);
             
         }
         /**------------------------------------------------------------------------------------------------*/
