@@ -235,7 +235,7 @@ export const getContainerEntityUrn = (slateAncestors) =>{
  * @returns 
  */
 export const getLabelNumberFieldValue = (element, figureLabelValue, containerNumber) => {
-    let elementLabel = "" //figureLabelValue || element?.displayedlabel || 
+    let elementLabel = figureLabelValue || element?.displayedlabel;
     if (element?.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == false) {
         // elementLabel = ""
         elementLabel = figureLabelValue;
