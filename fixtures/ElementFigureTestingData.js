@@ -2346,3 +2346,50 @@ export const smartLinkPdfWithData={
      "elementdata":{"text":null},
      "tcm":false 
  }
+
+ export const tableasmarkupWithoutData = {
+    "id": "urn:pearson:work:658093ea-1611-4684-a6fc-fe49bbb55e1a",
+    "type": "figure",
+    "figuretype": "tableasmarkup",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield": true,
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup"
+    },
+    "html": {
+        "title": "<p><br></p>",
+        "text": "",
+        "postertext": "",
+        "captions": "<p><br></p>",
+        "credits": "<p><br></p>"
+    },
+    "versionUrn": "urn:pearson:work:658093ea-1611-4684-a6fc-fe49bbb55e1a",
+    "contentUrn": "urn:pearson:entity:1afe65ed-623b-4c78-ba34-028f039c889e",
+    "status": "wip"
+}
+
+export const tableasmarkupWithData = {
+    "id": "urn:pearson:work:658093ea-1611-4684-a6fc-fe49bbb55e1a",
+    "type": "figure",
+    "figuretype": "tableasmarkup",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield": true,
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
+        "tableasHTML": "<table style=\"border-collapse: collapse; width: 1132.47px; word-break: normal; outline: none; text-align: left;\" data-mce-style=\"border-collapse: collapse; width: 100%;\" class=\"mce-item-table\" contenteditable=\"false\" data-mce-selected=\"1\"><tbody><tr><td style=\"width: 377.488px; outline: none;\"><br></td><td style=\"width: 377.488px; outline: none;\"><br></td><td style=\"width: 377.488px; outline: none;\"><br></td></tr><tr><td style=\"width: 377.488px; outline: none;\"><br></td><td style=\"width: 377.488px; outline: none;\">Table</td><td style=\"width: 377.488px; outline: none;\"><br></td></tr><tr><td style=\"width: 377.488px; outline: none;\"><br></td><td style=\"width: 377.488px; outline: none;\"><br></td><td style=\"width: 377.488px; outline: none;\"></td></tr></tbody></table>"
+    },
+    "html": {
+        "title": "<p><br></p>",
+        "tableasHTML": "<table style=\"border-collapse: collapse; width: 1132.47px; word-break: normal; outline: none; text-align: left;\" data-mce-style=\"border-collapse: collapse; width: 100%;\" class=\"mce-item-table\" contenteditable=\"false\" data-mce-selected=\"1\"><tbody><tr><td style=\"width: 377.488px; outline: none;\"><br></td><td style=\"width: 377.488px; outline: none;\"><br></td><td style=\"width: 377.488px; outline: none;\"><br></td></tr><tr><td style=\"width: 377.488px; outline: none;\"><br></td><td style=\"width: 377.488px; outline: none;\">Table</td><td style=\"width: 377.488px; outline: none;\"><br></td></tr><tr><td style=\"width: 377.488px; outline: none;\"><br></td><td style=\"width: 377.488px; outline: none;\"><br></td><td style=\"width: 377.488px; outline: none;\"></td></tr></tbody></table>",
+        "captions": "<p><br></p>",
+        "credits": "<p><br></p>",
+        "footnotes": {},
+        "assetsPopover": {},
+        "glossaryentries": {},
+        "indexEntries": {}
+    },
+    "versionUrn": "urn:pearson:work:658093ea-1611-4684-a6fc-fe49bbb55e1a",
+    "contentUrn": "urn:pearson:entity:1afe65ed-623b-4c78-ba34-028f039c889e",
+    "indexPos": 0,
+    "slateEntityUrn": "urn:pearson:entity:82dfe338-49b5-4fe7-b315-4c07194d1631"
+}

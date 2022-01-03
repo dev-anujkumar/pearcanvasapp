@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
 // IMPORT - Assets //
+import tableIcon from "../../../src/images/ElementButtons/tableIcon.svg";
+import blankTable from "../../../src/images/ElementButtons/combined-shape.svg";
 import {
+    DEFAULT_IMAGE_DATA_SOURCE,
     DEFAULT_IMAGE_SOURCE
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
@@ -67,6 +70,12 @@ class FigureImage extends Component {
         this.setState({
             figureNumberLabelValue: dropdownVal
         })
+        //Dropdown List for Table Element
+        if(this.props?.model?.figuretype === 'tableasmarkup') {
+            this.setState({
+                figureLabelData: this.props.figureDropdownData?.table ? this.props.figureDropdownData.table : ['Table']
+            })
+        }
     }
 
     componentWillUnmount() {
@@ -322,13 +331,50 @@ class FigureImage extends Component {
     }
 
     /**
- * @description function will be called on image src add and fetch resources
- */
+     * @description function will be called to launch Table Editor SPA
+     */
+    launchSPA = () => {
+        let editable = true;
+        if (hasReviewerRole()) {
+            editable = false;
+        }
+        this.props.handleFocus()
+        let slateData = {
+            elementId : this.props.elementId,
+            currentProjectId: config.projectUrn,
+            slateEntityUrn: config.slateEntityURN,
+            parentEntityUrn: this.props.parentEntityUrn,
+            sectionType: this.props?.asideData?.sectionType || "bodymatter"
+        }
+        let tableConfig = {
+            S3MathImagePath: config.S3MathImagePath ? config.S3MathImagePath : "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/",
+            alfrescoMetaData: config?.alfrescoMetaData ?? {},
+            CMDS_APIKEY: config.CMDS_APIKEY,
+            CMDS_DATABASE: config.CMDS_DATABASE,
+            CMIS_REPO: config.CMIS_REPO,
+            CMDS_AUTHORIZATION: config.CMDS_AUTHORIZATION,
+            EPS_API: config.EPS_API,
+            PROJECTAPI_ENDPOINT: config.PROJECTAPI_ENDPOINT,
+            STRUCTURE_APIKEY:config.STRUCTURE_APIKEY,
+            AlfrescoSiteAPIUrl: config.ALFRESCO_EDIT_METADATA
+        }
+        const configAPIKey = JSON.parse(JSON.stringify(tableConfig));
+        sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
+    }
+
+    /**
+     * @description function will be called on image src add and fetch resources
+     */
     addFigureResource = (e) => {
         if (e) {
             e.stopPropagation();
         }
-        this.handleC2MediaClick(e);
+        if (this.props?.model?.figuretype === "tableasmarkup") {
+            this.launchSPA();
+        }
+        else {
+            this.handleC2MediaClick(e);
+        }
     }
 
     changeFigureLabel = (figureLabelValue, data) => {
@@ -403,6 +449,96 @@ class FigureImage extends Component {
         return lowercaseOptions;
     }
 
+    renderTableAsset = (dataType, imageDimension) => {
+        return (
+            <>
+                <div className="figure-element-container interface-container">
+                    <div id="figure_add_div" className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
+                        <div className="tableMediaWrapper">
+                            <div className="tableIconWrapper">
+                                <div className="table-icon-wrapper">
+                                    <img className='tableIcon' src={tableIcon}/>
+                                    <span className='tableTitle'>Table</span>
+                                </div>
+                            </div>
+                            <div className="tableAssetWrapper">
+                                {
+                                    this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML !== "" || this.props.model.figuredata.tableasHTML !== undefined)) ?
+                                    <div className="table-asset-wrapper-with-asset" onClick={this.addFigureResource}>
+                                        <div id={`${this.props.index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{ __html: this.props.model.figuredata.tableasHTML }} ></div>
+                                    </div> :
+                                    <div className="table-asset-wrapper-without-asset">
+                                        <img className="blankTable" src={blankTable}/>
+                                        <button className="table-asset-button" onClick={this.addFigureResource}>
+                                            <span className="table-asset-button-label">
+                                                Add a Table
+                                            </span>
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+        )
+    }
+
+    renderImageAsset = (imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight) => {
+        return (
+            <>
+                <div id="figure_add_div" className={`pearson-component image figureData ${imageClass} ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
+                    {
+                        this.props.model.figuredata && this.props.model.figuredata.imageid ?
+                        <img src={this.state.imgSrc ? this.state.imgSrc : (this.props?.model?.figuredata?.path !== "" ? this.props.model.figuredata.path : '')}
+                            data-src={this.state.imgSrc}
+                            title=""
+                            alt=""
+                            className={imageDimension + ' lazyload ' + actualSizeClass}
+                            draggable="false" 
+                            width={imgWidth}
+                            height={imgHeight}
+                        />
+                        : <div className='figurebutton' onClick={this.addFigureResource}>Select an Image</div>
+                    }
+                </div>
+                <div>
+                    {
+                        this.props.model.figuredata && this.props.model.figuredata.imageid !== "" ? 
+                        <div className="figure-wrapper">
+                            <div className="figure-image-info">
+                                <div className='image-figure'><p className='image-text'>Image ID: </p> <span className='image-info'> {this.props.model.figuredata && this.props.model.figuredata.imageid ? this.props.model.figuredata.imageid : ""} </span> </div>
+                                <div className='image-figure-path'><p className='image-text'>Image Path: </p> <span className='image-info'> {this.state.imgSrc ? this.state.imgSrc : (this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.props.model.figuredata.path : "")}</span> </div>
+                                <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{this.props.model.figuredata && this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
+                            </div>
+                            <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
+                            <div className='deletefigurebutton' onClick={() => this.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                        </div> : ''
+                    }
+                </div>
+            </>
+        )
+    }
+
+    renderAssetSection = (figureTypeData) => {
+        let { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight } = figureTypeData
+        let figureJsx;
+        if (this.props.model && this.props.model.figuretype) {
+            switch (this.props.model.figuretype) {
+                case 'tableasmarkup':
+                    figureJsx = this.renderTableAsset(dataType, imageDimension);
+                break;
+                case 'table':
+                case 'mathImage':
+                case 'image':
+                default:
+                    figureJsx = this.renderImageAsset(imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight);
+                break;
+            }
+        }
+        return figureJsx;
+    }
+
     render() {
         const { model, isAutoNumberingEnabled } = this.props;
         let elementFigureAlignment = ''
@@ -411,6 +547,9 @@ class FigureImage extends Component {
                 case 'table':
                 case 'mathImage':
                     elementFigureAlignment = model.alignment ? model.alignment : 'half-text';
+                    break;
+                case 'tableasmarkup':
+                    elementFigureAlignment = model.alignment ? model.alignment : 'table-editor';
                     break;
                 case 'image':
                 default:
@@ -454,6 +593,10 @@ class FigureImage extends Component {
         const actualSizeClass = this.props.model.figuredata?.width > '600' ? "" : "img-actual-size";
         const imageClass = imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ? "figure-image" : "";
 
+        let figureTypeData = {
+            imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight
+        }
+
         return (
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
@@ -468,81 +611,54 @@ class FigureImage extends Component {
                                     figLabelClass={figLabelClass}
                                     figTitleClass={figTitleClass}
                                 /> :
-                                <><header className="figure-header new-figure-image-header">
-                                    <div className='figure-label-field'>
-                                        <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
-                                        <div className="figure-label" onClick={this.handleFigureDropdown}>
-                                            <span>{figureLabelValue}</span>
-                                            <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
+                                <>
+                                    <header className="figure-header new-figure-image-header">
+                                        <div className='figure-label-field'>
+                                            <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
+                                            <div className="figure-label" onClick={this.handleFigureDropdown}>
+                                                <span>{figureLabelValue}</span>
+                                                <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    {this.state.figureDropDown &&
-                                        <div className="figure-dropdown" ref={this.wrapperRef}>
-                                            <ul>
-                                                {this.state.figureLabelData.map((label, i) => {
-                                                    return (
-                                                        <li key={i} onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
-                                                    )
-
-                                                })}
-                                            </ul>
-                                        </div>
-                                    }
-                                    {
-                                        figureLabelValue === 'Custom' ?
+                                        {this.state.figureDropDown &&
+                                            <div className="figure-dropdown" ref={this.wrapperRef}>
+                                                <ul>
+                                                    {this.state.figureLabelData.map((label, i) => {
+                                                        return (
+                                                            <li key={i} onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
+                                                        )
+                                                    })}
+                                                </ul>
+                                            </div>
+                                        }
+                                        {figureLabelValue === 'Custom' ?
                                             <div className='image-label'>
                                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                                                 <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
-                                            </div>
-                                            :
+                                            </div> :
                                             <div className='image-label hide-field'>
                                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                                                 <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
                                             </div>
-                                    }
+                                        }
 
-                                    <div className="floating-number-group">
-                                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                                        <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
-                                    </div>
+                                        <div className="floating-number-group">
+                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                            <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
+                                        </div>
 
-                                </header>
+                                    </header>
                                     <div className="floating-title-group">
                                         <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                                         <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
-                                    </div></>}
-                            <div className="figure-image-container">
-
-                                <div id="figure_add_div" className={`pearson-component image figureData ${imageClass} ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
-                                    {
-                                        this.props.model.figuredata && this.props.model.figuredata.imageid ?
-                                        <img src={this.state.imgSrc ? this.state.imgSrc : (this.props?.model?.figuredata?.path !== "" ? this.props.model.figuredata.path : '')}
-                                        data-src={this.state.imgSrc}
-                                        title=""
-                                        alt=""
-                                        className={imageDimension + ' lazyload ' + actualSizeClass}
-                                        draggable="false" 
-                                        width={imgWidth}
-                                        height={imgHeight}
-                                        />
-                                            : <div className='figurebutton' onClick={this.addFigureResource}>Select an Image</div>
-                                    }
-
-                                </div>
-                                <div>
-                                    {
-                                        this.props.model.figuredata && this.props.model.figuredata.imageid !== "" ? <div className="figure-wrapper">
-                                            <div className="figure-image-info">
-                                                <div className='image-figure'><p className='image-text'>Image ID: </p> <span className='image-info'> {this.props.model.figuredata && this.props.model.figuredata.imageid ? this.props.model.figuredata.imageid : ""} </span> </div>
-                                                <div className='image-figure-path'><p className='image-text'>Image Path: </p> <span className='image-info'> {this.state.imgSrc ? this.state.imgSrc : (this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.props.model.figuredata.path : "")}</span> </div>
-                                                <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{this.props.model.figuredata && this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
-                                            </div>
-                                            <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
-                                            <div className='deletefigurebutton' onClick={() => this.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
-                                        </div> : ''
-                                    }
-                                </div>
-                            </div>
+                                    </div>
+                                </>
+                            }
+                            <>
+                                {
+                                    this.renderAssetSection(figureTypeData)
+                                }
+                            </>
                             <figcaption >
                                 <div className="floating-caption-group">
                                     <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={this.props.model.html.captions} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
@@ -557,7 +673,6 @@ class FigureImage extends Component {
                             </figcredit>
                         </figure>
                     </div>
-                    
                 </div>
             </div>
         );
