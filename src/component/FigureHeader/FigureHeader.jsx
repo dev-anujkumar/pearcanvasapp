@@ -165,6 +165,11 @@ export const FigureHeader = (props) => {
         }
         if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.remove('transition-none');
+            if (id === '0-0') {
+                labelElement?.nextElementSibling?.classList?.add('floating-label');
+            } else {
+                labelElement?.nextElementSibling?.classList?.add('floating-number');
+            }
         }
     }
 
@@ -179,6 +184,7 @@ export const FigureHeader = (props) => {
     imgNumberValue = `${imgNumberValue?.toString()}`
     const newClass = labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? 'disable-number-field': '';
     const removeLabelCondition = labelNumberSetting !== AUTO_NUMBER_SETTING_REMOVE_NUMBER ? true : false;
+    console.log("aaaaaaaaaa", imgLabelValue, checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`));
     return (
         <>
             <header className="figure-header new-figure-image-header">
