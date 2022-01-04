@@ -505,9 +505,9 @@ class AssessmentSlateData extends Component {
         if (isElmLearnosity) {
             let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
             const { assessmentSlateObj, assessmentReducer } = this.props;
-            const newAssessmentData = assessmentReducer[assessmentSlateObj.assessmentId]
+            const newAssessmentData =  assessmentSlateObj  && assessmentSlateObj.assessmentId && assessmentReducer[assessmentSlateObj.assessmentId] 
             const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.label === usageType)
-            if (newAssessmentData.intendedUsage && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
+            if (newAssessmentData?.intendedUsage?.length>0 && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
                 this.setState({
                     changeUsageTypePopup: true,
                     updatedUsageType: usageType

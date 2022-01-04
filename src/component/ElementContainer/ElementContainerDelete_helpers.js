@@ -16,7 +16,7 @@ import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Hel
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
-
+import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -41,6 +41,19 @@ export const onDeleteSuccess = (params) => {
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
+    
+    /** ---------------------------- Auto-Numbering handling ------------------------------*/
+    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+    const autoNumberParams = {
+        type,
+        getState,
+        dispatch,
+        contentUrn,
+        isAutoNumberingEnabled,
+        asideData
+    }
+    handleAutoNumberingOnDelete(autoNumberParams)
+    /**-----------------------------------------------------------------------------------*/
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const tcmDeleteArgs = {
         deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,

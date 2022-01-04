@@ -42,6 +42,7 @@ const BlockList = (props) => {
             }
             return (
                 <ElementContainer
+                    isBlockList={props?.isBlockList}
                     element={item}
                     index={indexToPass}
                     indexTemp={indexT}

@@ -184,10 +184,18 @@ class OpenerElement extends Component {
         }
         if (globalAlfrescoPath && globalAlfrescoPath.nodeRef) {
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                let messageObj = { citeName: globalAlfrescoPath?.repoName, 
-                    citeNodeRef: globalAlfrescoPath?.nodeRef, 
-                    elementId: this.props.elementId }
-                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                let messageObj = {
+                    citeName: globalAlfrescoPath?.repoName,
+                    citeNodeRef: globalAlfrescoPath?.nodeRef,
+                    elementId: this.props.elementId
+                }
+                sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                const messageDataToSave = {
+                    id: this.props.elementId,
+                    editor: undefined,
+                    citeNodeRef: globalAlfrescoPath?.nodeRef
+                }
+                this.props.saveSelectedAlfrescoElement(messageDataToSave);
             }
             else {
                 this.props.accessDenied(true)

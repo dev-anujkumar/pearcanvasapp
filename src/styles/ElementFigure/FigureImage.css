@@ -88,7 +88,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     white-space: nowrap;
     overflow: hidden;
 }
-.floating-title-group .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable {
+.floating-title-group  .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable {
     font-size: 14px!important;
     border-bottom: 2px solid #737373;
     margin: 8px 0 !important;
@@ -104,7 +104,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 .figure-header .floating-number-group .figureNumber.cypress-editable {
     font-size: 14px !important;
     width:74px !important;
-    border-bottom: 2px solid #737373;
+    border-bottom: 2px solid #737373 !important;
     margin: 8px 0 !important;
     padding: 15px 4px 6px 4px !important;
     font-weight: 500 !important;
@@ -116,11 +116,11 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 }
 .figure-header .floating-number-group .figureNumber.cypress-editable.mce-edit-focus,
 .figure-header .image-label .figureLabel.cypress-editable.mce-edit-focus, 
-.floating-title-group .figureTitle.cypress-editable.mce-edit-focus,
+.floating-title-group  .figureTitle.cypress-editable.mce-edit-focus,
 .floating-caption-group .figureCaption.cypress-editable.mce-edit-focus,
 .floating-credit-group .figureCredit.cypress-editable.mce-edit-focus
 {
-    border-bottom: 2px solid #005a70;  
+    border-bottom: 2px solid #005a70 !important;  
 }
 .figureLabel.cypress-editable  em,.figureLabel.cypress-editable  em strong,.figureLabel.cypress-editable strong span{
     font-weight: 900 !important;
@@ -162,7 +162,7 @@ figure,.element-container{
     display:block !important;
 }
 
-.pearson-component.image.figureData img:not(.img-actual-size){
+.pearson-component.image.figureData.figure-image img:not(.img-actual-size){
     width: 100%;
     text-align: center;
 }
@@ -718,6 +718,58 @@ th ol li.listItemNumeroUnoNone:before {
     bottom: 16px;
     width:65%;
 }
+.figure-label-number{
+    width: 230px;
+    font-size: 14px;
+    line-height: 1.71;
+    color: #000;
+    border-bottom: 2px solid #999;
+    cursor: pointer;
+    position: relative;
+    padding: 3px 4px;
+}
+.figure-number-dropdown{
+  width: 230px;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+  background-color: #fff;
+  position: absolute;
+  z-index: 99;
+  top:25px;
+}
+.figure-number-dropdown ul {
+    padding: 4px 0px;
+    margin: 0px;
+}
+.figure-number-dropdown ul li{
+  cursor: pointer;
+  padding: 10px;
+  margin: 0;
+  font-size: 14px;
+}
+.figure-number-dropdown ul li:hover {
+  background-color: #efefef;
+}
+.figure-label-number .dropdown-arrow{
+  width: 8px;
+  position: absolute;
+  right: 0;
+  top: 14px;
+}
+.label{
+  font-size: 10px;
+  color: #999;
+}
+.label.active {
+  color: #005a70;
+}
+.new-figure-image-header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+.figure-label-number-field{
+  margin-right: 24px;
+}
 .figure-label{
     width: 130px;
     font-size: 14px;
@@ -755,17 +807,6 @@ th ol li.listItemNumeroUnoNone:before {
   right: 0;
   top: 14px;
 }
-.label{
-  font-size: 10px;
-  color: #999;
-}
-.label.active {
-  color: #005a70;
-}
-.new-figure-image-header {
-  position: relative;
-  display: flex;
-}
 .figure-label-field{
   margin-right: 24px;
 }
@@ -786,6 +827,11 @@ th ol li.listItemNumeroUnoNone:before {
     top: 22px;
     transition: all 0.1s ease;
 }
+.previewClass{
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+}
 .floating-title-group .floating-title, .floating-caption-group .floating-caption, .floating-credit-group .floating-credit {
     font-size: 14px;
     color: #737373;
@@ -802,7 +848,7 @@ th ol li.listItemNumeroUnoNone:before {
     opacity: 1;
     color: #005a70;
 }
-.floating-title-group .figureTitle:focus ~ .floating-title, .floating-title-group .figureTitle:not(:focus):valid ~ .floating-title,
+.floating-title-group   .figureTitle:focus ~ .floating-title,.floating-title-group .figureTitle:not(:focus):valid ~ .floating-title,
 .floating-caption-group .figureCaption:focus ~ .floating-caption, .floating-caption-group .figureCaption:not(:focus):valid ~ .floating-caption,
 .floating-credit-group .figureCredit:focus ~ .floating-credit, .floating-credit-group .figureCredit:not(:focus):valid ~ .floating-credit {
     top: -6px;
@@ -821,7 +867,7 @@ th ol li.listItemNumeroUnoNone:before {
     z-index:0;
 }
 
- .floating-title-group .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none {
+ .floating-title-group   .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none {
     transition: none;
     top: -6px;
     font-size: 10px;
@@ -835,4 +881,27 @@ th ol li.listItemNumeroUnoNone:before {
 
 .label-color-change {
     color: #005a70 !important;
+}
+.figure-preview div.MuiFilledInput-multiline {
+    padding: 15px !important;
+    margin: 5px 0px 10px 0px;
+}
+.figure-preview .MuiFilledInput-underline.Mui-disabled:before {
+    border-bottom-style: none;
+}
+
+.preview label{
+    color: #737373;
+    margin: 0 12px;
+}
+.figure-preview textarea {
+    height: max-content !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+}
+
+.figureNumber.disable-number-field, .figureNumber.disable-number-field.cypress-editable, .heading4ImageTextWidthNumberLabel.figureNumber.disable-number-field.cypress-editable {
+    /* border: none !important; */
+    pointer-events: none;
+    border-bottom: none !important
 }

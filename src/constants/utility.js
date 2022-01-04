@@ -263,7 +263,7 @@ export const checkHTMLdataInsideString = (htmlNode) => {
     if (tempDiv.firstChild.innerHTML === "<br>" || tempDiv.firstChild.innerHTML === "</br>" || tempDiv.firstChild.innerHTML === "<br data-mce-bogus=\"1\">") {
         return '';
     } else { 
-        return tempDiv.firstChild.innerHTML;
+        return tempDiv?.firstChild?.innerHTML;
     }
 }
 

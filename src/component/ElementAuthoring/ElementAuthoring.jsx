@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import TinyMceEditor from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
+import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 export class ElementAuthoring extends Component {
   constructor(props) {
     super(props);
@@ -10,7 +11,9 @@ export class ElementAuthoring extends Component {
   render() {
     const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue, openMarkedIndexPopUp, markedIndexValue } = this.props
      return (
-        <TinyMceEditor
+       <KeyboardWrapper enable={this.props.element?.elementdata?.type !== "blockquote" && !this.props.isBlockList} index={this.props.index}>
+           <TinyMceEditor
+           isBlockList={this.props.isBlockList}
           openAssetPopoverPopUp ={openAssetPopoverPopUp}
           openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
           index={this.props.index}
@@ -35,6 +38,8 @@ export class ElementAuthoring extends Component {
           markedIndexValue={markedIndexValue}
           parentManifestListItem={this?.props?.parentManifestListItem}
         />
+       </KeyboardWrapper>
+       
     )
 
     

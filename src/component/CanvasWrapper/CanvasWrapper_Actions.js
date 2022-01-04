@@ -27,7 +27,8 @@ import {
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
-    ERROR_API_POPUP
+    ERROR_API_POPUP,
+    SLATE_FIGURE_ELEMENTS
 } from '../../constants/Action_Constants';
 import { SLATE_API_ERROR } from '../../constants/Element_Constants';
 
@@ -48,9 +49,11 @@ import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentAc
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
-import ElementConstants from "../ElementContainer/ElementConstants.js"
+import ElementConstants from "../ElementContainer/ElementConstants.js";
+import { isAutoNumberEnabled } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
-
+import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -374,6 +377,11 @@ export const getProjectDetails = () => (dispatch, getState) => {
             })
         }
         const data = JSON.parse(JSON.stringify(response.data))
+        if (data?.parameters && Object.keys(data?.parameters).length > 0) {
+            let flag = data?.parameters?.enablenumberedandlabel || false;
+            dispatch(isAutoNumberEnabled(flag, config.ENABLE_AUTO_NUMBER_CONTENT));
+        }
+        dispatch(isAutoNumberEnabled(true, config.ENABLE_AUTO_NUMBER_CONTENT)); // by default set true figure autonumbering
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
             // Api to get LOB Permissions
@@ -542,7 +550,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
-        let newVersionManifestId=Object.values(slateData.data)[0].id
+        let newVersionManifestId=Object.values(slateData.data)[0].id;
+
+        /* This code will get the last aligned LO from the local storage and update the redux store */
+        let lastAlignedLos = localStorage.getItem('lastAlignedLos');
+        if(lastAlignedLos && lastAlignedLos.length > 0){
+            let lastAlignedLosInStroage = JSON.parse(lastAlignedLos);
+            let lastAlignedLoForCurrentSlate = lastAlignedLosInStroage[newVersionManifestId];
+            dispatch(updateLastAlignedLO(lastAlignedLoForCurrentSlate));
+        }
+
         if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
@@ -812,6 +829,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         if(queryStrings.get('searchElement') && getState().searchReducer.deeplink) {
             let searchTerm = queryStrings.get('searchElement') || '';
             dispatch(getContainerData(searchTerm));
+        }
+        /** Get List of Figures on a Slate for Auto-Numbering */
+        const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
+        const slateFigures = getImagesInsideSlates(bodyMatter)
+        if (slateFigures) {
+            dispatch({
+                type: SLATE_FIGURE_ELEMENTS,
+                payload: {
+                    slateFigures
+                }
+            });
         }
     })
     .catch(err => {
