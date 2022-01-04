@@ -191,7 +191,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => (dispat
         if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && (Object.keys(elementsList[slateEntityForAutonumber]).length > 0)) {
             let nearestElementObj = findNearestMediaElement(slateFigures, figureObj, labelType);
 
-            if (nearestElementObj && Object.keys(nearestElementObj?.obj).length > 0) {
+            if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                 let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
                 index = nearestElementObj?.key === 'above' ? index + 1 : index;
                 elementsList[slateEntityForAutonumber]?.splice(index, 0, createdElementData);
@@ -212,7 +212,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => (dispat
         });
         let nearestElementObj = findNearestMediaElement(slateFigures, figureObj, labelType);
 
-        if (nearestElementObj && Object.keys(nearestElementObj?.obj).length > 0) {
+        if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
             let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
             index = nearestElementObj?.key === 'above' ? index + 1 : index;
             elementsList[slateEntityForAutonumber]?.splice(index, 0, createdElementData);
@@ -253,7 +253,7 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
             indexPos: indexPos
         }
         let nearestElementObj = findNearestMediaElement(mediaElementsInContainer, figureObjInContainer, labelType);
-        if (nearestElementObj && Object.keys(nearestElementObj?.obj).length > 0) {
+        if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
             if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1)) {
                 let index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
                 index = nearestElementObj?.key === 'above' ? index + 1 : index;
@@ -268,7 +268,7 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
             updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
         } else {
             let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, labelType);
-            if (nearestElementObj && Object.keys(nearestElementObj?.obj).length > 0) {
+            if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                 let index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
                 index = nearestElementObj?.key === 'above' ? index + 1 : index;
                 elementsList[slateEntityForAutonumber].splice(index, 0, createdElementData);
@@ -284,7 +284,7 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
             indexPos: figureObj.indexPos[0]
         }
         let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, labelType);
-        if (nearestElementObj && Object.keys(nearestElementObj?.obj).length > 0) {
+        if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
             let index = elementsList[slateEntityForAutonumber]?.findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
             index = nearestElementObj?.key === 'above' ? index + 1 : index;
             elementsList[slateEntityForAutonumber]?.splice(index, 0, createdElementData);
@@ -298,7 +298,7 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
 
 export const getAllSlatesListInsideParent = (inputArr, slatesArr) => {
     inputArr.forEach(innerObj => {
-        if (innerObj.label === 'module') {
+        if (innerObj.label === 'module' || innerObj.label === 'appendix') {
             innerObj.contents.forEach(slateData => {
                 slatesArr.push(slateData);
             })
@@ -314,7 +314,7 @@ export const getAllSlatesListInsideParent = (inputArr, slatesArr) => {
  * @param {*} slateEntityURN 
  * @returns 
  */
- export const checkElementExistenceInOtherSlates = (createdElementData, slateEntityURN, getState, dispatch) => {
+export const checkElementExistenceInOtherSlates = (createdElementData, slateEntityURN, getState, dispatch) => {
     const allSlateData = getState().appStore?.allSlateData;
     const slateAncestorData = getState().appStore?.currentSlateAncestorData;
     const parentUrn = getContainerEntityUrn(slateAncestorData);
@@ -325,55 +325,62 @@ export const getAllSlatesListInsideParent = (inputArr, slatesArr) => {
     let slateKey = '';
     let slatesArr = [];
     let slateIndex;
-    let elementIndex;
+    let elementIndex = -1;
     if (parentUrn && allSlateData) {
-        for (let matterType in allSlateData) {
-            if (allSlateData[matterType] && allSlateData[matterType].length > 0) {
-                let index = allSlateData[matterType].findIndex(parentEntity => parentEntity.entityUrn === parentUrn);
-                if (index > -1) {
-                    parentEntityObject = allSlateData[matterType][index];
-                    getAllSlatesListInsideParent(parentEntityObject.contents, slatesArr);
-                    if (slatesArr.length > 1) {
-                        slateIndex = slatesArr.findIndex(slate => slate.entityUrn === slateEntityURN);
-                        if (slateIndex === (slatesArr.length - 1)) {
-                            slateKey = 'above';
-                        } else {
-                            slateKey = 'below';
-                        }
+
+        if (parentUrn === 'frontMatter' || parentUrn === 'backMatter') {
+            parentEntityObject = allSlateData[parentUrn.toLowerCase()];
+            getAllSlatesListInsideParent(parentEntityObject, slatesArr);
+        } else {
+            for (let matterType in allSlateData) {
+                if (allSlateData[matterType] && allSlateData[matterType].length > 0) {
+                    let index = allSlateData[matterType].findIndex(parentEntity => parentEntity.entityUrn === parentUrn);
+                    if (index > -1) {
+                        parentEntityObject = allSlateData[matterType][index];
+                        getAllSlatesListInsideParent(parentEntityObject.contents, slatesArr);
+                        break;
                     }
-                    if (slateKey) {
-                        if ((elementsList && Object.keys(elementsList).length > 0) && parentUrn && (Object.keys(elementsList).indexOf(parentUrn) > -1)) {
-                            if (slateKey === 'below') {
-                                elementIndex = findElementInNextSlates(slatesArr, slateIndex, elementsList, parentUrn, createdElementData?.displayedlabel);
-                                if (elementIndex > -1 && (elementsList && Object.keys(elementsList).length > 0) && parentUrn && (Object.keys(elementsList[parentUrn]).length > 0)) {
-                                    elementsList[parentUrn].splice(elementIndex, 0, createdElementData);
-                                }
-                                if (elementIndex == -1) {
-                                    elementIndex = findElementInLastSlates(slatesArr, slateIndex, elementsList, parentUrn, createdElementData?.displayedlabel);
-                                    if (elementIndex > -1 && (elementsList && Object.keys(elementsList).length > 0) && parentUrn && (Object.keys(elementsList[parentUrn]).length > 0)) {
-                                        elementsList[parentUrn].splice(elementIndex + 1, 0, createdElementData);
-                                    }
-                                }
-                            } else if (slateKey === 'above') {
-                                elementIndex = findElementInLastSlates(slatesArr, slateIndex, elementsList, parentUrn, createdElementData?.displayedlabel);
-                                if (elementIndex > -1 && (elementsList && Object.keys(elementsList).length > 0) && parentUrn && (Object.keys(elementsList[parentUrn]).length > 0)) {
-                                    elementsList[parentUrn].splice(elementIndex + 1, 0, createdElementData);
-                                }
-                            }
-                        }
-                    }
-                    if (elementIndex === -1 || (!(elementsList.hasOwnProperty(parentUrn))) || (Object.keys(elementsList[parentUrn]).length === 0)) {
-                        elementsList = {
-                            ...elementsList,
-                            [parentUrn]: []
-                        }
-                        elementsList[parentUrn].push(createdElementData);
-                    }
-                    updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElements, dispatch);
-                    break;
                 }
             }
         }
+
+        if (slatesArr.length > 1) {
+            slateIndex = slatesArr.findIndex(slate => slate.entityUrn === slateEntityURN);
+            if (slateIndex === (slatesArr.length - 1)) {
+                slateKey = 'above';
+            } else {
+                slateKey = 'below';
+            }
+        }
+        if (slateKey) {
+            if ((elementsList && Object.keys(elementsList).length > 0) && parentUrn && (Object.keys(elementsList).indexOf(parentUrn) > -1)) {
+                if (slateKey === 'below') {
+                    elementIndex = findElementInNextSlates(slatesArr, slateIndex, elementsList, parentUrn, createdElementData?.displayedlabel);
+                    if (elementIndex > -1 && (elementsList && Object.keys(elementsList).length > 0) && parentUrn && (Object.keys(elementsList[parentUrn]).length > 0)) {
+                        elementsList[parentUrn].splice(elementIndex, 0, createdElementData);
+                    }
+                    if (elementIndex == -1) {
+                        elementIndex = findElementInLastSlates(slatesArr, slateIndex, elementsList, parentUrn, createdElementData?.displayedlabel);
+                        if (elementIndex > -1 && (elementsList && Object.keys(elementsList).length > 0) && parentUrn && (Object.keys(elementsList[parentUrn]).length > 0)) {
+                            elementsList[parentUrn].splice(elementIndex + 1, 0, createdElementData);
+                        }
+                    }
+                } else if (slateKey === 'above') {
+                    elementIndex = findElementInLastSlates(slatesArr, slateIndex, elementsList, parentUrn, createdElementData?.displayedlabel);
+                    if (elementIndex > -1 && (elementsList && Object.keys(elementsList).length > 0) && parentUrn && (Object.keys(elementsList[parentUrn]).length > 0)) {
+                        elementsList[parentUrn].splice(elementIndex + 1, 0, createdElementData);
+                    }
+                }
+            }
+        }
+        if (elementIndex === -1 || (!(elementsList.hasOwnProperty(parentUrn))) || (Object.keys(elementsList[parentUrn]).length === 0)) {
+            elementsList = {
+                ...elementsList,
+                [parentUrn]: []
+            }
+            elementsList[parentUrn].push(createdElementData);
+        }
+        updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElements, dispatch);
     }
 }
 

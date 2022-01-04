@@ -355,7 +355,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newLabel, element, autoNu
     }
     if (autoNumberedElements[autoNumber_ElementTypeKey[newLabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn]) {
         let nearestElementObj = findNearestMediaElement(slateFigures, element, newLabel, elementSlateIndex);
-        if (nearestElementObj && Object.keys(nearestElementObj?.obj).length > 0) {
+        if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
             let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
             storeIndex = nearestElementObj?.key === 'above' ? storeIndex + 1 : storeIndex;
             autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].splice(storeIndex, 0, element);
