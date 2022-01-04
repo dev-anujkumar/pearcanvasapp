@@ -29,7 +29,7 @@ export const EditorConfig = {
     },
     toolbar: 'undo redo | insertMedia | formatSelector | casechange bold italic underline strikethrough removeformat subscript superscript specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code IndexEntry | customListButton customUoListButton indent outdent | slateTag ',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image tinymcespellchecker casechange",
+    plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image casechange",
 }
 
 export const GlossaryFootnoteEditorConfig = {

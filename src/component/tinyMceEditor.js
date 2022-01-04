@@ -35,6 +35,7 @@ import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlo
 import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
+import cypressConfig from '../config/cypressConfig';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -62,8 +63,8 @@ export class TinyMceEditor extends Component {
         this.wirisClick = 0;
         this.activeGlossaryFootnoteId="";
         this.editorConfig = {
-            spellchecker_rpc_url: 'http://localhost:8080/ephox-spelling/',
-            plugins: EditorConfig.plugins,
+            spellchecker_rpc_url: cypressConfig.TINYMCE_SPELL_CHECKER_URL,
+            plugins: this.handleTinymcePlugins(),
             selector: '#cypress-0',
             inline: true,
             formats: EditorConfig.formats,
@@ -304,6 +305,18 @@ export class TinyMceEditor extends Component {
         
         this.editorRef = React.createRef();
         this.currentCursorBookmark = {};
+    }
+
+    /**
+     * function to provide tinymce plugins
+     * @returns {String} Tinymce plugins list
+     */
+    handleTinymcePlugins = () => {
+        const { spellCheckToggle } = this.props;
+        let plugins = EditorConfig.plugins;
+        // adding tinymce spellchecker plugin if spell checker option is active from project settings
+        if (spellCheckToggle) plugins = `${plugins} tinymcespellchecker`;
+        return plugins;
     }
 
     /**
@@ -3037,9 +3050,22 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * function to remove tinymce editors
+     */
+    removeTinymceEditors = () => {
+        for (let i = tinymce?.editors?.length - 1; i > -1; i--) {
+            let ed_id = tinymce?.editors[i]?.id;
+            tinymce.remove(`#${ed_id}`)
+        }
+    }
+
+    /**
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
+        const { spellCheckToggle } = this.props;
+        // removing the tinymce editors when spellcheck toggle is turned off to prevent incorrect text highlighting
+        if (!spellCheckToggle) this.removeTinymceEditors();
         let currentNode = document.getElementById('cypress-' + this.props.index);
         if (currentNode && currentNode.getElementsByTagName("IMG").length) {
             currentNode.innerHTML = this.getNodeContent();
@@ -4192,7 +4218,8 @@ const mapStateToProps = (state) => {
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isInlineEditor: state.alfrescoReducer.isInlineEditor,
         imageArgs: state.alfrescoReducer.imageArgs,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        spellCheckToggle: state.toolbarReducer.spellCheckToggle
     }
 }
 
