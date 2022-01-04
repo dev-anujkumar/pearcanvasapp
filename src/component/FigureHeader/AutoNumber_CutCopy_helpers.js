@@ -65,12 +65,14 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
         const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === selectedElement.displayedlabel)
         const figureIndexOnSlate = activeLabelFigures.findIndex(ele => ele.contentUrn === selectedElement.contentUrn)
         if (activeLabelFigures?.length > 1) {
-            let refIndex = ""
+            let refIndex = "", indexPos = ""
             if (figureIndexOnSlate == activeLabelFigures.length - 1) {
-                refIndex = figureIndexOnSlate
+                refIndex = figureIndexOnSlate - 1
+                indexPos = 'above'
             }
             else {
                 refIndex = figureIndexOnSlate + 1
+                indexPos = 'below'
             }
             //find the closest image now and then add the new img at that index
             const referenceFigure = activeLabelFigures[refIndex].contentUrn
@@ -81,9 +83,14 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== selectedElement.contentUrn)
                 }
             }
+
             if (referenceFigure) {
                 const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === referenceFigure)
-                numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, selectedElement)
+                if (indexPos === 'above') {
+                    numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex + 1, 0, selectedElement)
+                } else {
+                    numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, selectedElement)
+                }
                 dispatch({
                     type: GET_ALL_AUTO_NUMBER_ELEMENTS,
                     payload: {

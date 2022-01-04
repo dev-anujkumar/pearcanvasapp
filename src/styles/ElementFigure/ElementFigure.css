@@ -583,9 +583,3 @@ th ol li.listItemNumeroUnoNone:before {
     margin-top: 3px;
     border-bottom: 3px solid blue;
   }
-
-  .pearson-component.image.figureData.table-figure-data ul li.listItemNumeroUnoBullet::before {
-    counter-increment: section;
-    content: counter(section, disc);
-    font-size: 0px;
-}

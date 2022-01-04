@@ -807,18 +807,6 @@ th ol li.listItemNumeroUnoNone:before {
   right: 0;
   top: 14px;
 }
-.label{
-  font-size: 10px;
-  color: #999;
-}
-.label.active {
-  color: #005a70;
-}
-.new-figure-image-header {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-}
 .figure-label-field{
   margin-right: 24px;
 }
@@ -907,14 +895,15 @@ th ol li.listItemNumeroUnoNone:before {
     margin: 0 12px;
 }
 .figure-preview textarea {
-    height: max-content !important;;
+    height: max-content !important;
     padding: 0 !important;
     font-size: 13px !important;
 }
 
-.figureNumber.disable-number-field{
-    border: none !important;
+.figureNumber.disable-number-field, .figureNumber.disable-number-field.cypress-editable, .heading4ImageTextWidthNumberLabel.figureNumber.disable-number-field.cypress-editable {
+    /* border: none !important; */
     pointer-events: none;
+    border-bottom: none !important;
 }
 
 /**Table Element(TE) Styling Start*/

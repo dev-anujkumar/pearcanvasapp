@@ -53,8 +53,8 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
                 let index = numberedElements[labelType][parentIndex].findIndex(figure => figure.contentUrn === contentUrn);
                 if (index > -1) {
                     numberedElements[labelType][parentIndex].splice(index, 1);
+                    break;
                 }
-                break;
             }
         }
     }
@@ -166,7 +166,7 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
                 }
                 if (referenceFigure) {
-                    const refImageIndex = numberedElements[labelType][figureParentEntityUrn].indexOf(ele => ele.contentUrn === referenceFigure)
+                    const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === referenceFigure)
                     numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, swappedElementData)
                     dispatch({
                         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
