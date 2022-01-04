@@ -527,6 +527,21 @@ export const checkContainerElementVersion = async (containerElement, versionStat
         }
 
     }
+    // poetry inside show hide versioning
+    if ((containerElement?.poetryData?.element?.type === "poetry" && containerElement?.poetryData?.parent?.type === SHOWHIDE) || (containerElement?.poetryData?.element?.type === "poetry" && containerElement?.poetryData?.element?.grandParent?.asideData?.type === SHOWHIDE)) {
+        if (versionStatus?.parentStatus === "approved") {
+            const grandParent = containerElement?.poetryData?.parent ? containerElement?.poetryData?.parent : containerElement?.poetryData?.element?.grandParent?.asideData
+            let newShUrn = await getLatestVersion(grandParent?.contentUrn);
+            let updatedId = containerElement?.poetryData?.parent ? containerElement?.poetryData?.parent?.id : containerElement?.poetryData?.element?.grandParent?.asideData?.id
+            updatedId = newShUrn;
+        }
+        if (containerElement?.poetryData?.element?.status === "approved") {
+            const poetryUrn = containerElement?.poetryData?.contentUrn ? containerElement?.poetryData?.contentUrn : containerElement?.poetryData?.element?.contentUrn
+            let newElemUrn = await getLatestVersion(poetryUrn);
+            containerElement.poetryData.element.id = newElemUrn
+            containerElement.poetryData.id = newElemUrn;
+        }
+    }
     // also check if status is approved
     // only then go inside this
     if(
