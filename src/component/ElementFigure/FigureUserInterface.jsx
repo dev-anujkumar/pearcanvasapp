@@ -385,7 +385,7 @@ class FigureUserInterface extends Component {
         const { element, permissions, openGlossaryFootnotePopUp, handleFocus, handleBlur, index, slateLockInfo, glossaryFootnoteValue, glossaaryFootnotePopup, elementId, alfrescoSite, isAutoNumberingEnabled } = this.props;
         let figureHtmlData = getLabelNumberTitleHTML(element);
         let { figureLabelValue } = this.state;
-        let figureLabelFromApi = isAutoNumberingEnabled ? this.props.element.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
+        let figureLabelFromApi = (isAutoNumberingEnabled && element.figuretype !== INTERACTIVE) ? this.props.element.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         // let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
         if (!(this.checkForAutoNumberedContent(this.props.element))) {
