@@ -6,6 +6,7 @@ import axios from 'axios';
 import config from '../config/config';
 import { sendDataToIframe } from '../constants/utility';
 import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } from '../constants/Element_Constants';
+import store from '../appstore/store';
 /**
   * @description data after selecting an asset from alfresco c2 module
   * @param {*} data selected asset data
@@ -13,7 +14,7 @@ import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } f
   */
  export const dataFromAlfresco = (data, editor, imageArgs) => {
     let imageData = data;
-    let epsURL = imageData.epsUrl? imageData.epsUrl : "";
+    let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "" ;
     let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
     let uniqID = imageData.id ? imageData.id : "";
     let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
@@ -21,25 +22,37 @@ import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } f
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
     const imgData = `<img imageid="urn:pearson:alfresco:${uniqID}" src=${epsURL} height="150" width="112"  class="imageAssetContent" data-id="${imageID}"/>`;
     const imageTypes = ["image", "table", "mathImage", "authoredtext"];
-    if (imageTypes.indexOf(figureType) > -1) {
-        if (imageArgs?.id && editor?.targetElm) {
-            let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
-            if (getImgNode) {
-                getImgNode.outerHTML = imgData;
-                imageArgs.handleBlur(null, true);
+        if (imageTypes.indexOf(figureType) > -1) {
+            if (imageArgs?.id && editor?.targetElm) {
+                let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
+                if(!getImgNode){
+                    getImgNode = editor.targetElm.querySelector(`img[imageid="${imageArgs.id}"]`)
+                }
+                if (getImgNode) {
+                    getImgNode.outerHTML = imgData;
+                    imageArgs.handleBlur(null, true);
+                }
+            }
+            else {
+                editor.insertContent(imgData);
+                setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
             }
         }
-        else {
-            editor.insertContent(imgData);
-            setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
-        }
+    else{
+        store.dispatch({
+            type: 'MULTIPLE_LINE_POETRY_ERROR_POPUP',
+            payload: {
+                show: true,
+                message: 'Only Image Type Assets can be added as Inline Image!'
+            }
+        });
     }
     // return imgData;
 }
 /**
  * @description function will be called on image src add and fetch resources from Alfresco
  */
-export const handleC2MediaClick = (permissions, editor, element) => {
+export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlfrescoElement) => {
     let alfrescoPath = config.alfrescoMetaData;
     if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {
@@ -47,11 +60,18 @@ export const handleC2MediaClick = (permissions, editor, element) => {
                 let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
                 const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                 const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
                 let messageObj = { citeName: citeName, 
-                    citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                    citeNodeRef: citeNodeRef, 
                     elementId: element.id,
                     editor: true}
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                const messageDataToSaveInlineImage = {
+                    id: element.id,
+                    editor: true,
+                    citeNodeRef: citeNodeRef
+                }
+                saveSelectedAlfrescoElement(messageDataToSaveInlineImage);
             } else {
                 // props.accessDenied(true)
             }
@@ -140,7 +160,29 @@ export const checkBlockListElement = (data, keypressed) => {
     if (slateLevelData && Object.values(slateLevelData).length && index && keypressed) {
         const { contents } = Object.values(slateLevelData)[0];
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
-            const indexes = index.split("-");
+            let indexes = index.split("-");
+            let parentElement = data?.asideData?.parent;
+
+            if (parentElement && parentElement.type === "showhide" && data?.asideData.type==="manifestlist") {
+                let indexToinsert = null;
+                let parentData = {};
+                if (keypressed === "TAB") {
+                    indexToinsert = Number(indexes[indexes.length - 1]) + 1;
+                    parentData = data.parentManifestListItem;
+                }
+                else if (keypressed === 'ENTER') {
+                    indexToinsert = Number(indexes[indexes.length - 2]) + 1;
+                    parentData = data.asideData.parentManifestList;
+                }
+                else if (keypressed === 'SHIFT+TAB') {
+                    indexToinsert = Number(indexes[indexes.length - 4]) + 1;
+                    parentData = data.asideData.grandParentManifestList
+                }
+                return {
+                    indexToinsert: indexToinsert,
+                    parentData: parentData
+                }
+            }
             if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
                 elementData = {
                     indexToinsert: Number(indexes[indexes.length - 1]) + 1,
@@ -155,8 +197,9 @@ export const checkBlockListElement = (data, keypressed) => {
     return elementData;
 }
 
-export const isNestingLimitReached = (index) => {
-    const BLOCK_LIST_NESTING_LIMIT = 4  // This is default block list nesting limit.
+export const isNestingLimitReached = (index,asideData) => {
+    let BLOCK_LIST_NESTING_LIMIT = 4  // This is default block list nesting limit.
+    if(asideData.parent && asideData.parent.type==="showhide") BLOCK_LIST_NESTING_LIMIT = 5;
     if(typeof index === 'string' && index.includes('-') && index.split("-").length< BLOCK_LIST_NESTING_LIMIT * 2){
         return false;
     }
@@ -170,11 +213,16 @@ export const isNestingLimitReached = (index) => {
  * @returns {Boolean} return whether selected element is inside blocklist or not
  */
 export const isElementInsideBlocklist = (activeElement, slateData) => {
-    const { index } = activeElement;
+    const { index,data } = activeElement;
     if (slateData && Object.values(slateData).length && index) {
         const { contents } = Object.values(slateData)[0];
         if (contents && contents?.bodymatter && contents?.bodymatter?.length && typeof index === 'string' && index.includes('-')) {
             const indexes = index.split("-");
+            let parentElement = data?.asideData?.parent;
+
+            if (parentElement && parentElement.type === "showhide" && data.asideData.parentManifestList) {
+                return true;
+            }
             if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
                 return true;
             }

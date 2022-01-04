@@ -1,5 +1,5 @@
 let cypressConfig = {
-    ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
+    ssoToken: "u1cOYBZMHAa9XdcnGQ63ErHjcwI.*AAJTSQACMDIAAlNLABxMcCtHRGV5TFZlS0VQTDBzVHFZcFZhQWFYVUk9AAR0eXBlAANDVFMAAlMxAAIwNQ..*",
     alfrescoMetaData : {},
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : null,
@@ -28,7 +28,7 @@ let cypressConfig = {
     ctaButtonSmartlinkContexts: ['pdf', 'web-link', 'pop-up-web-link'],
     isCO : false,
     isLOL:false,
-    toolBarList : ['undo', 'redo', 'insertMedia', 'formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
+    toolBarList : ['undo', 'redo','insertMedia','formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
     elementToolbar: [],
     showHideToolbar: ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','alignment','calloutIcon', 'IndexEntry'],
     revelToolbar : ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
@@ -40,7 +40,11 @@ let cypressConfig = {
     figurLabelToolbar: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent','IndexEntry'],
     figureImageLabelToolbar:['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml','chemml','inlinecode','orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent','IndexEntry'],
     figureNumberToolbar:['insertMedia','formatSelector', 'subscript', 'superscript', 'specialcharactor', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
+    labelNumberToolbarAutonumberMode: ['insertMedia','formatSelector', 'bold', 'italic', 'underline', 'strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
     figurImageCommonToolbar: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent','IndexEntry'],
+    AsideLabel: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
+    AsideNumber: ['insertMedia', 'formatSelector', 'subscript', 'superscript', 'specialcharactor', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
+    AsideTitle: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote','mathml', 'chemml', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
     smartlinkActionButtonToolbar: ['insertMedia', 'formatSelector', 'bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'footnote', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist', 'mathml', 'chemml', 'inlinecode', 'alignment', 'calloutIcon', 'increaseindent', 'IndexEntry'],
     captionToolbar:['insertMedia','formatSelector','decreaseindent','glossary','crossLinkingIcon','assetpopover','alignment','calloutIcon', 'IndexEntry'],
     poetryLabelToolbar: ['insertMedia','formatSelector','footnote','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','mathml','chemml','alignment','calloutIcon', 'IndexEntry'],
@@ -88,7 +92,8 @@ let cypressConfig = {
     isSavingElement:false,
     tcmslatemanifest:"",
     saveElmOnAS: false,
-    fullName:'c5test01'
+    fullName:'c5test01',
+    isCypressPlusEnabled:true
 }
 
 

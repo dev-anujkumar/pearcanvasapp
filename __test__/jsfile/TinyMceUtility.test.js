@@ -3,6 +3,7 @@ import * as tinyMceFn from '../../src/js/TinyMceUtility.js';
 import config from '../../src/config/config';
 import tinymce from 'tinymce/tinymce';
 import axios from 'axios';
+import configureStore from 'redux-mock-store';
 /**************************Declare Common Variables**************************/
 let mockQuerySelector = (selector) => {
     switch (selector) {
@@ -27,6 +28,7 @@ let mockEditor = {
         id: "imageId",
         handleBlur: jest.fn()
     },
+    saveSelectedAlfrescoElement= jest.fn(),
     mockImgData = {
         'assetType': "image",
         'uniqueID': "imageId",
@@ -105,7 +107,7 @@ jest.mock('../../src/js/utils.js', () => ({
 describe('Testing TinyMceUtility', () => {
     it('Test - handleC2MediaClick - List Element', () => {
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
-        tinyMceFn.handleC2MediaClick(permissions, mockEditor, mockImageArgs);
+        tinyMceFn.handleC2MediaClick(permissions, mockEditor, mockImageArgs, saveSelectedAlfrescoElement);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear()
     });
@@ -187,7 +189,7 @@ describe('Testing TinyMceUtility', () => {
         }
         const spyFunc = jest.spyOn(tinyMceFn, 'handleC2MediaClick');
         axios.get = await jest.fn().mockImplementationOnce(() => Promise.reject({}));
-        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs);
+        tinyMceFn.handleC2MediaClick(['alfresco_crud_access', 'add_multimedia_via_alfresco'], mockEditor, mockImageArgs, saveSelectedAlfrescoElement);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });
@@ -214,7 +216,7 @@ describe('Testing TinyMceUtility', () => {
         }
         let data = {
             id: "",
-            epsUrl: "",
+            epsUrl: "dfe",
             properties: {
                 "cplg:altText": "",
                 'cplg:longDescription': "",
@@ -292,6 +294,48 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });
+    it('Test - dataFromAlfresco  - when other asset type is selected Action is dispatched', () => {
+        const initialState = {}
+        const middlewares = []
+        const mockStore = configureStore(middlewares);
+        const store = mockStore(initialState);
+        let mockEditor2 = {
+            selection: {
+                setContent: () => { }
+            },
+            insertContent: () => { },
+            targetElm: { classList: { remove: () => { } }, querySelector:()=>{return {outerHTML:""}} }
+        };
+        let data = {
+            epsUrl:"iamge.mp3",            
+            id: "testid",
+            properties:{
+                "cplg:altText":"Alt Text",
+                'cplg:longDescription':"longDescription"
+            },
+            content:{mimeType: "mp3"}
+        };
+        const spyFunc = jest.spyOn(tinyMceFn, 'dataFromAlfresco');
+        const expectedPayload = {
+            type: 'MULTIPLE_LINE_POETRY_ERROR_POPUP',
+            payload: {
+                show: true,
+                message: 'Only Image Type Assets can be added as Inline Image!'
+            }
+        };
+        tinyMceFn.dataFromAlfresco(data, mockEditor2);
+        store.dispatch({
+            type: 'MULTIPLE_LINE_POETRY_ERROR_POPUP',
+            payload: {
+                show: true,
+                message: 'Only Image Type Assets can be added as Inline Image!'
+            }
+        });
+        const actions = store.getActions();
+        expect(spyFunc).toHaveBeenCalled();
+        expect(actions).toEqual([expectedPayload]);
+        spyFunc.mockClear();
+    });
     it('Test - checkForDataIdAttribute', () => {
         let data = {
             match: ()=>{
@@ -307,17 +351,23 @@ describe('Testing TinyMceUtility', () => {
     });
 
     it('Test - isNestingLimitReached - if block', () => {
+        let asideData = {
+            type: 'showhide'
+        }
         const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
         const indexes = "0"
-        tinyMceFn.isNestingLimitReached(indexes);
+        tinyMceFn.isNestingLimitReached(indexes,asideData);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     })
 
     it('Test - isNestingLimitReached - else block', () => {
+        let asideData = {
+            type: 'showhide'
+        }
         const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
         const indexes = "1-0-1"
-        tinyMceFn.isNestingLimitReached(indexes);
+        tinyMceFn.isNestingLimitReached(indexes,asideData);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     })

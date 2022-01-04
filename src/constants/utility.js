@@ -242,28 +242,28 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
             figureObj.html.title = createLabelNumberTitleModel('', '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
         }
         figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
-    } else {
-        if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
-            figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
-            figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
-        }
-    }
-    // ................................XX...........................................
+     } else if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
+             figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj?.html?.subtitle?.replace("<p>", '')?.replace("</p>", ''));
+             figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
+     }
+
     let data = {};
+     if(figureObj?.html && figureObj?.html?.title){
         figureObj.html.title = figureObj.html.title.replace(/(\r\n|\n|\r)/gm, '');
         data.formattedLabel = getTitleSubtitleModel(figureObj.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
         data.formattedNumber = getTitleSubtitleModel(figureObj.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
         data.formattedTitle = getTitleSubtitleModel(figureObj.html.title, "formatted-subtitle", "figure");
+     }
     return data;
 }
 
 export const checkHTMLdataInsideString = (htmlNode) => {
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlNode;
-    if (tempDiv.firstChild.innerHTML === '<br>' || tempDiv.firstChild.innerHTML === '</br>') {
+    if (tempDiv.firstChild.innerHTML === "<br>" || tempDiv.firstChild.innerHTML === "</br>" || tempDiv.firstChild.innerHTML === "<br data-mce-bogus=\"1\">") {
         return '';
     } else { 
-        return tempDiv.firstChild.innerHTML;
+        return tempDiv?.firstChild?.innerHTML;
     }
 }
 

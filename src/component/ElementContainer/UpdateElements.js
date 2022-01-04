@@ -7,12 +7,17 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel, getTitleSubtitleModel } from '../../constants/utility';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForAutonumbering } from '../FigureHeader/AutoNumberConstants';
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { setAutonumberingValuesForPayload, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
     mathml: [ ]
 }
+const { 
+    AUTO_NUMBER_SETTING_DEFAULT
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export const replaceUnwantedtags = (html,flag) => {
     let tempDiv = document.createElement('div'); 
@@ -34,7 +39,7 @@ export const replaceUnwantedtags = (html,flag) => {
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-export const generateCommonFigureData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+export const generateCommonFigureData = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),
         subtitleDOM = document.getElementById(`cypress-${index}-2`),
@@ -52,6 +57,19 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
+    let numberedandlabel = false;
+    let manualoverride = {};
+
+    // let displayedlabel = (manualoverride && Object.keys(manualoverride)?.length > 0) ? previousElementData?.displayedlabel : titleHTML // Object.keys(manualoverride)?.length > 0  && manualoverride.hasOwnProperty('overridelabelvalue') ?  ;
+    let displayedlabel = previousElementData?.displayedlabel;
+    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+        displayedlabel = titleText;
+    }
+    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
+    }
     captionHTML = replaceUnwantedtags(captionHTML, true);
     creditsHTML = replaceUnwantedtags(creditsHTML, true);
     subtitleHTML = replaceUnwantedtags(subtitleHTML, true);
@@ -72,6 +90,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     }  
 
     previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
+    previousElementData.hasOwnProperty('indexPos') ? delete previousElementData.indexPos : previousElementData;  // Key added for autonumbering
 
     let data = {
         ...previousElementData,
@@ -100,6 +119,19 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         },
         inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
         inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
+    }
+    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
+        data = {
+            ...data,
+            html : {
+                ...data.html,
+                title: `<p>${subtitleHTML}</p>`
+            },
+            numberedandlabel : numberedandlabel,
+            displayedlabel : displayedlabel,
+            manualoverride : manualoverride
+        }
+        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT ? delete data.manualoverride : data;
     }
     return data
 }
@@ -228,7 +260,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     if (previousElementData.figuredata.interactiveformat == "mmi-elm") {
         const oldInteractiveTitle = previousElementData?.figuredata?.interactivetitle ?? "";
         const interactiveNodeSelector = document.querySelector(`div[data-id='${previousElementData.id}'] div.interactive-element`);
-        const interactiveTitleDom = interactiveNodeSelector && interactiveNodeSelector.querySelector(`div.interactive-title.elm-int-title span`);
+        const interactiveTitleDom = interactiveNodeSelector && interactiveNodeSelector.querySelector(`div.update-icon-wrapper p`);
         const interactiveTitleText = interactiveTitleDom ? interactiveTitleDom.innerText : "";
         data.figuredata.interactivetitle = interactiveTitleText;
         if (interactiveTitleText != oldInteractiveTitle) {
@@ -565,7 +597,7 @@ export const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousEle
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, poetryData) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, isAutoNumberingEnabled, autoNumberOption) => {
     let { appStore } = store.getState()
     let dataToReturn = {}
     switch (type){
@@ -637,9 +669,32 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             } else if(parentElement && parentElement.type === "citations") {
                 dataToReturn["metaDataField"] = "formattedTitle"
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
-            } else if(parentElement && parentElement.type === "showhide" && showHideType){
+            } 
+            else if(asideData?.type==="manifestlist" && parentElement && parentElement?.type === "showhide" && showHideType){
+                // dataToReturn.sectionType = showHideType;
+                let manifestListItemIndex = asideData.index.split('-');
+                dataToReturn["elementParentEntityUrn"] = asideData?.parentManifestList?.listdata?.bodymatter[manifestListItemIndex[manifestListItemIndex.length-2]]?.contentUrn
+            }
+            else if(parentElement && parentElement.type === "showhide" && showHideType){
+                const poetryElementTypes = ['poetry', 'stanza', 'element-authoredtext'];
                 dataToReturn.sectionType = showHideType;
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
+                // checking for poetry element inside SH element to pass some extra parameters inside update request
+                if (elementType && poetryElementTypes.includes(elementType) && parentElement?.interactivedata) {
+                    parentElement?.interactivedata?.[showHideType].forEach(poetryElement => {
+                        if(poetryElement?.type === 'poetry') {
+                            if(poetryElement?.contents?.['formatted-title']?.id === previousElementData.id) {
+                                dataToReturn["metaDataField"] = "formattedTitle";
+                                dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
+                            }
+                            if(poetryElement?.contents?.creditsarray && poetryElement?.contents?.creditsarray.length && poetryElement?.contents?.creditsarray[0]["id"] === previousElementData.id) {
+                                dataToReturn["sectionType"] = "creditsarray";
+                                dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
+                            }
+                        }
+                    });
+                    dataToReturn["elementType"] = "Poetry";
+                }
             }
             break;
         case elementTypeConstant.FIGURE:
@@ -648,17 +703,17 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
-                      //  console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
+
                         dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:
@@ -697,7 +752,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     }
     /* On update the inner elements of SH; add section type */
      if(asideData?.type === elementTypeConstant.SHOW_HIDE || elementType === elementTypeConstant.SHOW_HIDE) {
-        dataToReturn.sectionType = showHideType || asideData?.sectionType;
+        if(dataToReturn?.elementType !== 'Poetry') dataToReturn.sectionType = showHideType || asideData?.sectionType;
         if(parentElement?.type === "groupedcontent") {
             dataToReturn["elementParentEntityUrn"] = containerContext?.props?.element?.contentUrn;
         }

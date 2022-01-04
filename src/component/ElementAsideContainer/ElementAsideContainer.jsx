@@ -9,12 +9,14 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import { guid } from '../../constants/utility.js';
-import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
-import { ASIDE_SOURCE } from '../../constants/Element_Constants.js';
+import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.js';
+import TinyMceEditor from "../../component/tinyMceEditor";
+import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe } from '../../constants/utility';
+import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 // IMPORT - Assets //
 
 let random = guid();
@@ -24,10 +26,50 @@ class ElementAsideContainer extends Component {
         super(props);
         this.state = {
             sectionFocus: false,
-            btnClassName: ""
-
+            btnClassName: "",
+            showTitle: this.setFieldsForAside(this.props?.element, this.props?.asideTitleData),
+            elementId: this.props.elementId,
+            asideTitleData: this.props.asideTitleData
         }
         this.asideRef = React.createRef();
+    }
+
+    static getDerivedStateFromProps = (nextProps, prevState) => {
+        if ((nextProps.asideTitleData != prevState?.asideTitleData)) {
+            return {
+                asideTitleData: nextProps.asideTitleData
+            };
+        }
+        return null;
+    }
+
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    handleClickOutside = (event) => {
+        if (this.asideRef && !this.asideRef.current.contains(event.target)) {
+            this.handleAsideBlur(event);
+        }
+    }
+
+    setFieldsForAside = (element, asideTitleData) => {
+        if (element && asideTitleData) {
+            const asideObj = asideTitleData.filter(obj => {
+                return obj.elementId === element.id;
+              })
+            if (asideObj.length) {
+                return asideObj[0].isAsideNumber;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     handleFocus = (e) => {
@@ -57,7 +99,7 @@ class ElementAsideContainer extends Component {
      * @param {string} element -object of element
      */
 
-    renderContainer({ element: _containerData }) {
+    renderContainer({ element: _containerData },designtype,isDiffDesignType) {
         try {
             if (_containerData !== null && _containerData !== undefined) {
                 if (Object.values(_containerData).length > 0) {
@@ -77,7 +119,7 @@ class ElementAsideContainer extends Component {
                     } */
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
-                        <div className="container-aside" data-id={_containerId} container-type={_containerType}>
+                        <div className={`container-aside ${isDiffDesignType ? designtype : ''}`} data-id={_containerId} container-type={_containerType}>
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
@@ -493,6 +535,59 @@ class ElementAsideContainer extends Component {
             console.log("error", error)
         }
     }
+
+/**
+ * 
+ * @discription - this function render title fields
+ * 
+ */
+    renderTitleField = (asideHtmlData) => {
+        let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
+        if (showTitleField) {
+            return (
+                <div className="asideHeader">
+                    <header className="figure-header new-figure-image-header">
+                        <div className="image-label">
+                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t1`} placeholder="Label" tagName={'h4'} className={" figureLabel "} model={asideHtmlData?.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedLabel) ? "transition-none" : "floating-label"}>Label</label>
+                        </div>
+                        <div className="floating-number-group">
+                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t2`} placeholder="Number" tagName={'h4'} className={" figureNumber "} model={asideHtmlData?.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
+                        </div>
+                    </header>
+                    <div className="floating-title-group">
+                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t3`} placeholder="Title" tagName={'h4'} className={" figureTitle "} model={asideHtmlData?.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                        <label className={checkHTMLdataInsideString(asideHtmlData?.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                    </div>
+                </div>
+            )
+        }
+    }
+
+
+
+    
+    onFigureElementFieldFocus = (id) => {
+        let labelElement = document.getElementById(`cypress-${id}`);
+        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+            labelElement?.nextElementSibling?.classList?.add('label-color-change');
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) {
+            labelElement?.nextElementSibling?.classList?.add('transition-none');
+        }
+    }
+
+    onFigureElementFieldBlur = (id) => {
+        let labelElement = document.getElementById(`cypress-${id}`);
+        if (labelElement?.nextElementSibling) {
+            labelElement?.nextElementSibling?.classList?.remove('label-color-change');
+        }
+        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+        }
+    }
+
+
     /**
   * 
   * @discription - This function is renders workexample
@@ -503,7 +598,7 @@ class ElementAsideContainer extends Component {
         return (
             <React.Fragment>
                 <hr className={`aside-horizotal-break ${designtype == "workedexample2" ? 'aside-horizotal-break-green' : ""}`} />
-                {this.renderContainer(this.props)}
+                {this.renderContainer(this.props,"")}
                 <hr className={`aside-break-bottom ${designtype == "workedexample2" ? 'aside-break-bottom-green' : ""}`}></hr>
             </React.Fragment>
         )
@@ -547,35 +642,93 @@ class ElementAsideContainer extends Component {
 
         }
     }
+
+
+    onFigureImageFieldBlur = (id) => {
+        let labelElement = document.getElementById(`cypress-${id}`);
+        if (labelElement?.nextElementSibling) {
+            labelElement?.nextElementSibling?.classList?.remove('label-color-change');
+        }
+        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+        }
+    }
+
+    
+
     /**
   * 
   * @discription - This function is renders aside container
   * @param {string} designtype -string to select type of aside container
   */
 
-    renderAside = (designtype) => {
-
+    renderAside = (designtype,isDiffDesignType) => {
         return (
             <React.Fragment>
                 {this.borderTop(designtype)}
-                {this.renderContainer(this.props)}
+                {this.renderContainer(this.props,designtype,isDiffDesignType)}
                 <div className={designtype + "BorderBottom"} />
             </React.Fragment>
 
         )
     }
 
+    handleAsideBlur = (evt) => {
+        this.props.handleBlur();
+        const { element, index } = this.props;
 
+        let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false; 
+        const newToggleValue = hasAsideTitleData ? true : false;
+        let labelElement = document.getElementById(`cypress-${index}-t1`);
+        let numberElement = document.getElementById(`cypress-${index}-t2`);
+        let titleElement = document.getElementById(`cypress-${index}-t3`);
+        const focusInLabel = labelHtmlData.includes(labelElement?.innerHTML)
+        const focusInNumber = labelHtmlData.includes(numberElement?.innerHTML)
+        const focusInTitle = labelHtmlData.includes(titleElement?.innerHTML)
+        let focusOnToolbar = false, focusOnOtherElement = false
+        if (evt?.path?.length > 0) {
+            const evtNodes = evt.path
+            const activeNodeIndex = evtNodes[0]?.id?.split('-')
+            if (activeNodeIndex?.length > 1) {
+                if ((activeNodeIndex[0] === "cypress" && activeNodeIndex[1] !== index)) {
+                    focusOnOtherElement = true
+                }
+            }
+            else {
+                for (let evtNode of evtNodes.values()) {
+                    if (evtNode?.classList?.contains('element-container') && (evtNode?.classList?.contains('as'))) {
+                        if (this.props.elementId !== evtNode?.dataset.id) {
+                            focusOnOtherElement = true
+                        }
+                    }
+                    if (evtNode?.classList?.contains('toolbar-container')) {
+                        focusOnToolbar = true
+                    }
+                }
+            }
+        }
+        if (!newToggleValue && focusInLabel && focusInNumber && focusInTitle) {
+            if ((this.props.elementId !== this.props?.activeElement?.elementId) || (this.props.elementId === this.props?.activeElement?.elementId && (focusOnOtherElement))) { 
+                this.props.enableAsideNumbering(newToggleValue, element.id);
+            }
+        }
+    }
     /**
      * render | renders title and slate wrapper
      */
     render() {
         const { element } = this.props;
+        let asideHtmlData = getLabelNumberTitleHTML(element);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
+        let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
+        let labelMargin = showTitleField ? 'remove-margin-top' : ''
+        let diffDesignType = ["asideSidebar04", "asideSidebar05", "asideSidebarFeature", "asideActivity"]
+        let isDiffDesignType= diffDesignType.includes(designtype);
         return (
-            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
-                {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
+            <aside className={`${labelMargin} ${ isDiffDesignType ? '' : designtype } aside-container`} tabIndex="0" ref={this.asideRef}>
+                {this.renderTitleField(asideHtmlData)}
+                {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype,isDiffDesignType)}
             </aside>
         );
     }
@@ -589,7 +742,9 @@ ElementAsideContainer.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        searchUrn: state.searchReducer.searchTerm
+        searchUrn: state.searchReducer.searchTerm,
+        asideTitleData: state.appStore.asideTitleData,
+        activeElement: state.appStore.activeElement
     };
 };
 
@@ -597,6 +752,7 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     {
-        swapElement
+        swapElement,
+        enableAsideNumbering
     }
 )(ElementAsideContainer);

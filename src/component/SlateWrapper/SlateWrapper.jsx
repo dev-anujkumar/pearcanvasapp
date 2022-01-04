@@ -50,6 +50,7 @@ import store from '../../appstore/store';
 import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import {isOwnersSubscribedSlate} from '../CanvasWrapper/CanvasWrapper_Actions';
+import KeyboardUpDown from '../Keyboard/KeyboardUpDown.jsx';
 
 let random = guid();
 
@@ -1012,7 +1013,6 @@ class SlateWrapper extends Component {
                 const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(_slateType);
                 return _elements.map((element, index) => {
                         return (
-                            
                            <React.Fragment key={element.id}>
                                <LazyLoad 
                                     once={true}
@@ -1553,9 +1553,11 @@ class SlateWrapper extends Component {
                     } 
                 </div>
                 <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""}`} onScroll={this.handleScroll}>
+                <KeyboardUpDown>
                     {
                         this.renderSlate(this.props)
                     }
+                </KeyboardUpDown>
                 </div>
                 <div id="link-notification"></div>
                 {this.props.showToast  && <Toast active={true}/>}
@@ -1570,6 +1572,7 @@ class SlateWrapper extends Component {
                                 inputRef={inputRef}
                                 activeElement={this?.props?.activeElement}
                                 slateData={this?.props?.slateData}
+                                asideData={this?.props?.asideData}
                             />
                         )
                     }
@@ -1645,6 +1648,7 @@ const mapStateToProps = state => {
         removeGlossaryImage:state.appStore.removeGlossaryImage,
         projectSubscriptionDetails:state?.projectInfo,
         activeElement: state.appStore.activeElement,
+        asideData: state.appStore.asideData
     };
 };
 

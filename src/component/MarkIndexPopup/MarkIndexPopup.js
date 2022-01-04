@@ -36,10 +36,6 @@ componentWillMount() {
   document.addEventListener('mousedown', this.handleClickOutside);
 }
 
-componentWillUnmount() {
-  document.removeEventListener('mousedown', this.handleClickOutside);
-}
-
   componentDidMount(){
     this.props.getCrossReferenceValues();
   }
@@ -67,7 +63,7 @@ componentWillUnmount() {
 
 
 
-    return !(newEntryDom.isEqualNode(oldEntryDom) && newSubEntryDom.isEqualNode(oldSubEntryDom) && newCrossRefDom.isEqualNode(oldCrossRefDom))
+    return (!(newEntryDom.isEqualNode(oldEntryDom) && newSubEntryDom.isEqualNode(oldSubEntryDom) && newCrossRefDom.isEqualNode(oldCrossRefDom)) && newEntry !== "<p></p>")
   }
 
   saveContent = (crossReferences, crossRefValues) => {
@@ -104,10 +100,11 @@ componentWillUnmount() {
 
   getCrossRefData = () => {
     let crossRefValues = document.querySelector('#markedindex-cross-reference').innerHTML;
-    let crossReferences = "";
+    crossRefValues = crossRefValues.replace('<br data-mce-bogus="1">', '')
+    let crossReferences = "<p></p>";
     if(crossRefValues){
       let crossRefArray = crossRefValues.split(',');
-      crossReferences = crossRefArray.map(value => `<span>${value}</span>`);
+      crossReferences = crossRefArray.map(value => `<span>${value.replace('&nbsp;', '')}</span>`);
       crossReferences = `<p>${crossReferences.join('')}</p>`;
     }
     return {crossReferences, crossRefValues};
@@ -181,6 +178,7 @@ componentWillUnmount() {
         tinymce.$('.wrs_modal_desktop').remove();
       }
     }
+    document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   render() {
@@ -192,7 +190,7 @@ componentWillUnmount() {
       buttonText = markedIndexGlossary.markedIndexEntryURN ? 'Update': 'Add'
     }
     return (
-      <div>
+      <div className="marked-index-outer-div">
         <div className='index-container' ref={this.setWrapperRef}>
           <div className="index-setting">
             <span className="printIndex-label">Index Settings</span>

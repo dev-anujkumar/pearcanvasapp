@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import TinyMceEditor from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
+import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 export class ElementLearningObjectiveItem extends Component {
   render() {
     const { className,
@@ -11,6 +12,7 @@ export class ElementLearningObjectiveItem extends Component {
             openAssetPopoverPopUp } = this.props
 
     return (
+      <KeyboardWrapper index = {this.props.index} enable>
       <TinyMceEditor
         openAssetPopoverPopUp={openAssetPopoverPopUp}
         openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
@@ -26,6 +28,7 @@ export class ElementLearningObjectiveItem extends Component {
         onListSelect={this.props.onListSelect}
         permissions={this.props.permissions}
       />
+  </KeyboardWrapper>
     )
   }
 }

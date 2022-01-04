@@ -22,11 +22,13 @@ import {
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
     UPDATE_LOB_PERMISSIONS,
+    UPDATE_LOB_WORKFLOW,
     SET_PROJECT_SHARING_ROLE,
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
-    ERROR_API_POPUP
+    ERROR_API_POPUP,
+    SLATE_FIGURE_ELEMENTS
 } from '../../constants/Action_Constants';
 import { SLATE_API_ERROR } from '../../constants/Element_Constants';
 
@@ -41,15 +43,17 @@ import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAll
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
-import ElementConstants from "../ElementContainer/ElementConstants.js"
+import ElementConstants from "../ElementContainer/ElementConstants.js";
+import { isAutoNumberEnabled } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
-
+import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -221,6 +225,7 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type][element.subtype]["elementType"],
                     ...elementDataBank[element.type][element.subtype][element.designtype]
                 }
+                elementType.asideNumber = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false
                 break;
             case 'element-list': {
                 let type = element.type
@@ -353,7 +358,7 @@ export const fetchFigureDropdownOptions = () => (dispatch) => {
 
 export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
-    console.log("the lob url is " + lobURL)
+    // console.log("the lob url is " + lobURL)
     return axios.get(lobURL, {
         headers: {
             "Content-Type": "application/json",
@@ -372,6 +377,11 @@ export const getProjectDetails = () => (dispatch, getState) => {
             })
         }
         const data = JSON.parse(JSON.stringify(response.data))
+        if (data?.parameters && Object.keys(data?.parameters).length > 0) {
+            let flag = data?.parameters?.enablenumberedandlabel || false;
+            dispatch(isAutoNumberEnabled(flag, config.ENABLE_AUTO_NUMBER_CONTENT));
+        }
+        dispatch(isAutoNumberEnabled(true, config.ENABLE_AUTO_NUMBER_CONTENT)); // by default set true figure autonumbering
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
             // Api to get LOB Permissions
@@ -392,12 +402,27 @@ export const getProjectDetails = () => (dispatch, getState) => {
             }).catch(error => {
                 console.log("Get LOB permissions API Failed!!")
             })
+            // Api to get LOB Workflow roles
+            const workflowRoleURL = `${config.REACT_APP_API_URL}v1/lobs/workflow/${lineOfBusiness}`;
+            axios.get(workflowRoleURL, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then(response => {
+                dispatch({
+                    type: UPDATE_LOB_WORKFLOW,
+                    payload: response.data
+                })
+            }).catch(error => {
+                console.log("Get Workflow role API Failed!!")
+            })
 
             // call api to get usage types
             
             const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
             const usageTypeUrl = `${config.STRUCTURE_API_URL}${usageTypeEndPoint}`;
-            console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
+            //console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
              axios.get(usageTypeUrl, {
                 headers: {
                     ApiKey:config.STRUCTURE_APIKEY,
@@ -406,7 +431,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     Authorization:config.CMDS_AUTHORIZATION
                 }
             }).then (usageTypeResponse => {
-                console.log("the usage type response is", usageTypeResponse);
+                //console.log("the usage type response is", usageTypeResponse);
                 const data = usageTypeResponse?.data;
                 if(Array.isArray(data)){
                     const usageType = data.map(item => ({label:item.label.en}))
@@ -520,12 +545,21 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
-    }).then(slateData => {  
+    }).then(slateData => { 
          /* Slate tag issue */
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
-        let newVersionManifestId=Object.values(slateData.data)[0].id
+        let newVersionManifestId=Object.values(slateData.data)[0].id;
+
+        /* This code will get the last aligned LO from the local storage and update the redux store */
+        let lastAlignedLos = localStorage.getItem('lastAlignedLos');
+        if(lastAlignedLos && lastAlignedLos.length > 0){
+            let lastAlignedLosInStroage = JSON.parse(lastAlignedLos);
+            let lastAlignedLoForCurrentSlate = lastAlignedLosInStroage[newVersionManifestId];
+            dispatch(updateLastAlignedLO(lastAlignedLoForCurrentSlate));
+        }
+
         if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
@@ -614,6 +648,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         let index = versioning.indexes[0];
                         newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     }
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+                } else if (versioning?.type === "manifestlist" && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]] = Object.values(slateData.data)[0];
+
                     return dispatch({
                         type: AUTHORING_ELEMENT_UPDATE,
                         payload: {
@@ -784,6 +829,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         if(queryStrings.get('searchElement') && getState().searchReducer.deeplink) {
             let searchTerm = queryStrings.get('searchElement') || '';
             dispatch(getContainerData(searchTerm));
+        }
+        /** Get List of Figures on a Slate for Auto-Numbering */
+        const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
+        const slateFigures = getImagesInsideSlates(bodyMatter)
+        if (slateFigures) {
+            dispatch({
+                type: SLATE_FIGURE_ELEMENTS,
+                payload: {
+                    slateFigures
+                }
+            });
         }
     })
     .catch(err => {
@@ -1392,7 +1448,16 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                             }
                         })
                     })
-                } 
+                } else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents[poetryField] = [response.data]
+                            element2.contents[poetryField][0].html.text = elemNode.innerHTML
+                            element2.contents[poetryField][0].elementdata.text = elemNode.innerText
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
+                    })
+                }
                 else {
                 if(!targetPoetryElement.contents[poetryField]){
                     targetPoetryElement.contents[poetryField] = [];
@@ -1432,6 +1497,15 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                             }
                         })
                     })
+                } else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents[poetryField] = response.data
+                            element2.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                            element2.contents[poetryField].elementdata.text = elemNode.innerText
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
+                    })
                 } else {
                 targetPoetryElement.contents[poetryField] = response.data
                 targetPoetryElement.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
@@ -1464,6 +1538,14 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                                 targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
                             }
                         })
+                    })
+                }  else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents["formatted-title"] = response.data
+                            element2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
                     })
                 }
                 else {

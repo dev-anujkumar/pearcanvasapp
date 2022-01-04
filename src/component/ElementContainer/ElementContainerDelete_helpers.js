@@ -1,10 +1,6 @@
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { 
     prepareTcmSnapshots,
-    fetchElementWipData,
-    checkContainerElementVersion,
-    fetchManifestStatus, 
-    prepareSnapshots_ShowHide
 } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 //Constants
 import { 
@@ -18,8 +14,9 @@ import tinymce from 'tinymce'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper.js';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
+import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
-
+import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -44,6 +41,19 @@ export const onDeleteSuccess = (params) => {
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
+    
+    /** ---------------------------- Auto-Numbering handling ------------------------------*/
+    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+    const autoNumberParams = {
+        type,
+        getState,
+        dispatch,
+        contentUrn,
+        isAutoNumberingEnabled,
+        asideData
+    }
+    handleAutoNumberingOnDelete(autoNumberParams)
+    /**-----------------------------------------------------------------------------------*/
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const tcmDeleteArgs = {
         deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
@@ -201,6 +211,15 @@ export const deleteFromStore = (params) => {
                         })
                       
                     })
+                /* To update redux store while deleting new element inside SH->Block Poetry->Stanza */
+                } else if (element?.type == "showhide" && element?.id === poetryData?.parent?.id) {
+                    element?.interactivedata[poetryData?.parent?.showHideType].map((ele) => {
+                        ele?.contents?.bodymatter.forEach((ele2, innerIndex) => {
+                            if (ele2.id === elmId) {
+                                ele.contents.bodymatter.splice(innerIndex, 1);
+                            }
+                        });
+                    });
                 }
             }
             else if (parentUrn && parentUrn.elementType == "manifest") {
@@ -236,6 +255,13 @@ export const deleteFromStore = (params) => {
                 }
                 if (element.id === parentUrn.manifestUrn) {
                     element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
+                }
+            } else if (asideData?.parent?.type === 'showhide' && element.id === asideData?.parent?.id && asideData?.type === "manifestlist") {
+                let section = asideData?.parent?.showHideType;
+                const indexes = asideData?.index?.toString()?.split("-") || [];
+                if (section && indexes.length >= 3) {
+                    let blElemInSh = element.interactivedata[section][indexes[2]];
+                    deleteBlockListElement(elmId, blElemInSh);
                 }
             } else if (element?.type === "manifestlist") {
                 deleteBlockListElement(elmId, element)
@@ -279,7 +305,7 @@ export const deleteBlockListElement = (elementId, elementData) => {
 }
 
 /* Delete Element inside WE and aside */
-const delInsideWE = (item, asideData, parentUrn, elmId) => {
+export const delInsideWE = (item, asideData, parentUrn, elmId) => {
     /* Delete elements inside 2C:WE/AS */
     if (item.id === asideData?.id) {
         item?.elementdata?.bodymatter?.forEach((ele,index) => {

@@ -18,6 +18,7 @@ import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem,
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
 import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
+import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -57,6 +58,9 @@ function CommunicationChannel(WrappedComponent) {
             let messageType = e.data.type;
             let message = e.data.message;
             switch (messageType) {
+                case 'tocContainersLabelUpdate':
+                    this.showNotificationOnCanvas(message);
+                    break;
                 case 'getPermissions':
                     this.sendingPermissions();
                     break;
@@ -124,6 +128,7 @@ function CommunicationChannel(WrappedComponent) {
                     config.ssoToken = message.ssoToken;
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
+                    config.isCypressPlusEnabled = message.isCypressPlusEnabled;
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
                     if (message?.alfresco?.repositoryFolder) {
@@ -161,6 +166,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.currentSlateLO(message.LOList);
                     this.props.isLOExist(message);
                     this.props.currentSlateLOType(message.currentSlateLF);
+                    this.props.updateLastAlignedLO(message.lastAlignedLo)
                     break;
                 case 'loEditResponse':
                     this.setState({
@@ -266,21 +272,54 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleUnlinkedLOData(message)
                     break;
                 case 'selectedAlfrescoAssetData' :
-                    console.log('ASSET DATA FROM ALFRESCO', message.asset)
-                    if(message.isEditor){
+                    //Check if message.asset is array
+                    if (message.asset && Array.isArray(message.asset) && message.asset?.length > 0) {
+                        message.asset = message.asset[0]
+                    }
+                    else if (message.assets && Array.isArray(message.assets) && message.assets?.length > 0) {
+                        message.asset = message.assets[0]
+                    }
+                    if (this.props?.alfrescoReducer?.savedElement) {
+                        message = {
+                            ...message,
+                            ...this.props.alfrescoReducer?.savedElement,
+                            isEditor: this.props.alfrescoReducer.savedElement?.editor ?? undefined
+                        }
+                        let changedSiteUrl = false, changedAlfrescoData = {}
+                        if (message.site && Object.keys(message.site)?.length > 0) {
+                            const projectAlfrescoNodeRef = this.props.alfrescoReducer?.savedElement?.citeNodeRef ?? ""
+                            if (message.site?.citeNodeRef !== projectAlfrescoNodeRef) {
+                                changedSiteUrl = true
+                                changedAlfrescoData = {
+                                    guid: message.site?.citeNodeRef,
+                                    title: message.site?.title,
+                                    id: message.site?.citeName,
+                                    visibility: message.site?.visibility
+                                }
+                            }
+                            message = {
+                                ...message,
+                                changedSiteUrl,
+                                changedAlfrescoData
+                            }
+                        }
+                    }
+                    message.launchAlfrescoPopup = false
+                    console.log('Message from Alfresco', message)
+                    if (message.isEditor) {
                         this.handleEditorSave(message)
                     }
-                     if (message.calledFrom === "NarrativeAudio" || message.calledFromGlossaryFootnote) {
+                    if (message.calledFrom === "NarrativeAudio" || message.calledFromGlossaryFootnote) {
                         this.handleAudioData(message)
                     }
-                    if(message.calledFrom === "GlossaryImage" || message.calledFromImageGlossaryFootnote ) {
+                    if (message.calledFrom === "GlossaryImage" || message.calledFromImageGlossaryFootnote) {
                         this.handleImageData(message)
                     }
                     this.props.saveSelectedAssetData(message)
                     break;
-                case 'saveAlfrescoDataToConfig' : 
-                config.alfrescoMetaData = message
-                break;
+                case 'saveAlfrescoDataToConfig':
+                    config.alfrescoMetaData = message
+                    break;
                 case TOGGLE_ELM_SPA:
                     this.handleElmPickerTransactions(message);
                     break;
@@ -312,6 +351,20 @@ function CommunicationChannel(WrappedComponent) {
                         }
                         this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
                     }
+                    break;
+                case 'ResetAutoNumberSequence':
+                    this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
+                    const slateAncestors = this.props?.currentSlateAncestorData
+                    const currentParentUrn = getContainerEntityUrn(slateAncestors)
+                    if (currentParentUrn === message.currentTocParentContainer) {
+                        this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
+                        // get data for auto-numbering , 'AUDIO', 'VIDEO'
+                        const mediaElement = ['IMAGE','AUDIO', 'VIDEO']
+                        mediaElement.forEach(ele => {
+                            this.props.fetchProjectFigures(ele)
+                        })
+                    }
+                    break;
             }
         }
 
@@ -338,6 +391,18 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setElmPickerData({})
             }
             hideBlocker();
+        }
+
+        showNotificationOnCanvas = (message) => {
+            let linkNotification = document.getElementById('link-notification');
+            if (linkNotification) {
+                linkNotification.innerText = message;
+                linkNotification.style.display = "block";
+                setTimeout(() => {
+                    linkNotification.style.display = "none";
+                    linkNotification.innerText = "";
+                }, 3000);
+            }
         }
 
         /**
@@ -627,6 +692,17 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.currentSlateLO(updatedSlateLOs);
                 this.props.currentSlateLOMath(updatedSlateLOs);
                 this.props.currentSlateLOType(updatedSlateLOs.length ? EXTERNAL_LF : "");
+                this.props.updateLastAlignedLO(message.lastAlignedExternalLO);
+
+                let lastAlignedLos = localStorage.getItem('lastAlignedLos');
+                let lastAlignedLosToSlates = {};
+                if(lastAlignedLos && lastAlignedLos.length > 0){
+                    lastAlignedLosToSlates = JSON.parse(lastAlignedLos);
+                }
+                let slateUrn = config.slateManifestURN;
+                let newAlignment = {};
+                newAlignment[slateUrn] = message.lastAlignedExternalLO
+                localStorage.setItem('lastAlignedLos', JSON.stringify({...lastAlignedLosToSlates,...newAlignment}));
             }
         }
         handleLOData = (message) => {
@@ -764,6 +840,10 @@ function CommunicationChannel(WrappedComponent) {
                 isSubscribed: false,
                 owner: {}
             }
+
+            if (message?.node?.autoNumberingDetails) {
+                this.props.setTocContainersAutoNumberList(message.node.autoNumberingDetails)
+            }
             // reset owner slate popup flag on slate change
             this.resetOwnerSlatePopupFlag();
             if (message['category'] === 'titleChange') {
@@ -818,6 +898,11 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.fetchAudioNarrationForContainer(slateData)
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
+                // get data for auto-numbering , 'AUDIO', 'VIDEO'
+                const mediaElement = ['IMAGE','AUDIO', 'VIDEO']
+                mediaElement.forEach(ele => {
+                    this.props.fetchProjectFigures(ele)
+                })
                 this.props.fetchSlateData(message.node.containerUrn, config.slateEntityURN, config.page, '', "");
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);

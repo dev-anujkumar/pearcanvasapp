@@ -67,7 +67,8 @@ class MultiColumnContainer extends PureComponent {
             type: "groupedcontent",
             id: this.context.element.id,
             contentUrn: this.context.element.contentUrn,
-            element : this.context.element
+            element : this.context.element,
+            index: parentIndex
         };
         try {
             if (_elements !== null && _elements !== undefined) {
