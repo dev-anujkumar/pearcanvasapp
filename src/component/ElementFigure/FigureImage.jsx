@@ -520,13 +520,27 @@ class FigureImage extends Component {
         )
     }
 
+    renderMathML = (figureHtmlData) => {
+        return (
+            <>
+                <div className="floating-content-group">
+                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder="" tagName={'p'} className={"figureContent "} model={figureHtmlData.formattedContent} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedContent) ? "transition-none" : "floating-content"}>Math Block Content</label>
+                </div>
+            </>
+        )
+    }
+
     renderAssetSection = (figureTypeData) => {
-        let { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight } = figureTypeData
+        let { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, figTitleClass, figureHtmlData } = figureTypeData
         let figureJsx;
         if (this.props.model && this.props.model.figuretype) {
             switch (this.props.model.figuretype) {
                 case 'tableasmarkup':
                     figureJsx = this.renderTableAsset(dataType, imageDimension);
+                break;
+                case 'authoredtext':
+                    figureJsx = this.renderMathML(figureHtmlData);
                 break;
                 case 'table':
                 case 'mathImage':
@@ -551,6 +565,9 @@ class FigureImage extends Component {
                 case 'tableasmarkup':
                     elementFigureAlignment = model.alignment ? model.alignment : 'table-editor';
                     break;
+                case 'authoredtext':
+                    elementFigureAlignment = model.alignment ? model.alignment : 'mathml';
+                    break;
                 case 'image':
                 default:
                     elementFigureAlignment = model.alignment ? model.alignment : 'text-width';
@@ -568,8 +585,11 @@ class FigureImage extends Component {
             imageDimension = figureAlignment['imageDimension'],
             figCaptionClass = figureAlignment['figCaptionClass'],
             figCreditClass = figureAlignment['figCreditClass'];
-
+        console.log('Model: ',model)
         let figureHtmlData = getLabelNumberTitleHTML(model);
+        if(model.figuretype === "authoredtext") {
+            figureHtmlData["formattedContent"] = "<p class=\"paragraphNumeroUno\"></p>";
+        }
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = isAutoNumberingEnabled ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
@@ -590,11 +610,12 @@ class FigureImage extends Component {
             imgHeight = this.props.model.figuredata?.height && this.props.model.figuredata?.height !== '' ? `${this.props.model.figuredata?.height}px` : ''
         }
         const imageFigureTypes = ["image","mathImage","table"]
+        const blockMathCodeTypes = ["authoredtext","codelisting"]
         const actualSizeClass = this.props.model.figuredata?.width > '600' ? "" : "img-actual-size";
         const imageClass = imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ? "figure-image" : "";
 
         let figureTypeData = {
-            imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight
+            imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, figTitleClass, figureHtmlData
         }
 
         return (
@@ -661,13 +682,13 @@ class FigureImage extends Component {
                             </>
                             <figcaption >
                                 <div className="floating-caption-group">
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={this.props.model.html.captions} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-4`:`${this.props.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={this.props.model.html.captions} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                                     <label className={checkHTMLdataInsideString(this.props?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
                                 </div>
                             </figcaption>
                             <figcredit >
                                 <div className="floating-credit-group">
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={this.props.model.html.credits} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={this.props.model.html.credits} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                                     <label className={checkHTMLdataInsideString(this.props?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
                                 </div>
                             </figcredit>
