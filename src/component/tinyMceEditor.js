@@ -3696,7 +3696,6 @@ export class TinyMceEditor extends Component {
                     removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                     tinymce.remove(`#${ed_id}`)
                     wirisModalDesktopNode.remove();
-
                     let edNode = document.getElementById(`${ed_id}`)
                     if (edNode) {
                         edNode.contentEditable = true;
