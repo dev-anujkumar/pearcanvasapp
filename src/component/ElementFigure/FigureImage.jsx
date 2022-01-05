@@ -532,7 +532,7 @@ class FigureImage extends Component {
     }
 
     renderAssetSection = (figureTypeData) => {
-        let { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, figTitleClass, figureHtmlData } = figureTypeData
+        let { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, figureHtmlData } = figureTypeData
         let figureJsx;
         if (this.props.model && this.props.model.figuretype) {
             switch (this.props.model.figuretype) {
@@ -585,11 +585,7 @@ class FigureImage extends Component {
             imageDimension = figureAlignment['imageDimension'],
             figCaptionClass = figureAlignment['figCaptionClass'],
             figCreditClass = figureAlignment['figCreditClass'];
-         console.log('Model: ',model)
         let figureHtmlData = getLabelNumberTitleHTML(model);
-        if(model.figuretype === "authoredtext") {
-            figureHtmlData["formattedContent"] = "<p class=\"paragraphNumeroUno\"></p>";
-        }
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = isAutoNumberingEnabled ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);

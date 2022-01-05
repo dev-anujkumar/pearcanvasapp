@@ -258,10 +258,8 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
 }
 
 export const checkHTMLdataInsideString = (htmlNode) => {
-    console.log('Node: ',htmlNode)
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlNode;
-    console.log('Inner html: ',tempDiv.firstChild.innerHTML)
     if (tempDiv.firstChild.innerHTML === "<br>" || tempDiv.firstChild.innerHTML === "</br>" || tempDiv.firstChild.innerHTML === "<br data-mce-bogus=\"1\">") {
         return '';
     } else { 
