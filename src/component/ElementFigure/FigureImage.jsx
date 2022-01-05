@@ -76,6 +76,12 @@ class FigureImage extends Component {
                 figureLabelData: this.props.figureDropdownData?.table ? this.props.figureDropdownData.table : ['Table']
             })
         }
+        //Dropdown List for authoredtext Element
+        if(this.props?.model?.figuretype === 'authoredtext') {
+            this.setState({
+                figureLabelData: this.props.figureDropdownData?.authoredtext ? this.props.figureDropdownData.authoredtext : ['Equation']
+            })
+        }
     }
 
     componentWillUnmount() {
