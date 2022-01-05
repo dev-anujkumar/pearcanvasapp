@@ -327,14 +327,14 @@ class SlateTagDropdown extends React.Component {
     }
     this.props.closeLODropdown();
   }
-
     render = () => {
       const enableExtLO =this.checkExternalFramework();
       const liOptionStatus = this.handleCypressLODropdownOptions()
       /* @-isLoOption4Slate-@ - TO check is LO dropdown options allowed for current slate or not */
       const isLoOption4Slate = [SLATE_TYPE_SECTION, SLATE_TYPE_PDF].includes(config.slateType);
       const isExternalLoInAssessment = this.checkExternalFrameworkAS()
-        return (
+      const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' && this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? "disabled" : "";
+      return (
         <div>
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
               <ul>
@@ -354,14 +354,14 @@ class SlateTagDropdown extends React.Component {
               <div className="learningobjectivedropdown2" ref={node2 => this.node2 = node2}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && isLoOption4Slate &&
-                        <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}> {AddLearningObjectiveSlateDropdown}</li>}
+                        <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown} className= {`${subscriberContent}`}> {AddLearningObjectiveSlateDropdown}</li>}
                     {this.props.permissions.includes('lo_edit_metadata') && isLoOption4Slate &&
-                        <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}>{AddEditLearningObjectiveDropdown}</li>}
+                        <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown} className= {`${subscriberContent}`}>{AddEditLearningObjectiveDropdown}</li>}
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'assessment' &&
                         <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveAssessmentDropdown}</li>}
                     <li className={liOptionStatus.viewLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{ViewLearningObjectiveSlateDropdown}</li>
                     {isLoOption4Slate && !hasReviewerRole() &&
-                        <li className={liOptionStatus.unlinkLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
+                        <li className={`${liOptionStatus.unlinkLOStatus ? '' : 'disabled' } ${subscriberContent}`}  style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
             </div> 
             <div className="learningobjectivedropdown2" ref={node3 => this.node3 = node3}>

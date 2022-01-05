@@ -170,7 +170,7 @@ export class CanvasWrapper extends Component {
                 {/** Ends of custom error popup */}
                 <div id="editor-toolbar" className={`editor-toolbar ${popupFilter}`}>
                     {/* editor tool goes here */}
-                    <Toolbar showCanvasBlocker= {this.props.showCanvasBlocker} isToolBarBlocked={isToolBarBlocked}/>
+                    <Toolbar showCanvasBlocker= {this.props.showCanvasBlocker} isToolBarBlocked={isToolBarBlocked} projectSubscriptionDetails= {this.props.projectSubscriptionDetails}/>
                     {/* custom list editor component */}
                 </div>
 
