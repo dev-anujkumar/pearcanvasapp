@@ -82,6 +82,12 @@ class FigureImage extends Component {
                 figureLabelData: this.props.figureDropdownData?.authoredtext ? this.props.figureDropdownData.authoredtext : ['Equation']
             })
         }
+        //Dropdown List for codelisting Element
+        if(this.props?.model?.figuretype === 'codelisting') {
+            this.setState({
+                figureLabelData: this.props.figureDropdownData?.codelisting ? this.props.figureDropdownData.codelisting : ['Exhibit']
+            })
+        }
     }
 
     componentWillUnmount() {
@@ -203,7 +209,7 @@ class FigureImage extends Component {
         //commented lines will be used to update the element data
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
-        if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
+        if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext" || figureType === "codelisting") {
         let uniqID = imageData.id ? imageData.id : "";
         let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
         let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
@@ -536,6 +542,16 @@ class FigureImage extends Component {
             </>
         )
     }
+    renderCodeListing = (figureHtmlData) => {
+        return (
+            <>
+                <div className="floating-content-group">
+                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Code Block Content" tagName={'p'} className={"figureContent "} model={figureHtmlData.formattedContent} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                    <label className={checkHTMLdataInsideString(this.props?.model?.html?.preformattedtext) ? "transition-none" : "floating-content"}>Code Block Content</label>
+                </div>
+            </>
+        )
+    }
 
     renderAssetSection = (figureTypeData) => {
         let { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, figureHtmlData } = figureTypeData
@@ -547,6 +563,9 @@ class FigureImage extends Component {
                 break;
                 case 'authoredtext':
                     figureJsx = this.renderMathML(figureHtmlData);
+                break;
+                case 'codelisting':
+                    figureJsx = this.renderCodeListing(figureHtmlData);
                 break;
                 case 'table':
                 case 'mathImage':
@@ -574,6 +593,9 @@ class FigureImage extends Component {
                 case 'authoredtext':
                     elementFigureAlignment = model.alignment ? model.alignment : 'mathml';
                     break;
+                case 'codelisting':
+                    elementFigureAlignment = 'code-listing';
+                    break;   
                 case 'image':
                 default:
                     elementFigureAlignment = model.alignment ? model.alignment : 'text-width';
