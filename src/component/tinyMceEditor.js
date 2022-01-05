@@ -3343,6 +3343,8 @@ export class TinyMceEditor extends Component {
             }
             this.elementConverted = false;
         }
+        this.removeMultiTinyInstance();
+        this.handlePlaceholder()
          if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup && isInlineEditor) {
             dataFromAlfresco(alfrescoAssetData, alfrescoEditor, imageArgs)
         }
@@ -3664,11 +3666,6 @@ export class TinyMceEditor extends Component {
                     tinymce.remove(`#${ed_id}`)
                     wirisModalDesktopNode.remove();
 
-                    if (tinymceEditorNode && tinymceEditorNode.innerText.trim() !== "" && tinymceEditorNode.innerText.trim().length && tinymceEditorNode?.classList?.contains('place-holder')) {
-                        tinymceEditorNode?.classList.remove('place-holder')
-                    } else if (tinymceEditorNode && tinymceEditorNode.innerText.trim() == "" && !tinymceEditorNode.innerText.trim().length && !tinymceEditorNode?.classList?.contains('place-holder')){
-                        tinymceEditorNode?.classList.add('place-holder')
-                    }
                     let edNode = document.getElementById(`${ed_id}`)
                     if (edNode) {
                         edNode.contentEditable = true;
