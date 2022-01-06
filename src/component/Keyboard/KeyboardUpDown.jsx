@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
 import { QUERY_SELECTOR } from './KeyboardWrapper.jsx';
