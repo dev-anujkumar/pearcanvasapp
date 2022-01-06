@@ -15,7 +15,26 @@ const dummyData = [
 ];
 global.fetch = jest.fn(() => Promise.resolve(dummyData));
 
-
+const mockAutoNumberReducerEmpty = {
+    isAutoNumberingEnabled: false,
+    autoNumberedElements: {
+        imagesList: [],
+        tablesList: [],
+        equationsList: [],
+        audiosList:[],
+        videosList:[]
+    },
+    autoNumberingDetails: {},
+    autoNumberElementsIndex: {
+        figureImageIndex: {},
+        tableIndex: {},
+        equationsIndex: {},
+        audioIndex: {},
+        videoIndex: {}
+    },
+    slateFigureList:[],
+    autoNumberOption: ''
+}
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
         return (<div>null</div>)
@@ -71,6 +90,7 @@ describe('Testing FigureUserInterface component', () => {
             }
         },
         projectMetadata:{},
+        autoNumberReducer: mockAutoNumberReducerEmpty,
     }
     let props = {
         model: newVideoObjWithData,
