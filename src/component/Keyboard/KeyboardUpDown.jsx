@@ -81,8 +81,7 @@ const KeyboardUpDown = (props) => {
 
                 }
                 else if (event.keyCode === 40 && selectedNodeIndex !== allInteractiveElements.length) {
-                    const enableScroll = shouldEnableScroll(selectedNodeIndex, allInteractiveElements.length);
-                    getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], enableScroll, selectedNodeIndex);
+                    getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], selectedNodeIndex);
                 }
             }
         }
