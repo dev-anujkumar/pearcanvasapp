@@ -532,30 +532,30 @@ class FigureImage extends Component {
         )
     }
 
-    renderMathML = (figureHtmlData) => {
+    renderMathML = (posterText) => {
         return (
             <>
                 <div className="floating-math-content-group">
-                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Math Block Content" tagName={'p'} className={"figureMathContent "} model={figureHtmlData.formattedContent} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Math Block Content" tagName={'p'} className={"figureMathContent "} model={posterText} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                     <label className={checkHTMLdataInsideString(this.props?.model?.html?.text) ? "transition-none" : "floating-math-content"}>Math Block Content</label>
                 </div>
             </>
         )
     }
 
-    renderCodeListing = (figureHtmlData) => {
+    renderCodeListing = (processedText) => {
         return (
             <>
                 <div className="floating-code-content-group">
-                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Code Block Content" tagName={'p'} className={"figureCodeContent "} model={figureHtmlData.formattedContent} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                    <label className={checkHTMLdataInsideString(this.props?.model?.html?.preformattedtext) ? "transition-none" : "floating-code-content"}>Code Block Content</label>
+                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Code Block Content" tagName={'p'} className={"figureCodeContent "} model={processedText} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                    <label className={checkHTMLdataInsideString(this.props?.model?.html?.processedText) ? "transition-none" : "floating-code-content"}>Code Block Content</label>
                 </div>
             </>
         )
     }
 
     renderAssetSection = (figureTypeData) => {
-        let { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, figureHtmlData } = figureTypeData
+        let { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, processedText, posterText } = figureTypeData
         let figureJsx;
         if (this.props.model && this.props.model.figuretype) {
             switch (this.props.model.figuretype) {
@@ -563,10 +563,10 @@ class FigureImage extends Component {
                     figureJsx = this.renderTableAsset(dataType, imageDimension);
                 break;
                 case 'authoredtext':
-                    figureJsx = this.renderMathML(figureHtmlData);
+                    figureJsx = this.renderMathML(posterText);
                 break;
                 case 'codelisting':
-                    figureJsx = this.renderCodeListing(figureHtmlData);
+                    figureJsx = this.renderCodeListing(processedText);
                 break;
                 case 'table':
                 case 'mathImage':
@@ -639,8 +639,19 @@ class FigureImage extends Component {
         const actualSizeClass = this.props.model.figuredata?.width > '600' ? "" : "img-actual-size";
         const imageClass = imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ? "figure-image" : "";
 
+        let preformattedText = model.html && model.html.preformattedtext && model.html.preformattedtext.replace(/<p>/g, "")
+        preformattedText = preformattedText && preformattedText.replace(/<\/p>/g, "")
+        let processedText = preformattedText ? preformattedText : '<span class="codeNoHighlightLine"><br /></span>';
+        if (!preformattedText || preformattedText === '<p></p>'){
+            processedText = '<span class="codeNoHighlightLine"><br /></span>' 
+        }
+        let posterText = model.html.text
+        if (posterText === "" || posterText === '<p></p>') {
+            posterText = '<br />';
+        }
+
         let figureTypeData = {
-            imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, figTitleClass, figureHtmlData
+            imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, figTitleClass, figureHtmlData, processedText, posterText
         }
 
         return (
