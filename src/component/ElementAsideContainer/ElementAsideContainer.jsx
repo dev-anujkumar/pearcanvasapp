@@ -7,6 +7,7 @@ import config from '../../config/config';
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
+import ContainerHeader from '../ContainerHeader/ContainerHeader.jsx';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import { guid } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -52,7 +53,7 @@ class ElementAsideContainer extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.asideRef && !this.asideRef.current.contains(event.target)) {
+        if (this.asideRef && !this.asideRef.current.contains(event.target) && !this.props.isAutoNumberingEnabled) {
             this.handleAsideBlur(event);
         }
     }
@@ -713,11 +714,18 @@ class ElementAsideContainer extends Component {
             }
         }
     }
+
+    checkForAutoNumberedContent = (currentElement) => {
+        if ((currentElement?.type === 'element-aside') && currentElement.hasOwnProperty('displayedlabel') && this.props?.isAutoNumberingEnabled) {
+            return true
+        }
+        return false
+    }
     /**
      * render | renders title and slate wrapper
      */
     render() {
-        const { element } = this.props;
+        const { element, isAutoNumberingEnabled } = this.props;
         let asideHtmlData = getLabelNumberTitleHTML(element);
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
@@ -727,7 +735,14 @@ class ElementAsideContainer extends Component {
         let isDiffDesignType= diffDesignType.includes(designtype);
         return (
             <aside className={`${labelMargin} ${ isDiffDesignType ? '' : designtype } aside-container`} tabIndex="0" ref={this.asideRef}>
-                {this.renderTitleField(asideHtmlData)}
+                {this.checkForAutoNumberedContent(element) ?
+                    <ContainerHeader
+                        {...this.props}
+                        model = {element}
+                        isAutoNumberingEnabled = {isAutoNumberingEnabled}
+                        elementHtmlData = {asideHtmlData}
+                    /> : this.renderTitleField(asideHtmlData)
+                }
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype,isDiffDesignType)}
             </aside>
         );
@@ -744,7 +759,8 @@ const mapStateToProps = state => {
     return {
         searchUrn: state.searchReducer.searchTerm,
         asideTitleData: state.appStore.asideTitleData,
-        activeElement: state.appStore.activeElement
+        activeElement: state.appStore.activeElement,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled
     };
 };
 

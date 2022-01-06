@@ -15,8 +15,10 @@ const INITIAL_STATE = {
         imagesList: [],
         tablesList: [],
         equationsList: [],
-        audiosList:[],
-        videosList:[]
+        audiosList: [],
+        videosList: [],
+        asidesList: [],
+        workedExamplesList: []
     },
     autoNumberingDetails: {},
     autoNumberElementsIndex: {
@@ -24,7 +26,9 @@ const INITIAL_STATE = {
         tableIndex: {},
         equationsIndex: {},
         audioIndex: {},
-        videoIndex: {}
+        videoIndex: {},
+        asideIndex: {},
+        workedExampleIndex: {}
     },
     slateFigureList:[],
     autoNumberOption: ''

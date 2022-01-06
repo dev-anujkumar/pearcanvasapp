@@ -13,7 +13,9 @@ export const autoNumber_KeyMapper = {
     'Table': 'tableIndex',
     'Equation': 'equationsIndex',
     'Audio': 'audioIndex',
-    'Video': 'videoIndex'
+    'Video': 'videoIndex',
+    'Aside': 'asideIndex',
+    'Worked Example': 'workedExampleIndex'
 }
 
 export const autoNumber_FigureTypeKeyMapper = {
@@ -38,7 +40,9 @@ export const autoNumber_IndexMapper = {
   'tablesList': 'tableIndex',
   'equationsList': 'equationsIndex',
   'audiosList': 'audioIndex',
-  'videosList': 'videoIndex'
+  'videosList': 'videoIndex',
+  'asidesList': 'asideIndex',
+  'workedExamplesList': 'workedExampleIndex'
 }
 
 export const autoNumber_ElementTypeKey = {
@@ -117,11 +121,16 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'EQUATION': 'equationsList',
   'AUDIO': 'audiosList',
   'VIDEO': 'videosList',
-  'MATHIMAGE': 'equationsList'
+  'MATHIMAGE': 'equationsList',
+  'CONTAINER': 'asidesList',
+  'WORKED_EXAMPLE': 'workedExamplesList'
 }
-
+export const SIDEBAR = "sidebar"
+export const WORKED_EXAMPLE = "workedexample"
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage']
+export const autoNumberContainerTypesAllowed = ['element-aside']
 export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO']
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video']
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
 export const displayLabelsForAudioVideo = ['Audio', 'Video']
+export const createdElementTypesForAutoNumber = ['IMAGE', 'VIDEO', 'CONTAINER', 'WORKED_EXAMPLE']

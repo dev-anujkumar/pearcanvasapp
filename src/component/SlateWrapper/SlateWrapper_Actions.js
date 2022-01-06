@@ -40,7 +40,7 @@ import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES } from '../FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, AUTO_NUMBER_PROPERTIES, createdElementTypesForAutoNumber } from '../FigureHeader/AutoNumberConstants';
 
 const {
     MANUAL_OVERRIDE,
@@ -381,6 +381,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
           } 
         else {
+            if (createdElementData.type === "element-aside") {
+                createdElementData = {
+                    ...createdElementData,
+                    displayedlabel: createdElementData.subtype === "sidebar" ? "Aside" : "Worked Example",
+                    numberedandlabel: true
+                }
+            }
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
@@ -403,7 +410,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         })
         /** ---------------------------- Auto-Numbering handling ------------------------------*/
         
-        if (type === 'IMAGE' || type === 'VIDEO') {
+        if (createdElementTypesForAutoNumber.includes(type)) {
             const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
             let slateFigures = getImagesInsideSlates(bodyMatter);
             if (slateFigures) {
@@ -1292,7 +1299,30 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 _requestData.content[0].sectionType = section;
             }
             if (selection?.element?.type === 'element-aside' && selection?.element?.html?.title) {
-                _requestData.content[0].html = selection.element.html
+                _requestData.content[0].html = selection.element.html;
+
+            }
+
+            // Check for autonumbering parameters needs to send or not in request
+            if (isAutoNumberingEnabled && autoNumberContainerTypesAllowed.includes(selection?.element?.type)) {
+                if (selection?.element.hasOwnProperty(MANUAL_OVERRIDE) && selection?.element[MANUAL_OVERRIDE] !== undefined && Object.keys(selection?.element[MANUAL_OVERRIDE])?.length > 0) {
+                    _requestData = {
+                        "content": [{
+                            ..._requestData.content[0],
+                            'displayedlabel': selection?.element?.displayedlabel,
+                            'manualoverride': selection?.element[MANUAL_OVERRIDE],
+                            'numberedandlabel': selection?.element[NUMBERED_AND_LABEL]
+                        }]
+                    }
+                } else {
+                    _requestData = {
+                        "content": [{
+                            ..._requestData.content[0],
+                            'displayedlabel': selection?.element?.displayedlabel,
+                            'numberedandlabel': selection?.element[NUMBERED_AND_LABEL]
+                        }]
+                    }
+                }
             }
         }
 

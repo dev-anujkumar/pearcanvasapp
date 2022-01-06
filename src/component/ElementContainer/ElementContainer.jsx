@@ -364,7 +364,7 @@ class ElementContainer extends Component {
     }
 
 
-    asideDifference=(index, previousElementData)=>{
+    asideDifference = (index, previousElementData) => {
         let labelDOM = document.getElementById(`cypress-${index}-t1`),
             numberDOM = document.getElementById(`cypress-${index}-t2`),
             titleDOM = document.getElementById(`cypress-${index}-t3`),
@@ -451,7 +451,7 @@ class ElementContainer extends Component {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
-                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent ||
+                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
