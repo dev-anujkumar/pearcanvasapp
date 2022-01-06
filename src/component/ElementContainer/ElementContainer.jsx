@@ -1516,8 +1516,6 @@ class ElementContainer extends Component {
                             break;
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                            editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
-                            break;
                         case elementTypeConstant.FIGURE_CODELISTING:
                             editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];

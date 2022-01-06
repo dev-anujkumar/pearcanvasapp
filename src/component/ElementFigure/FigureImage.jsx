@@ -535,19 +535,20 @@ class FigureImage extends Component {
     renderMathML = (figureHtmlData) => {
         return (
             <>
-                <div className="floating-content-group">
-                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Math Block Content" tagName={'p'} className={"figureContent "} model={figureHtmlData.formattedContent} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                    <label className={checkHTMLdataInsideString(this.props?.model?.html?.text) ? "transition-none" : "floating-content"}>Math Block Content</label>
+                <div className="floating-math-content-group">
+                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Math Block Content" tagName={'p'} className={"figureMathContent "} model={figureHtmlData.formattedContent} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                    <label className={checkHTMLdataInsideString(this.props?.model?.html?.text) ? "transition-none" : "floating-math-content"}>Math Block Content</label>
                 </div>
             </>
         )
     }
+
     renderCodeListing = (figureHtmlData) => {
         return (
             <>
-                <div className="floating-content-group">
-                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Code Block Content" tagName={'p'} className={"figureContent "} model={figureHtmlData.formattedContent} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                    <label className={checkHTMLdataInsideString(this.props?.model?.html?.preformattedtext) ? "transition-none" : "floating-content"}>Code Block Content</label>
+                <div className="floating-code-content-group">
+                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Code Block Content" tagName={'p'} className={"figureCodeContent "} model={figureHtmlData.formattedContent} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                    <label className={checkHTMLdataInsideString(this.props?.model?.html?.preformattedtext) ? "transition-none" : "floating-code-content"}>Code Block Content</label>
                 </div>
             </>
         )
