@@ -61,10 +61,6 @@ const KeyboardUpDown = (props) => {
         }
     }
 
-    const shouldEnableScroll = (selectedNodeIndex, allElementLength) => {
-        return allElementLength;
-    }
-
     const handleKeyDown = (event) => {
         if (event.keyCode === 38 || event.keyCode === 40) {
 
