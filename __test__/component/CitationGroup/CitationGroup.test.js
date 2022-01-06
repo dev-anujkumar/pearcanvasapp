@@ -96,6 +96,26 @@ let initialState = {
     markedIndexReducer: {
         markedIndexCurrentValue: '',
         markedIndexValue: ''
+    },
+    autoNumberReducer: {
+        isAutoNumberingEnabled: false,
+        autoNumberedElements: {
+            imagesList: [],
+            tablesList: [],
+            equationsList: [],
+            audiosList:[],
+            videosList:[]
+        },
+        autoNumberingDetails: {},
+        autoNumberElementsIndex: {
+            figureImageIndex: {},
+            tableIndex: {},
+            equationsIndex: {},
+            audioIndex: {},
+            videoIndex: {}
+        },
+        slateFigureList:[],
+        autoNumberOption: ''
     }
 }
 

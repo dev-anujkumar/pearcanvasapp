@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { getOpenerContent, getOpenerImageSource } from '../../../src/component/OpenerElement/OpenerConstants';
+import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 jest.mock('../../../src/component/OpenerElement/OpenerConstants', () => ({
     getOpenerContent: jest.fn(),
     getOpenerImageSource: jest.fn(),
@@ -53,7 +54,8 @@ const store = mockStore({
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
-    }
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty
 
 });
 

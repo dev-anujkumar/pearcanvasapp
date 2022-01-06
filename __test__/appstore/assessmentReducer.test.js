@@ -207,6 +207,7 @@ describe('Test AssessmentReducer', () => {
             "currentEditAssessment": {},
             "itemUpdateEvent": false,
             "latestItemAssessment": undefined,
+            "usageTypeListData": {}
         })
     })
     it('ASSESSMENT_CONFIRMATION_POPUP', () => {
