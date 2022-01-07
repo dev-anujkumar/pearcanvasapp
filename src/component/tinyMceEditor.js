@@ -3431,7 +3431,7 @@ export class TinyMceEditor extends Component {
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
                 toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-        } else if (this.props.placeholder === "Enter block code...") {
+        } else if (this.props.placeholder === "Code Block Content") {
             let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
             if (syntaxEnabled && syntaxEnabled.checked) {
                 toolbar = config.codeListingToolbarDisabled;

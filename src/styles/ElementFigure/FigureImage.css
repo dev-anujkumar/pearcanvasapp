@@ -37,10 +37,18 @@
 code.cypress-editable.language-none{
     padding: 0px!important;
 }
+code .codeNoHighlightLine:last-child{
+    display: block;
+    border-bottom: 2px solid #737373 !important;
+    padding-bottom: 5px;
+}
 code .codeNoHighlightLine{
     display: block;
     min-height: 22px;
     color: #000;
+    font-size: 14px !important;
+    font-family: 'Open Sans', sans-serif;
+    padding-left:4px;
 }
 #figure_add_div {
     cursor: auto !important;
@@ -88,7 +96,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     white-space: nowrap;
     overflow: hidden;
 }
-.floating-title-group  .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable, .floating-math-content-group .figureMathContent.cypress-editable, .floating-code-content-group .figureCodeContent.cypress-editable {
+.floating-title-group  .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable, .floating-math-content-group .figureMathContent.cypress-editable {
     font-size: 14px!important;
     border-bottom: 2px solid #737373;
     margin: 8px 0 !important;
@@ -96,6 +104,11 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     font-weight: 500;
     line-height: 1.5;
     color:#000;
+}
+.floating-code-content-group .figureCodeContent.cypress-editable {
+    font-weight: 500;
+    color:#000;
+    padding: 15px 0px 4px 4px !important;
 }
 .image-label{
     margin-right:24px;
@@ -120,7 +133,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 .floating-caption-group .figureCaption.cypress-editable.mce-edit-focus,
 .floating-credit-group .figureCredit.cypress-editable.mce-edit-focus,
 .floating-math-content-group .figureMathContent.cypress-editable.mce-edit-focus,
-.floating-code-content-group .figureCodeContent.cypress-editable.mce-edit-focus
+.floating-code-content-group .figureCodeContent.cypress-editable.mce-edit-focus .codeNoHighlightLine:last-child
 {
     border-bottom: 2px solid #005a70 !important;  
 }
@@ -814,9 +827,13 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 /* --------------------------------------------------------------------------- */
-.floating-math-content-group, .floating-code-content-group {
+.floating-math-content-group {
     position: relative;
     margin-bottom: 25px;
+    margin-top: 25px;
+}
+.floating-code-content-group {
+    position: relative;
     margin-top: 25px;
 }
 .floating-caption-group {

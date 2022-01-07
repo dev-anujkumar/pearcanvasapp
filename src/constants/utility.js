@@ -177,6 +177,24 @@ export const getTitleSubtitleModel = (model, modelType, modelElement = "popup") 
             catch (error) {
                 modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
             }
+        } else if (modelType === 'formatted-code-content'){
+            try{
+                if (model && model.match(/<span>?.+<\/span>/g)) {
+                    for (let i = 0; i < modelDom.children.length; i++) {
+                        if (modelDom.children[i].innerHTML === '<br>' || modelDom.children[i].innerHTML === "</br>") {
+                            modelToReturn = ''
+                        } else {
+                            modelToReturn = `<span class="codeNoHighlightLine">${modelDom.children[i].innerHTML}</span>`
+                        }
+                        if (modelDom.children.length > 1 && modelDom.children[modelDom.children.length - 1].innerHTML === '<br>') {
+                            modelToReturn = `<span class="codeNoHighlightLine">${modelDom.children[modelDom.children.length - 1].innerHTML}</span>`
+                        }
+                    }
+                }
+            }
+            catch (error) {
+                modelToReturn = `<span class="codeNoHighlightLine"><br /></span>`
+            }
         }
         else{
             modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
@@ -248,11 +266,12 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
      }
 
     let data = {};
-     if(figureObj?.html && figureObj?.html?.title){
+     if(figureObj?.html && figureObj?.html?.title || figureObj?.html && figureObj?.html?.preformattedtext){
         figureObj.html.title = figureObj.html.title.replace(/(\r\n|\n|\r)/gm, '');
         data.formattedLabel = getTitleSubtitleModel(figureObj.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
         data.formattedNumber = getTitleSubtitleModel(figureObj.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
         data.formattedTitle = getTitleSubtitleModel(figureObj.html.title, "formatted-subtitle", "figure");
+        data.preformattedText = getTitleSubtitleModel(figureObj.html.preformattedtext, "formatted-code-content", "figure");
      }
     return data;
 }
