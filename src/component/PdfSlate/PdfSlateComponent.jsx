@@ -17,7 +17,7 @@ function PdfSlateComponent(props)  {
 							<div className="slate_assessment_data_id">ID: { pdfId }</div>
 							{(!config.SHOW_CYPRESS_PLUS || !config.isCypressPlusEnabled ) && (<div className="slate_assessment_change_button" onClick={ OpenAlfresco }>Change PDF</div>)}
 						</div>
-								{config.isCypressPlusEnabled && element?.elementdata?.contentDeliveredtoCF &&
+								{config.isCypressPlusEnabled && element?.elementdata?.conversionstatus  &&
 						<div className='slate_cypress_plus_enhance' > 
 					
 						<Tooltip direction='enhance' tooltipText='The content has been updated' >
