@@ -1,9 +1,10 @@
 import React from 'react';
 import config from '../../config/config';
+import Tooltip from '../Tooltip';
 
 function PdfSlateComponent(props)  {
 
-	const { showDetails, pdfId, filetitle, OpenAlfresco } = props;
+	const { showDetails, pdfId, filetitle, OpenAlfresco ,element} = props;
 
 	function showPDFDetails() {
 		return (
@@ -16,14 +17,15 @@ function PdfSlateComponent(props)  {
 							<div className="slate_assessment_data_id">ID: { pdfId }</div>
 							{(!config.SHOW_CYPRESS_PLUS || !config.isCypressPlusEnabled ) && (<div className="slate_assessment_change_button" onClick={ OpenAlfresco }>Change PDF</div>)}
 						</div>
-						        {/* Code will use in future */}
-						{/* {config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS &&
-						<>
-							<div className="slate_assessment_data_label enhanced_label">Cypress+ Enhanced</div>
-							<div className="slate_assessment_data_details">
-								<div className="slate_assessment_data_title enhanced_title">N/A</div>
+								{config.isCypressPlusEnabled && element?.elementdata?.contentDeliveredtoCF &&
+						<div className='slate_cypress_plus_enhance' > 
+					
+						<Tooltip direction='enhance' tooltipText='The content has been updated' >
+							<div className="slate_assessment_cypress_plus_enhance enhanced_label">Cypress+ Enhanced</div>
+						</Tooltip>
+								
 							</div>
-						</>} */}
+	}
 					</div>
 				</div>
 			</div>

@@ -76,6 +76,7 @@ import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAu
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForImage, displayLabelsForAudioVideo } from '../FigureHeader/AutoNumberConstants';
+import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes'
 
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -1960,7 +1961,7 @@ class ElementContainer extends Component {
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={(e) => this.handleCommentPopup(true, e)} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
-                        {permissions && permissions.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
+                     {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant?.PDF_SLATE && config?.isCypressPlusEnabled && element?.elementdata?.conversionstatus 
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
                         {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
@@ -2196,7 +2197,13 @@ class ElementContainer extends Component {
      */
     handleEditInCypressPlus = (e,elementId) =>{
         e.stopPropagation();
-        window.open(`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`, '_blank')
+        const urlCypressPlus=`http://localhost:3000/cypress-plus?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`
+        // const urlCypressPlus=`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`
+        const cypressPlusWindow = window.open(urlCypressPlus ,'_blank')
+       const obj ={type:INCOMING_MESSAGE,message:REFRESH_MESSAGE}
+     setTimeout(()=>{
+       cypressPlusWindow?.postMessage(obj,urlCypressPlus)
+     },2000)
     }
     /**
      * @description - This function is for handling click event on the label button.
