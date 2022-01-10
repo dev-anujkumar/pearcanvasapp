@@ -11,7 +11,7 @@ import {
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
-import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype } from '../../constants/utility';
+import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -449,36 +449,34 @@ class FigureImage extends Component {
 
     renderTableAsset = (dataType, imageDimension) => {
         return (
-            <>
-                <div className="figure-element-container interface-container">
-                    <div id="figure_add_div" className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
-                        <div className="tableMediaWrapper">
-                            <div className="tableIconWrapper">
-                                <div className="table-icon-wrapper">
-                                    <img className='tableIcon' src={tableIcon}/>
-                                    <span className='tableTitle'>Table</span>
+            <div className="figure-element-container interface-container">
+                <div id="figure_add_div" className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
+                    <div className="tableMediaWrapper">
+                        <div className="tableIconWrapper">
+                            <div className="table-icon-wrapper">
+                                <img className='tableIcon' src={tableIcon}/>
+                                <span className='tableTitle'>Table</span>
+                            </div>
+                        </div>
+                        <div className="tableAssetWrapper">
+                            {
+                                this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML !== "" || this.props.model.figuredata.tableasHTML !== undefined)) ?
+                                <div className="table-asset-wrapper-with-asset" onClick={this.addFigureResource}>
+                                    <div id={`${this.props.index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{ __html: this.props.model.figuredata.tableasHTML }} ></div>
+                                </div> :
+                                <div className="table-asset-wrapper-without-asset">
+                                    <img className="blankTable" src={blankTable}/>
+                                    <button className="table-asset-button" onClick={this.addFigureResource}>
+                                        <span className="table-asset-button-label">
+                                            Add a Table
+                                        </span>
+                                    </button>
                                 </div>
-                            </div>
-                            <div className="tableAssetWrapper">
-                                {
-                                    this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML !== "" || this.props.model.figuredata.tableasHTML !== undefined)) ?
-                                    <div className="table-asset-wrapper-with-asset" onClick={this.addFigureResource}>
-                                        <div id={`${this.props.index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{ __html: this.props.model.figuredata.tableasHTML }} ></div>
-                                    </div> :
-                                    <div className="table-asset-wrapper-without-asset">
-                                        <img className="blankTable" src={blankTable}/>
-                                        <button className="table-asset-button" onClick={this.addFigureResource}>
-                                            <span className="table-asset-button-label">
-                                                Add a Table
-                                            </span>
-                                        </button>
-                                    </div>
-                                }
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
-            </>
+            </div>
         )
     }
 
@@ -520,23 +518,19 @@ class FigureImage extends Component {
 
     renderMathML = (posterText) => {
         return (
-            <>
-                <div className="floating-math-content-group">
-                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Math Block Content" tagName={'p'} className={"figureMathContent "} model={posterText} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                    <label className={checkHTMLdataInsideString(this.props?.model?.html?.text) ? "transition-none" : "floating-math-content"}>Math Block Content</label>
-                </div>
-            </>
+            <div className="floating-math-content-group">
+                <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Math Block Content" tagName={'p'} className={"figureMathContent "} model={posterText} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                <label className={checkHTMLdataInsideString(this.props?.model?.html?.text) ? "transition-none" : "floating-math-content"}>Math Block Content</label>
+            </div>
         )
     }
 
     renderCodeListing = (processedText, figureHtmlData) => {
         return (
-            <>
-                <div className="floating-code-content-group">
-                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Code Block Content" tagName={'code'} className={"figureCodeContent "} model={processedText} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                    <label className={(figureHtmlData.preformattedText === '' || figureHtmlData.preformattedText == undefined) ? "floating-code-content" : "transition-none" }>Code Block Content</label>
-                </div>
-            </>
+            <div className="floating-code-content-group">
+                <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Code Block Content" tagName={'code'} className={"figureCodeContent "} model={processedText} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                <label className={(figureHtmlData.preformattedText === '' || figureHtmlData.preformattedText == undefined) ? "floating-code-content" : "transition-none" }>Code Block Content</label>
+            </div>
         )
     }
 
