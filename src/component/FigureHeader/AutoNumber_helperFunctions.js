@@ -118,8 +118,7 @@ export const setAutonumberingValuesForPayload = (autoNumberOption, titleHTML, nu
             break;
         case AUTO_NUMBER_SETTING_REMOVE_NUMBER:
             objToReturn = {
-                numberedandlabel : false,
-                manualoverride : { }
+                numberedandlabel : false
             }
             isValid = true;
             break;
