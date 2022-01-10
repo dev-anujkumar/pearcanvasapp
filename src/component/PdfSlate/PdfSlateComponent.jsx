@@ -20,7 +20,7 @@ function PdfSlateComponent(props)  {
 								{config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && element?.elementdata?.conversionstatus  &&
 						<div className='slate_cypress_plus_enhance' > 
 					
-						<Tooltip direction=' enhance' tooltipText={CYPRESS_PLUS_TOOLTIP} >
+						<Tooltip direction='enhance' tooltipText={CYPRESS_PLUS_TOOLTIP} >
 							<div className="slate_assessment_cypress_plus_enhance enhanced_label">Cypress+ Enhanced</div>
 						</Tooltip>
 								
