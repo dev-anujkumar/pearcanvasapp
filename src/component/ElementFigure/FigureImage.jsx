@@ -11,7 +11,7 @@ import {
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
-import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize } from '../../constants/utility';
+import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -33,6 +33,8 @@ import FigureHeader from '../FigureHeader/FigureHeader.jsx';
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
 //const BLANK_NUMBER_LABEL_OPTIONS = ['Default Auto-number', 'Override number only'];
 const BLANK_NUMBER_LABEL_OPTIONS = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
+const imageFigureTypes = ["image","mathImage","table"];
+const blockMathCodeTypes = ["authoredtext","codelisting"];
 
 class FigureImage extends Component {
     constructor(props) {
@@ -42,9 +44,9 @@ class FigureImage extends Component {
             projectMetadata: false,
             alfrescoSite: '',
             alfrescoSiteData: {},
-            figureLabelValue: 'No Label',
+            figureLabelValue: this.props?.model?.figuretype === 'tableasmarkup' ? 'Table' : 'No Label',
             figureNumberLabelValue: 'Default Auto-number',
-            figureLabelData: this.props.figureDropdownData?.image,
+            figureLabelData: dropdownValueForFiguretype(this.props?.model, this.props?.figureDropdownData),
             figureNumberLabelData: [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER],
             figureDropDown: false,
             figureNumberDropDown: false,
@@ -61,33 +63,17 @@ class FigureImage extends Component {
                 alfrescoSiteData: { ...response }
             })
         })
-        let figureHtmlData = this.props.isAutoNumberingEnabled ? { formattedLabel: `<p>${this.props.model.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.model);
+        let figureHtmlData = this.props.isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ? {formattedLabel: `<p>${this.props.model.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.model);
         let figureLabelValue = this.state;
-        figureLabelValue = dropdownValueAtIntialize(this.props.figureDropdownData.image, figureHtmlData.formattedLabel);
+        const labelList = dropdownValueForFiguretype(this.props?.model, this.props?.figureDropdownData)
+        let dropdownData = this.convertOptionsToLowercase(labelList);
+        figureLabelValue = dropdownValueAtIntialize(dropdownData, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
         const dropdownVal = setAutoNumberSettingValue(this.props.model)
         this.setState({
             figureNumberLabelValue: dropdownVal
         })
-        //Dropdown List for Table Element
-        if(this.props?.model?.figuretype === 'tableasmarkup') {
-            this.setState({
-                figureLabelData: this.props.figureDropdownData?.table ? this.props.figureDropdownData.table : ['Table']
-            })
-        }
-        //Dropdown List for authoredtext Element
-        if(this.props?.model?.figuretype === 'authoredtext') {
-            this.setState({
-                figureLabelData: this.props.figureDropdownData?.authoredtext ? this.props.figureDropdownData.authoredtext : ['Equation']
-            })
-        }
-        //Dropdown List for codelisting Element
-        if(this.props?.model?.figuretype === 'codelisting') {
-            this.setState({
-                figureLabelData: this.props.figureDropdownData?.codelisting ? this.props.figureDropdownData.codelisting : ['Exhibit']
-            })
-        }
     }
 
     componentWillUnmount() {
@@ -616,7 +602,7 @@ class FigureImage extends Component {
             figCreditClass = figureAlignment['figCreditClass'];
         let figureHtmlData = getLabelNumberTitleHTML(model);
         let { figureLabelValue } = this.state;
-        let figureLabelFromApi = isAutoNumberingEnabled ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
+        let figureLabelFromApi = isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1 ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
         if(!(isAutoNumberingEnabled)){
             if (dropdownData.indexOf(figureLabelFromApi?.toLowerCase()) > -1) {
@@ -634,8 +620,6 @@ class FigureImage extends Component {
             imgWidth = this.props.model.figuredata?.width && this.props.model.figuredata?.width !== '' ? `${this.props.model.figuredata?.width}px` : ''
             imgHeight = this.props.model.figuredata?.height && this.props.model.figuredata?.height !== '' ? `${this.props.model.figuredata?.height}px` : ''
         }
-        const imageFigureTypes = ["image","mathImage","table"]
-        const blockMathCodeTypes = ["authoredtext","codelisting"]
         const actualSizeClass = this.props.model.figuredata?.width > '600' ? "" : "img-actual-size";
         const imageClass = imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ? "figure-image" : "";
         let preformattedText = model.html && model.html.preformattedtext && model.html.preformattedtext.replace(/<p>/g, "")
@@ -651,14 +635,14 @@ class FigureImage extends Component {
         let figureTypeData = {
             imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, figTitleClass, figureHtmlData, processedText, posterText
         }
-
+        const autoNumberedElement = imageFigureTypes.indexOf(this.props.model.figuretype) > -1 ? true : false;
         return (
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
-                            {this.props.isAutoNumberingEnabled ?
+                            {this.props.isAutoNumberingEnabled && autoNumberedElement ?
                                 <FigureHeader
                                     {...this.props}
                                     figureHtmlData={figureHtmlData}

@@ -300,6 +300,17 @@ export const dropdownValueAtIntialize = (dropdownData, formattedLabel) => {
     return figureLabelValue;
 }
 
+export const dropdownValueForFiguretype = (element, figureDropdownData) => {
+    let dropdownList = ["No Label", "Custom"]
+    const imageFigureTypes = ["image", "mathImage", "table"]
+    if (element?.figuretype === 'tableasmarkup') {
+        dropdownList = figureDropdownData.tableasmarkup ?? ["No Label", "Table", "Custom"]
+    } else if (element && imageFigureTypes.indexOf(element.figuretype) > -1) {
+        dropdownList = figureDropdownData.image ?? ['No Label', 'Figure', 'Table', 'Equation', 'Custom']
+    }
+    return dropdownList;
+}
+
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
  *  It is used for mapping special characters in Wiris data 
  */

@@ -36,10 +36,13 @@ import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/A
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
 import { getDataFromLastTag, isKWChild, isLastChild, moveCursor, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
-import { autoNumberFigureTypesAllowed } from '../component/FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../component/FigureHeader/AutoNumberConstants';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
+const {
+    AUTO_NUMBER_SETTING_RESUME_NUMBER
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -1211,7 +1214,7 @@ export class TinyMceEditor extends Component {
              */
             moveCursor(e, selectionNode, tinymceOffset);
             /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering START xxxxxxxxxxxxxxxxxxx */
-            if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && this.props.placeholder === 'Number') {
+            if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && this.props.placeholder === 'Number' && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
                 if ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode !== 8 && e.keyCode !== 37 && e.keyCode !== 39)  {
                     e.preventDefault();
                     e.stopPropagation();
@@ -4268,7 +4271,8 @@ const mapStateToProps = (state) => {
         imageArgs: state.alfrescoReducer.imageArgs,
         slateLevelData: state.appStore.slateLevelData,
         asideData: state.appStore.asideData,
-        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
+        autoNumberOption: state.autoNumberReducer.autoNumberOption
     }
 }
 

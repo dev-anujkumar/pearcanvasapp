@@ -98,7 +98,8 @@ const INITIAL_STATE = {
         audio: ["No Label", "Custom"],
         image: ['Figure', 'Table', 'Equation'],
         smartlinks: ["No Label", "Custom"],
-        video: ["No Label", "Custom"]
+        video: ["No Label", "Custom"],
+        tableasmarkup: ["No Label", 'Table', "Custom"]
     },
     asideTitleData: []
 };
