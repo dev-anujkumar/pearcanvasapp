@@ -301,12 +301,22 @@ export const dropdownValueAtIntialize = (dropdownData, formattedLabel) => {
 }
 
 export const dropdownValueForFiguretype = (element, figureDropdownData) => {
-    let dropdownList = ["No Label", "Custom"]
-    const imageFigureTypes = ["image", "mathImage", "table"]
-    if (element?.figuretype === 'tableasmarkup') {
-        dropdownList = figureDropdownData.tableasmarkup ?? ["No Label", "Table", "Custom"]
-    } else if (element && imageFigureTypes.indexOf(element.figuretype) > -1) {
-        dropdownList = figureDropdownData.image ?? ['No Label', 'Figure', 'Table', 'Equation', 'Custom']
+    let dropdownList;
+    switch(element?.figuretype) {
+        case "tableasmarkup":
+            dropdownList = figureDropdownData.tableasmarkup ?? ["No Label", "Table", "Custom"]
+        break;
+        case "authoredtext":
+            dropdownList = figureDropdownData.mathml ?? ["No Label", "Equation", "Custom"]
+        break;
+        case "codelisting":
+            dropdownList = figureDropdownData.preformattedtext ?? ["No Label", "Exhibit", "Custom"]
+        break;
+        case "image":
+        case "mathImage":
+        case "table":
+        default:
+            dropdownList = figureDropdownData.image ?? ["No Label", "Figure", "Table", "Equation", "Custom"]
     }
     return dropdownList;
 }
