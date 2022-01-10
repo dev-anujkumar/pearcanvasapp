@@ -44,7 +44,7 @@ class FigureImage extends Component {
             projectMetadata: false,
             alfrescoSite: '',
             alfrescoSiteData: {},
-            figureLabelValue: this.props?.model?.figuretype === 'tableasmarkup' ? 'Table' : 'No Label',
+            figureLabelValue: labelValueForFiguretype(this.props?.model),
             figureNumberLabelValue: 'Default Auto-number',
             figureLabelData: dropdownValueForFiguretype(this.props?.model, this.props?.figureDropdownData),
             figureNumberLabelData: [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER],

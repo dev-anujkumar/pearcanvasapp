@@ -300,6 +300,27 @@ export const dropdownValueAtIntialize = (dropdownData, formattedLabel) => {
     return figureLabelValue;
 }
 
+export const labelValueForFiguretype = (element) => {
+    let labelValue;
+    switch(element?.figuretype) {
+        case "tableasmarkup":
+            labelValue = "Table"
+        break;
+        case "authoredtext":
+            labelValue = "Equation"
+        break;
+        case "codelisting":
+            labelValue = "Exhibit"
+        break;
+        case "image":
+        case "mathImage":
+        case "table":
+        default:
+            labelValue = "No Label"
+    }
+    return labelValue;
+}
+
 export const dropdownValueForFiguretype = (element, figureDropdownData) => {
     let dropdownList;
     switch(element?.figuretype) {
