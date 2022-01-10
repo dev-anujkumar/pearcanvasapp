@@ -347,6 +347,14 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
                     }
                     break;
+                case 'editPageAudioMessage':
+                case 'deletePageAudioMessage' :
+                    let slateData = {
+                        currentProjectId: config.projectUrn,
+                        slateEntityUrn: config.slateEntityURN
+                    }
+                    this.props.fetchAudioNarrationForContainer(slateData)   
+                    break;
                 case 'ResetAutoNumberSequence':
                     this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
                     const slateAncestors = this.props?.currentSlateAncestorData

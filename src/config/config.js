@@ -55,7 +55,8 @@ let config = {
     CYPRESS_PLUS_URL:"http://localhost:3000/cypress-plus",
     PROACTIVE_SLATE_PREVIEW_STATUS: "false",
     SHOW_CYPRESS_PLUS:true,
-    ENABLE_AUTO_NUMBER_CONTENT:false
+    ENABLE_AUTO_NUMBER_CONTENT:false,
+    CYPRESS_PLUS_WINDOW:'',
 };
 
 if (process.env.NODE_ENV === "development") {
