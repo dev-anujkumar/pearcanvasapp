@@ -10,6 +10,7 @@ import {
     SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP, ERROR_POPUP
 } from '../../constants/Action_Constants.js'
 import { hideTocBlocker } from '../../js/toggleLoader'
+import { deleteAudio,REFRESH_MESSAGE } from '../../constants/IFrameMessageTypes.js'
 /**
  * 
  * @param {*} value 
@@ -156,7 +157,7 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
                 if (config?.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS) {
                     const wUrn = store.getState()?.appStore?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0]?.id
                     const urlCypress = `${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${wUrn}`
-                    const obj = { type: "deletePageAudioMessage", message: "refresh on Cypress from Cypress_plus" }
+                    const obj = { type: deleteAudio, message: REFRESH_MESSAGE }
                     config.CYPRESS_PLUS_WINDOW.postMessage(obj, urlCypress)
                 }
             }
