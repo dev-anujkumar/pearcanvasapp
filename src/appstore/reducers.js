@@ -99,7 +99,9 @@ const INITIAL_STATE = {
         image: ['Figure', 'Table', 'Equation'],
         smartlinks: ["No Label", "Custom"],
         video: ["No Label", "Custom"],
-        tableasmarkup: ["No Label", 'Table', "Custom"]
+        tableasmarkup: ["No Label", 'Table', "Custom"],
+        mathml: ["No Label", "Equation", "Custom"],
+		preformattedtext: ["No Label", "Exhibit", "Custom"]
     },
     asideTitleData: []
 };
