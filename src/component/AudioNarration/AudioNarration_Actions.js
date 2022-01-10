@@ -98,7 +98,8 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
                     const wUrn = store.getState()?.appStore?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0]?.id
                     const urlCypress = `${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${wUrn}`
                     const obj = {
-                        type: "editPageAudioMessage", audioData: {
+                        type: "editPageAudioMessage",
+                        audioData: {
                             "narrativeAudioUrn": audioDataResponse?.data?.data[0]?.narrativeAudioUrn,
                             "location": audioDataResponse?.data?.data[0]?.location,
                             "title": {
