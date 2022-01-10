@@ -1099,6 +1099,22 @@ describe('Test for element container component', () => {
             expect(elementContainerInstance.state.isHovered).toBe(false)
             spyhandleOnMouseOut.mockClear()
         })
+        test('Test for toggleBlockCodePopup  function', () => {
+            let event = {
+                preventDefault: jest.fn(),
+                showCanvasBlocker: jest.fn()
+            }
+            elementContainerInstance.setState({
+                openBlockCodePopup: true,
+                showCanvasBlocker : true
+            })
+            const spytoggleBlockCodePopup = jest.spyOn(elementContainerInstance, 'toggleBlockCodePopup')
+            elementContainerInstance.toggleBlockCodePopup(true, event);
+            expect(elementContainerInstance.toggleBlockCodePopup).toHaveBeenCalled()
+            expect(elementContainerInstance.state.openBlockCodePopup).toBe(true)
+            expect(elementContainerInstance.state.showCanvasBlocker).toBe(true)
+            spytoggleBlockCodePopup.mockClear()
+        })
     })
     describe('Test- OpenerElement-Functions', () => {
         let openerData=wipData.opener

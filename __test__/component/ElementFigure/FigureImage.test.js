@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import FigureImage from '../../../src/component/ElementFigure/FigureImage';
-import { figureImage50TextElementDefault,figureImage50TextElementWithData,mathImage50TextElementDefault, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,testDataFromNewAlfresco,tableasmarkupWithoutData,tableasmarkupWithData } from '../../../fixtures/ElementFigureTestingData.js'
+import { figureImage50TextElementDefault,figureImage50TextElementWithData,mathImage50TextElementDefault, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,testDataFromNewAlfresco,tableasmarkupWithoutData,tableasmarkupWithData,codelistingWithoutData,codelistingWithData } from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
@@ -505,5 +505,45 @@ describe('Testing Figure image component', () => {
                 expect(spy).toHaveBeenCalled();
             })
         })
+    })
+    /**Test Cases for Block Code Element */
+    describe("Testing FigureImage Component for Block Code Element", () => {
+        let props = {
+            model: codelistingWithoutData,
+            index: "" ,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: jest.fn(),
+            handleFocus: jest.fn(),
+            permissions: ['add_multimedia_via_alfresco'],
+            figureData: {
+                model: {
+                    figuretype:['image','table','mathImage','authoredtext','tableasmarkup','codelisting']
+                }
+            },
+            asideData: {},
+            updateFigureData: jest.fn(),
+            parentEntityUrn: ""
+        };
+        let props2 = {
+            ...props,
+            model: codelistingWithData
+        }
+        let component = mount(<Provider store={store}><FigureImage {...props} /></Provider>);
+        let figureImageInstance = component.find('FigureImage').instance();
+        describe("Table Element renders without crashing", () => {
+            it('Block code without data renders without crashing', () => {
+                expect(component).toHaveLength(1);
+                expect(component.instance()).toBeDefined();
+            })
+            it('Block code with data renders without crashing', () => {
+                component = mount(<Provider store={store}><FigureImage {...props2} /></Provider>)
+                expect(component).toHaveLength(1);
+                expect(component.instance()).toBeDefined();
+            })
+        })
+        
     })
 });
