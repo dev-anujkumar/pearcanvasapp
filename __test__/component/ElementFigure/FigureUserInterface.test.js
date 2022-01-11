@@ -83,10 +83,10 @@ describe('Testing FigureUserInterface component', () => {
         appStore: {
             figureDropdownData: [],
             figureDropdownData: {
-                audio: ["No Label", "Custom"],
-                image: ["No Label", "Custom"],
-                smartlinks: ["No Label", "Custom", "Figure"],
-                video: ["No Label", "Video", "Custom"]
+                tableasmarkup: ["No Label", "Table", "Custom"],
+                mathml: ["No Label","Equation", "Custom"],
+                preformattedtext: ["No Label", "Exhibit", "Custom"],
+                image: ["No Label", "Figure", "Table", "Equation", "Custom"]
             }
         },
         projectMetadata:{},
