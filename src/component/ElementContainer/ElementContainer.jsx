@@ -22,7 +22,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData,BLOCK_CODE_DIALOG_TEXT } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker, hideTocBlocker, disableHeader, hideToc } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -104,7 +104,7 @@ class ElementContainer extends Component {
             isfigurePopup: false,
             figureUrl: "",
             assetsPopupStatus: false,
-            openBlockCodePopup: false
+            showBlockCodeElemPopup: false
         };
 
 
@@ -484,43 +484,7 @@ class ElementContainer extends Component {
         disableHeader(value);
         this.props.showBlocker(value);
     }
-    /**
-     * @description This function is used to toggle showBlockCodePopup 
-     * @param {*} toggleValue Boolean value
-     * @param {*} event event object
-     */
-    toggleBlockCodePopup = (toggleValue, event) => {
-        if (event) {
-            event.preventDefault();
-        }
-        this.setState({
-            openBlockCodePopup: toggleValue
-        })
-        this.showCanvasBlocker(toggleValue);
-        
-    }
-
-    /*** @description This function is used to render showBlockCodePopup Popup */
-    showBlockCodePopup = () => {
-        if (this.state.openBlockCodePopup) {
-            this.showCanvasBlocker(true)
-            return (
-                <PopUp
-                    dialogText={BLOCK_CODE_DIALOG_TEXT}
-                    active={true}
-                    togglePopup={this.toggleBlockCodePopup}
-                    blockCodePopup={true}
-                    isInputDisabled={true}
-                    blockCodePopupClass="delete-element-text"
-                    
-                />
-            )
-        }
-        else {
-            return null
-        }
-    }
-
+    
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             numberDOM = document.getElementById(`cypress-${index}-1`),
@@ -1244,6 +1208,19 @@ class ElementContainer extends Component {
     }
 
     /**
+     * show Block Code element warning Popup 
+     */
+     showBlockCodeElemWarningPopup = (e, popup) => {
+        e.stopPropagation();
+        this.props.showBlocker(true);
+        showTocBlocker();
+        this.setState({
+            popup,
+            showBlockCodeElemPopup: true
+        });
+    }
+
+    /**
      * For deleting slate level element
      */
     deleteElement = (e) => {
@@ -1961,7 +1938,7 @@ class ElementContainer extends Component {
         }
         if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
             if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-default" && this.props.activeElement.elementId === element.id)) {
-                bceOverlay = <div className="bce-overlay disabled" onClick={()=>{(event) => this.handleFocus("", "", event); this.toggleBlockCodePopup(true)}}></div>;
+                bceOverlay = <div className="bce-overlay disabled" onClick={(event) => {this.handleFocus("", "", event);this.showBlockCodeElemWarningPopup(event,true);}}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';
             }
@@ -2045,8 +2022,8 @@ class ElementContainer extends Component {
                         isAddComment={true}
                         projectUsers={this.props.projectUsers}
                         comment={this.state.comment}
+                        showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
                     />}
-                    {this.state.openBlockCodePopup && this.showBlockCodePopup()}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
                             figureUrl={this.state.figureUrl}
@@ -2240,6 +2217,7 @@ class ElementContainer extends Component {
         this.setState({
             popup,
             showDeleteElemPopup: false,
+            showBlockCodeElemPopup: false,
             comment: ""
         });
         if (this.props.isBlockerActive) {
