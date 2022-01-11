@@ -22,8 +22,8 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData,BLOCK_CODE_DIALOG_TEXT } from './../../constants/Element_Constants';
-import { showTocBlocker, hideBlocker, hideTocBlocker, disableHeader, hideToc } from '../../js/toggleLoader'
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
@@ -104,7 +104,7 @@ class ElementContainer extends Component {
             isfigurePopup: false,
             figureUrl: "",
             assetsPopupStatus: false,
-            openBlockCodePopup: false
+            showBlockCodeElemPopup: false
         };
 
 
@@ -409,7 +409,7 @@ class ElementContainer extends Component {
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-        if (!this.props.isAutoNumberingEnabled) {
+        if (!this.props.isAutoNumberingEnabled || (this.props.isAutoNumberingEnabled && previousElementData?.figuretype === 'tableasmarkup')) {
             titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         }
 
@@ -440,6 +440,7 @@ class ElementContainer extends Component {
             let isNumberDifferent = false;
             let imgNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
+            let isOverridedLabelDifferent = false;
             if (overridedNumber && overridedNumber !== '') {
                 isNumberDifferent = overridedNumber?.toString() !== numberHTML?.toString();
             } else {
@@ -447,12 +448,15 @@ class ElementContainer extends Component {
                 imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
                 isNumberDifferent = imgNumberValue?.toString() !== numberHTML?.toString();
             }
+            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData?.manualoverride.hasOwnProperty('overridelabelvalue')) {
+                isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
+            }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
-                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent ||
+                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
@@ -468,53 +472,6 @@ class ElementContainer extends Component {
             || podwidth !== (previousElementData.figuredata.podwidth ?
                 previousElementData.figuredata.podwidth : '') && podwidth !== null
         );
-    }
-    /*** @description This function is used to handle Canvas Blocker on delete */
-    showCanvasBlocker = (value) => {
-        if (value == true) {
-            showTocBlocker();
-            hideToc();
-        } else {
-            hideTocBlocker(value);
-        }
-        disableHeader(value);
-        this.props.showBlocker(value);
-    }
-    /**
-     * @description This function is used to toggle showBlockCodePopup 
-     * @param {*} toggleValue Boolean value
-     * @param {*} event event object
-     */
-    toggleBlockCodePopup = (toggleValue, event) => {
-        if (event) {
-            event.preventDefault();
-        }
-        this.setState({
-            openBlockCodePopup: toggleValue
-        })
-        this.showCanvasBlocker(toggleValue);
-        
-    }
-
-    /*** @description This function is used to render showBlockCodePopup Popup */
-    showBlockCodePopup = () => {
-        if (this.state.openBlockCodePopup) {
-            this.showCanvasBlocker(true)
-            return (
-                <PopUp
-                    dialogText={BLOCK_CODE_DIALOG_TEXT}
-                    active={true}
-                    togglePopup={this.toggleBlockCodePopup}
-                    blockCodePopup={true}
-                    isInputDisabled={true}
-                    blockCodePopupClass="delete-element-text"
-                    
-                />
-            )
-        }
-        else {
-            return null
-        }
     }
 
     figureDifferenceBlockCode = (index, previousElementData) => {
@@ -710,6 +667,7 @@ class ElementContainer extends Component {
             let isNumberDifferent = false;
             let imgNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
+            let isOverridedLabelDifferent = false;
             if (overridedNumber && overridedNumber !== '') {
                 isNumberDifferent = overridedNumber?.toString() !== numberHTML?.toString();
             } else {
@@ -717,13 +675,16 @@ class ElementContainer extends Component {
                 imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
                 isNumberDifferent = imgNumberValue?.toString() !== numberHTML?.toString();
             }
+            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData?.manualoverride.hasOwnProperty('overridelabelvalue')) {
+                isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
+            }
             let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
             if (!titleHTML || titleHTML === '' || !(displayLabelsForAudioVideo.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
-                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent ||
+                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage !== assetId)
@@ -1232,6 +1193,19 @@ class ElementContainer extends Component {
             popup,
             showDeleteElemPopup: true,
             sectionBreak: sectionBreak ? sectionBreak : null
+        });
+    }
+
+    /**
+     * show Block Code element warning Popup 
+     */
+     showBlockCodeElemWarningPopup = (e, popup) => {
+        e.stopPropagation();
+        this.props.showBlocker(true);
+        showTocBlocker();
+        this.setState({
+            popup,
+            showBlockCodeElemPopup: true
         });
     }
 
@@ -1953,7 +1927,7 @@ class ElementContainer extends Component {
         }
         if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
             if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-default" && this.props.activeElement.elementId === element.id)) {
-                bceOverlay = <div className="bce-overlay disabled" onClick={()=>{(event) => this.handleFocus("", "", event); this.toggleBlockCodePopup(true)}}></div>;
+                bceOverlay = <div className="bce-overlay disabled" onClick={(event) => {this.handleFocus("", "", event);this.showBlockCodeElemWarningPopup(event,true);}}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';
             }
@@ -2037,8 +2011,8 @@ class ElementContainer extends Component {
                         isAddComment={true}
                         projectUsers={this.props.projectUsers}
                         comment={this.state.comment}
+                        showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
                     />}
-                    {this.state.openBlockCodePopup && this.showBlockCodePopup()}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
                             figureUrl={this.state.figureUrl}
@@ -2232,6 +2206,7 @@ class ElementContainer extends Component {
         this.setState({
             popup,
             showDeleteElemPopup: false,
+            showBlockCodeElemPopup: false,
             comment: ""
         });
         if (this.props.isBlockerActive) {

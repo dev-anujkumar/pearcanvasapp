@@ -47,7 +47,6 @@ export const COMMENTS_POPUP_ROWS='10'
 export const SECTION_BREAK_DELETE_TEXT="Are you sure you want to delete the section break, elements beneath it will also get deleted?"
 export const OWNERS_ELM_DELETE_DIALOG_TEXT="You are trying to delete a container/element that is subscribed to in other projects. Are you sure you want to continue?"
 export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";
-export const BLOCK_CODE_DIALOG_TEXT = "Please select a language from element settings panel to start editing the Block Code element."
 
 /*---------------- List type constants -----------------*/
 export const LIST_TYPE_MAPPINGS = {

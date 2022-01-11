@@ -11,6 +11,7 @@ import {showHide} from '../../../fixtures/ElementSHowHideData.js';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 const middlewares = [thunk];
 
 global.document = (new JSDOM()).window.Element;
@@ -295,6 +296,7 @@ let tinyMceEditor = {
     windowManager: { open: jest.fn(), openUrl: jest.fn(), alert: jest.fn(), confirm: jest.fn(), close: jest.fn() }
 
 }
+
 tinymce.activeEditor = { ...tinyMceEditor }
 describe('------------------------------Test1 TINY_MCE_EDITOR------------------------------', () => {
 
@@ -321,7 +323,8 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
     },
     appStore:{
         slateLevelData:{}
-    }
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
  });
     const component = mount(<Provider store={store}><span class="randomClass"><b><em><u><div class="codeNoHighlightLineOne">TinyMce</div></u></em></b></span> < TinyMceEditor {...props} /> </Provider>, { attachTo: document.body })
     let instance = component.find('TinyMceEditor').instance();
@@ -3102,7 +3105,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(spyeditorPaste).toHaveBeenCalled()
             expect(setDisabled).toHaveBeenCalled();
         });
-        it('Test-27.2-Method--25--editorClick--Inline image in List double click', () => {
+        xit('Test-27.2-Method--25--editorClick--Inline image in List double click', () => {
             instance.props = {
                 ...props,
                 permissions: ["login", "logout"],
@@ -3125,7 +3128,8 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     },
                     dataset:{
                         id:'imageAssetContent:28154019-35d4-4b5b-9da6-fdc6335e1595'
-                    }
+                    },
+                    outerHTML: "test data"
                 },
                 type: "click",
                 clipboardData: {
@@ -7224,7 +7228,8 @@ describe('------------------------------Test2 TINY_MCE_EDITOR-------------------
         Permission: false
     },appStore:{
         slateLevelData:{}
-    }
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
  });
     let newProps = {
         ...props,
@@ -7839,7 +7844,9 @@ describe('------------------------------Test3 TINY_MCE_EDITOR blockquote if-----
         Permission: false
     },appStore:{
         slateLevelData:{}
-    } });
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
+     });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -7930,7 +7937,9 @@ describe('------------------------------Test3 TINY_MCE_EDITOR blockquote else---
         launchAlfrescoPopup: true,
         editor: true,
         Permission: false
-    },appStore:{
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
+    appStore:{
         slateLevelData:{}
     } });
     let newProps = {
@@ -8022,7 +8031,9 @@ describe('------------------------------Test4 TINY_MCE_EDITOR-------------------
         Permission: false
     },appStore:{
         slateLevelData:{}
-    } });
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
+    });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -8112,7 +8123,9 @@ describe('------------------------------Test4 TINY_MCE_EDITOR-------------------
         Permission: false
     },appStore:{
         slateLevelData:{}
-    } });
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
+    });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -8158,7 +8171,9 @@ describe('------------------------------Test TINY_MCE_EDITOR case: figureCredit-
         Permission: false
     },appStore:{
         slateLevelData:{}
-    } });
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
+    });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -8205,7 +8220,9 @@ describe('------------------------------Test TINY_MCE_EDITOR case: element-citat
         Permission: false
     },appStore:{
         slateLevelData:{}
-    } });
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
+    });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -8305,7 +8322,9 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
         Permission: false
     },appStore:{
         slateLevelData:{}
-    } });
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
+    });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -9493,7 +9512,9 @@ describe('------------------------------Test TINY_MCE_EDITOR case: Heading 4----
         Permission: false
     },appStore:{
         slateLevelData:{}
-    } });
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
+    });
     let newProps = {
         ...props,
         permissions: ["login", "logout"],
@@ -9543,7 +9564,8 @@ describe('------------------------------Test TINY_MCE_EDITOR case: tagName - P -
             Permission: false
         }, appStore: {
             slateLevelData: {}
-        }
+        },
+        autoNumberReducer: mockAutoNumberReducerEmpty,
     });
     let newProps = {
         ...props,
@@ -9600,7 +9622,8 @@ describe('------------------------------Test TINY_MCE_EDITOR case: tagName - cod
             Permission: false
         }, appStore: {
             slateLevelData: {}
-        }
+        },
+        autoNumberReducer: mockAutoNumberReducerEmpty,
     });
     let newProps = {
         ...props,
@@ -9658,7 +9681,8 @@ describe('------------------------------Test TINY_MCE_EDITOR case: tagName - fig
             Permission: false
         }, appStore: {
             slateLevelData: {}
-        }
+        },
+        autoNumberReducer: mockAutoNumberReducerEmpty,
     });
     let newProps = {
         ...props,
@@ -9732,7 +9756,8 @@ describe('------------------------------Test TINY_MCE_EDITOR case: Methods -----
             Permission: false
         }, appStore: {
             slateLevelData: {}
-        }
+        },
+        autoNumberReducer: mockAutoNumberReducerEmpty,
     });
     let newProps = {
         ...props,
