@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
+import FigureImageAsset from './FigureImageAsset.jsx';
 // IMPORT - Assets //
 import tableIcon from "../../../src/images/ElementButtons/tableIcon.svg";
 import blankTable from "../../../src/images/ElementButtons/combined-shape.svg";
@@ -480,42 +481,6 @@ class FigureImage extends Component {
         )
     }
 
-    renderImageAsset = (imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight) => {
-        return (
-            <>
-                <div id="figure_add_div" className={`pearson-component image figureData ${imageClass} ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
-                    {
-                        this.props.model.figuredata && this.props.model.figuredata.imageid ?
-                        <img src={this.state.imgSrc ? this.state.imgSrc : (this.props?.model?.figuredata?.path !== "" ? this.props.model.figuredata.path : '')}
-                            data-src={this.state.imgSrc}
-                            title=""
-                            alt=""
-                            className={imageDimension + ' lazyload ' + actualSizeClass}
-                            draggable="false" 
-                            width={imgWidth}
-                            height={imgHeight}
-                        />
-                        : <div className='figurebutton' onClick={this.addFigureResource}>Select an Image</div>
-                    }
-                </div>
-                <div>
-                    {
-                        this.props.model.figuredata && this.props.model.figuredata.imageid !== "" ? 
-                        <div className="figure-wrapper">
-                            <div className="figure-image-info">
-                                <div className='image-figure'><p className='image-text'>Image ID: </p> <span className='image-info'> {this.props.model.figuredata && this.props.model.figuredata.imageid ? this.props.model.figuredata.imageid : ""} </span> </div>
-                                <div className='image-figure-path'><p className='image-text'>Image Path: </p> <span className='image-info'> {this.state.imgSrc ? this.state.imgSrc : (this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.props.model.figuredata.path : "")}</span> </div>
-                                <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{this.props.model.figuredata && this.props.model.figuredata.path && this.props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? this.state.alfrescoSite : ""} </span> </div>
-                            </div>
-                            <div className='updatefigurebutton' onClick={this.addFigureResource}>Update Image</div>
-                            <div className='deletefigurebutton' onClick={() => this.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
-                        </div> : ''
-                    }
-                </div>
-            </>
-        )
-    }
-
     renderMathML = (posterText) => {
         return (
             <div className="floating-math-content-group">
@@ -552,7 +517,7 @@ class FigureImage extends Component {
                 case 'mathImage':
                 case 'image':
                 default:
-                    figureJsx = this.renderImageAsset(imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight);
+                    figureJsx = <FigureImageAsset {...this.props} figureTypeData={figureTypeData} imgSrc={this.state.imgSrc} alfrescoSite={this.state.alfrescoSite} addFigureResource={this.addFigureResource} toggleDeletePopup={this.toggleDeletePopup} />
                 break;
             }
         }
@@ -636,7 +601,7 @@ class FigureImage extends Component {
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
-                            {this.props.isAutoNumberingEnabled && autoNumberedElement ?
+                            {!this.props.isAutoNumberingEnabled && autoNumberedElement ?
                                 <FigureHeader
                                     {...this.props}
                                     figureHtmlData={figureHtmlData}
