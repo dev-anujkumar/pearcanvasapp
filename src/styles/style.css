@@ -494,3 +494,8 @@ span.markedForIndex:hover {
 div[title='Ignore all']{
     display: none !important;
 }
+
+/* show tinymcespellchecker incorrect word red line below the word*/
+.mce-spellchecker-annotation{
+    background-position: bottom !important;
+}
