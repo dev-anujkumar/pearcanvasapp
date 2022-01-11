@@ -33,6 +33,7 @@ export default function (state = INIT_STATE, action = INITIAL_ACTION) {
                 currentSlateLOData: action.payload.currentSlateLOData
             }
         case "UPDATE_LAST_ALIGNED_LO":
+            console.log("lastAlignedExternalLO inside metadataReducer: ", action.payload.lastAlignedExternalLO)
             return {
                 ...state,
                 lastAlignedExternalLO: action.payload.lastAlignedExternalLO

@@ -379,7 +379,8 @@ const mapStateToProps = (state) => {
         isLOExist: state.metadataReducer.slateTagEnable,
         currentSlateLF:state.metadataReducer.currentSlateLF,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
+        lastAlignedExternalLO:state.metadataReducer.lastAlignedExternalLO
     }
 }
 const mapActionToProps = {
