@@ -403,54 +403,60 @@ describe('Testing Function - prepareDialogueDom', () => {
 })
 describe('-----Testing Function  labelValueForFiguretype ------------', () => {
     it('should return the tableasmarkup, figure element', () => {
-        const labelValue = [ 'Table', 'Equation' , 'Exhibit'];
-        const element = {  figuretype: 'tableasmarkup', element: "Table" };
+        const labelValue = ['Table', 'Equation', 'Exhibit'];
+        const element = { figuretype: 'tableasmarkup', element: "Table" };
         expect(labelValueForFiguretype(element)).toEqual("Table");
     });
     it('should return the authoredtext, figure element', () => {
-        const labelValue = [ 'Table', 'Equation' , 'Exhibit'];
+        const labelValue = ['Table', 'Equation', 'Exhibit'];
         const element = { figuretype: 'authoredtext', element: "Equation" };
         expect(labelValueForFiguretype(element)).toEqual("Equation");
     });
     it('should return the codelisting, figure element', () => {
-        const labelValue = [ 'Table', 'Equation' , 'Exhibit'];
-        const element = {  figuretype: 'codelisting', element: "Exhibit" };
+        const labelValue = ['Table', 'Equation', 'Exhibit'];
+        const element = { figuretype: 'codelisting', element: "Exhibit" };
         expect(labelValueForFiguretype(element)).toEqual("Exhibit");
     });
     it('should return the "image", "mathImage" ,table" figure element', () => {
-        const labelValue = [ 'Table', 'Equation' , 'Exhibit','No Label'];
-        const element = {  figuretype: 'image' || 'mathImage'|| 'table', element: "No Label" };
+        const labelValue = ['Table', 'Equation', 'Exhibit', 'No Label'];
+        const element = { figuretype: 'image' || 'mathImage' || 'table', element: "No Label" };
         expect(labelValueForFiguretype(element)).toEqual("No Label");
     });
 });
 describe('-----Testing Function  dropdownValueForFiguretype ------------', () => {
     const figureDropdownData = {
-        tableasmarkup: ["No Label", "Table", "Custom"],
+        tableasmarkup: ["No Label", 'Table', "Custom"],
         mathml: ["No Label", "Equation", "Custom"],
         preformattedtext: ["No Label", "Exhibit", "Custom"],
         image: ["No Label", "Figure", "Table", "Equation", "Custom"]
     }
-
-
-
     it('Case 1', () => {
-        const dropdownList = ['No Label', 'Table', 'Custom'];
+        const dropdownList = ["No Label", 'Table', "Custom"];
         const subtype = ['image', 'mathml', 'preformattedtext', 'tableasmarkup']
         const element = { figuretype: 'tableasmarkup', element: "Equation" };
-        expect(dropdownValueForFiguretype(element,figureDropdownData)).toEqual(["No Label", "Table", "Custom"]);
-        // let result = dropdownValueForFiguretype(element, figureDropdownData);
-        // expect(result).toBe('tableasmarkup');
+        expect(dropdownValueForFiguretype(element, figureDropdownData)).toEqual(["No Label", 'Table', "Custom"]);
+
     })
-    // it('Case 2', () => {
-    //     const dropdownData = ['figure', 'table', 'equation'];
-    //     let formattedLabel = `<p></p>`;
-    //     let result = dropdownValueAtIntialize(dropdownData, formattedLabel);
-    //     expect(result).toBe('No Label');
-    // })
-    // it('Case 3', () => {
-    //     const dropdownData = ['figure', 'table', 'equation'];
-    //     let formattedLabel = `<p>test String</p>`;
-    //     let result = dropdownValueAtIntialize(dropdownData, formattedLabel);
-    //     expect(result).toBe('Custom');
-    // })
+    it('Case 2', () => {
+        const dropdownList = ["No Label", "Equation", "Custom"];
+        const subtype = ['image', 'mathml', 'preformattedtext', 'tableasmarkup']
+        const element = { figuretype: 'authoredtext' };
+        expect(dropdownValueForFiguretype(element, figureDropdownData)).toEqual(["No Label", "Equation", "Custom"]);
+
+    })
+    it('Case 3', () => {
+        const dropdownList = ["No Label", "Exhibit", "Custom"];
+        const subtype = ['image', 'mathml', 'preformattedtext', 'tableasmarkup']
+        const element = { figuretype: 'codelisting' };
+        expect(dropdownValueForFiguretype(element, figureDropdownData)).toEqual(["No Label", "Exhibit", "Custom"]);
+
+    })
+    it('Case 4', () => {
+        const dropdownList = ["No Label", "Figure", "Table", "Equation", "Custom"];
+        const subtype = ['image', 'mathml', 'preformattedtext', 'tableasmarkup']
+        const element = { figuretype: 'image' || 'mathImage' || 'table' };
+        expect(dropdownValueForFiguretype(element, figureDropdownData)).toEqual(["No Label", "Figure", "Table", "Equation", "Custom"]);
+
+    })
+
 });
