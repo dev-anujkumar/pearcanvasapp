@@ -2493,3 +2493,90 @@ export const codelistingWithData ={
 	"versionUrn": "urn:pearson:work:f4e5ae57-251f-4b07-a21e-f05c0a43411f",
 	"contentUrn": "urn:pearson:entity:768dc9aa-c1af-4161-90ad-a6f36061d48d"
 }
+export const blockmathWithoutData = {
+	"id": "urn:pearson:work:73a15b98-d284-40e5-93c4-39a96c24a656",
+	"type": "figure",
+	"figuretype": "authoredtext",
+	"subtype": "mathml",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+	"titlecontentintitlefield": true,
+	"title": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"captions": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"credits": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"figuredata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+		"type": "element-authoredtext",
+		"elementdata": {
+			"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+			"text": ""
+		}
+	},
+	"html": {
+		"title": "<p><br></p>",
+		"text": "<p><br></p>",
+		"postertext": "",
+		"captions": "<p><br></p>",
+		"credits": "<p><br></p>"
+	},
+	"versionUrn": "urn:pearson:work:73a15b98-d284-40e5-93c4-39a96c24a656",
+	"contentUrn": "urn:pearson:entity:f3312b7e-7888-4bdd-8d1d-50fa431d0048",
+	"status": "wip"
+}
+export const blockmathWithData = {
+	"id": "urn:pearson:work:73a15b98-d284-40e5-93c4-39a96c24a656",
+	"type": "figure",
+	"figuretype": "authoredtext",
+	"subtype": "mathml",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+	"titlecontentintitlefield": true,
+	"title": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "Equation 12 hello",
+		"textsemantics": [{
+			"charStart": 0,
+			"charEnd": 8,
+			"type": "label"
+		}, {
+			"charStart": 9,
+			"charEnd": 11,
+			"type": "number"
+		}]
+	},
+	"captions": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "caption1"
+	},
+	"credits": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "credit"
+	},
+	"figuredata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+		"type": "element-authoredtext",
+		"elementdata": {
+			"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+			"text": "block math"
+		}
+	},
+	"html": {
+		"title": "<p><label>Equation&nbsp;</label><number>12&nbsp;</number>hello</p>",
+		"text": "<p>block math</p>",
+		"postertext": "",
+		"captions": "<p>caption1</p>",
+		"credits": "<p>credit</p>",
+		"footnotes": {},
+		"glossaryentries": {},
+		"indexEntries": {}
+	},
+	"versionUrn": "urn:pearson:work:73a15b98-d284-40e5-93c4-39a96c24a656",
+	"contentUrn": "urn:pearson:entity:f3312b7e-7888-4bdd-8d1d-50fa431d0048"
+}
