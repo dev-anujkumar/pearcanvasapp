@@ -1,0 +1,1 @@
+export const CYPRESS_PLUS_TOOLTIP = 'The content has been updated'
