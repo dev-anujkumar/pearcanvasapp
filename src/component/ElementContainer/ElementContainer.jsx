@@ -23,7 +23,7 @@ import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/Comment
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
-import { showTocBlocker, hideBlocker, hideTocBlocker, disableHeader, hideToc } from '../../js/toggleLoader'
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
@@ -473,18 +473,7 @@ class ElementContainer extends Component {
                 previousElementData.figuredata.podwidth : '') && podwidth !== null
         );
     }
-    /*** @description This function is used to handle Canvas Blocker on delete */
-    showCanvasBlocker = (value) => {
-        if (value == true) {
-            showTocBlocker();
-            hideToc();
-        } else {
-            hideTocBlocker(value);
-        }
-        disableHeader(value);
-        this.props.showBlocker(value);
-    }
-    
+
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             numberDOM = document.getElementById(`cypress-${index}-1`),
