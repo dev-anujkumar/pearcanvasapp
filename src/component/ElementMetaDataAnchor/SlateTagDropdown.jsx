@@ -47,7 +47,7 @@ class SlateTagDropdown extends React.Component {
     }
     closestByClass = function(el, clazz) {
     // Traverse the DOM up with a while loop
-    while (el.className != clazz) {
+    while (el.className != clazz && el.className !== undefined) {
         // Increment the loop to the parent node
         el = el.parentNode;
         if (!el) {
@@ -332,8 +332,8 @@ class SlateTagDropdown extends React.Component {
       const liOptionStatus = this.handleCypressLODropdownOptions()
       /* @-isLoOption4Slate-@ - TO check is LO dropdown options allowed for current slate or not */
       const isLoOption4Slate = [SLATE_TYPE_SECTION, SLATE_TYPE_PDF].includes(config.slateType);
-      const isExternalLoInAssessment = this.checkExternalFrameworkAS()
-      const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' && this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? "disabled" : "";
+      const isExternalLoInAssessment = this.checkExternalFrameworkAS();
+      const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' && this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? "disable-buttton" : "";
       return (
         <div>
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
@@ -361,7 +361,8 @@ class SlateTagDropdown extends React.Component {
                         <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveAssessmentDropdown}</li>}
                     <li className={liOptionStatus.viewLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{ViewLearningObjectiveSlateDropdown}</li>
                     {isLoOption4Slate && !hasReviewerRole() &&
-                        <li className={`${liOptionStatus.unlinkLOStatus ? '' : 'disabled' } ${subscriberContent}`}  style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
+                        <li className={`${liOptionStatus.unlinkLOStatus ? '' : 'disabled' } ${subscriberContent}`} 
+                        style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
             </div> 
             <div className="learningobjectivedropdown2" ref={node3 => this.node3 = node3}>
