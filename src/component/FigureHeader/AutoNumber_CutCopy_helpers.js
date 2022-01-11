@@ -36,10 +36,11 @@ export const handleAutoNumberingOnCopyPaste = (params) => {
             });
         }
         if(operationType == 'copy' || operationType == 'cut'){
-            if (containerElements.indexOf(selectedElement?.type) > -1) {
+            /**if (containerElements.indexOf(selectedElement?.type) > -1) {
                 updateAutoNumberSequenceOnCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevFselectedElementigures: slateFigures, slateAncestors })
             }
-            else if (selectedElement?.type === 'figure') {
+            else */
+            if (selectedElement?.type === 'figure') {
                 updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors })
             }
         }
@@ -108,6 +109,7 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
  *  This function resets sequence after SWAP when a container having figure is swapped
  * @param {*} params
  */
+/**
 export const updateAutoNumberSequenceOnCopyContainers = (params) => {
     const {
         getState,
@@ -167,3 +169,4 @@ export const updateAutoNumberSequenceOnCopyContainers = (params) => {
         }
     }
 }
+*/

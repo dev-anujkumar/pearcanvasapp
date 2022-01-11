@@ -22,7 +22,9 @@ jest.mock('../../../src/component/SlateWrapper/slateWrapperAction_helper.js', ()
     onPasteSuccess: jest.fn(() => Promise.resolve({})),
     setPayloadForContainerCopyPaste: jest.fn(() => ({ content: [{ id: 'urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6', type: 'popup' }] }))
 }))
-
+jest.mock('../../../src/component/TcmSnapshots/TcmSnapshotsCreate_Update.js', () => ({
+    tcmSnapshotsForCreate: jest.fn()
+}))
 jest.mock('../../../src/component/ElementFigure/AlfrescoSiteUrl_helper.js', () => ({
     handleAlfrescoSiteUrl: jest.fn()
 }))
