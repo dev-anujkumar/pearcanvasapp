@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import TinyMceEditor from "../tinyMceEditor";
 import FigureImageAsset from './FigureImageAsset.jsx';
 import FigureTableAsset from './FigureTableAsset.jsx';
+import BlockMathCode from './BlockMathCode.jsx';
 // IMPORT - Assets //
 import {
     DEFAULT_IMAGE_DATA_SOURCE,
@@ -446,27 +447,8 @@ class FigureImage extends Component {
         }
         return lowercaseOptions;
     }
-    
-    renderMathML = (posterText) => {
-        return (
-            <div className="floating-math-content-group">
-                <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Math Block Content" tagName={'p'} className={"figureMathContent "} model={posterText} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                <label className={checkHTMLdataInsideString(this.props?.model?.html?.text) ? "transition-none" : "floating-math-content"}>Math Block Content</label>
-            </div>
-        )
-    }
-
-    renderCodeListing = (processedText, figureHtmlData) => {
-        return (
-            <div className="floating-code-content-group">
-                <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-3`} placeholder = "Code Block Content" tagName={'code'} className={"figureCodeContent "} model={processedText} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                <label className={(figureHtmlData.preformattedText === '' || figureHtmlData.preformattedText == undefined) ? "floating-code-content" : "transition-none" }>Code Block Content</label>
-            </div>
-        )
-    }
 
     renderAssetSection = (figureTypeData) => {
-        let { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, figureHtmlData, processedText, posterText } = figureTypeData
         let figureJsx;
         if (this.props.model && this.props.model.figuretype) {
             switch (this.props.model.figuretype) {
@@ -474,10 +456,8 @@ class FigureImage extends Component {
                     figureJsx = <FigureTableAsset {...this.props} figureTypeData={figureTypeData} addFigureResource={this.addFigureResource} />
                 break;
                 case 'authoredtext':
-                    figureJsx = this.renderMathML(posterText);
-                break;
                 case 'codelisting':
-                    figureJsx = this.renderCodeListing(processedText, figureHtmlData);
+                    figureJsx = <BlockMathCode {...this.props} figureTypeData={figureTypeData} onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} />
                 break;
                 case 'table':
                 case 'mathImage':
