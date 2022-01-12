@@ -40,7 +40,7 @@ code.cypress-editable.language-none{
 code .codeNoHighlightLine:last-child{
     display: block;
     border-bottom: 2px solid #737373 !important;
-    padding-bottom: 5px;
+    padding-bottom: 7px;
 }
 code .codeNoHighlightLine{
     display: block;

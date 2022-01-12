@@ -441,7 +441,7 @@ class PopUp extends React.Component {
         else if (props.showBlockCodeElemPopup) {
             return (
                 <>
-                    <div className={`${props.lOPopupClass}`}>Please select a language from element settings panel to start <br /><br /> editing the Block Code element.</div>
+                    <div className={`dialog-window blockcode-warning-text`}>Please select a language from element settings panel to start editing the Block Code element.</div>
                 </>
             )
         }
