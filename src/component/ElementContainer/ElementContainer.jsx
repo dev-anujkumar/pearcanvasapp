@@ -102,7 +102,8 @@ class ElementContainer extends Component {
             editInteractiveId: "",
             isfigurePopup: false,
             figureUrl: "",
-            assetsPopupStatus: false
+            assetsPopupStatus: false,
+            isActive: false
         };
 
 
@@ -309,6 +310,7 @@ class ElementContainer extends Component {
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
             this.props.fetchCommentByElement(this.props.element.id);
         }
+        this.handleCommunication(this.props.element.id);
     }
 
     removeClassesFromHtml = (html) => {
@@ -1941,7 +1943,7 @@ class ElementContainer extends Component {
                         {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} />}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.handleCommunication(e,element.id, this.props.index)} />}
+                        {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.handleCommentPopup(true, e)} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                         {permissions && permissions.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
@@ -2175,12 +2177,11 @@ class ElementContainer extends Component {
         this.props.getProjectUsers();
     }
 
-    handleCommunication = (event , elementId , index) => {
+    handleCommunication = ( elementId ) => {
         sendDataToIframe({
             'type': CanvasActiveElement,
-            'message': {"id":elementId, "index":index}
-        }); 
-        this.handleCommentPopup(true, event);
+            'message': {"id":elementId, "active":true}
+        });   
     }
      /**
      * @description - This function is for opening edit  button in Cypress Plus
