@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
 import FigureImageAsset from './FigureImageAsset.jsx';
+import FigureTableAsset from './FigureTableAsset.jsx';
 // IMPORT - Assets //
-import tableIcon from "../../../src/images/ElementButtons/tableIcon.svg";
-import blankTable from "../../../src/images/ElementButtons/combined-shape.svg";
 import {
     DEFAULT_IMAGE_DATA_SOURCE,
     DEFAULT_IMAGE_SOURCE
@@ -447,40 +446,7 @@ class FigureImage extends Component {
         }
         return lowercaseOptions;
     }
-
-    renderTableAsset = (dataType, imageDimension) => {
-        return (
-            <div className="figure-element-container interface-container">
-                <div id="figure_add_div" className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
-                    <div className="tableMediaWrapper">
-                        <div className="tableIconWrapper">
-                            <div className="table-icon-wrapper">
-                                <img className='tableIcon' src={tableIcon}/>
-                                <span className='tableTitle'>Table</span>
-                            </div>
-                        </div>
-                        <div className="tableAssetWrapper">
-                            {
-                                this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML !== "" || this.props.model.figuredata.tableasHTML !== undefined)) ?
-                                <div className="table-asset-wrapper-with-asset" onClick={this.addFigureResource}>
-                                    <div id={`${this.props.index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{ __html: this.props.model.figuredata.tableasHTML }} ></div>
-                                </div> :
-                                <div className="table-asset-wrapper-without-asset">
-                                    <img className="blankTable" src={blankTable}/>
-                                    <button className="table-asset-button" onClick={this.addFigureResource}>
-                                        <span className="table-asset-button-label">
-                                            Add a Table
-                                        </span>
-                                    </button>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
+    
     renderMathML = (posterText) => {
         return (
             <div className="floating-math-content-group">
@@ -505,7 +471,7 @@ class FigureImage extends Component {
         if (this.props.model && this.props.model.figuretype) {
             switch (this.props.model.figuretype) {
                 case 'tableasmarkup':
-                    figureJsx = this.renderTableAsset(dataType, imageDimension);
+                    figureJsx = <FigureTableAsset {...this.props} figureTypeData={figureTypeData} addFigureResource={this.addFigureResource} />
                 break;
                 case 'authoredtext':
                     figureJsx = this.renderMathML(posterText);
