@@ -176,6 +176,8 @@ class SlateTagDropdown extends React.Component {
     } = this.prepareExtFrameworkData();
 
     const currentSlateLF=this.props.currentSlateLF;
+    const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
+    const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
    if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
       this.props.toggleLOWarningPopup(true,e.target.innerText);
     } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
@@ -194,7 +196,9 @@ class SlateTagDropdown extends React.Component {
           'externalLFUrn': externalLFUrn,
           'currentSlateId': slateManifestURN,
           'chapterContainerUrn': '',
-          'currentSlateLF': currentSlateLF
+          'currentSlateLF': currentSlateLF,
+          'projectSharingRole': projectSharingRole,
+          'isSubscribed': isSubscribed
         }
       })
 
