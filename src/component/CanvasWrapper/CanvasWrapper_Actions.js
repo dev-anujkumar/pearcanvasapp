@@ -53,6 +53,7 @@ import ElementConstants from "../ElementContainer/ElementConstants.js";
 import { isAutoNumberEnabled } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -380,7 +381,6 @@ export const getProjectDetails = () => (dispatch, getState) => {
             let flag = data?.parameters?.enablenumberedandlabel || false;
             dispatch(isAutoNumberEnabled(flag, config.ENABLE_AUTO_NUMBER_CONTENT));
         }
-        dispatch(isAutoNumberEnabled(true, config.ENABLE_AUTO_NUMBER_CONTENT)); // by default set true figure autonumbering
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
             // Api to get LOB Permissions
@@ -549,7 +549,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
-        let newVersionManifestId=Object.values(slateData.data)[0].id
+        let newVersionManifestId=Object.values(slateData.data)[0].id;
+
+        /* This code will get the last aligned LO from the local storage and update the redux store */
+        let lastAlignedLos = localStorage.getItem('lastAlignedLos');
+        if(lastAlignedLos && lastAlignedLos.length > 0){
+            let lastAlignedLosInStroage = JSON.parse(lastAlignedLos);
+            let lastAlignedLoForCurrentSlate = lastAlignedLosInStroage[newVersionManifestId];
+            dispatch(updateLastAlignedLO(lastAlignedLoForCurrentSlate));
+        }
+
         if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId

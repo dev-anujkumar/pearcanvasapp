@@ -6,7 +6,7 @@ import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
 import { slateLevelData, slateLevelDataWithApproved, newslateShowhideData, showhidetestData } from "../../../fixtures/containerActionsTestingData";
 import { JSDOM } from 'jsdom'
-
+import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 global.document = (new JSDOM()).window.Element;
@@ -14,6 +14,10 @@ jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
     replaceWirisClassAndAttr: jest.fn()
+}))
+jest.mock('../../../src/component/FigureHeader/AutoNumber_DeleteAndSwap_helpers.js', () => ({
+    handleAutoNumberingOnDelete: jest.fn(),
+    getContainerEntityUrn: jest.fn()
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
     tcmSnapshotsForUpdate: jest.fn(),
@@ -57,7 +61,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 elemURN : "urn:pearson:work:123"
             }]
         },
-        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" }
+        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" },
+        autoNumberReducer: mockAutoNumberReducerEmpty,
     };
 
     let initialState2 = {
@@ -92,7 +97,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 elemURN : "urn:pearson:work:123"
             }]
         },
-        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" }
+        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" },
+        autoNumberReducer: mockAutoNumberReducerEmpty
     };
 
     let asideData = {

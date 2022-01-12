@@ -71,7 +71,6 @@ export const getOverridedNumberValue = (element) => {
         }
         return undefined;
     }
-    // return undefined;
 }
 
 const checkKeysInObj = (Obj) => {
@@ -119,17 +118,11 @@ export const setAutonumberingValuesForPayload = (autoNumberOption, titleHTML, nu
             break;
         case AUTO_NUMBER_SETTING_REMOVE_NUMBER:
             objToReturn = {
-                numberedandlabel : false,
-                manualoverride : { }
+                numberedandlabel : false
             }
             isValid = true;
             break;
         case AUTO_NUMBER_SETTING_DEFAULT:
-            objToReturn = {
-                numberedandlabel : true
-            }
-            isValid = true;
-            break;
         default:
             objToReturn = {
                 numberedandlabel : true
@@ -170,8 +163,10 @@ export const getValueOfLabel = (figuretype) => {
  * @returns 
  */
 export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber }) => {
-    if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
+    if (parentNumber && element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
         return `${imgLabelValue} ${parentNumber}.${imgNumberValue}`
+    } else if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
+        return `${imgLabelValue} ${imgNumberValue}`
     }
     return ""
 }
@@ -196,9 +191,9 @@ export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
             }
             else {
                 if (containerEntityUrn) {
-                    return autoNumberingDetails?.chapterOrderList[containerEntityUrn] || '1'
+                    return autoNumberingDetails?.chapterOrderList[containerEntityUrn] || ''
                 }
-                return "1"
+                return ""
             }
     }
 }
@@ -239,7 +234,7 @@ export const getContainerEntityUrn = (slateAncestors) =>{
  * @returns 
  */
 export const getLabelNumberFieldValue = (element, figureLabelValue, containerNumber) => {
-    let elementLabel = figureLabelValue || element?.displayedlabel || ""
+    let elementLabel = figureLabelValue || element?.displayedlabel;
     if (element?.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == false) {
         // elementLabel = ""
         elementLabel = figureLabelValue;
@@ -326,8 +321,8 @@ export const getAutoNumberedElement = (element) =>{
     }
 }
 
-export const updateAutonumberingOnOverridedCase = (elementType, element, autoNumberedElements, currentSlateAncestorData) => (dispatch) => {
-    const labelType = autoNumber_ElementTypeToStoreKeysMapper[elementType];
+export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNumberedElements, currentSlateAncestorData) => (dispatch) => {
+    const labelType = autoNumber_ElementTypeKey[elementLabel];
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
     if (autoNumberedElements[labelType]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[labelType][figureParentEntityUrn] && Object.keys(autoNumberedElements[labelType][figureParentEntityUrn]).length > 0) {
         let index = autoNumberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === element.contentUrn);
@@ -359,9 +354,10 @@ export const updateAutonumberingOnElementTypeUpdate = (newLabel, element, autoNu
     }
     if (autoNumberedElements[autoNumber_ElementTypeKey[newLabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn]) {
         let nearestElementObj = findNearestMediaElement(slateFigures, element, newLabel, elementSlateIndex);
-        if (nearestElementObj && Object.keys(nearestElementObj).length > 0) {
-            let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].findIndex(element => element.contentUrn === nearestElementObj.contentUrn);
-            autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].splice(storeIndex + 1, 0, element);
+        if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
+            let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
+            storeIndex = nearestElementObj?.key === 'above' ? storeIndex + 1 : storeIndex;
+            autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].splice(storeIndex, 0, element);
         } else {
             autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].splice(0, 0, element);
         }

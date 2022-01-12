@@ -36,9 +36,13 @@ import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/A
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
 import { getDataFromLastTag, isKWChild, isLastChild, moveCursor, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
+import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../component/FigureHeader/AutoNumberConstants';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
+const {
+    AUTO_NUMBER_SETTING_RESUME_NUMBER
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -1209,6 +1213,16 @@ export class TinyMceEditor extends Component {
              * inner most node as compared to currentSelecction.getNode()
              */
             moveCursor(e, selectionNode, tinymceOffset);
+            /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering START xxxxxxxxxxxxxxxxxxx */
+            if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && this.props.placeholder === 'Number' && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
+                if ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode !== 8 && e.keyCode !== 37 && e.keyCode !== 39)  {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
+            /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering STOP xxxxxxxxxxxxxxxxxxxx */
+
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
             if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                 const keyCode = e.keyCode || e.which;
@@ -3372,10 +3386,10 @@ export class TinyMceEditor extends Component {
         let toolbar;
         switch (placeholder) {
             case "Number":
-                toolbar = config.figureNumberToolbar;
+                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureNumberToolbar;
                 break;
             case "Label Name":
-                toolbar = config.figureImageLabelToolbar;
+                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureImageLabelToolbar;
                 break;
             case "Title":
             case "Caption":
@@ -4256,7 +4270,9 @@ const mapStateToProps = (state) => {
         isInlineEditor: state.alfrescoReducer.isInlineEditor,
         imageArgs: state.alfrescoReducer.imageArgs,
         slateLevelData: state.appStore.slateLevelData,
-        asideData: state.appStore.asideData
+        asideData: state.appStore.asideData,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
+        autoNumberOption: state.autoNumberReducer.autoNumberOption
     }
 }
 
