@@ -12,7 +12,6 @@ export const currentSlateLO = (currentSlateLOData) =>  (dispatch, getState) => {
 }
 
 export const updateLastAlignedLO = (lastAlignedExternalLO) =>  (dispatch, getState) => {
-    console.log("lastAlignedExternalLO inside updateLastAlignedLO action: ", lastAlignedExternalLO)
     return dispatch({
         type: 'UPDATE_LAST_ALIGNED_LO',
         payload: {
