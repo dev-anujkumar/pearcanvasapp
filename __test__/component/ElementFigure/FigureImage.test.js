@@ -8,6 +8,7 @@ const mockStore = configureMockStore(middlewares);
 import FigureImage from '../../../src/component/ElementFigure/FigureImage';
 import { figureImage50TextElementDefault,figureImage50TextElementWithData,mathImage50TextElementDefault, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,testDataFromNewAlfresco } from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
+import { mockNumberedElements, mockIndexedElements, mockSlateFiguresList} from '../FigureHeader/AutoNumberApiTestData';
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
         return (<div>null</div>)
@@ -18,6 +19,31 @@ global.fetch = jest.fn().mockImplementation(() => {
       resolve({json:jest.fn(),id:'urn:pearson134'});
    });
  });
+const permissionsArray = [
+    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview",'alfresco_crud_access', "add_instructor_resource_url", "grid_crud_access", , "set_favorite_project", "sort_projects",
+    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+]
+ const mockAutoNumberReducerEmpty = {
+    isAutoNumberingEnabled: false,
+    autoNumberedElements: {
+        imagesList: [],
+        tablesList: [],
+        equationsList: [],
+        audiosList:[],
+        videosList:[]
+    },
+    autoNumberingDetails: {},
+    autoNumberElementsIndex: {
+        figureImageIndex: {},
+        tableIndex: {},
+        equationsIndex: {},
+        audioIndex: {},
+        videoIndex: {}
+    },
+    slateFigureList:[],
+    autoNumberOption: ''
+}
 describe('Testing Figure image component', () => {
     let initialState = {
         alfrescoReducer: {
@@ -31,12 +57,13 @@ describe('Testing Figure image component', () => {
         appStore: {
             figureDropdownData: {
                 audio: ["No Label", "Custom"],
-                image: ["No Label", "Custom"],
+                image: ["Figure", "Table", "Equation"],
                 smartlinks: ["No Label", "Custom"],
                 video: ["No Label", "Custom"]
             }
         },
         projectMetadata:{},
+        autoNumberReducer: mockAutoNumberReducerEmpty,
     }
     const store = mockStore(initialState);
 
@@ -405,5 +432,99 @@ describe('Testing Figure image component', () => {
             elementFigureInstance.onFigureImageFieldBlur("test");
         })
     })
+
+});
+
+// slate id - urn:pearson:manifest:dd2504ac-ef6f-4cdc-8d24-de6b6170baee
+
+const mockAutoNumberReducerWithData = {
+    isAutoNumberingEnabled: true,
+    autoNumberedElements: mockNumberedElements,
+    autoNumberingDetails: {
+        chapterOrderList: { 'urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb': 1, 'urn:pearson:entity:288806e5-9c0e-4373-b2af-426acf010220': 2 },
+        partOrderList: { 'urn:pearson:entity:b459b0a8-a6ec-419e-8b5b-e815d1f7f067': 1 }
+    },
+    autoNumberElementsIndex: mockIndexedElements,
+    slateFigureList:mockSlateFiguresList,
+    autoNumberOption: ''
+}
+describe('Testing Figure image component', () => {
+    let initialState2 = {
+        alfrescoReducer: {
+            alfrescoAssetData: {},
+            elementId: "urn",
+            alfrescoListOption: [],
+            launchAlfrescoPopup: true,
+            editor: true,
+            Permission: false
+        },
+        appStore: {
+            figureDropdownData: {
+                audio: ["Audio"],
+                image: ["Figure", "Table", "Equation"],
+                smartlinks: ["No Label", "Custom"],
+                video: ["Video"]
+            },
+            activeElement: {
+                altText: "",
+                elementId: "urn:pearson:work:c76ca6f7-af8c-4b46-8de4-6b136fa3bd93",
+                elementType: "figure",
+                elementWipType: "figure",
+                index: 0,
+                longDesc: "",
+                podwidth: "",
+                primaryOption: "primary-image-figure",
+                secondaryOption: "secondary-image-figure-width",
+                tag: "Fg"
+            },
+            currentSlateAncestorData: {
+                "containerUrn": "urn:pearson:manifest:dd2504ac-ef6f-4cdc-8d24-de6b6170baee",
+                "entityUrn": "urn:pearson:entity:2a741486-681c-4536-ae46-5ea974db041b",
+                "title": "",
+                "label": "appendixslate",
+                "matterType": "BackMatter",
+                "ancestor": {
+                    "containerUrn": "urn:pearson:manifest:34e2807d-fd3f-4938-aa38-4b81e612eb0f",
+                    "entityUrn": "urn:pearson:entity:275d98d9-afb7-409f-8021-8aad2bd06656",
+                    "title": "",
+                    "label": "appendix",
+                    "ancestor": {
+                        "containerUrn": "urn:pearson:distributable:2c5fbcf9-81c4-4831-b5ca-adfbf644cfe7",
+                        "entityUrn": "urn:pearson:entity:fc1224f4-09b2-452f-aa74-f66f6344b64d",
+                        "title": "dev_test_39",
+                        "label": "project"
+                    }
+                }
+            }
+        },
+        projectMetadata: {},
+        autoNumberReducer: mockAutoNumberReducerWithData,
+    }
+    const store2 = mockStore(initialState2);
+
+    test('renders without crashing', () => {
+        let props = {
+            model: figureImage50TextElementWithData,
+            index: "",
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            permissions: ['add_multimedia_via_alfresco'],
+            figureData: {
+                model: {
+                    figuretype: ['image', 'table', 'mathImage', 'authoredtext']
+                }
+            }
+        }
+        const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>)
+        expect(component).toHaveLength(1);
+        let instance = component.instance();
+        expect(instance).toBeDefined();
+    })
+
+
 
 });

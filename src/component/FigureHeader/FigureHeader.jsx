@@ -7,7 +7,7 @@ import config from '../../config/config';
 import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
-import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData } from './AutoNumber_helperFunctions';
+import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
 import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData } from '../../constants/Element_Constants';
@@ -83,8 +83,12 @@ export const FigureHeader = (props) => {
     useEffect(() => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
         setLabelNumberSetting(dropdownVal);
-        props.updateAutoNumberingDropdownForCompare(dropdownVal);
-        updateDropdownOptions()
+        props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: dropdownVal});
+        updateDropdownOptions();
+        if (!props?.model.hasOwnProperty('displayedlabel')) {
+            let label = getValueOfLabel(props?.model?.figuretype);
+            setFigureLabelValue(label);
+        }
     }, [])
     useEffect(() => {
         if (props.activeElement.elementId === props.model.id) {
@@ -112,6 +116,7 @@ export const FigureHeader = (props) => {
         handleCloseDropDrown();
         if (oldSettings !== newSettings) {
             setLabelNumberSetting(newSettings);
+            props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: newSettings});
             if (newSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 setShowLabelField(false)
                 setShowNumberField(false)
@@ -119,11 +124,10 @@ export const FigureHeader = (props) => {
                 setShowLabelField(true)
                 setShowNumberField(true)
             }
-            if (oldSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+            if (oldSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER || oldSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
                 updateDropdownOptions();
-                setFigureLabelValue(figureLabelData[0]);
+                setFigureLabelValue(props.model?.displayedlabel);
             }
-            props.updateAutoNumberingDropdownForCompare(newSettings);
         }
     }
     /**---------------------------------------- */
@@ -155,7 +159,7 @@ export const FigureHeader = (props) => {
             props.updateAudioVideoDataForCompare(props.model.figuredata);
         }
 
-        props.updateAutoNumberingDropdownForCompare(labelNumberSetting);
+        props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: labelNumberSetting});
     }
 
     const onFigureHeaderFieldBlur = (id) => {
@@ -165,13 +169,20 @@ export const FigureHeader = (props) => {
         }
         if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.remove('transition-none');
+            if (id === '0-0') {
+                labelElement?.nextElementSibling?.classList?.add('floating-label');
+            } else {
+                labelElement?.nextElementSibling?.classList?.add('floating-number');
+            }
         }
     }
 
-    const { figureHtmlData, previewClass, figLabelClass, figTitleClass } = props
+    const { figureHtmlData, figLabelClass, figTitleClass } = props
     const containerNumber = getContainerNumber(slateAncestors, props.autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
-    const imgLabelValue = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)//props.model?.displayedLabel ?? 'Figure'
+    let imgLabelValue = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)//props.model?.displayedLabel ?? 'Figure'
+    imgLabelValue = labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ? props?.model?.displayedlabel : imgLabelValue;
+    imgLabelValue = !props?.model.hasOwnProperty('displayedlabel') ? getValueOfLabel(props?.model?.figuretype) : imgLabelValue;
     const parentNumber = containerNumber
     let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })

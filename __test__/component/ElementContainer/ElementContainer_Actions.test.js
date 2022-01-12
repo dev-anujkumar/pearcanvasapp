@@ -19,10 +19,7 @@ jest.mock('../../../src/constants/utility.js', () => ({
     hasReviewerRole: jest.fn(),
     getLabelNumberTitleHTML: jest.fn()
 }))
-jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
-    tcmSnapshotsForUpdate: jest.fn(),
-    fetchElementWipData: jest.fn(),
-    fetchManifestStatus: jest.fn(),
+jest.mock('../../../src/component/TcmSnapshots/TcmSnapshotsCreate_Update.js', () => ({
     prepareSnapshots_ShowHide: jest.fn(),
     tcmSnapshotsForCreate: jest.fn()
 }))
