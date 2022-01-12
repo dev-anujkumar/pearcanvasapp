@@ -29,6 +29,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions.js';
 import FigureHeader from '../FigureHeader/FigureHeader.jsx';
+import { IMAGE, TABLE, MATH_IMAGE, TABLE_AS_MARKUP, MATH_ML, BLOCK_CODE } from './ElementFigure_Constants'
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
@@ -452,16 +453,16 @@ class FigureImage extends Component {
         let figureJsx;
         if (this.props.model && this.props.model.figuretype) {
             switch (this.props.model.figuretype) {
-                case 'tableasmarkup':
+                case TABLE_AS_MARKUP:
                     figureJsx = <FigureTableAsset {...this.props} figureTypeData={figureTypeData} addFigureResource={this.addFigureResource} />
                 break;
-                case 'authoredtext':
-                case 'codelisting':
+                case MATH_ML:
+                case BLOCK_CODE:
                     figureJsx = <BlockMathCode {...this.props} figureTypeData={figureTypeData} onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} />
                 break;
-                case 'table':
-                case 'mathImage':
-                case 'image':
+                case TABLE:
+                case MATH_IMAGE:
+                case IMAGE:
                 default:
                     figureJsx = <FigureImageAsset {...this.props} figureTypeData={figureTypeData} imgSrc={this.state.imgSrc} alfrescoSite={this.state.alfrescoSite} addFigureResource={this.addFigureResource} toggleDeletePopup={this.toggleDeletePopup} />
                 break;
@@ -475,20 +476,20 @@ class FigureImage extends Component {
         let elementFigureAlignment = ''
         if (model && model.figuretype) {
             switch (model.figuretype) {
-                case 'table':
-                case 'mathImage':
+                case TABLE:
+                case MATH_IMAGE:
                     elementFigureAlignment = model.alignment ? model.alignment : 'half-text';
                     break;
-                case 'tableasmarkup':
+                case TABLE_AS_MARKUP:
                     elementFigureAlignment = model.alignment ? model.alignment : 'table-editor';
                     break;
-                case 'authoredtext':
+                case MATH_ML:
                     elementFigureAlignment = model.alignment ? model.alignment : 'mathml';
                     break;
-                case 'codelisting':
+                case BLOCK_CODE:
                     elementFigureAlignment = 'code-listing';
                     break;   
-                case 'image':
+                case IMAGE:
                 default:
                     elementFigureAlignment = model.alignment ? model.alignment : 'text-width';
                     break;
