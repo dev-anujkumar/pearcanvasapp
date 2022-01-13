@@ -522,7 +522,7 @@ class FigureImage extends Component {
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                 <div className='figure-image-wrapper'>
-                    <div className={divClass} resource="">
+                    <div className={`${divClass} ${model?.figuretype === 'codelisting' ? 'blockCodeFigure' : '' }`} resource="">
                         <figure className={figureClass} resource="">
                             {this.props.isAutoNumberingEnabled && autoNumberedElement ?
                                 <FigureHeader
