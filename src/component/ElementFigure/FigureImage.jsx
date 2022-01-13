@@ -30,6 +30,7 @@ import FormControl from '@material-ui/core/FormControl'
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions.js';
 import FigureHeader from '../FigureHeader/FigureHeader.jsx';
 import { IMAGE, TABLE, MATH_IMAGE, TABLE_AS_MARKUP, MATH_ML, BLOCK_CODE } from './ElementFigure_Constants'
+import { launchTableSPA } from './ElementFigure_Utility';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
@@ -334,32 +335,7 @@ class FigureImage extends Component {
      * @description function will be called to launch Table Editor SPA
      */
     launchSPA = () => {
-        let editable = true;
-        if (hasReviewerRole()) {
-            editable = false;
-        }
-        this.props.handleFocus()
-        let slateData = {
-            elementId : this.props.elementId,
-            currentProjectId: config.projectUrn,
-            slateEntityUrn: config.slateEntityURN,
-            parentEntityUrn: this.props.parentEntityUrn,
-            sectionType: this.props?.asideData?.sectionType || "bodymatter"
-        }
-        let tableConfig = {
-            S3MathImagePath: config.S3MathImagePath ? config.S3MathImagePath : "https://cite-media-stg.pearson.com/legacy_paths/wiris-dev-mathtype-cache-use/cache/",
-            alfrescoMetaData: config?.alfrescoMetaData ?? {},
-            CMDS_APIKEY: config.CMDS_APIKEY,
-            CMDS_DATABASE: config.CMDS_DATABASE,
-            CMIS_REPO: config.CMIS_REPO,
-            CMDS_AUTHORIZATION: config.CMDS_AUTHORIZATION,
-            EPS_API: config.EPS_API,
-            PROJECTAPI_ENDPOINT: config.PROJECTAPI_ENDPOINT,
-            STRUCTURE_APIKEY:config.STRUCTURE_APIKEY,
-            AlfrescoSiteAPIUrl: config.ALFRESCO_EDIT_METADATA
-        }
-        const configAPIKey = JSON.parse(JSON.stringify(tableConfig));
-        sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
+        launchTableSPA(this.props.elementId, this.props.parentEntityUrn, this.props?.asideData?.sectionType, this.props.handleFocus);
     }
 
     /**

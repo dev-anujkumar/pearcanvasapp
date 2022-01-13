@@ -13,16 +13,20 @@ export const TABLE_AS_MARKUP = "tableasmarkup"
 export const FIGURE_TABLE_TITLE = "Table"
 export const FIGURE_TABLE_BUTTON_TITLE = "Add a Table"
 
-/**Element Math ML*/
+/**Element Math ML, Block Code*/
 export const MATH_ML = "authoredtext"
-export const MATH_ML_DIV_CLASS = "floating-math-content-group"
-export const MATH_ML_PLACEHOLDER = "Math Block Content"
-export const MATH_ML_TAG_NAME = "p"
-export const MATH_ML_CLASS_NAME = "figureMathContent "
-
-/**Element Block Code*/
 export const BLOCK_CODE = "codelisting"
-export const BLOCK_CODE_DIV_CLASS = "floating-code-content-group"
-export const BLOCK_CODE_PLACEHOLDER = "Code Block Content"
-export const BLOCK_CODE_TAG_NAME = "code"
-export const BLOCK_CODE_CLASS_NAME = "figureCodeContent "
+export const BLOCK_MATH_CODE_CLASSES = {
+    authoredtext: {
+        divClass: "floating-math-content-group",
+        placeHolder: "Math Block Content",
+        tagName: "p",
+        tinyMceClass: "figureMathContent "
+    },
+    codelisting: {
+        divClass: "floating-code-content-group",
+        placeHolder: "Code Block Content",
+        tagName: "code",
+        tinyMceClass: "figureCodeContent "
+    }
+}
