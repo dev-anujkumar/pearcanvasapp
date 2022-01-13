@@ -24,7 +24,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -360,6 +360,8 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
         tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('data-mce-src');
         tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
+        // PCAT-2426 - calling function to remove tinymcespellchecker DOM attributes from innerHTML
+        tempDiv.innerHTML = removeSpellCheckDOMAttributes(tempDiv.innerHTML);
         tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }
