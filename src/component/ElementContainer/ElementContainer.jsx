@@ -103,7 +103,8 @@ class ElementContainer extends Component {
             editInteractiveId: "",
             isfigurePopup: false,
             figureUrl: "",
-            assetsPopupStatus: false
+            assetsPopupStatus: false,
+            showBlockCodeElemPopup: false
         };
 
 
@@ -408,7 +409,7 @@ class ElementContainer extends Component {
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-        if (!this.props.isAutoNumberingEnabled) {
+        if (!this.props.isAutoNumberingEnabled || (this.props.isAutoNumberingEnabled && previousElementData?.figuretype === 'tableasmarkup')) {
             titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         }
 
@@ -1210,6 +1211,19 @@ class ElementContainer extends Component {
     }
 
     /**
+     * show Block Code element warning Popup 
+     */
+     showBlockCodeElemWarningPopup = (e, popup) => {
+        e.stopPropagation();
+        this.props.showBlocker(true);
+        showTocBlocker();
+        this.setState({
+            popup,
+            showBlockCodeElemPopup: true
+        });
+    }
+
+    /**
      * For deleting slate level element
      */
     deleteElement = (e) => {
@@ -1536,10 +1550,10 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_MATH_IMAGE:
                             editor = <FigureImage model={element} showBlocker={this.props.showBlocker} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} {...commonProps}/>
                             break;
+                        case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
-                        case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
+                            editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
@@ -1927,7 +1941,7 @@ class ElementContainer extends Component {
         }
         if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
             if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-default" && this.props.activeElement.elementId === element.id)) {
-                bceOverlay = <div className="bce-overlay disabled" onClick={(event) => this.handleFocus("", "", event)}></div>;
+                bceOverlay = <div className="bce-overlay disabled" onClick={(event) => {this.handleFocus("", "", event);this.showBlockCodeElemWarningPopup(event,true);}}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';
             }
@@ -2011,6 +2025,7 @@ class ElementContainer extends Component {
                         isAddComment={true}
                         projectUsers={this.props.projectUsers}
                         comment={this.state.comment}
+                        showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
                     />}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
@@ -2205,6 +2220,7 @@ class ElementContainer extends Component {
         this.setState({
             popup,
             showDeleteElemPopup: false,
+            showBlockCodeElemPopup: false,
             comment: ""
         });
         if (this.props.isBlockerActive) {
