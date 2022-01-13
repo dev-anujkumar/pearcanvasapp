@@ -166,7 +166,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.currentSlateLO(message.LOList);
                     this.props.isLOExist(message);
                     this.props.currentSlateLOType(message.currentSlateLF);
-                    this.props.updateLastAlignedLO(message.lastAlignedLo)
                     break;
                 case 'loEditResponse':
                     this.setState({
