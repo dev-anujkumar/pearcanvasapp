@@ -678,6 +678,8 @@ export const replaceUnwantedtags = (html) => {
     tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
     tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
     tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
+    // PCAT-2426 - calling function to remove tinymcespellchecker DOM attributes from innerHTML
+    tempDiv.innerHTML = removeSpellCheckDOMAttributes(tempDiv.innerHTML);
     tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
     return encodeHTMLInWiris(tempDiv.innerHTML);
 }
@@ -718,4 +720,20 @@ export const isSubscriberRole = (projectSharingRole, isSubscribed) => {
         return true
     }
     return false
+}
+
+// function to remove tinymce spellcheck DOM attributes from innerHTML
+export const removeSpellCheckDOMAttributes = (innerHTML) => {
+    const spellCheckDiv = document.createElement('div');
+    spellCheckDiv.innerHTML = innerHTML
+    while(tinyMCE.$(spellCheckDiv).find('span.mce-spellchecker-annotation')?.length) {
+        tinyMCE.$(spellCheckDiv).find('span.mce-spellchecker-annotation').each(function () {
+            let innerHtml = this?.innerHTML;
+            this.outerHTML = innerHtml;
+        });
+        if(tinyMCE.$(spellCheckDiv).find('span.mce-spellchecker-annotation')?.length === 0) {
+            break;
+        }
+    }
+    return spellCheckDiv?.innerHTML;
 }

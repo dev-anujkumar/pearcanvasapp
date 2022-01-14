@@ -56,6 +56,7 @@ let config = {
     PROACTIVE_SLATE_PREVIEW_STATUS: "false",
     SHOW_CYPRESS_PLUS:true,
     ENABLE_AUTO_NUMBER_CONTENT:false
+    
 };
 
 if (process.env.NODE_ENV === "development") {

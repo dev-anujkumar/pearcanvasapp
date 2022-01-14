@@ -24,7 +24,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -76,6 +76,7 @@ import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAu
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForImage, displayLabelsForAudioVideo } from '../FigureHeader/AutoNumberConstants';
+import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes'
 
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -360,6 +361,8 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
         tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('data-mce-src');
         tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
+        // PCAT-2426 - calling function to remove tinymcespellchecker DOM attributes from innerHTML
+        tempDiv.innerHTML = removeSpellCheckDOMAttributes(tempDiv.innerHTML);
         tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }
@@ -1996,7 +1999,7 @@ class ElementContainer extends Component {
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={(e) => this.handleCommentPopup(true, e)} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
-                        {permissions && permissions.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
+                     {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
                         {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
@@ -2234,7 +2237,13 @@ class ElementContainer extends Component {
      */
     handleEditInCypressPlus = (e,elementId) =>{
         e.stopPropagation();
-        window.open(`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`, '_blank')
+        const urlCypressPlus=`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`
+        const cypressPlusWindow = window.open(urlCypressPlus ,'_blank')
+        config.CYPRESS_PLUS_WINDOW= cypressPlusWindow
+       const obj ={type:INCOMING_MESSAGE,message:REFRESH_MESSAGE}
+     setTimeout(()=>{
+       cypressPlusWindow?.postMessage(obj,urlCypressPlus)
+     },2000)
     }
     /**
      * @description - This function is for handling click event on the label button.
