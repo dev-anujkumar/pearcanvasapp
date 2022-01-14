@@ -181,7 +181,7 @@ export const getTitleSubtitleModel = (model, modelType, modelElement = "popup") 
             try{
                 if (model && model.match(/<span>?.+<\/span>/g)) {
                     for (let i = 0; i < modelDom.children.length; i++) {
-                        if (modelDom.children[i].innerHTML === '<br>' || modelDom.children[i].innerHTML === "</br>") {
+                        if (modelDom.children[i].innerHTML === '<br>' || modelDom.children[i].innerHTML === "</br>"|| modelDom.children[i].innerHTML === "") {
                             modelToReturn = ''
                         } else {
                             modelToReturn = `<span class="codeNoHighlightLine">${modelDom.children[i].innerHTML}</span>`
