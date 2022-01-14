@@ -32,7 +32,7 @@ import { deleteElement } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, restrictSpellCheck }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
@@ -326,7 +326,7 @@ export class TinyMceEditor extends Component {
         const { spellCheckToggle } = this.props;
         let plugins = EditorConfig.plugins;
         // adding tinymce spellchecker plugin if spell checker option is active from project settings
-        if (spellCheckToggle) plugins = `${plugins} tinymcespellchecker`;
+        if (spellCheckToggle && restrictSpellCheck(this.props)) plugins = `${plugins} tinymcespellchecker`;
         return plugins;
     }
 
