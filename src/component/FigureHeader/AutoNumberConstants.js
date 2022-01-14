@@ -38,7 +38,8 @@ export const autoNumber_IndexMapper = {
   'tablesList': 'tableIndex',
   'equationsList': 'equationsIndex',
   'audiosList': 'audioIndex',
-  'videosList': 'videoIndex'
+  'videosList': 'videoIndex',
+  'interactiveList': 'interactiveIndex'
 }
 
 export const autoNumber_ElementTypeKey = {
@@ -47,6 +48,17 @@ export const autoNumber_ElementTypeKey = {
   'Equation': 'equationsList',
   'Audio': 'audiosList',
   'Video': 'videosList'
+}
+
+export const autoNumber_response_ElementType_mapper = {
+  "figures":"imagesList",
+  "tables":"tablesList",
+  "equations":"equationsList",
+  "audios":"audiosList",
+  "videos":"videosList",
+  "interactives":"interactiveList",
+  "asides": "asidesList",
+  "workedExamples": "workedExamplesList"
 }
 
 export const moduleTypes = ['module', 'appendix']
@@ -95,7 +107,8 @@ export const AUTO_NUMBER_ELEMENTS = {
   VIDEO: "VIDEO",
   IMAGE: "IMAGE",
   TABLE_IMAGE: "TABLE_IMAGE",
-  MATH_IMAGE: "MATH_IMAGE"
+  MATH_IMAGE: "MATH_IMAGE",
+  INTERACTIVES: "INTERACTIVES"
 }
 
 export const DISPLAYED_LABELS = {
@@ -103,7 +116,8 @@ export const DISPLAYED_LABELS = {
   VIDEO: "Video",
   IMAGE: "Figure",
   TABLE: "Table",
-  EQUATIONS: "Equation"
+  EQUATIONS: "Equation",
+  INTERACTIVE: "Interactive"
 }
 
 export const ELEMENT_TYPES = {

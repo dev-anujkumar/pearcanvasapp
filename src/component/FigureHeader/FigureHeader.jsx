@@ -10,7 +10,7 @@ import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare }
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
-import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData } from '../../constants/Element_Constants';
+import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData, INTERACTIVE } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 
@@ -73,6 +73,9 @@ export const FigureHeader = (props) => {
                 break;
             case IMAGE: case TABLE: case MATH_IMAGE:
                 figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Figure', 'Table', 'Equation'] : props.figureDropdownData.video;
+                break;
+            case INTERACTIVE:
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Interactive'] : props.figureDropdownData.smartlinks;
                 break;
             default:
                 figureLabelDropdownVal = [];

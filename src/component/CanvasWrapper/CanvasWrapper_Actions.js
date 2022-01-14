@@ -50,10 +50,11 @@ import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import ElementConstants from "../ElementContainer/ElementConstants.js";
-import { isAutoNumberEnabled } from '../FigureHeader/AutoNumberActions.js';
+import { isAutoNumberEnabled, fetchProjectFigures } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
-import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
+import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -800,7 +801,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             }
         }
         /** [TK-3289]- To get Current Slate details */
-        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
+        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
+
+        // get data for auto-numbering
+        if(config.figureDataToBeFetched){
+            const slateAncestors = getState().appStore.currentSlateAncestorData;
+            const currentParentUrn = getContainerEntityUrn(slateAncestors);
+            dispatch(fetchProjectFigures(currentParentUrn));
+            config.figureDataToBeFetched = false;
+        }
+
         if (slateData.data[newVersionManifestId].type !== "popup") {
             if(slateData.data && Object.values(slateData.data).length > 0) {
                 let slateTitle = SLATE_TITLE;
