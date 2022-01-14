@@ -51,10 +51,10 @@ ajax.send = function (url, cb, method, data, contentType, arnKey, sync, pubApiKe
 
     document.cookie = `CTOOL_APIKEY=${xApiKey}; domain=.pearson.com; path=/; secure=true`;
     x.setRequestHeader('Content-Type', contentType);
-    x.setRequestHeader('Content-Language', 'en');
-    x.setRequestHeader('x-apikey', xApiKey);
+    //x.setRequestHeader('Content-Language', 'en');
+    //x.setRequestHeader('x-apikey', xApiKey);
     x.setRequestHeader('PearsonSSOSession', config_object.ssoToken);
-    x.setRequestHeader('If-Match', IF_MATCH !== "" ? IF_MATCH : "");
+    //x.setRequestHeader('If-Match', IF_MATCH !== "" ? IF_MATCH : "");
     x.setRequestHeader('accept', 'application/json, text/plain, */*');
     x.setRequestHeader('aws-resource', config_object.AWS_RESOURCE);
     x.setRequestHeader('arn', arnKey)
