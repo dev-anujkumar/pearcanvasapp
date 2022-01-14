@@ -11,7 +11,7 @@ import { FIGURE_IMAGE_BUTTON_TITLE, IMAGE_ID, IMAGE_PATH, ALFRESCO_SITE_PATH, UP
 const FigureImageAsset = (props) => {
     const { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight } = props.figureTypeData
     return (
-        <>
+        <div className="figure-image-container">
             <div id="figure_add_div" className={`pearson-component image figureData ${imageClass} ${props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                 {
                     props.model.figuredata && props.model.figuredata.imageid ?
@@ -40,7 +40,7 @@ const FigureImageAsset = (props) => {
                         </div> : ''
                 }
             </div>
-        </>
+        </div>
     )
 }
 
