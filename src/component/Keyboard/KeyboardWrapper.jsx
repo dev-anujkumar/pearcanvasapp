@@ -78,8 +78,12 @@ const isFirtstChild = (node, tinymceOffset) => {
             return tinymceOffset === 0;
         }
         else if (node?.parentNode?.parentNode?.id?.startsWith(QUERY_SELECTOR)) {
+            
+            if(firstTextNode?.nodeName === 'IMG') {
+                return tinymceOffset === 0;
+            }
             // for empty text
-            return node?.textContent?.length === 0;
+            else return node?.textContent?.length === 0;
         }
         else if (firstTextNode?.nodeName === 'BR' && node.nodeName === 'LI') {
             return true;
@@ -146,7 +150,6 @@ const isLastChild = (node, tinymceOffset) => {
     if (isKChild.isChild) {
         const lastTextNode = getLastTextNode(isKChild.node);
         const uniCode = '\uFEFF';
-
         if (lastTextNode === node) {
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
                 const textContent = lastTextNode.textContent.replace(/\uFEFF/g, "");
@@ -157,7 +160,12 @@ const isLastChild = (node, tinymceOffset) => {
         }
         else if (node?.parentNode?.parentNode?.id?.startsWith(QUERY_SELECTOR)) {
             // case for empty para
-            return node?.textContent?.length === 0;
+            if(node?.textContent?.length === 0) {
+                return true;
+            }
+            if(lastTextNode.nodeName === 'IMG') {
+                return true;
+            } 
         }
 
 
