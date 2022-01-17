@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
-const supportedNodenames = ['SUP', 'S', 'STRONG', 'EM', 'U', 'SPAN', 'CODE', 'ABBR']
 
 /**
  * function decides to
@@ -64,36 +63,77 @@ const isFirtstChild = (node, tinymceOffset) => {
         else if (node?.parentNode?.nodeName === 'LI') {
             const firstTextNode = firstNode.firstChild;
             if (firstTextNode === node) {
-                
                 return tinymceOffset === 0;
             }
         }
         else if (firstNode === node || firstNode?.nodeName === "IMG") {
             return tinymceOffset === 0
         }
-        else if (firstNode === node?.parentNode?.parentNode && firstNode?.nodeName === 'SUP'){
+        else if (firstNode === node?.parentNode?.parentNode && firstNode?.nodeName === 'SUP') {
             return true
         }
-        else if(supportedNodenames.includes(firstNode.nodeName)){
-            return tinymceOffset === 0;
-        }
+
         else if (firstNode === firstNode.parentNode.lastChild) {
-            
+            // if the first is last node
             if (firstNode.nodeName === 'CODE') {
                 const uniCode = '\uFEFF';
-                
+
                 if (firstNode.textContent.indexOf(uniCode) === 0 && tinymceOffset === 1) {
                     return true;
                 }
                 else return tinymceOffset == 0;
             }
             return tinymceOffset === 0;
-        } else {
-            return false;
         }
+        else if (node?.parentNode?.nodeName === 'DFN' && node?.parentNode?.classList?.contains("GlossaryTerm")) {
+            // if first child is glossary
+            if (node.parentNode === firstNode) {
+                return tinymceOffset === 0;
+            }
+            // if node is first child
+            return false
+        }
+        else if (node?.parentNode?.nodeName === 'CODE' && node?.parentNode === firstNode) {
+            // node is code  and first node is node's parent node
+            // initial part of text is code
+            const uniCode = '\uFEFF';
+            if (firstNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
+                return true;
+            }
+            else return tinymceOffset == 0;
+        }
+        else {
+            // last child of first node is node
+            // used for subscript, superscript, callout, 
+            // single/multiple formatting
+            const lastChild = getLastChild(firstNode);
+            if (lastChild === node) {
+                return tinymceOffset === 0
+            }
+            else {
+                return false;
+            }
+        }
+
     }
     else return false;
 }
+
+/**
+ * Get Last child of node
+ * useful for multiple formatting option
+ * @param {*} node 
+ * @returns 
+ */
+const getLastChild = (node) => {
+    if (node.lastChild) {
+        return getLastChild(node.lastChild);
+    }
+    else {
+        return node;
+    }
+}
+
 /**
  * Get the last nth child, of node
  * @param {*} node 
@@ -122,7 +162,7 @@ const isLastChild = (node, tinymceOffset) => {
             // in case of empty LI node name comes in node
             // and nth child will point to BR
             const nthChild = getNthLi(isKChild.node);
-            
+
             if (nthChild.parentNode === node) {
                 return true;
             }
@@ -132,7 +172,7 @@ const isLastChild = (node, tinymceOffset) => {
             // inside node.
             // get last child of last node.
             const nthChild = getNthLi(isKChild.node);
-            
+
             if (nthChild === node) {
                 return node.textContent?.length === tinymceOffset
             }
@@ -143,39 +183,30 @@ const isLastChild = (node, tinymceOffset) => {
             // in case of inline image its showing + 1 offset value
             if (node.parentNode.nodeName === 'CODE') {
                 const textContent = node.textContent.replace(/\uFEFF/g, "");
-                
+
                 return textContent.length == tinymceOffset
             } else if (node.parentNode?.firstChild?.lastChild === node?.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
                 return true
-            } else if(isKChild.node?.firstChild?.firstElementChild?.nodeName === 'SUP'){
-                return true
-            } else if(lastChild?.nodeName === 'SPAN' && supportedNodenames.includes(isKChild.node?.firstChild?.firstChild?.nodeName)){
-                    return true
+            } else if (isKChild.node?.firstChild?.firstElementChild?.nodeName === 'SUP') {
+                return node?.textContent?.length === tinymceOffset
             }
             return node.textContent?.length === tinymceOffset
-        } 
+        }
         else {
-            
-            
             if (lastChild === node || lastChild?.nodeName === 'IMG') {
                 return node.textContent?.length === tinymceOffset
+
             }
             else if (lastChild.nodeName === 'SPAN') {
                 const secondNode = lastChild?.previousSibling;
                 if (secondNode?.id === '_mce_caret') {
-                    
-                    
                     if (secondNode?.previousSibling?.nodeName === 'SUP') {
-                        
                         const a = secondNode?.previousSibling?.firstChild;
                         if (a && a.nodeName === 'A' && a.hasAttribute('data-footnoteelementid')) {
-                            
                             return true;
                         }
                     }
                 }
-            } else if (lastChild?.nodeName === 'SPAN' && supportedNodenames.includes(isKChild.node?.firstChild?.firstChild?.nodeName)) {
-                return true
             }
             return false;
             // check if there is no other child
