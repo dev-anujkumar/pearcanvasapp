@@ -235,5 +235,5 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
  * This method is used to rescrit spell check for specific element
  */
 export const restrictSpellCheck = (props) => {
-    return !(props.element.figuretype === 'codelisting' && (/-3$/.test(props.index)))
+    return !(props?.element?.figuretype === 'codelisting' && (/-3$/.test(props?.index)))
 }
