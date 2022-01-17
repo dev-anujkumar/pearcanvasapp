@@ -10,7 +10,7 @@ import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE,
 import config from '../../../src/config/config';
 import { elementAside, slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, asideDataType3, slateLevelData3, asideData11, workedexampleaside, asideforgouped } from '../../../fixtures/elementAsideData';
 import MockAdapter from 'axios-mock-adapter';
-
+import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
     tcmSnapshotsForCreate: jest.fn()
 }))
@@ -22,7 +22,9 @@ jest.mock('../../../src/component/SlateWrapper/slateWrapperAction_helper.js', ()
     onPasteSuccess: jest.fn(() => Promise.resolve({})),
     setPayloadForContainerCopyPaste: jest.fn(() => ({ content: [{ id: 'urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6', type: 'popup' }] }))
 }))
-
+jest.mock('../../../src/component/TcmSnapshots/TcmSnapshotsCreate_Update.js', () => ({
+    tcmSnapshotsForCreate: jest.fn()
+}))
 jest.mock('../../../src/component/ElementFigure/AlfrescoSiteUrl_helper.js', () => ({
     handleAlfrescoSiteUrl: jest.fn()
 }))
@@ -73,7 +75,8 @@ describe('Tests Slate Wrapper Actions', () => {
                     sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                 }
-            }
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         };
         store = mockStore(() => initialState);
         initialState2 = {
@@ -85,7 +88,8 @@ describe('Tests Slate Wrapper Actions', () => {
                 popupSlateData: {
                     type: ""
                 }
-            }
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         };
         store2 = mockStore(() => initialState2);
         moxios.install();
@@ -101,7 +105,8 @@ describe('Tests Slate Wrapper Actions', () => {
                 activeElement: {},
                 splittedElementIndex: 0,
                 pageNumberData: {}
-            }
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         };
         store = mockStore(() => initialState);
         const type = "OPENER";
@@ -704,7 +709,8 @@ describe('Tests Slate Wrapper Actions', () => {
                         id: "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6er"
                     }],
                     allElemPageData: [{}]
-                }
+                },
+                autoNumberReducer: mockAutoNumberReducerEmpty,
             }
         }
         let dispatch = (obj) => {
@@ -1090,7 +1096,8 @@ describe('Tests Slate Wrapper Actions', () => {
                 pageNumberData: [],
                 allElemPageData: []
             },
-            tcmReducer: { tcmSnapshot: [] }
+            tcmReducer: { tcmSnapshot: [] },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         };
 
         store = mockStore(() => initialState);
@@ -1190,7 +1197,8 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: "popup"
                 }
             },
-            tcmReducer: { tcmSnapshot: ["78", "9"] }
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         }
         store3 = mockStore(() => initialState3);
         const spyPowerPasteElement = jest.spyOn(actions, 'createPowerPasteElements');
@@ -1230,7 +1238,8 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: "popup"
                 }
             },
-            tcmReducer: { tcmSnapshot: ["78", "9"] }
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         }
         store3 = mockStore(() => initialState3);
         const spyPowerPasteElement = jest.spyOn(actions, 'createPowerPasteElements');
@@ -2392,7 +2401,8 @@ describe('Tests Slate Wrapper Actions', () => {
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6",
                     sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
                 }
-            }
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -3064,7 +3074,8 @@ describe('Tests Slate Wrapper Actions', () => {
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6",
                     sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
                 }
-            }
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
