@@ -42,6 +42,23 @@ export const moveCursor = (e, node, tinymceOffset) => {
     }
 }
 
+const getLastTextNode = (node) => {
+    if (node.lastChild) {
+        return getLastTextNode(node.lastChild);
+    }
+    else {
+        return node;
+    }
+}
+
+const getFirstTextNode = (node) => {
+    if (node.firstChild) {
+        return getFirstTextNode(node.firstChild);
+    }
+    else {
+        return node;
+    }
+}
 
 /**
  * Check if node if first child
@@ -52,68 +69,23 @@ export const moveCursor = (e, node, tinymceOffset) => {
 const isFirtstChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-        const firstNode = isKChild.node.firstChild.firstChild;
-        if (node.nodeName === 'LI') {
-            // in case of empty list item, text node
-            // does not come, Li node comes
-            if (firstNode === node) {
-                return tinymceOffset === 0;
-            }
+        const firstTextNode = getFirstTextNode(isKChild.node);
+        const uniCode = '\uFEFF';
+        if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
+            return true;
         }
-        else if (node?.parentNode?.nodeName === 'LI') {
-            const firstTextNode = firstNode.firstChild;
-            if (firstTextNode === node) {
-                return tinymceOffset === 0;
-            }
-        }
-        else if (firstNode === node || firstNode?.nodeName === "IMG") {
-            return tinymceOffset === 0
-        }
-        else if (firstNode === node?.parentNode?.parentNode && firstNode?.nodeName === 'SUP') {
-            return true
-        }
-
-        else if (firstNode === firstNode.parentNode.lastChild) {
-            // if the first is last node
-            if (firstNode.nodeName === 'CODE') {
-                const uniCode = '\uFEFF';
-
-                if (firstNode.textContent.indexOf(uniCode) === 0 && tinymceOffset === 1) {
-                    return true;
-                }
-                else return tinymceOffset == 0;
-            }
+        else if (firstTextNode === node) {
             return tinymceOffset === 0;
         }
-        else if (node?.parentNode?.nodeName === 'DFN' && node?.parentNode?.classList?.contains("GlossaryTerm")) {
-            // if first child is glossary
-            if (node.parentNode === firstNode) {
-                return tinymceOffset === 0;
-            }
-            // if node is first child
-            return false
+        else if (node?.parentNode?.parentNode?.id?.startsWith(QUERY_SELECTOR)) {
+            // for empty text
+            return node?.textContent?.length === 0;
         }
-        else if (node?.parentNode?.nodeName === 'CODE' && node?.parentNode === firstNode) {
-            // node is code  and first node is node's parent node
-            // initial part of text is code
-            const uniCode = '\uFEFF';
-            if (firstNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
-                return true;
-            }
-            else return tinymceOffset == 0;
+        else if (firstTextNode?.nodeName === 'BR' && node.nodeName === 'LI') {
+            return true;
+            // for empty list
         }
-        else {
-            // last child of first node is node
-            // used for subscript, superscript, callout, 
-            // single/multiple formatting
-            const lastChild = getLastChild(firstNode);
-            if (lastChild === node) {
-                return tinymceOffset === 0
-            }
-            else {
-                return false;
-            }
-        }
+        else return false;
 
     }
     else return false;
@@ -135,18 +107,33 @@ const getLastChild = (node) => {
 }
 
 /**
- * Get the last nth child, of node
- * @param {*} node 
- * @returns 
+ * Since Footnote has multiple spans
+ * so there are multiple scenarios wrt footnote
  */
-const getNthLi = (node) => {
-    if (node && node.lastChild) {
-        return getNthLi(node.lastChild);
+const footNoteCases = (node, lastTextNode) => {
+    const uniCode = '\uFEFF'; 
+    if (node.nodeName === 'SPAN' && lastTextNode.nodeName === 'BR') {
+        // when cliked span comes in node
+        // when cliked span comes in node
+        // for a few seconds, after few seconds caret is added
+        return (node.id === '_mce_caret') ||  (lastTextNode === node.firstChild && node.firstChild === node.lastChild);
     }
-    else {
-        return node;
+
+    else if (node?.textContent?.indexOf(uniCode)) {
+        // unicode is seen on direct click in
+        // some cases
+        return true;
     }
+    else if (isParentFootnote(node)) {
+        // simple case when * comes in node
+        if (lastTextNode?.nodeName === 'BR') {
+            return true;
+        }
+    }
+    
+    return false;
 }
+
 /**
  * Check if node is the last child of 
  * keyboard wrapper
@@ -156,67 +143,28 @@ const getNthLi = (node) => {
  */
 const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
-    const lastChild = isKChild.node?.firstChild?.lastChild;
     if (isKChild.isChild) {
-        if (node.nodeName === 'LI') {
-            // in case of empty LI node name comes in node
-            // and nth child will point to BR
-            const nthChild = getNthLi(isKChild.node);
+        const lastTextNode = getLastTextNode(isKChild.node);
+        const uniCode = '\uFEFF';
 
-            if (nthChild.parentNode === node) {
-                return true;
-            }
-        }
-        else if (node.parentNode.nodeName === 'LI') {
-            // in case li having text, we will get text node
-            // inside node.
-            // get last child of last node.
-            const nthChild = getNthLi(isKChild.node);
-
-            if (nthChild === node) {
-                return node.textContent?.length === tinymceOffset
-            }
-        }
-        // checking if node is first and last child of its parent
-        // this means that custom tag is added at the end
-        else if (node.parentNode.firstChild === node && node.parentNode.lastChild === node) {
-            // in case of inline image its showing + 1 offset value
-            if (node.parentNode.nodeName === 'CODE') {
-                const textContent = node.textContent.replace(/\uFEFF/g, "");
-
+        if (lastTextNode === node) {
+            if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
+                const textContent = lastTextNode.textContent.replace(/\uFEFF/g, "");
                 return textContent.length == tinymceOffset
-            } else if (node.parentNode?.firstChild?.lastChild === node?.lastChild && node?.lastChild?.nodeName === 'IMG') {     /** condition to navigate down if image is at the last position in text elements */
-                return true
-            } else if (isKChild.node?.firstChild?.firstElementChild?.nodeName === 'SUP') {
-                return node?.textContent?.length === tinymceOffset
             }
-            return node.textContent?.length === tinymceOffset
+            else
+                return tinymceOffset === lastTextNode.textContent.length;
         }
-        else {
-            if (lastChild === node || lastChild?.nodeName === 'IMG') {
-                return node.textContent?.length === tinymceOffset
+        else if (node?.parentNode?.parentNode?.id?.startsWith(QUERY_SELECTOR)) {
+            // case for empty para
+            return node?.textContent?.length === 0;
+        }
 
-            }
-            else if (lastChild.nodeName === 'SPAN') {
-                const secondNode = lastChild?.previousSibling;
-                if (secondNode?.id === '_mce_caret') {
-                    if (secondNode?.previousSibling?.nodeName === 'SUP') {
-                        const a = secondNode?.previousSibling?.firstChild;
-                        if (a && a.nodeName === 'A' && a.hasAttribute('data-footnoteelementid')) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-            // check if there is no other child
-            // if there is child
-            // 
-        }
+
+        else return footNoteCases(node, lastTextNode);
+
     }
-    else {
-        return false;
-    }
+    else return false;
 }
 /**
  * Check if the node is child of Keyboard Wrapper, 
@@ -235,6 +183,16 @@ const isKWChild = (node, index = 0) => {
     }
     else {
         return isKWChild(node.parentNode, index + 1);
+    }
+}
+
+const isParentFootnote = (node) => {
+    const nodeParent = node?.parentNode;
+    if(nodeParent) {
+        return nodeParent.nodeName === 'A' && nodeParent.hasAttribute && node?.parentNode?.hasAttribute("data-footnoteelementid");
+    }
+    else {
+        return false;
     }
 }
 
