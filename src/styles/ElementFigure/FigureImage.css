@@ -39,7 +39,6 @@ code.cypress-editable.language-none{
 }
 code .codeNoHighlightLine:last-child{
     display: block;
-    border-bottom: 2px solid #737373 !important;
     padding-bottom: 7px;
 }
 code .codeNoHighlightLine{
@@ -107,7 +106,10 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 .floating-code-content-group .figureCodeContent.cypress-editable {
     font-weight: 500;
     color:#000;
-    padding: 15px 0px 4px 4px !important;
+    padding: 15px 0px 0px 0px !important;
+    display:table;
+    border-bottom: 2px solid #737373;
+    border-radius: 0;
 }
 .image-label{
     margin-right:24px;
@@ -132,7 +134,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 .floating-caption-group .figureCaption.cypress-editable.mce-edit-focus,
 .floating-credit-group .figureCredit.cypress-editable.mce-edit-focus,
 .floating-math-content-group .figureMathContent.cypress-editable.mce-edit-focus,
-.floating-code-content-group .figureCodeContent.cypress-editable.mce-edit-focus .codeNoHighlightLine:last-child
+.floating-code-content-group .figureCodeContent.cypress-editable.mce-edit-focus 
 {
     border-bottom: 2px solid #005a70 !important;  
 }
@@ -833,7 +835,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .floating-code-content-group {
     position: relative;
-    margin-top: 25px;
+    margin: 25px 0;
 }
 .floating-caption-group {
     position: relative;
