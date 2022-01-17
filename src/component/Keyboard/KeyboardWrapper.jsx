@@ -85,7 +85,7 @@ const isFirtstChild = (node, tinymceOffset) => {
             // for empty text
             else return node?.textContent?.length === 0;
         }
-        else if (firstTextNode?.nodeName === 'BR' && node.nodeName === 'LI') {
+        else if (firstTextNode?.nodeName === 'BR' && node?.nodeName === 'LI') {
             return true;
             // for empty list
         }
@@ -152,8 +152,8 @@ const isLastChild = (node, tinymceOffset) => {
         const uniCode = '\uFEFF';
         if (lastTextNode === node) {
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
-                const textContent = lastTextNode.textContent.replace(/\uFEFF/g, "");
-                return textContent.length == tinymceOffset
+                const textContent = lastTextNode?.textContent?.replace(/\uFEFF/g, "");
+                return textContent?.length == tinymceOffset
             }
             else
                 return tinymceOffset === lastTextNode.textContent.length;
@@ -163,7 +163,7 @@ const isLastChild = (node, tinymceOffset) => {
             if(node?.textContent?.length === 0) {
                 return true;
             }
-            if(lastTextNode.nodeName === 'IMG') {
+            if(lastTextNode?.nodeName === 'IMG') {
                 return true;
             } 
         }
@@ -197,7 +197,7 @@ const isKWChild = (node, index = 0) => {
 const isParentFootnote = (node) => {
     const nodeParent = node?.parentNode;
     if(nodeParent) {
-        return nodeParent.nodeName === 'A' && nodeParent.hasAttribute && node?.parentNode?.hasAttribute("data-footnoteelementid");
+        return nodeParent?.nodeName === 'A' && nodeParent?.hasAttribute && node?.parentNode?.hasAttribute("data-footnoteelementid");
     }
     else {
         return false;
