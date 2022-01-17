@@ -65,6 +65,7 @@ class SlateTagDropdown extends React.Component {
         let assessmentuRN="";
         let assessmentType="";
         let assessmentTypeLO="";
+        let isSubscribed=this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed ?? false
         if(config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length){
         assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
         assessmentType = document.getElementsByClassName("slate_assessment_data_format_lo")[0].innerText;
@@ -101,7 +102,7 @@ class SlateTagDropdown extends React.Component {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': isLOExist, 'editAction': '' } });
         }
         else if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys_LO,'assessmentUrn':assessmentuRN,'previewData': previewData } });
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys_LO,'assessmentUrn':assessmentuRN,'previewData': previewData,'isSubscribed':isSubscribed } });
         }
         else if(checkSlateLock(this.props.slateLockInfo)){
             this.props.showSlateLockPopup(true);
@@ -371,7 +372,7 @@ class SlateTagDropdown extends React.Component {
             </div> 
             <div className="learningobjectivedropdown2" ref={node3 => this.node3 = node3}>
                 <ul>
-                      <li onClick={() =>this.openAssessmentExternalPopup('add')}>{AddEditLOsAssessmentSlate}</li>
+                      <li className= {`${subscriberContent}`} onClick={() =>this.openAssessmentExternalPopup('add')}>{AddEditLOsAssessmentSlate}</li>
                       <li className={this.props.isLOExist ? '' : 'disabled'} onClick={() =>this.openAssessmentExternalPopup('view')}>{ViewLOsAssessmentSlate}</li>
                 </ul>
             </div> 
