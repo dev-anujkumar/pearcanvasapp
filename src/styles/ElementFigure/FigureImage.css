@@ -835,7 +835,16 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .floating-code-content-group {
     position: relative;
-    margin: 25px 0;
+    margin: 22px 0 25px 0;
+    overflow-x: auto;
+    padding-top: 3px;
+}
+.floating-code-content-group::-webkit-scrollbar-thumb{
+    border-radius: 20px;
+    background-color: #555;
+}
+.floating-code-content-group::-webkit-scrollbar{
+   height:5px;
 }
 .floating-caption-group {
     position: relative;
@@ -865,6 +874,14 @@ th ol li.listItemNumeroUnoNone:before {
     top: 15px;
     transition: all 0.1s ease;
 }
+.floating-code-content-group .floating-code-content{
+    top: 18px;
+    font-size: 14px;
+    color: #737373;
+    position: absolute;
+    pointer-events: none;
+    transition: all 0.1s ease; 
+}
 .image-label .figureLabel:focus ~ .floating-label, .image-label .figureLabel:not(:focus):valid ~ .floating-label,
 .floating-number-group .figureNumber:focus ~ .floating-number, .floating-number-group .figureNumber:not(:focus):valid ~ .floating-number {
     top: 2px;
@@ -876,9 +893,16 @@ th ol li.listItemNumeroUnoNone:before {
 .floating-title-group   .figureTitle:focus ~ .floating-title,.floating-title-group .figureTitle:not(:focus):valid ~ .floating-title,
 .floating-caption-group .figureCaption:focus ~ .floating-caption, .floating-caption-group .figureCaption:not(:focus):valid ~ .floating-caption,
 .floating-credit-group .figureCredit:focus ~ .floating-credit, .floating-credit-group .figureCredit:not(:focus):valid ~ .floating-credit,
-.floating-math-content-group .figureMathContent:focus ~ .floating-math-content, .floating-math-content-group .figureMathContent:not(:focus):valid ~ .floating-math-content,
-.floating-code-content-group .figureCodeContent:focus ~ .floating-code-content, .floating-code-content-group .figureCodeContent:not(:focus):valid ~ .floating-code-content {
+.floating-math-content-group .figureMathContent:focus ~ .floating-math-content, .floating-math-content-group .figureMathContent:not(:focus):valid ~ .floating-math-content
+ {
     top: -6px;
+    bottom: 0px;
+    font-size: 10px;
+    opacity: 1;
+    color: #005a70;
+}
+.floating-code-content-group .figureCodeContent:focus ~ .floating-code-content, .floating-code-content-group .figureCodeContent:not(:focus):valid ~ .floating-code-content {
+    top: -3px;
     bottom: 0px;
     font-size: 10px;
     opacity: 1;
@@ -894,14 +918,20 @@ th ol li.listItemNumeroUnoNone:before {
     z-index:0;
 }
 
- .floating-title-group   .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none, .floating-math-content-group .transition-none, .floating-code-content-group .transition-none {
+ .floating-title-group   .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none, .floating-math-content-group .transition-none {
     transition: none;
     top: -6px;
     font-size: 10px;
     color: #737373;
     position: absolute;
 }
-
+.floating-code-content-group .transition-none {
+    transition: none;
+    top: -3px;
+    font-size: 10px;
+    color: #737373;
+    position: absolute;
+}
 .hide-field {
     display: none;
 }
