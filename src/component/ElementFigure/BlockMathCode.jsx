@@ -1,0 +1,23 @@
+import React from 'react'
+/**Import Components */
+import TinyMceEditor from "../tinyMceEditor";
+/**Import Functions */
+import { getLabelClass } from "./ElementFigure_Utility";
+/**Import Constants */
+import { BLOCK_CODE, BLOCK_MATH_CODE_CLASSES } from './ElementFigure_Constants';
+
+const BlockMathCode = (props) => {
+    let { processedText, posterText } = props?.figureTypeData
+    let elementType = props?.model?.figuretype
+    let { divClass, placeHolder, tagName, tinyMceClass } = BLOCK_MATH_CODE_CLASSES[`${elementType}`]
+    let model = (elementType === BLOCK_CODE ? processedText : posterText);
+
+    return (
+        <div className={divClass}>
+            <TinyMceEditor onFigureImageFieldFocus={props.onFigureImageFieldFocus} onFigureImageFieldBlur={props.onFigureImageFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-3`} placeholder={placeHolder} tagName={tagName} className={tinyMceClass} model={model} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
+            <label className={getLabelClass(elementType, props)}>{placeHolder}</label>
+        </div>
+    )
+}
+
+export default BlockMathCode

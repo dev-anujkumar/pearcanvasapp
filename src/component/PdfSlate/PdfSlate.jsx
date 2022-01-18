@@ -133,6 +133,7 @@ class PdfSlate extends Component {
 					pdfId = {this.state.pdfId}
 					filetitle = {this.state.filetitle}
 					OpenAlfresco = {this.OpenAlfresco}
+					element={this.props.element}
 				/>
 				<TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}

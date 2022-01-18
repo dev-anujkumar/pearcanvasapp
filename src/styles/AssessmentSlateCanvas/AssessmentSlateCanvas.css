@@ -406,4 +406,16 @@ span.approved-button.enable svg path#path2 {
 .pdf-slate .addLOdata {
   display: none;
 }
+.slate_cypress_plus_enhance{
+  width: 85%;
+  display: grid;
+  place-items: center;
+  padding-top: 4%;
+}
+.slate_assessment_cypress_plus_enhance{
+font-size: 20px;
+font-weight: bold;
+}
+
+
 /* Ends - PDF Slate Canvas css */

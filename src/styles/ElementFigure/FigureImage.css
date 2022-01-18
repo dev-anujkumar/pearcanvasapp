@@ -37,10 +37,16 @@
 code.cypress-editable.language-none{
     padding: 0px!important;
 }
+code .codeNoHighlightLine:last-child{
+    display: block;
+    padding-bottom: 7px;
+}
 code .codeNoHighlightLine{
     display: block;
     min-height: 22px;
     color: #000;
+    font-size: 14px !important;
+    padding-left:4px;
 }
 #figure_add_div {
     cursor: auto !important;
@@ -88,7 +94,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     white-space: nowrap;
     overflow: hidden;
 }
-.floating-title-group  .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable {
+.floating-title-group  .figureTitle.cypress-editable, .floating-caption-group .figureCaption.cypress-editable, .floating-credit-group .figureCredit.cypress-editable, .floating-math-content-group .figureMathContent.cypress-editable {
     font-size: 14px!important;
     border-bottom: 2px solid #737373;
     margin: 8px 0 !important;
@@ -96,6 +102,14 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     font-weight: 500;
     line-height: 1.5;
     color:#000;
+}
+.floating-code-content-group .figureCodeContent.cypress-editable {
+    font-weight: 500;
+    color:#000;
+    padding: 15px 0px 0px 0px !important;
+    display:table;
+    border-bottom: 2px solid #737373;
+    border-radius: 0;
 }
 .image-label{
     margin-right:24px;
@@ -118,7 +132,9 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
 .figure-header .image-label .figureLabel.cypress-editable.mce-edit-focus, 
 .floating-title-group  .figureTitle.cypress-editable.mce-edit-focus,
 .floating-caption-group .figureCaption.cypress-editable.mce-edit-focus,
-.floating-credit-group .figureCredit.cypress-editable.mce-edit-focus
+.floating-credit-group .figureCredit.cypress-editable.mce-edit-focus,
+.floating-math-content-group .figureMathContent.cypress-editable.mce-edit-focus,
+.floating-code-content-group .figureCodeContent.cypress-editable.mce-edit-focus 
 {
     border-bottom: 2px solid #005a70 !important;  
 }
@@ -812,7 +828,16 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 /* --------------------------------------------------------------------------- */
-.floating-caption-group{
+.floating-math-content-group {
+    position: relative;
+    margin-bottom: 25px;
+    margin-top: 25px;
+}
+.floating-code-content-group {
+    position: relative;
+    margin: 25px 0;
+}
+.floating-caption-group {
     position: relative;
     margin-bottom: 25px;
 }
@@ -832,7 +857,7 @@ th ol li.listItemNumeroUnoNone:before {
     flex-direction: row;
     width: fit-content;
 }
-.floating-title-group .floating-title, .floating-caption-group .floating-caption, .floating-credit-group .floating-credit {
+.floating-title-group .floating-title, .floating-caption-group .floating-caption, .floating-credit-group .floating-credit, .floating-math-content-group .floating-math-content, .floating-code-content-group .floating-code-content {
     font-size: 14px;
     color: #737373;
     position: absolute;
@@ -850,7 +875,9 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .floating-title-group   .figureTitle:focus ~ .floating-title,.floating-title-group .figureTitle:not(:focus):valid ~ .floating-title,
 .floating-caption-group .figureCaption:focus ~ .floating-caption, .floating-caption-group .figureCaption:not(:focus):valid ~ .floating-caption,
-.floating-credit-group .figureCredit:focus ~ .floating-credit, .floating-credit-group .figureCredit:not(:focus):valid ~ .floating-credit {
+.floating-credit-group .figureCredit:focus ~ .floating-credit, .floating-credit-group .figureCredit:not(:focus):valid ~ .floating-credit,
+.floating-math-content-group .figureMathContent:focus ~ .floating-math-content, .floating-math-content-group .figureMathContent:not(:focus):valid ~ .floating-math-content,
+.floating-code-content-group .figureCodeContent:focus ~ .floating-code-content, .floating-code-content-group .figureCodeContent:not(:focus):valid ~ .floating-code-content {
     top: -6px;
     bottom: 0px;
     font-size: 10px;
@@ -867,7 +894,7 @@ th ol li.listItemNumeroUnoNone:before {
     z-index:0;
 }
 
- .floating-title-group   .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none {
+ .floating-title-group   .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none, .floating-math-content-group .transition-none, .floating-code-content-group .transition-none {
     transition: none;
     top: -6px;
     font-size: 10px;
@@ -903,5 +930,103 @@ th ol li.listItemNumeroUnoNone:before {
 .figureNumber.disable-number-field, .figureNumber.disable-number-field.cypress-editable, .heading4ImageTextWidthNumberLabel.figureNumber.disable-number-field.cypress-editable {
     /* border: none !important; */
     pointer-events: none;
-    border-bottom: none !important
+    border-bottom: none !important;
 }
+
+/**Table Element(TE) Styling Start*/
+.tableMediaWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 198px;
+    background-color: #323232;
+}
+
+.tableIconWrapper {
+    display: flex;
+    height: 52px;
+    width: 100%;
+}
+
+.table-icon-wrapper {
+    align-items: start;
+    width: fit-content;
+    height: 36px;
+    display: flex;
+    margin: 16px 0px 0px 16px;
+}
+
+.tableIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 3px;
+    background-color: #d8d8d8;
+}
+
+.tableTitle {
+    width: 45px;
+    height: 22px;
+    margin: 2px 0px 0px 8px;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 16px;
+    font-weight: 300 !important;
+    font-style: italic;
+    color: #fff;
+}
+
+.tableAssetWrapper {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.table-asset-wrapper-without-asset {
+    width: 624px;
+    height: 114px;
+    display: flex;
+    padding: 16px 12px 16px 12px;
+    margin: 16px;
+    border-radius: 3px;
+    background-color: #000;
+}
+
+.blankTable {
+    width: 599px;
+    height: 82px;
+}
+
+.table-asset-wrapper-with-asset {
+    width: 624px;
+    min-height: 114px;
+    display: flex;
+    padding: 16px 12px 16px 12px;
+    margin: 16px;
+    border-radius: 3px;
+    background-color: #fff;
+}
+
+.table-asset-wrapper-with-asset tbody {
+    color: #000;
+}
+
+.table-asset-button {
+    position: relative;
+    width: 119px;
+    height: 36px;
+    border-radius: 2px;
+    border: solid 1px #dcdcdc;
+    background-color: #fff;
+    align-self: center;
+    margin-left: -358px;
+}
+
+.table-asset-button-label {
+    width: 79px;
+    height: 20px;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    color: #005a70;
+}
+/**Table Element(TE) Styling End*/
