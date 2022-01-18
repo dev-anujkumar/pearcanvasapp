@@ -3422,7 +3422,11 @@ export class TinyMceEditor extends Component {
             case "Title":
             case "Caption":
             case "Credit":
+            case "Math Block Content":
                 toolbar = config.figurImageCommonToolbar;
+                break;
+            case "Code Block Content":
+                toolbar = this.setCodeBlockContentToolbar();
                 break;
             case "Enter Button Label":
                 toolbar = config.smartlinkActionButtonToolbar;
@@ -3445,6 +3449,18 @@ export class TinyMceEditor extends Component {
         return toolbar;
     }
 
+    setCodeBlockContentToolbar = () => {
+        let toolbar;
+        let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
+        if (syntaxEnabled && syntaxEnabled.checked) {
+            toolbar = config.codeListingToolbarDisabled;
+        }
+        else {
+            toolbar = config.codeListingToolbarEnabled;
+        }
+        return toolbar;
+    }
+
     setInstanceToolbar = () => {
         let toolbar = [];
         let figureTypes = ['image', 'table', 'mathImage', 'audio', 'video', 'tableasmarkup', 'authoredtext', 'codelisting'];
@@ -3463,15 +3479,10 @@ export class TinyMceEditor extends Component {
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
                 toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-        } else if (this.props.placeholder === "Code Block Content") {
-            let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
-            if (syntaxEnabled && syntaxEnabled.checked) {
-                toolbar = config.codeListingToolbarDisabled;
-            }
-            else {
-                toolbar = config.codeListingToolbarEnabled;
-            }
         } 
+        // else if (this.props.placeholder === "Code Block Content") {
+        //     toolbar = this.setCodeBlockContentToolbar()
+        // }
         // else if (this.props.placeholder === "Enter Show text" || (this.props.placeholder === "Enter Hide text")) {
         //     toolbar = config.showHideToolbar
         // } 
