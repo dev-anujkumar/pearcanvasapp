@@ -51,13 +51,13 @@ ajax.send = function (url, cb, method, data, contentType, arnKey, sync, pubApiKe
 
     document.cookie = `CTOOL_APIKEY=${xApiKey}; domain=.pearson.com; path=/; secure=true`;
     x.setRequestHeader('Content-Type', contentType);
-    x.setRequestHeader('Content-Language', 'en');
-    x.setRequestHeader('x-apikey', xApiKey);
-    x.setRequestHeader('X-PearsonSSOSession', config_object.ssoToken);
-    x.setRequestHeader('If-Match', IF_MATCH !== "" ? IF_MATCH : "");
+    // x.setRequestHeader('Content-Language', 'en');
+    // x.setRequestHeader('x-apikey', xApiKey);
+    x.setRequestHeader('PearsonSSOSession', config_object.ssoToken);
+    // x.setRequestHeader('If-Match', IF_MATCH !== "" ? IF_MATCH : "");
     x.setRequestHeader('accept', 'application/json, text/plain, */*');
-    // x.setRequestHeader('aws-resource', config_object.AWS_RESOURCE);
-    // x.setRequestHeader('arn', arnKey)
+    x.setRequestHeader('aws-resource', config_object.AWS_RESOURCE);
+    x.setRequestHeader('arn', arnKey)
 
     x.send(data);
 };
@@ -75,7 +75,7 @@ ajax.put = function (url, data, cb, contentType, sync) {
 };
 
 export function publishTitleDelay(project, section, cite, callBack, isPreview) {
-    var content_url = config_object.CTOOL_PUBTITLE;
+    var content_url = config_object.PROJECT_PREVIEW_ENDPOINT;
     let content_data = {};
     content_data["projectManifest"] = project;
     content_data["sectionManifest"] = section;
@@ -103,7 +103,7 @@ export const c4PublishObj = {
 
     publishSlate: function (project, section, cite) {
         const startTime = performance.now();
-        var content_url = config_object.CTOOL_PUBSLATE;
+        var content_url = config_object.SLATE_PREVIEW_ENDPOINT;
         let proactiveSlatePreview = config_object?.PROACTIVE_SLATE_PREVIEW_STATUS ? config_object.PROACTIVE_SLATE_PREVIEW_STATUS : "false";
         let content_data = {};
         content_data["projectManifest"] = project;
