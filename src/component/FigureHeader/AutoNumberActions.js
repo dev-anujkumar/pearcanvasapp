@@ -130,23 +130,20 @@ export const commonDispatch = (dispatch, type, payload) => {
     });
 }
 
-/**
 
 export const getSlateLevelData = async (manifestURN, entityURN) => {
-
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`
-    await axios.get(apiUrl, {
-        headers: {
-            "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
-        }
-    }).then(async res => {
-        const slateData = Object.values(res.data)[0];
-        console.log('slateData',slateData)
-        return await slateData.contents.bodymatter
-    }).catch((err) => {
+    try {
+        const response = await axios.get(apiUrl, {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        })
+        const slateData = Object.values(response.data)[0];
+        return slateData;
+    } catch (err) {
+        console.log('Error in getting slate link data', err)
         return []
-    })
+    }
 }
-
- */
