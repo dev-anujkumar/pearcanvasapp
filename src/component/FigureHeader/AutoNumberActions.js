@@ -31,7 +31,52 @@ export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) =>
         }
     }).then(async response => {
         if (response?.data) {
-            const projectContent = response.data;
+            // const projectContent = response.data;
+            const projectContent = {
+                "audios": [],
+                "equations": [],
+                "figures": [],
+                "tables": [],
+                "videos": [],
+                "asides": [],
+                "workedExamples": [],
+                "interactives": [
+                  {
+                  
+                    "contentUrn": "urn:pearson:entity:314209cf-5f87-4bce-b32b-91675cc29139",
+                    "displayedlabel": "Interactive",
+                    "figureType": "interactive",
+                    "numberedandlabel": true,
+                    "slateEntityUrn": "urn:pearson:entity:7d1c2abe-e39a-4d61-b0fe-3fe6c3717746",
+                    "type": "figure",
+                    "title": "Figure SmartLink",
+                    "versionUrn": "urn:pearson:work:b9fdf2b2-2c32-494e-b2ec-970d4370faf9"
+                  },
+                   {
+                  
+                    "contentUrn": "urn:pearson:entity:df9a0ef8-36c5-4c14-9714-728b08fbfac0",
+                    "displayedlabel": "Interactive",
+                    "figureType": "interactive",
+                    "numberedandlabel": true,
+                    "slateEntityUrn": "urn:pearson:entity:7d1c2abe-e39a-4d61-b0fe-3fe6c3717746",
+                    "type": "figure",
+                    "title": "Elm-Interactive",
+                    "versionUrn": "urn:pearson:work:d19b07e5-690d-4877-b9dd-2d8167ac7f2b"
+                  },
+                  {
+                  
+                    "contentUrn": "urn:pearson:entity:3ef923b9-ab1f-4cf1-98b7-19becac2199c",
+                    "displayedlabel": "Interactive",
+                    "figureType": "interactive",
+                    "numberedandlabel": true,
+                    "slateEntityUrn": "urn:pearson:entity:7d1c2abe-e39a-4d61-b0fe-3fe6c3717746",
+                    "type": "figure",
+                    "title": "Quad_Interactive",
+                    "versionUrn": "urn:pearson:work:3c3e535d-98f8-41be-83a1-d52563fb4b66"
+                  }
+                  
+                ]
+              }
             let numberedElements = {}
             numberedElements = getNumberedElements(projectContent);
             console.log('numberedElements>>>>', numberedElements)

@@ -553,6 +553,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
          }     
         let newVersionManifestId=Object.values(slateData.data)[0].id;
 
+        // this is a temporary code and should be removed
+        slateData.data[newVersionManifestId].contents.bodymatter = slateData.data[newVersionManifestId].contents.bodymatter.map(element => {
+            return { ...element, displayedlabel: "Interactive"}
+        });
+
         /* This code will get the last aligned LO from the local storage and update the redux store */
         let lastAlignedLos = localStorage.getItem('lastAlignedLos');
         if(lastAlignedLos && lastAlignedLos.length > 0){

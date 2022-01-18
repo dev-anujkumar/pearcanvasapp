@@ -13,7 +13,8 @@ export const autoNumber_KeyMapper = {
     'Table': 'tableIndex',
     'Equation': 'equationsIndex',
     'Audio': 'audioIndex',
-    'Video': 'videoIndex'
+    'Video': 'videoIndex',
+    "Interactive": 'interactiveIndex'
 }
 
 export const autoNumber_FigureTypeKeyMapper = {
