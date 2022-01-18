@@ -132,7 +132,10 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'EQUATION': 'equationsList',
   'AUDIO': 'audiosList',
   'VIDEO': 'videosList',
-  'MATHIMAGE': 'equationsList'
+  'MATHIMAGE': 'equationsList',
+  'MMI_ELM': 'interactiveList',
+  'INTERACTIVE': 'interactiveList',
+  'SMART_LINK': 'interactiveList'
 }
 
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage']

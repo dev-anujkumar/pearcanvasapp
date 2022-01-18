@@ -128,6 +128,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
         const newPopupSlateData = JSON.parse(JSON.stringify(popupSlateData));
         let createdElementData = createdElemData.data;
+        createdElementData.displayedlabel = "Interactive"
         if (type == 'SECTION_BREAK') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == asideData.id) {
@@ -403,7 +404,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         })
         /** ---------------------------- Auto-Numbering handling ------------------------------*/
         
-        if (type === 'IMAGE' || type === 'VIDEO') {
+        if (type === 'IMAGE' || type === 'VIDEO' || type === 'INTERACTIVE' || type === 'SMART_LINK' || type === 'MMI_ELM') {
             const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
             let slateFigures = getImagesInsideSlates(bodyMatter);
             if (slateFigures) {
