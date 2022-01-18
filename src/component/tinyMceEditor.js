@@ -3447,10 +3447,11 @@ export class TinyMceEditor extends Component {
 
     setInstanceToolbar = () => {
         let toolbar = [];
+        let figureTypes = ['image', 'table', 'mathImage', 'audio', 'video', 'tableasmarkup', 'authoredtext', 'codelisting'];
         let blockListData = checkBlockListElement(this.props, "TAB");
         if (this.props?.element?.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        } else if ((this.props?.element?.type === 'figure' && ['image', 'table', 'mathImage', 'audio', 'video'].includes(this.props?.element?.figuretype)) || (this.props?.element?.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
+        } else if ((this.props?.element?.type === 'figure' && figureTypes.includes(this.props?.element?.figuretype)) || (this.props?.element?.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
             toolbar = this.setFigureToolbar(this.props.placeholder);
         }else if(this.props?.element?.type === 'element-aside'){
             toolbar = this.setAsideNumberingToolbar(this.props.placeholder);

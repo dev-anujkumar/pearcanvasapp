@@ -24,7 +24,7 @@ let cypressConfig = {
     // textcolors:["#ffffff", "#000000"],
     textcolors:["option1", "option2"],
     figureFieldsPlaceholders: ['Number', 'Label Name', 'Title', 'Caption', 'Credit', 'Math Block Content','Code Block Content'],
-    smartlinkContexts: ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'],
+    smartlinkContexts: ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table', 'fpo'],
     ctaButtonSmartlinkContexts: ['pdf', 'web-link', 'pop-up-web-link'],
     isCO : false,
     isLOL:false,
