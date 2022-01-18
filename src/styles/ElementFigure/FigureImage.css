@@ -937,7 +937,7 @@ th ol li.listItemNumeroUnoNone:before {
 .tableMediaWrapper {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: max-content;
     min-height: 198px;
     background-color: #323232;
 }
@@ -996,7 +996,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 .table-asset-wrapper-with-asset {
-    width: 624px;
+    min-width: 624px;
     min-height: 114px;
     display: flex;
     padding: 16px 12px 16px 12px;
