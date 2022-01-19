@@ -326,6 +326,8 @@ class ElementContainer extends Component {
             return;
         }
         let tempDiv = document.createElement('div');
+        // PCAT-2426 - calling function to remove tinymcespellchecker DOM attributes from innerHTML
+        html = removeSpellCheckDOMAttributes(html);
         html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g, "").replace(/>\s+</g, '><').replace(/data-mce-href="#"/g, '').replace(/ reset/g, '');
         html = html.trim();
         tempDiv.innerHTML = html;
@@ -361,8 +363,6 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
         tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('data-mce-src');
         tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
-        // PCAT-2426 - calling function to remove tinymcespellchecker DOM attributes from innerHTML
-        tempDiv.innerHTML = removeSpellCheckDOMAttributes(tempDiv.innerHTML);
         tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }
