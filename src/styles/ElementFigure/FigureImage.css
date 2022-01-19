@@ -968,7 +968,7 @@ th ol li.listItemNumeroUnoNone:before {
 .tableMediaWrapper {
     display: flex;
     flex-direction: column;
-    width: max-content;
+    width: fit-content;
     min-height: 198px;
     background-color: #323232;
 }
