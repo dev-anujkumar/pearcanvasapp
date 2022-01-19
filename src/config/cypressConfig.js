@@ -23,8 +23,8 @@ let cypressConfig = {
     colors : ["#005A70", "#003057", "#006128", "#505759", "#000000"],
     // textcolors:["#ffffff", "#000000"],
     textcolors:["option1", "option2"],
-    figureFieldsPlaceholders: ['Number', 'Label Name', 'Title', 'Caption', 'Credit'],
-    smartlinkContexts: ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'],
+    figureFieldsPlaceholders: ['Number', 'Label Name', 'Title', 'Caption', 'Credit', 'Math Block Content','Code Block Content'],
+    smartlinkContexts: ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table', 'fpo'],
     ctaButtonSmartlinkContexts: ['pdf', 'web-link', 'pop-up-web-link'],
     isCO : false,
     isLOL:false,
@@ -44,7 +44,7 @@ let cypressConfig = {
     figurImageCommonToolbar: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent','IndexEntry'],
     AsideLabel: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
     AsideNumber: ['insertMedia', 'formatSelector', 'subscript', 'superscript', 'specialcharactor', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
-    AsideTitle: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote','mathml', 'chemml', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
+    AsideTitle: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
     smartlinkActionButtonToolbar: ['insertMedia', 'formatSelector', 'bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'footnote', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist', 'mathml', 'chemml', 'inlinecode', 'alignment', 'calloutIcon', 'increaseindent', 'IndexEntry'],
     captionToolbar:['insertMedia','formatSelector','decreaseindent','glossary','crossLinkingIcon','assetpopover','alignment','calloutIcon', 'IndexEntry'],
     poetryLabelToolbar: ['insertMedia','formatSelector','footnote','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','mathml','chemml','alignment','calloutIcon', 'IndexEntry'],
@@ -93,7 +93,8 @@ let cypressConfig = {
     tcmslatemanifest:"",
     saveElmOnAS: false,
     fullName:'c5test01',
-    isCypressPlusEnabled:true
+    isCypressPlusEnabled:true,
+    CYPRESS_PLUS_WINDOW:''
 }
 
 

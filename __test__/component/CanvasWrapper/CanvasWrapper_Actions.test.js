@@ -943,7 +943,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear()
         })
-        it('Test-3.6-setActiveElement - deafult params', () => {
+        xit('Test-3.6-setActiveElement - deafult params', () => {
             let oldPath = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
             let dispatch = (obj) => {
                 if (obj.type === SET_ACTIVE_ELEMENT) {

@@ -280,7 +280,7 @@ export const MULTI_COLUMN_2C = {
     // "ELEMENT_PROPORTION": "33-33-33"
 }
 
-export const labelHtmlData = ['', '<br>', '<br/>', '<br data-mce-bogus="1">', '<p><br></p>'];
+export const labelHtmlData = ['', '<br>', '<br/>', '<br data-mce-bogus="1">', '<p><br></p>', '<span class="codeNoHighlightLine"><br></span>', '<span class="codeNoHighlightLine"></span>'];
 
 /** Block List constants */
 export const MANIFEST_LIST = 'manifestlist';

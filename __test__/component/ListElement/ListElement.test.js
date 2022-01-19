@@ -5,6 +5,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
+import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 // IMPORT - Assets //
 
 describe('ListElement', () => {
@@ -34,7 +35,8 @@ describe('ListElement', () => {
     },
     appStore: {
       slateLevelData: {}
-    }
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty,
   }
   const store = mockStore(initialState);
   const component = mount(<Provider store={store}><ListElement {...props} /></Provider>,{ attachTo: document.body })
