@@ -160,13 +160,15 @@ const isLastChild = (node, tinymceOffset) => {
                 return tinymceOffset === lastTextNode.textContent.length;
         }
         else if (node?.parentNode?.parentNode?.id?.startsWith(QUERY_SELECTOR)) {
-            // case for empty para
-            if(node?.textContent?.length === 0) {
+            // case for only single image
+            if(lastTextNode?.nodeName === 'IMG') {
+                return tinymceOffset !==0
+            } 
+            // case of empty para
+            else if(node?.textContent?.length === 0) {
                 return true;
             }
-            if(lastTextNode?.nodeName === 'IMG') {
-                return true;
-            } 
+          
         }
 
 
