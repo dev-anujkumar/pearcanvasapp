@@ -52,14 +52,16 @@ Array.prototype.move = function (from, to) {
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData,blockListDetails) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
-    let  popupSlateData = getState().appStore.popupSlateData
+    let  popupSlateData = getState().appStore.popupSlateData;
+    let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
-        "type": type
+        "type": type,
+        "isAutoNumberingEnabled": isAutoNumberingEnabled
     };
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
