@@ -33,7 +33,7 @@ export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) =>
         if (response?.data) {
             const projectContent = response.data;
             let numberedElements = {}
-            numberedElements = getNumberedElements(projectContent);
+            numberedElements = getNumberedElements(projectContent, currentParentUrn);
             console.log('numberedElements>>>>', numberedElements)
             getAutoNumberSequence(numberedElements,dispatch)
             dispatch({

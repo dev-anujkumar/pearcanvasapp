@@ -336,9 +336,10 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 
-export const fetchFigureDropdownOptions = () => (dispatch) => {
+export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     // Api to get Figure dropdown options
-    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type`;
+    let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type?isAutoNumberingEnabled=${isAutoNumberingEnabled}`;
     return axios.get(figureDropdownOptionsURL, {
         headers: {
             "Content-Type": "application/json",
@@ -808,6 +809,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             const slateAncestors = getState().appStore.currentSlateAncestorData;
             const currentParentUrn = getContainerEntityUrn(slateAncestors);
             dispatch(fetchProjectFigures(currentParentUrn));
+            dispatch(fetchFigureDropdownOptions());
             config.figureDataToBeFetched = false;
         }
 

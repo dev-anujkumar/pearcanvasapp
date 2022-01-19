@@ -407,7 +407,7 @@ export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements
     getAutoNumberSequence(autoNumberedElements, dispatch)
 }
 
-export const getNumberedElements = (data, matterType = "frontMatter") => {
+export const getNumberedElements = (data, matterType) => {
     let numberedElements = {};
 
     for(let matter in data){
