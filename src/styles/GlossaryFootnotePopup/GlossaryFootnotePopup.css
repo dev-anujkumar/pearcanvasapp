@@ -113,7 +113,7 @@
     margin: 0;
     outline: none;
 } */
-#toolbarGlossaryFootnote .tox-toolbar {
+#toolbarGlossaryFootnote .tox-toolbar__primary {
     background: transparent !important;
 }
 #toolbarGlossaryFootnote .tox-tbtn {
