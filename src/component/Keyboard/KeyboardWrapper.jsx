@@ -123,7 +123,7 @@ const footNoteCases = (node, lastTextNode) => {
         return (node.id === '_mce_caret') ||  (lastTextNode === node.firstChild && node.firstChild === node.lastChild);
     }
 
-    else if (node?.textContent?.indexOf(uniCode)) {
+    else if (node?.textContent?.indexOf(uniCode) > -1) {
         // unicode is seen on direct click in
         // some cases
         return true;
