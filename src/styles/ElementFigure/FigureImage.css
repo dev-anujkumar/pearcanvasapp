@@ -838,6 +838,7 @@ th ol li.listItemNumeroUnoNone:before {
     margin: 22px 0 25px 0;
     overflow-x: auto;
     padding-top: 3px;
+    white-space: nowrap;
 }
 .floating-code-content-group::-webkit-scrollbar-thumb{
     border-radius: 20px;
