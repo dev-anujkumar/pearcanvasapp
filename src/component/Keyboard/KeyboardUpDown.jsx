@@ -28,8 +28,8 @@ const KeyboardUpDown = (props) => {
         if (element) {
             dispatch(selectElement(element.id));
             const childElement = element.childNodes[1];
-            const scrollTo = element.getBoundingClientRect().top - divHeight / 3;
-            parentNode.scrollBy(0, scrollTo);
+            const rect = element.getBoundingClientRect();
+            const scrollTo = rect.top + rect.height - divHeight / 2;
             const lastChild = getLastChild(childElement?.firstChild);
             if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
                 // for foot note
@@ -49,6 +49,7 @@ const KeyboardUpDown = (props) => {
                 childElement.click();
             }
 
+            parentNode.scrollBy(0, scrollTo);
 
         }
         else {
