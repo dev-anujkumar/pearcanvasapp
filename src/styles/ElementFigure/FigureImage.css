@@ -685,7 +685,7 @@ th ol li.listItemNumeroUnoNone:before {
     font-size: 14px;
     cursor: pointer;
 }
-.figurebutton:hover{
+.figurebutton:hover, .table-asset-button:hover {
     border: 1px solid #005a70;
     background-color: #def8ff;
 }
@@ -839,12 +839,17 @@ th ol li.listItemNumeroUnoNone:before {
     overflow-x: auto;
     padding-top: 3px;
 }
-.floating-code-content-group::-webkit-scrollbar-thumb{
+.floating-code-content-group::-webkit-scrollbar-thumb, .tableAssetWrapper::-webkit-scrollbar-thumb {
     border-radius: 20px;
+}
+.floating-code-content-group::-webkit-scrollbar-thumb {
     background-color: #555;
 }
-.floating-code-content-group::-webkit-scrollbar{
-   height:5px;
+.tableAssetWrapper::-webkit-scrollbar-thumb {
+    background-color: #eee;
+}
+.floating-code-content-group::-webkit-scrollbar, .tableAssetWrapper::-webkit-scrollbar {
+   height: 5px;
 }
 .floating-caption-group {
     position: relative;
@@ -967,9 +972,10 @@ th ol li.listItemNumeroUnoNone:before {
 .tableMediaWrapper {
     display: flex;
     flex-direction: column;
-    width: fit-content;
+    width: 100%;
     min-height: 198px;
     background-color: #323232;
+    padding: 0px 4px 4px 4px;
 }
 
 .tableIconWrapper {
@@ -983,7 +989,7 @@ th ol li.listItemNumeroUnoNone:before {
     width: fit-content;
     height: 36px;
     display: flex;
-    margin: 16px 0px 0px 16px;
+    margin: 16px 0px 0px 12px;
 }
 
 .tableIcon {
@@ -1008,14 +1014,15 @@ th ol li.listItemNumeroUnoNone:before {
     display: flex;
     height: 100%;
     width: 100%;
+    overflow-x: auto;
 }
 
 .table-asset-wrapper-without-asset {
     width: 624px;
     height: 114px;
     display: flex;
-    padding: 16px 12px 16px 12px;
-    margin: 16px;
+    padding: 16px 12px;
+    margin: 16px 12px;
     border-radius: 3px;
     background-color: #000;
 }
@@ -1026,11 +1033,11 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 .table-asset-wrapper-with-asset {
-    min-width: 624px;
+    width: fit-content;
     min-height: 114px;
     display: flex;
-    padding: 16px 12px 16px 12px;
-    margin: 16px;
+    padding: 16px 12px;
+    margin: 16px 12px;
     border-radius: 3px;
     background-color: #fff;
 }
