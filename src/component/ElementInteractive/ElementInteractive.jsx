@@ -532,7 +532,9 @@ class Interactive extends React.Component {
         let smartlinkAvsString = (isSmartLinkAsset === true) ? smartLinkString : {}
         let smartLinkDesc = (typeof smartlinkAvsString === 'string')? JSON.parse(smartlinkAvsString) : smartlinkAvsString;
         let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-        let avsStringData =imageData.properties["avs:jsonString"]&& JSON.parse(imageData.properties["avs:jsonString"]);
+        const avsJsonStringData = imageData?.properties["avs:jsonString"] 
+        let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
+        //let avsStringData =imageData.properties["avs:jsonString"]&& JSON.parse(imageData.properties["avs:jsonString"]);
         let altText = avsStringData?.imageAltText ? avsStringData.imageAltText : "";
         let longDescription = avsStringData?.linkLongDesc ? avsStringData.linkLongDesc : "";
         let smartLinkTitle = imageData?.name ? imageData.name : "";
