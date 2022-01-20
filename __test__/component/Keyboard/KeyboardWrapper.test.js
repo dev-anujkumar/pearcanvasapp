@@ -42,5 +42,132 @@ describe("KeyboardWrapper Testing", () => {
     );
   });
 
-  
+  it("User Press down arrow key and id is KW child", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => {}, preventDefault: () => {} },
+      {
+        textContext: ["1", "2"],
+        firstChild: {
+          firstChild: {
+            parentNode: {},
+          },
+        },
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+        },
+      },
+      0
+    );
+  });
+
+  it("isLastChild function else if case", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => {}, preventDefault: () => {} },
+      {
+        textContext: ["1", "2"],
+        firstChild: {
+          firstChild: {
+            parentNode: {},
+          },
+        },
+        lastChild: {
+
+        },
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+          parentNode: {
+            id: QUERY_SELECTOR + "-1",
+          }
+        },
+      },
+      0
+    );
+  });
+
+  it("isLastChild function if condition - else if case", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => {}, preventDefault: () => {} },
+      {
+        textContext: [],
+        firstChild: {
+          firstChild: {
+            parentNode: {},
+          },
+        },
+        lastChild: {
+          nodeName: "IMG"
+        },
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+          parentNode: {
+            id: QUERY_SELECTOR + "-1",
+          }
+        },
+      },
+      0
+    );
+  });
+
+  it("isLastChild function if condition - else case", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => {}, preventDefault: () => {} },
+      {
+        textContext: [],
+        firstChild: {
+          firstChild: {
+            parentNode: {},
+          },
+        },
+        lastChild: {
+          nodeName: "IMG"
+        },
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+          parentNode: {
+            id: "different id",
+          }
+        },
+      },
+      0
+    );
+  });
+
+  it("User Press Up arrow key - isFirstChild- if - else if condition", () => {
+    moveCursor(
+      { keyCode: 38, stopPropagation: () => {}, preventDefault: () => {} },
+      {
+        // firstChild: {
+        //   firstChild: {
+        //     parentNode: {},
+        //   },
+        // },
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+        },
+      },
+      0
+    );
+  });
+
+  it("User Press Up arrow key - isFirstChild- if - else if query selector condition", () => {
+    moveCursor(
+      { keyCode: 38, stopPropagation: () => {}, preventDefault: () => {} },
+      {
+        nodeName: "IMG",
+        firstChild: {
+          firstChild: {
+            parentNode: {},
+          },
+        },
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+          parentNode: {
+            id: QUERY_SELECTOR + "-1"
+          }
+        },
+      },
+      0
+    );
+  });
+
 });
