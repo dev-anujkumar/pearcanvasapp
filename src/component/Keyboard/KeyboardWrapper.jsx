@@ -156,7 +156,7 @@ const isLastChild = (node, tinymceOffset) => {
                 return textContent?.length == tinymceOffset
             }
             else
-                return tinymceOffset === lastTextNode.textContent.length;
+                return tinymceOffset === lastTextNode?.textContent?.length;
         }
         else if (node?.parentNode?.parentNode?.id?.startsWith(QUERY_SELECTOR)) {
             // case for empty para
