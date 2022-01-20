@@ -4,10 +4,8 @@ import { mediaElementAPI_Handler } from './mediaElementDataMapper.js';
 import {
     SET_AUTO_NUMBER_TOGGLE,
     SET_AUTO_NUMBER_SEQUENCE,
-    UPDATE_AUTO_NUMBER_SEQUENCE,
     GET_TOC_AUTO_NUMBERING_LIST,
-    GET_ALL_AUTO_NUMBER_ELEMENTS,
-    UPDATE_AUTO_NUMBER_ELEMENTS_LIST
+    GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList } from './AutoNumber_helperFunctions';
 import { AUTO_NUMBER_ELEMENTS, autoNumber_IndexMapper } from './AutoNumberConstants';
@@ -120,46 +118,10 @@ export const isAutoNumberEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: SET_AUTO_NUMBER_TOGGLE,
         payload: {
-            isAutoNumberingEnabled: flag && configValue
+            isAutoNumberingEnabled: true//flag && configValue
         }
     });
 }
-
-
-export const fetchContainerFigures = (containerEntityUrn) => (dispatch,getState) => {
-    axios.get(`${config.ASSET_POPOVER_ENDPOINT}v3/${config.projectUrn}/containers/${containerEntityUrn}/images`, {
-        headers: {
-            "ApiKey": config.STRUCTURE_APIKEY,
-            "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
-        }
-    }).then(response => {
-        if (response?.data?.contents) {
-            const projectContent = response.data.contents
-            let numberedElements = {
-                imagesList: [],
-                tablesList: [],
-                equationsList: [],
-                audiosList:[],
-                videosList:[],
-            }
-            let oldAutoNumberedElements = getState().autoNumberReducer.autoNumberedElements
-            numberedElements = mediaElementAPI_Handler({atContainerLevel:true,elementType:'IMAGE',autoNumberedElements: oldAutoNumberedElements}, projectContent, numberedElements);
-        } else {
-            dispatch({
-                type: UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
-                payload: {}
-            });
-        }
-    }).catch(error => {
-        console.log('Error in fetching list of figures in the container>>>> ', error)
-        dispatch({
-            type: UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
-            payload: {}
-        });
-    })
-
-};
 
 export const commonDispatch = (dispatch, type, payload) => {
     dispatch({
@@ -168,6 +130,7 @@ export const commonDispatch = (dispatch, type, payload) => {
     });
 }
 
+/**
 
 export const getSlateLevelData = async (manifestURN, entityURN) => {
 
@@ -185,3 +148,5 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
         return []
     })
 }
+
+ */

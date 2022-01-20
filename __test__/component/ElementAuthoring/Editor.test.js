@@ -10,6 +10,7 @@ import elementData from './elementData';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 const middlewares = [thunk];
 
 // global.document = (new JSDOM()).window.Element;
@@ -220,7 +221,8 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         Permission: false
     },appStore:{
         slateLevelData:{}
-    } });
+    } ,
+    autoNumberReducer: mockAutoNumberReducerEmpty});
     const component = mount(<Provider store={store}> < TinyMceEditor {...props} /> </Provider>, { attachTo: document.body })
     let instance = component.find('TinyMceEditor').instance();
     let tinymceDiv = document.createElement('div');

@@ -309,5 +309,8 @@ export const newAlfrescoData2 = {
      "thumbnailUrl":" ",
      "epsStatus":true,
      "type":"",
-     "epsUrl":""
+     "epsUrl":"",
+     'institution-urls': [{
+      publicationUrl: "test.png"
+     }]
 }

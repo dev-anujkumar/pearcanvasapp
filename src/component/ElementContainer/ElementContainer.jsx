@@ -427,18 +427,19 @@ class ElementContainer extends Component {
         }
         if (this.props?.isAutoNumberingEnabled && (previousElementData.figuretype !== 'tableasmarkup')) {
             // Not selecting remove label and number
-            if (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+            if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
             // Selecting default case 
-            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData.manualoverride !== undefined && (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT)) {
+            if ((previousElementData?.hasOwnProperty('manualoverride') || !previousElementData?.numberedandlabel) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
             let isNumberDifferent = false;
             let imgNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
+            let isOverridedLabelDifferent = false;
             if (overridedNumber && overridedNumber !== '') {
                 isNumberDifferent = overridedNumber?.toString() !== numberHTML?.toString();
             } else {
@@ -446,12 +447,15 @@ class ElementContainer extends Component {
                 imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
                 isNumberDifferent = imgNumberValue?.toString() !== numberHTML?.toString();
             }
+            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData?.manualoverride.hasOwnProperty('overridelabelvalue')) {
+                isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
+            }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
-                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent ||
+                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
@@ -650,18 +654,19 @@ class ElementContainer extends Component {
         oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
         if (this.props.isAutoNumberingEnabled) {
             // Not selecting remove label and number
-            if (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+            if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
-            // Selecting default case
-            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData.manualoverride !== undefined && (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT)) {
+            // Selecting default case 
+            if ((previousElementData?.hasOwnProperty('manualoverride') || !previousElementData?.numberedandlabel) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
             let isNumberDifferent = false;
             let imgNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
+            let isOverridedLabelDifferent = false;
             if (overridedNumber && overridedNumber !== '') {
                 isNumberDifferent = overridedNumber?.toString() !== numberHTML?.toString();
             } else {
@@ -669,13 +674,16 @@ class ElementContainer extends Component {
                 imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
                 isNumberDifferent = imgNumberValue?.toString() !== numberHTML?.toString();
             }
+            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData?.manualoverride.hasOwnProperty('overridelabelvalue')) {
+                isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
+            }
             let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
             if (!titleHTML || titleHTML === '' || !(displayLabelsForAudioVideo.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
-                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent ||
+                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage !== assetId)
@@ -959,11 +967,25 @@ class ElementContainer extends Component {
     handleAutonumberAfterUpdate = (previousElementData, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
         if (!previousElementData?.numberedandlabel && dataToSend.numberedandlabel) {
+            if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride.hasOwnProperty('resumenumbervalue')) {
+                dataToSend = {
+                    ...dataToSend,
+                    manualoverride: {
+                        resumenumbervalue: parseInt(dataToSend?.manualoverride?.resumenumbervalue)
+                    }
+                }
+            }
             this.props.handleAutonumberingOnCreate(dataToSend?.figuretype?.toUpperCase(), dataToSend);
         } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) {
             this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
         } else if ( (previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (!(dataToSend.hasOwnProperty('manualoverride')) || (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue'))) ) {
-            // resume case 
+            // resume case
+            dataToSend = {
+                ...dataToSend,
+                manualoverride: {
+                    resumenumbervalue: parseInt(dataToSend?.manualoverride?.resumenumbervalue)
+                }
+            }
             this.props.updateAutonumberingOnElementTypeUpdate(dataToSend?.displayedlabel, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel === dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
             // override label and number case 
