@@ -30,7 +30,14 @@ const KeyboardUpDown = (props) => {
             const childElement = element.childNodes[1];
             const scrollTo = element.getBoundingClientRect().top - divHeight / 3;
             parentNode.scrollBy(0, scrollTo);
-            const lastChild = getLastChild(childElement?.firstChild);
+            console.log("The next childElement is ", childElement);
+            
+            const firstChild = childElement?.firstChild ? childElement.firstChild : childElement;
+            // in case of para firstChild is childElement.first child
+            // in case of Image childElement is null;
+            const lastChild = getLastChild(firstChild);
+
+            console.log("The last childElement is ", lastChild);
             if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
                 // for foot note
                 // add span at last and click on span
@@ -42,8 +49,14 @@ const KeyboardUpDown = (props) => {
                 span.click();
             }
             else if(lastChild.id === "f-e-s") {
-                lastChild.parentNode.removeChild(lastChild);
-                childElement.click();
+                console.log("The last child", lastChild.previousSibling);
+                if(lastChild?.previousSibling?.nodeName !== 'SUP') {
+                    lastChild.parentNode.removeChild(lastChild);
+                    childElement.click();
+                }
+                else {
+                    lastChild.click();
+                }
             }
             else {
                 childElement.click();

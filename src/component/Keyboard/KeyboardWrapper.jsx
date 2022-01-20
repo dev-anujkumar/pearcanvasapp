@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
+const NORMAL_SELECTOR = `cypress-`
 
 /**
  * function decides to
@@ -11,12 +12,14 @@ export const QUERY_SELECTOR = `cypress-keyboard`;
  * @param {*} move : boolean true or false.
  */
 const updateCursor = (e, move) => {
+
+    console.log("Moving cursor: ", move);
     if (move) {
         // moves to next element
         e.preventDefault();
     }
     else {
-        // moves to next Element in DOM
+        // moves to next line of same element
         e.stopPropagation()
     }
 }
@@ -70,6 +73,7 @@ const isFirtstChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
         const firstTextNode = getFirstTextNode(isKChild.node);
+        console.log("The First text node is ", firstTextNode, node, tinymceOffset);
         const uniCode = '\uFEFF';
         if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
             return true;
@@ -88,6 +92,10 @@ const isFirtstChild = (node, tinymceOffset) => {
         else if (firstTextNode?.nodeName === 'BR' && node?.nodeName === 'LI') {
             return true;
             // for empty list
+        }
+        else if (node?.id?.startsWith(NORMAL_SELECTOR) && node?.parentNode?.id.startsWith(QUERY_SELECTOR)) {
+            // tinymce edtiors empty values
+           return tinymceOffset === 0
         }
         else return false;
 
@@ -142,6 +150,9 @@ const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
         const lastTextNode = getLastTextNode(isKChild.node);
+        console.log("The last text node is ", lastTextNode, node, tinymceOffset);
+
+        console.log("The last text node is ", lastTextNode, node, tinymceOffset);
         const uniCode = '\uFEFF';
         if (lastTextNode === node) {
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
@@ -169,8 +180,11 @@ const isLastChild = (node, tinymceOffset) => {
                 return true;
             }
           
+        }        
+        else if (node?.id?.startsWith(NORMAL_SELECTOR) && node?.parentNode?.id.startsWith(QUERY_SELECTOR)) {
+            // tinymce edtiors empty values
+           return tinymceOffset === 0
         }
-
 
         else return footNoteCases(node, lastTextNode);
 
