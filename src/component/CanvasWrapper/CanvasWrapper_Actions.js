@@ -52,9 +52,9 @@ import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Hel
 import ElementConstants from "../ElementContainer/ElementConstants.js";
 import { isAutoNumberEnabled, fetchProjectFigures } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
-import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
-import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getImagesInsideSlates, getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
+import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -383,7 +383,6 @@ export const getProjectDetails = () => (dispatch, getState) => {
             let flag = data?.parameters?.enablenumberedandlabel || false;
             dispatch(isAutoNumberEnabled(flag, config.ENABLE_AUTO_NUMBER_CONTENT));
         }
-        dispatch(isAutoNumberEnabled(true, config.ENABLE_AUTO_NUMBER_CONTENT)); // by default set true figure autonumbering
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
             // Api to get LOB Permissions
@@ -843,16 +842,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(getContainerData(searchTerm));
         }
         /** Get List of Figures on a Slate for Auto-Numbering */
-        const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
-        const slateFigures = getImagesInsideSlates(bodyMatter)
-        if (slateFigures) {
-            dispatch({
-                type: SLATE_FIGURE_ELEMENTS,
-                payload: {
-                    slateFigures
-                }
-            });
-        }
+        // const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
+        // const slateFigures = getImagesInsideSlates(bodyMatter)
+        getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
+        // if (slateFigures) {
+        //     dispatch({
+        //         type: SLATE_FIGURE_ELEMENTS,
+        //         payload: {
+        //             slateFigures :dataaaaa
+        //         }
+        //     });
+        // }
     })
     .catch(err => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
