@@ -227,7 +227,7 @@ const KeyboardWrapper = (props) => {
     // alphanumeric, id should be unique for all the elements.
     const id = `${QUERY_SELECTOR}-${props.index}`;
     if (props.enable)
-        return <div onFocus={() => {
+        return <div data-focus={props.focus} onFocus={() => {
             // element is directly clicked via mouse
             dispatch(selectElement(id));
         }} id={id}> {props.children} </div>

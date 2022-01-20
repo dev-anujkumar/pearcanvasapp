@@ -817,12 +817,23 @@ th ol li.listItemNumeroUnoNone:before {
 .figure-dropdown ul li:hover {
   background-color: #efefef;
 }
+.figure-dropdown ul li:focus {
+    background-color: #005a70;
+    color: 'white'
+  }
 .figure-label .dropdown-arrow{
   width: 8px;
   position: absolute;
   right: 0;
   top: 14px;
 }
+
+.figure-label-highlight .dropdown-arrow{
+    width: 8px;
+    position: absolute;
+    right: 0;
+    top: 14px;
+  }
 .figure-label-field{
   margin-right: 24px;
 }

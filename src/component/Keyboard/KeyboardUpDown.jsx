@@ -60,6 +60,7 @@ const KeyboardUpDown = (props) => {
             }
             else {
                 childElement.click();
+                childElement.focus();
             }
 
 
@@ -80,6 +81,7 @@ const KeyboardUpDown = (props) => {
     }
 
     const handleKeyDown = (event) => {
+        console.log("Right Here");
         if (event.keyCode === 38 || event.keyCode === 40) {
 
             const allInteractiveElements = document.querySelectorAll(`[id^='${QUERY_SELECTOR}-']`);
@@ -90,6 +92,10 @@ const KeyboardUpDown = (props) => {
                         selectedNodeIndex = currentIndex
                     }
                 });
+                // if last tinymce is not blured then cursor will
+                // keep on showing if next element is non text 
+                // element, like image's Label
+                allInteractiveElements[selectedNodeIndex]?.childNodes[1]?.blur();
                 if (event.keyCode === 38 && selectedNodeIndex !== 0) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex - 1]);
 
