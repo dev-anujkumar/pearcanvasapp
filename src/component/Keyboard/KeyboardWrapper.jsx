@@ -157,7 +157,7 @@ const isLastChild = (node, tinymceOffset) => {
                 }
             }
             else
-                return tinymceOffset === lastTextNode.textContent.length;
+                return tinymceOffset === lastTextNode?.textContent?.length;
         }
         else if (node?.parentNode?.parentNode?.id?.startsWith(QUERY_SELECTOR)) {
             // case for only single image
