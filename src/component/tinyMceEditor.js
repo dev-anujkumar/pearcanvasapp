@@ -3381,7 +3381,7 @@ export class TinyMceEditor extends Component {
         }
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
         // PCAT-2426 - executing command on active editor when spellCheck is ON to trigger tinymce spell check
-        if(spellCheckToggle) tinymce.activeEditor.execCommand('mceSpellcheckEnable');
+        if(spellCheckToggle) tinymce?.activeEditor?.execCommand('mceSpellcheckEnable');
     }
 
     removeMultiTinyInstance = () => {
