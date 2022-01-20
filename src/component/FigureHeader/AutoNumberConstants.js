@@ -30,7 +30,8 @@ export const autoNumber_KeyMapperElements = {
   'Table': 'property',
   'Equation': 'equationsList',
   'Audio': 'audiosList',
-  'Video': 'videosList'
+  'Video': 'videosList',
+  'Interactive': 'interactiveList'
 }
 
 
@@ -48,7 +49,8 @@ export const autoNumber_ElementTypeKey = {
   'Table': 'tablesList',
   'Equation': 'equationsList',
   'Audio': 'audiosList',
-  'Video': 'videosList'
+  'Video': 'videosList',
+  'Interactive': 'interactiveList'
 }
 
 export const autoNumber_response_ElementType_mapper = {

@@ -142,7 +142,6 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
  */
 export const updateAutoNumberSequenceOnSwappingElements = (params) => {
     const {
-        // getState,
         dispatch,
         slateFigures,
         slateAncestors,
@@ -169,8 +168,9 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
                 }
                 if (referenceFigure) {
-                    const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === referenceFigure)
-                    numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, swappedElementData)
+                    const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === referenceFigure);
+                    const newPosition = refImageIndex < 0 ? numberedElements[labelType][figureParentEntityUrn].length : refImageIndex;
+                    numberedElements[labelType][figureParentEntityUrn]?.splice(newPosition, 0, swappedElementData)
                     dispatch({
                         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
                         payload: {
