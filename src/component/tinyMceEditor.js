@@ -3354,7 +3354,7 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup, isInlineEditor, imageArgs} = this.props
+        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup, isInlineEditor, imageArgs, spellCheckToggle} = this.props
         let isBlockQuote = this.props.element && this.props?.element?.elementdata && (this.props?.element?.elementdata?.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
@@ -3380,6 +3380,8 @@ export class TinyMceEditor extends Component {
             dataFromAlfresco(alfrescoAssetData, alfrescoEditor, imageArgs)
         }
         tinymce.$('.blockquote-editor').attr('contenteditable', false)
+        // PCAT-2426 - executing command on active editor when spellCheck is ON to trigger tinymce spell check
+        if(spellCheckToggle) tinymce.activeEditor.execCommand('mceSpellcheckEnable');
     }
 
     removeMultiTinyInstance = () => {
