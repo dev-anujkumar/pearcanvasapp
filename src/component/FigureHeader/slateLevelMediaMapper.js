@@ -1,5 +1,6 @@
 import config from '../../config/config';
 import { containerElements, autoNumberElementsAllowed, SHOWHIDE_SECTION, ELEMENT_TYPES } from './AutoNumberConstants';
+import { SLATE_FIGURE_ELEMENTS } from "../../constants/Action_Constants";
 import { getSlateEntityUrn } from './AutoNumber_helperFunctions';
 
 export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
