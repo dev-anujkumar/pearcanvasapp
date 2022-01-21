@@ -40,7 +40,7 @@ import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES } from '../FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER } from '../FigureHeader/AutoNumberConstants';
 
 const {
     MANUAL_OVERRIDE,
@@ -405,9 +405,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         })
         /** ---------------------------- Auto-Numbering handling ------------------------------*/
-
         const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
-        if ((type === 'IMAGE' || type === 'VIDEO' || type === 'INTERACTIVE' || type === 'SMART_LINK' || type === 'MMI_ELM') && isAutoNumberingEnabled) {
+        if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
             const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
             let slateFigures = getImagesInsideSlates(bodyMatter);
             if (slateFigures) {

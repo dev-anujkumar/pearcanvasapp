@@ -144,4 +144,5 @@ export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table',
 export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO']
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive']
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
-export const displayLabelsForAudioVideo = ['Audio', 'Video']
+export const displayLabelsForAudioVideo = ['Audio', 'Video'];
+export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM'];
