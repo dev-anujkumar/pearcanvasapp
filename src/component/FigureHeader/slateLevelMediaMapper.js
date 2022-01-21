@@ -2,15 +2,29 @@ import config from '../../config/config';
 import { containerElements, autoNumberElementsAllowed, SHOWHIDE_SECTION, ELEMENT_TYPES } from './AutoNumberConstants';
 import { getSlateEntityUrn } from './AutoNumber_helperFunctions';
 
+export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
+    const { dispatch } = params
+    const bodyMatter = slateLevelData?.contents?.bodymatter || []
+    const slateFigures = getImagesInsideSlates(bodyMatter)
+    if (slateFigures) {
+        dispatch({
+            type: SLATE_FIGURE_ELEMENTS,
+            payload: {
+                slateFigures
+            }
+        });
+    }
+}
+
 /**
  * Get List of Media Elements on a Slate
  * @param {*} bodyMatter 
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideSlates = (bodyMatter, numberedElements = [], parentIndex = []) => {
+export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[]) => {
     if (bodyMatter?.length > 0) {
-        bodyMatter?.forEach((element, index) => {
+        bodyMatter?.forEach(async (element, index) => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
                 if (parentIndex?.length) {
                     element.indexPos = [...parentIndex]
@@ -18,12 +32,18 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [], parentI
                 } else {
                     element.indexPos = index
                 }
+                if (parentDetails?.length) {
+                    element.parentDetails = parentDetails
+                } else {
+                    element.parentDetails = []
+                }
                 element.slateEntityUrn = getSlateEntityUrn()
                 numberedElements.push({ ...element })
             }
             else if (Object.values(containerElements).indexOf(element.type) > -1) {
                 element.indexPos = [...parentIndex]
                 element.indexPos.push(index)
+                if (parentIndex?.length) element.parentDetails = parentIndex
                 switch (element.type) {
                     case containerElements.SHOW_HIDE:
                         getMediaElementInShowhide(element, numberedElements, [...element.indexPos])
@@ -32,7 +52,9 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [], parentI
                         getMediaElementInMultiColumn(element, numberedElements, [...element.indexPos])
                         break;
                     case containerElements.POPUP:
-                        getMediaElementInPopup(element, numberedElements)
+                        const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
+                        if (parentIndex?.length) popupContent.parentDetails = parentIndex
+                        await getMediaElementInPopup(popupContent, numberedElements)
                         break;
                     case containerElements.ASIDE:
                         getMediaElementInAsideWE(element, numberedElements, [...element.indexPos])
@@ -78,6 +100,8 @@ export const getMediaElementInPopup = (containerData, numberedElements) => {
     if (containerData?.contents?.bodymatter?.length > 0) {
         containerData?.contents?.bodymatter.forEach((element, index) => {
             element.indexPos = containerData.indexPos.push(index)
+            element.parentDetails = containerData.parentDetails  || []
+            element.parentDetails.push(containerData.contentUrn)//popup id
             if (element.type === ELEMENT_TYPES.FIGURE) {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
@@ -86,7 +110,8 @@ export const getMediaElementInPopup = (containerData, numberedElements) => {
             } else if ((element.type === containerElements.MANIFEST && element.contents.bodymatter) || (Object.values(containerElements).indexOf(element.type) > -1)) {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
-                getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos])
+                element.parentDetails.push(element.contentUrn) //element id
+                getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails)
             }
         })
     }
@@ -101,6 +126,8 @@ export const getMediaElementInPopup = (containerData, numberedElements) => {
 export const getMediaElementInAsideWE = (containerData, numberedElements) => {
     if (containerData?.elementdata?.bodymatter?.length > 0) {
         containerData?.elementdata?.bodymatter.forEach((element, index) => {
+            element.parentDetails = containerData.parentDetails   || []
+            element.parentDetails.push(containerData.contentUrn) //as|we:head -id
             if (element.type === ELEMENT_TYPES.FIGURE) {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
@@ -109,7 +136,8 @@ export const getMediaElementInAsideWE = (containerData, numberedElements) => {
             } else if ((element.type === containerElements.MANIFEST && element.contents.bodymatter) || (Object.values(containerElements).indexOf(element.type) > -1)) {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
-                getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos])
+                element.parentDetails.push(element.contentUrn) //we:body | elemen -id
+                getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails)
             }
         })
     }
@@ -129,6 +157,9 @@ export const getMediaElementInMultiColumn = (containerData, numberedElements, pa
                 containerData.indexPos.push(i);
                 if (colData?.groupdata?.bodymatter?.length > 0) {
                     colData?.groupdata?.bodymatter.forEach((element, index) => {
+                        element.parentDetails = containerData.parentDetails  || []
+                        element.parentDetails.push(containerData.contentUrn) //multi-column id
+                        element.parentDetails.push(colData.contentUrn) //column -id
                         if (element.type === ELEMENT_TYPES.FIGURE) {
                             containerData.indexPos.push(index)
                             element.indexPos = [...containerData.indexPos]
@@ -137,7 +168,8 @@ export const getMediaElementInMultiColumn = (containerData, numberedElements, pa
                         } else if (element.type === 'container'|| (Object.values(containerElements).indexOf(element.type) > -1)) {
                             containerData.indexPos.push(index)
                             element.indexPos = [...containerData.indexPos]
-                            getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos])
+                            element.parentDetails.push(element.contentUrn)  //element -id
+                            getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos],element.parentDetails)
                         }
                     })
                 }
@@ -156,7 +188,9 @@ export const getMediaElementInShowhide = (containerData, numberedElements, conta
     const showHideContent = containerBodyMatter(containerData)
     if (showHideContent?.length > 0) {
         showHideContent.forEach((element, index) => {
-            element.indexPos = containerData.parentDetails
+            element.indexPos = [...containerData.indexPos]
+            element.parentDetails = containerData.parentDetails || []
+            element.parentDetails.push(containerData.contentUrn)  //showhide -id
             if (element.type === ELEMENT_TYPES.FIGURE) {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
@@ -165,7 +199,8 @@ export const getMediaElementInShowhide = (containerData, numberedElements, conta
             } else if (element.type === 'container'  || (Object.values(containerElements).indexOf(element.type) > -1)) {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
-                getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos])
+                element.parentDetails.push(element.contentUrn)  //element -id
+                getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails)
             }
         })
     }
