@@ -3354,7 +3354,7 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate(prevProps) {
-        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup, isInlineEditor, imageArgs, spellCheckToggle} = this.props
+        const { elementId, alfrescoElementId, alfrescoEditor, alfrescoAssetData, launchAlfrescoPopup, isInlineEditor, imageArgs} = this.props
         let isBlockQuote = this.props.element && this.props?.element?.elementdata && (this.props?.element?.elementdata?.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote) {
             this.lastContent = document.getElementById('cypress-' + this.props.index)?.innerHTML;
