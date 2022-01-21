@@ -115,18 +115,11 @@ const getLastChild = (node) => {
  * so there are multiple scenarios wrt footnote
  */
 const footNoteCases = (node, lastTextNode) => {
-    const uniCode = '\uFEFF'; 
     if (node.nodeName === 'SPAN' && lastTextNode.nodeName === 'BR') {
         // when cliked span comes in node
-        // when cliked span comes in node
         // for a few seconds, after few seconds caret is added
-        return (node.id === '_mce_caret') ||  (lastTextNode === node.firstChild && node.firstChild === node.lastChild);
-    }
-
-    else if (node?.textContent?.indexOf(uniCode) > -1) {
-        // unicode is seen on direct click in
-        // some cases
-        return true;
+        // span ka sibling is foot note
+        return (node.id === '_mce_caret') ||  (node.id === 'f-e-s' );
     }
     else if (isParentFootnote(node)) {
         // simple case when * comes in node
@@ -152,20 +145,30 @@ const isLastChild = (node, tinymceOffset) => {
         const uniCode = '\uFEFF';
         if (lastTextNode === node) {
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
-                const textContent = lastTextNode?.textContent?.replace(/\uFEFF/g, "");
-                return textContent?.length == tinymceOffset
+                if(lastTextNode?.parentNode?.id === "_mce_caret") {
+                    // unicode inside footnote
+                    return true;
+                }
+                else {
+                    // unicode inside inline code
+                    let textContent = lastTextNode?.textContent?.replace(/\uFEFF/g, "");
+                    textContent = textContent?.replace(/\u200B/g, "");
+                    return textContent?.length == tinymceOffset
+                }
             }
             else
-                return tinymceOffset === lastTextNode.textContent.length;
+                return tinymceOffset === lastTextNode?.textContent?.length;
         }
         else if (node?.parentNode?.parentNode?.id?.startsWith(QUERY_SELECTOR)) {
-            // case for empty para
-            if(node?.textContent?.length === 0) {
+            // case for only single image
+            if(lastTextNode?.nodeName === 'IMG') {
+                return tinymceOffset !==0
+            } 
+            // case of empty para
+            else if(node?.textContent?.length === 0) {
                 return true;
             }
-            if(lastTextNode?.nodeName === 'IMG') {
-                return true;
-            } 
+          
         }
 
 

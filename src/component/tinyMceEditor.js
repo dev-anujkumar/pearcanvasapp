@@ -69,7 +69,7 @@ export class TinyMceEditor extends Component {
         this.wirisClick = 0;
         this.activeGlossaryFootnoteId="";
         this.editorConfig = {
-            spellchecker_rpc_url: cypressConfig.TINYMCE_SPELL_CHECKER_URL,
+            // spellchecker_rpc_url: cypressConfig.TINYMCE_SPELL_CHECKER_URL,
             plugins: this.handleTinymcePlugins(),
             selector: '#cypress-0',
             inline: true,
@@ -323,10 +323,10 @@ export class TinyMceEditor extends Component {
      * @returns {String} Tinymce plugins list
      */
     handleTinymcePlugins = () => {
-        const { spellCheckToggle } = this.props;
+        // const { spellCheckToggle } = this.props;
         let plugins = EditorConfig.plugins;
         // adding tinymce spellchecker plugin if spell checker option is active from project settings
-        if (spellCheckToggle && restrictSpellCheck(this.props)) plugins = `${plugins} tinymcespellchecker`;
+        // if (spellCheckToggle && restrictSpellCheck(this.props)) plugins = `${plugins} tinymcespellchecker`;
         return plugins;
     }
 
@@ -3118,9 +3118,9 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
-        const { spellCheckToggle } = this.props;
+        // const { spellCheckToggle } = this.props;
         // removing the tinymce editors when spellcheck toggle is turned off to prevent incorrect text highlighting
-        if (!spellCheckToggle) this.removeTinymceEditors();
+        // if (!spellCheckToggle) this.removeTinymceEditors();
         let currentNode = document.getElementById('cypress-' + this.props.index);
         if (currentNode && currentNode.getElementsByTagName("IMG").length) {
             currentNode.innerHTML = this.getNodeContent();
@@ -4014,14 +4014,13 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
-        /**Comment the below code to support  tinymce spellcheck. It will reopen data paste issue in blockquote marginalia*/
-        /*
+        /*It will reopen data paste issue in blockquote marginalia*/
         while (tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').length) {
             tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').each(function () {
                 let innerHtml = this.innerHTML;
                 this.outerHTML = innerHtml;
             })
-        }*/
+        }
         tinymce.$('div[data-mce-bogus="all"]').each(function () {
             this.outerHTML = '';
         })
@@ -4314,8 +4313,7 @@ const mapStateToProps = (state) => {
         slateLevelData: state.appStore.slateLevelData,
         asideData: state.appStore.asideData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
-        autoNumberOption: state.autoNumberReducer.autoNumberOption,
-        spellCheckToggle: state.toolbarReducer.spellCheckToggle
+        autoNumberOption: state.autoNumberReducer.autoNumberOption
     }
 }
 

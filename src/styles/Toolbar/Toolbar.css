@@ -332,7 +332,7 @@ button[aria-label="formatSelector"] span.tox-tbtn__select-label,button[aria-labe
   font-family: 'Open Sans',sans-serif;
 }
 button[aria-label="insertMedia"] span.tox-tbtn__select-label{
-  min-width : 70px!important;
+  min-width : 50px!important;
 }
 button[aria-label="formatSelector"].tox-tbtn--select{
   max-width : 162px!important;

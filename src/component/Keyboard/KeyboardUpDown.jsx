@@ -36,9 +36,14 @@ const KeyboardUpDown = (props) => {
                 // add span at last and click on span
                 // childElement.click();
                 const span = document.createElement('span');
+                span.id = "f-e-s"
                 span.innerHTML = "<br>";
                 childElement.firstChild.appendChild(span);
                 span.click();
+            }
+            else if(lastChild.id === "f-e-s") {
+                lastChild.parentNode.removeChild(lastChild);
+                childElement.click();
             }
             else {
                 childElement.click();
