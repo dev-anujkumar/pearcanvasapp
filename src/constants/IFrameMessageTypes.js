@@ -8,6 +8,8 @@ export const ShowLoader = "ShowLoader"
 export const PreviousSlate = "prevSlate"
 export const NextSlate = "nextSlate"
 export const SplitCurrentSlate = "splitCurrentSlate"
+export const WORKFLOW_ROLES = "workflowRoles"
+
 /******************* Learning Objective Message Types ***********************/
 export const OpenLOPopup = "openLoPopup"
 export const ViewLearningObjectiveSlate ="VIEW LEARNING OBJECTIVE"
