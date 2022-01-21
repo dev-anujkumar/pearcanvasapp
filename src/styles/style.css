@@ -489,3 +489,13 @@ span.markedForIndex:hover {
     color:#007FA3;
     border-bottom: 1.1px dotted #007FA3;
 }
+
+/* hide Ignore all option from tinymcespellchecker context menu */
+div[title='Ignore all']{
+    display: none !important;
+}
+
+/* show tinymcespellchecker incorrect word red line below the word*/
+.mce-spellchecker-annotation{
+    background-position: bottom !important;
+}

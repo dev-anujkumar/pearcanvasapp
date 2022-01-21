@@ -52,3 +52,10 @@ export const PROJECT_SHARING_ROLE = "projectSharingRole"
 export const UPDATE_PROJECT_METADATA = "updateProjectMetadata"
 export const IS_SLATE_SUBSCRIBED = "isSlateSubscribed"
 export const CHECK_SUBSCRIBED_SLATE_STATUS = "checkSubscribedSlateStatus"
+
+// Sending Message from Cypress To Cypress plus
+export const INCOMING_MESSAGE='openCypressPlus'
+export const REFRESH_MESSAGE='refresh on Cypress from Cypress_plus'
+
+//Audio Narration Constant
+ export const deleteAudio='deletePageAudioMessage'

@@ -938,3 +938,128 @@ export const asideData11={
 	   }
 	}
  }
+
+export const asideNumbering = {
+	"id": "urn:pearson:manifest:6760246e-8cd5-4ddd-a525-292a98ab1422",
+	"type": "element-aside",
+	"subtype": "sidebar",
+	"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+	"designtype": "asideSidebar01",
+	"elementdata": {
+		"bodymatter": [
+			{
+				"id": "urn:pearson:work:00bca01b-adbc-4c8b-9004-6e1adb464fed",
+				"type": "element-authoredtext",
+				"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+				"elementdata": {
+					"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+					"text": ""
+				},
+				"html": {
+					"text": "<p class=\"paragraphNumeroUno\"><br></p>",
+					"footnotes": {
+
+					},
+					"assetsPopover": {
+
+					},
+					"glossaryentries": {
+
+					},
+					"indexEntries": {
+
+					}
+				},
+				"versionUrn": "urn:pearson:work:00bca01b-adbc-4c8b-9004-6e1adb464fed",
+				"contentUrn": "urn:pearson:entity:ce3de390-4209-4488-b67d-b19b2721376c"
+			}
+		],
+		"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+		"title": {
+			"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+			"text": "Test123 1.1 AsideNumber",
+			"textsemantics": [
+				{
+					"charStart": 0,
+					"charEnd": 7,
+					"type": "label"
+				},
+				{
+					"charStart": 8,
+					"charEnd": 11,
+					"type": "number"
+				}
+			]
+		}
+	},
+	"html": {
+		"title": "<p><label>Test123 </label><number>1.1 </number>AsideNumber</p>"
+	},
+	"versionUrn": "urn:pearson:manifest:6760246e-8cd5-4ddd-a525-292a98ab1422",
+	"contentUrn": "urn:pearson:entity:1f94b1dd-4ab9-47f4-8ef6-3b91154cfad5",
+	"status": "wip"
+}
+
+export const weNumbering = {
+	"id": "urn:pearson:manifest:6760246e-8cd5-4ddd-a525-292a98ab1432",
+	"type": "element-aside",
+	"subtype": "sidebar",
+	"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+	"designtype": "asideSidebar01",
+	"elementdata": {
+		"bodymatter": [
+			{
+				"id": "urn:pearson:work:00bca01b-adbc-4c8b-9004-6e1adb464fed",
+				"type": "element-authoredtext",
+				"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+				"elementdata": {
+					"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+					"text": ""
+				},
+				"html": {
+					"text": "<p class=\"paragraphNumeroUno\"><br></p>",
+					"footnotes": {
+
+					},
+					"assetsPopover": {
+
+					},
+					"glossaryentries": {
+
+					},
+					"indexEntries": {
+
+					}
+				},
+				"versionUrn": "urn:pearson:work:00bca01b-adbc-4c8b-9004-6e1adb464fed",
+				"contentUrn": "urn:pearson:entity:ce3de390-4209-4488-b67d-b19b2721376c"
+			}
+		],
+		"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+		"title": {
+			"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+			"text": "Test123 1.1 AsideNumber",
+			"textsemantics": [
+				{
+					"charStart": 0,
+					"charEnd": 7,
+					"type": "label"
+				},
+				{
+					"charStart": 8,
+					"charEnd": 11,
+					"type": "number"
+				}
+			]
+		}
+	},
+	"html": {
+		"title": "<p><label>Test123 </label><number>1.1 </number>AsideNumber</p>"
+	},
+	"versionUrn": "urn:pearson:manifest:6760246e-8cd5-4ddd-a525-292a98ab1432",
+	"contentUrn": "urn:pearson:entity:1f94b1dd-4ab9-47f4-8ef6-3b91154cfad5",
+	"status": "wip",
+	"indexPos": [
+		1
+	]
+}
