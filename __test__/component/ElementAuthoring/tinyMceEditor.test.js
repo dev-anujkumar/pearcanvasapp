@@ -1979,7 +1979,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 tagName: "code",
                 elementId: "work:urn",
                 element: { type: "figure", figuretype: "codelisting" },
-                placeholder: "Enter block code..."
+                placeholder: "Code Block Content"
             })
             component.update();
             const spysetInstanceToolbar = jest.spyOn(instance, 'setInstanceToolbar')
@@ -2009,7 +2009,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 tagName: "code",
                 elementId: "work:urn",
                 element: { type: "figure", figuretype: "codelisting" },
-                placeholder: "Enter block code..."
+                placeholder: "Code Block Content"
             })
             component.update();
             document.querySelector = () => {

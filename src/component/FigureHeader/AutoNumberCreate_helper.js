@@ -242,7 +242,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => (dispat
  */
 export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch) => {
     let mediaElementsInContainer = findMediaElementsInContainer(bodyMatter[figureObj.indexPos[0]], []);
-    let figureObjInContainer = mediaElementsInContainer.find(x => x.contentUrn === createdElementData.contentUrn);
+    let figureObjInContainer = mediaElementsInContainer?.find(x => x.contentUrn === createdElementData.contentUrn);
     const listType = createdElementData?.figuretype === 'video' ? 'videosList' : 'imagesList'
     const labelType = createdElementData?.figuretype === 'video' ? "Video" : "Figure"
     let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
@@ -255,9 +255,9 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
         let nearestElementObj = findNearestMediaElement(mediaElementsInContainer, figureObjInContainer, labelType);
         if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
             if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1)) {
-                let index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
+                let index = elementsList[slateEntityForAutonumber]?.findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
                 index = nearestElementObj?.key === 'above' ? index + 1 : index;
-                elementsList[slateEntityForAutonumber].splice(index, 0, createdElementData);
+                elementsList[slateEntityForAutonumber]?.splice(index, 0, createdElementData);
             } else {
                 elementsList = {
                     ...elementsList,
@@ -269,12 +269,12 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj
         } else {
             let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, labelType);
             if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
-                let index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
+                let index = elementsList[slateEntityForAutonumber]?.findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
                 index = nearestElementObj?.key === 'above' ? index + 1 : index;
-                elementsList[slateEntityForAutonumber].splice(index, 0, createdElementData);
+                elementsList[slateEntityForAutonumber]?.splice(index, 0, createdElementData);
                 updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
             } else {
-                elementsList[slateEntityForAutonumber].splice(figureObj.index, 0, createdElementData);
+                elementsList[slateEntityForAutonumber]?.splice(figureObj.index, 0, createdElementData);
                 updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
             }
         }

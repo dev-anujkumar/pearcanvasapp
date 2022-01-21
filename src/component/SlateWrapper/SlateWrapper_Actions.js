@@ -405,8 +405,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         })
         /** ---------------------------- Auto-Numbering handling ------------------------------*/
-        
-        if (type === 'IMAGE' || type === 'VIDEO' || type === 'INTERACTIVE' || type === 'SMART_LINK' || type === 'MMI_ELM') {
+
+        const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+        if ((type === 'IMAGE' || type === 'VIDEO' || type === 'INTERACTIVE' || type === 'SMART_LINK' || type === 'MMI_ELM') && isAutoNumberingEnabled) {
             const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
             let slateFigures = getImagesInsideSlates(bodyMatter);
             if (slateFigures) {
