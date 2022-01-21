@@ -35,7 +35,7 @@ import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
 import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-import { toggleElemBordersAction, togglePageNumberAction } from '../Toolbar/Toolbar_Actions.js';
+import { toggleElemBordersAction, togglePageNumberAction, toggleSpellCheckAction } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
@@ -336,6 +336,7 @@ export default connect(
         isOwnersSubscribedSlate,
         markedIndexPopup,
         fetchProjectFigures,
-        setTocContainersAutoNumberList
+        setTocContainersAutoNumberList,
+        toggleSpellCheckAction
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

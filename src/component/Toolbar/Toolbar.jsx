@@ -200,7 +200,6 @@ const mapStateToProps = (state) => {
         elemBorderToggle,
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
-        lastAlignedExternalLO:state.metadataReducer.lastAlignedExternalLO,
         slateType: state.appStore.slateType,
         setSlateEntity: state.appStore.setSlateEntity,
         isLOExist: state.metadataReducer.slateTagEnable,
