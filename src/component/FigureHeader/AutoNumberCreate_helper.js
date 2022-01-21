@@ -5,10 +5,11 @@ import {
     UPDATE_AUTO_NUMBER_SEQUENCE,
     GET_TOC_AUTO_NUMBERING_LIST,
     GET_ALL_AUTO_NUMBER_ELEMENTS,
-    UPDATE_AUTO_NUMBER_ELEMENTS_LIST
+    UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
+    UPDATE_POPUP_PARENT_SLATE
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
-import { containerBodyMatter, getMediaElementInMultiColumn, getMediaElementInPopup } from './slateLevelMediaMapper';
+import { containerBodyMatter } from './slateLevelMediaMapper';
 import { containerElements, autoNumberElementsAllowed, autoNumber_ElementTypeToStoreKeysMapper, autoNumber_ElementTypeKey } from './AutoNumberConstants';
 import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
@@ -36,26 +37,26 @@ export const updateCreatedElementInAutonumberList = (mediaType, mediaList, autoN
     getAutoNumberSequence(autoNumberedElementsObj, dispatch)
 }
 
-export const findNearestMediaElement = (slateFigures, figureObj, elementType, index = undefined) => {
+export const findNearestElement = (elementsArr, elementObj, elementType, index = undefined) => {
     let objToReturn = {};
-    let mainIndex = index !== undefined ? index : figureObj.indexPos;
+    let mainIndex = index !== undefined ? index : elementObj.indexPos;
     if (mainIndex > 0) {
         for (let i = mainIndex - 1; i > -1; i--) {
-            if (slateFigures[i].displayedlabel === elementType) {
+            if (elementsArr[i].displayedlabel === elementType) {
                 objToReturn = {
                     key: 'above',
-                    obj: slateFigures[i]
+                    obj: elementsArr[i]
                 }
                 return objToReturn;
             }
         }
     }
     if (objToReturn === undefined || Object.keys(objToReturn).length === 0) {
-        for (let i = mainIndex + 1; i < slateFigures.length; i++) {
-            if (slateFigures[i].displayedlabel === elementType) {
+        for (let i = mainIndex + 1; i < elementsArr.length; i++) {
+            if (elementsArr[i].displayedlabel === elementType) {
                 objToReturn = {
                     key: 'below',
-                    obj: slateFigures[i]
+                    obj: elementsArr[i]
                 }
                 return objToReturn;
             }
@@ -64,33 +65,69 @@ export const findNearestMediaElement = (slateFigures, figureObj, elementType, in
     return objToReturn;
 }
 
-export const findMediaElementsInContainer = (element, numberedElements = []) => {
+export const findElementsInContainer = (element, numberedElements = [], createdElementData) => {
     switch (element.type) {
-        case 'showhide':
-            getAllMediaElementInShowhide(element, numberedElements)
+        case containerElements.SHOW_HIDE:
+            getAllElementsInShowhide(element, numberedElements, createdElementData);
             break;
-        case 'groupedcontent':
-            getAllMediaElementInMultiColumn(element, numberedElements)
+        case containerElements.MULTI_COLUMN:
+            getAllElementsInMultiColumn(element, numberedElements, createdElementData);
             break;
-        case 'popup':
-            getMediaElementInPopup(element, numberedElements)
+        case containerElements.POPUP:
+            getAllElementsInPopup(element, numberedElements, createdElementData);
             break;
-        case "element-aside":
-            getAllMediaElementInAsideWE(element, numberedElements)
+        case containerElements.ASIDE:
+            getAllElementsInAsideWE(element, numberedElements, createdElementData);
+            break;
+        case containerElements.MANIFEST:
+            getAllElementsInManifest(element, numberedElements, createdElementData);
             break;
     }
     return numberedElements;
 }
 
-const getAllMediaElementInAsideWE = (containerData, numberedElements) => {
-    let count = 0;
+export const getAllElementsInPopup = (containerData, numberedElements, createdElementData) => {
+    if (containerData?.contents?.bodymatter?.length > 0) {
+        containerData?.contents?.bodymatter.forEach((element, index) => {
+            element.indexPos = containerData.indexPos.push(index)
+            if (element.displayedlabel === createdElementData.displayedlabel) {
+                containerData.indexPos.push(index)
+                element.indexPos = [...containerData.indexPos]
+                element.slateEntityUrn = getSlateEntityUrn()
+                numberedElements.push({...element})
+            } else if ((element.type === containerElements.MANIFEST && element.contents.bodymatter) || (Object.values(containerElements).indexOf(element.type) > -1)) {
+                containerData.indexPos.push(index)
+                element.indexPos = [...containerData.indexPos]
+                getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos])
+            }
+        })
+    }
+    return numberedElements
+}
+
+const getAllElementsInAsideWE = (containerData, numberedElements, createdElementData) => {
     if (containerData?.elementdata?.bodymatter?.length > 0) {
         containerData?.elementdata?.bodymatter.forEach((element, index) => {
-            if (element.type === 'figure') {
-                numberedElements.push({ contentUrn: element.contentUrn, index: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype })
+            if (element.displayedlabel === createdElementData.displayedlabel) {
+                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
+                numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element?.displayedlabel, figuretype: element.figuretype });
                 count++;
             } else if ((element.type === 'manifest' && element.contents.bodymatter) || (element.type === 'showhide')) {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements);
+                getImagesInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
+            }
+        })
+    }
+}
+
+const getAllElementsInManifest = (containerData, numberedElements, createdElementData) => {
+    if (containerData?.contents?.bodymatter?.length > 0) {
+        containerData?.contents?.bodymatter.forEach((element, index) => {
+            if (element.displayedlabel === createdElementData.displayedlabel) {
+                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
+                numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element?.displayedlabel, figuretype: element.figuretype });
+                count++;
+            } else if (element.type === 'showhide') {
+                getImagesInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
             }
         })
     }
@@ -102,16 +139,16 @@ const getAllMediaElementInAsideWE = (containerData, numberedElements) => {
  * @param {*} numberedElements 
  * @returns 
  */
-const getAllMediaElementInShowhide = (containerData, numberedElements) => {
+const getAllElementsInShowhide = (containerData, numberedElements, createdElementData) => {
     const showHideContent = containerBodyMatter(containerData);
-    let count = 0;
     if (showHideContent?.length > 0) {
         showHideContent.forEach((element, index) => {
-            if (element.type === 'figure') {
-                numberedElements.push({ contentUrn: element.contentUrn, index: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype });
+            if (element.displayedlabel === createdElementData.displayedlabel) {
+                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
+                numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype });
                 count++;
             } else if (element.type === 'element-aside') {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements, [...element.indexPos])
+                getImagesInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
             }
         })
     }
@@ -123,16 +160,16 @@ const getAllMediaElementInShowhide = (containerData, numberedElements) => {
  * @param {*} numberedElements 
  * @returns 
  */
- const getAllMediaElementInMultiColumn = (containerData, numberedElements) => {
+ const getAllElementsInMultiColumn = (containerData, numberedElements, createdElementData) => {
     if (containerData?.groupeddata?.bodymatter?.length > 0) {
         containerData?.groupeddata?.bodymatter.forEach(colData => {
             if (colData?.groupdata?.bodymatter?.length > 0) {
                 colData?.groupdata?.bodymatter.forEach((element, index) => {
-                    if (element.type === 'figure') {
-                        let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].index + 1 : 0;
-                        numberedElements.push({ contentUrn: element.contentUrn, index: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype });
+                    if (element.displayedlabel === createdElementData.displayedlabel) {
+                        let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
+                        numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype });
                     } else if (element.type === 'showhide' || element.type === 'element-aside') {
-                        getImagesInsideElement(containerBodyMatter(element), numberedElements, [...element.indexPos]);
+                        getImagesInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
                     }
                 })
             }
@@ -146,26 +183,30 @@ const getAllMediaElementInShowhide = (containerData, numberedElements) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideElement = (bodyMatter, numberedElements = [], parentIndex = []) => {
+export const getImagesInsideElement = (bodyMatter, numberedElements = [], createdElementData) => {
     if (bodyMatter?.length > 0) {
         bodyMatter?.forEach((element, index) => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
-                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].index + 1 : 0;
-                numberedElements.push({ contentUrn: element.contentUrn, index: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype })
+                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
+                numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel, figuretype: element.figuretype });
+                count++;
             }
             else if (Object.values(containerElements).indexOf(element.type) > -1) {
                 switch (element.type) {
-                    case 'showhide':
-                        getMediaElementInShowhide(element, numberedElements, index)
+                    case containerElements.SHOW_HIDE:
+                        getAllElementsInShowhide(element, numberedElements, createdElementData)
                         break;
-                    case 'groupedcontent':
-                        getMediaElementInMultiColumn(element, numberedElements)
+                    case containerElements.MULTI_COLUMN:
+                        getAllElementsInMultiColumn(element, numberedElements, createdElementData)
                         break;
-                    case 'popup':
-                        getMediaElementInPopup(element, numberedElements)
+                    case containerElements.POPUP:
+                        getAllElementsInPopup(element, numberedElements, createdElementData)
                         break;
-                    case "element-aside":
-                        getMediaElementInAsideWE(element, numberedElements)
+                    case containerElements.ASIDE:
+                        getAllElementsInAsideWE(element, numberedElements, createdElementData)
+                        break;
+                    case containerElements.MANIFEST:
+                        getImagesInsideElement(element?.contents?.bodymatter, numberedElements, createdElementData);
                         break;
                 }
             }
@@ -185,11 +226,14 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => (dispat
     let figureObj = slateFigures.find(element => element.contentUrn === createdElementData.contentUrn);
     let elementsList = autoNumberedElementsObj[listType];
     let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
-    const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === createdElementData.displayedlabel)
-
+    const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === createdElementData.displayedlabel);
+    const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
+    if (popupParentSlateData?.isPopupSlate) {
+        addElementInPopupSlate(bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
+    }
     if (figureObj.indexPos == 0 && activeLabelFigures.length > 1) {
         if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && (Object.keys(elementsList[slateEntityForAutonumber]).length > 0)) {
-            let nearestElementObj = findNearestMediaElement(slateFigures, figureObj, labelType);
+            let nearestElementObj = findNearestElement(slateFigures, figureObj, labelType);
 
             if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                 let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
@@ -210,7 +254,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => (dispat
             item.indexPos = count;
             count++;
         });
-        let nearestElementObj = findNearestMediaElement(slateFigures, figureObj, labelType);
+        let nearestElementObj = findNearestElement(slateFigures, figureObj, labelType);
 
         if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
             let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
@@ -227,7 +271,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => (dispat
         }
         updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
     } else if (Array.isArray(figureObj.indexPos) && activeLabelFigures.length > 1) {
-        handleAutonumberingForElementsInContainers(bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch)
+        handleAutonumberingForElementsInContainers(bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch)
     } else if (activeLabelFigures.length === 1) {
         checkElementExistenceInOtherSlates(createdElementData, config.slateEntityURN, getState, dispatch);
     }
@@ -240,62 +284,127 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => (dispat
  * @param {*} imagesList 
  * @returns 
  */
-export const handleAutonumberingForElementsInContainers = (bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch) => {
-    let mediaElementsInContainer = findMediaElementsInContainer(bodyMatter[figureObj.indexPos[0]], []);
-    let figureObjInContainer = mediaElementsInContainer.find(x => x.contentUrn === createdElementData.contentUrn);
-    const listType = createdElementData?.figuretype === 'video' ? 'videosList' : 'imagesList'
-    const labelType = createdElementData?.figuretype === 'video' ? "Video" : "Figure"
+export const handleAutonumberingForElementsInContainers = (bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch) => {
+    let elementsInContainer = findElementsInContainer(bodyMatter[elementObj.indexPos[0]], [], createdElementData);
     let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
-    if (mediaElementsInContainer.length && figureObjInContainer.index > 0) {
-        let indexPos = figureObjInContainer.index;
-        figureObjInContainer = {
-            ...figureObjInContainer,
-            indexPos: indexPos
-        }
-        let nearestElementObj = findNearestMediaElement(mediaElementsInContainer, figureObjInContainer, labelType);
-        if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
-            if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1)) {
-                let index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
-                index = nearestElementObj?.key === 'above' ? index + 1 : index;
-                elementsList[slateEntityForAutonumber].splice(index, 0, createdElementData);
-            } else {
-                elementsList = {
-                    ...elementsList,
-                    [slateEntityForAutonumber]: []
-                }
-                elementsList[slateEntityForAutonumber].push(createdElementData);
-            }
-            updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-        } else {
-            let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, labelType);
-            if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
-                let index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
-                index = nearestElementObj?.key === 'above' ? index + 1 : index;
-                elementsList[slateEntityForAutonumber].splice(index, 0, createdElementData);
-                updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-            } else {
-                elementsList[slateEntityForAutonumber].splice(figureObj.index, 0, createdElementData);
-                updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-            }
-        }
-    } else if (figureObjInContainer.index == 0) {
-        figureObjInContainer = {
-            ...figureObjInContainer,
-            indexPos: figureObj.indexPos[0]
-        }
-        let nearestElementObj = findNearestMediaElement(slateFigures, figureObjInContainer, labelType);
-        if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
-            let index = elementsList[slateEntityForAutonumber]?.findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
-            index = nearestElementObj?.key === 'above' ? index + 1 : index;
-            elementsList[slateEntityForAutonumber]?.splice(index, 0, createdElementData);
-            updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-        } else {
-            elementsList[slateEntityForAutonumber]?.splice(0, 0, createdElementData);
-            updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-        }
+    let activeLabelElements = slateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
+    if (elementsInContainer.length > 1) {
+        appendElementToList(elementsInContainer, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
+    } else if (elementsInContainer.length == 1 && activeLabelElements.length > 1) {
+        let count = 0;
+        activeLabelElements?.forEach(item => { item.indexPos = count; count++; });
+        appendElementToList(activeLabelElements, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
+    } else if (elementsInContainer.length == 1 && activeLabelElements.length == 1) {
+        checkElementExistenceInOtherSlates(createdElementData, config.slateEntityURN, getState, dispatch);
     }
 }
 
+export const addElementInPopupSlate = (bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch) => {
+    let popupSlateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN]?.contents?.bodymatter;
+    let popupSlateFigures = getImagesInsideSlates(popupSlateBodymatter);
+    let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
+    let activeLabelElements = popupSlateFigures?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
+    const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
+    if (activeLabelElements.length > 1) {
+        appendElementToList(popupSlateFigures, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
+    } 
+    // else if (popupSlateFigures.length == 1 && activeLabelElements.length > 1) {
+    //     let count = 0;
+    //     activeLabelElements?.forEach(item => { item.indexPos = count; count++; });
+    //     appendElementToList(activeLabelElements, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
+    // }
+     else if (activeLabelElements.length == 1 && popupParentSlateData?.isPopupSlate) {
+         let popupIndex = popupParentSlateData.index
+        if (typeof (index) == 'number') {
+            if (newBodymatter[index].versionUrn == elementWorkId) {
+                glossaryFootElem = newBodymatter[index]
+            }
+        } else {
+            let indexes = index.split('-');
+        }
+        let bodyMatter = getState().appStore.slateLevelData[popupParentSlateData.parentSlateId]?.contents?.bodymatter;
+    let slateFigures = getImagesInsideSlates(bodyMatter);
+    let figureObj = slateFigures.find(element => element.contentUrn === createdElementData.contentUrn);
+    let elementsList = autoNumberedElementsObj[listType];
+    const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === createdElementData.displayedlabel);
+
+    if (figureObj.indexPos == 0 && activeLabelFigures.length > 1) {
+        if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && (Object.keys(elementsList[slateEntityForAutonumber]).length > 0)) {
+            let nearestElementObj = findNearestElement(slateFigures, figureObj, labelType);
+
+            if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
+                let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
+                index = nearestElementObj?.key === 'above' ? index + 1 : index;
+                elementsList[slateEntityForAutonumber]?.splice(index, 0, createdElementData);
+            }
+        } else if (Object.keys(elementsList[slateEntityForAutonumber]).length === 0) {
+            elementsList = {
+                ...elementsList,
+                [slateEntityForAutonumber]: []
+            }
+            elementsList[slateEntityForAutonumber].push(createdElementData);
+        }
+        updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
+    } else if (figureObj.indexPos > 0 && activeLabelFigures.length > 1) {
+        let count = 0;
+        slateFigures.forEach(item => {
+            item.indexPos = count;
+            count++;
+        });
+        let nearestElementObj = findNearestElement(slateFigures, figureObj, labelType);
+
+        if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
+            let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
+            index = nearestElementObj?.key === 'above' ? index + 1 : index;
+            elementsList[slateEntityForAutonumber]?.splice(index, 0, createdElementData);
+        } else if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1)) {
+            elementsList[slateEntityForAutonumber]?.splice(figureObj.indexPos, 0, createdElementData);
+        } else {
+            elementsList = {
+                ...elementsList,
+                [slateEntityForAutonumber]: []
+            }
+            elementsList[slateEntityForAutonumber].push(createdElementData);
+        }
+        updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
+    } else if (Array.isArray(figureObj.indexPos) && activeLabelFigures.length > 1) {
+        handleAutonumberingForElementsInContainers(bodyMatter, figureObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch)
+    } else if (activeLabelFigures.length === 1) {
+        checkElementExistenceInOtherSlates(createdElementData, config.slateEntityURN, getState, dispatch);
+    }
+    }
+}
+
+export const appendElementToList = (elementsArr, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch) => {
+    let elementObjInContainer = elementsArr.find(element => element.contentUrn === createdElementData.contentUrn);
+    let indexPos = elementObjInContainer?.indexPos;
+    elementObjInContainer = {
+        ...elementObjInContainer,
+        indexPos: indexPos
+    }
+    let nearestElementObj = findNearestElement(elementsArr, elementObjInContainer, labelType);
+    if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
+        if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && elementsList[slateEntityForAutonumber].length > 0) {
+            let index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
+            index = nearestElementObj?.key === 'above' ? index + 1 : index;
+            elementsList[slateEntityForAutonumber].splice(index, 0, createdElementData);
+        } else {
+            elementsList = {
+                ...elementsList,
+                [slateEntityForAutonumber]: []
+            }
+            elementsList[slateEntityForAutonumber].push(createdElementData);
+        }
+        updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
+    }
+}
+
+/**
+ * Returns all slates inside FM/BM/Chapter
+ * @param {*} inputArr 
+ * @param {*} slatesArr 
+ * @returns 
+ */
 export const getAllSlatesListInsideParent = (inputArr, slatesArr) => {
     inputArr.forEach(innerObj => {
         if (innerObj.label === 'module' || innerObj.label === 'appendix') {
@@ -407,4 +516,11 @@ export const findElementInNextSlates = (slatesArr, slateIndex, elementsList, par
         }
     }
     return index;
+}
+
+export const savePopupParentSlateData = (popupParentSlateData) => (dispatch) => {
+    dispatch({
+        type: UPDATE_POPUP_PARENT_SLATE,
+        payload: popupParentSlateData
+    });
 }

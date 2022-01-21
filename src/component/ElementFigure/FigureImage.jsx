@@ -460,7 +460,7 @@ class FigureImage extends Component {
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
-                            {this.props.isAutoNumberingEnabled ?
+                            {this.props.isAutoNumberingEnabled && model?.hasOwnProperty('numberedandlabel') ?
                                 <FigureHeader
                                     {...this.props}
                                     figureHtmlData={figureHtmlData}

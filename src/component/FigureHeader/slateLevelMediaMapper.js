@@ -8,9 +8,9 @@ import { getSlateEntityUrn } from './AutoNumber_helperFunctions';
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[]) => {
+export const getImagesInsideSlates = (bodyMatter, numberedElements = [], parentIndex = []) => {
     if (bodyMatter?.length > 0) {
-        bodyMatter?.forEach((element,index) => {
+        bodyMatter?.forEach((element, index) => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
                 if (parentIndex?.length) {
                     element.indexPos = [...parentIndex]
@@ -26,16 +26,19 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                 element.indexPos.push(index)
                 switch (element.type) {
                     case containerElements.SHOW_HIDE:
-                        getMediaElementInShowhide(element, numberedElements, index)
+                        getMediaElementInShowhide(element, numberedElements, [...element.indexPos])
                         break;
                     case containerElements.MULTI_COLUMN:
-                        getMediaElementInMultiColumn(element, numberedElements)
+                        getMediaElementInMultiColumn(element, numberedElements, [...element.indexPos])
                         break;
                     case containerElements.POPUP:
                         getMediaElementInPopup(element, numberedElements)
                         break;
                     case containerElements.ASIDE:
-                        getMediaElementInAsideWE(element, numberedElements)
+                        getMediaElementInAsideWE(element, numberedElements, [...element.indexPos])
+                        break;
+                    case containerElements.MANIFEST:
+                        getImagesInsideSlates(element?.contents?.bodymatter, numberedElements, [...element.indexPos]);
                         break;
                 }
             }
@@ -118,10 +121,12 @@ export const getMediaElementInAsideWE = (containerData, numberedElements) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getMediaElementInMultiColumn = (containerData, numberedElements) => {
+export const getMediaElementInMultiColumn = (containerData, numberedElements, parentIndex) => {
     if (containerData?.groupeddata?.bodymatter?.length > 0) {
-        containerData?.groupeddata?.bodymatter.forEach(colData => {
+        containerData?.groupeddata?.bodymatter.forEach((colData, i) => {
             if (colData.type === containerElements.GROUP) {
+                containerData.indexPos = [...parentIndex];
+                containerData.indexPos.push(i);
                 if (colData?.groupdata?.bodymatter?.length > 0) {
                     colData?.groupdata?.bodymatter.forEach((element, index) => {
                         if (element.type === ELEMENT_TYPES.FIGURE) {

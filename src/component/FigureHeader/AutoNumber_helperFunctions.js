@@ -9,7 +9,7 @@ import {
     UPDATE_AUTO_NUMBER_ELEMENTS_LIST
 } from '../../constants/Action_Constants.js';
 import {getAutoNumberSequence} from './AutoNumberActions';
-import { findNearestMediaElement } from './AutoNumberCreate_helper';
+import { findNearestElement } from './AutoNumberCreate_helper';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO } from '../../constants/Element_Constants';
 const {
@@ -353,7 +353,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newLabel, element, autoNu
         displayedlabel: newLabel
     }
     if (autoNumberedElements[autoNumber_ElementTypeKey[newLabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn]) {
-        let nearestElementObj = findNearestMediaElement(slateFigures, element, newLabel, elementSlateIndex);
+        let nearestElementObj = findNearestElement(slateFigures, element, newLabel, elementSlateIndex);
         if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
             let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
             storeIndex = nearestElementObj?.key === 'above' ? storeIndex + 1 : storeIndex;
