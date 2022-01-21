@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
 import ElementAsideContainer from '../../../src/component/ElementAsideContainer/ElementAsideContainer';
-import { elementAsideWorkExample, elementAside, element, section } from '../../../fixtures/elementAsideData';
+import { elementAsideWorkExample, elementAside, element, section,asideNumbering } from '../../../fixtures/elementAsideData';
 import { threeMultiColumnContainer } from '../../../fixtures/multiColumnContainer';
 import { showHide } from '../../../fixtures/ElementSHowHideData';
 import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
@@ -39,7 +39,8 @@ let initialState = {
             index: "1-0",
             tag: "H1",
             toolbar: ['bold']
-        }
+        },
+        asideTitleData:[]
     },
     toolbarReducer: {
         elemBorderToggle: "true"
@@ -129,7 +130,6 @@ describe('Testing ElementAside component with props', () => {
         it('should have comment-wrapper', () => {
             expect(wrapper.find(".aside-break-bottom")).toHaveLength(1)
         })
-
     })
     describe('Testing functions with props', () => {
         it('should render section function', () => {
@@ -346,3 +346,155 @@ describe('Testing ElementAside component with props', () => {
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>)
     })
 })
+
+describe("test AsideWENumebring",()=>{
+    let props = {
+        element: asideNumbering,
+        swapElement : swapElement,
+        onUpdate : jest.fn(),
+        onStart : jest.fn(),
+        setActiveElement : jest.fn(),
+        handleFocus : jest.fn(),
+        swapElement : jest.fn(),
+        deleteElement: jest.fn(),
+        slateLockInfo:{isLocked:false,userId:'c5test01'},
+        handleCopyPastePopup:jest.fn(),
+        handleBlur:jest.fn(),
+        asideTitleData: [{
+            elementId: "urn:pearson:manifest:6760246e-8cd5-4ddd-a525-292a98ab1422",
+            isAsideNumber: true
+        }, {
+            elementId: "urn:pearson:manifest:6760246e-8cd5-4ddd-a525-292a98ab1432",
+            isAsideNumber: true
+        }]
+    } 
+    const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} esProps={props.elementSepratorProps}/> </Provider>);
+    const instance = wrapper.find('ElementAsideContainer').instance();
+
+    it('Test componentWillUnmount', () => {
+        jest.spyOn(instance, 'componentWillUnmount')
+        document.removeEventListener = () => {
+            return true
+        }
+        instance.componentWillUnmount();
+        expect(instance.componentWillUnmount).toHaveBeenCalled()
+    });
+    it('Test handleClickOutside', () => {
+        const event={
+            target:false,
+            path:[{
+                id:"cypress-1-t1"
+            }]
+        }
+        const outClick=jest.spyOn(instance, 'handleClickOutside')
+        instance.asideRef.current = { contains: () => { return event.target } }
+        instance.handleClickOutside(event)
+        const AsideBlur=jest.spyOn(instance,'handleAsideBlur');
+        instance.handleAsideBlur(event);
+        expect(outClick).toHaveBeenCalled();
+        expect(AsideBlur).toHaveBeenCalled()
+    });
+    it('Test Aside Blur-else-1', () => {
+        const event={
+            target: { classList: { contains: () => { return ['element-container','as'] } } },
+            path:[{ }]
+        }
+        const AsideBlur=jest.spyOn(instance,'handleAsideBlur');
+        instance.handleAsideBlur(event);
+        expect(AsideBlur).toHaveBeenCalled()
+    });
+    it("render Title field",()=>{
+        const asideHtmlData = {
+            formattedLabel: "<p class=\"paragraphNumeroUno\">Test123</p>",
+            formattedNumber: "<p class=\"paragraphNumeroUno\">1.1</p>",
+            formattedTitle: "<p class=\"paragraphNumeroUno\">AsideNumbers</p>"
+        }
+        const renderTitle=jest.spyOn(instance,"renderTitleField");
+        instance.renderTitleField(asideHtmlData);
+        expect(renderTitle).toHaveBeenCalled();
+    });
+    it("Test setFieldsForAside",()=>{
+        const TitleFields=jest.spyOn(instance,"setFieldsForAside")
+        instance.setFieldsForAside(props.element,props.asideTitleData);
+        expect(TitleFields).toHaveBeenCalled();
+    });
+    it("Test setFieldsForAside else",()=>{
+        const TitleFields=jest.spyOn(instance,"setFieldsForAside")
+        instance.setFieldsForAside("","");
+        expect(TitleFields).toHaveBeenCalled();
+    });
+    it('onFigureElementFieldFocus',()=>{
+        document.getElementById = () => {
+            return {
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => true),
+                        add: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let id="1-t3"
+        const FieldFocus=jest.spyOn(instance,"onFigureElementFieldFocus")
+        instance.onFigureElementFieldFocus(id);
+        expect(FieldFocus).toHaveBeenCalled();
+    });
+    it('onFigureElementFieldFocus 2nd if',()=>{
+        document.getElementById = () => {
+            return {
+                innerHTML: 'test text',
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => false),
+                        add: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => false)
+                }
+            }
+        }
+        let id="1-t3"
+        const FiledFocus= jest.spyOn(instance,"onFigureElementFieldFocus")
+        instance.onFigureElementFieldFocus(id);
+        expect(FiledFocus).toHaveBeenCalled();
+    });
+    it('onFigureImageFieldBlur',()=>{
+        document.getElementById = () => {
+            return {
+                innerHTML: "<br>",
+                nextElementSibling: {
+                    classList: {
+                        contains: jest.fn(() => true),
+                        remove: jest.fn()
+                    }
+                },
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let id="1-t3"
+        const FiledBlur= jest.spyOn(instance,"onFigureImageFieldBlur")
+        instance.onFigureImageFieldBlur(id);
+        expect(FiledBlur).toHaveBeenCalled();
+
+    })
+    it('onFigureImageFieldBlur 2nd if',()=>{
+        document.getElementById = () => {
+            return {
+                classList: {
+                    contains: jest.fn(() => true)
+                }
+            }
+        }
+        let id="1-t3"
+        const FiledBlur= jest.spyOn(instance,"onFigureImageFieldBlur")
+        instance.onFigureImageFieldBlur(id);
+        expect(FiledBlur).toHaveBeenCalled();
+
+    })
+});

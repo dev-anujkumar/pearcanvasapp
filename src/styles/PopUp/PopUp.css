@@ -221,7 +221,7 @@
     font-family: "Helvetica Neue", sans-serif;
     color: #000;
 }
-.delete-element-text, .audioRemoveClass, .remove-glossary-image{
+.delete-element-text, .audioRemoveClass, .remove-glossary-image, .blockcode-warning-text{
   font-family: "Helvetica Neue", sans-serif;
   color: #000;
   font-size: 16px;

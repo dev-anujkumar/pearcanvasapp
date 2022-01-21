@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
 import { QUERY_SELECTOR } from './KeyboardWrapper.jsx';
@@ -36,9 +36,14 @@ const KeyboardUpDown = (props) => {
                 // add span at last and click on span
                 // childElement.click();
                 const span = document.createElement('span');
+                span.id = "f-e-s"
                 span.innerHTML = "<br>";
                 childElement.firstChild.appendChild(span);
                 span.click();
+            }
+            else if(lastChild.id === "f-e-s") {
+                lastChild.parentNode.removeChild(lastChild);
+                childElement.click();
             }
             else {
                 childElement.click();
@@ -61,10 +66,6 @@ const KeyboardUpDown = (props) => {
         }
     }
 
-    const shouldEnableScroll = (selectedNodeIndex, allElementLength) => {
-        return allElementLength;
-    }
-
     const handleKeyDown = (event) => {
         if (event.keyCode === 38 || event.keyCode === 40) {
 
@@ -81,8 +82,7 @@ const KeyboardUpDown = (props) => {
 
                 }
                 else if (event.keyCode === 40 && selectedNodeIndex !== allInteractiveElements.length) {
-                    const enableScroll = shouldEnableScroll(selectedNodeIndex, allInteractiveElements.length);
-                    getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], enableScroll, selectedNodeIndex);
+                    getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], selectedNodeIndex);
                 }
             }
         }

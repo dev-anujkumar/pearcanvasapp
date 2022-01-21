@@ -6,7 +6,7 @@ import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
-import { createLabelNumberTitleModel, getTitleSubtitleModel } from '../../constants/utility';
+import { createLabelNumberTitleModel, getTitleSubtitleModel, removeSpellCheckDOMAttributes } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForAutonumbering } from '../FigureHeader/AutoNumberConstants';
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import { setAutonumberingValuesForPayload, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
@@ -29,6 +29,8 @@ export const replaceUnwantedtags = (html,flag) => {
     }
     tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
     tempDiv.innerHTML = handleBlankLineDom(tempDiv.innerHTML)
+    // calling the function to remove tinymce spell check DOM attributes from innerHTML
+    // tempDiv.innerHTML = removeSpellCheckDOMAttributes(tempDiv.innerHTML);
     return tempDiv.innerHTML;
 }
 
@@ -629,6 +631,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             else if ((attributionText.length > 0 && inputElementSubType == "BLOCKQUOTE") || (attributionText.length > 0 && inputElementSubType == "MARGINALIA")) {
                 inputElementSubType = "MARGINALIA"
             }
+            // PCAT-2426 - calling function to remove tinymce spellcheck DOM attributes from innerHTML
+            // innerHTML = removeSpellCheckDOMAttributes(innerHTML);
             dataToReturn = {
                 ...previousElementData,
                 elementdata : {
