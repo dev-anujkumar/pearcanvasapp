@@ -74,7 +74,7 @@ let cypressConfig = {
     TCM_CANVAS_POPUP_DATA: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tctx` :"http://localhost:5000/tctx",
     TCM_CUT_COPY_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/cut-copy-snapshots` :"http://localhost:5000/cut-copy-snapshots",
     getENVConfig: process.env.NODE_ENV === "development" ? 'https://10.11.7.24:8081/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
-    TINYMCE_SPELL_CHECKER_URL: process.env.NODE_ENV === "development" ? 'http://localhost:8080/ephox-spelling/': '/cypress/tiny-mce-srvr/ephox-spelling/',
+    TINYMCE_SPELL_CHECKER_URL: process.env.NODE_ENV === "development" ? 'http://localhost:8080/ephox-spelling/': '/cypress/tinymce-srvr/ephox-spelling/',
     prodUrl : 'https://structuredauthoring.pearson.com',
     sitePointing : 'dev',
     conversionInProcess : false,
