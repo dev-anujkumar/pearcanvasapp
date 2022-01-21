@@ -130,7 +130,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
         const newPopupSlateData = JSON.parse(JSON.stringify(popupSlateData));
         let createdElementData = createdElemData.data;
-
         if (type == 'SECTION_BREAK') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == asideData.id) {
