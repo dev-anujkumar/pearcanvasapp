@@ -1,6 +1,6 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss';
 import 'tinymce/plugins/charmap/plugin.min.js';
-// import 'tinymce/plugins/tinymcespellchecker/plugin.min.js';
+import 'tinymce/plugins/tinymcespellchecker/plugin.min.js';
 import 'tinymce/plugins/casechange/plugin.min.js';
 import { checkBlockListElement, handleC2MediaClick } from '../js/TinyMceUtility.js';
 import ElementConstants from '../component/ElementContainer/ElementConstants.js';
