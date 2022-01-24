@@ -264,6 +264,8 @@ class SlateTagDropdown extends React.Component {
     const {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
     } = this.prepareExtFrameworkData();
+    const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
+    const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
     const currentSlateLF=this.props.currentSlateLF;
     let assessmentuRN="";
     let assessmentType="";
@@ -326,7 +328,9 @@ class SlateTagDropdown extends React.Component {
             'chapterContainerUrn': '',
             'currentSlateLF': currentSlateLF,
             'assessmentUrn': assessmentuRN,
-            'previewData': previewData
+            'previewData': previewData,
+            'projectSharingRole': projectSharingRole,
+            'isSubscribed': isSubscribed
         }
       })
     }
