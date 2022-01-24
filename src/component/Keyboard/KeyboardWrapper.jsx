@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
+const NORMAL_SELECTOR = `cypress-`
 
 /**
  * function decides to
@@ -16,7 +17,7 @@ const updateCursor = (e, move) => {
         e.preventDefault();
     }
     else {
-        // moves to next Element in DOM
+        // moves to next line of same element
         e.stopPropagation()
     }
 }
@@ -88,6 +89,10 @@ const isFirtstChild = (node, tinymceOffset) => {
         else if (firstTextNode?.nodeName === 'BR' && node?.nodeName === 'LI') {
             return true;
             // for empty list
+        }
+        else if (node?.id?.startsWith(NORMAL_SELECTOR) && node?.parentNode?.id.startsWith(QUERY_SELECTOR)) {
+            // tinymce edtiors empty values
+           return tinymceOffset === 0
         }
         else return false;
 
@@ -169,8 +174,11 @@ const isLastChild = (node, tinymceOffset) => {
                 return true;
             }
           
+        }        
+        else if (node?.id?.startsWith(NORMAL_SELECTOR) && node?.parentNode?.id.startsWith(QUERY_SELECTOR)) {
+            // tinymce edtiors empty values
+           return tinymceOffset === 0
         }
-
 
         else return footNoteCases(node, lastTextNode);
 
