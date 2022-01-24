@@ -95,7 +95,6 @@ class FigureImage extends Component {
             this.dataFromNewAlfresco(alfrescoAssetData)
         }
         if(!prevState.figureDropDown && this.state.figureDropDown) {
-            console.log("All List 2", this.labelListRef);
             this.setState({showingListIndex: 0});
             this.labelListRef.current.childNodes[0].focus();
             this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown)
@@ -104,8 +103,6 @@ class FigureImage extends Component {
 
 
     handleLabelKeyDown = (event) => {
-        console.log("the event is ", event.keyCode, this.labelListRef,this.state.showingListIndex);
-        console.log("Foccsuing on -1", this.labelListRef.current.childNodes);
        
         if(event.keyCode === 13) {
             this.labelListRef.current.childNodes[this.state.showingListIndex].click();
@@ -114,13 +111,11 @@ class FigureImage extends Component {
 
         else if (event.keyCode === 40) {
             if(this.labelListRef.current.childNodes[this.state.showingListIndex + 1]) {
-                console.log("Foccsuing on 1", this.labelListRef.current.childNodes[this.state.showingListIndex + 1])
                 this.labelListRef.current.childNodes[this.state.showingListIndex + 1 ].focus();
                 this.setState({showingListIndex: this.state.showingListIndex + 1});
             }
         } else if (event.keyCode === 38) {
             if(this.labelListRef.current.childNodes[this.state.showingListIndex - 1]) {
-                console.log("Foccsuing on ", this.labelListRef.current.childNodes[this.state.showingListIndex - 1])
                 this.labelListRef.current.childNodes[this.state.showingListIndex - 1].focus();
                 this.setState({showingListIndex: this.state.showingListIndex - 1});
             
@@ -131,7 +126,6 @@ class FigureImage extends Component {
     }
 
     handleCaptionDown = (event) => {
-        console.log("Event Down", event.keyCode);
         if(event.keyCode === 40) {
             // focus button
             event.stopPropagation();
@@ -140,7 +134,6 @@ class FigureImage extends Component {
     }
 
     handleCaptionDown = (event) => {
-        console.log("Event Down", event.keyCode);
         if(event.keyCode === 38) {
             // focus button
             event.stopPropagation();
@@ -597,7 +590,6 @@ class FigureImage extends Component {
                                             <KeyboardWrapper index={`${this.props.index}-label-1`} enable focus>
                                                 <div ref={this.labelRef} tabIndex={0} onKeyDown={(e) => {
                                                     const key = e.which || e.keyCode;
-                                                    console.log("Key is presseing in label", key);
                                                     if(key === 13) {
                                                         this.handleFigureDropdown();
                                                         e.stopPropagation();
@@ -615,8 +607,7 @@ class FigureImage extends Component {
                                                 <ul ref={this.labelListRef}>
                                                     {this.state.figureLabelData.map((label, i) => {
                                                         return (
-                                                            <li tabIndex={0} key={i} onClick={() => { 
-                                                                console.log("Right here");
+                                                            <li tabIndex={0} key={i} onClick={() => {
                                                                 this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
                                                         )
                                                     })}
