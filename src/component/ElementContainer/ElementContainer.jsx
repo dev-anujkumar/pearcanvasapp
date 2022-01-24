@@ -429,14 +429,14 @@ class ElementContainer extends Component {
         if (previousElementData.figuretype !== 'tableasmarkup') {
             oldImage = this.props.oldFigureDataForCompare.path;
         }
-        if (this.props?.isAutoNumberingEnabled && (previousElementData.figuretype !== 'tableasmarkup')) {
+        if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel') && (previousElementData.figuretype !== 'tableasmarkup')) {
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
             // Selecting default case 
-            if ((previousElementData?.hasOwnProperty('manualoverride') || !previousElementData?.numberedandlabel) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -656,14 +656,14 @@ class ElementContainer extends Component {
         let assetId = previousElementData.figuretype == 'video' ? previousElementData.figuredata.videoid : (previousElementData.figuredata.audioid ? previousElementData.figuredata.audioid : "");
         let oldImage = this.props.oldImage;
         oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
-        if (this.props.isAutoNumberingEnabled) {
+        if (this.props.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
             // Selecting default case 
-            if ((previousElementData?.hasOwnProperty('manualoverride') || !previousElementData?.numberedandlabel) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 

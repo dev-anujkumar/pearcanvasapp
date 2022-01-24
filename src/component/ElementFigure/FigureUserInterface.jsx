@@ -476,7 +476,7 @@ class FigureUserInterface extends Component {
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
-                            {this.checkForAutoNumberedContent(this.props.element) ?
+                            {this.checkForAutoNumberedContent(this.props.element) && this.props?.element?.hasOwnProperty('numberedandlabel') ?
                                 <FigureHeader
                                     {...this.props}
                                     model={this.props.element}

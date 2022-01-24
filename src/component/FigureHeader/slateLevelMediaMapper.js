@@ -47,10 +47,10 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                 if (parentIndex?.length) element.parentDetails = parentIndex
                 switch (element.type) {
                     case containerElements.SHOW_HIDE:
-                        getMediaElementInShowhide(element, numberedElements, index)
+                        getMediaElementInShowhide(element, numberedElements, [...element.indexPos])
                         break;
                     case containerElements.MULTI_COLUMN:
-                        getMediaElementInMultiColumn(element, numberedElements)
+                        getMediaElementInMultiColumn(element, numberedElements, [...element.indexPos])
                         break;
                     case containerElements.POPUP:
                         const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
@@ -58,7 +58,10 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                         await getMediaElementInPopup(popupContent, numberedElements)
                         break;
                     case containerElements.ASIDE:
-                        getMediaElementInAsideWE(element, numberedElements)
+                        getMediaElementInAsideWE(element, numberedElements, [...element.indexPos])
+                        break;
+                    case containerElements.MANIFEST:
+                        getImagesInsideSlates(element?.contents?.bodymatter, numberedElements, [...element.indexPos]);
                         break;
                 }
             }
@@ -147,10 +150,12 @@ export const getMediaElementInAsideWE = (containerData, numberedElements) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getMediaElementInMultiColumn = (containerData, numberedElements) => {
+export const getMediaElementInMultiColumn = (containerData, numberedElements, parentIndex) => {
     if (containerData?.groupeddata?.bodymatter?.length > 0) {
-        containerData?.groupeddata?.bodymatter.forEach(colData => {
+        containerData?.groupeddata?.bodymatter.forEach((colData, i) => {
             if (colData.type === containerElements.GROUP) {
+                containerData.indexPos = [...parentIndex];
+                containerData.indexPos.push(i);
                 if (colData?.groupdata?.bodymatter?.length > 0) {
                     colData?.groupdata?.bodymatter.forEach((element, index) => {
                         element.parentDetails = containerData.parentDetails  || []
