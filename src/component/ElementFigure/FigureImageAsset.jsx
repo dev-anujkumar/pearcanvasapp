@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useEffect, useRef } from 'react';
 /**Import Assets */
 import { DEFAULT_IMAGE_SOURCE } from '../../constants/Element_Constants';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
+import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 /**Import Constants */
 import { FIGURE_IMAGE_BUTTON_TITLE, IMAGE_ID, IMAGE_PATH, ALFRESCO_SITE_PATH, UPDATE_FIGURE_IMAGE_BUTTON_TITLE } from './ElementFigure_Constants'
 
@@ -9,38 +11,88 @@ import { FIGURE_IMAGE_BUTTON_TITLE, IMAGE_ID, IMAGE_PATH, ALFRESCO_SITE_PATH, UP
  * This is Pure Component to render Image Asset of FigureImage Component
  */
 const FigureImageAsset = (props) => {
-    const { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight } = props.figureTypeData
+    const { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, onFocusTop, onFocusBottom } = props.figureTypeData;
+
+    const addFigureRef = useRef(null);
+    const updateFigureRef = useRef(null);
+    const deleteFigureRef = useRef(null);
+    const [focusBackground, serFocusBackgrond] = useState(false);
+
+
+
+
+    const focusDelete = () => {
+        deleteFigureRef.current.focus();
+        serFocusBackgrond(true);
+    }
+
+    const focusSelectAnImage = () => {
+        addFigureRef.current.focus();
+    }
+
+    const focusUpdate = () => {
+        updateFigureRef.current.focus();
+        serFocusBackgrond(true);
+    }
+
+    const triggerClickOnEnter = (event) => {
+        const keyCode = event.keyCode;
+        if(keyCode === 13) {
+            const node = document.activeElement;
+            node.click();
+        }
+    }
+    const removeFocus = () => {
+        serFocusBackgrond(false);
+    }
+
+
     return (
-        <div className="figure-image-container">
-            <div id="figure_add_div" className={`pearson-component image figureData ${imageClass} ${props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
-                {
-                    props.model.figuredata && props.model.figuredata.imageid ?
-                        <img src={props.imgSrc ? props.imgSrc : (props?.model?.figuredata?.path !== "" ? props.model.figuredata.path : '')}
-                            data-src={props.imgSrc}
-                            title=""
-                            alt=""
-                            className={imageDimension + ' lazyload ' + actualSizeClass}
-                            draggable="false"
-                            width={imgWidth}
-                            height={imgHeight}
-                        /> : <div className='figurebutton' onClick={(e) => props.addFigureResource(e)}>{FIGURE_IMAGE_BUTTON_TITLE}</div>
-                }
+       
+            <div className={`figure-image-container`}>
+                <div id="figure_add_div" className={`pearson-component image figureData ${imageClass} ${props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
+                    {
+                        props.model.figuredata && props.model.figuredata.imageid ?
+                            <img src={props.imgSrc ? props.imgSrc : (props?.model?.figuredata?.path !== "" ? props.model.figuredata.path : '')}
+                                data-src={props.imgSrc}
+                                title=""
+                                alt=""
+                                className={imageDimension + ' lazyload ' + actualSizeClass}
+                                draggable="false"
+                                width={imgWidth}
+                                height={imgHeight}
+                            /> : 
+                            <KeyboardWrapper index={`${props.index}-image-asset-1`} enable>
+                                <div onClick={focusSelectAnImage}>
+                                    <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={addFigureRef} className='figurebutton' onClick={(e) => props.addFigureResource(e)}>{FIGURE_IMAGE_BUTTON_TITLE}</div>
+                                </div>
+                            </KeyboardWrapper>
+                    }
+                </div>
+                <div>
+                    {
+                        props.model.figuredata && props.model.figuredata.imageid !== "" ?
+                            <div className={`${focusBackground?'image-background-focus': ''} figure-wrapper`}>
+                                <div className="figure-image-info">
+                                    <div className='image-figure'><p className='image-text'>{IMAGE_ID}</p> <span className='image-info'> {props.model.figuredata && props.model.figuredata.imageid ? props.model.figuredata.imageid : ""}</span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>{IMAGE_PATH}</p> <span className='image-info'> {props.imgSrc ? props.imgSrc : (props.model.figuredata.path && props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? props.model.figuredata.path : "")}</span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>{ALFRESCO_SITE_PATH}</p> <span className='image-info'>{props.model.figuredata && props.model.figuredata.path && props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? props.alfrescoSite : ""}</span> </div>
+                                </div>
+
+                            <KeyboardWrapper index={`${props.index}-image-asset-1`} enable>
+                                <div onClick={focusUpdate}>
+                                    <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={updateFigureRef} className='updatefigurebutton' onClick={(e) => props.addFigureResource(e)}>{UPDATE_FIGURE_IMAGE_BUTTON_TITLE}</div>
+                                </div>
+                            </KeyboardWrapper>
+                            <KeyboardWrapper index={`${props.index}-image-asset-2`} enable>
+                                <div onClick={focusDelete}>
+                                  <div onBlur={removeFocus} onKeyDown={triggerClickOnEnter} tabIndex={0} ref={deleteFigureRef} className='deletefigurebutton' onClick={() => props.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                                </div>
+                               </KeyboardWrapper>
+                            </div> : ''
+                    }
+                </div>
             </div>
-            <div>
-                {
-                    props.model.figuredata && props.model.figuredata.imageid !== "" ?
-                        <div className="figure-wrapper">
-                            <div className="figure-image-info">
-                                <div className='image-figure'><p className='image-text'>{IMAGE_ID}</p> <span className='image-info'> {props.model.figuredata && props.model.figuredata.imageid ? props.model.figuredata.imageid : ""}</span> </div>
-                                <div className='image-figure-path'><p className='image-text'>{IMAGE_PATH}</p> <span className='image-info'> {props.imgSrc ? props.imgSrc : (props.model.figuredata.path && props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? props.model.figuredata.path : "")}</span> </div>
-                                <div className='image-figure-path'><p className='image-text'>{ALFRESCO_SITE_PATH}</p> <span className='image-info'>{props.model.figuredata && props.model.figuredata.path && props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? props.alfrescoSite : ""}</span> </div>
-                            </div>
-                            <div className='updatefigurebutton' onClick={(e) => props.addFigureResource(e)}>{UPDATE_FIGURE_IMAGE_BUTTON_TITLE}</div>
-                            <div className='deletefigurebutton' onClick={() => props.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
-                        </div> : ''
-                }
-            </div>
-        </div>
     )
 }
 

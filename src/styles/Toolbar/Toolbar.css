@@ -101,7 +101,7 @@
     word-break: break-all;
   }
 
-  .tox-editor-container .tox-toolbar{
+  .tox-editor-container .tox-toolbar__primary{
     background: #ffffff !important;
     cursor: pointer;
   }
