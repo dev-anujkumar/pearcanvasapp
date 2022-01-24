@@ -689,7 +689,7 @@ th ol li.listItemNumeroUnoNone:before {
     border: 1px solid #005a70;
     background-color: #def8ff;
 }
-.deletefigurebutton:hover, .updatefigurebutton:hover {
+.deletefigurebutton:hover, .updatefigurebutton:hover , .deletefigurebutton:focus, .updatefigurebutton:focus {
     background-color: #def8ff;
 }
 .updatefigurebutton{
@@ -724,10 +724,16 @@ th ol li.listItemNumeroUnoNone:before {
     margin: 25px 0 25px 0;
     min-height: 90px;
 }
-.figure-image-container:hover .figure-wrapper{
+.figure-image-container:hover .figure-wrapper {
     opacity: 0.8;
     color: #fff;
 }
+
+.image-background-focus{
+    opacity: 0.8 !important;
+    color: #fff;
+}
+
 .figure-image-info{
     left:16px;
     position: absolute;
