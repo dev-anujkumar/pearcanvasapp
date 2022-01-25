@@ -166,7 +166,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.currentSlateLO(message.LOList);
                     this.props.isLOExist(message);
                     this.props.currentSlateLOType(message.currentSlateLF);
-                    this.props.updateLastAlignedLO(message.lastAlignedLo)
                     break;
                 case 'loEditResponse':
                     this.setState({
@@ -326,6 +325,11 @@ function CommunicationChannel(WrappedComponent) {
                 case 'openInlineAlsfrescoPopup' :
                     this.props.alfrescoPopup(message);
                     break;
+                case 'spellCheckStatus':
+                    this.props.toggleSpellCheckAction();
+                    // refreshing the slate once spell check toggle is changed
+                    this.handleRefreshSlate();
+                    break;
                 case PROJECT_SHARING_ROLE:
                     if (message?.sharingContextRole) {
                         this.props.setProjectSharingRole(message.sharingContextRole);
@@ -346,6 +350,14 @@ function CommunicationChannel(WrappedComponent) {
                         }
                         this.props.setProjectSubscriptionDetails(projectSubscriptionDetails);
                     }
+                    break;
+                case 'editPageAudioMessage':
+                case 'deletePageAudioMessage' :
+                    let slateData = {
+                        currentProjectId: config.projectUrn,
+                        slateEntityUrn: config.slateEntityURN
+                    }
+                    this.props.fetchAudioNarrationForContainer(slateData)   
                     break;
                 case 'ResetAutoNumberSequence':
                     this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)

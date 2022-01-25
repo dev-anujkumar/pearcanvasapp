@@ -230,3 +230,18 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
     }
     return false;
 }
+
+/**
+ * This method is used to rescrit spell check for specific element
+ */
+export const restrictSpellCheck = (props) => {
+    return !(props?.element?.figuretype === 'codelisting' && (/-3$/.test(props?.index)))
+}
+
+/**
+ * This method is used to check current active element
+ */
+export const checkActiveElement = (elements) => {
+    let currentActiveElement = store.getState()?.appStore?.activeElement;
+    return (elements.includes(currentActiveElement?.elementType))
+}
