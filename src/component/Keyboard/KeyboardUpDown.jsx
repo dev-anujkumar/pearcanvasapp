@@ -35,7 +35,6 @@ const KeyboardUpDown = (props) => {
             // in case of para firstChild is childElement.first child
             // in case of Image childElement is null;
             const lastChild = getLastChild(childElement);
-
             if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
                 // for foot note
                 // add span at last and click on span
@@ -55,18 +54,18 @@ const KeyboardUpDown = (props) => {
                     lastChild.click();
                 }
             }
+            else if (lastChild?.nodeName === 'LABEL') {
+                // case of floating placeholder
+                if(lastChild?.previousSibling && lastChild?.previousSibling?.innerHTML === "<p></p>") {
+                    lastChild.previousSibling.innerHTML = '';
+                }
+                childElement.firstChild.click();
+            }
             else if(childElement.firstChild) {
                 childElement.click();
                 childElement.focus();
             }
-            else {
-                childElement.click();
-                const span = document.createElement('span');
-                span.innerHTML = "<br>";
-                childElement.appendChild(span);
-                span.focus();
-                childElement.focus();
-            }
+           
 
 
         }
