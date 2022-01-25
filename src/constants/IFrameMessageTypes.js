@@ -3,6 +3,7 @@ export const ShowHeader = 'showHeader'
 export const CanvasIframeLoaded = 'canvasIframeLoaded'
 export const TocToggle = "tocToggle"
 export const CanvasActiveElement = "canvasActiveElement"
+export const AddOrViewComment = "addOrViewComment"
 export const HideLoader = "HideLoader"
 export const ShowLoader = "ShowLoader"
 export const PreviousSlate = "prevSlate"
