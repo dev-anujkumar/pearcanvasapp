@@ -825,7 +825,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .figure-dropdown ul li:focus {
     background-color: #005a70;
-    color: 'white'
+    color: white
   }
 .figure-label .dropdown-arrow{
   width: 8px;
