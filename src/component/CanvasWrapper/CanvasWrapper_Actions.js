@@ -53,7 +53,7 @@ import ElementConstants from "../ElementContainer/ElementConstants.js";
 import { isAutoNumberEnabled, fetchProjectFigures } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
 import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
-import { getImagesInsideSlates, getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
+import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -844,15 +844,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         /** Get List of Figures on a Slate for Auto-Numbering */
         // const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
         // const slateFigures = getImagesInsideSlates(bodyMatter)
-        getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
-        // if (slateFigures) {
-        //     dispatch({
-        //         type: SLATE_FIGURE_ELEMENTS,
-        //         payload: {
-        //             slateFigures :dataaaaa
-        //         }
-        //     });
-        // }
+        const slateFigures = getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
+        /* if (slateFigures) {
+            console.log('slateFigures',slateFigures)
+            dispatch({
+                type: SLATE_FIGURE_ELEMENTS,
+                payload: {
+                    slateFigures :slateFigures
+                }
+            });
+        }*/
     })
     .catch(err => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });

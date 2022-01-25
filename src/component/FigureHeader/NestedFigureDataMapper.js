@@ -3,11 +3,10 @@ import { containerElements, autoNumberElementsAllowed, SHOWHIDE_SECTION, ELEMENT
 import { SLATE_FIGURE_ELEMENTS } from "../../constants/Action_Constants";
 import { getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getSlateLevelData } from './AutoNumberActions';
-
-export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
+export const getAutoNumberedElementsOnSlate = async (slateLevelData, params) => {
     const { dispatch } = params
     const bodyMatter = slateLevelData?.contents?.bodymatter || []
-    const slateFigures = getImagesInsideSlates(bodyMatter)
+    const slateFigures = await getImagesInsideSlates(bodyMatter)
     if (slateFigures) {
         dispatch({
             type: SLATE_FIGURE_ELEMENTS,
@@ -15,7 +14,10 @@ export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
                 slateFigures
             }
         });
+        console.log('slateFigures',slateFigures)
+        return slateFigures
     }
+    return []
 }
 
 /**
@@ -24,9 +26,9 @@ export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[]) => {
+export const getImagesInsideSlates = async (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[]) => {
     if (bodyMatter?.length > 0) {
-        bodyMatter?.forEach(async (element, index) => {
+       await Promise.all(bodyMatter?.map(async (element, index) => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
                 if (parentIndex?.length) {
                     element.indexPos = [...parentIndex]
@@ -56,6 +58,7 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                     case containerElements.POPUP:
                         const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
                         if (parentIndex?.length) popupContent.parentDetails = parentIndex
+                        console.log('popupContent',popupContent)
                         await getMediaElementInPopup(popupContent, numberedElements)
                         break;
                     case containerElements.ASIDE:
@@ -66,8 +69,9 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                         break;
                 }
             }
-        })
+        }))
     }
+    console.log('getImagesInsideSlates::::numberedElements',numberedElements)
     return numberedElements
 }
 
