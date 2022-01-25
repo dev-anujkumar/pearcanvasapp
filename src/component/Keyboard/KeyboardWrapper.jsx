@@ -30,12 +30,15 @@ const updateCursor = (e, move) => {
  */
 export const moveCursor = (e, node, tinymceOffset) => {
     let move;
+    console.log("right here deciding", e.keyCode)
     if (e.keyCode === 38) {
         move = isFirtstChild(node, tinymceOffset);
+        console.log("right here deciding 1",move, e.keyCode)
         updateCursor(e, move);
     }
     else if (e.keyCode === 40) {
         move = isLastChild(node, tinymceOffset);
+        console.log("right here deciding 2",move, e.keyCode)
         updateCursor(e, move)
     }
     else {
@@ -70,7 +73,9 @@ const getFirstTextNode = (node) => {
 const isFirtstChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-        const firstTextNode = getFirstTextNode(isKChild.node);
+        const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
+        console.log("Tinymce node is ", tinymceNode, isKChild.node);
+        const firstTextNode = getFirstTextNode(tinymceNode);
         const uniCode = '\uFEFF';
         if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
             return true;
@@ -146,8 +151,11 @@ const footNoteCases = (node, lastTextNode) => {
 const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-        const lastTextNode = getLastTextNode(isKChild.node);
+        const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
+        console.log("Tinymce node is 1 ", tinymceNode, isKChild.node);
+        const lastTextNode = getLastTextNode(tinymceNode);
         const uniCode = '\uFEFF';
+        console.log("Last child check", lastTextNode, node, isKChild.node);
         if (lastTextNode === node) {
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
                 if(lastTextNode?.parentNode?.id === "_mce_caret") {
@@ -174,11 +182,16 @@ const isLastChild = (node, tinymceOffset) => {
                 return true;
             }
           
-        }        
+        }
         else if (node?.id?.startsWith(NORMAL_SELECTOR) && node?.parentNode?.id.startsWith(QUERY_SELECTOR)) {
             // tinymce edtiors empty values
-           return tinymceOffset === 0
+           return tinymceOffset === 0;
         }
+        else if(tinymceNode?.textContent?.length === 0) {
+            // for empty fields in floating text case
+            // as p and br are coming there
+            return tinymceOffset === 0;
+        }        
 
         else return footNoteCases(node, lastTextNode);
 
@@ -194,10 +207,11 @@ const isLastChild = (node, tinymceOffset) => {
  * @returns 
  */
 const isKWChild = (node, index = 0) => {
+    console.log("Node id is ",node, node.id)
     if (index === 10) {
         return { isChild: false, index, node };
     }
-    else if (node.parentNode.id.startsWith(QUERY_SELECTOR)) {
+    else if (node?.id?.startsWith(QUERY_SELECTOR)) {
         return { isChild: true, index, node };
     }
     else {
