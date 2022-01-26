@@ -213,6 +213,7 @@ class FigureUserInterface extends Component {
            const node = document.activeElement;
            node.click();
         }
+        event.preventDefault();
     }
 
 

@@ -27,7 +27,8 @@ const KeyboardUpDown = (props) => {
         const divHeight = parentNode.getBoundingClientRect().height;
         if (element) {
             dispatch(selectElement(element.id));
-            const childElement = element.childNodes[1];
+            // firstElement child as we done need text nodes;
+            const childElement = element.firstElementChild;
             const scrollTo = element.getBoundingClientRect().top - divHeight / 3;
             parentNode.scrollBy(0, scrollTo);
             
@@ -60,6 +61,7 @@ const KeyboardUpDown = (props) => {
                     lastChild.previousSibling.innerHTML = '';
                 }
                 childElement.firstChild.click();
+                childElement.focus();
             }
             else if(childElement.firstChild) {
                 childElement.click();
