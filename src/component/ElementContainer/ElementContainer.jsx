@@ -2238,6 +2238,7 @@ class ElementContainer extends Component {
     }
 
     addOrViewComment = ( elementId ,type) => {
+        this.props.setActiveElement(this.props.element);
         sendDataToIframe({
             'type': AddOrViewComment,
             'message': {"id":elementId, "mode":type}
