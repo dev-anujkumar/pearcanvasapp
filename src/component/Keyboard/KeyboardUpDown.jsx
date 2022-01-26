@@ -61,7 +61,7 @@ const KeyboardUpDown = (props) => {
                     lastChild.previousSibling.innerHTML = '';
                 }
                 childElement.firstChild.click();
-                childElement.focus();
+                childElement.firstChild.focus();
             }
             else if(childElement.firstChild) {
                 childElement.click();
