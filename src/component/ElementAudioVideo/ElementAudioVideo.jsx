@@ -107,8 +107,8 @@ class ElementAudioVideo extends Component {
                 if(imageData?.properties['avs:jsonString']){
                     const avsJsonStringData = imageData?.properties["avs:jsonString"]
                     const avsJsonString = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
-                    //const avsJsonString = JSON.parse(imageData.properties['avs:jsonString']);
-                    const imageReference = avsJsonString?.imageReferenceURL ?? DEFAULT_VIDEO_POSTER_IMAGE;
+                    const imagePublicationUrl = imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
+                    const imageReference = avsJsonString?.imageReferenceURL ?? imagePublicationUrl ?? DEFAULT_VIDEO_POSTER_IMAGE;
                     epsURL = imageReference
                 }
             }
