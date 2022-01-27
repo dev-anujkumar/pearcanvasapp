@@ -94,7 +94,7 @@ class ElementAudioVideo extends Component {
         let imageData = data;
         let clipInfo;
         let audioDes;
-        let epsURL = imageData?.epsUrl ? imageData.epsUrl : "";   
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
         let assetFormat=""
         let figureType = imageData?.content?.mimeType?.split('/')[0]
         let width = imageData?.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
@@ -107,8 +107,7 @@ class ElementAudioVideo extends Component {
                 if(imageData?.properties['avs:jsonString']){
                     const avsJsonStringData = imageData?.properties["avs:jsonString"]
                     const avsJsonString = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
-                    const imagePublicationUrl = imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
-                    const imageReference = avsJsonString?.imageReferenceURL ?? imagePublicationUrl ?? DEFAULT_VIDEO_POSTER_IMAGE;
+                    const imageReference = avsJsonString?.imageReferenceURL ?? DEFAULT_VIDEO_POSTER_IMAGE;
                     epsURL = imageReference
                 }
             }
