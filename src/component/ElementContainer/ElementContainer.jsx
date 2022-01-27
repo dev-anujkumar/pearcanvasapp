@@ -25,7 +25,7 @@ import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } f
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
-import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, CanvasActiveElement, AddOrViewComment } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
@@ -105,6 +105,7 @@ class ElementContainer extends Component {
             isfigurePopup: false,
             figureUrl: "",
             assetsPopupStatus: false,
+            isActive: false,
             showBlockCodeElemPopup: false
         };
 
@@ -312,6 +313,7 @@ class ElementContainer extends Component {
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
             this.props.fetchCommentByElement(this.props.element.id);
         }
+        this.handleCommunication(this.props.element.id);
     }
 
     removeClassesFromHtml = (html) => {
@@ -1997,17 +1999,12 @@ class ElementContainer extends Component {
                         {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} />}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ () => this.addOrViewComment(element.id,'addComment')} />}
+                        {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} btnClassName={btnClassName} onClick={() => this.addOrViewComment(element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
-                        {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
-                            if (this.props.projectUsers.length === 0) {
-                                this.props.getProjectUsers();
-                            }
-                            handleCommentspanel(event, element.id, this.props.index)
-                        }} type="comment-flag"  elementType={element?.type} />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                         {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
@@ -2232,6 +2229,22 @@ class ElementContainer extends Component {
         }
         this.props.getProjectUsers();
     }
+
+    handleCommunication = ( elementId ) => {
+        sendDataToIframe({
+            'type': CanvasActiveElement,
+            'message': {"id":elementId, "active":true}
+        });   
+    }
+
+    addOrViewComment = ( elementId ,type) => {
+        this.props.setActiveElement(this.props.element);
+        sendDataToIframe({
+            'type': AddOrViewComment,
+            'message': {"id":elementId, "mode":type}
+        });   
+    }
+
      /**
      * @description - This function is for opening edit  button in Cypress Plus
      */

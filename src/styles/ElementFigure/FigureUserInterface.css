@@ -713,6 +713,9 @@ th ol li.listItemNumeroUnoNone:before {
 .media-button-group .delete-figure-button:hover, .media-button-group .update-figure-button:hover {
     background-color: #def8ff !important;
 }
+.media-button-group .delete-figure-button:focus, .media-button-group .update-figure-button:focus {
+    background-color: #def8ff !important;
+}
 .media-button-group .update-figure-button{
     height: 36px;
     padding: 8px 20px;
@@ -840,6 +843,12 @@ th ol li.listItemNumeroUnoNone:before {
     overflow-wrap: anywhere;
 }
 .addVideobutton:hover {
+    
+    background-color: #def8ff;
+}
+
+.addVideobutton:focus {
+    
     background-color: #def8ff;
 }
 .addVideobutton {
