@@ -386,6 +386,11 @@ button[aria-label="insertMedia"].tox-tbtn--select{
   display: none!important;
 }
 
+.header.hideToolbar{
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .tox-tbtn{
   cursor:pointer!important;
 }
