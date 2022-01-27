@@ -182,7 +182,6 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
 
     if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
         let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
-        console.log('payloadKeys in Interactive : ',payloadKeys)
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
