@@ -150,6 +150,9 @@ export const getValueOfLabel = (figuretype) => {
         case IMAGE: case TABLE: case MATH_IMAGE:
             label = 'Figure';
             break;
+        case INTERACTIVE:
+            label = 'Interactive';
+            break;
         default:
             label = '';
             break;
