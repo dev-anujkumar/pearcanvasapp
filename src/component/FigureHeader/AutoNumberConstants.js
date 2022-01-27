@@ -141,7 +141,7 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
 }
 
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive']
-export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO']
+export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO', 'SMART_LINK']
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive']
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
 export const displayLabelsForAudioVideo = ['Audio', 'Video'];
