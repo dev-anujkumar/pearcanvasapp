@@ -3,7 +3,6 @@ import { containerElements, autoNumberElementsAllowed, SHOWHIDE_SECTION, ELEMENT
 import { SLATE_FIGURE_ELEMENTS } from "../../constants/Action_Constants";
 import { getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getSlateLevelData } from './AutoNumberActions';
-import { SLATE_FIGURE_ELEMENTS } from './../../constants/Action_Constants';
 
 export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
     const { dispatch } = params
