@@ -30,7 +30,12 @@ const KeyboardUpDown = (props) => {
             const childElement = element.childNodes[1];
             const scrollTo = element.getBoundingClientRect().top - divHeight / 3;
             parentNode.scrollBy(0, scrollTo);
-            const lastChild = getLastChild(childElement?.firstChild);
+            
+            // const firstChild = childElement?.firstChild ? childElement.firstChild : childElement;
+            // in case of para firstChild is childElement.first child
+            // in case of Image childElement is null;
+            const lastChild = getLastChild(childElement);
+
             if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
                 // for foot note
                 // add span at last and click on span
@@ -42,11 +47,25 @@ const KeyboardUpDown = (props) => {
                 span.click();
             }
             else if(lastChild.id === "f-e-s") {
-                lastChild.parentNode.removeChild(lastChild);
+                if(lastChild?.previousSibling?.nodeName !== 'SUP') {
+                    lastChild.parentNode.removeChild(lastChild);
+                    childElement.click();
+                }
+                else {
+                    lastChild.click();
+                }
+            }
+            else if(childElement.firstChild) {
                 childElement.click();
+                childElement.focus();
             }
             else {
                 childElement.click();
+                const span = document.createElement('span');
+                span.innerHTML = "<br>";
+                childElement.appendChild(span);
+                span.focus();
+                childElement.focus();
             }
 
 
@@ -77,6 +96,10 @@ const KeyboardUpDown = (props) => {
                         selectedNodeIndex = currentIndex
                     }
                 });
+                // if last tinymce is not blured then cursor will
+                // keep on showing if next element is non text 
+                // element, like image's Label
+                allInteractiveElements[selectedNodeIndex]?.childNodes[1]?.blur();
                 if (event.keyCode === 38 && selectedNodeIndex !== 0) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex - 1]);
 

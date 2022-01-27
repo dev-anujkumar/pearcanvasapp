@@ -8,7 +8,7 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS,
     UPDATE_POPUP_ELEMENTS_DATA
 } from '../../constants/Action_Constants.js';
-import { prepareAutoNumberList } from './AutoNumber_helperFunctions';
+import { prepareAutoNumberList, getNumberedElements } from './AutoNumber_helperFunctions';
 import { AUTO_NUMBER_ELEMENTS, autoNumber_IndexMapper } from './AutoNumberConstants';
 import store from '../../appstore/store';
 /**
@@ -23,8 +23,8 @@ const commonHeaders = {
 /**
  * This API fetches the Learning Framework(s) linked to the project
  */
-export const fetchProjectFigures = (elementType) => (dispatch, getState) => {
-    const url = getAPIUrl(elementType)
+export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) => {
+    const url = getAPIUrl(currentParentUrn);
     axios.get(url, {
         headers: {
             "ApiKey": config.STRUCTURE_APIKEY,
@@ -32,17 +32,10 @@ export const fetchProjectFigures = (elementType) => (dispatch, getState) => {
             "PearsonSSOSession": config.ssoToken
         }
     }).then(async response => {
-        if (response?.data?.contents) {
-            const projectContent = response.data.contents
-            let numberedElements = {
-                imagesList: [],
-                tablesList: [],
-                equationsList: [],
-                audiosList:[],
-                videosList:[],
-            }
-            let oldAutoNumberedElements = getState().autoNumberReducer.autoNumberedElements
-            numberedElements = await mediaElementAPI_Handler({elementType,autoNumberedElements: oldAutoNumberedElements}, projectContent, numberedElements);
+        if (response?.data) {
+            const projectContent = response.data;
+            let numberedElements = {}
+            numberedElements = getNumberedElements(projectContent, currentParentUrn);
             console.log('numberedElements>>>>', numberedElements)
             getAutoNumberSequence(numberedElements,dispatch)
             dispatch({
@@ -83,31 +76,55 @@ export const getAutoNumberSequence = (numberedElements, dispatch) => {
     });
 }
 
-const getAPIUrl = (mediaType, containerEntityUrn) => {
-    let endpointVersion = '',
-        endpointExtension = ''
-    switch (mediaType) {
-        case AUTO_NUMBER_ELEMENTS.AUDIO:
-            endpointVersion = 'v2'
-            endpointExtension = 'audios'
-            break;
-        case AUTO_NUMBER_ELEMENTS.VIDEO:
-            endpointVersion = 'v2'
-            endpointExtension = 'videos'
-            break;
-        case AUTO_NUMBER_ELEMENTS.IMAGE:
-        case AUTO_NUMBER_ELEMENTS.MATH_IMAGE:
-        case AUTO_NUMBER_ELEMENTS.MATH_IMAGE:
+const getAPIUrl = (containerEntityUrn) => {
+    let matterType = "";
+    switch(containerEntityUrn){
+        case "frontMatter":
+            matterType = "frontmatter";
+        break;
+        case "backMatter":
+            matterType = "backmatter";
+        break;
         default:
-            endpointVersion = 'v3'
-            endpointExtension = 'images'
-            break;
+            matterType = "bodymatter"
     }
-    if (containerEntityUrn) {
-        return `${config.ASSET_POPOVER_ENDPOINT}${endpointVersion}/${config.projectUrn}/containers/${containerEntityUrn}/${endpointExtension}`
+    let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/sectionType/${matterType}`;
+    if(matterType === "bodymatter"){
+        url = `${url}?contentUrn=${containerEntityUrn}`;
     }
-    return `${config.ASSET_POPOVER_ENDPOINT}${endpointVersion}/${config.projectUrn}/${endpointExtension}`
+
+    return url;
 }
+
+// const getAPIUrl = (mediaType, containerEntityUrn) => {
+//     let endpointVersion = '',
+//         endpointExtension = ''
+//     switch (mediaType) {
+//         case AUTO_NUMBER_ELEMENTS.AUDIO:
+//             endpointVersion = 'v2'
+//             endpointExtension = 'audios'
+//             break;
+//         case AUTO_NUMBER_ELEMENTS.VIDEO:
+//             endpointVersion = 'v2'
+//             endpointExtension = 'videos'
+//             break;
+//         case AUTO_NUMBER_ELEMENTS.INTERACTIVES:
+//             endpointVersion = 'v3'
+//             endpointExtension = 'interactives'
+//             break;
+//         case AUTO_NUMBER_ELEMENTS.IMAGE:
+//         case AUTO_NUMBER_ELEMENTS.MATH_IMAGE:
+//         case AUTO_NUMBER_ELEMENTS.MATH_IMAGE:
+//         default:
+//             endpointVersion = 'v3'
+//             endpointExtension = 'images'
+//             break;
+//     }
+//     if (containerEntityUrn) {
+//         return `${config.ASSET_POPOVER_ENDPOINT}${endpointVersion}/${config.projectUrn}/containers/${containerEntityUrn}/${endpointExtension}`
+//     }
+//     return `${config.ASSET_POPOVER_ENDPOINT}${endpointVersion}/${config.projectUrn}/${endpointExtension}`
+// }
 
 export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch => {
     dispatch({

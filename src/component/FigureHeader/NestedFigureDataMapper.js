@@ -3,12 +3,10 @@ import { containerElements, autoNumberElementsAllowed, SHOWHIDE_SECTION, ELEMENT
 import { SLATE_FIGURE_ELEMENTS } from "../../constants/Action_Constants";
 import { getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getSlateLevelData } from './AutoNumberActions';
-import { SLATE_FIGURE_ELEMENTS } from './../../constants/Action_Constants';
-
-export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
+export const getAutoNumberedElementsOnSlate = async (slateLevelData, params) => {
     const { dispatch } = params
     const bodyMatter = slateLevelData?.contents?.bodymatter || []
-    const slateFigures = getImagesInsideSlates(bodyMatter)
+    const slateFigures = await getImagesInsideSlates(bodyMatter)
     if (slateFigures) {
         dispatch({
             type: SLATE_FIGURE_ELEMENTS,
@@ -16,7 +14,10 @@ export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
                 slateFigures
             }
         });
+        console.log('slateFigures',slateFigures)
+        return slateFigures
     }
+    return []
 }
 
 /**
@@ -25,9 +26,9 @@ export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[], popupElementsList = []) => {
+export const getImagesInsideSlates = async (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[]) => {
     if (bodyMatter?.length > 0) {
-        bodyMatter?.forEach(async (element, index) => {
+       await Promise.all(bodyMatter?.map(async (element, index) => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
                 if (parentIndex?.length) {
                     element.indexPos = [...parentIndex]
@@ -55,16 +56,10 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                         getMediaElementInMultiColumn(element, numberedElements, [...element.indexPos])
                         break;
                     case containerElements.POPUP:
-                        if (popupElementsList.length) {
-                            let popupData = popupElementsList.filter(function (data) {
-                                return data.id == element.id
-                            })
-                            if (popupData.length > 0) getMediaElementInPopup(popupData[0], numberedElements);
-                        } else {
-                            const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
-                            if (parentIndex?.length) popupContent.parentDetails = parentIndex
-                            await getMediaElementInPopup(popupContent, numberedElements)
-                        }
+                        const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
+                        if (parentIndex?.length) popupContent.parentDetails = parentIndex
+                        console.log('popupContent',popupContent)
+                        await getMediaElementInPopup(popupContent, numberedElements)
                         break;
                     case containerElements.ASIDE:
                         getMediaElementInAsideWE(element, numberedElements, [...element.indexPos])
@@ -74,8 +69,9 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                         break;
                 }
             }
-        })
+        }))
     }
+    console.log('getImagesInsideSlates::::numberedElements',numberedElements)
     return numberedElements
 }
 
@@ -107,7 +103,6 @@ export const containerBodyMatter = (container) => {
     return dataToReturn;
 }
 export const getMediaElementInPopup = (containerData, numberedElements) => {
-    containerData = {...containerData, indexPos: []}
     if (containerData?.contents?.bodymatter?.length > 0) {
         containerData?.contents?.bodymatter.forEach((element, index) => {
             element.indexPos = containerData?.indexPos?.push(index) || [index]

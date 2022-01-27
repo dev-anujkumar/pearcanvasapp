@@ -64,7 +64,7 @@ class FigureUserInterface extends Component {
     }
 
     checkForAutoNumberedContent = (currentElement) =>{
-        if((currentElement?.figuretype === 'audio' || currentElement?.figuretype === 'video') && this.props?.isAutoNumberingEnabled){
+        if((currentElement?.figuretype === 'audio' || currentElement?.figuretype === 'video' || currentElement?.figuretype === 'interactive') && this.props?.isAutoNumberingEnabled){
             return true
         }
         return false

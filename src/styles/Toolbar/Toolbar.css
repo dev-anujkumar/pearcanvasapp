@@ -101,7 +101,7 @@
     word-break: break-all;
   }
 
-  .tox-editor-container .tox-toolbar{
+  .tox-editor-container .tox-toolbar__primary{
     background: #ffffff !important;
     cursor: pointer;
   }
@@ -335,11 +335,11 @@ button[aria-label="insertMedia"] span.tox-tbtn__select-label{
   min-width : 50px!important;
 }
 button[aria-label="formatSelector"].tox-tbtn--select{
-  max-width : 162px!important;
+  max-width : 142px!important;
   border-radius:0; 
 }
 button[aria-label="insertMedia"].tox-tbtn--select{
-  max-width : 100px!important;
+  max-width : 70px!important;
   border-radius:0; 
 }
 .tox .tox-collection--list .tox-collection__group{

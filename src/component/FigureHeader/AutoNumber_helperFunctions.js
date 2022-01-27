@@ -1,5 +1,6 @@
 import config from '../../config/config'
-import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_KeyMapper, autoNumber_ElementTypeKey, autoNumber_FigureTypeKeyMapper, autoNumber_ElementTypeToStoreKeysMapper } from './AutoNumberConstants';
+import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_KeyMapper, autoNumber_ElementTypeKey, autoNumber_FigureTypeKeyMapper, autoNumber_ElementTypeToStoreKeysMapper,
+        autoNumber_response_ElementType_mapper } from './AutoNumberConstants';
 import {
     SET_AUTO_NUMBER_TOGGLE,
     SET_AUTO_NUMBER_SEQUENCE,
@@ -404,4 +405,16 @@ export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements
         }
     });
     getAutoNumberSequence(autoNumberedElements, dispatch)
+}
+
+export const getNumberedElements = (data, matterType) => {
+    let numberedElements = {};
+
+    for(let matter in data){
+        numberedElements[autoNumber_response_ElementType_mapper[matter]] = {
+           [matterType]: data[matter].length > 0 ? data[matter] : []
+        }
+    }
+
+    return numberedElements;
 }

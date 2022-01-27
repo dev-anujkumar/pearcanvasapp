@@ -50,9 +50,10 @@ import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import ElementConstants from "../ElementContainer/ElementConstants.js";
-import { isAutoNumberEnabled } from '../FigureHeader/AutoNumberActions.js';
+import { isAutoNumberEnabled, fetchProjectFigures } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
-import { getImagesInsideSlates, getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
+import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
+import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -335,9 +336,10 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 
-export const fetchFigureDropdownOptions = () => (dispatch) => {
+export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     // Api to get Figure dropdown options
-    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type`;
+    let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type?isAutoNumberingEnabled=${isAutoNumberingEnabled}`;
     return axios.get(figureDropdownOptionsURL, {
         headers: {
             "Content-Type": "application/json",
@@ -799,7 +801,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             }
         }
         /** [TK-3289]- To get Current Slate details */
-        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
+        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
+
+        // get data for auto-numbering
+        if(config.figureDataToBeFetched){
+            const slateAncestors = getState().appStore.currentSlateAncestorData;
+            const currentParentUrn = getContainerEntityUrn(slateAncestors);
+            dispatch(fetchProjectFigures(currentParentUrn));
+            dispatch(fetchFigureDropdownOptions());
+            config.figureDataToBeFetched = false;
+        }
+
         if (slateData.data[newVersionManifestId].type !== "popup") {
             if(slateData.data && Object.values(slateData.data).length > 0) {
                 let slateTitle = SLATE_TITLE;
@@ -832,15 +844,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         /** Get List of Figures on a Slate for Auto-Numbering */
         // const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
         // const slateFigures = getImagesInsideSlates(bodyMatter)
-        getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
-        // if (slateFigures) {
-        //     dispatch({
-        //         type: SLATE_FIGURE_ELEMENTS,
-        //         payload: {
-        //             slateFigures :dataaaaa
-        //         }
-        //     });
-        // }
+        const slateFigures = getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
+        /* if (slateFigures) {
+            console.log('slateFigures',slateFigures)
+            dispatch({
+                type: SLATE_FIGURE_ELEMENTS,
+                payload: {
+                    slateFigures :slateFigures
+                }
+            });
+        }*/
     })
     .catch(err => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });

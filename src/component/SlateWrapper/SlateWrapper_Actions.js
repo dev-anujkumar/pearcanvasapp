@@ -40,8 +40,7 @@ import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
-
+import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL
@@ -60,7 +59,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
-        "type": type
+        "type": type,
+        "isAutoNumberingEnabled": isAutoNumberingEnabled
     };
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
@@ -406,8 +406,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         })
         /** ---------------------------- Auto-Numbering handling ------------------------------*/
-        
-        if ((type === 'IMAGE' || type === 'VIDEO') && isAutoNumberingEnabled) {
+        const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+        if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
             const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
             let slateFigures = getImagesInsideSlates(bodyMatter);
             if (slateFigures) {
