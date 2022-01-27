@@ -5,10 +5,12 @@ import {
     SET_AUTO_NUMBER_TOGGLE,
     SET_AUTO_NUMBER_SEQUENCE,
     GET_TOC_AUTO_NUMBERING_LIST,
-    GET_ALL_AUTO_NUMBER_ELEMENTS
+    GET_ALL_AUTO_NUMBER_ELEMENTS,
+    UPDATE_POPUP_ELEMENTS_DATA
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList } from './AutoNumber_helperFunctions';
 import { AUTO_NUMBER_ELEMENTS, autoNumber_IndexMapper } from './AutoNumberConstants';
+import store from '../../appstore/store';
 /**
  * 
  */
@@ -141,6 +143,7 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
             }
         })
         const slateData = Object.values(response.data)[0];
+        store.dispatch({type: UPDATE_POPUP_ELEMENTS_DATA, payload: slateData, key: slateData.id});
         return slateData;
     } catch (err) {
         console.log('Error in getting slate link data', err)

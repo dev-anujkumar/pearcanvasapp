@@ -1,6 +1,8 @@
 import config from '../../config/config';
 import { containerElements, autoNumberElementsAllowed, SHOWHIDE_SECTION, ELEMENT_TYPES } from './AutoNumberConstants';
 import { getSlateEntityUrn } from './AutoNumber_helperFunctions';
+import { getSlateLevelData } from './AutoNumberActions';
+import { SLATE_FIGURE_ELEMENTS } from './../../constants/Action_Constants';
 
 export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
     const { dispatch } = params
@@ -22,7 +24,7 @@ export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[]) => {
+export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[], popupElementsList = []) => {
     if (bodyMatter?.length > 0) {
         bodyMatter?.forEach(async (element, index) => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
@@ -52,9 +54,16 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                         getMediaElementInMultiColumn(element, numberedElements, [...element.indexPos])
                         break;
                     case containerElements.POPUP:
-                        const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
-                        if (parentIndex?.length) popupContent.parentDetails = parentIndex
-                        await getMediaElementInPopup(popupContent, numberedElements)
+                        if (popupElementsList.length) {
+                            let popupData = popupElementsList.filter(function (data) {
+                                return data.id == element.id
+                            })
+                            if (popupData.length > 0) getMediaElementInPopup(popupData[0], numberedElements);
+                        } else {
+                            const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
+                            if (parentIndex?.length) popupContent.parentDetails = parentIndex
+                            await getMediaElementInPopup(popupContent, numberedElements)
+                        }
                         break;
                     case containerElements.ASIDE:
                         getMediaElementInAsideWE(element, numberedElements, [...element.indexPos])
@@ -97,19 +106,20 @@ export const containerBodyMatter = (container) => {
     return dataToReturn;
 }
 export const getMediaElementInPopup = (containerData, numberedElements) => {
+    containerData = {...containerData, indexPos: []}
     if (containerData?.contents?.bodymatter?.length > 0) {
         containerData?.contents?.bodymatter.forEach((element, index) => {
-            element.indexPos = containerData.indexPos.push(index)
-            element.parentDetails = containerData.parentDetails  || []
+            element.indexPos = containerData?.indexPos?.push(index)
+            element.parentDetails = containerData?.parentDetails  || []
             element.parentDetails.push(containerData.contentUrn)//popup id
             if (element.type === ELEMENT_TYPES.FIGURE) {
-                containerData.indexPos.push(index)
-                element.indexPos = [...containerData.indexPos]
+                containerData?.indexPos?.push(index)
+                element.indexPos = [...containerData?.indexPos]
                 element.slateEntityUrn = getSlateEntityUrn()
                 numberedElements.push({...element})
             } else if ((element.type === containerElements.MANIFEST && element.contents.bodymatter) || (Object.values(containerElements).indexOf(element.type) > -1)) {
-                containerData.indexPos.push(index)
-                element.indexPos = [...containerData.indexPos]
+                containerData?.indexPos?.push(index)
+                element.indexPos = [...containerData?.indexPos]
                 element.parentDetails.push(element.contentUrn) //element id
                 getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails)
             }
