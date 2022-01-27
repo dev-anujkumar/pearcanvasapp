@@ -560,9 +560,9 @@ class ElementContainer extends Component {
         let podwidth = this.props?.activeElement?.podwidth;
         let oldImage = this.props.oldImage;
         // if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
-            oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
+             oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
         // }
-
+      
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link" || previousElementData.figuredata.interactivetype === '3rd-party' || 
             previousElementData.figuredata.interactivetype === 'table') {
@@ -889,10 +889,13 @@ class ElementContainer extends Component {
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if (this.figureDifferenceInteractive(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement)
+                            if (this.props.isAutoNumberingEnabled) {
+                                this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+                            }
                         }
                         break;
 
