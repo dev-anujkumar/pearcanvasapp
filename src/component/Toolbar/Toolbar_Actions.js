@@ -1,5 +1,5 @@
 import {
-    TOGGLE_BORDERS, TOGGLE_PAGE_NUMBER
+    TOGGLE_BORDERS, TOGGLE_PAGE_NUMBER, TOGGLE_SPELL_CHECK
 } from '../../constants/Action_Constants';
 
 /**
@@ -13,5 +13,10 @@ export const toggleElemBordersAction = () => {
 export const togglePageNumberAction = () => {
     return {
         type: TOGGLE_PAGE_NUMBER
+    }
+}
+export const toggleSpellCheckAction = () => {
+    return {
+        type : TOGGLE_SPELL_CHECK
     }
 }

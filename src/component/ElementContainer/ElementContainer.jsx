@@ -24,8 +24,8 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
-import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
+import { ShowLoader, CanvasActiveElement, AddOrViewComment } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
@@ -76,6 +76,7 @@ import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAu
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForImage, displayLabelsForAudioVideo } from '../FigureHeader/AutoNumberConstants';
+import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes'
 
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -103,7 +104,9 @@ class ElementContainer extends Component {
             editInteractiveId: "",
             isfigurePopup: false,
             figureUrl: "",
-            assetsPopupStatus: false
+            assetsPopupStatus: false,
+            isActive: false,
+            showBlockCodeElemPopup: false
         };
 
 
@@ -310,6 +313,7 @@ class ElementContainer extends Component {
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
             this.props.fetchCommentByElement(this.props.element.id);
         }
+        this.handleCommunication(this.props.element.id);
     }
 
     removeClassesFromHtml = (html) => {
@@ -324,6 +328,8 @@ class ElementContainer extends Component {
             return;
         }
         let tempDiv = document.createElement('div');
+        // PCAT-2426 - calling function to remove tinymcespellchecker DOM attributes from innerHTML
+        html = removeSpellCheckDOMAttributes(html);
         html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g, "").replace(/>\s+</g, '><').replace(/data-mce-href="#"/g, '').replace(/ reset/g, '');
         html = html.trim();
         tempDiv.innerHTML = html;
@@ -408,7 +414,7 @@ class ElementContainer extends Component {
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-        if (!this.props.isAutoNumberingEnabled) {
+        if (!this.props.isAutoNumberingEnabled || (this.props.isAutoNumberingEnabled && previousElementData?.figuretype === 'tableasmarkup')) {
             titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         }
 
@@ -427,12 +433,12 @@ class ElementContainer extends Component {
         }
         if (this.props?.isAutoNumberingEnabled && (previousElementData.figuretype !== 'tableasmarkup')) {
             // Not selecting remove label and number
-            if (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+            if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
             // Selecting default case 
-            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData.manualoverride !== undefined && (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT)) {
+            if ((previousElementData?.hasOwnProperty('manualoverride') || !previousElementData?.numberedandlabel) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -654,12 +660,12 @@ class ElementContainer extends Component {
         oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
         if (this.props.isAutoNumberingEnabled) {
             // Not selecting remove label and number
-            if (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+            if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
-            // Selecting default case
-            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData.manualoverride !== undefined && (this.props?.autoNumberOption?.entityUrn === previousElementData.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT)) {
+            // Selecting default case 
+            if ((previousElementData?.hasOwnProperty('manualoverride') || !previousElementData?.numberedandlabel) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -967,11 +973,25 @@ class ElementContainer extends Component {
     handleAutonumberAfterUpdate = (previousElementData, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
         if (!previousElementData?.numberedandlabel && dataToSend.numberedandlabel) {
+            if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride.hasOwnProperty('resumenumbervalue')) {
+                dataToSend = {
+                    ...dataToSend,
+                    manualoverride: {
+                        resumenumbervalue: parseInt(dataToSend?.manualoverride?.resumenumbervalue)
+                    }
+                }
+            }
             this.props.handleAutonumberingOnCreate(dataToSend?.figuretype?.toUpperCase(), dataToSend);
         } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) {
             this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
         } else if ( (previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (!(dataToSend.hasOwnProperty('manualoverride')) || (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue'))) ) {
-            // resume case 
+            // resume case
+            dataToSend = {
+                ...dataToSend,
+                manualoverride: {
+                    resumenumbervalue: parseInt(dataToSend?.manualoverride?.resumenumbervalue)
+                }
+            }
             this.props.updateAutonumberingOnElementTypeUpdate(dataToSend?.displayedlabel, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel === dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
             // override label and number case 
@@ -1196,6 +1216,19 @@ class ElementContainer extends Component {
     }
 
     /**
+     * show Block Code element warning Popup 
+     */
+     showBlockCodeElemWarningPopup = (e, popup) => {
+        e.stopPropagation();
+        this.props.showBlocker(true);
+        showTocBlocker();
+        this.setState({
+            popup,
+            showBlockCodeElemPopup: true
+        });
+    }
+
+    /**
      * For deleting slate level element
      */
     deleteElement = (e) => {
@@ -1263,7 +1296,7 @@ class ElementContainer extends Component {
     }
 
     toolbarHandling = (action = "") => {
-        let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar')
+        let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary')
         if (action === "add") {
             toolbar?.classList?.add("disable");
         } else if (action === "remove") {
@@ -1522,10 +1555,10 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_MATH_IMAGE:
                             editor = <FigureImage model={element} showBlocker={this.props.showBlocker} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} {...commonProps}/>
                             break;
+                        case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
-                        case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
+                            editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
@@ -1913,7 +1946,7 @@ class ElementContainer extends Component {
         }
         if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
             if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-default" && this.props.activeElement.elementId === element.id)) {
-                bceOverlay = <div className="bce-overlay disabled" onClick={(event) => this.handleFocus("", "", event)}></div>;
+                bceOverlay = <div className="bce-overlay disabled" onClick={(event) => {this.handleFocus("", "", event);this.showBlockCodeElemWarningPopup(event,true);}}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';
             }
@@ -1966,17 +1999,12 @@ class ElementContainer extends Component {
                         {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} />}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={(e) => this.handleCommentPopup(true, e)} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}
+                        {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
-                        {permissions && permissions.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
+                     {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
-                        {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={(event) => {
-                            if (this.props.projectUsers.length === 0) {
-                                this.props.getProjectUsers();
-                            }
-                            handleCommentspanel(event, element.id, this.props.index)
-                        }} type="comment-flag"  elementType={element?.type} />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                         {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
@@ -1997,6 +2025,7 @@ class ElementContainer extends Component {
                         isAddComment={true}
                         projectUsers={this.props.projectUsers}
                         comment={this.state.comment}
+                        showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
                     />}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
@@ -2191,6 +2220,7 @@ class ElementContainer extends Component {
         this.setState({
             popup,
             showDeleteElemPopup: false,
+            showBlockCodeElemPopup: false,
             comment: ""
         });
         if (this.props.isBlockerActive) {
@@ -2199,12 +2229,35 @@ class ElementContainer extends Component {
         }
         this.props.getProjectUsers();
     }
+
+    handleCommunication = ( elementId ) => {
+        sendDataToIframe({
+            'type': CanvasActiveElement,
+            'message': {"id":elementId, "active":true}
+        });   
+    }
+
+    addOrViewComment = ( e, elementId ,type) => {
+        this.props.setActiveElement(this.props.element);
+        sendDataToIframe({
+            'type': AddOrViewComment,
+            'message': {"id":elementId, "mode":type}
+        });  
+        e.stopPropagation(); 
+    }
+
      /**
      * @description - This function is for opening edit  button in Cypress Plus
      */
     handleEditInCypressPlus = (e,elementId) =>{
         e.stopPropagation();
-        window.open(`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`, '_blank')
+        const urlCypressPlus=`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`
+        const cypressPlusWindow = window.open(urlCypressPlus ,'_blank')
+        config.CYPRESS_PLUS_WINDOW= cypressPlusWindow
+       const obj ={type:INCOMING_MESSAGE,message:REFRESH_MESSAGE}
+     setTimeout(()=>{
+       cypressPlusWindow?.postMessage(obj,urlCypressPlus)
+     },2000)
     }
     /**
      * @description - This function is for handling click event on the label button.

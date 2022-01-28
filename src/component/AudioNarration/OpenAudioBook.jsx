@@ -71,7 +71,7 @@ class OpenAudioBook extends React.Component {
             replaceToggle:false
         })
     }
-
+    
     render = () => {
         const { audioData, audioGlossaryData, isGlossary } = this.props;
         var mediaSrc = "";
@@ -87,6 +87,8 @@ class OpenAudioBook extends React.Component {
             mediaSrc = audioData.data[0].location;
             mediaTitle = audioData.data[0].title.en;
         }
+        
+        const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' && this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)
         return (
             <div className={!isGlossary ?'audiodropdown':'glossary-audiodropdown'} style={isGlossary ? this.props.position :null}  id='openAudioBook' ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
                 <div className="audio-close">
@@ -108,7 +110,7 @@ class OpenAudioBook extends React.Component {
 
                 <div className="remove-button">
                     
-                    { !hasReviewerRole() &&
+                    { (!hasReviewerRole() && !subscriberContent) &&
                         <button className="remove-text" onClick={() => this.openConfirmationBox(isGlossary)} className="audioRemoveButton audioRemoveRound">Remove</button>
                     }
                     {

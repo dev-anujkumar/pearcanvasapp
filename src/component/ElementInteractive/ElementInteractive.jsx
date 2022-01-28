@@ -522,16 +522,19 @@ class Interactive extends React.Component {
         disableHeader(false);
         this.props.showBlocker(false);
         let imageData = data;
-        let epsURL = imageData.epsUrl ?imageData.epsUrl : "";              //commented lines will be used to update the element data
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
         //let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
         let smartLinkPath = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
         let smartLinkString = (imageData.properties["cm:description"] && imageData.properties["cm:description"].toLowerCase() !== "eps media") ? imageData.properties["cm:description"] : "{}";
         let isSmartLinkAsset = smartLinkString !== "{}" && (smartLinkString.includes("smartLinkType") || !(imageData.hasOwnProperty('content'))) ? true :  false
-        let smartLinkDesc = (isSmartLinkAsset === true)? JSON.parse(smartLinkString) : "";
+        let smartlinkAvsString = (isSmartLinkAsset === true) ? smartLinkString : {}
+        let smartLinkDesc = (typeof smartlinkAvsString === 'string')? JSON.parse(smartlinkAvsString) : smartlinkAvsString;
         let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-        let avsStringData =imageData.properties["avs:jsonString"]&& JSON.parse(imageData.properties["avs:jsonString"]);
+        const avsJsonStringData = imageData?.properties["avs:jsonString"] 
+        let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
+        //let avsStringData =imageData.properties["avs:jsonString"]&& JSON.parse(imageData.properties["avs:jsonString"]);
         let altText = avsStringData?.imageAltText ? avsStringData.imageAltText : "";
         let longDescription = avsStringData?.linkLongDesc ? avsStringData.linkLongDesc : "";
         let smartLinkTitle = imageData?.name ? imageData.name : "";

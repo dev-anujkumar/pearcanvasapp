@@ -14,7 +14,8 @@ import {
     openerElement, 
     noteFlag , 
     tcmIcon, 
-    addNote, 
+    addNote,
+    viewNote,
     editInCypressPlus,
     textIcon, 
     imageIcon, 
@@ -73,9 +74,9 @@ class ElementButton extends Component {
                     {editInCypressPlus}
                 </span></Tooltip>
                 break;
-            case buttonTypes.COMMENT_FLAG:
-                buttonJSX = <span className={`btn-element small flag-icon ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
-                    {noteFlag}
+            case buttonTypes.VIEW_COMMENT:
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
+                    {viewNote}
                     </span>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
