@@ -70,7 +70,8 @@ const getFirstTextNode = (node) => {
 const isFirtstChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-        const firstTextNode = getFirstTextNode(isKChild.node);
+        const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
+        const firstTextNode = getFirstTextNode(tinymceNode);
         const uniCode = '\uFEFF';
         if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
             return true;
@@ -146,7 +147,8 @@ const footNoteCases = (node, lastTextNode) => {
 const isLastChild = (node, tinymceOffset) => {
     const isKChild = isKWChild(node);
     if (isKChild.isChild) {
-        const lastTextNode = getLastTextNode(isKChild.node);
+        const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
+        const lastTextNode = getLastTextNode(tinymceNode);
         const uniCode = '\uFEFF';
         if (lastTextNode === node) {
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
@@ -174,11 +176,16 @@ const isLastChild = (node, tinymceOffset) => {
                 return true;
             }
           
-        }        
+        }
         else if (node?.id?.startsWith(NORMAL_SELECTOR) && node?.parentNode?.id.startsWith(QUERY_SELECTOR)) {
             // tinymce edtiors empty values
-           return tinymceOffset === 0
+           return tinymceOffset === 0;
         }
+        else if(tinymceNode?.textContent?.length === 0) {
+            // for empty fields in floating text case
+            // as p and br are coming there
+            return tinymceOffset === 0;
+        }        
 
         else return footNoteCases(node, lastTextNode);
 
@@ -197,7 +204,7 @@ const isKWChild = (node, index = 0) => {
     if (index === 10) {
         return { isChild: false, index, node };
     }
-    else if (node.parentNode.id.startsWith(QUERY_SELECTOR)) {
+    else if (node?.id?.startsWith(QUERY_SELECTOR)) {
         return { isChild: true, index, node };
     }
     else {

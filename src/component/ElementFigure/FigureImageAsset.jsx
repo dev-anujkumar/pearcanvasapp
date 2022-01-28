@@ -41,6 +41,7 @@ const FigureImageAsset = (props) => {
             const node = document.activeElement;
             node.click();
         }
+        event.preventDefault();
     }
     const removeFocus = () => {
         serFocusBackgrond(false);
