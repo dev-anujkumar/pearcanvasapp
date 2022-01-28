@@ -301,7 +301,6 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete data.manualoverride : data;
         autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete data.displayedlabel : data;
     }
-    console.log('above return data in Interactive',data)
     return data
 }
 
