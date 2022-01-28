@@ -641,7 +641,7 @@ class Sidebar extends Component {
     handleSyntaxHighligtingRemove = () => {
         //remove all formatting from code
 
-        tinymce.$(`[data-id='${this.props.activeElement.elementId}'] .codeNoHighlightLineWrapper span.codeNoHighlightLine`).each(function () {
+        tinymce.$(`[data-id='${this.props.activeElement.elementId}'] .figureCodeContent span.codeNoHighlightLine`).each(function () {
             // this.innerHTML = this.innerText;
             let boldTags = this.getElementsByTagName('STRONG');
             while (boldTags.length) {

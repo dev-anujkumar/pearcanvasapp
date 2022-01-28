@@ -1,6 +1,7 @@
 export default {
     CLOSE_CONTAINER : "close-container",
     ADD_COMMENT : "add-comment",
+    VIEW_COMMENT : "view-comment",
     EDIT_BUTTON_CYPRESSSPLUS: "edit-button-cypressplus",
     COMMENT_FLAG : "comment-flag",
     ELEMENT_BLOCK_LABEL : "element-label",

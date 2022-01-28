@@ -27,12 +27,11 @@ export const handleAutoNumberingOnDelete = (params) => {
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
     const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside'];
     if (isAutoNumberingEnabled) {
-        /**if (asideData && asideData.type && containerElements.indexOf(asideData.type) > -1) {
+        if (containerElements.includes(type)) {
             //reset auto-numbering
             updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, slateAncestors, getState, dispatch)
         }
-        else */
-        if (type == 'figure') {
+        else if (type == 'figure') {
             //reset auto-numbering
             const autoNumberedElements = getState().autoNumberReducer.autoNumberedElements;
             dispatch(updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements))
@@ -75,7 +74,6 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
  * @param {*} getState 
  * @param {*} dispatch 
  */
-/**
 export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, contentUrn, slateAncestors, getState, dispatch) => {
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
@@ -95,7 +93,6 @@ export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, conten
     });
     getAutoNumberSequence(numberedElements, dispatch)
 }
- */
 /**
  * Handle AUTO-NUMBERING on Swapping
  * @param {*} params 

@@ -96,36 +96,6 @@ const getAPIUrl = (containerEntityUrn) => {
     return url;
 }
 
-// const getAPIUrl = (mediaType, containerEntityUrn) => {
-//     let endpointVersion = '',
-//         endpointExtension = ''
-//     switch (mediaType) {
-//         case AUTO_NUMBER_ELEMENTS.AUDIO:
-//             endpointVersion = 'v2'
-//             endpointExtension = 'audios'
-//             break;
-//         case AUTO_NUMBER_ELEMENTS.VIDEO:
-//             endpointVersion = 'v2'
-//             endpointExtension = 'videos'
-//             break;
-//         case AUTO_NUMBER_ELEMENTS.INTERACTIVES:
-//             endpointVersion = 'v3'
-//             endpointExtension = 'interactives'
-//             break;
-//         case AUTO_NUMBER_ELEMENTS.IMAGE:
-//         case AUTO_NUMBER_ELEMENTS.MATH_IMAGE:
-//         case AUTO_NUMBER_ELEMENTS.MATH_IMAGE:
-//         default:
-//             endpointVersion = 'v3'
-//             endpointExtension = 'images'
-//             break;
-//     }
-//     if (containerEntityUrn) {
-//         return `${config.ASSET_POPOVER_ENDPOINT}${endpointVersion}/${config.projectUrn}/containers/${containerEntityUrn}/${endpointExtension}`
-//     }
-//     return `${config.ASSET_POPOVER_ENDPOINT}${endpointVersion}/${config.projectUrn}/${endpointExtension}`
-// }
-
 export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch => {
     dispatch({
         type: GET_TOC_AUTO_NUMBERING_LIST,
