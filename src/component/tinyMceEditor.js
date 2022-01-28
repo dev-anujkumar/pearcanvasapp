@@ -33,7 +33,7 @@ import { deleteElement } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, restrictSpellCheck }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, restrictSpellCheck, checkActiveElement }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
@@ -365,6 +365,9 @@ export class TinyMceEditor extends Component {
     }
 
     onListButtonClick = (type, subType) => {
+        if(type === 'unordered' && checkActiveElement(['manifestlist'])) {
+            return;
+        }
         this.elementConverted = true;
         let blockListData = isElementInsideBlocklist({index:this.props.index,data:this.props}, this.props.slateLevelData);
         removeListHighliting();
