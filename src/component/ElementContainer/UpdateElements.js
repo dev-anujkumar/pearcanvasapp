@@ -30,7 +30,7 @@ export const replaceUnwantedtags = (html,flag) => {
     tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
     tempDiv.innerHTML = handleBlankLineDom(tempDiv.innerHTML)
     // calling the function to remove tinymce spell check DOM attributes from innerHTML
-    tempDiv.innerHTML = removeSpellCheckDOMAttributes(tempDiv.innerHTML);
+    // tempDiv.innerHTML = removeSpellCheckDOMAttributes(tempDiv.innerHTML);
     return tempDiv.innerHTML;
 }
 
@@ -661,7 +661,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 inputElementSubType = "MARGINALIA"
             }
             // PCAT-2426 - calling function to remove tinymce spellcheck DOM attributes from innerHTML
-            innerHTML = removeSpellCheckDOMAttributes(innerHTML);
+            // innerHTML = removeSpellCheckDOMAttributes(innerHTML);
             dataToReturn = {
                 ...previousElementData,
                 elementdata : {

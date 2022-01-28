@@ -36,7 +36,7 @@ import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsP
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
-import { HideLoader, UPDATE_PROJECT_METADATA } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
@@ -414,6 +414,10 @@ export const getProjectDetails = () => (dispatch, getState) => {
                 dispatch({
                     type: UPDATE_LOB_WORKFLOW,
                     payload: response.data
+                })
+                sendDataToIframe({
+                    'type': WORKFLOW_ROLES,
+                    'message': response.data
                 })
             }).catch(error => {
                 console.log("Get Workflow role API Failed!!")

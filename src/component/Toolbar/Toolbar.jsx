@@ -117,10 +117,10 @@ const _Toolbar = props => {
     return (
         <>
             <div className='toolbar-container'>
-                <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
+                <div className={`header ${isToolBarBlocked} ${accessToolbar}`} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
-                    <div className={isToolBarBlocked ? "leaningobjective-block " : "leaningobjective-block"}>
+                    <div className={props?.isLOExist ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
                         <div className="learningobjectiveicon">
                             <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
