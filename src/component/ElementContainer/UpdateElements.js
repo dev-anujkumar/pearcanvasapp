@@ -62,7 +62,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
 
     let numberedandlabel = false;
     let manualoverride = {};
-    
     let displayedlabel = previousElementData?.displayedlabel;
     if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
         displayedlabel = titleText;
@@ -173,19 +172,14 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
-
     let numberedandlabel = false;
     let manualoverride = {};
-
     let displayedlabel = previousElementData?.displayedlabel;
-    
-
     if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
         let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
-
 
         captionHTML = replaceUnwantedtags(captionHTML,true)
         creditsHTML = replaceUnwantedtags(creditsHTML,true)
