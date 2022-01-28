@@ -257,17 +257,19 @@ class FigureUserInterface extends Component {
                     }
 
                 </div>
-                <div className="media-assets">
+
                 <KeyboardWrapper enable index={`${this.props.index}-add-asset`}>
                         <div onClick={() => this.addVideoRef.current.focus()}>
-
-                    <div tabIndex={0} onKeyDown={this.clickNode} ref={this.addVideoRef} className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
-                    </div>
-                    </KeyboardWrapper>
-                    <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} />
+                        <div className="media-assets">
+                        <div tabIndex={0} onKeyDown={this.clickNode} ref={this.addVideoRef} className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
+                        <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} />
+                        
                     </div>
                 </div>
             </div>
+                    </KeyboardWrapper>
+                    </div>
+                   
         )
     }
 

@@ -1999,8 +1999,8 @@ class ElementContainer extends Component {
                         {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} />}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ () => this.addOrViewComment(element.id,'addComment')} />}
-                        {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} btnClassName={btnClassName} onClick={() => this.addOrViewComment(element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}
+                        {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
@@ -2237,12 +2237,13 @@ class ElementContainer extends Component {
         });   
     }
 
-    addOrViewComment = ( elementId ,type) => {
+    addOrViewComment = ( e, elementId ,type) => {
         this.props.setActiveElement(this.props.element);
         sendDataToIframe({
             'type': AddOrViewComment,
             'message': {"id":elementId, "mode":type}
-        });   
+        });  
+        e.stopPropagation(); 
     }
 
      /**
