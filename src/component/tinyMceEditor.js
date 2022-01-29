@@ -38,7 +38,7 @@ import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/A
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
 import { getDataFromLastTag, isKWChild, isLastChild, moveCursor, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
-import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../component/FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
 import cypressConfig from '../config/cypressConfig';
 let context = {};
 let clickedX = 0;
@@ -998,6 +998,10 @@ export class TinyMceEditor extends Component {
      */
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
+            /** Update the PREVIEW field with Label Value immediately */
+            if (this.props.isAutoNumberingEnabled && this.props?.element?.type === 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder)) {
+                this.props.onFigureLabelChange(e, this.props.index);
+            }
             this.isctrlPlusV = false;
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             let isMediaElement = tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;

@@ -18,8 +18,11 @@ const commonHeaders = {
     "Content-Type": "application/json",
     "PearsonSSOSession": config.ssoToken
 }
+
 /**
- * This API fetches the Learning Framework(s) linked to the project
+ * This API fetches the autonumbered elements in the current TOC Container (P,C,FM,BM)
+ * @param {*} currentParentUrn TOC Container EntityUrn
+ * @returns 
  */
 export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) => {
     const url = getAPIUrl(currentParentUrn);
@@ -53,6 +56,12 @@ export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) =>
 
 };
 
+/**
+ * Prepare the Final Autonumbered Elements Sequence
+ * @param {*} numberedElements 
+ * @param {*} autoNumberElementsIndex 
+ * @returns 
+ */
 const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIndex) => {
     for (let labelType in numberedElements) {
         if (Object.prototype.hasOwnProperty.call(numberedElements, labelType)) {
@@ -63,6 +72,11 @@ const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIn
     return autoNumberElementsIndex
 }
 
+/**
+ * Save the Final Autonumbered Elements Sequence in Store
+ * @param {*} numberedElements 
+ * @param {*} dispatch 
+ */
 export const getAutoNumberSequence = (numberedElements, dispatch) => {
     let autoNumberElementsIndex = {}
     autoNumberElementsIndex = setAutoNumberSequenceForElements(numberedElements, autoNumberElementsIndex);
@@ -74,6 +88,11 @@ export const getAutoNumberSequence = (numberedElements, dispatch) => {
     });
 }
 
+/**
+ * Prepare the Endpoint to get Autonumbered Elements at Container TOC Container Level  (P,C,FM,BM)
+ * @param {*} containerEntityUrn 
+ * @returns 
+ */
 const getAPIUrl = (containerEntityUrn) => {
     let matterType = "";
     switch(containerEntityUrn){
@@ -94,6 +113,11 @@ const getAPIUrl = (containerEntityUrn) => {
     return url;
 }
 
+/**
+ * Set TOC Container's AutoNumbbering Details in Store
+ * @param {*} autoNumberingDetails 
+ * @returns 
+ */
 export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch => {
     dispatch({
         type: GET_TOC_AUTO_NUMBERING_LIST,
@@ -101,6 +125,12 @@ export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch
     });
 }
 
+/**
+ * Function to Enable/Disable Autonumbering in Canvas
+ * @param {*} flag 
+ * @param {*} configValue 
+ * @returns 
+ */
 export const isAutoNumberEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: SET_AUTO_NUMBER_TOGGLE,
@@ -118,6 +148,12 @@ export const commonDispatch = (dispatch, type, payload) => {
 }
 
 
+/**
+ * Get Slate's Content | Used for getting Popup Slate's bodymatter
+ * @param {*} manifestURN 
+ * @param {*} entityURN 
+ * @returns 
+ */
 export const getSlateLevelData = async (manifestURN, entityURN) => {
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`
     try {

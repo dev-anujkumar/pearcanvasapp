@@ -2,17 +2,12 @@ import config from '../../config/config'
 import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_KeyMapper, autoNumber_ElementTypeKey, autoNumber_FigureTypeKeyMapper, autoNumber_ElementTypeToStoreKeysMapper,
         autoNumber_response_ElementType_mapper } from './AutoNumberConstants';
 import {
-    SET_AUTO_NUMBER_TOGGLE,
-    SET_AUTO_NUMBER_SEQUENCE,
-    UPDATE_AUTO_NUMBER_SEQUENCE,
-    GET_TOC_AUTO_NUMBERING_LIST,
-    GET_ALL_AUTO_NUMBER_ELEMENTS,
-    UPDATE_AUTO_NUMBER_ELEMENTS_LIST
+    GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import {getAutoNumberSequence} from './AutoNumberActions';
 import { findNearestElement } from './AutoNumberCreate_helper';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
-import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO } from '../../constants/Element_Constants';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE } from '../../constants/Element_Constants';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL,
@@ -166,11 +161,15 @@ export const getValueOfLabel = (figuretype) => {
  * @param {*} param1 
  * @returns 
  */
-export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber }) => {
+export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber, currentLabelValue, labelNumberSetting }) => {
+    let labelValue = imgLabelValue
+    if(labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+        labelValue = currentLabelValue
+    }
     if (parentNumber && element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
-        return `${imgLabelValue} ${parentNumber}.${imgNumberValue}`
+        return `${labelValue} ${parentNumber}.${imgNumberValue}`
     } else if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
-        return `${imgLabelValue} ${imgNumberValue}`
+        return `${labelValue} ${imgNumberValue}`
     }
     return ""
 }
@@ -237,10 +236,9 @@ export const getContainerEntityUrn = (slateAncestors) =>{
  * @param {*} containerNumber 
  * @returns 
  */
-export const getLabelNumberFieldValue = (element, figureLabelValue, containerNumber) => {
+export const getLabelNumberFieldValue = (element, figureLabelValue, settingsOption) => {
     let elementLabel = figureLabelValue || element?.displayedlabel;
     if (element?.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == false) {
-        // elementLabel = ""
         elementLabel = figureLabelValue;
     }
     else if (element?.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
@@ -252,6 +250,8 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, containerNum
             }
         }
     }
+    elementLabel = settingsOption !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ? element?.displayedlabel : elementLabel;
+    elementLabel = !element.hasOwnProperty('displayedlabel') ? getValueOfLabel(element?.figuretype) : elementLabel;
     return elementLabel
 }
 

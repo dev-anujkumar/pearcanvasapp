@@ -146,3 +146,5 @@ export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Au
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
 export const displayLabelsForAudioVideo = ['Audio', 'Video'];
 export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM'];
+
+export const autoNumberFieldsPlaceholders = ['Number', 'Label']
