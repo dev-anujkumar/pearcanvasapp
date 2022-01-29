@@ -3421,6 +3421,7 @@ export class TinyMceEditor extends Component {
             case "Number":
                 toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureNumberToolbar;
                 break;
+            case "Label":
             case "Label Name":
                 toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureImageLabelToolbar;
                 break;
