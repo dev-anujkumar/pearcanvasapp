@@ -17,7 +17,8 @@ const indivisualData = {
 }
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
-    AUTO_NUMBER_SETTING_REMOVE_NUMBER
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export const replaceUnwantedtags = (html,flag) => {
@@ -135,7 +136,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             manualoverride : manualoverride
         }
         autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete data.manualoverride : data;
-        autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete data.displayedlabel : data;
+        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete data.displayedlabel : data;
     }
     return data
 }
@@ -175,7 +176,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = previousElementData?.displayedlabel;
-    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
@@ -281,7 +282,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         }
     }
 
-    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled) {
+    if (isAutoNumberingEnabled) {
         data = {
             ...data,
             html : {
@@ -293,7 +294,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             manualoverride : manualoverride
         }
         autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete data.manualoverride : data;
-        autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete data.displayedlabel : data;
+        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete data.displayedlabel : data;
     }
     return data
 }

@@ -522,7 +522,7 @@ class Interactive extends React.Component {
         disableHeader(false);
         this.props.showBlocker(false);
         let imageData = data;
-        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'] && imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
         //let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";

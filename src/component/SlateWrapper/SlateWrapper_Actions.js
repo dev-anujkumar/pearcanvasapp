@@ -59,8 +59,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
-        "type": type,
-        "isAutoNumberingEnabled": isAutoNumberingEnabled
+        "type": type
     };
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
@@ -75,7 +74,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         _requestData["parentType"] = "groupedcontent"
         _requestData["columnName"] = parentUrn.columnName
     }
-    if (autoNumberFigureTypesForConverion.includes(type) && isAutoNumberingEnabled) {
+    if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
         _requestData["isAutoNumberingEnabled"] = true;
     }
 
@@ -406,7 +405,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         })
         /** ---------------------------- Auto-Numbering handling ------------------------------*/
-        const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
         if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
             const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
             let slateFigures = getImagesInsideSlates(bodyMatter);
@@ -420,7 +418,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
 
             dispatch(handleAutonumberingOnCreate(type, createdElementData));
-            
         }
         /**------------------------------------------------------------------------------------------------*/
         if (cb) {

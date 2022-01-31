@@ -81,7 +81,6 @@ export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, conten
         for (let labelType in numberedElements) {
             if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
                 numberedElements[labelType][parentIndex] = numberedElements[labelType][parentIndex]?.filter(ele => ((!ele.parentDetails) || (ele.parentDetails?.length < 1) || ele?.parentDetails?.indexOf(contentUrn) < 0))
-                break;
             }
         }
     }
