@@ -28,7 +28,8 @@ import {
     OWNERS_SUBSCRIBED_SLATE,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     ERROR_API_POPUP,
-    SLATE_FIGURE_ELEMENTS
+    SLATE_FIGURE_ELEMENTS,
+    OEP_DISCUSSION
 } from '../../constants/Action_Constants';
 import { SLATE_API_ERROR } from '../../constants/Element_Constants';
 
@@ -444,15 +445,16 @@ export const getProjectDetails = () => (dispatch, getState) => {
             }).catch(error => {
             }) 
 
-
-
+            
+            
             // call api to get discussion items
+            /* If LOB is english, then it will change to onlineenglishproficiency(OEP) */
             const discussionURLEndPoint = 'v1/discussion/discussions';
             // 'https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1/discussion/discussions'
             const discussionUrl = `${config.REACT_APP_API_URL}${discussionURLEndPoint}`;
             return axios.post(discussionUrl, {
                 "lineOfBusinesses" : [
-                    lineOfBusiness
+                    (lineOfBusiness === "english" ? OEP_DISCUSSION : lineOfBusiness)
                 ]
             },
             {
