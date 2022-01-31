@@ -7,7 +7,7 @@ import config from '../../config/config';
 import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
-import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData } from './AutoNumber_helperFunctions';
+import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
 import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData } from '../../constants/Element_Constants';
@@ -84,7 +84,11 @@ export const FigureHeader = (props) => {
         const dropdownVal = setAutoNumberSettingValue(props.model)
         setLabelNumberSetting(dropdownVal);
         props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: dropdownVal});
-        updateDropdownOptions()
+        updateDropdownOptions();
+        if (!props?.model.hasOwnProperty('displayedlabel')) {
+            let label = getValueOfLabel(props?.model?.figuretype);
+            setFigureLabelValue(label);
+        }
     }, [])
     useEffect(() => {
         if (props.activeElement.elementId === props.model.id) {
@@ -173,11 +177,12 @@ export const FigureHeader = (props) => {
         }
     }
 
-    const { figureHtmlData, previewClass, figLabelClass, figTitleClass } = props
+    const { figureHtmlData, figLabelClass, figTitleClass } = props
     const containerNumber = getContainerNumber(slateAncestors, props.autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
     let imgLabelValue = getLabelNumberFieldValue(props.model, figureLabelValue, containerNumber)//props.model?.displayedLabel ?? 'Figure'
     imgLabelValue = labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ? props?.model?.displayedlabel : imgLabelValue;
+    imgLabelValue = !props?.model.hasOwnProperty('displayedlabel') ? getValueOfLabel(props?.model?.figuretype) : imgLabelValue;
     const parentNumber = containerNumber
     let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })
