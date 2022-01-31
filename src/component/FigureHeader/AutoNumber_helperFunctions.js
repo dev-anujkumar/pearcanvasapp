@@ -1,6 +1,6 @@
 import config from '../../config/config'
 import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_KeyMapper, autoNumber_ElementTypeKey, autoNumber_FigureTypeKeyMapper, autoNumber_ElementTypeToStoreKeysMapper,
-        autoNumber_response_ElementType_mapper } from './AutoNumberConstants';
+        autoNumber_response_ElementType_mapper, displayLabelsForImage } from './AutoNumberConstants';
 import {
     SET_AUTO_NUMBER_TOGGLE,
     SET_AUTO_NUMBER_SEQUENCE,
@@ -410,6 +410,12 @@ export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements
     getAutoNumberSequence(autoNumberedElements, dispatch)
 }
 
+/**
+ * This function prepares the data, from response of the numbered API, in the desired format 
+ * @param {*} data 
+ * @param {*} matterType 
+ * @returns 
+ */
 export const getNumberedElements = (data, matterType) => {
     let numberedElements = {};
 
@@ -420,4 +426,79 @@ export const getNumberedElements = (data, matterType) => {
     }
 
     return numberedElements;
+}
+/**
+ * This function will validate the label & number for make the saving call
+ * @param {*} props 
+ * @param {*} previousElementData 
+ * @param {*} removeClassesFromHtml 
+ * @param {*} titleHTML 
+ * @param {*} numberHTML 
+ * @param {*} subtitleHTML 
+ * @param {*} captionHTML 
+ * @param {*} creditsHTML 
+ * @param {*} oldImage 
+ * @param {*} podwidth 
+ * @param {*} smartlinkContexts
+ * @param {*} index
+ * @param {*} changeInPodwidth
+ * @returns Boolean value
+ */
+export const validateLabelNumberSetting = (props, previousElementData, removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, changeInPodwidth) => {
+    // Not selecting remove label and number
+    if (props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+        let isValidValues = setAutonumberingValuesForPayload(props.autoNumberOption.option, titleHTML, numberHTML, true);
+        if (!isValidValues) return false;
+    }
+    // Selecting default case 
+    if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+        return true;
+    }
+    let isNumberDifferent = false;
+    let imgNumberValue = '';
+    let overridedNumber = getOverridedNumberValue(previousElementData);
+    let isOverridedLabelDifferent = false;
+    if (overridedNumber && overridedNumber !== '') {
+        isNumberDifferent = overridedNumber?.toString() !== numberHTML?.toString();
+    } else {
+        const figIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
+        imgNumberValue = getNumberData(figIndexParent, previousElementData, props.autoNumberElementsIndex || {});
+        isNumberDifferent = imgNumberValue?.toString() !== numberHTML?.toString();
+    }
+    if (previousElementData.hasOwnProperty('manualoverride') && previousElementData?.manualoverride.hasOwnProperty('overridelabelvalue')) {
+        isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
+    }
+    subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+    if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
+        titleHTML = previousElementData.displayedlabel;
+    }
+
+    let newInteractiveid = previousElementData?.figuredata?.interactiveid || "";
+    let result = (
+        titleHTML !== previousElementData.displayedlabel ||
+        removeClassesFromHtml(subtitleHTML) !== removeClassesFromHtml(previousElementData.html.title) ||
+        isNumberDifferent ||
+        isOverridedLabelDifferent ||
+        subtitleHTML !== removeClassesFromHtml(previousElementData.html.title) ||
+        captionHTML !== removeClassesFromHtml(previousElementData.html.captions) ||
+        creditsHTML !== removeClassesFromHtml(previousElementData.html.credits) ||
+        oldImage !== newInteractiveid
+    );
+
+    if(smartlinkContexts.includes(previousElementData.figuredata.interactivetype)){
+        let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
+        let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
+        posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
+
+        let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? 
+                            previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : 
+                            "<p></p>";
+        return (
+            result ||
+            removeClassesFromHtml(posterTextHTML) !== removeClassesFromHtml(oldPosterText) ||
+            changeInPodwidth(podwidth, previousElementData?.figuredata?.posterimage?.podwidth)
+        );
+    }
+    
+    return result;
 }
