@@ -66,16 +66,16 @@ export const FigureHeader = (props) => {
         let figureLabelDropdownVal = [];
         switch (props.model.figuretype) {
             case AUDIO:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? props.figureDropdownData.audio : LABEL_DROPDOWN_VALUES[AUDIO] ;
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Audio'] : props.figureDropdownData.audio;
                 break;
             case VIDEO:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? props.figureDropdownData.video : LABEL_DROPDOWN_VALUES[VIDEO] ;
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Video'] : props.figureDropdownData.video;
                 break;
             case IMAGE: case TABLE: case MATH_IMAGE:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? props.figureDropdownData.image : LABEL_DROPDOWN_VALUES[IMAGE];
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Figure', 'Table', 'Equation'] : props.figureDropdownData.video;
                 break;
             case INTERACTIVE:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? props.figureDropdownData.smartlinks : LABEL_DROPDOWN_VALUES[INTERACTIVE];
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Interactive']: props.figureDropdownData.smartlinks;
                 break;
             default:
                 figureLabelDropdownVal = [];
