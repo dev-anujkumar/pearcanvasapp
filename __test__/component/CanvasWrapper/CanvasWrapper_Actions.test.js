@@ -24,7 +24,8 @@ import {
     SET_PARENT_SHOW_DATA,
     SET_PARENT_ASIDE_DATA,
     AUTHORING_ELEMENT_UPDATE,
-    OPEN_POPUP_SLATE
+    OPEN_POPUP_SLATE,
+    OEP_DISCUSSION
 } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
@@ -2403,6 +2404,19 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             axios.get.mockImplementation(() => Promise.reject(secondResponseData))
             await canvasActions.getProjectDetails()(dispatch)
             expect(dispatch).not.toHaveBeenCalled();
+        })
+
+        it('Test-11.5 Get Project Details - then Block for english discussion', async () => {
+            let firstResponseData = {
+                "data": {
+                    "lineOfBusiness": "english"
+                }
+            }
+            let lineOfBusiness = OEP_DISCUSSION
+            let dispatch = jest.fn();
+            axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
+            await canvasActions.getProjectDetails(lineOfBusiness)(dispatch)
+            expect(dispatch).toHaveBeenCalled();
         })
     });
     describe('Test-12- tcmCosConversionSnapshot ', () => {
