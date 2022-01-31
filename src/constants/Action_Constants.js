@@ -53,6 +53,7 @@ export const UPDATE_CROSS_REFERENCE_VALUES = "UPDATE_CROSS_REFERENCE_VALUES"
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
 export const TOGGLE_PAGE_NUMBER = 'TOGGLE_PAGE_NUMBER'
+export const TOGGLE_SPELL_CHECK = 'TOGGLE_SPELL_CHECK'
 
 
 /*---------------Slate Lock -------------------*/

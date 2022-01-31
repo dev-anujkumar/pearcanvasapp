@@ -1,8 +1,15 @@
 import React from 'react';
-import {matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom } from '../../src/constants/utility.js';
+import { mount } from 'enzyme';
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+import {utility,matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom,labelValueForFiguretype,labelValue,Table, Equation , Exhibit,dropdownValueForFiguretype,dropdownList,subtype,preformattedtext,mathml,image,tableasmarkup } from '../../src/constants/utility.js';
 import cypressConfig from '../../src/config/cypressConfig';
 import { newFigureObj } from '../../fixtures/ElementFigureTestingData.js';
 import { showHide } from '../../fixtures/ElementSHowHideData';
+
 
 
 describe('Testing Function - matchHTMLwithRegex', () => {
@@ -394,3 +401,62 @@ describe('Testing Function - prepareDialogueDom', () => {
         expect(result).toBe("<span class=\"dialogueLine\"><br /></span>");
     })
 })
+describe('-----Testing Function  labelValueForFiguretype ------------', () => {
+    it('should return the tableasmarkup, figure element', () => {
+        const labelValue = ['Table', 'Equation', 'Exhibit'];
+        const element = { figuretype: 'tableasmarkup', element: "Table" };
+        expect(labelValueForFiguretype(element)).toEqual("Table");
+    });
+    it('should return the authoredtext, figure element', () => {
+        const labelValue = ['Table', 'Equation', 'Exhibit'];
+        const element = { figuretype: 'authoredtext', element: "Equation" };
+        expect(labelValueForFiguretype(element)).toEqual("Equation");
+    });
+    it('should return the codelisting, figure element', () => {
+        const labelValue = ['Table', 'Equation', 'Exhibit'];
+        const element = { figuretype: 'codelisting', element: "Exhibit" };
+        expect(labelValueForFiguretype(element)).toEqual("Exhibit");
+    });
+    it('should return the "image", "mathImage" ,table" figure element', () => {
+        const labelValue = ['Table', 'Equation', 'Exhibit', 'No Label'];
+        const element = { figuretype: 'image' || 'mathImage' || 'table', element: "No Label" };
+        expect(labelValueForFiguretype(element)).toEqual("No Label");
+    });
+});
+describe('-----Testing Function  dropdownValueForFiguretype ------------', () => {
+    const figureDropdownData = {
+        tableasmarkup: ["No Label", 'Table', "Custom"],
+        mathml: ["No Label", "Equation", "Custom"],
+        preformattedtext: ["No Label", "Exhibit", "Custom"],
+        image: ["No Label", "Figure", "Table", "Equation", "Custom"]
+    }
+    it('Case 1', () => {
+        const dropdownList = ["No Label", 'Table', "Custom"];
+        const subtype = ['image', 'mathml', 'preformattedtext', 'tableasmarkup']
+        const element = { figuretype: 'tableasmarkup', element: "Equation" };
+        expect(dropdownValueForFiguretype(element, figureDropdownData)).toEqual(["No Label", 'Table', "Custom"]);
+
+    })
+    it('Case 2', () => {
+        const dropdownList = ["No Label", "Equation", "Custom"];
+        const subtype = ['image', 'mathml', 'preformattedtext', 'tableasmarkup']
+        const element = { figuretype: 'authoredtext' };
+        expect(dropdownValueForFiguretype(element, figureDropdownData)).toEqual(["No Label", "Equation", "Custom"]);
+
+    })
+    it('Case 3', () => {
+        const dropdownList = ["No Label", "Exhibit", "Custom"];
+        const subtype = ['image', 'mathml', 'preformattedtext', 'tableasmarkup']
+        const element = { figuretype: 'codelisting' };
+        expect(dropdownValueForFiguretype(element, figureDropdownData)).toEqual(["No Label", "Exhibit", "Custom"]);
+
+    })
+    it('Case 4', () => {
+        const dropdownList = ["No Label", "Figure", "Table", "Equation", "Custom"];
+        const subtype = ['image', 'mathml', 'preformattedtext', 'tableasmarkup']
+        const element = { figuretype: 'image' || 'mathImage' || 'table' };
+        expect(dropdownValueForFiguretype(element, figureDropdownData)).toEqual(["No Label", "Figure", "Table", "Equation", "Custom"]);
+
+    })
+
+});
