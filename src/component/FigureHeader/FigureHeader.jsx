@@ -9,7 +9,7 @@ import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, LABEL_DROPDOWN_VALUES } from './AutoNumberConstants';
 import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData, INTERACTIVE } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
@@ -67,16 +67,16 @@ export const FigureHeader = (props) => {
         let figureLabelDropdownVal = [];
         switch (props.model.figuretype) {
             case AUDIO:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Audio'] : props.figureDropdownData.audio;
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? props.figureDropdownData.audio : LABEL_DROPDOWN_VALUES[AUDIO] ;
                 break;
             case VIDEO:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Video'] : props.figureDropdownData.video;
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? props.figureDropdownData.video : LABEL_DROPDOWN_VALUES[VIDEO] ;
                 break;
             case IMAGE: case TABLE: case MATH_IMAGE:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Figure', 'Table', 'Equation'] : props.figureDropdownData.video;
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? props.figureDropdownData.image : LABEL_DROPDOWN_VALUES[IMAGE];
                 break;
             case INTERACTIVE:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Interactive'] : props.figureDropdownData.smartlinks;
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? props.figureDropdownData.smartlinks : LABEL_DROPDOWN_VALUES[INTERACTIVE];
                 break;
             default:
                 figureLabelDropdownVal = [];

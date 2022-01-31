@@ -140,6 +140,13 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'SMART_LINK': 'interactiveList'
 }
 
+export const LABEL_DROPDOWN_VALUES = {
+  'audio': ['Audio'],
+  'video': ['Video'],
+  'interactive': ['Interactive'],
+  'image': ['Figure', 'Table', 'Equation']
+}
+
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive']
 export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO', 'SMART_LINK']
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive']
