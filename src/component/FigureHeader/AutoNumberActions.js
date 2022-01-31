@@ -135,7 +135,7 @@ export const isAutoNumberEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: SET_AUTO_NUMBER_TOGGLE,
         payload: {
-            isAutoNumberingEnabled: true//flag && configValue
+            isAutoNumberingEnabled: flag && configValue
         }
     });
 }
