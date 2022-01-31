@@ -573,6 +573,7 @@ overflow: unset;
   font-size: 12px !important;
   overflow-x: hidden;
   max-height: 50vh;
+  position: relative;
 }
 
 .dialog-window p {
