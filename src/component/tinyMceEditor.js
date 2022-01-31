@@ -1000,7 +1000,7 @@ export class TinyMceEditor extends Component {
         editor.on('keyup', (e) => {
             /** Update the PREVIEW field with Label Value immediately */
             if (this.props.isAutoNumberingEnabled && this.props?.element?.type === 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder)) {
-                this.props.onFigureLabelChange(e, this.props.index);
+                this.props.onFigureLabelChange(e, this.props?.placeholder);
             }
             this.isctrlPlusV = false;
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');

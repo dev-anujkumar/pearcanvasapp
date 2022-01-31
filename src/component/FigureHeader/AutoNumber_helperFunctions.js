@@ -161,15 +161,19 @@ export const getValueOfLabel = (figuretype) => {
  * @param {*} param1 
  * @returns 
  */
-export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber, currentLabelValue, labelNumberSetting }) => {
+export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber, currentLabelValue, labelNumberSetting, currentNumberValue }) => {
     let labelValue = imgLabelValue
-    if(labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+    let numberValue = imgNumberValue
+    if (labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
         labelValue = currentLabelValue
     }
+    if (labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER || labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER || labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER) {
+        numberValue = currentNumberValue
+    }
     if (parentNumber && element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
-        return `${labelValue} ${parentNumber}.${imgNumberValue}`
+        return `${labelValue} ${parentNumber}.${numberValue}`
     } else if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
-        return `${labelValue} ${imgNumberValue}`
+        return `${labelValue} ${numberValue}`
     }
     return ""
 }
@@ -302,6 +306,11 @@ export const prepareAutoNumberList = (imagesData) => {
  */
 export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => {
     if (parentIndex && element && autoNumberElementsIndex) {
+        if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
+            if (element.hasOwnProperty(MANUAL_OVERRIDE) && element[MANUAL_OVERRIDE] !== undefined && (Object.keys(element[MANUAL_OVERRIDE])?.length > 0) && element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_NUMBER_VALUE)) {
+                return element[MANUAL_OVERRIDE][OVERRIDE_NUMBER_VALUE];
+            }
+        }
         let labelType = autoNumber_KeyMapper[element?.displayedlabel || 'Figure']
         // Check added for overrided labels
         if (!(labelType)) {
