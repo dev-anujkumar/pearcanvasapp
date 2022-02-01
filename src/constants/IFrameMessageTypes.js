@@ -2,11 +2,15 @@ export const HideWrapperLoader = 'hideWrapperLoader'
 export const ShowHeader = 'showHeader'
 export const CanvasIframeLoaded = 'canvasIframeLoaded'
 export const TocToggle = "tocToggle"
+export const CanvasActiveElement = "canvasActiveElement"
+export const AddOrViewComment = "addOrViewComment"
 export const HideLoader = "HideLoader"
 export const ShowLoader = "ShowLoader"
 export const PreviousSlate = "prevSlate"
 export const NextSlate = "nextSlate"
 export const SplitCurrentSlate = "splitCurrentSlate"
+export const WORKFLOW_ROLES = "workflowRoles"
+
 /******************* Learning Objective Message Types ***********************/
 export const OpenLOPopup = "openLoPopup"
 export const ViewLearningObjectiveSlate ="VIEW LEARNING OBJECTIVE"
@@ -52,3 +56,10 @@ export const PROJECT_SHARING_ROLE = "projectSharingRole"
 export const UPDATE_PROJECT_METADATA = "updateProjectMetadata"
 export const IS_SLATE_SUBSCRIBED = "isSlateSubscribed"
 export const CHECK_SUBSCRIBED_SLATE_STATUS = "checkSubscribedSlateStatus"
+
+// Sending Message from Cypress To Cypress plus
+export const INCOMING_MESSAGE='openCypressPlus'
+export const REFRESH_MESSAGE='refresh on Cypress from Cypress_plus'
+
+//Audio Narration Constant
+ export const deleteAudio='deletePageAudioMessage'

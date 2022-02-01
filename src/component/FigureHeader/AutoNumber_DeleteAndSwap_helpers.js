@@ -27,7 +27,7 @@ export const handleAutoNumberingOnDelete = (params) => {
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
     const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside'];
     if (isAutoNumberingEnabled) {
-        if (asideData && asideData.type && containerElements.indexOf(asideData.type) > -1) {
+        if (containerElements.includes(type)) {
             //reset auto-numbering
             updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, slateAncestors, getState, dispatch)
         }
@@ -81,7 +81,6 @@ export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, conten
         for (let labelType in numberedElements) {
             if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
                 numberedElements[labelType][parentIndex] = numberedElements[labelType][parentIndex]?.filter(ele => ((!ele.parentDetails) || (ele.parentDetails?.length < 1) || ele?.parentDetails?.indexOf(contentUrn) < 0))
-                break;
             }
         }
     }
@@ -93,7 +92,6 @@ export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, conten
     });
     getAutoNumberSequence(numberedElements, dispatch)
 }
-
 /**
  * Handle AUTO-NUMBERING on Swapping
  * @param {*} params 
@@ -120,10 +118,11 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
                 }
             });
         }
-        if (containerElements.indexOf(swappedElementData?.type) > -1) {
+        /** if (containerElements.indexOf(swappedElementData?.type) > -1) {
             updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors })
         }
-        else if (swappedElementData?.type === 'figure') {
+        else */
+         if (swappedElementData?.type === 'figure') {
             updateAutoNumberSequenceOnSwappingElements({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors })
         }
 
@@ -139,7 +138,6 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
  */
 export const updateAutoNumberSequenceOnSwappingElements = (params) => {
     const {
-        // getState,
         dispatch,
         slateFigures,
         slateAncestors,
@@ -166,8 +164,9 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
                 }
                 if (referenceFigure) {
-                    const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === referenceFigure)
-                    numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, swappedElementData)
+                    const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === referenceFigure);
+                    const newPosition = refImageIndex < 0 ? numberedElements[labelType][figureParentEntityUrn].length : refImageIndex;
+                    numberedElements[labelType][figureParentEntityUrn]?.splice(newPosition, 0, swappedElementData)
                     dispatch({
                         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
                         payload: {
@@ -186,6 +185,7 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
  *  This function resets sequence after SWAP when a container having figure is swapped
  * @param {*} params
  */
+/**
 export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
     const {
         getState,
@@ -244,3 +244,4 @@ export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
         }
     }
 }
+ */

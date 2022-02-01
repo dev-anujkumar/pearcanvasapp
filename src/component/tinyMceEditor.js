@@ -10,6 +10,8 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists/plugin.min.js";
 import "tinymce/plugins/advlist/plugin.min.js";
 import "tinymce/plugins/paste/plugin.min.js";
+// Commenting icons import related to latest tinymce version
+// import 'tinymce/icons/default/icons.min.js';
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
@@ -31,12 +33,13 @@ import { deleteElement } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, restrictSpellCheck }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
 import { getDataFromLastTag, isKWChild, isLastChild, moveCursor, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
-import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../component/FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
+import cypressConfig from '../config/cypressConfig';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -67,7 +70,8 @@ export class TinyMceEditor extends Component {
         this.wirisClick = 0;
         this.activeGlossaryFootnoteId="";
         this.editorConfig = {
-            plugins: EditorConfig.plugins,
+            // spellchecker_rpc_url: cypressConfig.TINYMCE_SPELL_CHECKER_URL,
+            plugins: this.handleTinymcePlugins(),
             selector: '#cypress-0',
             inline: true,
             formats: EditorConfig.formats,
@@ -313,6 +317,18 @@ export class TinyMceEditor extends Component {
         
         this.editorRef = React.createRef();
         this.currentCursorBookmark = {};
+    }
+
+    /**
+     * function to provide tinymce plugins
+     * @returns {String} Tinymce plugins list
+     */
+    handleTinymcePlugins = () => {
+        // const { spellCheckToggle } = this.props;
+        let plugins = EditorConfig.plugins;
+        // adding tinymce spellchecker plugin if spell checker option is active from project settings
+        // if (spellCheckToggle && restrictSpellCheck(this.props)) plugins = `${plugins} tinymcespellchecker`;
+        return plugins;
     }
 
     /**
@@ -982,6 +998,10 @@ export class TinyMceEditor extends Component {
      */
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
+            /** Update the PREVIEW field with Label Value immediately */
+            if (this.props.isAutoNumberingEnabled && this.props?.element?.type === 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder)) {
+                this.props.onFigureLabelChange(e, this.props?.placeholder);
+            }
             this.isctrlPlusV = false;
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             let isMediaElement = tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;
@@ -3090,9 +3110,22 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * function to remove tinymce editors
+     */
+    removeTinymceEditors = () => {
+        for (let i = tinymce?.editors?.length - 1; i > -1; i--) {
+            let ed_id = tinymce?.editors[i]?.id;
+            tinymce.remove(`#${ed_id}`)
+        }
+    }
+
+    /**
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
+        // const { spellCheckToggle } = this.props;
+        // removing the tinymce editors when spellcheck toggle is turned off to prevent incorrect text highlighting
+        // if (!spellCheckToggle) this.removeTinymceEditors();
         let currentNode = document.getElementById('cypress-' + this.props.index);
         if (currentNode && currentNode.getElementsByTagName("IMG").length) {
             currentNode.innerHTML = this.getNodeContent();
@@ -3388,13 +3421,18 @@ export class TinyMceEditor extends Component {
             case "Number":
                 toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureNumberToolbar;
                 break;
+            case "Label":
             case "Label Name":
                 toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureImageLabelToolbar;
                 break;
             case "Title":
             case "Caption":
             case "Credit":
+            case "Math Block Content":
                 toolbar = config.figurImageCommonToolbar;
+                break;
+            case "Code Block Content":
+                toolbar = this.setCodeBlockContentToolbar();
                 break;
             case "Enter Button Label":
                 toolbar = config.smartlinkActionButtonToolbar;
@@ -3417,12 +3455,25 @@ export class TinyMceEditor extends Component {
         return toolbar;
     }
 
+    setCodeBlockContentToolbar = () => {
+        let toolbar;
+        let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
+        if (syntaxEnabled && syntaxEnabled.checked) {
+            toolbar = config.codeListingToolbarDisabled;
+        }
+        else {
+            toolbar = config.codeListingToolbarEnabled;
+        }
+        return toolbar;
+    }
+
     setInstanceToolbar = () => {
         let toolbar = [];
+        let figureTypes = ['image', 'table', 'mathImage', 'audio', 'video', 'tableasmarkup', 'authoredtext', 'codelisting'];
         let blockListData = checkBlockListElement(this.props, "TAB");
         if (this.props?.element?.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        } else if ((this.props?.element?.type === 'figure' && ['image', 'table', 'mathImage', 'audio', 'video'].includes(this.props?.element?.figuretype)) || (this.props?.element?.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
+        } else if ((this.props?.element?.type === 'figure' && figureTypes.includes(this.props?.element?.figuretype)) || (this.props?.element?.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
             toolbar = this.setFigureToolbar(this.props.placeholder);
         }else if(this.props?.element?.type === 'element-aside'){
             toolbar = this.setAsideNumberingToolbar(this.props.placeholder);
@@ -3434,15 +3485,10 @@ export class TinyMceEditor extends Component {
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
                 toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-        } else if (this.props.placeholder === "Enter block code...") {
-            let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
-            if (syntaxEnabled && syntaxEnabled.checked) {
-                toolbar = config.codeListingToolbarDisabled;
-            }
-            else {
-                toolbar = config.codeListingToolbarEnabled;
-            }
         } 
+        // else if (this.props.placeholder === "Code Block Content") {
+        //     toolbar = this.setCodeBlockContentToolbar()
+        // }
         // else if (this.props.placeholder === "Enter Show text" || (this.props.placeholder === "Enter Hide text")) {
         //     toolbar = config.showHideToolbar
         // } 
@@ -3974,6 +4020,7 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
+        /*It will reopen data paste issue in blockquote marginalia*/
         while (tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').length) {
             tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').each(function () {
                 let innerHtml = this.innerHTML;
