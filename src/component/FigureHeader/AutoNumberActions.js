@@ -170,3 +170,8 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
         return {}
     }
 }
+
+
+export const setAutoNumberinBrowser = (flag, configValue) => {
+    localStorage.setItem('projectAutoNumberStatus', { [config.projectEntityUrn]: flag && configValue });
+}
