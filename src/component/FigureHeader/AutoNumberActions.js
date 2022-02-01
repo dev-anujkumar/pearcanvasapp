@@ -171,7 +171,18 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
     }
 }
 
-
+/**
+ * Handle Autonumbering in TCM Window
+ */
 export const setAutoNumberinBrowser = (flag, configValue) => {
-    localStorage.setItem('projectAutoNumberStatus', { [config.projectEntityUrn]: flag && configValue });
+    let prevStatus = localStorage.getItem('projectAutoNumberStatus');
+    let projectAutoNumberStatus = {};
+    if (prevStatus && prevStatus.length > 0) {
+        projectAutoNumberStatus = JSON.parse(prevStatus);
+    }
+    projectAutoNumberStatus = {
+        ...projectAutoNumberStatus,
+        [config.projectEntityUrn]: flag && configValue
+    }
+    localStorage.setItem('projectAutoNumberStatus', JSON.stringify({ ...projectAutoNumberStatus }));
 }
