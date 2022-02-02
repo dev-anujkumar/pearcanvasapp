@@ -55,8 +55,13 @@ import store from '../appstore/store';
 export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlfrescoElement) => {
 
     const imageArgs = store.getState()?.alfrescoReducer?.imageArgs;
-    const currentAsset = imageArgs?.id ? {
-        id: imageArgs.id?.split(':')?.pop() || "",
+    let currentAssetId = ""
+    if (imageArgs?.id) {
+        const imageId = imageArgs?.id?.split(':')
+        currentAssetId = imageId[0] === 'imageAssetContent' ? imageId[1] : (imageId?.pop() || "")
+    }
+    const currentAsset = currentAssetId?.trim() !== "" ? {
+        id: currentAssetId || "",
         type: 'image',
     } : null;
     let alfrescoPath = config.alfrescoMetaData;
