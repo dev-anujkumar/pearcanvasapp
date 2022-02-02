@@ -187,9 +187,21 @@ export const FigureHeader = (props) => {
 
     const handleFigureLabelChange = (evt, fieldType) => {
         if (fieldType == 'Label') {
-            setCurrentLabelValue(evt.target.innerHTML)
+            setCurrentLabelValue(evt.target.innerText)
         } else {
-            setCurrentNumberValue(evt.target.innerHTML)
+            if (evt?.target?.innerText?.length > 9) {
+                return false;
+            }
+            let isnum = true;
+            if (evt?.target?.innerText?.length > 0) {
+                const numberVal = parseInt(evt.target.innerText)
+                isnum = /^[1-9][0-9]*$/.test(numberVal);
+            }
+            if (labelNumberSettingDropDown === AUTO_NUMBER_SETTING_RESUME_NUMBER && !isnum) {
+                return false;
+            } else {
+                setCurrentNumberValue(evt.target.innerText);
+            }
         }
     }
     const { figureHtmlData, figLabelClass, figTitleClass } = props
