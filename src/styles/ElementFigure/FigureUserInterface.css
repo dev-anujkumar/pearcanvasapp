@@ -45,6 +45,7 @@ code .codeNoHighlightLine{
 #figure_add_div {
     cursor: auto !important;
     outline: none;
+    overflow-y: hidden;
 }
 
 /* .floating-credit-group .figureCredit.cypress-editable {
@@ -910,7 +911,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .floating-number-group .transition-none, .image-label .transition-none {
     transition: none;
-    top: 2px;
+    top: -6px;
     bottom: 0px;
     font-size: 10px;
     color: #737373;
