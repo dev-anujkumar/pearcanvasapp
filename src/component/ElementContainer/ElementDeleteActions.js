@@ -86,7 +86,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
         }
 
         //--------------------- Handle Auto-numbering -----------------------------------
-        const slateData = getState().appStore.slateLevelData;
+        const slateData = getState()?.appStore?.slateLevelData;
         const newslateData = JSON.parse(JSON.stringify(slateData));
         const slateLevelData = newslateData[config.slateManifestURN];
         getAutoNumberedElementsOnSlate(slateLevelData, {dispatch});
