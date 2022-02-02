@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import FigureImage from '../../../src/component/ElementFigure/FigureImage';
-import { figureImage50TextElementDefault,figureImage50TextElementWithData,mathImage50TextElementDefault, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,testDataFromNewAlfresco } from '../../../fixtures/ElementFigureTestingData.js'
+import { figureImage50TextElementDefault,figureImage50TextElementWithData,mathImage50TextElementDefault, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,testDataFromNewAlfresco,tableasmarkupWithoutData,tableasmarkupWithData,codelistingWithoutData,codelistingWithData,blockmathWithData,blockmathWithoutData } from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
 import { mockNumberedElements, mockIndexedElements, mockSlateFiguresList} from '../FigureHeader/AutoNumberApiTestData';
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
@@ -388,7 +388,7 @@ describe('Testing Figure image component', () => {
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
             spyhandleC2MediaClick.mockClear()
         }) 
-        it('handleC2MediaClick-if else case  alfresco_crud_access ', () => {
+        xit('handleC2MediaClick-if else case  alfresco_crud_access ', () => {
             let props = {
                 slateLockInfo: {
                     isLocked: false,
@@ -509,131 +509,183 @@ describe('Testing Figure image component', () => {
             elementFigureInstance.onFigureImageFieldBlur("test");
         })
     })
-
-});
-
-describe('Testing FigureImage component', () => {
-    let initialState = {
-        alfrescoReducer: {
-            alfrescoAssetData: {},
-            elementId: "urn",
-            alfrescoListOption: [],
-            launchAlfrescoPopup: true,
-            editor: true,
-            Permission: false
-        },assessmentReducer:{
-            'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456': {
-                'assessmentStatus':'final',
-                "showUpdateStatus": true
-            }
-        },
-        appStore: {
-            figureDropdownData: {
-                audio: ["No Label", "Custom"],
-                image: ["No Label", "Custom"],
-                smartlinks: ["No Label", "Custom", "Figure"],
-                video: ["No Label", "Video", "Custom"]
-            }
-        },
-        projectMetadata:{},
-        autoNumberReducer: mockAutoNumberReducerEmpty,
-    }
-    let props = {
-        model: figureImage50TextElementWithData,
-        index: "",
-        slateLockInfo: {
-            isLocked: false,
-            userId: 'c5Test01'
-        },
-        onClick: () => { },
-        handleFocus: function () { },
-        permissions: ['add_multimedia_via_alfresco'],
-        element: {
-            figuretype: ['image', 'table', 'mathImage', 'authoredtext'],
-            figuredata: {
-                hasOwnProperty: jest.fn(),
-                videos: [
-                    {
-                        path: "Test Path"
-                    }
-                ],
-                videoid: 'urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c',
-                posterimage: { path: "urn:pearson:alfresco:c778faed-76e1-4523-a402-2fbbaf16036c" }
+    describe("Testing changeFigureLabel()", () => {
+        let props = {
+            model: tableasmarkupWithoutData,
+            index: 0,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
             },
-            html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>video</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
-        }
-    }
-    const store = mockStore(initialState);
-    const component = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
-    let elementFigureInstance = component.find('FigureImage').instance();
-    xit('Test onFigureElementFieldBlur 1st if condition', () => {
-        document.getElementById = () => {
-            return {
-                innerHTML: "<br>",
-                nextElementSibling: {
-                    classList: {
-                        contains: jest.fn(() => true),
-                        remove: jest.fn()
-                    }
-                },
-                classList: {
-                    contains: jest.fn(() => true)
+            onClick: jest.fn(),
+            handleFocus: jest.fn(),
+            permissions: ['add_multimedia_via_alfresco'],
+            figureData: {
+                model: {
+                    figuretype:['image','table','mathImage','authoredtext','tableasmarkup']
                 }
-            }
-        }
-        let spyFucntion = jest.spyOn(elementFigureInstance, 'onFigureElementFieldBlur')
-        elementFigureInstance.onFigureElementFieldBlur('1-0');
-        expect(spyFucntion).toHaveBeenCalledWith('1-0')
-        spyFucntion.mockClear();
+            },
+            asideData: {},
+            updateFigureData: jest.fn(),
+            parentEntityUrn: "",
+            handleBlur: jest.fn()
+        };
+        const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
+        let component = mount(<Provider store={store}><FigureImage {...props} /></Provider>);
+        let figureImageInstance = component.find('FigureImage').instance();
+        document.body.innerHTML ='<div id="cypress-0-0" class="label">No Label</div>';
+        it('If figureLabelValue !== data', () => {
+            figureImageInstance.setState({ figureLabelValue: 'No Label' });
+            const spy = jest.spyOn(figureImageInstance, 'changeFigureLabel');
+            figureImageInstance.changeFigureLabel(figureImageInstance.state.figureLabelValue,"Image")
+            expect(spy).toHaveBeenCalled();
+        })
+        it('If dropdownOptions.includes(data)', () => {
+            figureImageInstance.setState({ figureLabelValue: 'No Label',
+            figureLabelData: ['Image','Table']
+            });
+            const spy = jest.spyOn(figureImageInstance, 'changeFigureLabel');
+            figureImageInstance.changeFigureLabel(figureImageInstance.state.figureLabelValue,"Table")
+            expect(spy).toHaveBeenCalled();
+        })
     })
-    xit('Test onFigureElementFieldBlur 1st if-else condition', () => {
-        document.getElementById = () => {
-            return {
-                classList: {
-                    contains: jest.fn(() => true)
+    /**Test Cases for FigureImage when it renders Table Element */
+    describe("Testing FigureImage Component for Table Editor Element", () => {
+        let props = {
+            model: tableasmarkupWithoutData,
+            index: "" ,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: jest.fn(),
+            handleFocus: jest.fn(),
+            permissions: ['add_multimedia_via_alfresco'],
+            figureData: {
+                model: {
+                    figuretype:['image','table','mathImage','authoredtext','tableasmarkup']
                 }
-            }
+            },
+            asideData: {},
+            updateFigureData: jest.fn(),
+            parentEntityUrn: ""
+        };
+        let props2 = {
+            ...props,
+            model: tableasmarkupWithData
         }
-        let spyFucntion = jest.spyOn(elementFigureInstance, 'onFigureElementFieldBlur')
-        elementFigureInstance.onFigureElementFieldBlur('1-0');
-        expect(spyFucntion).toHaveBeenCalledWith('1-0')
-        spyFucntion.mockClear();
+        let component = mount(<Provider store={store}><FigureImage {...props} /></Provider>);
+        let figureImageInstance = component.find('FigureImage').instance();
+        describe("Table Element renders without crashing", () => {
+            it('Table Element without Asset renders without crashing', () => {
+                expect(component).toHaveLength(1);
+                expect(component.instance()).toBeDefined();
+            })
+            it('Table Element with Asset renders without crashing', () => {
+                component = mount(<Provider store={store}><FigureImage {...props2} /></Provider>)
+                expect(component).toHaveLength(1);
+                expect(component.instance()).toBeDefined();
+            })
+        })
+        describe("Table SPA is launched or not", () => {
+            it("When Clicked on 'Add a Table' button method launchSPA() is called", () => {
+                component = mount(<Provider store={store}><FigureImage {...props} /></Provider>);
+                figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'launchSPA');
+                expect(component.find('button.table-asset-button')).toHaveLength(1);
+                component.find('button.table-asset-button').simulate('click');
+                expect(spy).toHaveBeenCalled();
+            })
+            it("When Clicked on Table Asset method launchSPA() is called", () => {
+                component = mount(<Provider store={store}><FigureImage {...props2} /></Provider>);
+                figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'launchSPA');
+                expect(component.find('div.table-asset-wrapper-with-asset')).toHaveLength(1);
+                component.find('div.table-asset-wrapper-with-asset').simulate('click');
+                expect(spy).toHaveBeenCalled();
+            })
+        })
     })
-    xit('Test onFigureElementFieldBlur 3rd if condition', () => {
-        document.getElementById = () => {
-            return {
-                innerHTML: {
-                    toLowerCase: jest.fn(() => 'video')
-                },
-                classList: {
-                    contains: jest.fn(() => true)
+    /**Test Cases for Block Code Element */
+    describe("Testing FigureImage Component for Block Code Element", () => {
+        let props = {
+            model: codelistingWithoutData,
+            index: "" ,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: jest.fn(),
+            handleFocus: jest.fn(),
+            permissions: ['add_multimedia_via_alfresco'],
+            figureData: {
+                model: {
+                    figuretype:['image','table','mathImage','authoredtext','tableasmarkup','codelisting']
                 }
-            }
+            },
+            asideData: {},
+            updateFigureData: jest.fn(),
+            parentEntityUrn: ""
+        };
+        let props2 = {
+            ...props,
+            model: codelistingWithData
         }
-        let spyFucntion = jest.spyOn(elementFigureInstance, 'onFigureElementFieldBlur')
-        elementFigureInstance.onFigureElementFieldBlur('0-0');
-        expect(spyFucntion).toHaveBeenCalledWith('0-0')
-        spyFucntion.mockClear();
+        let component = mount(<Provider store={store}><FigureImage {...props} /></Provider>);
+        let figureImageInstance = component.find('FigureImage').instance();
+        describe("block code renders without crashing", () => {
+            it('Block code without data renders without crashing', () => {
+                expect(component).toHaveLength(1);
+                expect(component.instance()).toBeDefined();
+            })
+            it('Block code with data renders without crashing', () => {
+                component = mount(<Provider store={store}><FigureImage {...props2} /></Provider>)
+                expect(component).toHaveLength(1);
+                expect(component.instance()).toBeDefined();
+            })
+        })
+        
     })
-    xit('Test onFigureElementFieldBlur 3rd if-else condition', () => {
-        document.getElementById = () => {
-            return {
-                innerHTML: {
-                    toLowerCase: jest.fn(() => 'test')
-                },
-                classList: {
-                    contains: jest.fn(() => false)
+    /**Test Cases for Block math Element */
+    describe("Testing FigureImage Component for Block math Element", () => {
+        let props = {
+            model: blockmathWithoutData,
+            index: "" ,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: jest.fn(),
+            handleFocus: jest.fn(),
+            permissions: ['add_multimedia_via_alfresco'],
+            figureData: {
+                model: {
+                    figuretype:['image','table','mathImage','authoredtext','tableasmarkup','codelisting']
                 }
-            }
+            },
+            asideData: {},
+            updateFigureData: jest.fn(),
+            parentEntityUrn: ""
+        };
+        let props2 = {
+            ...props,
+            model: blockmathWithData
         }
-        let spyFucntion = jest.spyOn(elementFigureInstance, 'onFigureElementFieldBlur')
-        elementFigureInstance.onFigureElementFieldBlur('0-0');
-        expect(spyFucntion).toHaveBeenCalledWith('0-0')
-        spyFucntion.mockClear();
+        let component = mount(<Provider store={store}><FigureImage {...props} /></Provider>);
+        let figureImageInstance = component.find('FigureImage').instance();
+        describe("block math  renders without crashing", () => {
+            it('Block math without data renders without crashing', () => {
+                expect(component).toHaveLength(1);
+                expect(component.instance()).toBeDefined();
+            })
+            it('Block math with data renders without crashing', () => {
+                component = mount(<Provider store={store}><FigureImage {...props2} /></Provider>)
+                expect(component).toHaveLength(1);
+                expect(component.instance()).toBeDefined();
+            })
+        })   
     })
 });
-// slate id - urn:pearson:manifest:dd2504ac-ef6f-4cdc-8d24-de6b6170baee
-
 const mockAutoNumberReducerWithData = {
     isAutoNumberingEnabled: true,
     autoNumberedElements: mockNumberedElements,
@@ -722,7 +774,4 @@ describe('Testing Figure image component', () => {
         let instance = component.instance();
         expect(instance).toBeDefined();
     })
-
-
-
-})
+});

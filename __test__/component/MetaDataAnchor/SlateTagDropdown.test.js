@@ -31,12 +31,24 @@ const store = mockStore({
             "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying", "lo_edit_metadata"
         ]
     },
+    projectSubscriptionDetails:{
+        projectSharingRole:"SUBSCRIBER",
+        projectSubscriptionDetails:{
+            isSubscribed : true
+        }
+    },
 });
 let props = {
     slateLockInfo: {
         isLocked: false,
         timestamp: "",
         userId: "c5test01"
+    },
+    projectSubscriptionDetails:{
+        projectSharingRole:"SUBSCRIBER",
+        projectSubscriptionDetails:{
+            isSubscribed : true
+        }
     },
     permissions: ["lo_edit_metadata"],
     closeLODropdown: function () { },

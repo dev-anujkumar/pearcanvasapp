@@ -94,7 +94,7 @@ class ElementAudioVideo extends Component {
         let imageData = data;
         let clipInfo;
         let audioDes;
-        let epsURL = imageData?.epsUrl ? imageData.epsUrl : "";   
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'] && imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
         let assetFormat=""
         let figureType = imageData?.content?.mimeType?.split('/')[0]
         let width = imageData?.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
@@ -105,7 +105,8 @@ class ElementAudioVideo extends Component {
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
             if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
                 if(imageData?.properties['avs:jsonString']){
-                    const avsJsonString = JSON.parse(imageData.properties['avs:jsonString']);
+                    const avsJsonStringData = imageData?.properties["avs:jsonString"]
+                    const avsJsonString = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
                     const imageReference = avsJsonString?.imageReferenceURL ?? DEFAULT_VIDEO_POSTER_IMAGE;
                     epsURL = imageReference
                 }
@@ -139,7 +140,9 @@ class ElementAudioVideo extends Component {
             let frenchSubtitle = ""
             let spanishSubtitle = ""
             
-            audioDes = imageData?.properties['avs:jsonString'] && JSON.parse(imageData.properties['avs:jsonString'])
+            const avsJsonStringValue = imageData?.properties["avs:jsonString"]
+            audioDes = avsJsonStringValue && (typeof avsJsonStringValue === 'string') ? JSON.parse(avsJsonStringValue) : avsJsonStringValue;
+            //audioDes = imageData?.properties['avs:jsonString'] && JSON.parse(imageData.properties['avs:jsonString'])
             ensubtitle = audioDes?.englishCC ?? "";
             frenchSubtitle = audioDes?.frenchCC ?? "";
             spanishSubtitle = audioDes?.spanishCC ?? "";

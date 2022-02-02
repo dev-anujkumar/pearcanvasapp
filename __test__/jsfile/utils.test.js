@@ -1,6 +1,6 @@
 var _ = require("lodash");
 const uuidV4 = require("uuid/v4");
-import { utils, checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText  } from '../../src/js/utils.js';
+import { utils, checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, fetchUpdatedImageUrl, removeImageCache  } from '../../src/js/utils.js';
 import { JSDOM } from 'jsdom'
 global.document = (new JSDOM()).window.Element;
 var globalDiv = null;
@@ -39,8 +39,8 @@ describe('Utils file function testing', () => {
     })
 
     it('Testing getCommentFormatTime function', () => {
-        let result = utils.getCommentFormatTime(14, 2);
-        expect(result).toBe('02:02 PM')
+        let result = utils.getCommentFormatTime(14, 22);
+        expect(result).toBe('02:22 PM')
 
     })
 
@@ -255,6 +255,54 @@ describe('Utils file function testing', () => {
         expect(divTag.innerHTML).toEqual('<span class=\"poetryLine\"><strong>Testing</strong></span>');
     })
 
+    it('Testing handleFormattingTags function : className branch coverage', () => {
+        let htmlString = '<div><span class="poetryLine"><strong>Testing</strong></span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let span = htmlDoc.getElementsByTagName("span")[0];
+        let divTag = htmlDoc.getElementsByTagName("div")[0];
+        let editor = {
+            selection: {
+                getContent: () => {
+                    //return '<span class="poetryLine">Testing</span>'
+                },
+                setRng: (range) => {
+
+                },
+                getNode: () => {
+                    return {
+                        tagName: 'STANZA',
+                        isEqualNode: (args) => {
+                            return true;
+                        },
+                        closest: (args) => {
+                            return span;
+                        }
+                    }
+                }
+            }
+        }
+        let childNodes = [
+            {
+                tagName: 'SPAN'
+            },
+            {
+                tagName: 'STRONG'
+            }
+        ]
+        let range = {
+            setStart: (mainParent, startOffSet) => {
+
+            },
+            setEnd: (mainParent, startOffSet) => {
+
+            }
+        }
+        spanHandlers.handleFormattingTags(editor, 'testid', 'div', childNodes, 'poetryLine', range);
+        expect(divTag.innerHTML).toEqual('<span class=\"poetryLine\"><strong>Testing</strong></span>');
+    })
+
+
     it('Testing handleExtraTags function', () => {
         spanHandlers.handleExtraTags('testid', 'div', 'poetryLine');
         expect(JSON.stringify(globalDiv)).toEqual("{}");
@@ -336,6 +384,51 @@ describe('Utils file function testing', () => {
         }
         spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, 8, {}, 'poetryLine');
         expect(divTag.innerHTML).toEqual('<span class=\"poetryLine\">&nbsp;<span class=\"poetryLine\"><br></span></span>');
+    })
+
+
+    it('Testing handleBackSpaceAndDeleteKyeDown function if element has no previousSibling for key 8 : branch coverage', () => {
+        let htmlString = '<div><span class="poetryLine"><strong>T</strong></span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let spanTag = htmlDoc.getElementsByTagName("span")[0];
+        let divTag = htmlDoc.getElementsByTagName("div")[0];
+        let editor = {
+            selection: {
+                getRng: () => {
+                    return {
+                        startOffset: 0
+                    }
+                },
+                getNode: () => {
+                    return {
+                        tagName: 'SPAN',
+                        className: 'poetryLine',
+                        closest: (args) => {
+                            return spanTag;
+                        }
+                    }
+                },
+                setCursorLocation: () => {
+
+                },
+                getContent: () => {
+                },
+                getContent: () => {
+
+                }
+            },
+            dom: {
+                create: () => {
+                    let span = htmlDoc.createElement("SPAN");
+                    span.classList.add('poetryLine');
+                    span.innerHTML = '<br/>';
+                    return span;
+                }
+            }
+        }
+        spanHandlers.handleBackSpaceAndDeleteKyeDown(editor, 8, {}, 'poetryLine');
+        expect(divTag.innerHTML).toEqual('<span class="poetryLine"><br></span>');
     })
 
     it('Testing handleBackSpaceAndDeleteKyeDown function if element has no previousSibling for key 46', () => {
@@ -442,6 +535,31 @@ describe('Utils file function testing', () => {
         expect(divTag.innerHTML).toEqual('<span class=\"poetryLine\">TestingT</span>');
     })
 
+    it('Testing handleBackSpaceAndDeleteKyeUp function if element has no previousSibling for key 46', () => {
+        let htmlString = '<div><span class="poetryLine">Testing<span>T</span><br></span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let spanTag = htmlDoc.getElementsByTagName("span")[0];
+        let divTag = htmlDoc.getElementsByTagName("div")[0];
+        let editor = {
+            selection: {
+                getNode: () => {
+                    return {
+                        tagName: 'SPAN',
+                        className: 'TEST',
+                        closest: (args) => {
+                            return spanTag;
+                        }
+                    }
+                },
+                setCursorLocation: () => {
+
+                }
+            }
+        }
+        spanHandlers.handleBackSpaceAndDeleteKyeUp(editor, 46, 'poetryLine');
+        expect(divTag.innerHTML).toEqual('<span class=\"poetryLine\">TestingT</span>');
+    })
     it('Testing handleRemoveFormattingOnSpan function', () => {
         let selection = {
             anchorNode: {
@@ -468,6 +586,33 @@ describe('Utils file function testing', () => {
         let result = spanHandlers.handleRemoveFormattingOnSpan(selection, { preventDefault: () => { }, stopPropagation: () => { } }, 'div', 'poetryLine', 'abc');
         expect(result).toEqual(false);
     })
+
+    it('Testing handleRemoveFormattingOnSpan function', () => {
+        let selection = {
+            anchorNode: {
+                parentNode: {
+                    nodeName: 'SPAN',
+                    classList: {
+                        contains: () => {
+                            return true;
+                        }
+                    },
+                    innerHTML: 'Testing',
+                    innerText: 'Test'
+                },
+                parentElement: {
+                    tagName: 'SPAN',
+                    parentNode: {
+                        replaceChild: () => { }
+                    }
+                },
+                className: 'poetryLine',
+                nodeName: 'div'
+            }
+        }
+        spanHandlers.handleRemoveFormattingOnSpan(selection, { preventDefault: () => { }, stopPropagation: () => { } }, 'div', 'poetryLine', 'abc');
+    })
+    
 
     it('Testing splitOnTag function', () => {
         let htmlString = '<p><strong>hi there, how <em>are <span>y<!--break-->ou</span> doing</em> today?</strong></p>';
@@ -563,6 +708,59 @@ describe('Utils file function testing', () => {
             }
         }
         spanHandlers.addAndSplitSpan(editor, 'testid', 'div', 'poetryLine');
+    })
+    it('Testing addAndSplitSpan function : branch coverage', () => {
+        let htmlString = '<div><span class="poetryLine"><strong>Testing</strong><br></span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let strongTag = htmlDoc.getElementsByTagName("strong")[0];
+        let editor = {
+            selection: {
+                getNode: () => {
+                    return {
+                        // strongTag: strongTag,
+                        tagName:"SPAN",
+                        className: "poetryLine",
+                        closest: () => {
+                            return strongTag
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: () => {
+
+                }
+            }
+        }
+        spanHandlers.addAndSplitSpan(editor, 'testid', 'div', 'dialogueLine');
+    })
+
+    it('Testing addAndSplitSpan function : childClass branch coverage', () => {
+        let htmlString = '<div><span class="poetryLine"><strong>Testing</strong></span></div>';
+        let parser = new DOMParser();
+        let htmlDoc = parser.parseFromString(htmlString, 'text/html');
+        let strongTag = htmlDoc.getElementsByTagName("strong")[0];
+        let editor = {
+            selection: {
+                getNode: () => {
+                    return {
+                        // strongTag: strongTag,
+                        tagName:"SPAN",
+                        className: "poetryLine",
+                        closest: () => {
+                            return strongTag
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: () => {
+
+                }
+            }
+        }
+        spanHandlers.addAndSplitSpan(editor, 'testid', 'div', 'codeNoHighlightLine');
     })
 
     it('Testing performSplitOperation function for first position', () => {
@@ -1079,4 +1277,16 @@ describe('Utils file function testing', () => {
         expect(RESULT).toEqual(EXPECTED_RESULT);
     })
 
+    it("Testing fetchUpdatedImageUrl function", () => {
+
+        const url = "/images/logo.png"
+        const result = fetchUpdatedImageUrl(url);
+        expect(result).toEqual(`/images/logo.png?${(new Date()).getTime()}` )
+    })
+
+    it("Testing removeImageCache function", () => {
+        const nodeHTML = '<div><img src="/images/logo.png" class="poetryLine">&#65279;</img></div>';
+        const result = removeImageCache(nodeHTML)
+        expect(result).toEqual(`<div><img src="/images/logo.png?${(new Date()).getTime()}" class="poetryLine">&#65279;</img></div>`)
+    })
 });
