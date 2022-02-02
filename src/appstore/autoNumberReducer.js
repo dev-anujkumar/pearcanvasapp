@@ -16,8 +16,10 @@ const INITIAL_STATE = {
         imagesList: [],
         tablesList: [],
         equationsList: [],
-        audiosList:[],
-        videosList:[],
+        audiosList: [],
+        videosList: [],
+        asidesList: [],
+        workedExamplesList: [],
         interactiveList: []
     },
     autoNumberingDetails: {},
@@ -27,12 +29,13 @@ const INITIAL_STATE = {
         equationsIndex: {},
         audioIndex: {},
         videoIndex: {},
+        asideIndex: {},
+        workedExampleIndex: {},
         interactiveIndex: {}
     },
     slateFigureList:[],
     autoNumberOption: '',
-    popupParentSlateData: {},
-    popupElementsData: []
+    popupParentSlateData: {}
 }
 
 const INITIAL_ACTION = {
