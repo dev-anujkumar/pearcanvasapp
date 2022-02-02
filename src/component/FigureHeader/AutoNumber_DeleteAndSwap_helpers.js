@@ -29,7 +29,7 @@ export const handleAutoNumberingOnDelete = (params) => {
     if (isAutoNumberingEnabled) {
         if (containerElements.includes(type)) {
             //reset auto-numbering
-            updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, slateAncestors, getState, dispatch)
+            updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, getState, dispatch)
         }
         else if (type == 'figure') {
             //reset auto-numbering
@@ -74,23 +74,31 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
  * @param {*} getState 
  * @param {*} dispatch 
  */
-export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, contentUrn, slateAncestors, getState, dispatch) => {
-    const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    const numberedElements = getState().autoNumberReducer.autoNumberedElements;
-    if (contentUrn && numberedElements) {
-        for (let labelType in numberedElements) {
-            if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
-                numberedElements[labelType][parentIndex] = numberedElements[labelType][parentIndex]?.filter(ele => ((!ele.parentDetails) || (ele.parentDetails?.length < 1) || ele?.parentDetails?.indexOf(contentUrn) < 0))
+export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, contentUrn, getState, dispatch) => {
+    const {autoNumberedElements, slateFigureList} = getState().autoNumberReducer;
+    if (autoNumberedElements) {
+        for (let labelType in autoNumberedElements) {
+            if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex]) {
+                let elementData = autoNumberedElements[labelType][parentIndex];
+                let data = [];
+                for(let element of elementData){
+                    slateFigureList?.map(figure =>{
+                        if(figure.contentUrn === element.contentUrn && !figure.parentDetails.includes(contentUrn)) {
+                            data.push(figure);
+                        }
+                    });
+                }
+                autoNumberedElements[labelType][parentIndex] = data
             }
         }
     }
     dispatch({
         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
         payload: {
-            numberedElements
+            numberedElements: autoNumberedElements
         }
     });
-    getAutoNumberSequence(numberedElements, dispatch)
+    getAutoNumberSequence(autoNumberedElements, dispatch)
 }
 /**
  * Handle AUTO-NUMBERING on Swapping

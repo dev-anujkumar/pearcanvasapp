@@ -24,7 +24,7 @@ export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[]) => {
+export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[], popupElementsList = []) => {
     if (bodyMatter?.length > 0) {
         bodyMatter?.forEach(async (element, index) => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
@@ -54,9 +54,16 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                         getMediaElementInMultiColumn(element, numberedElements, [...element.indexPos])
                         break;
                     case containerElements.POPUP:
-                        const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
-                        if (parentIndex?.length) popupContent.parentDetails = parentIndex
-                        await getMediaElementInPopup(popupContent, numberedElements)
+                        if (popupElementsList.length) {
+                            const popupData = popupElementsList.filter(function (data) {
+                                return data.id == element.id
+                            })
+                            if (popupData.length > 0) getMediaElementInPopup(popupData[0], numberedElements);
+                        } else {
+                            const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
+                            if (parentIndex?.length) popupContent.parentDetails = parentIndex
+                            await getMediaElementInPopup(popupContent, numberedElements)
+                        }
                         break;
                     case containerElements.ASIDE:
                         getMediaElementInAsideWE(element, numberedElements, [...element.indexPos])
@@ -99,6 +106,7 @@ export const containerBodyMatter = (container) => {
     return dataToReturn;
 }
 export const getMediaElementInPopup = (containerData, numberedElements) => {
+    containerData = {...containerData, indexPos: []}
     if (containerData?.contents?.bodymatter?.length > 0) {
         containerData?.contents?.bodymatter.forEach((element, index) => {
             element.indexPos = containerData?.indexPos?.push(index) || [index]

@@ -17,6 +17,7 @@ import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper'; 
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -43,6 +44,9 @@ export const onDeleteSuccess = (params) => {
     let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
     
     /** ---------------------------- Auto-Numbering handling ------------------------------*/
+    const slateLevelData = newParentData[config.slateManifestURN];
+    getAutoNumberedElementsOnSlate(slateLevelData, {dispatch});
+
     const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
     const autoNumberParams = {
         type,

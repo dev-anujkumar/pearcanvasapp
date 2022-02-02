@@ -16,8 +16,10 @@ const INITIAL_STATE = {
         imagesList: [],
         tablesList: [],
         equationsList: [],
-        audiosList:[],
-        videosList:[],
+        audiosList: [],
+        videosList: [],
+        asidesList: [],
+        workedExamplesList: [],
         interactiveList: []
     },
     autoNumberingDetails: {},
@@ -27,6 +29,8 @@ const INITIAL_STATE = {
         equationsIndex: {},
         audioIndex: {},
         videoIndex: {},
+        asideIndex: {},
+        workedExampleIndex: {},
         interactiveIndex: {}
     },
     slateFigureList:[],
@@ -92,7 +96,6 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 slateFigureList: [
-                    ...state.slateFigureList,
                     ...action.payload.slateFigures
                 ]
             }
