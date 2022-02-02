@@ -166,7 +166,7 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
         const slateData = Object.values(response.data)[0];
         return slateData;
     } catch (err) {
-        console.log('Error in getting slate link data', err)
-        return []
+        console.error('Error in getting slate link data', err)
+        return {}
     }
 }
