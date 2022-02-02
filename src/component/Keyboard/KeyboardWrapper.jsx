@@ -93,7 +93,7 @@ const isFirtstChild = (node, tinymceOffset) => {
         }
         else if (node?.id?.startsWith(NORMAL_SELECTOR) && node?.parentNode?.id.startsWith(QUERY_SELECTOR)) {
             // tinymce edtiors empty values
-           return tinymceOffset === 0
+            return tinymceOffset === 0
         }
         else return false;
 
@@ -149,7 +149,7 @@ const isLastChild = (node, tinymceOffset) => {
     if (isKChild.isChild) {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const lastTextNode = getLastTextNode(tinymceNode);
-        const uniCode = '\uFEFF';
+        const uniCode = '\uFEFF';        
         if (lastTextNode === node) {
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
                 if(lastTextNode?.parentNode?.id === "_mce_caret") {
@@ -175,11 +175,11 @@ const isLastChild = (node, tinymceOffset) => {
             else if(node?.textContent?.length === 0) {
                 return true;
             }
-          
+            
         }
         else if (node?.id?.startsWith(NORMAL_SELECTOR) && node?.parentNode?.id.startsWith(QUERY_SELECTOR)) {
             // tinymce edtiors empty values
-           return tinymceOffset === 0;
+            return tinymceOffset === 0;
         }
         else if(tinymceNode?.textContent?.length === 0) {
             // for empty fields in floating text case
@@ -188,7 +188,7 @@ const isLastChild = (node, tinymceOffset) => {
         }        
 
         else return footNoteCases(node, lastTextNode);
-
+        
     }
     else return false;
 }
