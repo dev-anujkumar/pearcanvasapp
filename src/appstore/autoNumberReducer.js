@@ -92,7 +92,6 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 slateFigureList: [
-                    ...state.slateFigureList,
                     ...action.payload.slateFigures
                 ]
             }

@@ -12,6 +12,7 @@ import { deleteBlockListElement } from '../ElementContainer/ElementContainerDele
 import { AUTHORING_ELEMENT_UPDATE, ERROR_POPUP } from "./../../constants/Action_Constants";
 import tinymce from 'tinymce';
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper'
 
 export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
     const elementIndex = eleIndex?.toString()?.split('-')
@@ -85,6 +86,11 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
         }
 
         //--------------------- Handle Auto-numbering -----------------------------------
+        const slateData = getState().appStore.slateLevelData;
+        const newslateData = JSON.parse(JSON.stringify(slateData));
+        const slateLevelData = newslateData[config.slateManifestURN];
+        getAutoNumberedElementsOnSlate(slateLevelData, {dispatch});
+
         const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
         const autoNumberParams = {
             type,
