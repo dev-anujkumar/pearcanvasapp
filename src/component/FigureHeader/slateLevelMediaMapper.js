@@ -55,7 +55,7 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                         break;
                     case containerElements.POPUP:
                         if (popupElementsList.length) {
-                            let popupData = popupElementsList.filter(function (data) {
+                            const popupData = popupElementsList.filter(function (data) {
                                 return data.id == element.id
                             })
                             if (popupData.length > 0) getMediaElementInPopup(popupData[0], numberedElements);
