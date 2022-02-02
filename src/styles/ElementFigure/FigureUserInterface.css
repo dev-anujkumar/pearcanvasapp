@@ -882,7 +882,6 @@ th ol li.listItemNumeroUnoNone:before {
     position: absolute;
     pointer-events: none;
     top: 22px;
-    /* top: 0px; */
     transition: all 0.1s ease;
 }
 .floating-title-group .floating-title, .floating-caption-group .floating-caption, .floating-credit-group .floating-credit {
@@ -912,7 +911,6 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .floating-number-group .transition-none, .image-label .transition-none {
     transition: none;
-    /* top: 2px; */
     top: -6px;
     bottom: 0px;
     font-size: 10px;
