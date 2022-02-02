@@ -882,7 +882,8 @@ th ol li.listItemNumeroUnoNone:before {
     position: absolute;
     pointer-events: none;
     top: 22px;
-    margin-top: -5px;
+    /* margin-top: -5px; */
+    margin-top: -7px;
     transition: all 0.1s ease;
     
 }
@@ -935,7 +936,8 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .floating-number-group .transition-none, .image-label .transition-none {
     transition: none;
-    top: 2px;
+    top: -6px;
+    /* top: 2px; */
     bottom: 0px;
     font-size: 10px;
     color: #737373;
@@ -945,7 +947,8 @@ th ol li.listItemNumeroUnoNone:before {
 
  .floating-title-group   .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none, .floating-math-content-group .transition-none {
     transition: none;
-    top: -6px;
+    /* top: -6px; */
+    top: 2px;
     font-size: 10px;
     color: #737373;
     position: absolute;
