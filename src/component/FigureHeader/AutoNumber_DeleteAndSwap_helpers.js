@@ -95,7 +95,7 @@ export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, conten
     dispatch({
         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
         payload: {
-            autoNumberedElements
+            numberedElements: autoNumberedElements
         }
     });
     getAutoNumberSequence(autoNumberedElements, dispatch)
