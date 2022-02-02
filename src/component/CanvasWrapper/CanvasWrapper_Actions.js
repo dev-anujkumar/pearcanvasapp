@@ -1149,6 +1149,22 @@ export const fetchAuthUser = () => dispatch => {
         document.cookie = (userInfo.userId)?`USER_ID=${userInfo.userId};path=/;`:`USER_ID=;path=/;`;
 		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
 		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
+        
+        /* 
+        To update the latest info
+        Since GetFirst Salte was called before fetch user
+        so sending user info with postmessage 
+        */
+
+        sendDataToIframe({
+            type: 'updateUserDetail',
+            message : {
+                userId : userInfo.userId,
+                firstName : userInfo.firstName,
+                lastName: userInfo.lastName
+            }
+            
+        });
     })
         .catch(err => {
             console.error('axios Error', err);
