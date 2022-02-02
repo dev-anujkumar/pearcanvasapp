@@ -53,6 +53,12 @@ import store from '../appstore/store';
  * @description function will be called on image src add and fetch resources from Alfresco
  */
 export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlfrescoElement) => {
+
+    const imageArgs = store.getState()?.alfrescoReducer?.imageArgs;
+    const currentAsset = imageArgs?.id ? {
+        id: imageArgs.id?.split(':')?.pop() || "",
+        type: 'image',
+    } : null;
     let alfrescoPath = config.alfrescoMetaData;
     if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {
@@ -64,7 +70,9 @@ export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlf
                 let messageObj = { citeName: citeName, 
                     citeNodeRef: citeNodeRef, 
                     elementId: element.id,
-                    editor: true}
+                    editor: true,
+                    currentAsset
+                }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                 const messageDataToSaveInlineImage = {
                     id: element.id,
