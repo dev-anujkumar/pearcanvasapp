@@ -58,7 +58,6 @@ export const getImagesInsideSlates = async (bodyMatter, numberedElements = [],pa
                     case containerElements.POPUP:
                         const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
                         if (parentIndex?.length) popupContent.parentDetails = parentIndex
-                        console.log('popupContent',popupContent)
                         await getMediaElementInPopup(popupContent, numberedElements)
                         break;
                     case containerElements.ASIDE:

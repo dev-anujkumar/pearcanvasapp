@@ -8,7 +8,7 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList, getNumberedElements } from './AutoNumber_helperFunctions';
-import { AUTO_NUMBER_ELEMENTS, autoNumber_IndexMapper } from './AutoNumberConstants';
+import { autoNumber_IndexMapper } from './AutoNumberConstants';
 /**
  * 
  */
@@ -169,4 +169,20 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
         console.error('Error in getting slate link data', err)
         return {}
     }
+}
+
+/**
+ * Handle Autonumbering in TCM Window
+ */
+export const setAutoNumberinBrowser = (flag, configValue) => {
+    let prevStatus = localStorage.getItem('projectAutoNumberStatus');
+    let projectAutoNumberStatus = {};
+    if (prevStatus && prevStatus.length > 0) {
+        projectAutoNumberStatus = JSON.parse(prevStatus);
+    }
+    projectAutoNumberStatus = {
+        ...projectAutoNumberStatus,
+        [config.projectEntityUrn]: flag && configValue
+    }
+    localStorage.setItem('projectAutoNumberStatus', JSON.stringify({ ...projectAutoNumberStatus }));
 }
