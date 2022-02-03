@@ -412,7 +412,8 @@ export const getProjectDetails = () => (dispatch, getState) => {
             axios.get(workflowRoleURL, {
                 headers: {
                     "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }).then(response => {
                 dispatch({

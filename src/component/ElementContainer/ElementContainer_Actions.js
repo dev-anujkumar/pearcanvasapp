@@ -899,7 +899,8 @@ export const updateAsideNumber = (previousData, index,elementId) => (dispatch, g
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
         if (currentSlateData?.status === 'approved') {

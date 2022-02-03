@@ -16,7 +16,8 @@ import { autoNumber_IndexMapper } from './AutoNumberConstants';
 const commonHeaders = {
     "ApiKey": config.STRUCTURE_APIKEY,
     "Content-Type": "application/json",
-    "PearsonSSOSession": config.ssoToken
+    // "PearsonSSOSession": config.ssoToken
+    'myCloudProxySession': config.myCloudProxySession
 }
 
 /**
@@ -30,7 +31,8 @@ export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) =>
         headers: {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(async response => {
         if (response?.data) {
@@ -160,7 +162,8 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
         const response = await axios.get(apiUrl, {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
         const slateData = Object.values(response.data)[0];
