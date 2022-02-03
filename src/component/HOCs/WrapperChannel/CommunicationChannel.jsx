@@ -368,6 +368,16 @@ function CommunicationChannel(WrappedComponent) {
                         config.figureDataToBeFetched = true;
                     }
                     break;
+
+                case 'commentAdded' : {
+                    this.props.addNewComment(message)
+                    break
+                }
+
+                case 'commentDeleted' : {
+                    this.props.deleteComment(message)
+                    break
+                }
             }
         }
 
