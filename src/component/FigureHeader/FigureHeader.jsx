@@ -103,7 +103,7 @@ export const FigureHeader = (props) => {
         setSlateAncestors(props.currentSlateAncestorData);
         const figIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
         const currentNumber = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
-        setCurrentNumberValue(currentNumber)
+        setCurrentNumberValue(currentNumber?.replace(/&nbsp;/g, ' '))
     }, [props.currentSlateAncestorData]);
     useEffect(() => {
         updateDropdownOptions();
@@ -187,7 +187,7 @@ export const FigureHeader = (props) => {
 
     const handleFigureLabelChange = (evt, fieldType) => {
         if (fieldType == 'Label') {
-            setCurrentLabelValue(evt.target.innerText)
+            setCurrentLabelValue(evt.target.innerText?.replace(/&nbsp;/g, ' '))
         } else {
             if (evt?.target?.innerText?.length > 9) {
                 return false;
@@ -200,7 +200,7 @@ export const FigureHeader = (props) => {
             if (labelNumberSettingDropDown === AUTO_NUMBER_SETTING_RESUME_NUMBER && !isnum) {
                 return false;
             } else {
-                setCurrentNumberValue(evt.target.innerText);
+                setCurrentNumberValue(evt.target.innerText?.replace(/&nbsp;/g, ' '));
             }
         }
     }

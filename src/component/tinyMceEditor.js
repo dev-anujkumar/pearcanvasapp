@@ -1244,7 +1244,7 @@ export class TinyMceEditor extends Component {
                 // Restrict limit to Numbers only in Number Field for Resume Number option
                 if (this.props.placeholder === 'Number' && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
                     if (e.ctrlKey || e.shiftKey || ((keyCode < 48 || keyCode > 57) && (keyCode < 96 || keyCode > 105)) && keyCode !== 8 && keyCode !== 37 && keyCode !== 39 && keyCode !== 46) {
-                        restrictOperation();
+                        e.preventDefault();
                         e.stopPropagation();
                         return false;
                     }
@@ -3438,11 +3438,11 @@ export class TinyMceEditor extends Component {
         let toolbar;
         switch (placeholder) {
             case "Number":
-                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureNumberToolbar;
+                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.numberToolbarAutonumberMode : config.figureNumberToolbar;
                 break;
             case "Label":
             case "Label Name":
-                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureImageLabelToolbar;
+                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelToolbarAutonumberMode : config.figureImageLabelToolbar;
                 break;
             case "Title":
             case "Caption":
