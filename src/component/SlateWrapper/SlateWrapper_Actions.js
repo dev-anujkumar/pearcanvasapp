@@ -567,6 +567,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem,
          asideId, poetryId, parentElement, elementIndex, sectionType } = dataObj || {};
     const slateId = config.slateManifestURN;
+    swappedElementData.slateEntityUrn = currentSlateEntityUrn ? currentSlateEntityUrn : config.slateEntityURN;
 
     let _requestData = {
         "projectUrn": config.projectUrn,
