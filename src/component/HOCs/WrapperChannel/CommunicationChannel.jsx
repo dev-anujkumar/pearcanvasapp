@@ -364,12 +364,8 @@ function CommunicationChannel(WrappedComponent) {
                     const slateAncestors = this.props?.currentSlateAncestorData
                     const currentParentUrn = getContainerEntityUrn(slateAncestors)
                     if (currentParentUrn === message.currentTocParentContainer) {
-                        this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
-                        // get data for auto-numbering , 'AUDIO', 'VIDEO'
-                        const mediaElement = ['IMAGE','AUDIO', 'VIDEO']
-                        mediaElement.forEach(ele => {
-                            this.props.fetchProjectFigures(ele)
-                        })
+                        this.props.setTocContainersAutoNumberList(message.autoNumberingDetails);
+                        config.figureDataToBeFetched = true;
                     }
                     break;
             }
@@ -902,14 +898,10 @@ function CommunicationChannel(WrappedComponent) {
                     slateEntityUrn: config.slateEntityURN
                 }
                 config.isPopupSlate = false;
+                config.figureDataToBeFetched = true;
                 this.props.fetchAudioNarrationForContainer(slateData)
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
-                // get data for auto-numbering , 'AUDIO', 'VIDEO'
-                const mediaElement = ['IMAGE','AUDIO', 'VIDEO']
-                mediaElement.forEach(ele => {
-                    this.props.fetchProjectFigures(ele)
-                })
                 this.props.fetchSlateData(message.node.containerUrn, config.slateEntityURN, config.page, '', "");
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);

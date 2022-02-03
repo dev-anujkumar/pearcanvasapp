@@ -72,7 +72,7 @@ class FigureUserInterface extends Component {
     }
 
     checkForAutoNumberedContent = (currentElement) =>{
-        if((currentElement?.figuretype === 'audio' || currentElement?.figuretype === 'video') && this.props?.isAutoNumberingEnabled){
+        if((currentElement?.figuretype === 'audio' || currentElement?.figuretype === 'video' || currentElement?.figuretype === 'interactive') && this.props?.isAutoNumberingEnabled){
             return true
         }
         return false
@@ -540,7 +540,7 @@ class FigureUserInterface extends Component {
                 <div className='figure-image-wrapper'>
                     <div className={divClass} resource="">
                         <figure className={figureClass} resource="">
-                            {this.checkForAutoNumberedContent(this.props.element) ?
+                            {this.checkForAutoNumberedContent(this.props.element) && this.props?.element?.hasOwnProperty('numberedandlabel') ?
                                 <FigureHeader
                                     {...this.props}
                                     model={this.props.element}

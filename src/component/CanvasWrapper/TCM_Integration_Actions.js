@@ -6,6 +6,7 @@ import {LAUNCH_TCM_CANVAS_POPUP} from '../../constants/Action_Constants'
 
 export const loadTrackChanges = (elementId) => {
   let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
+  let isAutoNumberingEnabled= store?.getState()?.autoNumberReducer?.isAutoNumberingEnabled ?? false;
   if (!checkSlateLock(slateLockInfo)) {
     const title = store.getState().appStore && store.getState().appStore.slateTitleUpdated ? store.getState().appStore.slateTitleUpdated : "";
     const currentSlateTitle = title;
@@ -13,7 +14,7 @@ export const loadTrackChanges = (elementId) => {
     const currentSlateUrn = config.tcmslatemanifest ? config.tcmslatemanifest : config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN;
     const currentProjectEntityUrn = config.projectEntityUrn;
     const slateEntityUrn = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN;
-    const QUERY_URL = `?dURN=${currentProjectUrn}&sURN=${currentSlateUrn}&slateEntityURN=${slateEntityUrn}&slateTitle=${encodeURIComponent(currentSlateTitle)}&entityURN=${currentProjectEntityUrn}`;
+    const QUERY_URL = `?dURN=${currentProjectUrn}&sURN=${currentSlateUrn}&slateEntityURN=${slateEntityUrn}&slateTitle=${encodeURIComponent(currentSlateTitle)}&entityURN=${currentProjectEntityUrn}&autoNumberEnabled=${isAutoNumberingEnabled}`;
     const CURRENT_ELEMENT_QUERY = elementId ? `&eURN=${elementId}` : "";
     window.open(config.TCM_DASHBOARD_UI_URL + QUERY_URL + CURRENT_ELEMENT_QUERY, 'tcmwin');
   }

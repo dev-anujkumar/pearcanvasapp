@@ -743,23 +743,23 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
 export const setFigureElementContentSnapshot = (element, actionStatus) => {
     let formattedLabel, formattedNumber, formattedTitle
     let isAutoNumberingEnabled= store?.getState()?.autoNumberReducer?.isAutoNumberingEnabled ?? false;
-    let allowedFigureTypesForAutoNumbering=["image","table","mathImage","audio","video"]
     formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
-    if (isAutoNumberingEnabled && allowedFigureTypesForAutoNumbering.includes(element?.figuretype) ) {
-        formattedLabel = "<p><br></p>",
-        formattedNumber = "<p><br></p>"
+    if (isAutoNumberingEnabled && autoNumberedElements(element)) {
+        formattedLabel = getAutoNumberedLabelData(element)
     } else {
         formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
         formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
     }
     let snapshotData = {
         title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
-        figurenumber: handleBlankLineDom(formattedNumber, 'BlankLine') || "",
+        // figurenumber: handleBlankLineDom(formattedNumber, 'BlankLine') || "",
         subtitle: handleBlankLineDom(formattedTitle, 'BlankLine') || "",
         captions: handleBlankLineDom(element.html.captions, 'BlankLine') || "",
         credits: handleBlankLineDom(element.html.credits, 'BlankLine') || "" 
     }
-
+    if (!(isAutoNumberingEnabled && autoNumberedElements(element))) {
+        snapshotData.figurenumber = handleBlankLineDom(formattedNumber, 'BlankLine') || ""
+    }
     switch (element.figuretype) {
         case "video":
             snapshotData["metadata"] = element.figuredata?.videoid?.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
@@ -849,4 +849,41 @@ const isEmpty = (obj) => {
         return true;
     }
     return false;
+}
+
+const allowedFigureTypesForAutoNumbering = ['image', 'table', 'mathImage', 'interactive', 'audio', 'video']
+
+export const autoNumberedElements = (element) => {
+   
+    if (element && element.type === 'figure' && allowedFigureTypesForAutoNumbering.includes(element.figuretype)) {
+        return true
+    }
+    return false
+}
+
+/**
+ * Prepare LABEL field content for snapshot
+ * @param {*} element 
+ * @returns 
+ */
+export const getAutoNumberedLabelData = (element) => {
+    let elementLabel = `<br/>`
+    if (element && element.type && element.type === 'figure') {
+        if (element?.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == false) {
+            elementLabel = `<br/>`; // Remove Label Case
+        }
+        else if (element?.hasOwnProperty('numberedandlabel') && element['numberedandlabel'] == true) {
+            if (element.hasOwnProperty('manualoverride') && element['manualoverride'] !== undefined && Object.keys(element['manualoverride'])?.length > 0) {
+                if (element['manualoverride'].hasOwnProperty('overridenumbervalue') && element['manualoverride'].hasOwnProperty('overridelabelvalue')) {
+                    elementLabel = element['manualoverride'].overridelabelvalue // Override Label & NumberCase
+                } else {
+                    elementLabel = element['displayedlabel'] || `<br/>`// Default| Resume |Override Number Only Case
+                }
+            } else {
+                elementLabel = element['displayedlabel'] || `<br/>`// Default| Resume |Override Number Only Case
+            }
+        }
+    }
+    elementLabel = `<p>${elementLabel}</p>`
+    return elementLabel
 }

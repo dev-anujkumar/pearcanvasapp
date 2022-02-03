@@ -40,8 +40,7 @@ import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES } from '../FigureHeader/AutoNumberConstants';
-
+import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL
@@ -52,7 +51,8 @@ Array.prototype.move = function (from, to) {
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData,blockListDetails) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
-    let  popupSlateData = getState().appStore.popupSlateData
+    let  popupSlateData = getState().appStore.popupSlateData;
+    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
     let _requestData = {
@@ -73,6 +73,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     else if (parentUrn && parentUrn.elementType === 'group') {
         _requestData["parentType"] = "groupedcontent"
         _requestData["columnName"] = parentUrn.columnName
+    }
+    if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
+        _requestData["isAutoNumberingEnabled"] = true;
     }
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
@@ -402,8 +405,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         })
         /** ---------------------------- Auto-Numbering handling ------------------------------*/
-        const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
-        if ((type === 'IMAGE' || type === 'VIDEO') && isAutoNumberingEnabled) {
+        if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
             const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
             let slateFigures = getImagesInsideSlates(bodyMatter);
             if (slateFigures) {
@@ -416,7 +418,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
 
             dispatch(handleAutonumberingOnCreate(type, createdElementData));
-            
         }
         /**------------------------------------------------------------------------------------------------*/
         if (cb) {

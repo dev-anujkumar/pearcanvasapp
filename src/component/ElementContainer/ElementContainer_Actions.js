@@ -16,6 +16,7 @@ import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
+import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
 export const addComment = (commentString, elementId) => (dispatch) => {
@@ -441,6 +442,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     let newIndex = index.split("-")
     let newShowhideIndex = parseInt(newIndex[newIndex.length-1]); //+1
     //const { asideData, parentUrn ,showHideObj } = getState().appStore
+    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
@@ -450,6 +452,9 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         "sectionType": type
 
     };
+    if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
+        _requestData["isAutoNumberingEnabled"] = true;
+    }
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
@@ -508,7 +513,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
         const slateAncestorData = getState().appStore.currentSlateAncestorData;
         let elementsList = {};
-        if (type2BAdded === 'IMAGE') {
+        if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
             let slateFigures = getImagesInsideSlates(newBodymatter);
             if (slateFigures) {
                 dispatch({
@@ -518,9 +523,11 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                     }
                 });
             }
-            let figureObj = slateFigures.find(figure => figure.contentUrn === createdElemData.data.contentUrn);
-            elementsList = autoNumberedElementsObj.imagesList;
-            handleAutonumberingForElementsInContainers(newBodymatter, figureObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, dispatch);
+            let elementObj = slateFigures.find(element => element.contentUrn === createdElemData.data.contentUrn);
+            const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
+            const labelType = createdElemData?.data?.displayedlabel;
+            elementsList = autoNumberedElementsObj[listType];
+            handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
         }
         /* let condition;
         if (newIndex.length == 4) {
