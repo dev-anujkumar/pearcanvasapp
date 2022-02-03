@@ -103,6 +103,9 @@ export const FigureHeader = (props) => {
         setSlateAncestors(props.currentSlateAncestorData);
         const figIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
         const currentNumber = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
+        if(currentNumber && typeof currentNumber === 'string' && currentNumber.trim() !== ""){
+            currentNumber?.replace(/&nbsp;/g, ' ')
+        }
         setCurrentNumberValue(currentNumber)
     }, [props.currentSlateAncestorData]);
     useEffect(() => {
