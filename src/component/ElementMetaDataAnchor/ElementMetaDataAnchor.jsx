@@ -138,6 +138,7 @@ export class ElementMetaDataAnchor extends Component {
   prepareExtFrameworkData = () => {
     let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
     let currentSlateLOData = this.props.currentSlateLOData;
+    let lastAlignedLo = this.props.lastAlignedExternalLO;
     let apiKeys_LO = {
       'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
       'strApiKey': config.STRUCTURE_APIKEY,
@@ -152,13 +153,13 @@ export class ElementMetaDataAnchor extends Component {
       externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
     }
     return {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     }
   }
 
   launchExternalFrameworkPopup = () => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     } = this.prepareExtFrameworkData();
     const currentSlateLF=this.props.currentSlateLF;
       sendDataToIframe({
@@ -166,6 +167,7 @@ export class ElementMetaDataAnchor extends Component {
         'message': {
           'text': AlignToExternalFramework,
           'data': currentSlateLOData,
+          'lastAlignedLo':lastAlignedLo,
           'isLOExist': true,
           'editAction': '',
           'selectedLOs': selectedLOs,
@@ -202,6 +204,7 @@ const mapStateToProps = (state) => {
   return {
     currentSlateLF: state.metadataReducer.currentSlateLF,
     currentSlateLOData: state.metadataReducer.currentSlateLOData,
+    lastAlignedExternalLO: state.metadataReducer.lastAlignedExternalLO,
     currentSlateLODataMath: state.metadataReducer.currentSlateLODataMath,
     projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
   }

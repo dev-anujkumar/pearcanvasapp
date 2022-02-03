@@ -20,6 +20,7 @@ let deleteParams = {
     dispatch: dispatch
 }
 
+let  isSectionBreak={id:'urn:pearson:manifest:c6ea920d-80e5-4932-afbe-85c5447b7ad3',type:"manifest",schema:"http://schemas.pearson.com/wip-authoring/manifest/1",versionUrn:"urn:pearson:manifest:c6ea920d-80e5-4932-afbe-85c5447b7ad3",contentUrn:"urn:pearson:entity:72ca110d-0a48-4199-a627-d6351abd68ab",contents:{bodymatter:[{id:"urn:pearson:work:bc2fbe67-554b-41e7-933e-b69458066bed",type:"element-authoredtext",schema:"http://schemas.pearson.com/wip-authoring/element/1",elementdata:{schema:"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",text:"",headers:[{"level":5}]},html:{text:"<h5 class=\"heading5NummerEins\"><br></h5>"},versionUrn:"urn:pearson:work:bc2fbe67-554b-41e7-933e-b69458066bed",contentUrn:"urn:pearson:entity:6bd81333-9db8-4313-8f9c-31564fbbdca3",status:"wip"},{id:"urn:pearson:work:1ac43897-fec4-43ad-bfbc-960e06b4a42f",type:"element-authoredtext",schema:"http://schemas.pearson.com/wip-authoring/element/1",elementdata:{schema:"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",text:""},html:{text:"<p class=\"paragraphNumeroUno\"><br></p>"},versionUrn:"urn:pearson:work:1ac43897-fec4-43ad-bfbc-960e06b4a42f",contentUrn:"urn:pearson:entity:e229c3fc-58a9-4c5d-9e33-3ca6af259345",status:"wip"}],schema:"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"}}
 
 describe('deleteElementAction ', () => {
     it('testing------- deleteElementAction ------action-', async () => {
@@ -39,7 +40,12 @@ describe('UpdateStorePostDelete all cases', () => {
         let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{type:'element-aside',elementdata:{bodymatter:[]}}] } } }
         updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0]})
     })
-    it('testing updateStorePostDelete case 3', () => {
+    it('testing updateStorePostDelete case 3 if case', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+        let newParentData = {'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{type:'showhide',interactivedata:{'show':[]}}] } } }
+        updateStorePostDelete({...deleteParams,isSectionBreak,newParentData,newIndex:[0,0,0]})
+    })
+    it('testing updateStorePostDelete case 3 else case', () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
         let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{type:'showhide',interactivedata:{'show':[]}}] } } }
         updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,'0',0]})

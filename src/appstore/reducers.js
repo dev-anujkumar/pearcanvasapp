@@ -51,7 +51,8 @@ import {
     UPDATE_OLD_FIGUREIMAGE_INFO,
     UPDATE_OLD_SMARTLINK_INFO,
     UPDATE_OLD_AUDIOVIDEO_INFO,
-    UPDATE_FIGURE_DROPDOWN_OPTIONS
+    UPDATE_FIGURE_DROPDOWN_OPTIONS,
+    CHECK_ASIDE_NUMBER
 } from '../constants/Action_Constants';
 
 /**
@@ -95,10 +96,14 @@ const INITIAL_STATE = {
     oldAudioVideoDataForCompare: {},
     figureDropdownData: {
         audio: ["No Label", "Custom"],
-        image: ["No Label", "Custom"],
+        image: ['Figure', 'Table', 'Equation'],
         smartlinks: ["No Label", "Custom"],
-        video: ["No Label", "Custom"]
-    }
+        video: ["No Label", "Custom"],
+        tableasmarkup: ["No Label", 'Table', "Custom"],
+        mathml: ["No Label", "Equation", "Custom"],
+		preformattedtext: ["No Label", "Exhibit", "Custom"]
+    },
+    asideTitleData: []
 };
 
 const INITIAL_ACTION = {
@@ -347,6 +352,19 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 figureDropdownData: action.payload
             }
+        case CHECK_ASIDE_NUMBER:
+            let asideTitleData = state.asideTitleData;
+            asideTitleData = asideTitleData.filter(function (data) {
+                return data.elementId !== action.payload.elementId
+            })
+            return {
+                ...state,
+                asideTitleData: [...asideTitleData, action.payload]
+            }
+            // return{
+            //     ...state,
+            //     asideTitleData: action.payload
+            // }
 
         default:
             return state;

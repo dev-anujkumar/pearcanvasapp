@@ -45,10 +45,13 @@
     background-color: grey;
 }
 .btn-element.element-label.quad-interactive{
-    font-size: 12px;
+    font-size: 10px;
 }
-.btn-element.flag-icon {
-    background-color: #fa5d54;
+.btn-element.view-icon {
+    background-color:  #005a70;
+}
+.btn-element.edit-in-cypressPlus {
+    background-color: #808080;
 }
 
 .btn-element.delete-icon {
@@ -81,6 +84,14 @@
     margin-bottom: -6px;
     padding-top: 3px;
     margin-left: -10px;
+}
+
+.container-aside .power-paste-icon {
+    margin-left: -35px;
+}
+
+.multi-column-container .power-paste-icon {
+    margin-left: -12px;
 }
 
 .btn-element.color-text {

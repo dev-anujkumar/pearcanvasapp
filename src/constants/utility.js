@@ -177,6 +177,24 @@ export const getTitleSubtitleModel = (model, modelType, modelElement = "popup") 
             catch (error) {
                 modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
             }
+        } else if (modelType === 'formatted-code-content'){
+            try{
+                if (model && model.match(/<span>?.+<\/span>/g)) {
+                    for (let i = 0; i < modelDom.children.length; i++) {
+                        if (modelDom.children[i].innerHTML === '<br>' || modelDom.children[i].innerHTML === "</br>"|| modelDom.children[i].innerHTML === "") {
+                            modelToReturn = ''
+                        } else {
+                            modelToReturn = `<span class="codeNoHighlightLine">${modelDom.children[i].innerHTML}</span>`
+                        }
+                        if (modelDom.children.length > 1 && modelDom.children[modelDom.children.length - 1].innerHTML === '<br>') {
+                            modelToReturn = `<span class="codeNoHighlightLine">${modelDom.children[modelDom.children.length - 1].innerHTML}</span>`
+                        }
+                    }
+                }
+            }
+            catch (error) {
+                modelToReturn = `<span class="codeNoHighlightLine"><br /></span>`
+            }
         }
         else{
             modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
@@ -242,28 +260,29 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
             figureObj.html.title = createLabelNumberTitleModel('', '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
         }
         figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
-    } else {
-        if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
-            figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj.html.subtitle.replace("<p>", '').replace("</p>", ''));
-            figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
-        }
-    }
-    // ................................XX...........................................
+     } else if (figureElementsType.includes(figureObj.figuretype) && figureObj.type == 'figure' && figureObj.hasOwnProperty('subtitle')) {
+             figureObj.html.title = createLabelNumberTitleModel(figureObj.html.title.replace("<p>", '').replace("</p>", ''), '', figureObj?.html?.subtitle?.replace("<p>", '')?.replace("</p>", ''));
+             figureObj.hasOwnProperty('subtitle') ? delete figureObj.subtitle : figureObj;
+     }
+
     let data = {};
+     if(figureObj?.html && figureObj?.html?.title || figureObj?.html && figureObj?.html?.preformattedtext){
         figureObj.html.title = figureObj.html.title.replace(/(\r\n|\n|\r)/gm, '');
         data.formattedLabel = getTitleSubtitleModel(figureObj.html.title, "formatted-title", "figure").replace(/&nbsp;/g, "");
         data.formattedNumber = getTitleSubtitleModel(figureObj.html.title, "formatted-number", "figure").replace(/&nbsp;/g, "");
         data.formattedTitle = getTitleSubtitleModel(figureObj.html.title, "formatted-subtitle", "figure");
+        data.preformattedText = getTitleSubtitleModel(figureObj.html.preformattedtext, "formatted-code-content", "figure");
+     }
     return data;
 }
 
 export const checkHTMLdataInsideString = (htmlNode) => {
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlNode;
-    if (tempDiv.firstChild.innerHTML === '<br>' || tempDiv.firstChild.innerHTML === '</br>') {
+    if (tempDiv.firstChild.innerHTML === "<br>" || tempDiv.firstChild.innerHTML === "</br>" || tempDiv.firstChild.innerHTML === "<br data-mce-bogus=\"1\">") {
         return '';
     } else { 
-        return tempDiv.firstChild.innerHTML;
+        return tempDiv?.firstChild?.innerHTML;
     }
 }
 
@@ -279,6 +298,48 @@ export const dropdownValueAtIntialize = (dropdownData, formattedLabel) => {
         figureLabelValue = 'Custom';
     }
     return figureLabelValue;
+}
+
+export const labelValueForFiguretype = (element) => {
+    let labelValue;
+    switch(element?.figuretype) {
+        case "tableasmarkup":
+            labelValue = "Table"
+        break;
+        case "authoredtext":
+            labelValue = "Equation"
+        break;
+        case "codelisting":
+            labelValue = "Exhibit"
+        break;
+        case "image":
+        case "mathImage":
+        case "table":
+        default:
+            labelValue = "No Label"
+    }
+    return labelValue;
+}
+
+export const dropdownValueForFiguretype = (element, figureDropdownData) => {
+    let dropdownList;
+    switch(element?.figuretype) {
+        case "tableasmarkup":
+            dropdownList = figureDropdownData.tableasmarkup ?? ["No Label", "Table", "Custom"]
+        break;
+        case "authoredtext":
+            dropdownList = figureDropdownData.mathml ?? ["No Label", "Equation", "Custom"]
+        break;
+        case "codelisting":
+            dropdownList = figureDropdownData.preformattedtext ?? ["No Label", "Exhibit", "Custom"]
+        break;
+        case "image":
+        case "mathImage":
+        case "table":
+        default:
+            dropdownList = figureDropdownData.image ?? ["No Label", "Figure", "Table", "Equation", "Custom"]
+    }
+    return dropdownList;
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
@@ -590,6 +651,8 @@ export const replaceUnwantedtags = (html) => {
         return;
     }
     let tempDiv = document.createElement('div');
+    // PCAT-2426 - calling function to remove tinymcespellchecker DOM attributes from innerHTML
+    html = removeSpellCheckDOMAttributes(html);
     html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g, "").replace(/>\s+</g, '><').replace(/data-mce-href="#"/g, '').replace(/ reset/g, '');
     html = html.trim();
     tempDiv.innerHTML = html;
@@ -644,9 +707,8 @@ export const releaseOwnerPopup=(data)=>{
 export const isOwnerRole = (projectSharingRole, isSubscribed) => {
     if (projectSharingRole === "OWNER" && isSubscribed) {
         return true
-    }else{
-        return false
     }
+    return false
 }
 
 /**It checks whether its a Subscriber project or not
@@ -656,7 +718,22 @@ export const isOwnerRole = (projectSharingRole, isSubscribed) => {
 export const isSubscriberRole = (projectSharingRole, isSubscribed) => {
     if (projectSharingRole === "SUBSCRIBER" && isSubscribed) {
         return true
-    }else{
-        return false
     }
+    return false
+}
+
+// function to remove tinymce spellcheck DOM attributes from innerHTML
+export const removeSpellCheckDOMAttributes = (innerHTML) => {
+    const spellCheckDiv = document.createElement('div');
+    spellCheckDiv.innerHTML = innerHTML
+    while(tinyMCE.$(spellCheckDiv).find('span.mce-spellchecker-annotation')?.length) {
+        tinyMCE.$(spellCheckDiv).find('span.mce-spellchecker-annotation').each(function () {
+            let innerHtml = this?.innerHTML;
+            this.outerHTML = innerHtml;
+        });
+        if(tinyMCE.$(spellCheckDiv).find('span.mce-spellchecker-annotation')?.length === 0) {
+            break;
+        }
+    }
+    return spellCheckDiv?.innerHTML;
 }

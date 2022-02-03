@@ -8,18 +8,15 @@ import { hideBlocker } from '../../js/toggleLoader';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { deleteBlockListElement } from '../ElementContainer/ElementContainerDelete_helpers';
 import { AUTHORING_ELEMENT_UPDATE, ERROR_POPUP } from "./../../constants/Action_Constants";
 import tinymce from 'tinymce';
+import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper'
 
 export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
     const elementIndex = eleIndex?.toString()?.split('-')
-    //const { showHideObj } = getState().appStore
     const { cutCopyParentUrn, parentUrn, parentElement, asideData, showHideObj, isSectionBreak } = containerElements
-    // const parentElementUrn = getState().appStore.parentUrn
-    //This block was unused, So commented it while writing testcases.
-    // if(type === 'popup'){
-    //     dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
-    // }
     const _requestData = prepareDeleteRequestData(type, { elementId, elementIndex, parentElement, parentUrn, activeElement, cutCopyParentUrn, isSectionBreak })
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
@@ -32,7 +29,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             }
         }
     ).then(async (response) => {
-        console.log('delete success')
+
         let newIndex = typeof eleIndex == 'number' ? eleIndex : eleIndex.split("-")
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
         hideBlocker()
@@ -53,7 +50,6 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             parentUrn,
             asideData,
             contentUrn: activeElement.contentUrn,
-            // sectionType: showHideType[elementIndex[elementIndex.length - 2].toString()],
             newIndex,
             element: activeElement,
             isSectionBreak,
@@ -74,6 +70,8 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             index: elementIndex[elementIndex.length - 1].toString(),
             newParentData,
             isSectionBreak,
+            asideData,
+            elementId,
             dispatch
         }
         updateStorePostDelete(deleteParams);
@@ -87,6 +85,23 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             const { prepareTCMforDelete } = (await import("./ElementContainerDelete_helpers.js"))
             prepareTCMforDelete(elementId, dispatch, getState);
         }
+
+        //--------------------- Handle Auto-numbering -----------------------------------
+        const slateData = getState()?.appStore?.slateLevelData;
+        const newslateData = JSON.parse(JSON.stringify(slateData));
+        const slateLevelData = newslateData[config.slateManifestURN];
+        getAutoNumberedElementsOnSlate(slateLevelData, {dispatch});
+
+        const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+        const autoNumberParams = {
+            type,
+            getState,
+            dispatch,
+            contentUrn: activeElement?.contentUrn,
+            isAutoNumberingEnabled,
+            asideData
+        }
+        handleAutoNumberingOnDelete(autoNumberParams);
     }).catch(error => {
         showError(error, dispatch, "error while creating element")
         if (cb) {
@@ -102,65 +117,77 @@ export const updateStorePostDelete = (deleteParams) => {
         newIndex,
         newParentData,
         dispatch,
-        isSectionBreak
+        isSectionBreak,
+        asideData,
+        elementId
     } = deleteParams
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
     let elementToUpdate;
 
-    switch (newIndex.length) {
-        case 2:
-            elementToUpdate = newBodymatter[newIndex[0]]
-            if (elementToUpdate?.type == 'element-aside') {
-                elementToUpdate.elementdata.bodymatter.splice(index, 1);
-            }
-            newBodymatter[newIndex[0]] = elementToUpdate;
-            break;
-        case 3: // sh:show:p
-            elementToUpdate = newBodymatter[newIndex[0]]
-            if (elementToUpdate?.type == 'showhide') {
-                if (isSectionBreak?.id) {
-                    const sectionBreakParent = newBodymatter[newIndex[0]]?.interactivedata[showHideType[newIndex[1]]][newIndex[2]]
-                    const updatedWorkedEx = delSBInsideWE(isSectionBreak, sectionBreakParent)
-                    newBodymatter[newIndex[0]].interactivedata[showHideType[newIndex[1]]][newIndex[2]] = updatedWorkedEx
-                } else {
-                    newBodymatter[newIndex[0]]?.interactivedata[showHideType[newIndex[1]]].splice(index, 1)
+    if (asideData?.parent?.type !== 'showhide' && asideData?.type !== "manifestlist") {
+        switch (newIndex.length) {
+            case 2:
+                elementToUpdate = newBodymatter[newIndex[0]]
+                if (elementToUpdate?.type == 'element-aside') {
+                    elementToUpdate.elementdata.bodymatter.splice(index, 1);
                 }
-            }
-            break;
-        case 4:// we:head:sh:show:p | as:sh:show:p
-            elementToUpdate = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
-            if (elementToUpdate?.type == 'showhide') {
-                newBodymatter[newIndex[0]]?.elementdata?.bodymatter[newIndex[1]]?.interactivedata[showHideType[newIndex[2]]].splice(index, 1)
-            }
-            break;
-        case 5: // we:body:sh:show:p | 2c:c1:sh:show:p
-            let inWorkedExample = newBodymatter[newIndex[0]]?.elementdata?.bodymatter[newIndex[1]]?.contents?.bodymatter[newIndex[2]]
-            let inMultiColumn = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]
-            elementToUpdate = inMultiColumn || inWorkedExample
-            if (elementToUpdate?.type == 'showhide') {
-                elementToUpdate?.interactivedata[showHideType[newIndex[3]]].splice(index, 1)
-            }
-            break;
-        case 6: // 2c:c1:we:head:sh:show:p | 2c:c1:as:sh:show:p
-            elementToUpdate = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]?.elementdata?.bodymatter[newIndex[3]];
-            if (elementToUpdate?.type == 'showhide') {
-                elementToUpdate?.interactivedata[showHideType[newIndex[4]]].splice(index, 1)
-            }
-            newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]] = elementToUpdate;
-            break;
-        case 7: // 2c:c1:we:body:sh:show:p
-            elementToUpdate = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
-            if (elementToUpdate?.type == 'showhide') {
-                elementToUpdate.interactivedata[showHideType[newIndex[5]]].splice(index, 1)
-            }
-            newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]] = elementToUpdate;
-            break;
-
-        case 1:/** Element on slate level */
-        default:
-            newBodymatter.splice(index, 1)
-            break;
+                newBodymatter[newIndex[0]] = elementToUpdate;
+                break;
+            case 3: // sh:show:p
+                elementToUpdate = newBodymatter[newIndex[0]]
+                if (elementToUpdate?.type == 'showhide') {
+                    if (isSectionBreak?.id) {
+                        const sectionBreakParent = newBodymatter[newIndex[0]]?.interactivedata[showHideType[newIndex[1]]][newIndex[2]]
+                        const updatedWorkedEx = delSBInsideWE(isSectionBreak, sectionBreakParent)
+                        newBodymatter[newIndex[0]].interactivedata[showHideType[newIndex[1]]][newIndex[2]] = updatedWorkedEx
+                    } else {
+                        newBodymatter[newIndex[0]]?.interactivedata[showHideType[newIndex[1]]].splice(index, 1)
+                    }
+                }
+                break;
+            case 4:// we:head:sh:show:p | as:sh:show:p
+                elementToUpdate = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
+                if (elementToUpdate?.type == 'showhide') {
+                    newBodymatter[newIndex[0]]?.elementdata?.bodymatter[newIndex[1]]?.interactivedata[showHideType[newIndex[2]]].splice(index, 1)
+                }
+                break;
+            case 5: // we:body:sh:show:p | 2c:c1:sh:show:p
+                let inWorkedExample = newBodymatter[newIndex[0]]?.elementdata?.bodymatter[newIndex[1]]?.contents?.bodymatter[newIndex[2]]
+                let inMultiColumn = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]
+                elementToUpdate = inMultiColumn || inWorkedExample
+                if (elementToUpdate?.type == 'showhide') {
+                    elementToUpdate?.interactivedata[showHideType[newIndex[3]]].splice(index, 1)
+                }
+                break;
+            case 6: // 2c:c1:we:head:sh:show:p | 2c:c1:as:sh:show:p
+                elementToUpdate = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]?.elementdata?.bodymatter[newIndex[3]];
+                if (elementToUpdate?.type == 'showhide') {
+                    elementToUpdate?.interactivedata[showHideType[newIndex[4]]].splice(index, 1)
+                }
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]] = elementToUpdate;
+                break;
+            case 7: // 2c:c1:we:body:sh:show:p
+                elementToUpdate = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
+                if (elementToUpdate?.type == 'showhide') {
+                    elementToUpdate.interactivedata[showHideType[newIndex[5]]].splice(index, 1)
+                }
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]] = elementToUpdate;
+                break;
+    
+            case 1:/** Element on slate level */
+            default:
+                newBodymatter.splice(index, 1)
+                break;
+        }
+    } else if (asideData?.parent?.type === 'showhide' && asideData?.type === "manifestlist") {
+        let section = asideData?.parent?.showHideType;
+        let element = newBodymatter[newIndex[0]]
+        if (section && newIndex.length >= 3) {
+            let blElemInSh = element.interactivedata[section][newIndex[2]];
+            deleteBlockListElement(elementId, blElemInSh);
+        }
     }
+    
     console.log('newBodymatter', newBodymatter)
     // return newBodymatter
     newParentData[config.slateManifestURN].contents.bodymatter = newBodymatter
@@ -190,7 +217,7 @@ export const prepareDeleteRequestData = (elementType, payloadParams) => {
         parentElement,
         isSectionBreak
     } = payloadParams
-    const containerElements = ["element-aside", "element-workedexample", "showhide", "popup", "citations", "poetry", "groupedcontent"];
+    const containerElements = ["element-aside", "element-workedexample", "showhide", "popup", "citations", "poetry", "groupedcontent", "manifestlist"];
     let requestPayload = {
         "index": elementIndex[elementIndex.length - 1]?.toString() || "0",
         "projectUrn": config.projectUrn        

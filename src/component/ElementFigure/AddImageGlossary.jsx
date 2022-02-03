@@ -5,7 +5,7 @@ import { showTocBlocker} from '../../js/toggleLoader'
 import config from '../../config/config';
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
 import axios from 'axios';
-import { alfrescoPopup } from '../AlfrescoPopup/Alfresco_Action'
+import { alfrescoPopup, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
 
 /**
 * @description - AddImageGlossary is a class based component. It is defined simply for adding image in glossary.
@@ -46,14 +46,23 @@ class AddImageGlossary extends Component {
                     const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                    const citeNodeRef= alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef; 
                     let messageObj = {
                         citeName: citeName,
-                        citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef,
+                        citeNodeRef: citeNodeRef,
                         elementId: this.props.elementId,
                         calledFrom: 'GlossaryImage',
                         calledFromImageGlossaryFootnote: this.props.isImageGlossary
                     }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                    const messageDataToSave = {
+                        id: this.props.elementId,
+                        editor: undefined,
+                        citeNodeRef: citeNodeRef,
+                        calledFrom: 'GlossaryImage',
+                        calledFromImageGlossaryFootnote: this.props.isImageGlossary
+                    }
+                    this.props.saveSelectedAlfrescoElement(messageDataToSave);
                 }
                 else {
                     this.props.accessDenied(true)
@@ -129,6 +138,9 @@ const mapActionToProps = (dispatch) => {
         },
         alfrescoPopup: (payloadObj) => {
             dispatch(alfrescoPopup(payloadObj))
+        },
+        saveSelectedAlfrescoElement: (payloadObj) => {
+            dispatch(saveSelectedAlfrescoElement(payloadObj))
         }
     }
 }

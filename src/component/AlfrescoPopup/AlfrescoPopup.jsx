@@ -15,7 +15,7 @@ import '../../styles/AlfrescoPopup/AlfrescoPopup.css'
 import config from '../../config/config'
 import { sendDataToIframe } from '../../constants/utility';
 import axios from 'axios';
-import {alfrescoPopup} from "../AlfrescoPopup/Alfresco_Action";
+import { alfrescoPopup, saveSelectedAlfrescoElement } from "../AlfrescoPopup/Alfresco_Action";
 import { connect } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
@@ -80,6 +80,14 @@ function AlfrescoPopup(props) {
         const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
         let messageObj = { citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef, elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,  calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote}
         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+        const messageDataToSave = {
+            id: props.alfrescoElementId,
+            calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,
+            editor: editor,
+            citeNodeRef: locationSiteDataNodeRef,
+            calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote
+        }
+        props.saveSelectedAlfrescoElement(messageDataToSave)
         let request = {
             eTag: props.alfrescoPath.etag,
             projectId: props.alfrescoPath.id,
@@ -166,6 +174,9 @@ const mapActionToProps = (dispatch) =>{
         alfrescoPopup: (payloadObj) => {
             dispatch(alfrescoPopup(payloadObj))
         },
+        saveSelectedAlfrescoElement: (payloadObj) => {
+            dispatch(saveSelectedAlfrescoElement(payloadObj))
+        }
     }
 }
 

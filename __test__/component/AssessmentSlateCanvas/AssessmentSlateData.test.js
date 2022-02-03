@@ -714,5 +714,104 @@ describe('Testing Assessment Slate Data component', () => {
             expect(assessmentSlateInstance11.state.openAssessmentDropdown).toBe(false)
             expect(assessmentSlateInstance11.state.openUsageDropdown).toBe(false)
         });
-    })
-})
+    });
+    describe(" Test 12 render changeUsageTypePopup ", () => {
+        let pufObj = {
+            assessmentId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            title: "Test Puf",
+            assessmentFormat: "puf",
+            usagetype: "Homework"
+        }
+        let usageType ="Homework"
+        let nextProps = {
+            handleAssessmentBlur: jest.fn(),
+            ...props
+        }
+        const component11 = mount(<Provider store={store}><AssessmentSlateData
+            {...nextProps}
+            model={assessmentSlateELM}
+            assessmentSlateObj={pufObj}
+            getAssessmentData={true}
+            getAssessmentDataPopup={false}
+            usageType ="Homework"
+        /></Provider>)
+        let assessmentSlateInstance11 = component11.find('AssessmentSlateData').instance();
+        assessmentSlateInstance11.setState({
+            showElmComponent: false,
+            activeAssessmentUsageType: 'Homework'
+        })
+        component11.update();
+        assessmentSlateInstance11.forceUpdate();
+        it('Test 12.1-handleAssessmentUsageTypeChange', () => {
+            jest.spyOn(assessmentSlateInstance11, 'handleAssessmentUsageTypeChange')
+            assessmentSlateInstance11.handleAssessmentUsageTypeChange(usageType);
+            expect(assessmentSlateInstance11.props.getAssessmentData).toBe(true)
+            expect(assessmentSlateInstance11.state.showElmComponent).toBe(false)
+            expect(assessmentSlateInstance11.state.activeAssessmentUsageType).toBe('Homework')
+            expect(assessmentSlateInstance11.props.getAssessmentDataPopup).toBe(false)
+        })
+        it('Test 12.2-togglechangeUsageTypePopup', () => {
+            let event = {
+                stopPropagation: jest.fn(),
+                togglechangeUsageTypePopup: jest.fn(),
+                preventDefault: jest.fn()
+            }
+            jest.spyOn(assessmentSlateInstance11, 'togglechangeUsageTypePopup')
+            assessmentSlateInstance11.togglechangeUsageTypePopup(event);
+            expect(assessmentSlateInstance11.togglechangeUsageTypePopup).toHaveBeenCalled();
+
+
+        })
+        it('Test 12.3-render showchangeUsageTypePopup', () => {
+            jest.spyOn(assessmentSlateInstance11, 'showChangeUsageTypePopup')
+            assessmentSlateInstance11.setState({
+                changeUsageTypePopup: true
+            })
+            assessmentSlateInstance11.showChangeUsageTypePopup();
+            expect(assessmentSlateInstance11.showChangeUsageTypePopup).toHaveBeenCalled();
+        })
+        it('Test 12.4-else condtion in showchangeUsageTypePopup', () => {
+
+            jest.spyOn(assessmentSlateInstance11, 'showChangeUsageTypePopup')
+            assessmentSlateInstance11.setState({
+                changeUsageTypePopup: false
+            })
+            assessmentSlateInstance11.showChangeUsageTypePopup();
+            expect(assessmentSlateInstance11.showChangeUsageTypePopup).toHaveBeenCalled();
+            expect(assessmentSlateInstance11.state.changeUsageTypePopup).toBe(false);
+        })
+        it('Test 12.5- handleChangeUsageTypePopup', () => {
+            jest.spyOn(assessmentSlateInstance11, 'handleChangeUsageTypePopup')
+            assessmentSlateInstance11.setState({
+                changeUsageTypePopup: false
+            })
+            assessmentSlateInstance11.handleChangeUsageTypePopup();
+            expect(assessmentSlateInstance11.handleChangeUsageTypePopup).toHaveBeenCalled();
+        });
+        it('Test 12.6- setChangeUsageType', () => {
+            let format = 'puf'
+            let usagetype = "Homework"
+            jest.spyOn(assessmentSlateInstance11, 'updateUsageTypeAfterProceed');
+            jest.spyOn(assessmentSlateInstance11, 'setChangeUsageType');
+            assessmentSlateInstance11.setState({
+                changeUsageTypePopup: false
+            });
+            assessmentSlateInstance11.updateUsageTypeAfterProceed();
+            assessmentSlateInstance11.setChangeUsageType(format);
+            expect(assessmentSlateInstance11.updateUsageTypeAfterProceed).toHaveBeenCalled();
+            expect(assessmentSlateInstance11.setChangeUsageType).toHaveBeenCalled();
+        })
+        it('Test 12.7-selectAssessmentType', () => {
+            let event = {
+                stopPropagation: jest.fn(),
+                preventDefault: jest.fn(),
+                target: { classList: { contains: () => { return false } } }
+            }
+            jest.spyOn(assessmentSlateInstance11, 'selectAssessmentType')
+            assessmentSlateInstance11.selectAssessmentType();
+            assessmentSlateInstance11.handleAssessmentUsageTypeChange('Full Assessment QuAd CITE', event, "updateAssessmentFormat");
+            expect(assessmentSlateInstance11.state.openAssessmentDropdown).toBe(false)
+            expect(assessmentSlateInstance11.state.openUsageDropdown).toBe(false)
+        });
+    });
+});

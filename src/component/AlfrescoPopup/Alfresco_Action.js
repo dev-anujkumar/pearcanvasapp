@@ -2,7 +2,8 @@
 import {
     SET_ALFRESCO_POPUP,
     SAVE_ALFRESCO_ASSET_DATA,
-    SAVE_INLINE_IMAGE_DATA
+    SAVE_INLINE_IMAGE_DATA,
+    SAVE_ALFRESCO_ELEMENT
 } from './../../constants/Action_Constants';
 import config from '../../config/config';
 import axios from 'axios';
@@ -20,7 +21,12 @@ export const saveSelectedAssetData = (data) =>{
         payload: data
     }
 }
-
+export const saveSelectedAlfrescoElement = (data) =>{
+    return {
+        type: SAVE_ALFRESCO_ELEMENT,
+        payload: data
+    }
+}
 export const saveInlineImageData = (data) =>{
     return {
         type: SAVE_INLINE_IMAGE_DATA,

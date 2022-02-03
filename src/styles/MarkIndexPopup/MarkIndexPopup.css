@@ -11,9 +11,7 @@
   cursor: pointer;
 }
 .index-container{
-    width:240px;
     height: 100%;
-    border-left:1px solid #eee;
 }
 .index-setting{
     display: flex;
@@ -73,9 +71,6 @@
     background: #07313b;
 }
 .button-group {
-    /* position: absolute; */
-    /* right: 12px; */
-    /* bottom: 15%; */
     margin-top: 40px;
     float: right;
 }
@@ -85,21 +80,24 @@
     background-color: #eee;
 }
 
-.index-container .markedindex-word-title{
-    padding: 10px 10px 5px;
+.index-container .markedindex-word-title, .index-container .markedindex-secondlevel-label{
+    padding: 10px 0px 5px;
     font-size: 12px;
     font-family: 'Open Sans', sans-serif;
 }
 
 .markedindex-word-title .index-entry.markedindex-editor, .markedindex-secondlevel-label .sub-entry.markedindex-editor{
     font-size: 14px!important;
-    margin: 8px 0 !important;
-    padding: 13px 0px 0 2px !important;
+    margin: 15px 0 6px 0!important;
+    padding: 4px 12px 0 12px!important;
     font-weight: 500;
     line-height: 1.5;
     color:#000;
     width: 100%;
     font-family: 'Open Sans', sans-serif !important;
+    max-height: 50px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .markedindex-word-title, .markedindex-secondlevel-label {
@@ -153,12 +151,96 @@
     border-bottom: 1px solid #ccc;
 }
 
-.index-container .markedindex-secondlevel-label{
-    padding: 10px 10px 5px;
-    font-size: 12px;
-    font-family: 'Open Sans', sans-serif;
-}
-
 .hide-markedinde-toolbar{
     display: none;
+}
+
+.cross-ref-dropdown {
+    position: relative;
+    height: 129px;
+    overflow: scroll;
+    z-index: 99;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
+    background-color: #ffffff;
+    overflow-x: hidden;
+  }
+
+.checkbox-input{
+  display: flex;
+  padding: 8px;
+  font-size: 14px;
+  width: 100%;
+}
+.checkbox-input:hover{
+  background-color: #efefef;
+}
+.checkbox-input span {
+  margin-left: 5px;
+  margin-top: -5px;
+}
+
+.markedindex-secondlevel-label .cross-reference.markedindex-editor{
+    font-size: 14px!important;
+    margin: 15px 0 6px 0!important;
+    padding: 4px 12px 0 12px!important;
+    font-weight: 500;
+    line-height: 1.5;
+    color:#000;
+    width: 100%;
+    font-family: 'Open Sans', sans-serif !important;
+    max-height: 50px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    white-space: nowrap;
+    display: inline-block;
+    min-width: 200px;
+}
+
+.markedindex-secondlevel-label .cross-reference-lable {
+    transition: none;
+    top: 7px;
+    left:12px;
+    font-size: 12px;
+    color: #737373;
+    position: absolute;
+    min-width: 180px;
+}
+
+.markedindex-secondlevel-header .tooltip .tooltiptext.tooltip-bottom {
+    width: auto;
+    top: 100%;
+    padding: 6px 8px;
+    left: 0;
+    margin-left: 0px;
+}
+
+.markedindex-secondlevel-header .tooltip .tooltiptext{
+    height: auto;
+    word-break: break-all;
+}
+
+.markedindex-secondlevel-header .tooltip .tooltip-bottom::after{
+    left: 20%;
+}
+
+.show-cross-ref-label{
+    position: absolute;
+    padding-left: 12px;
+    top: 30px;
+    font-size: 14px;
+    display: block;
+    color: #ADADAD;
+    cursor: text;
+}
+
+.hide-cross-ref-label{
+    display: none;
+}
+
+.marked-index-outer-div{
+    height: 450px;
+    background-color: #fff;
 }

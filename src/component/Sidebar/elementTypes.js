@@ -3,7 +3,7 @@ export default {
         'primary-paragraph': {
             text: 'Paragraph',
             enum: 'AUTHORED_TEXT',
-            toolbar: ['insertMedia'],
+            // toolbar: ['insertMedia'],
             subtype: {
                 'secondary-paragraph': {
                     text: 'Paragraph',
@@ -15,7 +15,7 @@ export default {
         'primary-handwriting': {
             text: 'Handwriting',
             enum: 'HS',
-            toolbar: ['insertMedia','alignment'],
+            toolbar: ['alignment'],
             subtype: {
                 'subtype-handwriting': {
                     text: 'Handwriting',
@@ -27,7 +27,7 @@ export default {
         'primary-heading': {
             text: 'Headings',
             enum: 'HEADERS',
-            toolbar: ['insertMedia','bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','crossLinkingIcon','assetpopover','slatetag','IndexEntry'],//PCAT-6725 fixed
+            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','crossLinkingIcon','assetpopover','slatetag','IndexEntry'],//PCAT-6725 fixed
             subtype: {
                 'secondary-heading-1': {
                     text: 'Heading 1',
@@ -63,7 +63,7 @@ export default {
         },
         'primary-learning-objective': {
             text: 'Learning Objective Item',
-            toolbar: ['insertMedia','bold', 'italic','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','footnote', 'glossary','crossLinkingIcon','assetpopover','alignment','IndexEntry'],
+            toolbar: ['bold', 'italic','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','footnote', 'glossary','crossLinkingIcon','assetpopover','alignment','IndexEntry'],
             enum: 'LEARNING_OBJECTIVE',
             subtype: {
                 'secondary-learning-objective': {
@@ -75,7 +75,7 @@ export default {
         },
         'primary-blockquote': {
             text: 'Blockquotes',
-            toolbar: ['insertMedia','bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag','alignment','IndexEntry'],
+            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag','alignment','IndexEntry'],
             enum: 'BLOCKFEATURE',
             subtype: {
                 'secondary-pullquote': {
@@ -158,6 +158,11 @@ export default {
                     labelText: 'Fg',
                     enum: 'IMAGE_TEXT_WIDTH'
                 },
+                'secondary-image-figure-actual': {
+                    text: 'Actual Size',
+                    labelText: 'Fg',
+                    enum: 'IMAGE_ACTUAL_SIZE'
+                },
                 'secondary-image-figure-quarter': {
                     text: '25% Text Width',
                     labelText: 'Fg',
@@ -210,6 +215,11 @@ export default {
                     labelText: 'TB',
                     enum: 'IMAGE_TEXT_WIDTH_TABLE'
                 },
+                'secondary-image-table-actual': {
+                    text: 'Actual Size',
+                    labelText: 'TB',
+                    enum: 'IMAGE_ACTUAL_SIZE_TABLE'
+                },
                 'secondary-image-table-wider': {
                     text: 'Wider Than Text',
                     labelText: 'TB',
@@ -246,6 +256,11 @@ export default {
                     text: 'Text Width',
                     labelText: 'EQ',
                     enum: 'IMAGE_TEXT_WIDTH_MATH'
+                },
+                'secondary-image-equation-actual': {
+                    text: 'Actual Size',
+                    labelText: 'EQ',
+                    enum: 'IMAGE_ACTUAL_SIZE_MATH'
                 },
                 'secondary-image-equation-wider': {
                     text: 'Wider Than Text',
@@ -492,7 +507,7 @@ export default {
         'primary-column-2': {
             text: '2-Column View',
             enum: 'COLUMN_VIEW_2',
-            toolbar: ['insertMedia'],
+            // toolbar: ['insertMedia'],
             subtype: {
                 'secondary-column-2': {
                     text: '2-Column View',
@@ -504,7 +519,7 @@ export default {
         'primary-column-3': {
             text: '3-Column View',
             enum: 'COLUMN_VIEW_3',
-            toolbar: ['insertMedia'],
+            // toolbar: ['insertMedia'],
             subtype: {
                 'secondary-column-3': {
                     text: '3-Column View',
@@ -516,7 +531,7 @@ export default {
         'primary-column-4': {
             text: '4-Column View',
             enum: 'COLUMN_VIEW_4',
-            toolbar: ['insertMedia'],
+            // toolbar: ['insertMedia'],
             subtype: {
                 'secondary-column-4': {
                     text: '4-Column View',

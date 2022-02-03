@@ -3,7 +3,14 @@ const INITIAL_STATE = {
     showApoCurrentlyLinked : false,        // Show or not currently linked part of the window
     showApoBody : false,                   // Show or not APO Body
     showApoFooter : true,                  // Show or not APO footer
-    figures : [],                          // Array of search Results from API
+    figures : [],  
+    videos : [],
+    audios : [],
+    interactives : [],
+    smartLinkInteractives: [],
+    asides : [],
+    tables : [],
+    workedExamples : [],                   // Array of search Results from API
     selectedFigureValue : {},              // Name of Selected Figure
     noSearchResultFound : false,           // If Error or No search results found from API
     figureIsSelected : false,              // Figure is selected or not
@@ -11,7 +18,7 @@ const INITIAL_STATE = {
     imageData : [],
     searchTerm : '' ,                        //Figure name to be find
     currentlyLinkedImageData : {},
-    assetID:""
+    assetID : ""
 };
 
 const INITIAL_ACTION = {
@@ -31,15 +38,29 @@ export default function assetPopoverReducer (state = INITIAL_STATE, action = INI
                 showApoFooter : true,
                 showApoBody : false,
                 noSearchResultFound : true,
-                figures : [],
+                figures : [],  
+                videos : [],
+                audios : [],
+                interactives : [],
+                smartLinkInteractives : [],
+                asides : [],
+                tables : [],
+                workedExamples : [],
                 selectedFigureValue : '',
                 figureIsSelected : false
             }
         }
-        case 'IMAGES_FROM_API': {             //Seacrch For figures
+        case 'IMAGES_FROM_API': {        //Seacrch For figures
             return {
                 ...state,
-                figures : action.payload.images,
+                figures : action.payload.figures,  
+                videos : action.payload.videos,
+                audios : action.payload.audios,
+                interactives : action.payload.interactives,
+                smartLinkInteractives : action.payload.smartLinkInteractives,
+                asides : action.payload.asides,
+                tables : action.payload.tables,
+                workedExamples : action.payload.workedExamples,
                 searchTerm : action.payload.searchTerm,
                 noSearchResultFound : false,
                 showApoBody : true,
@@ -50,7 +71,14 @@ export default function assetPopoverReducer (state = INITIAL_STATE, action = INI
         case 'IMAGES_FROM_API_FAIL': {         //If searching fails
             return {
                 ...state,
-                figures : [],
+                figures : [],  
+                videos : [],
+                audios : [],
+                interactives : [],
+                smartLinkInteractives: [],
+                asides : [],
+                tables : [],
+                workedExamples : [],
                 noSearchResultFound : true,
                 showApoBody : false
             }

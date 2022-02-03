@@ -1,7 +1,8 @@
 import {
   ERROR_POPUP,
   MULTIPLE_LINE_POETRY_ERROR_POPUP,
-  ELM_PORTAL_API_ERROR
+  ELM_PORTAL_API_ERROR,
+  ERROR_API_POPUP
 } from '../constants/Action_Constants'
 
 const INITIAL_STATE = {
@@ -30,6 +31,7 @@ export default function errorPopupReducer(state = INITIAL_STATE, action = INITIA
         message : 'The element you tried to create or update did not save. Please try again.'
       }
     }
+    case ERROR_API_POPUP:
     case MULTIPLE_LINE_POETRY_ERROR_POPUP: {
       return {
         ...state,
@@ -44,7 +46,7 @@ export default function errorPopupReducer(state = INITIAL_STATE, action = INITIA
         message: action.payload.errorMessage,
         isElmApiError: action.payload.isElmApiError
       }
-    }
+    }    
     default:
       return state
   }

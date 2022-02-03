@@ -10,7 +10,7 @@ const middlewares = [thunk];
 import config from "../../../src/config/config.js"
 import wipData from './wipData';
 import { singleAssessmentElmDefault } from '../../../fixtures/ElementSingleAssessmentTestData'
-
+import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("innerText")) {
     Object.defineProperty(global.Element.prototype, 'innerText', {
@@ -236,13 +236,18 @@ const store = mockStore({
         editor: true,
         Permission: false
     },
-    assessmentReducer: {}
+    assessmentReducer: {},
+    markedIndexReducer: {
+        markedIndexCurrentValue: {},
+        markedIndexValue: { "type": "", "popUpStatus": false }
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty
 });
 
 config["elementStatus"] = {}
 
 describe('Test for element container component', () => {
-    xit('Render Element Container without crashing ', () => {      
+    it('Render Element Container without crashing ', () => {      
     let props = {
         element: wipData.paragraph,
          permissions:  [
@@ -261,7 +266,7 @@ describe('Test for element container component', () => {
     expect(elementContainerInstance).toBeDefined();
     })
      
-    xdescribe('Test- renderElement function for Different Elements ', () => {
+    describe('Test- renderElement function for Different Elements ', () => {
         let props = {
             element: wipData.opener,
             permissions: [],
@@ -439,7 +444,12 @@ describe('Test for element container component', () => {
                         sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                         sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                     }
-                }
+                },
+                markedIndexReducer: {
+                    markedIndexCurrentValue: {},
+                    markedIndexValue: { "type": "", "popUpStatus": false }
+                },
+                autoNumberReducer: mockAutoNumberReducerEmpty
             });
             let props = {
                 element: wipData.pullquote,
@@ -494,7 +504,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        xit('Render Element Container ----->handleBlur EmbeddedAssessment element', () => {
+        it('Render Element Container ----->handleBlur EmbeddedAssessment element', () => {
             let props = {
                 element: wipData.assessment,
                 permissions: [],
@@ -791,7 +801,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        xit('Render Element Container ----->SingleAssessment Element', () => {
+        it('Render Element Container ----->SingleAssessment Element', () => {
             let props = {
                 element: wipData.assessment,
                 permissions: [],
@@ -850,7 +860,7 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
-        xit('Render Element Container ----->AssessmentSlate', () => {
+        it('Render Element Container ----->AssessmentSlate', () => {
             let props = {
                 element: wipData.assessmentSlate,
                 permissions: [],
@@ -924,7 +934,7 @@ describe('Test for element container component', () => {
             expect(elementContainerInstance).toBeDefined();
         })
     })
-    xdescribe('Test- Add Comment Functions', () => {
+    describe('Test- Add Comment Functions', () => {
         let props = {
             element: wipData.paragraph,
             permissions: [
@@ -992,7 +1002,37 @@ describe('Test for element container component', () => {
             spysaveNewComment .mockClear()
         })
     })
-    xdescribe('Test- Popup Functions', () => {
+
+    describe('Test- Edit Button for Cypress Plus Function', () => {
+        let props = {
+            element: wipData.paragraph,
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing","access-to-cypress+","notes_relpying",
+            ],
+            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+        };
+        let event= {
+            stopPropagation:()=>{}
+        }
+        config.isCypressPlusEnabled=true
+        config.SHOW_CYPRESS_PLUS=true
+        let elementId = 'urn:perason:work:1234567' 
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        it('Test-handleEditInCypressPlus Function', () => {
+            const spyhandleEditInCypressPlus = jest.spyOn(elementContainerInstance, 'handleEditInCypressPlus')
+            elementContainerInstance.handleEditInCypressPlus(event,elementId);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyhandleEditInCypressPlus).toHaveBeenCalledWith(event,elementId)
+            spyhandleEditInCypressPlus.mockClear()
+        })
+       
+    })
+
+    describe('Test- Popup Functions', () => {
         let props = {
             element: wipData.paragraph,
             permissions: [
@@ -1019,6 +1059,15 @@ describe('Test for element container component', () => {
             elementContainer.update();
             expect(spyopenGlossaryFootnotePopUp ).toHaveBeenCalledWith(true, "Footnote", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback)
             spyopenGlossaryFootnotePopUp .mockClear()
+        })
+        it('Test-openMarkedIndexPopUp  Function', () => {
+            let callback=jest.fn();
+            const spyopenMarkedIndexPopUp  = jest.spyOn(elementContainerInstance, 'openMarkedIndexPopUp')
+            elementContainerInstance.openMarkedIndexPopUp(true, "Markedindex", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyopenMarkedIndexPopUp ).toHaveBeenCalledWith(true, "Markedindex", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback)
+            spyopenMarkedIndexPopUp .mockClear()
         })
         it('Test-openAssetPopoverPopUp  Function', () => {
             const spyopenAssetPopoverPopUp = jest.spyOn(elementContainerInstance, 'openAssetPopoverPopUp')
@@ -1053,7 +1102,7 @@ describe('Test for element container component', () => {
             spyhandleOnMouseOut.mockClear()
         })
     })
-    xdescribe('Test- OpenerElement-Functions', () => {
+    describe('Test- OpenerElement-Functions', () => {
         let openerData=wipData.opener
         let props = {
             element: wipData.opener,
@@ -1236,7 +1285,7 @@ describe('Test for element container component', () => {
             spytoggleColorTextList.mockClear()
         })
     })
-    xdescribe('Test-Other Functions', () => {
+    describe('Test-Other Functions', () => {
         let props = {
             element: wipData.paragraph,
             permissions: [
@@ -1404,7 +1453,7 @@ describe('Test for element container component', () => {
         }) 
 
     })
-    xdescribe('Test-Lifecycle Functions', () => {
+    describe('Test-Lifecycle Functions', () => {
         let props = {
             element: wipData.paragraph,
             permissions: [
@@ -1507,7 +1556,7 @@ describe('Test for element container component', () => {
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-            xit('Render Element Container ----->AssessmentSlate-update-LT/LA', () => {
+            it('Render Element Container ----->AssessmentSlate-update-LT/LA', () => {
                 let props = {
                     element: wipData.assessmentSlate,
                     permissions: [],
@@ -1530,7 +1579,7 @@ describe('Test for element container component', () => {
                 expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
                 spyhandleBlurAssessmentSlate.mockClear()
             })
-            xit('Render Element Container ----->AssessmentSlate-update-usageType update', () => {
+            it('Render Element Container ----->AssessmentSlate-update-usageType update', () => {
                 let props = {
                     element: wipData.assessmentSlate,
                     permissions: [],
@@ -1548,7 +1597,7 @@ describe('Test for element container component', () => {
     
         })
     })
-    xdescribe('Test-Elm Assessent Functions', () => {
+    describe('Test-Elm Assessent Functions', () => {
         let newProps = {
             element: singleAssessmentElmDefault,
             permissions: [
@@ -1577,7 +1626,7 @@ describe('Test for element container component', () => {
     })
 });
 
-xdescribe('Test-Lifecycle Functions-componentWillReceiveProps', () => {
+describe('Test-Lifecycle Functions-componentWillReceiveProps', () => {
     let props = {
         element: wipData.opener,
         permissions: [
@@ -1682,7 +1731,7 @@ xdescribe('Test-Lifecycle Functions-componentWillReceiveProps', () => {
         expect(elementContainerInstance.state.ElementId).toBe("urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y")
     })  
 })
-xdescribe('Test-Other Functions', () => {
+describe('Test-Other Functions', () => {
    
     let props = {
         element: wipData.poetry,
@@ -1828,7 +1877,12 @@ xdescribe('Test-Other Functions', () => {
                     sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                 }
-            }
+            },
+            markedIndexReducer: {
+                markedIndexCurrentValue: '',
+                markedIndexValue: ''
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty
         });
         let props = {
             element: wipData.pullquote,
@@ -1946,7 +2000,12 @@ xdescribe('Test-Other Functions', () => {
                     sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                 }
-            }
+            },
+            markedIndexReducer: {
+                markedIndexCurrentValue: '',
+                markedIndexValue: ''
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty
         });
         let props = {
             element: wipData.pullquote,
@@ -2109,6 +2168,29 @@ xdescribe('Test-Other Functions', () => {
         }
         const spyhandleContentChange = jest.spyOn(elementContainerInstance1, 'handleContentChange')
         elementContainerInstance1.handleContentChange(null, previousElementData, null, null, null, null, false, { type: "showhide" }, 'postertextobject');
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for CG element when update title field", () => {
+        const previousElementData = {
+            type: "citations",
+            html: {
+                text: "<p>title text</p>"
+            }
+        }
+        document.querySelector = () => {
+            return {
+                innerText: " ",
+                append: jest.fn()
+            }
+        }
+        const cgTitleFieldData = {
+            asideData: { element: {type: 'citations'}},
+            parentElement: {type : 'showhide'}
+        }
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, false, {type: "showhide"}, null, null, cgTitleFieldData);
         expect(spyhandleContentChange).toHaveBeenCalled();
         spyhandleContentChange.mockClear()
     })

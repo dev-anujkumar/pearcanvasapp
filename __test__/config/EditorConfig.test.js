@@ -9,7 +9,8 @@ import "tinymce/plugins/paste";
 import config from '../../src/config/config';
 import { insertMediaSelectors, FormatSelectors } from '../../src/config/EditorConfig.js';
 jest.mock('../../src/js/TinyMceUtility.js', () => ({
-    handleC2MediaClick:()=>{}
+    handleC2MediaClick:()=>{},
+    checkBlockListElement: jest.fn(() => { return { parentData: {} } })
 }))
 config.userId= 'c5test01';
 describe('Testing TinyMceEditor - EditorConfig', () => {
@@ -45,5 +46,58 @@ describe('Testing TinyMceEditor - EditorConfig', () => {
         const dropdownMenu = FormatSelectors(callback);
         dropdownMenu[0].onAction();
         expect(dropdownMenu[0].type).toBe('menuitem');
+    });
+
+    it('Test - insertImageHandler - Block List Element',()=>{
+        let params = {
+            editor:{},
+            permissions:{},
+            element:{
+                type:"element-authoredtext"
+            },
+            props:{}
+        }
+        const dropdownMenu = insertMediaSelectors(params);
+        dropdownMenu[0].onAction();
+        expect(dropdownMenu[0].text).toBe('Image');
+    });
+    it('Test - insertImageHandler - Block List Element-Else Part',()=>{
+        let params = {
+            editor:{},
+            permissions:{},
+            element:{
+                type:""
+            },
+            props:{}
+        }
+        const dropdownMenu = insertMediaSelectors(params);
+         dropdownMenu[0].onAction();
+         expect(dropdownMenu[0].text).toBe('Image');
+    });
+    it('Test - insertImageHandler - for ',()=>{
+        let params = {
+            editor:{},
+            permissions:{},
+            element:{
+                type:"LEARNING_OBJECTIVE_ITEM"
+            },
+            props:{}
+        }
+        const dropdownMenu = insertMediaSelectors(params);
+        dropdownMenu[0].onAction();
+        expect(dropdownMenu[0].text).toBe('Image');
+    });
+    it('Test - insertImageHandler - Else ',()=>{
+        let params = {
+            editor:{},
+            permissions:{},
+            element:{
+                type:""
+            },
+            props:{}
+        }
+        const dropdownMenu = insertMediaSelectors(params);
+         dropdownMenu[0].onAction();
+         expect(dropdownMenu[0].text).toBe('Image');
     });
 })

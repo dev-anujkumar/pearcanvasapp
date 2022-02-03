@@ -50,6 +50,8 @@ import store from '../../appstore/store';
 import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import {isOwnersSubscribedSlate} from '../CanvasWrapper/CanvasWrapper_Actions';
+import KeyboardUpDown from '../Keyboard/KeyboardUpDown.jsx';
+import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 
 let random = guid();
 
@@ -72,7 +74,8 @@ class SlateWrapper extends Component {
             pastedindex:null,
             powerPasteData: [],
             updatedindex:'',
-            showOwnerSlatePopup: false
+            showOwnerSlatePopup: false,
+            parentUrn:null
         }
         this.isDefaultElementInProgress = false;
     }
@@ -623,10 +626,12 @@ class SlateWrapper extends Component {
         this.props.isOwnersSubscribedSlate(false);
     }
 
-    handleCopyPastePopup = (wordPastePopup,index)=>{
+    handleCopyPastePopup = (wordPastePopup,index,parentUrn, asideData)=>{
       this.setState({
         isWordPastePopup: wordPastePopup,
-        pastedindex: index
+        pastedindex: index,
+        parentUrn:parentUrn,
+        asideData
       })
   }
 
@@ -927,8 +932,8 @@ class SlateWrapper extends Component {
      * Calls Powerpaste API when user clicks Proceed button
      */
     handlePowerPaste = () => {
-        const { powerPasteData, updatedindex } = this.state
-        powerPasteData.length && this.props.createPowerPasteElements(powerPasteData, updatedindex);
+        const { powerPasteData, updatedindex, parentUrn, asideData  } = this.state
+        powerPasteData.length && this.props.createPowerPasteElements(powerPasteData, updatedindex, parentUrn, asideData);
         this.handleCopyPastePopup(false)
         this.setState({
             powerPasteData:[]
@@ -1009,7 +1014,6 @@ class SlateWrapper extends Component {
                 const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(_slateType);
                 return _elements.map((element, index) => {
                         return (
-                            
                            <React.Fragment key={element.id}>
                                <LazyLoad 
                                     once={true}
@@ -1052,6 +1056,7 @@ class SlateWrapper extends Component {
                                         projectSharingRole={this.props.projectSubscriptionDetails.projectSharingRole}
                                         projectSubscriptionDetails={this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed}
                                         hideElementSeperator={this.props.hideElementSeperator}
+                                        handleCopyPastePopup={this.handleCopyPastePopup}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -1383,6 +1388,7 @@ class SlateWrapper extends Component {
         config.tcmslatemanifest= null
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
+        this.props.savePopupParentSlateData({});
         if(config.tcmStatus){
             this.props.handleTCMData(config.slateManifestURN)
         }
@@ -1549,9 +1555,11 @@ class SlateWrapper extends Component {
                     } 
                 </div>
                 <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""}`} onScroll={this.handleScroll}>
+                <KeyboardUpDown>
                     {
                         this.renderSlate(this.props)
                     }
+                </KeyboardUpDown>
                 </div>
                 <div id="link-notification"></div>
                 {this.props.showToast  && <Toast active={true}/>}
@@ -1566,6 +1574,7 @@ class SlateWrapper extends Component {
                                 inputRef={inputRef}
                                 activeElement={this?.props?.activeElement}
                                 slateData={this?.props?.slateData}
+                                asideData={this?.props?.asideData}
                             />
                         )
                     }
@@ -1641,6 +1650,7 @@ const mapStateToProps = state => {
         removeGlossaryImage:state.appStore.removeGlossaryImage,
         projectSubscriptionDetails:state?.projectInfo,
         activeElement: state.appStore.activeElement,
+        asideData: state.appStore.asideData
     };
 };
 
@@ -1678,6 +1688,7 @@ export default connect(
         showWrongImagePopup,
         alfrescoPopup,
         showRemoveImageGlossaryPopup,
-        isOwnersSubscribedSlate
+        isOwnersSubscribedSlate,
+        savePopupParentSlateData
     }
 )(SlateWrapper);

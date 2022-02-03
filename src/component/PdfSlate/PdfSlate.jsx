@@ -7,8 +7,9 @@ import { ELEMENT_PDF } from '../SlateWrapper/SlateWrapperConstants.js';
 import { ELEMENT_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import config from '../../config/config.js';
 import TinyMceEditor from '../tinyMceEditor.js';
-import { alfrescoPopup, saveSelectedAssetData } from '../AlfrescoPopup/Alfresco_Action';
+import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action';
 import { hideBlocker } from '../../js/toggleLoader';
+import { clearPool, poolFunc } from './CypressPlusAction.js';
 class PdfSlate extends Component {
     constructor(props) {
         super(props);
@@ -29,8 +30,11 @@ class PdfSlate extends Component {
 				filetitle: filetitle,
 				pdfId: assetid
 			})
+			if (config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && !this.props.element?.elementdata?.hasOwnProperty('conversionstatus')) {
+				poolFunc(this.props.element.id)
 		}
     }
+}
 
     componentDidUpdate(prevProps) {
         const {alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
@@ -43,6 +47,10 @@ class PdfSlate extends Component {
 			this.props.saveSelectedAssetData(payloadObj)
         }
     }
+
+	componentWillUnmount() {
+		clearPool()
+	}
 
 	/* --- Open alfresco Picker --- */
 	OpenAlfresco = () => {
@@ -59,7 +67,10 @@ class PdfSlate extends Component {
 			/* Check "desc" property should not be other than "PDF" */
 			const isPdf = pdfData && pdfData?.content?.mimeType?.split('/')[1]
 			const smartLinkString = (pdfData.properties["cm:description"] && pdfData.properties["cm:description"].toLowerCase() !== "eps media") ? pdfData.properties["cm:description"] : "{}";
-			const smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+			let isSmartLinkAsset = smartLinkString !== "{}" ? true : false
+			let smartlinkAvsString = (isSmartLinkAsset === true) ? smartLinkString : {}
+			const smartLinkDesc = (typeof smartlinkAvsString === 'string')? JSON.parse(smartlinkAvsString) : smartlinkAvsString;
+			// const smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
 			const smartLinkType = smartLinkDesc !== "" && smartLinkDesc.smartLinkType ? smartLinkDesc.smartLinkType : "";
 
 			if ((isPdf?.toLowerCase() == "pdf") || (smartLinkType?.toLowerCase() === 'pdf')) {
@@ -125,6 +136,7 @@ class PdfSlate extends Component {
 					pdfId = {this.state.pdfId}
 					filetitle = {this.state.filetitle}
 					OpenAlfresco = {this.OpenAlfresco}
+					element={this.props.element}
 				/>
 				<TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
@@ -143,7 +155,8 @@ class PdfSlate extends Component {
 const dispatchActions = {
     updateElement,
 	alfrescoPopup,
-	saveSelectedAssetData
+	saveSelectedAssetData,
+	saveSelectedAlfrescoElement
 
 }
 

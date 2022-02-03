@@ -221,7 +221,7 @@
     font-family: "Helvetica Neue", sans-serif;
     color: #000;
 }
-.delete-element-text, .audioRemoveClass, .remove-glossary-image{
+.delete-element-text, .audioRemoveClass, .remove-glossary-image, .blockcode-warning-text{
   font-family: "Helvetica Neue", sans-serif;
   color: #000;
   font-size: 16px;
@@ -573,6 +573,7 @@ overflow: unset;
   font-size: 12px !important;
   overflow-x: hidden;
   max-height: 50vh;
+  position: relative;
 }
 
 .dialog-window p {
@@ -648,7 +649,7 @@ a.paragraphNumeroUnoFootnote del{
 
 /* added css for list style in the popup */
 .dialog-window.tcm-canvas-popup ul{
-  list-style-type: disc;
+  list-style-type:none !important;
   color: black;
 }
 
@@ -694,7 +695,7 @@ span.calloutOne > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-.modal-content.tcm-canvas-popup span.calloutOne:hover::after {
+/* .modal-content.tcm-canvas-popup span.calloutOne:hover::after {
   content: 'Callout: Option 1';
   width: 100px;
   background-color: #555;
@@ -708,10 +709,10 @@ span.calloutOne > ins.diffmod{
   /* left: -10px;
   position: absolute;
   z-index: 1;
-  right: -13px; */
+  right: -13px;
   transition: opacity 0.3s;
   font-size: 10px;
-}
+} */
 .modal-content.tcm-canvas-popup 
 span.calloutTwo, 
 span.calloutTwo > ins.diffins, 
@@ -721,7 +722,7 @@ span.calloutTwo > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-.modal-content.tcm-canvas-popup span.calloutTwo:hover::after {
+/* .modal-content.tcm-canvas-popup span.calloutTwo:hover::after {
   content: 'Callout: Option 2';
   width: 100px;
   background-color: #555;
@@ -735,10 +736,10 @@ span.calloutTwo > ins.diffmod{
   /* left: -10px;
   position: absolute;
   z-index: 1;
-  right: -13px; */
+  right: -13px;
   transition: opacity 0.3s;
   font-size: 10px;
-}
+} */
 .modal-content.tcm-canvas-popup 
 span.calloutThree, 
 span.calloutThree > ins.diffins, 
@@ -748,7 +749,7 @@ span.calloutThree > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-.modal-content.tcm-canvas-popup span.calloutThree:hover::after {
+/* .modal-content.tcm-canvas-popup span.calloutThree:hover::after {
   content: 'Callout: Option 3';
   width: 100px;
   background-color: #555;
@@ -762,10 +763,10 @@ span.calloutThree > ins.diffmod{
   /* left: -10px;
   position: absolute;
   z-index: 1;
-  right: -13px; */
+  right: -13px; 
   transition: opacity 0.3s;
   font-size: 10px;
-}
+} */
 .modal-content.tcm-canvas-popup 
 span.calloutFour, 
 span.calloutFour > ins.diffins, 
@@ -775,7 +776,7 @@ span.calloutFour > ins.diffmod{
     position: relative;
     background: rgb(251, 188, 72);
 }
-.modal-content.tcm-canvas-popup span.calloutFour:hover::after {
+/* .modal-content.tcm-canvas-popup span.calloutFour:hover::after {
   content: 'Callout: Option 4';
   width: 100px;
   background-color: #555;
@@ -789,10 +790,10 @@ span.calloutFour > ins.diffmod{
   /* left: -10px;
   position: absolute;
   z-index: 1;
-  right: -13px; */
+  right: -13px;
   transition: opacity 0.3s;
   font-size: 10px;
-}
+} */
 
 /* added css for list elements */
 li ol, li ul{
@@ -818,5 +819,12 @@ ol li.listItemNumeroUnoLowerRoman {
     width: 14px;
     height: 14px;
     margin-right: 6px;
+}
+
+.dialog-window.tcm-canvas-popup ol {
+  counter-reset: section !important;
+}
+.dialog-window.tcm-canvas-popup li {
+  min-height: 22px;
 }
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { showTocBlocker} from '../../js/toggleLoader'
 import config from '../../config/config';
 import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
-import { alfrescoPopup } from '../AlfrescoPopup/Alfresco_Action'
+import { alfrescoPopup, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
 import axios from 'axios';
 
 /**
@@ -73,11 +73,23 @@ class AddAudioBook extends React.Component {
                     const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
+                    const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
                     let messageObj = { citeName:  citeName, 
-                        citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
+                        citeNodeRef: citeNodeRef,
                         elementId: this.props.elementId,
-                        calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary }
+                        calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary 
+                    }
+
                         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                        const messageDataToSaveAudioBook = {
+                            id: this.props.elementId,
+                            calledFrom: 'NarrativeAudio',
+                            calledFromGlossaryFootnote: this.props.isGlossary,
+                            editor: undefined,
+                            citeNodeRef: citeNodeRef
+                        }
+                        this.props.saveSelectedAlfrescoElement(messageDataToSaveAudioBook);
+
                 } else {
                     this.props.accessDenied(true)
                 }
@@ -120,6 +132,9 @@ const mapActionToProps = (dispatch) =>{
         alfrescoPopup: (payloadObj) => {
             dispatch(alfrescoPopup(payloadObj))
         },
+        saveSelectedAlfrescoElement: (payloadObj) => {
+            dispatch(saveSelectedAlfrescoElement(payloadObj))
+        }
     }
 }
 

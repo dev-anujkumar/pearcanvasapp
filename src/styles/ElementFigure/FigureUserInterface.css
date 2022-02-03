@@ -45,6 +45,7 @@ code .codeNoHighlightLine{
 #figure_add_div {
     cursor: auto !important;
     outline: none;
+    overflow-y: hidden;
 }
 
 /* .floating-credit-group .figureCredit.cypress-editable {
@@ -170,6 +171,13 @@ figure,.element-container{
 .divCodeSnippetFigure.blockCodeFigure .figureCodeSnippet .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing .cypress-editable{
     line-height: 25px;
     display: table;
+}
+
+.divImageActualSize, .divImageActualSizeTableImage, .divImageActualSizeMathImage{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
 }
 
 /* figure 25% image*/
@@ -552,6 +560,11 @@ th ol li.listItemNumeroUnoNone:before {
     min-height: 257px;
     display: flex;
 }
+
+.figure-wrapper-update-quad{
+    min-height: 188px
+}
+
 .figure-element-container{
     position: relative;
     top: 0;
@@ -694,11 +707,14 @@ th ol li.listItemNumeroUnoNone:before {
     font-size: 14px;
     cursor: pointer;
 }
-.figurebutton:hover{
+.figurebutton:hover, .figurebutton:focus{
     border: 1px solid #005a70;
     background-color: #def8ff;
 }
 .media-button-group .delete-figure-button:hover, .media-button-group .update-figure-button:hover {
+    background-color: #def8ff !important;
+}
+.media-button-group .delete-figure-button:focus, .media-button-group .update-figure-button:focus {
     background-color: #def8ff !important;
 }
 .media-button-group .update-figure-button{
@@ -738,6 +754,16 @@ th ol li.listItemNumeroUnoNone:before {
     line-height: 1.71;
     color: #000;
     border-bottom: 2px solid #999;
+    cursor: pointer;
+    position: relative;
+    padding: 3px 4px;
+}
+.figure-label-highlight{
+    width: 130px;
+    font-size: 14px;
+    line-height: 1.71;
+    color: #000;
+    border-bottom: 2px solid #005a70;
     cursor: pointer;
     position: relative;
     padding: 3px 4px;
@@ -818,6 +844,12 @@ th ol li.listItemNumeroUnoNone:before {
     overflow-wrap: anywhere;
 }
 .addVideobutton:hover {
+    
+    background-color: #def8ff;
+}
+
+.addVideobutton:focus {
+    
     background-color: #def8ff;
 }
 .addVideobutton {
@@ -879,7 +911,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .floating-number-group .transition-none, .image-label .transition-none {
     transition: none;
-    top: 2px;
+    top: -6px;
     bottom: 0px;
     font-size: 10px;
     color: #737373;

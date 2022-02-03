@@ -48,6 +48,7 @@ class MultipleColumnContainer extends PureComponent {
                 userRole={this.props.userRole}
                 pasteElement={this.props.pasteElement}
                 source={MULTICOLUMN_SOURCE}
+                handleCopyPastePopup={this.props.handleCopyPastePopup}
             />
         )
     }
@@ -73,7 +74,8 @@ class MultipleColumnContainer extends PureComponent {
             type: "groupedcontent",
             id: this.context.element.id,
             contentUrn: this.context.element.contentUrn,
-            element : this.context.element
+            element : this.context.element,
+            index: parentIndex
         };
         try {
             if (_elements !== null && _elements !== undefined && parentUrn.columnName === columnIndex) {
@@ -99,6 +101,7 @@ class MultipleColumnContainer extends PureComponent {
                                     userRole={this.props.userRole}
                                     pasteElement={this.props.pasteElement}
                                     source={MULTICOLUMN_SOURCE}
+                                    handleCopyPastePopup={this.props.handleCopyPastePopup}
                                 />
                             }
                             <ElementContainer
@@ -132,6 +135,7 @@ class MultipleColumnContainer extends PureComponent {
                                 userRole={this.props.userRole}
                                 pasteElement={this.props.pasteElement}
                                 source={MULTICOLUMN_SOURCE}
+                                handleCopyPastePopup={this.props.handleCopyPastePopup}
                             />  
                         </React.Fragment>
                     )

@@ -7,19 +7,23 @@ import {
     ERROR_POPUP,
     GET_TCM_RESOURCES,
     AUTHORING_ELEMENT_UPDATE,
+    CHECK_ASIDE_NUMBER 
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
-import { prepareTcmSnapshots,checkContainerElementVersion,fetchManifestStatus,fetchParentData, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
+import { fetchParentData } from '../TcmSnapshots/TcmSnapshotsOnDefaultSlate';
+import { checkContainerElementVersion, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
-
+import { updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
+import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -198,7 +202,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         index: indexes[indexes.length - 1],
         slateEntity : appStore.parentUrn && Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
-
+    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled
     if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
     }
@@ -208,6 +212,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             conversionDataToSend["elementParentEntityUrn"] = showHideObj.element.contentUrn;
         }
     }
+    if (isAutoNumberingEnabled && (outputPrimaryOptionEnum === 'AUDIO' || outputPrimaryOptionEnum === 'VIDEO')) {
+        conversionDataToSend = {
+            ...conversionDataToSend,
+            displayedlabel: outputPrimaryOptionEnum === 'AUDIO' ? 'Audio' : 'Video'      
+        }
+    }
+
     let parentEntityUrn = conversionDataToSend.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     conversionDataToSend["elementParentEntityUrn"] = parentEntityUrn
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
@@ -224,7 +235,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(async res =>{
-        
         let parentData = store;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
@@ -366,11 +376,20 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
            activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
             
         }
+        const asideElementTypes = ['element-aside', 'element-workedexample'];
+        if (asideElementTypes.includes(newElementData.elementType)) {
+            const hasAsideNumber = (res.data?.html?.title && (res.data?.html?.title !== "<p class='paragraphNumeroUno'></p>" && res.data?.html?.title !== "<p></p>")) ? true : false;
+            activeElementObject.asideNumber = hasAsideNumber
+        }
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
         });
-
+        if (isAutoNumberingEnabled && autoNumberFigureTypesForConverion.includes(outputPrimaryOptionEnum)) {
+            const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
+            const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
+            dispatch(updateAutonumberingOnElementTypeUpdate(res.data?.displayedlabel, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
+        }
         /**
          * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
          * Setting the correct active element to solve this issue.
@@ -659,6 +678,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
     }).then(res => {
         const newParentData = getState().appStore.slateLevelData;
         const parsedParentData = JSON.parse(JSON.stringify(newParentData));
+        const slateLevelBLIndex = (typeof dataToUpdate?.slateLevelBLIndex === 'number') ? [`${dataToUpdate.slateLevelBLIndex}`] : dataToUpdate.slateLevelBLIndex;
         if (parsedParentData[config.slateManifestURN]?.status === 'approved') {
             if (parsedParentData.type === "popup") {
                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
@@ -674,7 +694,14 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             config.isSavingElement = false
         } else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-            updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[dataToUpdate.slateLevelBLIndex], dataToSend)
+            //For Nested BL inside SH i.e Slate->SH->BL->BL || For Parent BL inside SH i.e Slate->SH->BL
+            if ((dataToUpdate?.asideData?.parent?.type && dataToUpdate.asideData.parent.type === "showhide" && dataToUpdate?.asideData?.parent?.showHideType) || (dataToUpdate?.asideData?.type && dataToUpdate.asideData.type === "showhide" && dataToUpdate?.asideData?.sectionType)) {
+                let showHideSection = dataToUpdate?.asideData?.parent?.showHideType ? dataToUpdate.asideData.parent.showHideType : dataToUpdate.asideData.sectionType;
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].interactivedata[showHideSection][slateLevelBLIndex[2]], dataToSend)
+            } //For BL on Slate Level i.e Slate->BL
+            else {
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]], dataToSend)
+            }
             dispatch({
                 type: AUTHORING_ELEMENT_UPDATE,
                 payload: {
@@ -801,8 +828,8 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
         })
 }
 
-const updateBLMetaData = (elementId, elementData, metaData) => {
-    if(elementData.id === elementId){
+export const updateBLMetaData = (elementId, elementData, metaData) => {
+    if(elementData?.id === elementId){
         if(metaData.subtype){
             elementData.subtype = metaData.subtype;
             elementData.listtype = metaData.listtype;
@@ -836,7 +863,8 @@ const updateBLMetaData = (elementId, elementData, metaData) => {
 }
 
 
-const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch) => {
+const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (dispatch, getState) => {
+    const { appStore } =  getState();
     const {
         dataToUpdate,
         activeElement,
@@ -868,6 +896,10 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
                         updatedElement = newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]]
+                    } else if (newBodymatter[tmpIndex[0]]?.type == "showhide") {
+                        newBodymatter[tmpIndex[0]].interactivedata[appStore?.asideData?.sectionType][tmpIndex[2]].numberedline = dataToUpdate.isNumbered
+                        newBodymatter[tmpIndex[0]].interactivedata[appStore?.asideData?.sectionType][tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
+                        updatedElement = newBodymatter[tmpIndex[0]].interactivedata[appStore?.asideData?.sectionType][tmpIndex[2]]
                     } else {
                         newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
                         newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]].startlinenumber = dataToUpdate.startNumber
@@ -904,4 +936,11 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
        elementEntityUrn, currentSlateData
     }
 
+}
+
+export const enableAsideNumbering = (isAsideNumber,elementId) => (dispatch) => {
+    dispatch({
+        type: CHECK_ASIDE_NUMBER,
+        payload: {isAsideNumber, elementId}
+    });
 }

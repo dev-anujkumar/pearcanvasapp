@@ -10,6 +10,7 @@ import {
     SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP, ERROR_POPUP
 } from '../../constants/Action_Constants.js'
 import { hideTocBlocker } from '../../js/toggleLoader'
+import { deleteAudio,REFRESH_MESSAGE } from '../../constants/IFrameMessageTypes.js'
 /**
  * 
  * @param {*} value 
@@ -94,6 +95,22 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
                 dispatch({ type: CURRENT_SLATE_AUDIO_NARRATION, payload: audioDataResponse.data});
                 dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
+                if (config?.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && config.CYPRESS_PLUS_WINDOW) {
+                    const wUrn = store.getState()?.appStore?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0]?.id
+                    const urlCypress = `${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${wUrn}`
+                    const obj = {
+                        type: "editPageAudioMessage",
+                        audioData: {
+                            "narrativeAudioUrn": audioDataResponse?.data?.data[0]?.narrativeAudioUrn,
+                            "location": audioDataResponse?.data?.data[0]?.location,
+                            "title": {
+                                "en": audioDataResponse?.data?.data[0]?.title?.en
+                            },
+                            "format": audioDataResponse?.data?.data[0]?.format
+                        }
+                    }
+                    config.CYPRESS_PLUS_WINDOW.postMessage(obj, urlCypress)
+                }
             }
             else {
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
@@ -140,6 +157,12 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
                 fetchAudioNarrationForContainer(slateData)
                 dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
+                if (config?.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && config.CYPRESS_PLUS_WINDOW) { 
+                    const wUrn = store.getState()?.appStore?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0]?.id
+                    const urlCypress = `${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${wUrn}`
+                    const obj = { type: deleteAudio, message: REFRESH_MESSAGE }
+                    config.CYPRESS_PLUS_WINDOW.postMessage(obj, urlCypress)
+                }
             }
             else {
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: false })

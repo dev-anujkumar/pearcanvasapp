@@ -137,6 +137,9 @@
     font-size: 14px;
     
   }
+  .enhanced_label{
+    margin-top: 5%;
+  }
   .slate_assessment_data_details{
     float: left;
     width: 75%;
@@ -154,6 +157,9 @@
     overflow: visible; 
     white-space: normal; 
     height:auto; 
+  }
+  .enhanced_title {
+    margin-top: 6%;
   }
 
   .slate_assessment_data_id{
@@ -400,4 +406,16 @@ span.approved-button.enable svg path#path2 {
 .pdf-slate .addLOdata {
   display: none;
 }
+.slate_cypress_plus_enhance{
+  width: 85%;
+  display: grid;
+  place-items: center;
+  padding-top: 4%;
+}
+.slate_assessment_cypress_plus_enhance{
+font-size: 20px;
+font-weight: bold;
+}
+
+
 /* Ends - PDF Slate Canvas css */

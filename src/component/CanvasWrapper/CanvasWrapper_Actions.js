@@ -22,31 +22,39 @@ import {
     UPDATE_USAGE_TYPE,
     UPDATE_DISCUSSION_ITEMS,
     UPDATE_LOB_PERMISSIONS,
+    UPDATE_LOB_WORKFLOW,
     SET_PROJECT_SHARING_ROLE,
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
-    UPDATE_FIGURE_DROPDOWN_OPTIONS
+    UPDATE_FIGURE_DROPDOWN_OPTIONS,
+    ERROR_API_POPUP,
+    SLATE_FIGURE_ELEMENTS
 } from '../../constants/Action_Constants';
+import { SLATE_API_ERROR } from '../../constants/Element_Constants';
+
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
-import { HideLoader, UPDATE_PROJECT_METADATA } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
-import ElementConstants from "../ElementContainer/ElementConstants.js"
+import ElementConstants from "../ElementContainer/ElementConstants.js";
+import { isAutoNumberEnabled, fetchProjectFigures, setAutoNumberinBrowser } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
-
+import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
+import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
+import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -104,7 +112,7 @@ export const findElementType = (element, index) => {
                         } else {
                             let figureType = figureData[element['figuretype']];
                             let figureAlignment = figureType[element['alignment']]
-                            subType = figureAlignment['imageDimension']
+                            subType = element['alignment'] === 'actual-size' ? element?.subtype : figureAlignment['imageDimension']
                         }
                         if(element.figuretype === "image" || element.figuretype === "table" || element.figuretype === "mathImage"){
                             if(element.figuredata && !element.figuredata.podwidth){
@@ -218,6 +226,7 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type][element.subtype]["elementType"],
                     ...elementDataBank[element.type][element.subtype][element.designtype]
                 }
+                elementType.asideNumber = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false
                 break;
             case 'element-list': {
                 let type = element.type
@@ -327,9 +336,10 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 
-export const fetchFigureDropdownOptions = () => (dispatch) => {
+export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     // Api to get Figure dropdown options
-    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type`;
+    let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type?isAutoNumberingEnabled=${isAutoNumberingEnabled}`;
     return axios.get(figureDropdownOptionsURL, {
         headers: {
             "Content-Type": "application/json",
@@ -351,7 +361,7 @@ export const fetchFigureDropdownOptions = () => (dispatch) => {
 
 export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
-    console.log("the lob url is " + lobURL)
+    // console.log("the lob url is " + lobURL)
     return axios.get(lobURL, {
         headers: {
             "Content-Type": "application/json",
@@ -371,6 +381,11 @@ export const getProjectDetails = () => (dispatch, getState) => {
             })
         }
         const data = JSON.parse(JSON.stringify(response.data))
+        if (data?.parameters && Object.keys(data?.parameters).length > 0) {
+            let flag = data?.parameters?.enablenumberedandlabel || false;
+            dispatch(isAutoNumberEnabled(flag, config.ENABLE_AUTO_NUMBER_CONTENT));
+            setAutoNumberinBrowser(flag, config.ENABLE_AUTO_NUMBER_CONTENT)
+        }
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
             // Api to get LOB Permissions
@@ -392,12 +407,31 @@ export const getProjectDetails = () => (dispatch, getState) => {
             }).catch(error => {
                 console.log("Get LOB permissions API Failed!!")
             })
+            // Api to get LOB Workflow roles
+            const workflowRoleURL = `${config.REACT_APP_API_URL}v1/lobs/workflow/${lineOfBusiness}`;
+            axios.get(workflowRoleURL, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then(response => {
+                dispatch({
+                    type: UPDATE_LOB_WORKFLOW,
+                    payload: response.data
+                })
+                sendDataToIframe({
+                    'type': WORKFLOW_ROLES,
+                    'message': response.data
+                })
+            }).catch(error => {
+                console.log("Get Workflow role API Failed!!")
+            })
 
             // call api to get usage types
             
             const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
             const usageTypeUrl = `${config.STRUCTURE_API_URL}${usageTypeEndPoint}`;
-            console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
+            //console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
              axios.get(usageTypeUrl, {
                 headers: {
                     ApiKey:config.STRUCTURE_APIKEY,
@@ -407,7 +441,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (usageTypeResponse => {
-                console.log("the usage type response is", usageTypeResponse);
+                //console.log("the usage type response is", usageTypeResponse);
                 const data = usageTypeResponse?.data;
                 if(Array.isArray(data)){
                     const usageType = data.map(item => ({label:item.label.en}))
@@ -523,12 +557,21 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             // "PearsonSSOSession": config.ssoToken,
             'myCloudProxySession': config.myCloudProxySession
         }
-    }).then(slateData => {  
+    }).then(slateData => { 
          /* Slate tag issue */
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
          }     
-        let newVersionManifestId=Object.values(slateData.data)[0].id
+        let newVersionManifestId=Object.values(slateData.data)[0].id;
+
+        /* This code will get the last aligned LO from the local storage and update the redux store */
+        let lastAlignedLos = localStorage.getItem('lastAlignedLos');
+        if(lastAlignedLos && lastAlignedLos.length > 0){
+            let lastAlignedLosInStroage = JSON.parse(lastAlignedLos);
+            let lastAlignedLoForCurrentSlate = lastAlignedLosInStroage[newVersionManifestId];
+            dispatch(updateLastAlignedLO(lastAlignedLoForCurrentSlate));
+        }
+
         if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
@@ -617,6 +660,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         let index = versioning.indexes[0];
                         newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     }
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+                } else if (versioning?.type === "manifestlist" && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]] = Object.values(slateData.data)[0];
+
                     return dispatch({
                         type: AUTHORING_ELEMENT_UPDATE,
                         payload: {
@@ -758,7 +812,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             }
         }
         /** [TK-3289]- To get Current Slate details */
-        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
+        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
+
+        // get data for auto-numbering
+        if(config.figureDataToBeFetched){
+            const slateAncestors = getState().appStore.currentSlateAncestorData;
+            const currentParentUrn = getContainerEntityUrn(slateAncestors);
+            dispatch(fetchProjectFigures(currentParentUrn));
+            dispatch(fetchFigureDropdownOptions());
+            config.figureDataToBeFetched = false;
+        }
+
         if (slateData.data[newVersionManifestId].type !== "popup") {
             if(slateData.data && Object.values(slateData.data).length > 0) {
                 let slateTitle = SLATE_TITLE;
@@ -788,7 +852,26 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             let searchTerm = queryStrings.get('searchElement') || '';
             dispatch(getContainerData(searchTerm));
         }
-    });
+        /** Get List of Figures on a Slate for Auto-Numbering */
+        // const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
+        // const slateFigures = getImagesInsideSlates(bodyMatter)
+        const slateFigures = getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
+        /* if (slateFigures) {
+            console.log('slateFigures',slateFigures)
+            dispatch({
+                type: SLATE_FIGURE_ELEMENTS,
+                payload: {
+                    slateFigures :slateFigures
+                }
+            });
+        }*/
+    })
+    .catch(err => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+        dispatch({type: ERROR_API_POPUP, payload:{show: true,message:SLATE_API_ERROR}})
+        console.error('Error in fetch Slate api', err);
+    })
+   
 };
 
 export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => {
@@ -1073,6 +1156,22 @@ export const fetchAuthUser = () => dispatch => {
         document.cookie = (userInfo.userId)?`USER_ID=${userInfo.userId};path=/;`:`USER_ID=;path=/;`;
 		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
 		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
+        
+        /* 
+        To update the latest info
+        Since GetFirst Salte was called before fetch user
+        so sending user info with postmessage 
+        */
+
+        sendDataToIframe({
+            type: 'updateUserDetail',
+            message : {
+                userId : userInfo.userId,
+                firstName : userInfo.firstName,
+                lastName: userInfo.lastName
+            }
+            
+        });
     })
         .catch(err => {
             console.error('axios Error', err);
@@ -1329,7 +1428,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
     })
 }
 
-export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN) => (dispatch, getState) => {
+export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, slateManifestURN, element) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
@@ -1360,19 +1459,20 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         let newslateData = JSON.parse(JSON.stringify(parentData))
         let _slateObject = newslateData[slateManifestURN]
         let targetPoetryElement = _slateObject.contents.bodymatter[ElementIndex]
+        const activeElementId = element?.id
 
         if(targetPoetryElement){
             if(poetryField==="creditsarray"){
                 if(targetPoetryElement?.type == "element-aside"){ /* update credit of PE inside aside */
                     targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
-                        if (element.type == "poetry") {
+                        if (element.type == "poetry" && element.id == activeElementId) {
                             element.contents[poetryField] = [response.data]
                             element.contents[poetryField][0].html.text  = elemNode.innerHTML
                             element.contents[poetryField][0].elementdata.text = elemNode.innerText
                             targetPoetryElement.elementdata.bodymatter[index] = element
                         } else if (element?.type == "manifest") { /* update credit of PE inside WE in section break */
                             element.contents?.bodymatter.map((element1, maniIndex) => {
-                                if (element1?.type == "poetry") {
+                                if (element1?.type == "poetry" && element1?.id == activeElementId) {
                                 element1.contents[poetryField] = [response.data]
                                 element1.contents[poetryField][0].html.text  = elemNode.innerHTML
                                 element1.contents[poetryField][0].elementdata.text = elemNode.innerText
@@ -1384,7 +1484,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 } else if (targetPoetryElement?.type == "groupedcontent") { /* update credit of PE inside MultiColumn */
                     targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
                         groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
-                            if (groupElem2.type == "poetry") {
+                            if (groupElem2.type == "poetry" && groupElem2.id == activeElementId) {
                                 groupElem2.contents[poetryField] = [response.data]
                                 groupElem2.contents[poetryField][0].html.text  = elemNode.innerHTML
                                 groupElem2.contents[poetryField][0].elementdata.text = elemNode.innerText
@@ -1392,7 +1492,16 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                             }
                         })
                     })
-                } 
+                } else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents[poetryField] = [response.data]
+                            element2.contents[poetryField][0].html.text = elemNode.innerHTML
+                            element2.contents[poetryField][0].elementdata.text = elemNode.innerText
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
+                    })
+                }
                 else {
                 if(!targetPoetryElement.contents[poetryField]){
                     targetPoetryElement.contents[poetryField] = [];
@@ -1405,14 +1514,14 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
             else if(poetryField==="formatted-title"){
                 if(targetPoetryElement?.type == "element-aside"){ /* update Title of PE inside aside */
                     targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
-                        if (element.type == "poetry") {
+                        if (element.type == "poetry" && element.id == activeElementId) {
                             element.contents[poetryField] = response.data
                             element.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                             element.contents[poetryField].elementdata.text = elemNode.innerText
                             targetPoetryElement.elementdata.bodymatter[index] = element
                         } else if (element?.type == "manifest") { /* update title of PE inside WE in section break */
                             element.contents?.bodymatter.map((element1, maniIndex) => {
-                                if (element1?.type == "poetry") {
+                                if (element1?.type == "poetry" && element1?.id == activeElementId) {
                                     element1.contents[poetryField] = response.data
                                     element1.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                                     element1.contents[poetryField].elementdata.text = elemNode.innerText
@@ -1424,13 +1533,22 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 } else if (targetPoetryElement?.type == "groupedcontent") { /* update title of PE inside MultiColumn */
                     targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
                         groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
-                            if (groupElem2.type == "poetry") {
+                            if (groupElem2.type == "poetry" && groupElem2.id == activeElementId) {
                                 groupElem2.contents[poetryField] = response.data
                                 groupElem2.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
                                 groupElem2.contents[poetryField].elementdata.text = elemNode.innerText
                                 targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
                             }
                         })
+                    })
+                } else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents[poetryField] = response.data
+                            element2.contents[poetryField].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                            element2.contents[poetryField].elementdata.text = elemNode.innerText
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
                     })
                 } else {
                 targetPoetryElement.contents[poetryField] = response.data
@@ -1441,13 +1559,13 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
             else if(poetryField==="formatted-subtitle"){
                 if (targetPoetryElement?.type == "element-aside") {
                     targetPoetryElement?.elementdata?.bodymatter.map((element, index) => {
-                        if (element.type == "poetry") { /* update subtitle of PE inside Aside/WE */
+                        if (element.type == "poetry" && element.id == activeElementId) { /* update subtitle of PE inside Aside/WE */
                             element.contents["formatted-title"] = response.data
                             element.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                             targetPoetryElement.elementdata.bodymatter[index] = element
                         } else if (element.type == "manifest") { /* update subtitle of PE inside WE in section break */
                             element.contents?.bodymatter.map((element1, maniIndex) => {
-                                if (element1?.type == "poetry") {
+                                if (element1?.type == "poetry" && element1?.id == activeElementId) {
                                     element1.contents["formatted-title"] = response.data
                                     element1.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                                     targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
@@ -1458,12 +1576,20 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 } else if (targetPoetryElement?.type == "groupedcontent") { /* update subtitle of PE inside MultiColumn */
                     targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
                         groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
-                            if (groupElem2.type == "poetry") {
+                            if (groupElem2.type == "poetry" && groupElem2.id == activeElementId) {
                                 groupElem2.contents["formatted-title"] = response.data
                                 groupElem2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                                 targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
                             }
                         })
+                    })
+                }  else if (targetPoetryElement?.type == "showhide") {
+                    targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
+                        if (element2.type == "poetry" && element2.id == activeElementId) {
+                            element2.contents["formatted-title"] = response.data
+                            element2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                            targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
+                        }
                     })
                 }
                 else {

@@ -5,14 +5,15 @@ import { sendDataToIframe, createTitleSubtitleModel, matchHTMLwithRegex, createL
 import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { hideTocBlocker } from '../../js/toggleLoader'
-import { tcmSnapshotsForUpdate, fetchParentData, fetchElementWipData } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForUpdate, fetchElementWipData } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 const {
     REACT_APP_API_URL
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
-import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE, UPDATE_NEW_ELEMENT_WORK_ID} from "./../../constants/Action_Constants";
+import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE, UPDATE_NEW_ELEMENT_WORK_ID, UPDATE_CURRENT_VALUE} from "./../../constants/Action_Constants";
 import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
 import { updateMarkedIndexStore } from '../MarkIndexPopup/MarkIndex_Action';
+import { fetchParentData } from '../TcmSnapshots/TcmSnapshotsOnDefaultSlate';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -43,7 +44,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
-        if (showHideElement || asideParent?.type === 'showhide') { /** Glossary-Footnotes inside Show-Hide */
+        if (showHideElement || asideParent?.type === 'showhide' && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) { /** Glossary-Footnotes inside Show-Hide */
             //let showHideChild = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement, 'glossaryFootnote')
             //glossaryFootElem = showHideChild?.currentElement
             /* Get the element where footnote/Glossery is added */
@@ -141,7 +142,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                             glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata.bodymatter[tempIndex[1]]?.groupdata.bodymatter[tempIndex[2]]?.contents['creditsarray'][0] || {};
                             break;
                     }
-                } 
+                } else if (newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.sectionType][tempIndex[2]]?.type === 'poetry') { /* footnote for PE title inside SH element */
+                    switch (tempIndex[3]) {
+                        case "1":
+                            glossaryFootElem = newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.sectionType][tempIndex[2]]?.contents['formatted-title'] || {}
+                            break;
+                        case "4":
+                            glossaryFootElem = newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.sectionType][tempIndex[2]]?.contents['creditsarray'][0] || {}
+                            break;
+                    }
+                }
             }
         } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // MultiColumn->PS or MultiColumn->As->PS or MultiColumn->WE->PS
             let elementInside2C = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
@@ -231,6 +241,8 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                             glossaryFootElem =  newBodymatter[indexes[0]].elementdata?.bodymatter[indexes[1]].contents?.bodymatter[indexes[2]].contents?.bodymatter[indexes[4]]
                         } else if (newBodymatter[indexes[0]]?.type == "groupedcontent"){
                             glossaryFootElem =  newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.contents?.bodymatter[indexes[4]]
+                        } else if (newBodymatter[indexes[0]]?.type === "showhide"){ // to support glossary in Block Poetry in SH
+                            glossaryFootElem = newBodymatter[indexes[0]]?.interactivedata[asideParent?.showHideType][indexes[2]]?.contents.bodymatter[indexes[4]];
                         }
                     } else {
                     // to support glossary in section break inside WE of MultiColumn
@@ -399,7 +411,7 @@ function alterMarkedIndexAttr(type, markedIndexedURN, addAttributeInDfn, glossar
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField,audioGlossaryData,figureGlossaryData, indexEntries) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup,poetryField,audioGlossaryData,figureGlossaryData, indexEntries, crossReferences) => {
     if(!glossaryfootnoteid) return false
     let glossaryEntry = Object.create({})
     let footnoteEntry = Object.create({})
@@ -550,7 +562,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             case 4:
                 if(newBodymatter[elemIndex[0]]?.type == "groupedcontent"){ /* contentURN for PE title inside multicolumn element */
                     parentEntityUrn = newBodymatter[elemIndex[0]]?.groupeddata?.bodymatter[elemIndex[1]]?.groupdata.bodymatter[elemIndex[2]]?.contentUrn
-                } else {
+                } 
+                else if (typeWithPopup === "poetry") { /* contentURN for PE title inside SH element */
+                    const showhideTypeVal = asideParent?.sectionType;
+                    parentEntityUrn = newBodymatter[elemIndex[0]]?.interactivedata[showhideTypeVal][elemIndex[2]]?.contents['formatted-title'].contentUrn
+                }
+                else {
                     parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contents.bodymatter[elemIndex[2]].contentUrn
                 }
                 break;
@@ -611,7 +628,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             case "MARKEDINDEX":   
             indexEntry[glossaryfootnoteid] = JSON.stringify({
                 firstLevelEntry: term,
-                secondLevelEntry: definition
+                secondLevelEntry: definition,
+                crossReferences
                 })
                 data = {
                     id: elementWorkId,
@@ -725,7 +743,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
 
-        if (showHideElement || asideParent?.type === 'showhide') {/** Glossary-Footnotes inside Show-Hide */
+        if (showHideElement || asideParent?.type === 'showhide'  && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) {/** Glossary-Footnotes inside Show-Hide */
             newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         } else if ((tempIndex.length == 5 || tempIndex.length == 6) && elementType == 'figure' && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
             let elementInSH = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]];
@@ -874,7 +892,23 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].contents['creditsarray'][0] = res.data
                             break;
                     }
-                } 
+                } else if (newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.sectionType][tempIndex[2]]?.type === 'poetry') { /* footnote for PE title inside SH element */
+                    switch (tempIndex[3]) {
+                        case "1":
+                            let responseElement = { ...res.data }
+                            newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['formatted-title']
+                            res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
+                            responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
+                            newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['formatted-title'] = responseElement;
+                            break;
+                        case "4":
+                            if (!newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['creditsarray']) {
+                                newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['creditsarray'] = [];
+                            }
+                            newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['creditsarray'][0] = res.data
+                            break;
+                    }
+                }
             }
         } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // MultiColumn->PS or MultiColumn->As->PS or MultiColumn->WE->PS
             if (res.data.html.hasOwnProperty('text')) {
@@ -1075,6 +1109,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                             newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].contents.bodymatter[indexes[4]] = res.data
                         } else if (newBodymatter[indexes[0]] && newBodymatter[indexes[0]].type == "groupedcontent"){
                             newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].contents.bodymatter[indexes[4]] = res.data
+                        } else if (newBodymatter[indexes[0]] && newBodymatter[indexes[0]].type == "showhide"){ // Block Poetry Inside SH
+                            newBodymatter[indexes[0]].interactivedata[asideParent?.showHideType][indexes[2]].contents.bodymatter[indexes[4]] = res.data 
                         }
 
                     } else {
@@ -1154,8 +1190,8 @@ function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
  * @param {*} action, type of action to be performed
  */
 export const setFormattingToolbar = (action) => {
-    let tinymceToolbar = document.querySelector('div#tinymceToolbar .tox-toolbar') ? document.querySelector('div#tinymceToolbar .tox-toolbar') : ""
-    let glossaryFootnoteToolbar = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar') : ""
+    let tinymceToolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary') ? document.querySelector('div#tinymceToolbar .tox-toolbar__primary') : ""
+    let glossaryFootnoteToolbar = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary') : ""
     switch (action) {
         case 'enableTinymceToolbar':
             tinymceToolbar && tinymceToolbar.classList.remove("toolbar-disabled");
@@ -1171,13 +1207,13 @@ export const setFormattingToolbar = (action) => {
             glossaryFootnoteToolbar && glossaryFootnoteToolbar.classList.add("disable");
             break;
         case 'removeTinymceSuperscript':
-            let tinymceSuperscript = document.querySelector('div#tinymceToolbar .tox-toolbar button[title="Superscript"]') ? document.querySelector('div#tinymceToolbar .tox-toolbar button[title="Superscript"]') : ""
+            let tinymceSuperscript = document.querySelector('div#tinymceToolbar .tox-toolbar__primary button[title="Superscript"]') ? document.querySelector('div#tinymceToolbar .tox-toolbar__primary button[title="Superscript"]') : ""
             tinymceSuperscript && tinymceSuperscript.removeAttribute('aria-pressed')
             tinymceSuperscript && tinymceSuperscript.classList.remove('tox-tbtn--enabled')
             tinymceSuperscript && tinymceSuperscript.classList.add('tox-tbtn--select')
             break;
         case 'removeGlossaryFootnoteSuperscript':
-            let isSuperscriptButton = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar button[title="Superscript"]') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar button[title="Superscript"]') : ""
+            let isSuperscriptButton = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary button[title="Superscript"]') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary button[title="Superscript"]') : ""
             isSuperscriptButton && isSuperscriptButton.removeAttribute('aria-pressed')
             isSuperscriptButton && isSuperscriptButton.classList.remove('tox-tbtn--enabled')
             isSuperscriptButton && isSuperscriptButton.classList.add('tox-tbtn--select')
@@ -1201,7 +1237,7 @@ export const showRemoveImageGlossaryPopup = (value) => (dispatch, getState) => {
 
 export const saveImageDataFromAlfresco = (message) => dispatch => {
     let imageData = message?.asset;
-    let epsURL = imageData.epsUrl ? imageData.epsUrl : "";
+    let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "" ;
     // let figureType = imageData?.content?.mimeType?.split('/')[0]
     let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
     let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
@@ -1248,7 +1284,10 @@ export const UpdateElementWorkId = () => {
         let glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         newElementWorkId = glossaryFootElem?.id;
     } else if ((tempIndex.length == 5 || tempIndex.length == 6) && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
-        let glossaryFootElem = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+        let glossaryFootElem;
+        if (asideParent.subtype === "workedexample" && tempIndex.length == 5 ) {
+           glossaryFootElem = newBodymatter[tempIndex[0]].interactivedata[asideParent.parent.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]]
+        } 
         newElementWorkId = glossaryFootElem?.id;
     } else {
         if (typeof (elementIndex) == 'number') {
@@ -1267,7 +1306,10 @@ export const UpdateElementWorkId = () => {
                     newElementWorkId = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]?.id;
                 }
             }
-            else if (indexesLen == 4) {
+            else if ((indexesLen == 4 ) && newBodymatter[indexes[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support index Entry in text elements inside WE/AS of S/H
+                newElementWorkId = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].id;
+            }
+            else if (indexesLen == 4 &&  newBodymatter[indexes[0]].type === "groupedcontent") {
                 newElementWorkId = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]]?.id;
             } else if (indexesLen == 5) {
                 newElementWorkId = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]?.id;
@@ -1286,4 +1328,16 @@ export const UpdateElementWorkId = () => {
             }
         })
     }
+}
+
+export const updateCurrentValue = (glossaryContentText, footnoteContentText) => {
+    store.dispatch({
+        type: UPDATE_CURRENT_VALUE,
+        payload:{
+            glossaryFootNoteCurrentValue: {
+                footnoteContentText,
+                glossaryContentText
+            }
+        }
+    })
 }

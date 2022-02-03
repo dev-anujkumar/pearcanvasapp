@@ -1,11 +1,12 @@
 
-import {OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY} from  '../constants/Action_Constants';
+import {OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES} from  '../constants/Action_Constants';
 
 const INITIAL_STATE = {
     markedIndexValue: { "type": "", "popUpStatus": false },
     markedIndexCurrentValue: '',
     elementIndex: '',
-    markedIndexGlossary: {popUpStatus: false,  indexEntries: {}, markedIndexEntryURN: '', }
+    markedIndexGlossary: {popUpStatus: false,  indexEntries: {}, markedIndexEntryURN: '', },
+    crossReferenceValues: []
 };
 
 const INITIAL_ACTION = {
@@ -28,6 +29,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 markedIndexGlossary: action.payload.markedIndexGlossary,
                 markedIndexCurrentValue: action.payload.markedIndexCurrentValue
+            }
+        case UPDATE_CROSS_REFERENCE_VALUES:
+            return {
+                ...state,
+                crossReferenceValues: action.payload.crossReferenceValues,
             }
         default:
             return state;

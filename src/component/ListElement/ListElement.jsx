@@ -6,6 +6,7 @@ import PopUp from '../../component/PopUp';
 import { showTocBlocker, showBlocker, hideTocBlocker,disableHeader } from '../../js/toggleLoader';
 // IMPORT - Assets //
 import '../../styles/ListElement/style.css'
+import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 
 export class ListElement extends Component {
     constructor(props) {
@@ -62,40 +63,42 @@ export class ListElement extends Component {
                         saveContent={this.listWarningConfirmation}
                     />
                 }
-                <TinyMceEditor
-                    openAssetPopoverPopUp={this.props.openAssetPopoverPopUp}
-                    openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
-                    index={this.props.index}
-                    elementId={this.props.elementId}
-                    element={this.props.element}
-                    placeholder={this.props.placeholder || "Type Something..."}
-                    className={className}
-                    model={wipModel || model}
-                    handleEditorFocus={this.props.handleFocus}
-                    onFocus={this.onFocus}
-                    handleBlur={this.props.handleBlur}
-                    onKeyup={this.onKeyup}
-                    onBlur={this.onBlur}
-                    onClick={this.onClick}
-                    slateLockInfo={slateLockInfo}
-                    onListSelect={this.props.onListSelect}
-                    permissions={this.props.permissions}
-                    glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                    showHideType={showHideType}
-                    togglePopup={this.togglePopup}
-                    innerIndex={this.props.innerIndex}
-                    id={this.props.currentElement?this.props.currentElement.id:null}
-                    activeShowHide={this.props.activeShowHide}
-                    createShowHideElement={this.props.createShowHideElement}
-                    currentElement={this.props.currentElement}
-                    deleteShowHideUnit={this.props.deleteShowHideUnit}
-                    handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
-                    handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
-                    showHideType = {this.props?.showHideType}
-                    openMarkedIndexPopUp={this.props.openMarkedIndexPopUp}
-                    markedIndexValue={this.props.markedIndexValue}
-                />
+                <KeyboardWrapper enable index={this.props.index}>
+                    <TinyMceEditor
+                        openAssetPopoverPopUp={this.props.openAssetPopoverPopUp}
+                        openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                        index={this.props.index}
+                        elementId={this.props.elementId}
+                        element={this.props.element}
+                        placeholder={this.props.placeholder || "Type Something..."}
+                        className={className}
+                        model={wipModel || model}
+                        handleEditorFocus={this.props.handleFocus}
+                        onFocus={this.onFocus}
+                        handleBlur={this.props.handleBlur}
+                        onKeyup={this.onKeyup}
+                        onBlur={this.onBlur}
+                        onClick={this.onClick}
+                        slateLockInfo={slateLockInfo}
+                        onListSelect={this.props.onListSelect}
+                        permissions={this.props.permissions}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        showHideType={showHideType}
+                        togglePopup={this.togglePopup}
+                        innerIndex={this.props.innerIndex}
+                        id={this.props.currentElement?this.props.currentElement.id:null}
+                        activeShowHide={this.props.activeShowHide}
+                        createShowHideElement={this.props.createShowHideElement}
+                        currentElement={this.props.currentElement}
+                        deleteShowHideUnit={this.props.deleteShowHideUnit}
+                        handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
+                        handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
+                        showHideType = {this.props?.showHideType}
+                        openMarkedIndexPopUp={this.props.openMarkedIndexPopUp}
+                        markedIndexValue={this.props.markedIndexValue}
+                    />
+                </KeyboardWrapper>
             </React.Fragment>
         )
     }

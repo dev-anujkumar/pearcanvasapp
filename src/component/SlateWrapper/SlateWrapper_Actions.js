@@ -16,14 +16,14 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     PAGE_NUMBER_LOADER,
-    WIRIS_ALT_TEXT_POPUP
-
+    WIRIS_ALT_TEXT_POPUP,
+    SLATE_FIGURE_ELEMENTS
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
@@ -36,14 +36,23 @@ import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
-
+import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
+import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
+import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
+const {
+    MANUAL_OVERRIDE,
+    NUMBERED_AND_LABEL
+} = AUTO_NUMBER_PROPERTIES;
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData,blockListDetails) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
-    let  popupSlateData = getState().appStore.popupSlateData
+    let  popupSlateData = getState().appStore.popupSlateData;
+    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
     let _requestData = {
@@ -64,6 +73,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     else if (parentUrn && parentUrn.elementType === 'group') {
         _requestData["parentType"] = "groupedcontent"
         _requestData["columnName"] = parentUrn.columnName
+    }
+    if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
+        _requestData["isAutoNumberingEnabled"] = true;
     }
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
@@ -247,6 +259,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         })
                     })
                 }
+                /* To update redux store while creating new element inside SH->Block Poetry->Stanza */
+                else if(poetryData?.parent?.type === "showhide" && item.id === poetryData?.parent?.id){
+                    item?.interactivedata[poetryData?.parent?.showHideType].map((ele) => {
+                        if(ele?.id === poetryData?.id) {
+                            ele?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                        }
+                    });
+                }
             })  
         }
         else if (asideData && asideData.type === 'groupedcontent') {
@@ -267,50 +287,102 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         /*  Local store update for block list and Text inside block list for multiple levels. */
         else if((type==='MANIFEST_LIST' || type==='TEXT') && blockListDetails!==null){
             const indexes = blockListDetails.indexOrder.split('-');
-            let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter;
-            if(indexes.length===3){ // Block list on 1 level nesting
-             initialdata.splice(index, 0, createdElementData)
+            let initialdata = {};
+            if(asideData.parent && asideData.parent.type === "showhide"){
+                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
+                 if (indexes.length === 5) { // Block list on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 7) { // Block list on 2 level nesting
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 9) { // Block list on 3 level nesting
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // level 4 
+                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
             }
-            else if(indexes.length===5){ // Block list on 2 level nesting
-             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter.splice(index, 0, createdElementData)
-            }
-            else if(indexes.length===7){ // Block list on 3 level nesting
-             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
-            }
-            else{ // level 4 
-             initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+            else{
+                let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter;
+                if (indexes.length === 3) { // Block list on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 5) { // Block list on 2 level nesting
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 7) { // Block list on 3 level nesting
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // level 4 
+                    initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
             }
          } 
          /*  Local store update for manifest list item inside block list for multiple levels. */
          else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="ENTER"){
              const indexes = blockListDetails.indexOrder.split('-');
-             let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
-             if(indexes.length===3){ // Manifest List Item on 1 level nesting
-              initialdata.splice(index, 0, createdElementData)
+             let initialdata = {};
+             if(asideData.parent && asideData.parent.type === "showhide"){
+                  initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
+                 if (indexes.length === 5) { // Block list on 1 level nesting
+                     initialdata.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 7) { // Manifest List Item on 2 level nesting
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 9) { // Manifest List Item on 3 level nesting
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else { // Manifest List Item on 4 level nesting
+                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
              }
-             else if(indexes.length===5){ // Manifest List Item on 2 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
-             else if(indexes.length===7){ // Manifest List Item on 3 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
-             else{ // Manifest List Item on 4 level nesting
-                 initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
+            else{
+                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
+                 if (indexes.length === 3) { // Manifest List Item on 1 level nesting
+                     initialdata.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 5) { // Manifest List Item on 2 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 7) { // Manifest List Item on 3 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else { // Manifest List Item on 4 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+            }
+            
           } 
          /*  Local store update for manifest list item inside block list for multiple levels. */
           else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="SHIFT+TAB"){
              const indexes = blockListDetails.indexOrder.split('-');
-             let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
-             if(indexes.length===5){ // Manifest List Item on 1 level nesting
-              initialdata.splice(index, 0, createdElementData)
+             let initialdata = {};
+             if(asideData.parent && asideData.parent.type === "showhide"){
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
+                if (indexes.length === 7) { // Manifest List Item on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 9) { // Manifest List Item on 2 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // Manifest List Item on 3 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
              }
-             else if(indexes.length===7){ // Manifest List Item on 2 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
-             else{ // Manifest List Item on 3 level nesting
-              initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
-             }
+            else{
+                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
+                 if (indexes.length === 5) { // Manifest List Item on 1 level nesting
+                     initialdata.splice(index, 0, createdElementData)
+                 }
+                 else if (indexes.length === 7) { // Manifest List Item on 2 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+                 else { // Manifest List Item on 3 level nesting
+                     initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                 }
+            }
           } 
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
@@ -333,7 +405,22 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
-        
+        /** ---------------------------- Auto-Numbering handling ------------------------------*/
+        if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
+            const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
+            let slateFigures = getImagesInsideSlates(bodyMatter);
+            if (slateFigures) {
+                dispatch({
+                    type: SLATE_FIGURE_ELEMENTS,
+                    payload: {
+                        slateFigures
+                    }
+                });
+            }
+
+            dispatch(handleAutonumberingOnCreate(type, createdElementData));
+        }
+        /**------------------------------------------------------------------------------------------------*/
         if (cb) {
             cb();
         }   
@@ -375,9 +462,9 @@ export const appendElementInsideShowhide = (shObj, key, asideData, innerkey, ind
  * @param {Array} powerPasteData Elements to be pasted
  * @param {Number} index index of insertion
  */
-export const createPowerPasteElements = (powerPasteData, index) => async (dispatch, getState) => {
+export const createPowerPasteElements = (powerPasteData, index, parentUrn, asideData) => async (dispatch, getState) => {
     let data = []
-    let slateEntityUrn = config.slateEntityURN
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || config.slateEntityURN
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -413,8 +500,8 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
         while (indexOfElement < response.data.length) {
             if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1){
                 const containerElement = {
-                    asideData: null,
-                    parentUrn: null,
+                    asideData: asideData?asideData:null,
+                    parentUrn: parentUrn?parentUrn:null,
                     poetryData: null
                 };
                 const slateData = {
@@ -440,7 +527,28 @@ export const createPowerPasteElements = (powerPasteData, index) => async (dispat
             return false;
         }
 
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data); 
+        if (asideData && asideData.type === 'groupedcontent') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
+                if (item.id === asideData.id) {
+                    item.groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter.splice(index, 0, ...response.data)
+                }
+            })
+        } else if (asideData && asideData.type == 'element-aside') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == parentUrn.manifestUrn) {
+                    item.elementdata.bodymatter.splice(index, 0, ...response.data)
+                } else if (item.type == "element-aside" && item.id == asideData.id) {
+                    item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
+                        if (ele.id === parentUrn.manifestUrn) {
+                            ele.contents.bodymatter.splice(index, 0, ...response.data)
+                        }
+                    })
+                }
+            })
+        }
+        else {
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data);
+        }
         
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
@@ -607,6 +715,13 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                                 })
 
                             })
+                        // handling local redux state for swapping of stanzas inside SH->Poetry  
+                        } else if (element?.type === "showhide" && sectionType) {
+                            element?.interactivedata[sectionType].forEach((eachElement)=>{
+                                if(eachElement?.type === "poetry" && eachElement?.id === poetryId) {
+                                    eachElement.contents.bodymatter.move(oldIndex, newIndex);
+                                }
+                            });
                         }
                     });
                 }
@@ -633,8 +748,16 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                         slateLevelData: newParentData,
                     }
                 })
-
-
+                /** ---------------------------- Auto-Numbering handling ------------------------------*/
+                const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+                const params = {
+                    getState,
+                    dispatch,
+                    currentSlateData: newParentData[slateId],
+                    swappedElementData
+                }
+                handleAutoNumberingOnSwapping(isAutoNumberingEnabled, params)
+                /**-----------------------------------------------------------------------------------*/
                 cb(newParentData)
             }
 
@@ -1026,6 +1149,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
+        const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
 
         let slateEntityUrn = config.slateEntityURN;
         if(parentUrn && 'contentUrn' in parentUrn) { //sectionType && 
@@ -1124,12 +1248,33 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
 
-        if(selection.element.type === "figure") {
+        if (selection.element.type === "figure") {
             _requestData = {
                 "content": [{
                     ..._requestData.content[0],
                     "figuredata": selection.element.figuredata
                 }]
+            }
+            // Check for autonumbering parameters needs to send or not in request
+            if (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(selection?.element?.figuretype)) {
+                if (selection?.element.hasOwnProperty(MANUAL_OVERRIDE) && selection?.element[MANUAL_OVERRIDE] !== undefined && Object.keys(selection?.element[MANUAL_OVERRIDE])?.length > 0) {
+                    _requestData = {
+                        "content": [{
+                            ..._requestData.content[0],
+                            'displayedlabel': selection?.element?.displayedlabel,
+                            'manualoverride': selection?.element[MANUAL_OVERRIDE],
+                            'numberedandlabel': selection?.element[NUMBERED_AND_LABEL]
+                        }]
+                    }
+                } else {
+                    _requestData = {
+                        "content": [{
+                            ..._requestData.content[0],
+                            'displayedlabel': selection?.element?.displayedlabel,
+                            'numberedandlabel': selection?.element[NUMBERED_AND_LABEL]
+                        }]
+                    }
+                }
             }
         }
 
@@ -1154,6 +1299,9 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             if (sectionType || (asideData?.sectionType)) {
                 let section = sectionType ? sectionType : asideData?.sectionType;
                 _requestData.content[0].sectionType = section;
+            }
+            if (selection?.element?.type === 'element-aside' && selection?.element?.html?.title) {
+                _requestData.content[0].html = selection.element.html
             }
         }
 
@@ -1228,6 +1376,32 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     let tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
                     if (selection?.operationType === 'copy' || (selection?.operationType === 'cut' && responseData[0]?.status === 'wip')) {
                         callCutCopySnapshotAPI(tcmSnapshotPayload)
+                    }
+                }
+                if (selection?.element?.type === 'element-aside') {
+                    const { element } = selection;
+                    let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false;
+                    const newToggleValue = hasAsideTitleData ? true : false;
+                    const asideTitleData = getState()?.appStore?.asideTitleData
+                    const setFieldsForAside = (elem, titleData) => {
+                        if (elem && titleData) {
+                            const asideObj = titleData.filter(obj => {
+                                return obj.elementId === elem.id;
+                            })
+                            if (asideObj.length) {
+                                return asideObj[0].isAsideNumber;
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    const asideTitleStatus = setFieldsForAside(element, asideTitleData)
+                    dispatch(enableAsideNumbering(newToggleValue, element.id));
+                    if (asideTitleStatus) {
+                        dispatch(enableAsideNumbering(asideTitleStatus, responseData[0]?.id));
                     }
                 }
                 /******************************/

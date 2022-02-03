@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { conversionElement, setBCEMetadata ,updateBlockListMetadata,updateContainerMetadata} from './Sidebar_Action';
+import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateContainerMetadata, enableAsideNumbering } from './Sidebar_Action';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
@@ -49,7 +49,7 @@ class Sidebar extends Component {
             bceNumberStartFrom: startNumber,
             podOption: false,
             podValue: podwidth,
-            usageType: this.props.activeElement.usageType
+            usageType: this.props.activeElement.usageType,
         };
     }
 
@@ -69,7 +69,7 @@ class Sidebar extends Component {
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false
             }
-
+            
             return {
                 elementDropdown: elementDropdown,
                 activeElementId: nextProps.activeElement.elementId,
@@ -82,12 +82,28 @@ class Sidebar extends Component {
                 syntaxHighlightingToggleValue: nextProps.activeElement.syntaxhighlighting,
                 podValue: podValue,
                 podOption: podOption,
-                usageType: nextProps.activeElement.usageType
+                usageType: nextProps.activeElement.usageType,
             };
         }
 
         return null;
     }
+
+    setToggleForAside = (activeElement, asideTitleData) => {
+        if (activeElement && asideTitleData) {
+            const asideObj = asideTitleData.filter(obj => {
+                return obj.elementId === activeElement.elementId;
+              })
+            if (asideObj.length) {
+                return asideObj[0].isAsideNumber;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     handlePrimaryOptionChange = (e) => {
       let value = e.target.getAttribute("data-value");
       let secondaryelementList =
@@ -103,7 +119,7 @@ class Sidebar extends Component {
         podValue: POD_DEFAULT_VALUE,
         podOption: false,
       });
-
+      const {asideData} = this.props;
       if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
         if (this.props.activeElement.elementWipType == "manifestlist") {
         let blockListMetaDataPayload = {
@@ -119,10 +135,11 @@ class Sidebar extends Component {
             labelText,
             blockListElement:true,
             toolbar: elementList[this.state.activeElementType][value].toolbar,
-            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-")[0],
+            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
             dataToSend:{
                 columnnumber : value.split('-')[value.split('-').length-1]
-            }
+            },
+            asideData:asideData
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
@@ -417,6 +434,11 @@ class Sidebar extends Component {
     }
 
     attributions = () => {
+        let toggleAsideNumber = false;
+        if (this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample") {
+            toggleAsideNumber = this.setToggleForAside(this.props.activeElement, this.props.asideTitleData);
+        }
+        let hasAsideTitleData = this.props?.activeElement?.asideNumber || false;
         let attributions = '';
         let attributionsObject = {};
         let attributionsList = [];
@@ -521,6 +543,15 @@ class Sidebar extends Component {
                 </div>
                 return attributions;
             }
+            if ((this.props.activeElement.elementType === "element-aside" || this.props.activeElement.elementType === "element-workedexample")) {
+               attributions = <div className="asideNumberHeading">
+                    <div className="toggleAsideNumber">Label, Number, Title</div>
+                    <div className="setting-value" onClick={() => this.handleAsideNumber(toggleAsideNumber)}>
+                        <div className={`asideSlider ${toggleAsideNumber ? 'on' : 'off'}${hasAsideTitleData === true ? ' disabled-toggle' : ''}`}></div>
+                    </div>
+                </div>
+                return attributions;
+            }
 
             attributions = <div className="attributions">
                 {attributions}
@@ -550,6 +581,17 @@ class Sidebar extends Component {
         if (regex.test(e.target.value)) {
             this.props.setBCEMetadata('startNumber', e.target.value);
             this.setState({ bceNumberStartFrom: e.target.value })
+        }
+    }
+
+    handleAsideNumber = (toggleAsideNumber) => {
+        let hasAsideTitleData = this.props?.activeElement?.asideNumber || false;
+        if(hasAsideTitleData === true){
+            return false
+        }
+        if (!hasReviewerRole() && !config.savingInProgress) {
+            let newToggleValue = toggleAsideNumber;
+            this.props.enableAsideNumbering(!newToggleValue, this.state.activeElementId);
         }
     }
 
@@ -599,7 +641,7 @@ class Sidebar extends Component {
     handleSyntaxHighligtingRemove = () => {
         //remove all formatting from code
 
-        tinymce.$(`[data-id='${this.props.activeElement.elementId}'] .codeNoHighlightLineWrapper span.codeNoHighlightLine`).each(function () {
+        tinymce.$(`[data-id='${this.props.activeElement.elementId}'] .figureCodeContent span.codeNoHighlightLine`).each(function () {
             // this.innerHTML = this.innerText;
             let boldTags = this.getElementsByTagName('STRONG');
             while (boldTags.length) {
@@ -848,7 +890,9 @@ const mapStateToProps = state => {
         isTCMCanvasPopupLaunched: state.tcmReducer.isTCMCanvasPopupLaunched,
         tcmSnapshotData: state.tcmReducer.tcmSnapshotData,
         elementData: state.tcmReducer.elementData,
-        tcmStatus: state.tcmReducer.tcmStatus
+        tcmStatus: state.tcmReducer.tcmStatus,
+        asideData:state.appStore.asideData,
+        asideTitleData: state.appStore.asideTitleData
     };
 };
 
@@ -861,6 +905,7 @@ export default connect(
         setBCEMetadata,
         tcmButtonHandler,
         updateContainerMetadata,
-        updateBlockListMetadata
+        updateBlockListMetadata,
+        enableAsideNumbering
     }
 )(Sidebar);

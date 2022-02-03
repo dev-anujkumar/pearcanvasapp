@@ -15,7 +15,8 @@ const INIT_STATE = {
         externalLF:[]
     },
     currentSlateLF:"",
-    loWarningPopupData: {}
+    loWarningPopupData: {},
+    lastAlignedExternalLO:{}
 }
 
 const INITIAL_ACTION = {
@@ -30,6 +31,11 @@ export default function (state = INIT_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 currentSlateLOData: action.payload.currentSlateLOData
+            }
+        case "UPDATE_LAST_ALIGNED_LO":
+            return {
+                ...state,
+                lastAlignedExternalLO: action.payload.lastAlignedExternalLO
             }
         case SLATE_TAG_ENABLE:
             return {

@@ -21,11 +21,11 @@ padding:0px;
 code.cypress-editable.language-none{
     padding: 0px!important;
 }
-code .codeNoHighlightLine{
+/* code .codeNoHighlightLine{
     display: block;
     min-height: 22px;
     color: #000;
-}
+} */
 /* .figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing.language-none .cypress-editable{
     padding: 10px!important;
     
@@ -105,6 +105,13 @@ figure,.element-container{
 .divCodeSnippetFigure.blockCodeFigure .figureCodeSnippet .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing .cypress-editable{
     line-height: 25px;
     display: table;
+}
+
+.divImageActualSize, .divImageActualSizeTableImage, .divImageActualSizeMathImage{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
 }
 
 /* figure 25% image*/
@@ -270,6 +277,12 @@ img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage
     list-style:inherit !important;
     display: list-item;
     text-align: -webkit-match-parent;
+}
+
+.pearson-component.image.figureData.table-figure-data ul li.listItemNumeroUnoBullet::before{
+    counter-increment: section;
+    content: counter(section, disc);
+    font-size: 0px;
 }
 .pearson-component.image.figureData.table-figure-data ol li{
     list-style:inherit !important; 

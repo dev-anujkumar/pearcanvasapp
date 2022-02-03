@@ -49,6 +49,7 @@ export const ERROR_CREATING_ASSETPOPOVER = "You can not apply Asset PopOver over
 export const CHANGE_ASSESSMENT_TYPE="Changing the Assessment type will lead to a change in the Assessment picker options for this embedded assessment.";
 export const OWNER_SLATE_POPUP ="If you make a change to this content, it will apply to all its children. Do you still want to proceed?";
 export const DO_NOT_SHOW_TXT="Do not show this message again";
+export const ERROR_DELETING_MANIFEST_LIST_ITEM="The list item can not be deleted if it contains a child Block List. Please delete the child Block List to complete the delete action.";
 /*****************************TOC Delete Popup Dialog text***************************/
 export const SINGLE_CONTAINER_DELETE = 'A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
 export const WITH_PENDING_TRACK = ' Are you sure you want to delete this slate/container with pending changes?'

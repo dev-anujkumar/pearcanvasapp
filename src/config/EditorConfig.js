@@ -1,5 +1,8 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss';
 import 'tinymce/plugins/charmap/plugin.min.js';
+// import 'tinymce/plugins/tinymcespellchecker/plugin.min.js';
+import 'tinymce/plugins/casechange/plugin.min.js';
+import 'tinymce/plugins/spellchecker/plugin.min.js';
 import { checkBlockListElement, handleC2MediaClick } from '../js/TinyMceUtility.js';
 import ElementConstants from '../component/ElementContainer/ElementConstants.js';
 export const EditorConfig = {
@@ -25,9 +28,9 @@ export const EditorConfig = {
             { selector: 'span', remove: 'empty', split: false }
           ]
     },
-    toolbar: 'undo redo | insertMedia | formatSelector | bold italic underline strikethrough removeformat subscript superscript specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code IndexEntry | customListButton customUoListButton indent outdent | slateTag ',
+    toolbar: 'undo redo | insertMedia | formatSelector | casechange bold italic underline strikethrough removeformat subscript superscript specialcharacters Alignment calloutIcon | crossLinkingIcon Glossary Footnote tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code IndexEntry | customListButton customUoListButton indent outdent | slateTag ',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image",
+    plugins: "lists advlist placeholder charmap paste tiny_mce_wiris image casechange",
 }
 
 export const GlossaryFootnoteEditorConfig = {
@@ -159,10 +162,11 @@ export const elementTypeOptions = Object.freeze({
 /** -------------------------------- Insert-Media Toolbar Handling -------------------------------- */
 /** Insert Image handler - calls Image Alfresco Picker */
 const insertImageHandler = (params) => {
-    let { element, permissions, editor } = params;
+    let { element, permissions, editor ,props} = params;
     let blockListData = checkBlockListElement(params.props, "TAB");
-    if (element?.type === ElementConstants.ELEMENT_LIST || (element?.type === ElementConstants.AUTHORED_TEXT && blockListData && Object.keys(blockListData).length)) {
-        handleC2MediaClick(permissions, editor, element);
+    let allowedElementTypes = [ElementConstants.ELEMENT_LIST,ElementConstants.AUTHORED_TEXT,ElementConstants.LEARNING_OBJECTIVE_ITEM,ElementConstants.BLOCKFEATURE];
+    if (allowedElementTypes.indexOf(element?.type) > -1) {
+        handleC2MediaClick(permissions, editor, element, props.saveSelectedAlfrescoElement);
     }
 }
 /** Insert Media-Selector Dropdown Handler */

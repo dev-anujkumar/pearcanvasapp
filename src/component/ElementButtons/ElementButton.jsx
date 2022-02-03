@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import '../../styles/ElementButtons/ElementButton.css'
 
 import buttonTypes from './ButtonTypes.js'
-
+import Tooltip from '../Tooltip';
 import { 
     stageDirectionIcon,
     dialougeElementIcon,
@@ -14,7 +14,9 @@ import {
     openerElement, 
     noteFlag , 
     tcmIcon, 
-    addNote, 
+    addNote,
+    viewNote,
+    editInCypressPlus,
     textIcon, 
     imageIcon, 
     interativeIcon, 
@@ -67,9 +69,14 @@ class ElementButton extends Component {
                     {addNote}
                     </span>
                 break;
-            case buttonTypes.COMMENT_FLAG:
-                buttonJSX = <span className={`btn-element small flag-icon ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
-                    {noteFlag}
+            case buttonTypes.EDIT_BUTTON_CYPRESSSPLUS:
+                buttonJSX = <Tooltip direction='picker' tooltipText="Edit in Cypress+"><span className={`btn-element small ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
+                    {editInCypressPlus}
+                </span></Tooltip>
+                break;
+            case buttonTypes.VIEW_COMMENT:
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
+                    {viewNote}
                     </span>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
