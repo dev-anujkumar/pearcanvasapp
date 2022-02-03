@@ -247,9 +247,10 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
 /**
  * This method is used to rescrit spell check for specific element
  */
-export const restrictSpellCheck = (props) => {
-    return !(props?.element?.figuretype === 'codelisting' && (/-3$/.test(props?.index)))
-}
+// PCAT-2426 - This may be used with tinymcespellchecker pro version but not required with browser spellcheck
+// export const restrictSpellCheck = (props) => {
+//     return !(props?.element?.figuretype === 'codelisting' && (/-3$/.test(props?.index)))
+// }
 
 /**
  * This method is used to check current active element

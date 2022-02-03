@@ -72,6 +72,7 @@ export class TinyMceEditor extends Component {
         this.editorConfig = {
             // spellchecker_rpc_url: cypressConfig.TINYMCE_SPELL_CHECKER_URL,
             plugins: this.handleTinymcePlugins(),
+            browser_spellcheck: this.tinymceSpellCheckStatus(),
             selector: '#cypress-0',
             inline: true,
             formats: EditorConfig.formats,
@@ -324,11 +325,20 @@ export class TinyMceEditor extends Component {
      * @returns {String} Tinymce plugins list
      */
     handleTinymcePlugins = () => {
-        // const { spellCheckToggle } = this.props;
+        const { spellCheckToggle } = this.props;
         let plugins = EditorConfig.plugins;
         // adding tinymce spellchecker plugin if spell checker option is active from project settings
-        // if (spellCheckToggle && restrictSpellCheck(this.props)) plugins = `${plugins} tinymcespellchecker`;
+        if (this.tinymceSpellCheckStatus()) plugins = `${plugins} spellchecker`;
         return plugins;
+    }
+
+    /**
+     * function to provide the status of tinymce spell check option
+     * @returns {Boolean} tinymce spell check status
+     */
+     tinymceSpellCheckStatus = () => {
+        const { spellCheckToggle } = this.props;
+        return spellCheckToggle;
     }
 
     /**
@@ -4338,7 +4348,8 @@ const mapStateToProps = (state) => {
         slateLevelData: state.appStore.slateLevelData,
         asideData: state.appStore.asideData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
-        autoNumberOption: state.autoNumberReducer.autoNumberOption
+        autoNumberOption: state.autoNumberReducer.autoNumberOption,
+        spellCheckToggle: state.toolbarReducer.spellCheckToggle
     }
 }
 
