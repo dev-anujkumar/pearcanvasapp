@@ -12,10 +12,23 @@ import {
     UPDATE_ASSIGNEE,
     DELETE_COMMENT,
     ERROR_POPUP,
-    UPDATE_ROLE
+    UPDATE_ROLE,
+    ADD_NEW_COMMENT
 } from '../../constants/Action_Constants';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action';
+
+
+export const addNewComment = (payload) => ({
+    type: ADD_NEW_COMMENT,
+    payload
+});
+
+
+export const deleteComment = (payload) => ({
+    type: DELETE_COMMENT,
+    payload
+});
 
 
 /**
@@ -243,32 +256,6 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 
 }
 
-/**
- * 
- *@discription - This function is to delete the comment of the project 
-  @param {String} commentUrn - Comment urn of comment to reply
-  @param {String} elementId -elementId of the element
-*/
-
-export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => {
-    let url = `${config.REACT_APP_API_URL}v2/narrative/container/${elementId}/comment/${commentUrn}`
-    return axios.delete(url,
-        {
-            headers: {
-                "Content-Type": "application/json",
-                PearsonSSOSession: config.ssoToken
-            }
-        }).then(response => {
-            dispatch({
-                type: DELETE_COMMENT,
-                payload: commentUrn
-            });
-        }).catch(error => {
-            dispatch({ type: ERROR_POPUP, payload: { show: true } })
-            console.log("error while deleting user", error);
-        })
-
-}
 
 export const updateRole = (commentUrn, newRole, elementId) => dispatch => {
     let url = `${config.NARRATIVE_API_ENDPOINT}narrative/v1/comment/role`
