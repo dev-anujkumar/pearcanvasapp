@@ -34,6 +34,7 @@ class Sidebar extends Component {
         let podwidth = this.props.activeElement.podwidth;
         this.state = {
             elementDropdown: '',
+            fontBulletElementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
             activeElementType: elementType,
             activePrimaryOption: primaryFirstOption,
@@ -56,22 +57,19 @@ class Sidebar extends Component {
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if (Object.keys(nextProps.activeElement).length > 0) {
             let elementDropdown = prevState.elementDropdown;
-            //let numberStartFrom = prevState.bceNumberStartFrom;
-            //let bceToggle = prevState.bceToggleValue;
-            //let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
+            let fontBulletElementDropdown = prevState.fontBulletElementDropdown;
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
-                //numberStartFrom = nextProps.activeElement.startNumber;
-                //bceToggle = nextProps.activeElement.numbered;
-                //bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
+                fontBulletElementDropdown = "";
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false
             }
             
             return {
                 elementDropdown: elementDropdown,
+                fontBulletElementDropdown,
                 activeElementId: nextProps.activeElement.elementId,
                 activeElementType: nextProps.activeElement.elementType,
                 activePrimaryOption: nextProps.activeElement.primaryOption,
@@ -113,6 +111,7 @@ class Sidebar extends Component {
 
       this.setState({
         elementDropdown: "",
+        fontBulletElementDropdown: "",
         activePrimaryOption: value,
         activeSecondaryOption: secondaryFirstOption,
         activeLabelText: labelText,
@@ -167,11 +166,18 @@ class Sidebar extends Component {
             }
         }
         let elementDropdown = e.target.getAttribute('data-element');
-        if (this.state.elementDropdown === elementDropdown) {
-            elementDropdown = '';
-        }
+        if (elementDropdown == 'primary') {
+            if(this.state.elementDropdown === elementDropdown) {
+                elementDropdown = '';
+            }
+            this.setState({elementDropdown});
+        } else if (elementDropdown == 'font' || elementDropdown == 'bullet'){
+            if(this.state.fontBulletElementDropdown === elementDropdown) {
+                elementDropdown = '';
+            }
+            this.setState({fontBulletElementDropdown: elementDropdown});
+        } 
         this.setState({
-            elementDropdown,
             podOption: false
         });
     }
@@ -238,6 +244,50 @@ class Sidebar extends Component {
 
     }
 
+    fontPrimaryOption = (data) => {
+        // const { activePrimaryOption } = this.state
+        let dataElement;
+        let fontBulletOptions = '';
+        let fontBulletOptionObject = [];
+
+        if(data === "fontStyle") {
+            fontBulletOptionObject = elementList[data];
+            dataElement = "font"
+        } else if(data === "bulletIcon") {
+            fontBulletOptionObject = elementList[data];
+            dataElement = "bullet"
+        }
+
+        let className = ""
+        let fontBulletOptionList = Object.keys(fontBulletOptionObject);
+        fontBulletOptions = fontBulletOptionList.map(item => {
+            return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
+                {fontBulletOptionObject[item].text}    
+            </li>;
+        });
+
+        let active = '';
+        if (data == "fontStyle" && this.state.fontBulletElementDropdown === 'font') {
+            active = 'active';
+        } else if (data == "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet'){
+            active = 'active';
+        }
+        const sidebarDisableCondition = ((this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+        
+        fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
+            className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
+            <div className={`element-dropdown-title ${className}`} data-element= {`${dataElement}`} onClick={this.toggleElementDropdown}>
+                {fontBulletOptionObject[this.state.activefontBulletOption]?.text}
+                {/* {disabledfontBulletOption.indexOf(activefontBulletOption) > -1 ? null : dropdownArrow} */}
+            </div>
+            <ul className={`element-dropdown-content primary-options  ${active}`}>
+                {fontBulletOptions}
+            </ul>
+        </div> : null;
+        
+        return fontBulletOptions;
+    }
+    
     showUpdateAssessmentTypePopup=()=>{
         this.props.showCanvasBlocker(true);
         hideToc();
@@ -839,6 +889,8 @@ class Sidebar extends Component {
     }  
 
     render = () => {
+
+
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
@@ -850,6 +902,12 @@ class Sidebar extends Component {
                     {this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
+                    {this.state.activeElementType ==="manifestlist" && <div>
+                    <div className="canvas-sidebar-font-type">Font Type</div>
+                    {this.fontPrimaryOption("fontStyle")}
+                    <div className="canvas-sidebar-bullet-type">Bullet Style</div>
+                    {this.fontPrimaryOption("bulletIcon")}
+                    </div>}
                 </div>
                 }
                 {this.props.isTCMCanvasPopupLaunched &&
