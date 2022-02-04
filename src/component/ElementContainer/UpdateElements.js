@@ -176,6 +176,11 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = previousElementData?.displayedlabel;
+    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+        displayedlabel = titleText;
+    } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+        displayedlabel = getValueOfLabel(previousElementData?.figuretype);
+    }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
