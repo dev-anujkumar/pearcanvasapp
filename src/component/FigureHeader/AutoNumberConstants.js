@@ -145,6 +145,6 @@ export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUD
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive']
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
 export const displayLabelsForAudioVideo = ['Audio', 'Video'];
-export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM'];
+export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'TABLE_EDITOR'];
 
 export const autoNumberFieldsPlaceholders = ['Number', 'Label']

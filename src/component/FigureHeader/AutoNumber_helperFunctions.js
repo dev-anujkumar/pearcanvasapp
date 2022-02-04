@@ -7,7 +7,7 @@ import {
 import {getAutoNumberSequence} from './AutoNumberActions';
 import { findNearestElement } from './AutoNumberCreate_helper';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
-import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE } from '../../constants/Element_Constants';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE, TABLE_AS_MARKUP } from '../../constants/Element_Constants';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL,
@@ -147,6 +147,9 @@ export const getValueOfLabel = (figuretype) => {
             break;
         case INTERACTIVE:
             label = 'Interactive';
+            break;
+        case TABLE_AS_MARKUP:
+            label = 'Table';
             break;
         default:
             label = '';
