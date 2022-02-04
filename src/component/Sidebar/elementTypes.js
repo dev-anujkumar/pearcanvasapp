@@ -542,6 +542,83 @@ export default {
         },
         enumType: 'blocklist',
     },
+
+    'fontStyle': {
+        'font-style-1': {
+            text: 'Font Type 1',
+            enum: 'FONT_TYPE_1',
+            toolbar: ['insertMedia'],
+            // subtype: {
+            //     'font-style-1': {
+            //         text: 'FONT TYPE 1',
+            //         labelText: 'P',
+            //         enum: 'NA',
+            //     }
+            // }
+        },
+        'font-style-2': {
+            text: 'Font Type 2',
+            enum: 'FONT_TYPE_2',
+            // toolbar: ['insertMedia'],
+            // subtype: {
+            //     'font-style-2': {
+            //         text: 'FONT TYPE 2',
+            //         labelText: 'P',
+            //         enum: 'NA',
+            //     }
+            // }
+        },
+        'font-style-3': {
+            text: 'Font Type 3',
+            enum: 'FONT_TYPE_3',
+            // toolbar: ['insertMedia'],
+            // subtype: {
+            //     'font-style-3': {
+            //         text: 'FONT TYPE 3',
+            //         labelText: 'P',
+            //         enum: 'NA',
+            //     }
+            // }
+        },
+        'font-style-4': {
+            text: 'Font Type 4',
+            enum: 'FONT_TYPE_4',
+            // toolbar: ['insertMedia'],
+            // subtype: {
+            //     'font-style-4': {
+            //         text: 'FONT TYPE 4',
+            //         labelText: 'P',
+            //         enum: 'NA',
+            //     }
+            // }
+        },
+        enumType: 'blocklist',
+    },
+
+    'bulletIcon': {
+        'bullet-color-1': {
+            text: 'Bullet Color 1',
+            enum: 'BULLET_COLOR_1',
+            toolbar: ['insertMedia']
+        },
+        'bullet-color-2': {
+            text: 'Bullet Color 2',
+            enum: 'BULLET_COLOR_2',
+            // toolbar: ['insertMedia'],
+        },
+        'bullet-color-3': {
+            text: 'Bullet Color 3',
+            enum: 'BULLET_COLOR_3',
+            // toolbar: ['insertMedia'],
+        },
+        'bullet-color-4': {
+            text: 'Bullet Color 4',
+            enum: 'BULLET_COLOR_4',
+            // toolbar: ['insertMedia'],
+        },
+        enumType: 'blocklist',
+    },
+
     'element-aside': {
         'primary-aside-aside': {
             text: 'Aside',

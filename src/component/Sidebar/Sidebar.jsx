@@ -38,6 +38,8 @@ class Sidebar extends Component {
             activeElementId: this.props.activeElement.elementId || "",
             activeElementType: elementType,
             activePrimaryOption: primaryFirstOption,
+            activefontStyle: "Font Type 1" ,
+            activebulletIcon: "Bullet Color 1",
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
             attrInput: "",
@@ -73,7 +75,9 @@ class Sidebar extends Component {
                 activeElementId: nextProps.activeElement.elementId,
                 activeElementType: nextProps.activeElement.elementType,
                 activePrimaryOption: nextProps.activeElement.primaryOption,
-                activeSecondaryOption: nextProps.activeElement.secondaryOption,
+                activefontStyle: nextProps.activeElement.fontStyle,
+                activebulletIcon: nextProps.activeElement.bulletIcon,
+                activeSecondaryOption: nextProps.activeElement.secondaryOption,         
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom: nextProps.activeElement.startNumber,
                 bceToggleValue: nextProps.activeElement.numbered,
@@ -113,6 +117,8 @@ class Sidebar extends Component {
         elementDropdown: "",
         fontBulletElementDropdown: "",
         activePrimaryOption: value,
+        // activefontStyle: value,
+        // activebulletIcon: value,
         activeSecondaryOption: secondaryFirstOption,
         activeLabelText: labelText,
         podValue: POD_DEFAULT_VALUE,
@@ -128,6 +134,7 @@ class Sidebar extends Component {
             },
             elementType: this.state.activeElementType,
             primaryOption: value,
+            fontBulletOption: value,
             secondaryOption: secondaryFirstOption,
             elementWipType: this.props.activeElement.elementWipType,
             index: this.props.activeElement.index,
@@ -136,7 +143,8 @@ class Sidebar extends Component {
             toolbar: elementList[this.state.activeElementType][value].toolbar,
             slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
             dataToSend:{
-                columnnumber : value.split('-')[value.split('-').length-1]
+                columnnumber : value.split('-')[value.split('-').length-1],
+                // fontnumber : value.split('-')[value.split('-').length-1]
             },
             asideData:asideData
           }
@@ -146,6 +154,7 @@ class Sidebar extends Component {
             elementId: this.props.activeElement.elementId,
             elementType: this.state.activeElementType,
             primaryOption: value,
+            fontBulletOption: value,
             secondaryOption: secondaryFirstOption,
             labelText,
             toolbar: elementList[this.state.activeElementType][value].toolbar,
@@ -244,18 +253,20 @@ class Sidebar extends Component {
 
     }
 
-    fontPrimaryOption = (data) => {
-        // const { activePrimaryOption } = this.state
+    fontBulletOption = (data) => {
+        let dataValue = "";
         let dataElement;
         let fontBulletOptions = '';
         let fontBulletOptionObject = [];
 
         if(data === "fontStyle") {
             fontBulletOptionObject = elementList[data];
-            dataElement = "font"
+            dataElement = "font",
+            dataValue =  this.state.activefontStyle
         } else if(data === "bulletIcon") {
             fontBulletOptionObject = elementList[data];
-            dataElement = "bullet"
+            dataElement = "bullet",
+            dataValue = this.state.activebulletIcon
         }
 
         let className = ""
@@ -277,8 +288,8 @@ class Sidebar extends Component {
         fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
             className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
             <div className={`element-dropdown-title ${className}`} data-element= {`${dataElement}`} onClick={this.toggleElementDropdown}>
-                {fontBulletOptionObject[this.state.activefontBulletOption]?.text}
-                {/* {disabledfontBulletOption.indexOf(activefontBulletOption) > -1 ? null : dropdownArrow} */}
+                {fontBulletOptionObject[dataValue]?.text}
+                {disabledPrimaryOption.indexOf(dataValue) > -1 ? null : dropdownArrow}
             </div>
             <ul className={`element-dropdown-content primary-options  ${active}`}>
                 {fontBulletOptions}
@@ -889,8 +900,6 @@ class Sidebar extends Component {
     }  
 
     render = () => {
-
-
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
@@ -903,10 +912,10 @@ class Sidebar extends Component {
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
                     {this.state.activeElementType ==="manifestlist" && <div>
-                    <div className="canvas-sidebar-font-type">Font Type</div>
-                    {this.fontPrimaryOption("fontStyle")}
-                    <div className="canvas-sidebar-bullet-type">Bullet Style</div>
-                    {this.fontPrimaryOption("bulletIcon")}
+                    <div className="canvas-sidebar-font-bullet-type">Font Type</div>
+                    {this.fontBulletOption("fontStyle")}
+                    <div className="canvas-sidebar-font-bullet-type">Bullet Style</div>
+                    {this.fontBulletOption("bulletIcon")}
                     </div>}
                 </div>
                 }

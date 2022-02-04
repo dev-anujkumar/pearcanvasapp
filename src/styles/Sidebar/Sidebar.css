@@ -15,6 +15,12 @@
     /* color: #424242; */
 }
 
+.canvas-sidebar-font-bullet-type {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: -20px;  
+}
+
 .canvas-sidebar .element-dropdown {
     position: relative;
 }

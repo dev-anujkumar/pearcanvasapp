@@ -68,6 +68,8 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type]["elementType"],
                     //primaryOption : "primary-column-1",
                     primaryOption: `primary-column-${element.columnnumber}`,
+                    fontStyle: "font-style-1",
+                    bulletIcon: "bullet-color-1",
                     secondaryOption: `secondary-column-${element.columnnumber}`,
                     contentUrn : element.contentUrn
                     //secondaryOption: elementDataBank[element.type]["secondaryOption"]
