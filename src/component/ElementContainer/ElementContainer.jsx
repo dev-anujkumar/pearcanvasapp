@@ -992,7 +992,7 @@ class ElementContainer extends Component {
             this.props.handleAutonumberingOnCreate(dataToSend?.figuretype?.toUpperCase(), dataToSend);
         } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) {
             this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
-        } else if ( (previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (!(dataToSend.hasOwnProperty('manualoverride')) || (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue'))) ) {
+        } else if ( (previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue')) ) {
             // resume case
             dataToSend = {
                 ...dataToSend,
@@ -1000,16 +1000,16 @@ class ElementContainer extends Component {
                     resumenumbervalue: parseInt(dataToSend?.manualoverride?.resumenumbervalue)
                 }
             }
-            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend?.displayedlabel, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
+            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel === dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
             // override label and number case 
             this.props.updateAutonumberingOnOverridedCase(dataToSend?.displayedlabel, dataToSend, autoNumberedElements, currentSlateAncestorData);
         } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
             // override number only case 
-            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend?.displayedlabel, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
+            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else if ( (previousElementData?.numberedandlabel) && (!(dataToSend.hasOwnProperty('manualoverride'))) ) { 
             // default case
-            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend?.displayedlabel, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData);
+            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else {
             this.props.updateAutonumberingKeysInStore(dataToSend, autoNumberedElements, currentSlateAncestorData);
         }
