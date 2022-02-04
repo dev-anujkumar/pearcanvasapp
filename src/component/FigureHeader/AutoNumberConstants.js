@@ -137,7 +137,8 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'MATHIMAGE': 'equationsList',
   'MMI_ELM': 'interactiveList',
   'INTERACTIVE': 'interactiveList',
-  'SMART_LINK': 'interactiveList'
+  'SMART_LINK': 'interactiveList',
+  'TABLE_EDITOR': 'tablesList'
 }
 
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive']
