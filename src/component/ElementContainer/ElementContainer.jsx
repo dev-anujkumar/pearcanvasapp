@@ -460,8 +460,9 @@ class ElementContainer extends Component {
             if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
-            return (titleHTML !== previousElementData.displayedlabel ||
-                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent || isOverridedLabelDifferent ||
+            const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
+                return (isLabelDifferent || this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title)
+                || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
@@ -980,7 +981,7 @@ class ElementContainer extends Component {
     
     handleAutonumberAfterUpdate = (previousElementData, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
-        if (!previousElementData?.numberedandlabel && dataToSend.numberedandlabel) {
+        if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
             if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride.hasOwnProperty('resumenumbervalue')) {
                 dataToSend = {
                     ...dataToSend,
@@ -1001,10 +1002,11 @@ class ElementContainer extends Component {
                 }
             }
             this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
-        } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel === dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
+        } else if ((previousElementData?.numberedandlabel) && (!dataToSend.hasOwnProperty('displayedlabel')) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridelabelvalue'))) {
             // override label and number case 
-            this.props.updateAutonumberingOnOverridedCase(dataToSend?.displayedlabel, dataToSend, autoNumberedElements, currentSlateAncestorData);
-        } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
+            // this.props.updateAutonumberingOnOverridedCase(dataToSend?.displayedlabel, dataToSend, autoNumberedElements, currentSlateAncestorData);
+            this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
+        } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel === dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
             // override number only case 
             this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else if ( (previousElementData?.numberedandlabel) && (!(dataToSend.hasOwnProperty('manualoverride'))) ) { 

@@ -73,7 +73,7 @@ export const getOverridedNumberValue = (element) => {
 const checkKeysInObj = (Obj) => {
     let check = true;
     for (let Key in Obj) {
-        if (Obj[Key] === '' || Obj[Key] === undefined || Obj[Key] === null) {
+        if (Obj[Key] === '' || Obj[Key] === undefined || Obj[Key] === null || Obj[Key] === NaN) {
             check = false;
             break;
         }
@@ -367,7 +367,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
         });
         getAutoNumberSequence(autoNumberedElements, dispatch);
     }
-    if (autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].length > 0 && activeLabelElements.length > 0) {
+    if (autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].length > 0 && activeLabelElements.length > 1) {
         let nearestElementObj = findNearestElement(slateElements, element, newElement?.displayedlabel, elementSlateIndex);
         if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
             let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
@@ -381,14 +381,14 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
             payload: autoNumberedElements
         });
         getAutoNumberSequence(autoNumberedElements, dispatch);
-    } else if (activeLabelElements.length === 0) {
+    } else if (activeLabelElements.length === 1) {
         checkElementExistenceInOtherSlates(newElement, config?.slateEntityURN, getState, dispatch);
     } 
 }
 
 export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements, currentSlateAncestorData) => (dispatch) => {
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
-    if (figureParentEntityUrn && updatedData?.contentUrn && autoNumberedElements) {
+    if (updatedData?.displayedlabel && figureParentEntityUrn && updatedData?.contentUrn && autoNumberedElements) {
         if (autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]) {
             let index = autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn].findIndex(element => element.contentUrn === updatedData.contentUrn);
             if (index > -1) {
@@ -406,16 +406,16 @@ export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements
                     }
                 }
                 autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn][index] = figureObj;
+                dispatch({
+                    type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+                    payload: {
+                        autoNumberedElements
+                    }
+                });
+                getAutoNumberSequence(autoNumberedElements, dispatch);
             }
         }
     }
-    dispatch({
-        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-        payload: {
-            autoNumberedElements
-        }
-    });
-    getAutoNumberSequence(autoNumberedElements, dispatch)
 }
 
 /**
