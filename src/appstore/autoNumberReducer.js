@@ -35,8 +35,7 @@ const INITIAL_STATE = {
     },
     slateFigureList:[],
     autoNumberOption: '',
-    popupParentSlateData: {},
-    popupElementsData: []
+    popupParentSlateData: {}
 }
 
 const INITIAL_ACTION = {
@@ -97,7 +96,6 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 slateFigureList: [
-                    ...state.slateFigureList,
                     ...action.payload.slateFigures
                 ]
             }

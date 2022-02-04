@@ -259,14 +259,26 @@ class FigureImage extends Component {
             this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
         }
 
-        let scaleMarkerData = {};
+        /**let scaleMarkerData = {};
         Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
             (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.id || null } : null,
             (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.name || "The alttext for the scale image" } : null,
             (data && data.scalemarker && data.scalemarker.epsUrl) ? { "path": data.scalemarker.epsUrl || null } : null,
             (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
             (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ? { "width": data.properties["exif:pixelXDimension"] || null } : null,
-        );
+        ); */
+        let scaleMarkerAsset = {};
+            if (data.scalemarker) {
+                scaleMarkerAsset = {
+                    'schema': 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image',
+                    'imageid': data.scalemarker?.id ?? data?.id ?? null,
+                    'alttext': data.scalemarker?.name ?? "The alttext for the scale image",
+                    'path': data.scalemarker?.epsUrl ? data.scalemarker?.epsUrl : data.scalemarker?.['institution-urls']?.[0]?.publicationUrl ? data.scalemarker['institution-urls'][0].publicationUrl : "",
+                    'height': data.scalemarker?.properties?.["exif:pixelYDimension"] ?? null,
+                    'width': data.scalemarker?.properties?.["exif:pixelXDimension"] ?? null
+                };
+            }
+
         // store current element figuredata in store
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
         let setFigureData = {
@@ -280,7 +292,7 @@ class FigureImage extends Component {
             type: figureType,
         }
 
-        Object.assign(setFigureData, (Object.keys(scaleMarkerData).length > 0) ? { scaleimage: scaleMarkerData } : null);
+        Object.assign(setFigureData, (Object.keys(scaleMarkerAsset).length > 0) ? { scaleimage: scaleMarkerAsset } : null);
 
         this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
             this.props.handleFocus("updateFromC2");

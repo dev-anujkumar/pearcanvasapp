@@ -573,6 +573,7 @@ overflow: unset;
   font-size: 12px !important;
   overflow-x: hidden;
   max-height: 50vh;
+  position: relative;
 }
 
 .dialog-window p {
@@ -822,5 +823,8 @@ ol li.listItemNumeroUnoLowerRoman {
 
 .dialog-window.tcm-canvas-popup ol {
   counter-reset: section !important;
+}
+.dialog-window.tcm-canvas-popup li {
+  min-height: 22px;
 }
 

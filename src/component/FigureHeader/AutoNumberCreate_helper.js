@@ -1,10 +1,5 @@
 import config from '../../config/config';
 import {
-    SET_AUTO_NUMBER_TOGGLE,
-    SET_AUTO_NUMBER_SEQUENCE,
-    UPDATE_AUTO_NUMBER_SEQUENCE,
-    GET_TOC_AUTO_NUMBERING_LIST,
-    GET_ALL_AUTO_NUMBER_ELEMENTS,
     UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
     UPDATE_POPUP_PARENT_SLATE
 } from '../../constants/Action_Constants.js';
@@ -13,15 +8,7 @@ import { containerBodyMatter } from './slateLevelMediaMapper';
 import { containerElements, autoNumberElementsAllowed, autoNumber_ElementTypeToStoreKeysMapper, autoNumber_ElementTypeKey } from './AutoNumberConstants';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getImagesInsideSlates, getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
 import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
-const { 
-    AUTO_NUMBER_SETTING_DEFAULT,
-    AUTO_NUMBER_SETTING_RESUME_NUMBER,
-    AUTO_NUMBER_SETTING_REMOVE_NUMBER,
-    AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
-    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
-} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export const updateCreatedElementInAutonumberList = (mediaType, mediaList, autoNumberedElementsObj, dispatch) => {
     dispatch({
