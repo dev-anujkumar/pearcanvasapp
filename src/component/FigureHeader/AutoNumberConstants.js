@@ -27,7 +27,7 @@ export const autoNumber_FigureTypeKeyMapper = {
 
 export const autoNumber_KeyMapperElements = {
   'Figure': 'imagesList',
-  'Table': 'property',
+  'Table': 'tablesList',
   'Equation': 'equationsList',
   'Audio': 'audiosList',
   'Video': 'videosList',
@@ -141,7 +141,7 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'TABLE_EDITOR': 'tablesList'
 }
 
-export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive']
+export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive', 'tableasmarkup']
 export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO', 'SMART_LINK']
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive']
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
