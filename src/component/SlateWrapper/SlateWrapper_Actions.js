@@ -40,7 +40,7 @@ import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER } from '../FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL
@@ -384,13 +384,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
           } 
         else {
-            if (createdElementData.type === "element-aside") {
-                createdElementData = {
-                    ...createdElementData,
-                    displayedlabel: createdElementData.subtype === "sidebar" ? "Aside" : "Worked Example",
-                    numberedandlabel: true
-                }
-            }
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
         if (config.tcmStatus) {
@@ -423,7 +416,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     }
                 });
             }
-
             dispatch(handleAutonumberingOnCreate(type, createdElementData));
         }
         /**------------------------------------------------------------------------------------------------*/

@@ -713,7 +713,10 @@ class ElementAsideContainer extends Component {
      */
     render() {
         const { element, isAutoNumberingEnabled } = this.props;
-        let asideHtmlData = getLabelNumberTitleHTML(element);
+        let asideHtmlData;
+        if (!isAutoNumberingEnabled) {
+            asideHtmlData = getLabelNumberTitleHTML(element);
+        }
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);

@@ -16,8 +16,15 @@ import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
-import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
+import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
+import { setAutonumberingValuesForPayload } from '../FigureHeader/AutoNumber_helperFunctions';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
+
+const { 
+    AUTO_NUMBER_SETTING_DEFAULT,
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
@@ -830,7 +837,7 @@ const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
     }
 }
 
-const prepareAsideTitleForUpdate = (index) => {
+const prepareAsideTitleForUpdate = (index, isAutoNumberingEnabled) => {
     let labelDOM = document.getElementById(`cypress-${index}-t1`),
         numberDOM = document.getElementById(`cypress-${index}-t2`),
         titleDOM = document.getElementById(`cypress-${index}-t3`)
@@ -840,15 +847,19 @@ const prepareAsideTitleForUpdate = (index) => {
     labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
     numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
     titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
-    return titleHTML
+    if (isAutoNumberingEnabled) {
+        return [labeleHTML, numberHTML]
+    } else {
+        return titleHTML
+    }
 }
-export const updateAsideNumber = (previousData, index,elementId) => (dispatch, getState) => {
+export const updateAsideNumber = (previousData, index, elementId, isAutoNumberingEnabled, autoNumberOption) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
     const activeElementId=elementId;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
     let elementEntityUrn = "", updatedElement
-    let titleHTML = prepareAsideTitleForUpdate(index);
+    let titleHTML = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
     
     updatedElement = {
         ...previousData,
@@ -888,7 +899,27 @@ export const updateAsideNumber = (previousData, index,elementId) => (dispatch, g
         versionUrn: activeElementId,
         contentUrn: previousData.contentUrn,
         status: updatedSlateLevelData.status
+    }
+    // if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
+    if (isAutoNumberingEnabled) {
+        const dataArr = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
+        const payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, dataArr[0], dataArr[1], false);
+        const numberedandlabel = payloadKeys?.numberedandlabel;
+        const manualoverride = payloadKeys?.manualoverride;
+        const displayedlabel = previousData.displayedlabel;
 
+        dataToSend = {
+            ...dataToSend,
+            html : {
+                ...dataToSend.html,
+                title: `<p>${dataArr[0]}</p>`
+            },
+            numberedandlabel : numberedandlabel,
+            displayedlabel : displayedlabel,
+            manualoverride : manualoverride
+        }
+        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete dataToSend.manualoverride : dataToSend;
+        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete dataToSend.displayedlabel : dataToSend;
     }
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
     return axios.put(url, dataToSend, {
