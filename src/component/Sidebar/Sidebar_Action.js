@@ -23,6 +23,7 @@ const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
 import { updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
+import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -383,10 +384,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: FETCH_SLATE_DATA,
             payload: store
         });
-        if (isAutoNumberingEnabled && (outputPrimaryOptionEnum === 'AUDIO' || outputPrimaryOptionEnum === 'VIDEO')) {
+        if (isAutoNumberingEnabled && autoNumberFigureTypesForConverion.includes(outputPrimaryOptionEnum)) {
             const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
             const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
-            dispatch(updateAutonumberingOnElementTypeUpdate(res.data?.displayedlabel, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
+            dispatch(updateAutonumberingOnElementTypeUpdate(res.data, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
         }
         /**
          * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.

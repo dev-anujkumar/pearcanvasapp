@@ -257,7 +257,7 @@ export const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, is
     }
 }
 
-export const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn }) => {
+export const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn, showHideObj }) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
    const poetryElement = {
         element: wipData
@@ -277,7 +277,7 @@ export const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPo
     wipData.contents.bodymatter.map((item) => {
         elementId.childId = item.id;
         tag.childTag = fetchElementsTag(item); 
-        const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn });
+        const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn, showHideObj });
         prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
     })
 }

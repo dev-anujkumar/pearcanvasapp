@@ -6,6 +6,7 @@
 // IMPORT - dependencies
 require('./polyfills.js')
 import tinyMCE from 'tinymce';
+import { checkActiveElement } from '../../js/TinyMceUtility.js';
 
 /* ------------------------------ START - List toolbar button methods ----------------------------- */
 /**
@@ -49,7 +50,7 @@ export const positionListDrop = (event) => {
     let _wrapperWidth = 275;  // static because dom remains hidden //
     let _offsetLeft = _targetLeft - (_wrapperWidth / 2) + (_targetWidth / 2) + 104.5;
     _listWrapperDiv.style.left = `${_offsetLeft}px`;
-    if (!_listWrapperDiv.querySelector('.fr-popup').classList.contains('fr-active')) {
+    if (!_listWrapperDiv.querySelector('.fr-popup').classList.contains('fr-active') && !checkActiveElement(['manifestlist'])) {
         _listWrapperDiv.querySelector('.fr-popup').classList.add('fr-active');
     }
 }

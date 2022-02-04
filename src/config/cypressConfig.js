@@ -23,12 +23,12 @@ let cypressConfig = {
     colors : ["#005A70", "#003057", "#006128", "#505759", "#000000"],
     // textcolors:["#ffffff", "#000000"],
     textcolors:["option1", "option2"],
-    figureFieldsPlaceholders: ['Number', 'Label Name', 'Title', 'Caption', 'Credit'],
-    smartlinkContexts: ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'],
+    figureFieldsPlaceholders: ['Number', 'Label Name', 'Title', 'Caption', 'Credit', 'Math Block Content','Code Block Content'],
+    smartlinkContexts: ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table', 'fpo'],
     ctaButtonSmartlinkContexts: ['pdf', 'web-link', 'pop-up-web-link'],
     isCO : false,
     isLOL:false,
-    toolBarList : ['undo', 'redo','insertMedia','formatSelector','bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
+    toolBarList : ['undo', 'redo','insertMedia','formatSelector','casechange', 'bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
     elementToolbar: [],
     showHideToolbar: ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','alignment','calloutIcon', 'IndexEntry'],
     revelToolbar : ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
@@ -40,10 +40,12 @@ let cypressConfig = {
     figurLabelToolbar: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent','IndexEntry'],
     figureImageLabelToolbar:['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml','chemml','inlinecode','orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent','IndexEntry'],
     figureNumberToolbar:['insertMedia','formatSelector', 'subscript', 'superscript', 'specialcharactor', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
+    labelToolbarAutonumberMode: ['insertMedia','formatSelector','bold', 'italic', 'underline', 'strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
+    numberToolbarAutonumberMode: ['insertMedia','formatSelector', 'casechange','bold', 'italic', 'underline', 'strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
     figurImageCommonToolbar: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent','IndexEntry'],
     AsideLabel: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
     AsideNumber: ['insertMedia', 'formatSelector', 'subscript', 'superscript', 'specialcharactor', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'mathml', 'chemml', 'inlinecode', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
-    AsideTitle: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote','mathml', 'chemml', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
+    AsideTitle: ['insertMedia', 'formatSelector', 'alignment', 'calloutIcon', 'crossLinkingIcon', 'glossary', 'footnote', 'orderedlist', 'unorderedlist', 'increaseindent', 'decreaseindent', 'IndexEntry'],
     smartlinkActionButtonToolbar: ['insertMedia', 'formatSelector', 'bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'footnote', 'decreaseindent', 'glossary', 'crossLinkingIcon', 'assetpopover', 'orderedlist', 'unorderedlist', 'mathml', 'chemml', 'inlinecode', 'alignment', 'calloutIcon', 'increaseindent', 'IndexEntry'],
     captionToolbar:['insertMedia','formatSelector','decreaseindent','glossary','crossLinkingIcon','assetpopover','alignment','calloutIcon', 'IndexEntry'],
     poetryLabelToolbar: ['insertMedia','formatSelector','footnote','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','mathml','chemml','alignment','calloutIcon', 'IndexEntry'],
@@ -73,6 +75,7 @@ let cypressConfig = {
     TCM_CANVAS_POPUP_DATA: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tctx` :"http://localhost:5000/tctx",
     TCM_CUT_COPY_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/cut-copy-snapshots` :"http://localhost:5000/cut-copy-snapshots",
     getENVConfig: process.env.NODE_ENV === "development" ? 'https://10.11.7.24:8081/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
+    TINYMCE_SPELL_CHECKER_URL: process.env.NODE_ENV === "development" ? 'http://localhost:8080/ephox-spelling/': '/cypress/tinymce-srvr/ephox-spelling/',
     prodUrl : 'https://structuredauthoring.pearson.com',
     sitePointing : 'dev',
     conversionInProcess : false,
@@ -91,7 +94,8 @@ let cypressConfig = {
     tcmslatemanifest:"",
     saveElmOnAS: false,
     fullName:'c5test01',
-    isCypressPlusEnabled:true
+    isCypressPlusEnabled:true,
+    CYPRESS_PLUS_WINDOW:''
 }
 
 

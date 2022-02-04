@@ -36,10 +36,11 @@ export const handleAutoNumberingOnCopyPaste = (params) => {
             });
         }
         if(operationType == 'copy' || operationType == 'cut'){
-            if (containerElements.indexOf(selectedElement?.type) > -1) {
+            /**if (containerElements.indexOf(selectedElement?.type) > -1) {
                 updateAutoNumberSequenceOnCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevFselectedElementigures: slateFigures, slateAncestors })
             }
-            else if (selectedElement?.type === 'figure') {
+            else */
+            if (selectedElement?.type === 'figure') {
                 updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors })
             }
         }
@@ -65,12 +66,14 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
         const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === selectedElement.displayedlabel)
         const figureIndexOnSlate = activeLabelFigures.findIndex(ele => ele.contentUrn === selectedElement.contentUrn)
         if (activeLabelFigures?.length > 1) {
-            let refIndex = ""
+            let refIndex = "", indexPos = ""
             if (figureIndexOnSlate == activeLabelFigures.length - 1) {
-                refIndex = figureIndexOnSlate
+                refIndex = figureIndexOnSlate - 1
+                indexPos = 'above'
             }
             else {
                 refIndex = figureIndexOnSlate + 1
+                indexPos = 'below'
             }
             //find the closest image now and then add the new img at that index
             const referenceFigure = activeLabelFigures[refIndex].contentUrn
@@ -81,9 +84,14 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== selectedElement.contentUrn)
                 }
             }
+
             if (referenceFigure) {
                 const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === referenceFigure)
-                numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, selectedElement)
+                if (indexPos === 'above') {
+                    numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex + 1, 0, selectedElement)
+                } else {
+                    numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, selectedElement)
+                }
                 dispatch({
                     type: GET_ALL_AUTO_NUMBER_ELEMENTS,
                     payload: {
@@ -101,6 +109,7 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
  *  This function resets sequence after SWAP when a container having figure is swapped
  * @param {*} params
  */
+/**
 export const updateAutoNumberSequenceOnCopyContainers = (params) => {
     const {
         getState,
@@ -160,3 +169,4 @@ export const updateAutoNumberSequenceOnCopyContainers = (params) => {
         }
     }
 }
+*/

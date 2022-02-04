@@ -10,7 +10,7 @@ const middlewares = [thunk];
 import config from "../../../src/config/config.js"
 import wipData from './wipData';
 import { singleAssessmentElmDefault } from '../../../fixtures/ElementSingleAssessmentTestData'
-
+import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("innerText")) {
     Object.defineProperty(global.Element.prototype, 'innerText', {
@@ -240,7 +240,8 @@ const store = mockStore({
     markedIndexReducer: {
         markedIndexCurrentValue: {},
         markedIndexValue: { "type": "", "popUpStatus": false }
-    }
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty
 });
 
 config["elementStatus"] = {}
@@ -447,7 +448,8 @@ describe('Test for element container component', () => {
                 markedIndexReducer: {
                     markedIndexCurrentValue: {},
                     markedIndexValue: { "type": "", "popUpStatus": false }
-                }
+                },
+                autoNumberReducer: mockAutoNumberReducerEmpty
             });
             let props = {
                 element: wipData.pullquote,
@@ -1879,7 +1881,8 @@ describe('Test-Other Functions', () => {
             markedIndexReducer: {
                 markedIndexCurrentValue: '',
                 markedIndexValue: ''
-            }
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty
         });
         let props = {
             element: wipData.pullquote,
@@ -2001,7 +2004,8 @@ describe('Test-Other Functions', () => {
             markedIndexReducer: {
                 markedIndexCurrentValue: '',
                 markedIndexValue: ''
-            }
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty
         });
         let props = {
             element: wipData.pullquote,

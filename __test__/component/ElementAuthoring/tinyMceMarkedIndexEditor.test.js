@@ -18,6 +18,14 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 let initialState = {};
 let store = mockStore(initialState);
+jest.mock('../../../src/component/GlossaryFootnotePopup/GlossaryFootnote_Actions', () => {
+    return {
+        saveGlossaryAndFootnote: () => {
+            return;
+        },
+        setFormattingToolbar: () => { return; }
+    }
+})
 describe('Testing tinyMce component for glossary footnote with  props', () => {
     let props = {
         placeholder: "Type Something...",
