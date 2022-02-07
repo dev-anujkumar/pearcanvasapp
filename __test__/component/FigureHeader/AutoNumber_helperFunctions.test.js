@@ -60,14 +60,23 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
                 ...element,
                 numberedandlabel: true
             }
-            delete element.manualoverride
+            delete element.manualoverride;
             const spyFunction = jest.spyOn(autonumber_helperFunctions, 'setAutoNumberSettingValue');
             const result = autonumber_helperFunctions.setAutoNumberSettingValue(element);
             expect(result).toBe('Default Auto-number')
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
-    })
+
+        it('Test-1.6---setAutoNumberSettingValue--- No numberedandlabel key', () => {
+            delete element.numberedandlabel
+            const spyFunction = jest.spyOn(autonumber_helperFunctions, 'setAutoNumberSettingValue');
+            const result = autonumber_helperFunctions.setAutoNumberSettingValue(element);
+            expect(result).toBe('Default Auto-number')
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+    });
     describe('Test-2 getOverridedNumberValue-----------------', () => {
         let element = mockSlateFiguresList[0]
         it('Test-2.1---getOverridedNumberValue---Resume numbering', () => {
@@ -141,6 +150,8 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
             expect(result).toBe('Figure')
             result = autonumber_helperFunctions.getValueOfLabel("mathImage");
             expect(result).toBe('Figure')
+            result = autonumber_helperFunctions.getValueOfLabel("interactive");
+            expect(result).toBe('Interactive')
             result = autonumber_helperFunctions.getValueOfLabel("mathml");
             expect(result).toBe('')
             expect(spyFunction).toHaveBeenCalled();
@@ -155,6 +166,7 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
             parentNumber: "11"
         }
         it('Test-4.1---getLabelNumberPreview---Other cases', () => {
+            params.labelNumberSetting = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER;
             const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getLabelNumberPreview');
             let result = autonumber_helperFunctions.getLabelNumberPreview(element, params);
             expect(result).toBe('Figure 11.2')
@@ -400,6 +412,12 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
             isPayloadValid = false
             const spyFunction = jest.spyOn(autonumber_helperFunctions, 'setAutonumberingValuesForPayload');
             const result = autonumber_helperFunctions.setAutonumberingValuesForPayload(AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, titleHTML, numberHTML, isPayloadValid);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-10.6---setAutonumberingValuesForPayload---Resume numbering with null value', () => {
+            const spyFunction = jest.spyOn(autonumber_helperFunctions, 'setAutonumberingValuesForPayload');
+            autonumber_helperFunctions.setAutonumberingValuesForPayload(AUTO_NUMBER_SETTING_RESUME_NUMBER, titleHTML, "", isPayloadValid);
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
