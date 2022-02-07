@@ -50,7 +50,7 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
     if (parentIndex && contentUrn && numberedElements) {
         for (let labelType in numberedElements) {
             if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
-                let index = numberedElements[labelType][parentIndex].findIndex(figure => figure.contentUrn === contentUrn);
+                let index = numberedElements[labelType][parentIndex]?.findIndex(figure => figure.contentUrn === contentUrn);
                 if (index > -1) {
                     numberedElements[labelType][parentIndex].splice(index, 1);
                     break;
@@ -153,8 +153,8 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
     } = params
     if (swappedElementData?.type === 'figure' && swappedElementData?.hasOwnProperty('displayedlabel')) {
         if (slateFigures || slateFigures?.length > 0) {
-            const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === swappedElementData.displayedlabel)
-            const figureIndexOnSlate = activeLabelFigures.findIndex(ele => ele.contentUrn === swappedElementData.contentUrn)
+            const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === swappedElementData?.displayedlabel)
+            const figureIndexOnSlate = activeLabelFigures?.findIndex(ele => ele?.contentUrn === swappedElementData?.contentUrn)
             if (activeLabelFigures?.length > 1) {
                 let refIndex = ""
                 if (figureIndexOnSlate == activeLabelFigures.length - 1) {
@@ -171,8 +171,8 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
                 }
                 if (referenceFigure) {
-                    const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === referenceFigure);
-                    const newPosition = refImageIndex < 0 ? numberedElements[labelType][figureParentEntityUrn].length : refImageIndex;
+                    const refImageIndex = numberedElements[labelType][figureParentEntityUrn]?.findIndex(ele => ele.contentUrn === referenceFigure);
+                    const newPosition = refImageIndex < 0 ? numberedElements[labelType][figureParentEntityUrn]?.length : refImageIndex;
                     numberedElements[labelType][figureParentEntityUrn]?.splice(newPosition, 0, swappedElementData)
                     dispatch({
                         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
@@ -235,14 +235,14 @@ export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
                 });
                 if(refElementObj[label]){
                     const findRefIndex = (element) => element.contentUrn === refElementObj[label]
-                    const refElementIndex = elementArray.findIndex(findRefIndex);
+                    const refElementIndex = elementArray?.findIndex(findRefIndex);
                     elementArray.splice(refElementIndex+1, 0, ...swappedElementList);
                 } else {
                     const findRefIndexInCurrentSlate = (element) => element.slateEntityUrn === swappedElementData.slateEntityUrn;
-                    const refIndexInCurrentSlate = elementArray.findIndex(findRefIndexInCurrentSlate);
+                    const refIndexInCurrentSlate = elementArray?.findIndex(findRefIndexInCurrentSlate);
                     if(refIndexInCurrentSlate < 0){
                         const findPrevElementIndex = (element) => element.contentUrn === prevElementURN;
-                        const prevElementIndex = elementArray.findIndex(findPrevElementIndex);
+                        const prevElementIndex = elementArray?.findIndex(findPrevElementIndex);
                         elementArray.splice(prevElementIndex+1, 0, ...swappedElementList);
                     } else {
                         elementArray.splice(refIndexInCurrentSlate, 0, ...swappedElementList);
