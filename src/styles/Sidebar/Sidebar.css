@@ -10,14 +10,14 @@
 
 .canvas-sidebar > .canvas-sidebar-heading {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 550;
     margin-bottom: 25px;
     /* color: #424242; */
 }
 
 .canvas-sidebar-font-bullet-type {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 520;
     margin-bottom: -20px;  
 }
 

@@ -107,6 +107,7 @@ class Sidebar extends Component {
     }
 
     handlePrimaryOptionChange = (e) => {
+      
       let value = e.target.getAttribute("data-value");
       let secondaryelementList =
         elementList[this.state.activeElementType][value].subtype;
@@ -117,8 +118,8 @@ class Sidebar extends Component {
         elementDropdown: "",
         fontBulletElementDropdown: "",
         activePrimaryOption: value,
-        // activefontStyle: value,
-        // activebulletIcon: value,
+        activefontStyle: value,
+        activebulletIcon: value,
         activeSecondaryOption: secondaryFirstOption,
         activeLabelText: labelText,
         podValue: POD_DEFAULT_VALUE,
@@ -134,7 +135,8 @@ class Sidebar extends Component {
             },
             elementType: this.state.activeElementType,
             primaryOption: value,
-            fontBulletOption: value,
+            fontStyle: value,
+            bulletIcon: value,
             secondaryOption: secondaryFirstOption,
             elementWipType: this.props.activeElement.elementWipType,
             index: this.props.activeElement.index,
@@ -179,7 +181,7 @@ class Sidebar extends Component {
             if(this.state.elementDropdown === elementDropdown) {
                 elementDropdown = '';
             }
-            this.setState({elementDropdown});
+            this.setState({elementDropdown ,fontBulletElementDropdown: ''});
         } else if (elementDropdown == 'font' || elementDropdown == 'bullet'){
             if(this.state.fontBulletElementDropdown === elementDropdown) {
                 elementDropdown = '';
