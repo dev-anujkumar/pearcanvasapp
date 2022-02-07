@@ -105,7 +105,7 @@ export const FigureHeader = (props) => {
     useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
         const figIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
-        const currentNumber = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
+        let currentNumber = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
         if(currentNumber && typeof currentNumber === 'string' && currentNumber.trim() !== ""){
             currentNumber?.replace(/&nbsp;/g, ' ')
         }
@@ -217,14 +217,12 @@ export const FigureHeader = (props) => {
     const containerNumber = getContainerNumber(slateAncestors, props.autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
     let imgLabelValue = getLabelNumberFieldValue(props.model, figureLabelValue, labelNumberSetting);
-    console.log('llllllllllllllLLLLL', imgLabelValue, figureLabelValue, labelNumberSetting);
     let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
     imgNumberValue = props?.model?.manualoverride?.hasOwnProperty('overridelabelvalue') && labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER ? '' : imgNumberValue;
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber:containerNumber, currentLabelValue,labelNumberSetting, currentNumberValue })
     imgNumberValue = `${imgNumberValue?.toString()}`
     const newClass = labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? 'disable-number-field': '';
     const removeLabelCondition = labelNumberSetting !== AUTO_NUMBER_SETTING_REMOVE_NUMBER ? true : false;
-    console.log("kkkkkkkkkk", imgNumberValue, props.model);
     return (
         <>
             <header className="figure-header new-figure-image-header">

@@ -33,7 +33,7 @@ import PageNumberContext from '../CanvasWrapper/PageNumberContext.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
-import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from './UpdateElements.js';
+import { createUpdatedData, createOpenerElementData, handleBlankLineDom, updateAutoNumberedElement } from './UpdateElements.js';
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
@@ -981,7 +981,13 @@ class ElementContainer extends Component {
     
     handleAutonumberAfterUpdate = (previousElementData, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
-        if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
+        const  labelNumberSetting = this.props?.autoNumberOption?.option
+        const finalValue =  updateAutoNumberedElement(labelNumberSetting,dataToSend,{ displayedlabel: dataToSend?.displayedlabel,    manualoverride: dataToSend?.manualoverride })
+        if (labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT) {
+            dataToSend = finalValue;
+            this.props.handleAutonumberingOnCreate(finalValue?.figuretype?.toUpperCase(), finalValue);
+        }
+        else if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
             if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride.hasOwnProperty('resumenumbervalue')) {
                 dataToSend = {
                     ...dataToSend,

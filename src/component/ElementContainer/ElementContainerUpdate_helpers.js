@@ -3,6 +3,7 @@ import { customEvent } from '../../js/utils';
 import { tcmSnapshotsForUpdate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { updateAssessmentVersion } from '../../component/AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { updateAutoNumberedElement } from './UpdateElements';
 //Constants
 import {
     AUTHORING_ELEMENT_UPDATE,
@@ -15,7 +16,7 @@ import ElementConstants, {
     allowedFigureTypesForTCM,
     allowedParentType
 } from "./ElementConstants";
-
+import { autoNumberFigureTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
@@ -119,7 +120,8 @@ export const updateElementInStore = (paramsObj) => {
         elementIndex,
         showHideType,
         parentElement,
-        newslateData
+        newslateData,
+        autoNumberDetails
     } = paramsObj
 
     let _slateObject = newslateData[updatedData.slateVersionUrn],
@@ -267,7 +269,7 @@ export const updateElementInStore = (paramsObj) => {
                     }
                 })
             }else {
-                const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
                 _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
                     ...element,
                     ...updatedData,
@@ -278,6 +280,12 @@ export const updateElementInStore = (paramsObj) => {
                         text: updatedData.elementdata ? updatedData.elementdata.text : null
                     },
                     tcm: _slateObject.tcm ? true : false
+                }
+                /** Updation of AutoNumbered Elements */
+                const { autoNumberSettingsOption, isAutoNumberingEnabled } = autoNumberDetails
+                if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                    element = { ...dataToReturn }
                 }
             }  
         }
@@ -305,6 +313,12 @@ export const updateElementInStore = (paramsObj) => {
                         tcm: _slateObject.tcm ? true : false,
                         html: updatedData.html
                     };
+                    /** Updation of AutoNumbered Elements */
+                    const { autoNumberSettingsOption, isAutoNumberingEnabled } = autoNumberDetails
+                    if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                        const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                        element = { ...dataToReturn }
+                    }
                 }
                 else {
                     element = {
@@ -745,6 +759,10 @@ export const processAndStoreUpdatedResponse = async (params) => {
     let { glossaryFootnoteValue, glossaryFootNoteCurrentValue, elementIndex: elementIndexFootnote } = getState().glossaryFootnoteReducer
     let { markedIndexValue, markedIndexCurrentValue, elementIndex: elementMarkedIndex } = getState().markedIndexReducer
     const { saveAutoUpdateData } = getState().assessmentReducer;
+    // update Element in store based on AutoNumber Settings
+    const autoNumberSettingsOption = getState().autoNumberReducer?.autoNumberOption
+    const isAutoNumberingEnabled= getState().autoNumberReducer?.isAutoNumberingEnabled
+    const autoNumberDetails = {autoNumberSettingsOption,isAutoNumberingEnabled}
     if (saveAutoUpdateData && saveAutoUpdateData.oldAssessmentId && saveAutoUpdateData.newAssessmentId) {
         dispatch(updateAssessmentVersion(saveAutoUpdateData.oldAssessmentId, saveAutoUpdateData.newAssessmentId));
     }
@@ -772,7 +790,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
         })
     }
 
-    const commonArgs = { updatedData, elementIndex, parentUrn, asideData, parentElement, currentSlateData, getState, dispatch, responseData, showHideType }
+    const commonArgs = { updatedData, elementIndex, parentUrn, asideData, parentElement, currentSlateData, getState, dispatch, responseData, showHideType, autoNumberDetails }
 
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const snapshotArgs = {
@@ -911,6 +929,10 @@ export const updateStoreInCanvas = (params) => {
     //direct dispatching in store
     const slateParentData = getState().appStore.slateLevelData;
     const newslateData = JSON.parse(JSON.stringify(slateParentData));
+    // update Element in store based on AutoNumber Settings
+    const autoNumberSettingsOption = getState().autoNumberReducer?.autoNumberOption
+    const isAutoNumberingEnabled= getState().autoNumberReducer?.isAutoNumberingEnabled
+    const autoNumberDetails = {autoNumberSettingsOption,isAutoNumberingEnabled}
     //tcm update code
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false;
@@ -927,7 +949,7 @@ export const updateStoreInCanvas = (params) => {
             }
         }}
     }
-    const commonArgs = { updatedData, asideData, dispatch, elementIndex, parentElement, newslateData }
+    const commonArgs = { updatedData, asideData, dispatch, elementIndex, parentElement, newslateData, autoNumberDetails }
     if(versionedData){
         const argObj = {
             ...commonArgs,
