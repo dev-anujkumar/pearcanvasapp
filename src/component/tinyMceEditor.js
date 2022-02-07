@@ -72,6 +72,7 @@ export class TinyMceEditor extends Component {
         this.editorConfig = {
             // spellchecker_rpc_url: cypressConfig.TINYMCE_SPELL_CHECKER_URL,
             plugins: this.handleTinymcePlugins(),
+            browser_spellcheck: this.tinymceSpellCheckStatus(),
             selector: '#cypress-0',
             inline: true,
             formats: EditorConfig.formats,
@@ -143,8 +144,8 @@ export class TinyMceEditor extends Component {
 
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
-
-                if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
+                const isAutoNumberField = (this.props.isAutoNumberingEnabled && this.props?.element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn)
+                if (isAutoNumberField || config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                     editor.shortcuts.remove('meta+u', '', '');
                     editor.shortcuts.remove('meta+b', '', '');
                     editor.shortcuts.remove('meta+i', '', '');
@@ -324,11 +325,20 @@ export class TinyMceEditor extends Component {
      * @returns {String} Tinymce plugins list
      */
     handleTinymcePlugins = () => {
-        // const { spellCheckToggle } = this.props;
+        const { spellCheckToggle } = this.props;
         let plugins = EditorConfig.plugins;
         // adding tinymce spellchecker plugin if spell checker option is active from project settings
-        // if (spellCheckToggle && restrictSpellCheck(this.props)) plugins = `${plugins} tinymcespellchecker`;
+        if (this.tinymceSpellCheckStatus()) plugins = `${plugins} spellchecker`;
         return plugins;
+    }
+
+    /**
+     * function to provide the status of tinymce spell check option
+     * @returns {Boolean} tinymce spell check status
+     */
+     tinymceSpellCheckStatus = () => {
+        const { spellCheckToggle } = this.props;
+        return spellCheckToggle;
     }
 
     /**
@@ -1237,11 +1247,27 @@ export class TinyMceEditor extends Component {
              */
             moveCursor(e, selectionNode, tinymceOffset);
             /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering START xxxxxxxxxxxxxxxxxxx */
-            if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && this.props.placeholder === 'Number' && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
-                if ((e.keyCode < 48 || e.keyCode > 57) && e.keyCode !== 8 && e.keyCode !== 37 && e.keyCode !== 39)  {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
+            if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn) {
+                const keyCode = e.keyCode || e.which;
+                const allowedKeys = [8, 37, 38, 39, 40, 46]
+                const allowedFormattingKeys = [66, 73, 85]
+                // Restrict limit to Numbers only in Number Field for Resume Number option
+                if (this.props.placeholder === 'Number' && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
+                    if (e.ctrlKey || e.shiftKey || ((keyCode < 48 || keyCode > 57) && (keyCode < 96 || keyCode > 105)) && keyCode !== 8 && keyCode !== 37 && keyCode !== 39 && keyCode !== 46) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                    // Restrict limit to 9 digits only in Number Field for Resume Number option
+                    if ((tinymce?.activeEditor?.getContent()?.length + 1 > 9) && !(allowedKeys.includes(keyCode))) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                }
+                // disable keyboard events in Label & Number fields of Autonumbered Elements
+                if ((e.ctrlKey || e.metaKey) && (allowedFormattingKeys.includes(keyCode))) {
+                    tinymce.dom.Event.cancel(e);
                 }
             }
             /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering STOP xxxxxxxxxxxxxxxxxxxx */
@@ -3422,11 +3448,11 @@ export class TinyMceEditor extends Component {
         let toolbar;
         switch (placeholder) {
             case "Number":
-                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureNumberToolbar;
+                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.numberToolbarAutonumberMode : config.figureNumberToolbar;
                 break;
             case "Label":
             case "Label Name":
-                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelNumberToolbarAutonumberMode : config.figureImageLabelToolbar;
+                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelToolbarAutonumberMode : config.figureImageLabelToolbar;
                 break;
             case "Title":
             case "Caption":
@@ -4322,7 +4348,8 @@ const mapStateToProps = (state) => {
         slateLevelData: state.appStore.slateLevelData,
         asideData: state.appStore.asideData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
-        autoNumberOption: state.autoNumberReducer.autoNumberOption
+        autoNumberOption: state.autoNumberReducer.autoNumberOption,
+        spellCheckToggle: state.toolbarReducer.spellCheckToggle
     }
 }
 

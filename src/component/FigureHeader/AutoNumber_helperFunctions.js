@@ -488,20 +488,19 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
         removeClassesFromHtml(subtitleHTML) !== removeClassesFromHtml(previousElementData.html.title) ||
         isNumberDifferent ||
         isOverridedLabelDifferent ||
-        subtitleHTML !== removeClassesFromHtml(previousElementData.html.title) ||
         captionHTML !== removeClassesFromHtml(previousElementData.html.captions) ||
         creditsHTML !== removeClassesFromHtml(previousElementData.html.credits) ||
         oldImage !== newInteractiveid
     );
 
-    if(smartlinkContexts.includes(previousElementData.figuredata.interactivetype)){
+    if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
         let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
 
-        let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? 
-                            previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : 
-                            "<p></p>";
+        let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ?
+            previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` :
+            "<p></p>";
         return (
             result ||
             removeClassesFromHtml(posterTextHTML) !== removeClassesFromHtml(oldPosterText) ||

@@ -21,7 +21,7 @@ import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.
 import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
 import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate } from './CanvasWrapper_Actions';
-import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
+import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType,updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
@@ -337,6 +337,8 @@ export default connect(
         markedIndexPopup,
         fetchProjectFigures,
         setTocContainersAutoNumberList,
-        toggleSpellCheckAction
+        toggleSpellCheckAction,
+        addNewComment, 
+        deleteComment
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

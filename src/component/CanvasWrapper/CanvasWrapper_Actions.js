@@ -50,7 +50,7 @@ import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import ElementConstants from "../ElementContainer/ElementConstants.js";
-import { isAutoNumberEnabled, fetchProjectFigures } from '../FigureHeader/AutoNumberActions.js';
+import { isAutoNumberEnabled, fetchProjectFigures, setAutoNumberinBrowser } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
 import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
 import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
@@ -386,6 +386,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
         if (data?.parameters && Object.keys(data?.parameters).length > 0) {
             let flag = data?.parameters?.enablenumberedandlabel || false;
             dispatch(isAutoNumberEnabled(flag, config.ENABLE_AUTO_NUMBER_CONTENT));
+            setAutoNumberinBrowser(flag, config.ENABLE_AUTO_NUMBER_CONTENT)
         }
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
@@ -1152,6 +1153,22 @@ export const fetchAuthUser = () => dispatch => {
         document.cookie = (userInfo.userId)?`USER_ID=${userInfo.userId};path=/;`:`USER_ID=;path=/;`;
 		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
 		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
+        
+        /* 
+        To update the latest info
+        Since GetFirst Salte was called before fetch user
+        so sending user info with postmessage 
+        */
+
+        sendDataToIframe({
+            type: 'updateUserDetail',
+            message : {
+                userId : userInfo.userId,
+                firstName : userInfo.firstName,
+                lastName: userInfo.lastName
+            }
+            
+        });
     })
         .catch(err => {
             console.error('axios Error', err);
