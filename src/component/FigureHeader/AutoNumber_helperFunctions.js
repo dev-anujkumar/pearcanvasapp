@@ -339,7 +339,7 @@ export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNu
     const labelType = autoNumber_ElementTypeKey[elementLabel];
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
     if (autoNumberedElements[labelType]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[labelType][figureParentEntityUrn] && Object.keys(autoNumberedElements[labelType][figureParentEntityUrn]).length > 0) {
-        let index = autoNumberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === element.contentUrn);
+        let index = autoNumberedElements[labelType][figureParentEntityUrn]?.findIndex(ele => ele.contentUrn === element.contentUrn);
         if (index > -1) {
             autoNumberedElements[labelType][figureParentEntityUrn][index] = element;
         }
@@ -354,10 +354,10 @@ export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNu
 export const updateAutonumberingOnElementTypeUpdate = (newElement, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => async (dispatch, getState) => {
     let slateElements = await getAutoNumberedElementsOnSlate(slateLevelData[config?.slateManifestURN], { dispatch });
     const activeLabelElements = slateElements?.filter(elem => elem.displayedlabel === newElement?.displayedlabel);
-    let elementSlateIndex = slateElements.findIndex(ele => ele.contentUrn === element.contentUrn);
+    let elementSlateIndex = slateElements?.findIndex(ele => ele.contentUrn === element.contentUrn);
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
     if (autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn]) {
-        let index = autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn].findIndex(ele => ele.contentUrn === element.contentUrn);
+        let index = autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn]?.findIndex(ele => ele.contentUrn === element.contentUrn);
         if (index > -1) {
             autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn].splice(index, 1);
         }
@@ -370,7 +370,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
     if (autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].length > 0 && activeLabelElements.length > 1) {
         let nearestElementObj = findNearestElement(slateElements, element, newElement?.displayedlabel, elementSlateIndex);
         if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
-            let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
+            let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
             storeIndex = nearestElementObj?.key === 'above' ? storeIndex + 1 : storeIndex;
             autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].splice(storeIndex, 0, newElement);
         } else {
@@ -390,7 +390,7 @@ export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
     if (updatedData?.displayedlabel && figureParentEntityUrn && updatedData?.contentUrn && autoNumberedElements) {
         if (autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]) {
-            let index = autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn].findIndex(element => element.contentUrn === updatedData.contentUrn);
+            let index = autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]?.findIndex(element => element.contentUrn === updatedData.contentUrn);
             if (index > -1) {
                 let figureObj = autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn][index];
                 if (updatedData.hasOwnProperty(MANUAL_OVERRIDE) && updatedData[MANUAL_OVERRIDE] !== undefined && Object.keys(updatedData[MANUAL_OVERRIDE])?.length > 0) {
