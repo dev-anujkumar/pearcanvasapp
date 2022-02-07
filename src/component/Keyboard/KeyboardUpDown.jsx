@@ -63,13 +63,14 @@ const KeyboardUpDown = (props) => {
                 childElement.firstChild.click();
                 childElement.firstChild.focus();
             }
+            else if (childElement?.className.includes('heading4ImageTextWidthTitle')) {
+                childElement.click();
+                childElement.focus();
+            }
             else if(childElement.firstChild) {
                 childElement.click();
                 childElement.focus();
             }
-           
-
-
         }
         else {
             // element not there 
