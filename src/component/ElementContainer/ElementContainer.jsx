@@ -983,11 +983,7 @@ class ElementContainer extends Component {
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
         const  labelNumberSetting = this.props?.autoNumberOption?.option
         const finalValue =  updateAutoNumberedElement(labelNumberSetting,dataToSend,{ displayedlabel: dataToSend?.displayedlabel,    manualoverride: dataToSend?.manualoverride })
-        if (labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT) {
-            dataToSend = finalValue;
-            this.props.handleAutonumberingOnCreate(finalValue?.figuretype?.toUpperCase(), finalValue);
-        }
-        else if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
+        if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
             if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride.hasOwnProperty('resumenumbervalue')) {
                 dataToSend = {
                     ...dataToSend,
