@@ -17,7 +17,9 @@ const indivisualData = {
 }
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
+    AUTO_NUMBER_SETTING_RESUME_NUMBER,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
@@ -130,15 +132,52 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             html : {
                 ...data.html,
                 title: `<p>${subtitleHTML}</p>`
-            },
-            numberedandlabel : numberedandlabel,
-            displayedlabel : displayedlabel,
-            manualoverride : manualoverride
+            }
         }
-        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete data.manualoverride : data;
-        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete data.displayedlabel : data;
+    const dataToReturn = updateAutoNumberedElement(autoNumberOption,data,{ displayedlabel,    manualoverride })
+    data = {...dataToReturn}  
     }
     return data
+}
+
+export const updateAutoNumberedElement = (autoNumberOption, updatedElement, { displayedlabel, manualoverride }) => {
+    let objToReturn = updatedElement
+    switch (autoNumberOption) {
+        case AUTO_NUMBER_SETTING_RESUME_NUMBER:
+            objToReturn = { ...objToReturn, displayedlabel, manualoverride, numberedandlabel: true}
+            break;
+        case AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER:
+            objToReturn = { ...objToReturn, numberedandlabel: true, manualoverride }
+            if (objToReturn.hasOwnProperty('displayedlabel')) {
+                delete objToReturn.displayedlabel
+            }
+            break;
+        case AUTO_NUMBER_SETTING_OVERRIDE_NUMBER:
+            objToReturn = {
+                ...objToReturn,
+                displayedlabel,
+                numberedandlabel: true,
+                manualoverride
+            }
+            break;
+        case AUTO_NUMBER_SETTING_REMOVE_NUMBER:
+            objToReturn = { ...objToReturn,  numberedandlabel: false }
+            if (objToReturn.hasOwnProperty('displayedlabel')) {
+                delete objToReturn.displayedlabel
+            }
+            if (objToReturn.hasOwnProperty('manualoverride')) {
+                delete objToReturn.manualoverride
+            }
+            break;
+        case AUTO_NUMBER_SETTING_DEFAULT:
+        default:
+            objToReturn = { ...objToReturn, displayedlabel, numberedandlabel: true }
+            if (objToReturn.hasOwnProperty('manualoverride')) {
+                delete objToReturn.manualoverride
+            }
+            break;
+    }
+    return { ...objToReturn }
 }
 
 export const podHtmlmatchWithRegex = (html) => {
@@ -176,6 +215,11 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = previousElementData?.displayedlabel;
+    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+        displayedlabel = titleText;
+    } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+        displayedlabel = getValueOfLabel(previousElementData?.figuretype);
+    }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
         numberedandlabel = payloadKeys?.numberedandlabel;

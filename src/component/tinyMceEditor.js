@@ -1253,7 +1253,7 @@ export class TinyMceEditor extends Component {
                 const allowedFormattingKeys = [66, 73, 85]
                 // Restrict limit to Numbers only in Number Field for Resume Number option
                 if (this.props.placeholder === 'Number' && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
-                    if (e.ctrlKey || e.shiftKey || ((keyCode < 48 || keyCode > 57) && (keyCode < 96 || keyCode > 105)) && keyCode !== 8 && keyCode !== 37 && keyCode !== 39 && keyCode !== 46) {
+                    if ((e.ctrlKey && keyCode !== 86) || e.shiftKey || ((keyCode < 48 || keyCode > 57) && (keyCode < 96 || keyCode > 105) && keyCode !== 86) && keyCode !== 8 && keyCode !== 37 && keyCode !== 39 && keyCode !== 46) {
                         e.preventDefault();
                         e.stopPropagation();
                         return false;
@@ -2329,6 +2329,16 @@ export class TinyMceEditor extends Component {
     }
     editorPaste = (editor) => {
         editor.on('paste', (e) => {
+            if (this.props.isAutoNumberingEnabled && this.props?.element?.type === 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && this.props?.placeholder === 'Number' && this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
+                const currentValue = e.clipboardData.getData('Text');
+                const isNum = /^[1-9][0-9]*$/.test(currentValue);
+                if(!isNum){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
+
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement.nodeName === "CODE") {
                 let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
