@@ -388,7 +388,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if (isAutoNumberingEnabled && autoNumberFigureTypesForConverion.includes(outputPrimaryOptionEnum)) {
             const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
             const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
-            dispatch(updateAutonumberingOnElementTypeUpdate(res.data?.displayedlabel, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
+            dispatch(updateAutonumberingOnElementTypeUpdate(res.data, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
         }
         /**
          * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
