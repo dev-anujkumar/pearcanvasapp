@@ -107,7 +107,6 @@ class Sidebar extends Component {
     }
 
     handlePrimaryOptionChange = (e) => {
-      
       let value = e.target.getAttribute("data-value");
       let secondaryelementList =
         elementList[this.state.activeElementType][value].subtype;
@@ -145,8 +144,8 @@ class Sidebar extends Component {
             slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
             dataToSend:{
                 columnnumber : value.split('-')[value.split('-').length-1],
-                fontnumber : activefontStyle.split('-')[activefontStyle.split('-').length-1],
-                bulletnumner: activebulletIcon.split('-')[activebulletIcon.split('-').length-1]
+                fontnumber : activefontStyle?.split('-')[activefontStyle?.split('-').length-1],
+                bulletnumner: activebulletIcon?.split('-')[activebulletIcon?.split('-').length-1]
             },
             asideData:asideData
           }
@@ -210,8 +209,8 @@ class Sidebar extends Component {
             slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
             dataToSend:{
                 columnnumber : primaryOptionValue.split('-')[primaryOptionValue.split('-').length-1],
-                fontnumber : fontValue.split('-')[fontValue.split('-').length-1],
-                bulletnumner: bulletValue.split('-')[bulletValue.split('-').length-1]
+                fontnumber : fontValue?.split('-')[fontValue?.split('-').length-1],
+                bulletnumner: bulletValue?.split('-')[bulletValue?.split('-').length-1]
             },
             asideData:asideData
           }
