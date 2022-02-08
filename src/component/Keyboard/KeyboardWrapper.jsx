@@ -14,11 +14,9 @@ const NORMAL_SELECTOR = `cypress-`
 const updateCursor = (e, move) => {
     if (move) {
         // moves to next element
-        console.log("console1");
         e.preventDefault();
     }
     else {
-        console.log("console2");
         // moves to next line of same element
         e.stopPropagation()
     }

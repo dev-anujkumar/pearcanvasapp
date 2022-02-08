@@ -23,14 +23,12 @@ const KeyboardUpDown = (props) => {
 
     const getChildAndClick = (element, index) => {
 
-        console.log("element",element);
         const parentNode = keyboardUpDown.current.parentNode;
         const divHeight = parentNode.getBoundingClientRect().height;
         if (element) {
             dispatch(selectElement(element.id));
             // firstElement child as we done need text nodes;
             const childElement = element.firstElementChild;
-            console.log("childElement",childElement);
 
             const scrollTo = element.getBoundingClientRect().top - divHeight / 3;
             parentNode.scrollBy(0, scrollTo);
@@ -39,9 +37,7 @@ const KeyboardUpDown = (props) => {
             // in case of para firstChild is childElement.first child
             // in case of Image childElement is null;
             const lastChild = getLastChild(childElement);
-            console.log("lastChild",lastChild);
 
-            console.log("lastChild.firstChild",lastChild.firstChild);
             if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
                 // for foot note
                 // add span at last and click on span
@@ -70,18 +66,11 @@ const KeyboardUpDown = (props) => {
                 childElement.firstChild.focus();
             }
             else if(childElement.className.includes("actTitle-h4") || childElement.className.includes("sceneTitle-h4")
-             || childElement.className.includes("credit-h4")|| childElement.className.includes("floating-code-content-group")){
+             || childElement.className.includes("credit-h4")|| childElement.className.includes("characterPS") || 
+             childElement.firstChild){
                 childElement.click();
                 childElement.focus();
             }
-            else if(childElement.firstChild) {
-                console.log("clicked");
-                childElement.click();
-                childElement.focus();
-            }
-           
-
-
         }
         else {
             // element not there 
@@ -102,7 +91,6 @@ const KeyboardUpDown = (props) => {
         if (event.keyCode === 38 || event.keyCode === 40) {
 
             const allInteractiveElements = document.querySelectorAll(`[id^='${QUERY_SELECTOR}-']`);
-            console.log("allInteractiveElements",allInteractiveElements);
             if (activeElement) {
                 let selectedNodeIndex = 0;
                 allInteractiveElements.forEach((currentValue, currentIndex) => {
