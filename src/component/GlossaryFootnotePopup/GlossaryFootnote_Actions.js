@@ -460,17 +460,17 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             innerSH_Index = elementIndex;
             innerSH_Index = innerSH_Index?.split('-')
         }
-        label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
-        number = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
-        title = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
+        label = document.getElementById('cypress-' + elementIndex + '-0')?.innerHTML //cypress-1-0
+        number = document.getElementById('cypress-' + elementIndex + '-1')?.innerHTML //cypress-1-1
+        title = document.getElementById('cypress-' + elementIndex + '-2')?.innerHTML //cypress-1-2
 
 
         if(elementSubType == 'image' || elementSubType === 'tableasmarkup' || elementSubType === "audio" || elementSubType === "video" || elementSubType === 'table' || elementSubType === "mathImage"){
-            captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
-            credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
+            captions = document.getElementById('cypress-' + elementIndex + '-3')?.innerHTML //cypress-1-3
+            credits = document.getElementById('cypress-' + elementIndex + '-4')?.innerHTML //cypress-1-4
             if (elementSubType === 'tableasmarkup') {
                 if(document.getElementById(elementIndex + '-tableData')) {
-                    tableAsHTML = document.getElementById(elementIndex + '-tableData').innerHTML;
+                    tableAsHTML = document.getElementById(elementIndex + '-tableData')?.innerHTML;
                 }
             }
         }else if (elementSubType === 'interactive' || elementSubType === "codelisting" || elementSubType === "authoredtext"){
