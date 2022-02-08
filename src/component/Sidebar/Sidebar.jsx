@@ -113,13 +113,12 @@ class Sidebar extends Component {
         elementList[this.state.activeElementType][value].subtype;
       let secondaryFirstOption = Object.keys(secondaryelementList)[0];
       let labelText = secondaryelementList[secondaryFirstOption].labelText;
+      const {activefontStyle, activebulletIcon} = this.state
 
       this.setState({
         elementDropdown: "",
         fontBulletElementDropdown: "",
         activePrimaryOption: value,
-        activefontStyle: value,
-        activebulletIcon: value,
         activeSecondaryOption: secondaryFirstOption,
         activeLabelText: labelText,
         podValue: POD_DEFAULT_VALUE,
@@ -135,8 +134,8 @@ class Sidebar extends Component {
             },
             elementType: this.state.activeElementType,
             primaryOption: value,
-            fontStyle: value,
-            bulletIcon: value,
+            fontStyle: activefontStyle,
+            bulletIcon: activebulletIcon,
             secondaryOption: secondaryFirstOption,
             elementWipType: this.props.activeElement.elementWipType,
             index: this.props.activeElement.index,
@@ -146,7 +145,8 @@ class Sidebar extends Component {
             slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
             dataToSend:{
                 columnnumber : value.split('-')[value.split('-').length-1],
-                // fontnumber : value.split('-')[value.split('-').length-1]
+                fontnumber : activefontStyle.split('-')[activefontStyle.split('-').length-1],
+                bulletnumner: activebulletIcon.split('-')[activebulletIcon.split('-').length-1]
             },
             asideData:asideData
           }
@@ -165,6 +165,61 @@ class Sidebar extends Component {
       }
     };
 
+    handleFontBulletOptionChange = (e) => {
+        let value = e.target.getAttribute("data-value");
+        let primaryOptionValue = this.state.activePrimaryOption;
+        let fontValue = this.state.activefontStyle;
+        let bulletValue = this.state.activebulletIcon;
+        let toolbar = [];
+        if(this.state.activeElementType === "manifestlist"){
+          if(value?.includes('font')){
+                fontValue = value;
+                toolbar = elementList["fontStyle"][value].toolbar;
+          } else if(value?.includes('bullet')){
+                bulletValue = value;
+                toolbar = elementList["bulletIcon"][value].toolbar;
+          }
+        }
+
+        let secondaryFirstOption = this.state.activeSecondaryOption;
+        let labelText = this.state.activeLabelText;
+
+      this.setState({
+        fontBulletElementDropdown: "",
+        activefontStyle: fontValue,
+        activebulletIcon: bulletValue,
+      });
+      const {asideData} = this.props;
+      if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
+        if (this.props.activeElement.elementWipType == "manifestlist") {
+        let blockListMetaDataPayload = {
+            blockListData: {
+                id:this.props.activeElement.elementId,
+                contentUrn:this.props.activeElement.contentUrn
+            },
+            elementType: this.state.activeElementType,
+            primaryOption: primaryOptionValue,
+            fontStyle: fontValue,
+            bulletIcon: bulletValue,
+            secondaryOption: secondaryFirstOption,
+            elementWipType: this.props.activeElement.elementWipType,
+            index: this.props.activeElement.index,
+            labelText,
+            blockListElement:true,
+            toolbar,
+            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
+            dataToSend:{
+                columnnumber : primaryOptionValue.split('-')[primaryOptionValue.split('-').length-1],
+                fontnumber : fontValue.split('-')[fontValue.split('-').length-1],
+                bulletnumner: bulletValue.split('-')[bulletValue.split('-').length-1]
+            },
+            asideData:asideData
+          }
+          this.props.updateBlockListMetadata(blockListMetaDataPayload);
+        }
+      }
+    };
+
     toggleElementDropdown = e => {
         if (hasReviewerRole()) {
             return true
@@ -177,20 +232,16 @@ class Sidebar extends Component {
             }
         }
         let elementDropdown = e.target.getAttribute('data-element');
-        if (elementDropdown == 'primary') {
-            if(this.state.elementDropdown === elementDropdown) {
-                elementDropdown = '';
-            }
-            this.setState({elementDropdown ,fontBulletElementDropdown: ''});
-        } else if (elementDropdown == 'font' || elementDropdown == 'bullet'){
-            if(this.state.fontBulletElementDropdown === elementDropdown) {
-                elementDropdown = '';
-            }
+
+        
+        if (elementDropdown == 'font' || elementDropdown == 'bullet'){
+            if(this.state.fontBulletElementDropdown === elementDropdown)  elementDropdown = '';
             this.setState({fontBulletElementDropdown: elementDropdown});
-        } 
-        this.setState({
-            podOption: false
-        });
+        } else {
+            if(this.state.elementDropdown === elementDropdown) elementDropdown = '';
+            this.setState({elementDropdown, fontBulletElementDropdown: ""});
+        }
+        this.setState({ podOption: false });
     }
 
     primaryOption = () => {
@@ -274,26 +325,28 @@ class Sidebar extends Component {
         let className = ""
         let fontBulletOptionList = Object.keys(fontBulletOptionObject);
         fontBulletOptions = fontBulletOptionList.map(item => {
-            return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
-                {fontBulletOptionObject[item].text}    
-            </li>;
+            if (item !== 'enumType') {
+                return <li key={item} data-value={item} onClick={this.handleFontBulletOptionChange}>
+                    {fontBulletOptionObject[item].text}    
+                </li>;
+            }
         });
 
         let active = '';
-        if (data == "fontStyle" && this.state.fontBulletElementDropdown === 'font') {
+        if (data === "fontStyle" && this.state.fontBulletElementDropdown === 'font') {
             active = 'active';
-        } else if (data == "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet'){
+        } else if (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet'){
             active = 'active';
         }
         const sidebarDisableCondition = ((this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
         
         fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
             className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
-            <div className={`element-dropdown-title ${className}`} data-element= {`${dataElement}`} onClick={this.toggleElementDropdown}>
+            <div className={`element-dropdown-title ${className}`} data-element= {dataElement} onClick={this.toggleElementDropdown}>
                 {fontBulletOptionObject[dataValue]?.text}
                 {disabledPrimaryOption.indexOf(dataValue) > -1 ? null : dropdownArrow}
             </div>
-            <ul className={`element-dropdown-content primary-options  ${active}`}>
+            <ul className={`element-dropdown-content primary-options ${active}`}>
                 {fontBulletOptions}
             </ul>
         </div> : null;
