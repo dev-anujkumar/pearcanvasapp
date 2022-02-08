@@ -955,7 +955,7 @@ class Sidebar extends Component {
     }  
 
     render = () => {
-        const disableFontBullet = this.props.activeElement?.index !== 1 ? "disableFontBullet" : "";
+        const disableFontBullet = "";//this.props.activeElement?.index !== 1 ? "disableFontBullet" : "";
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
