@@ -10,10 +10,10 @@ function DialogueContent(props) {
     if (props.labelText === 'DE') {
         let dialogueModel= prepareDialogueDom(props.model[props.index]?.text)
         editor = <Fragment>
-            {/* <KeyboardWrapper index={`${props.elementIndex}-${props.index}-0`}  enable> */}
+            <KeyboardWrapper index={`${props.elementIndex}-${props.index}-0`}  enable>
             <TinyMceEditor
 
-                index={`${props.elementIndex}-${props.index}-0`}
+                index={`${props.elementIndex}-${props.index}-0-DE`}
                 permissions={props.permissions}
                 openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}
                 element={props.element}
@@ -33,7 +33,7 @@ function DialogueContent(props) {
                 }}
                 placeholder="Enter Character Name..."
                 tagName={'h4'}
-                className={props.className}
+                className={`${props.className} characterPS`}
                 model={props.model[props.index]?.characterName}
                 slateLockInfo={props.slateLockInfo}
                 glossaryFootnoteValue={props.glossaryFootnoteValue}
@@ -42,8 +42,8 @@ function DialogueContent(props) {
                 handleAssetsPopupLocation={props.handleAssetsPopupLocation}
                 
             />
-             {/* </KeyboardWrapper>
-             <KeyboardWrapper index={`${props.elementIndex}-${props.index}-1`}  enable>  */}
+            </KeyboardWrapper>
+            <KeyboardWrapper index={`${props.elementIndex}-${props.index}-1-DE`}  enable>
             <TinyMceEditor
                 index={`${props.elementIndex}-${props.index}-1`}
                 permissions={props.permissions}
@@ -73,7 +73,7 @@ function DialogueContent(props) {
                 handleAudioPopupLocation = {props.handleAudioPopupLocation}
                 handleAssetsPopupLocation={props.handleAssetsPopupLocation}
             />
-            {/* </KeyboardWrapper> */}
+            </KeyboardWrapper>
         </Fragment>
     } else {
         editor = 
