@@ -998,11 +998,11 @@ class SlateWrapper extends Component {
                 this.renderButtonsonCondition(_elements);
                 /* @-isPdf_Assess-@ - TO check TYPE of current slate  */
                 const isPdf_Assess = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(config.slateType);
-                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress && !isSubscriberRole(projectSubscriptionDetails?.projectSharingRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)) {
+                if (_elements.length <= 1 && isPdf_Assess && config.isDefaultElementInProgress && !isSubscriberRole(projectSubscriptionDetails?.projectSharingRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     const typeOfEle = _slateType === SLATE_TYPE_ASSESSMENT ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
-                    this.props.createElement(typeOfEle, "0", '', '', '', '', () => {
+                    this.props.createElement(typeOfEle, `${_elements.length}`, '', '', '', '', () => {
                         config.isDefaultElementInProgress = true;
                     });
                 }
@@ -1011,7 +1011,7 @@ class SlateWrapper extends Component {
                 }
                 /* @hideSapratorFor@ List of slates where seprator is hidden */
                 const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(_slateType);
-                return _elements.map((element, index) => {
+                return _elements.map((element, index) => { 
                         return (
                            <React.Fragment key={element.id}>
                                <LazyLoad 
