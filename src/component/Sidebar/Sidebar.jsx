@@ -902,6 +902,7 @@ class Sidebar extends Component {
     }  
 
     render = () => {
+        const disableFontBullet = this.props.activeElement?.index !== 1 ? "disableFontBullet" : "";
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
@@ -913,7 +914,7 @@ class Sidebar extends Component {
                     {this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
-                    {this.state.activeElementType ==="manifestlist" && <div>
+                    {this.state.activeElementType ==="manifestlist" && <div className={`${disableFontBullet}`}>
                     <div className="canvas-sidebar-font-bullet-type">Font Type</div>
                     {this.fontBulletOption("fontStyle")}
                     <div className="canvas-sidebar-font-bullet-type">Bullet Style</div>
