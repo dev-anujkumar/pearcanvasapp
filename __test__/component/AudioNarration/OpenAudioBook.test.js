@@ -31,6 +31,12 @@ const initialState = {
             "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
             "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
         }
+    },
+    projectSubscriptionDetails:{
+        projectSharingRole:"SUBSCRIBER",
+        projectSubscriptionDetails:{
+            isSubscribed : true
+        }
     }
 };
 let store = mockStore(initialState);
@@ -57,7 +63,13 @@ describe('Testing OpenAudioBook component', () => {
         deleteAudioNarrationForContainer:  jest.fn(),
         showAudioRemovePopup : jest.fn(), 
         isGlossary :false,
-        audioGlossaryData: {}
+        audioGlossaryData: {},
+            projectSubscriptionDetails:{
+                projectSharingRole:"SUBSCRIBER",
+                projectSubscriptionDetails:{
+                    isSubscribed : true
+                }
+            }
     }
     const e = {
         target: {
@@ -156,3 +168,4 @@ describe('when audio is selected from glossary',()=>{
 
     })
 })
+

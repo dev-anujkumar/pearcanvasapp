@@ -1,5 +1,5 @@
-import { getContainerEntityUrn, getAutoNumberedElement } from './AutoNumber_helperFunctions';
-import { autoNumber_KeyMapperElements } from './AutoNumberConstants';
+import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
+import { autoNumber_KeyMapperElements, autoNumber_ElementTypeKey } from './AutoNumberConstants';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
@@ -27,12 +27,11 @@ export const handleAutoNumberingOnDelete = (params) => {
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
     const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside'];
     if (isAutoNumberingEnabled) {
-        /**if (asideData && asideData.type && containerElements.indexOf(asideData.type) > -1) {
+        if (containerElements.includes(type)) {
             //reset auto-numbering
-            updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, slateAncestors, getState, dispatch)
+            updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, contentUrn, getState, dispatch)
         }
-        else */
-        if (type == 'figure') {
+        else if (type == 'figure') {
             //reset auto-numbering
             const autoNumberedElements = getState().autoNumberReducer.autoNumberedElements;
             dispatch(updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements))
@@ -51,7 +50,7 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
     if (parentIndex && contentUrn && numberedElements) {
         for (let labelType in numberedElements) {
             if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
-                let index = numberedElements[labelType][parentIndex].findIndex(figure => figure.contentUrn === contentUrn);
+                let index = numberedElements[labelType][parentIndex]?.findIndex(figure => figure.contentUrn === contentUrn);
                 if (index > -1) {
                     numberedElements[labelType][parentIndex].splice(index, 1);
                     break;
@@ -75,27 +74,32 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
  * @param {*} getState 
  * @param {*} dispatch 
  */
-/**
-export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, contentUrn, slateAncestors, getState, dispatch) => {
-    const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    const numberedElements = getState().autoNumberReducer.autoNumberedElements;
-    if (contentUrn && numberedElements) {
-        for (let labelType in numberedElements) {
-            if (numberedElements[labelType]?.hasOwnProperty(parentIndex) && numberedElements[labelType][parentIndex]) {
-                numberedElements[labelType][parentIndex] = numberedElements[labelType][parentIndex]?.filter(ele => ((!ele.parentDetails) || (ele.parentDetails?.length < 1) || ele?.parentDetails?.indexOf(contentUrn) < 0))
-                break;
+export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, contentUrn, getState, dispatch) => {
+    const {autoNumberedElements, slateFigureList} = getState().autoNumberReducer;
+    if (autoNumberedElements) {
+        for (let labelType in autoNumberedElements) {
+            if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex]) {
+                let elementData = autoNumberedElements[labelType][parentIndex];
+                let data = [];
+                for(let element of elementData){
+                    slateFigureList?.map(figure =>{
+                        if(figure.contentUrn === element.contentUrn && !figure.parentDetails.includes(contentUrn)) {
+                            data.push(figure);
+                        }
+                    });
+                }
+                autoNumberedElements[labelType][parentIndex] = data
             }
         }
     }
     dispatch({
         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
         payload: {
-            numberedElements
+            numberedElements: autoNumberedElements
         }
     });
-    getAutoNumberSequence(numberedElements, dispatch)
+    getAutoNumberSequence(autoNumberedElements, dispatch)
 }
- */
 /**
  * Handle AUTO-NUMBERING on Swapping
  * @param {*} params 
@@ -122,11 +126,10 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
                 }
             });
         }
-        /** if (containerElements.indexOf(swappedElementData?.type) > -1) {
+        if (containerElements.indexOf(swappedElementData?.type) > -1) {
             updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors })
         }
-        else */
-         if (swappedElementData?.type === 'figure') {
+        else if (swappedElementData?.type === 'figure') {
             updateAutoNumberSequenceOnSwappingElements({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors })
         }
 
@@ -142,7 +145,6 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
  */
 export const updateAutoNumberSequenceOnSwappingElements = (params) => {
     const {
-        // getState,
         dispatch,
         slateFigures,
         slateAncestors,
@@ -151,8 +153,8 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
     } = params
     if (swappedElementData?.type === 'figure' && swappedElementData?.hasOwnProperty('displayedlabel')) {
         if (slateFigures || slateFigures?.length > 0) {
-            const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === swappedElementData.displayedlabel)
-            const figureIndexOnSlate = activeLabelFigures.findIndex(ele => ele.contentUrn === swappedElementData.contentUrn)
+            const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === swappedElementData?.displayedlabel)
+            const figureIndexOnSlate = activeLabelFigures?.findIndex(ele => ele?.contentUrn === swappedElementData?.contentUrn)
             if (activeLabelFigures?.length > 1) {
                 let refIndex = ""
                 if (figureIndexOnSlate == activeLabelFigures.length - 1) {
@@ -169,8 +171,9 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
                 }
                 if (referenceFigure) {
-                    const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === referenceFigure)
-                    numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, swappedElementData)
+                    const refImageIndex = numberedElements[labelType][figureParentEntityUrn]?.findIndex(ele => ele.contentUrn === referenceFigure);
+                    const newPosition = refImageIndex < 0 ? numberedElements[labelType][figureParentEntityUrn]?.length : refImageIndex;
+                    numberedElements[labelType][figureParentEntityUrn]?.splice(newPosition, 0, swappedElementData)
                     dispatch({
                         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
                         payload: {
@@ -189,63 +192,71 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
  *  This function resets sequence after SWAP when a container having figure is swapped
  * @param {*} params
  */
-/**
 export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
     const {
-        getState,
         dispatch,
         slateFigures,
         slateAncestors,
         numberedElements,
         swappedElementData
     } = params;
+
+    let refElementObj = {}
+    let swappedElementsUrn = [];
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    const labelType = autoNumber_KeyMapperElements[swappedElementData.displayedlabel]
-    if (slateFigures || slateFigures?.length > 1) {
-        const elementsToSwap = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.containerData.indexOf(swappedElementData.contentUrn) > -1)
-        const noOfElementsToSwap = elementsToSwap?.length
-        if (noOfElementsToSwap > 0) {
-            const elementUrnToSearch = elementsToSwap[noOfElementsToSwap - 1].contentUrn
+    let swappedElementIterated = false;
+    let swappedElementList = [];
+    let reNumberingRequired = false;
 
-            Object.values(DISPLAYED_LABELS).forEach(label => {
-                const activeLabelElements = slateFigures?.filter(ele => ele.displayedlabel === label)
-                const indexToSearch = activeLabelElements?.findIndex(ele => ele.contentUrn === elementUrnToSearch)
-                if (indexToSearch == (activeLabelElements?.length - 1)) {
-                    const newUrnToSearch = elementsToSwap[0].contentUrn
-                    const indexToSearch2 = activeLabelElements?.findIndex(ele => ele.contentUrn === newUrnToSearch)
-                    const prevElement = activeLabelElements[indexToSearch2 - 1]?.contentUrn
-                    if (prevElement) {
-                        //delete old places
-                        numberedElements[labelType][figureParentEntityUrn]?.splice(indexToSearch, noOfElementsToSwap)
-                        const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === nextElement)
-                        numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex + 1, 0, elementsToSwap)
-                        dispatch({
-                            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-                            payload: {
-                                numberedElements
-                            }
-                        });
-                        getAutoNumberSequence(numberedElements, dispatch)
-                    }
-
-                } else {
-                    const nextElement = activeLabelElements[elementToSearch + 1]?.contentUrn
-                    if (nextElement) {
-                        //delete old places
-                        numberedElements[labelType][figureParentEntityUrn]?.splice(indexToSearch, noOfElementsToSwap)
-                        const refImageIndex = numberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === nextElement)
-                        numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, elementsToSwap)
-                        dispatch({
-                            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-                            payload: {
-                                numberedElements
-                            }
-                        });
-                        getAutoNumberSequence(numberedElements, dispatch)
-                    }
-                }
-            })
+    for(let i in slateFigures){
+        let element = slateFigures[i];
+        if(element?.parentDetails?.includes(swappedElementData?.contentUrn)){
+            swappedElementsUrn.push(element.contentUrn);
+            swappedElementIterated = true;
+        } else {
+            reNumberingRequired = true;
+            if(swappedElementIterated) break;
+            refElementObj[autoNumber_ElementTypeKey[element.displayedlabel]] = element.contentUrn;
         }
     }
+
+    if(reNumberingRequired){
+        Object.values(autoNumber_ElementTypeKey).forEach(label => {
+            let elementArray = numberedElements[label][figureParentEntityUrn];
+            swappedElementList = [];
+            let prevElementURN = ""
+            if(elementArray && elementArray.length > 0){
+                elementArray.forEach((element, i) => {
+                    if(element?.slateEntityUrn === swappedElementData.slateEntityUrn && swappedElementsUrn.includes(element?.contentUrn)){
+                        swappedElementList.push(element);
+                        prevElementURN = i > 0 ? elementArray[i-1]?.contentUrn : ""
+                        elementArray.splice(i,1);
+                    }
+                });
+                if(refElementObj[label]){
+                    const findRefIndex = (element) => element.contentUrn === refElementObj[label]
+                    const refElementIndex = elementArray?.findIndex(findRefIndex);
+                    elementArray.splice(refElementIndex+1, 0, ...swappedElementList);
+                } else {
+                    const findRefIndexInCurrentSlate = (element) => element.slateEntityUrn === swappedElementData.slateEntityUrn;
+                    const refIndexInCurrentSlate = elementArray?.findIndex(findRefIndexInCurrentSlate);
+                    if(refIndexInCurrentSlate < 0){
+                        const findPrevElementIndex = (element) => element.contentUrn === prevElementURN;
+                        const prevElementIndex = elementArray?.findIndex(findPrevElementIndex);
+                        elementArray.splice(prevElementIndex+1, 0, ...swappedElementList);
+                    } else {
+                        elementArray.splice(refIndexInCurrentSlate, 0, ...swappedElementList);
+                    }
+                }
+            }
+        });
+    
+        dispatch({
+            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+            payload: {
+                numberedElements
+            }
+        });
+        getAutoNumberSequence(numberedElements, dispatch)
+    }
 }
- */

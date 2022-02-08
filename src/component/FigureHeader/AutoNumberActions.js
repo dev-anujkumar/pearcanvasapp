@@ -7,8 +7,8 @@ import {
     GET_TOC_AUTO_NUMBERING_LIST,
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
-import { prepareAutoNumberList } from './AutoNumber_helperFunctions';
-import { AUTO_NUMBER_ELEMENTS, autoNumber_IndexMapper } from './AutoNumberConstants';
+import { prepareAutoNumberList, getNumberedElements } from './AutoNumber_helperFunctions';
+import { autoNumber_IndexMapper } from './AutoNumberConstants';
 /**
  * 
  */
@@ -18,11 +18,14 @@ const commonHeaders = {
     "Content-Type": "application/json",
     "PearsonSSOSession": config.ssoToken
 }
+
 /**
- * This API fetches the Learning Framework(s) linked to the project
+ * This API fetches the autonumbered elements in the current TOC Container (P,C,FM,BM)
+ * @param {*} currentParentUrn TOC Container EntityUrn
+ * @returns 
  */
-export const fetchProjectFigures = (elementType) => (dispatch, getState) => {
-    const url = getAPIUrl(elementType)
+export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) => {
+    const url = getAPIUrl(currentParentUrn);
     axios.get(url, {
         headers: {
             "ApiKey": config.STRUCTURE_APIKEY,
@@ -30,17 +33,10 @@ export const fetchProjectFigures = (elementType) => (dispatch, getState) => {
             "PearsonSSOSession": config.ssoToken
         }
     }).then(async response => {
-        if (response?.data?.contents) {
-            const projectContent = response.data.contents
-            let numberedElements = {
-                imagesList: [],
-                tablesList: [],
-                equationsList: [],
-                audiosList:[],
-                videosList:[],
-            }
-            let oldAutoNumberedElements = getState().autoNumberReducer.autoNumberedElements
-            numberedElements = await mediaElementAPI_Handler({elementType,autoNumberedElements: oldAutoNumberedElements}, projectContent, numberedElements);
+        if (response?.data) {
+            const projectContent = response.data;
+            let numberedElements = {}
+            numberedElements = getNumberedElements(projectContent, currentParentUrn);
             console.log('numberedElements>>>>', numberedElements)
             getAutoNumberSequence(numberedElements,dispatch)
             dispatch({
@@ -60,6 +56,12 @@ export const fetchProjectFigures = (elementType) => (dispatch, getState) => {
 
 };
 
+/**
+ * Prepare the Final Autonumbered Elements Sequence
+ * @param {*} numberedElements 
+ * @param {*} autoNumberElementsIndex 
+ * @returns 
+ */
 const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIndex) => {
     for (let labelType in numberedElements) {
         if (Object.prototype.hasOwnProperty.call(numberedElements, labelType)) {
@@ -70,6 +72,11 @@ const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIn
     return autoNumberElementsIndex
 }
 
+/**
+ * Save the Final Autonumbered Elements Sequence in Store
+ * @param {*} numberedElements 
+ * @param {*} dispatch 
+ */
 export const getAutoNumberSequence = (numberedElements, dispatch) => {
     let autoNumberElementsIndex = {}
     autoNumberElementsIndex = setAutoNumberSequenceForElements(numberedElements, autoNumberElementsIndex);
@@ -81,32 +88,36 @@ export const getAutoNumberSequence = (numberedElements, dispatch) => {
     });
 }
 
-const getAPIUrl = (mediaType, containerEntityUrn) => {
-    let endpointVersion = '',
-        endpointExtension = ''
-    switch (mediaType) {
-        case AUTO_NUMBER_ELEMENTS.AUDIO:
-            endpointVersion = 'v2'
-            endpointExtension = 'audios'
-            break;
-        case AUTO_NUMBER_ELEMENTS.VIDEO:
-            endpointVersion = 'v2'
-            endpointExtension = 'videos'
-            break;
-        case AUTO_NUMBER_ELEMENTS.IMAGE:
-        case AUTO_NUMBER_ELEMENTS.MATH_IMAGE:
-        case AUTO_NUMBER_ELEMENTS.MATH_IMAGE:
+/**
+ * Prepare the Endpoint to get Autonumbered Elements at Container TOC Container Level  (P,C,FM,BM)
+ * @param {*} containerEntityUrn 
+ * @returns 
+ */
+const getAPIUrl = (containerEntityUrn) => {
+    let matterType = "";
+    switch(containerEntityUrn){
+        case "frontMatter":
+            matterType = "frontmatter";
+        break;
+        case "backMatter":
+            matterType = "backmatter";
+        break;
         default:
-            endpointVersion = 'v3'
-            endpointExtension = 'images'
-            break;
+            matterType = "bodymatter"
     }
-    if (containerEntityUrn) {
-        return `${config.ASSET_POPOVER_ENDPOINT}${endpointVersion}/${config.projectUrn}/containers/${containerEntityUrn}/${endpointExtension}`
+    let url = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/sectionType/${matterType}`;
+    if(matterType === "bodymatter"){
+        url = `${url}?contentUrn=${containerEntityUrn}`;
     }
-    return `${config.ASSET_POPOVER_ENDPOINT}${endpointVersion}/${config.projectUrn}/${endpointExtension}`
+
+    return url;
 }
 
+/**
+ * Set TOC Container's AutoNumbbering Details in Store
+ * @param {*} autoNumberingDetails 
+ * @returns 
+ */
 export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch => {
     dispatch({
         type: GET_TOC_AUTO_NUMBERING_LIST,
@@ -114,6 +125,12 @@ export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch
     });
 }
 
+/**
+ * Function to Enable/Disable Autonumbering in Canvas
+ * @param {*} flag 
+ * @param {*} configValue 
+ * @returns 
+ */
 export const isAutoNumberEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: SET_AUTO_NUMBER_TOGGLE,
@@ -130,23 +147,42 @@ export const commonDispatch = (dispatch, type, payload) => {
     });
 }
 
+
 /**
-
+ * Get Slate's Content | Used for getting Popup Slate's bodymatter
+ * @param {*} manifestURN 
+ * @param {*} entityURN 
+ * @returns 
+ */
 export const getSlateLevelData = async (manifestURN, entityURN) => {
-
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`
-    await axios.get(apiUrl, {
-        headers: {
-            "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
-        }
-    }).then(async res => {
-        const slateData = Object.values(res.data)[0];
-        console.log('slateData',slateData)
-        return await slateData.contents.bodymatter
-    }).catch((err) => {
-        return []
-    })
+    try {
+        const response = await axios.get(apiUrl, {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        })
+        const slateData = Object.values(response.data)[0];
+        return slateData;
+    } catch (err) {
+        console.error('Error in getting slate link data', err)
+        return {}
+    }
 }
 
+/**
+ * Handle Autonumbering in TCM Window
  */
+export const setAutoNumberinBrowser = (flag, configValue) => {
+    let prevStatus = localStorage.getItem('projectAutoNumberStatus');
+    let projectAutoNumberStatus = {};
+    if (prevStatus && prevStatus.length > 0) {
+        projectAutoNumberStatus = JSON.parse(prevStatus);
+    }
+    projectAutoNumberStatus = {
+        ...projectAutoNumberStatus,
+        [config.projectEntityUrn]: flag && configValue
+    }
+    localStorage.setItem('projectAutoNumberStatus', JSON.stringify({ ...projectAutoNumberStatus }));
+}

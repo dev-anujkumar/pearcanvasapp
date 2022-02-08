@@ -117,16 +117,16 @@ const _Toolbar = props => {
     return (
         <>
             <div className='toolbar-container'>
-                <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
+                <div className={`header ${isToolBarBlocked} ${accessToolbar}`} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
-                    <div className={isToolBarBlocked ? "leaningobjective-block hideToolbar" : "leaningobjective-block"}>
+                    <div className={props?.isLOExist ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
                         <div className="learningobjectiveicon">
                             <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
                             </div>
                             {lodropdown &&
-                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} lastAlignedExternalLO={props.lastAlignedExternalLO} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} showCanvasBlocker={props.showCanvasBlocker}/>
+                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} lastAlignedExternalLO={props.lastAlignedExternalLO} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} showCanvasBlocker={props.showCanvasBlocker} projectSubscriptionDetails = {props.projectSubscriptionDetails} />
                             }
                         </div>
                     </div>
@@ -168,7 +168,7 @@ const _Toolbar = props => {
                             }}>
                                 {audioNarrationEnable}
                             </div>
-                            {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
+                            {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} projectSubscriptionDetails = {props.projectSubscriptionDetails} />}
                         </div>
                     </div>
                 }
@@ -200,7 +200,6 @@ const mapStateToProps = (state) => {
         elemBorderToggle,
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
-        lastAlignedExternalLO:state.metadataReducer.lastAlignedExternalLO,
         slateType: state.appStore.slateType,
         setSlateEntity: state.appStore.setSlateEntity,
         isLOExist: state.metadataReducer.slateTagEnable,

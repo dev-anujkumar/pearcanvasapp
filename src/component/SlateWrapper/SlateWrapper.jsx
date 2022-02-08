@@ -51,6 +51,7 @@ import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../compone
 import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import {isOwnersSubscribedSlate} from '../CanvasWrapper/CanvasWrapper_Actions';
 import KeyboardUpDown from '../Keyboard/KeyboardUpDown.jsx';
+import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 
 let random = guid();
 
@@ -1387,6 +1388,7 @@ class SlateWrapper extends Component {
         config.tcmslatemanifest= null
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
+        this.props.savePopupParentSlateData({});
         if(config.tcmStatus){
             this.props.handleTCMData(config.slateManifestURN)
         }
@@ -1686,6 +1688,7 @@ export default connect(
         showWrongImagePopup,
         alfrescoPopup,
         showRemoveImageGlossaryPopup,
-        isOwnersSubscribedSlate
+        isOwnersSubscribedSlate,
+        savePopupParentSlateData
     }
 )(SlateWrapper);
