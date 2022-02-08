@@ -21,6 +21,11 @@
     margin-bottom: -20px;  
 }
 
+.disableFontBullet {
+  pointer-events:none;
+  opacity: 0.5;
+}
+
 .canvas-sidebar .element-dropdown {
     position: relative;
 }
