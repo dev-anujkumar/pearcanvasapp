@@ -65,9 +65,9 @@ const KeyboardUpDown = (props) => {
                 childElement.firstChild.click();
                 childElement.firstChild.focus();
             }
-            else if(childElement.className.includes("actTitle-h4") || childElement.className.includes("sceneTitle-h4")
-             || childElement.className.includes("credit-h4")|| childElement.className.includes("characterPS") || 
-             childElement.firstChild){
+            else if(childElement?.className.includes("actTitle-h4") || childElement?.className.includes("sceneTitle-h4")
+                    || childElement?.className.includes("credit-h4")|| childElement?.className.includes("characterPS") ||
+                     childElement?.className.includes('heading4ImageTextWidthTitle') || childElement?.firstChild){
                 childElement.click();
                 childElement.focus();
             }

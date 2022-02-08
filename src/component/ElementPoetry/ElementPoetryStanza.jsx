@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../../styles/ElementPoetry/ElementPoetry.css'
+import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 import TinyMceEditor from "../tinyMceEditor";
 
 /**
@@ -19,30 +20,32 @@ class ElementPoetryStanza extends Component {
     const { className, model, openGlossaryFootnotePopUp, slateLockInfo, openAssetPopoverPopUp, glossaryFootnoteValue, index } = this.props
     let lineModel = this.prepareLineDom(model)
     return (
-      <TinyMceEditor
-        openAssetPopoverPopUp={openAssetPopoverPopUp}
-        openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
-        index={index}
-        elementId={this.props.elementId}
-        element={this.props.element}
-        placeholder="Type Something..."
-        className={className}
-        model={lineModel ? lineModel : '<span class="poetryLine"><br></span>'}
-        tagName={'div'}
-        handleEditorFocus={this.props.handleFocus}
-        handleBlur={this.props.handleBlur}
-        slateLockInfo={slateLockInfo}
-        onListSelect={this.props.onListSelect}
-        permissions={this.props.permissions}
-        setActiveElement={this.props.setActiveElement}
-        btnClassName={this.props.btnClassName}
-        borderToggle={this.props.borderToggle}
-        elemBorderToggle={this.props.elemBorderToggle}
-        glossaryFootnoteValue={glossaryFootnoteValue}
-        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-        handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
-        handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
-      />
+      <KeyboardWrapper index={index} enable>
+        <TinyMceEditor
+          openAssetPopoverPopUp={openAssetPopoverPopUp}
+          openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
+          index={index}
+          elementId={this.props.elementId}
+          element={this.props.element}
+          placeholder="Type Something..."
+          className={className}
+          model={lineModel ? lineModel : '<span class="poetryLine"><br></span>'}
+          tagName={'div'}
+          handleEditorFocus={this.props.handleFocus}
+          handleBlur={this.props.handleBlur}
+          slateLockInfo={slateLockInfo}
+          onListSelect={this.props.onListSelect}
+          permissions={this.props.permissions}
+          setActiveElement={this.props.setActiveElement}
+          btnClassName={this.props.btnClassName}
+          borderToggle={this.props.borderToggle}
+          elemBorderToggle={this.props.elemBorderToggle}
+          glossaryFootnoteValue={glossaryFootnoteValue}
+          glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+          handleAudioPopupLocation={this.props.handleAudioPopupLocation}
+          handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
+        />
+      </KeyboardWrapper>
     )
   }
 }
