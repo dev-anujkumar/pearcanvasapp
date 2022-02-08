@@ -261,6 +261,7 @@ function removeAllLocal() {
             removeLocal("validSession");
             removeLocal("attributes");
             removeLocalStorage("hasOwnerEdit");
+            removeLocalStorage("projectAutoNumberStatus");
         } catch (err) {
             // Do nothing
         }
