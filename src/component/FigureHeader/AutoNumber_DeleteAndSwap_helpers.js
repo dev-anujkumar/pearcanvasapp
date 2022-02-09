@@ -166,7 +166,7 @@ export const getImagesInsideElement = (bodyMatter, numberedElements = [], elemen
  */
 export const handleAutoNumberingOnDelete = (params) => {
     const {
-        deleteElemData,
+        element,
         type,
         contentUrn,
         getState,
@@ -174,7 +174,6 @@ export const handleAutoNumberingOnDelete = (params) => {
         isAutoNumberingEnabled,
         asideData
     } = params
-    console.log(";;;;;;;;;;;", deleteElemData);
     const slateAncestors = getState().appStore.currentSlateAncestorData;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
     const autoNumberedElements = getState().autoNumberReducer.autoNumberedElements;
@@ -182,7 +181,7 @@ export const handleAutoNumberingOnDelete = (params) => {
         if (containerElementTypes.includes(type)) {
             //reset auto-numbering
             dispatch(updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements));
-            updateAutoNumberSequenceOnDeleteInContainers(deleteElemData, figureParentEntityUrn, contentUrn, getState, dispatch);
+            updateAutoNumberSequenceOnDeleteInContainers(element, figureParentEntityUrn, contentUrn, getState, dispatch);
         }
         else if (type == 'figure') {
             //reset auto-numbering
