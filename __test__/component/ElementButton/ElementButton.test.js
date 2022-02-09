@@ -12,7 +12,7 @@ describe('Testing Button component with props', () => {
         const component = mount(<Button type={buttonTypes.ADD_COMMENT} labelText="UL" />);
         expect(component.find('span.btn-element').hasClass('add-comment')).toBe(true);
         expect(component.find('span.btn-element').hasClass('split-icon')).toBe(false);
-        expect(component.find('svg#Capa_1').exists()).toBe(true);
+        expect(component.find('svg#Capa_1').exists()).toBe(false);
     })
   it('render Edit Button Component to open Cypress Plus', () => {
     const component = mount(<Button type={buttonTypes.EDIT_BUTTON_CYPRESSSPLUS} labelText='UL' />)
