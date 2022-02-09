@@ -3,7 +3,7 @@ import config from '../../../src/config/config';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../../../src/component/FigureHeader/AutoNumberConstants';
 import * as autonumber_helperFunctions from '../../../src/component/FigureHeader/AutoNumber_helperFunctions';
 /*************************Import Constants*************************/
-import { mockSlateFiguresList, mockAutoNumberingDetails, slateAncestorFM, slateAncestorBM, slateAncestorPart, slateAncestorChapter, slateAncestorChapterwithMod, mockIndexedElements } from './AutoNumberApiTestData';
+import { mockSlateFiguresList, mockAutoNumberingDetails, slateAncestorFM, slateAncestorBM, slateAncestorPart, slateAncestorChapter, slateAncestorChapterwithMod, mockIndexedElements, figureData } from './AutoNumberApiTestData';
 
 describe('-----------------Testing AutoNumber_helperFunctions-----------------', () => {
     describe('Test-1 setAutoNumberSettingValue-----------------', () => {
@@ -166,7 +166,6 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
             parentNumber: "11"
         }
         it('Test-4.1---getLabelNumberPreview---Other cases', () => {
-            params.labelNumberSetting = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER;
             const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getLabelNumberPreview');
             let result = autonumber_helperFunctions.getLabelNumberPreview(element, params);
             expect(result).toBe('Figure 11.2')
@@ -305,15 +304,25 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
             contentUrn: "urn:pearson:entity:a4719e78-a66b-4356-ac62-7591a42d070d",
             figuretype: "image"
         }
+        let element = { ...element2, numberedandlabel: true, manualoverride: {
+                "overridenumbervalue": "12"
+            }}
         it('Test-7.1---getNumberData---default cases', () => {
             const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getNumberData');
-            let result = autonumber_helperFunctions.getNumberData("backMatter", element2, mockIndexedElements)
+            autonumber_helperFunctions.getNumberData("backMatter", element2, mockIndexedElements)
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
         it('Test-7.2---getNumberData---default cases', () => {
             const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getNumberData');
-            let result = autonumber_helperFunctions.getNumberData("", element2, mockIndexedElements)
+            autonumber_helperFunctions.getNumberData("", element2, mockIndexedElements)
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+
+        it('Test-7.3---getNumberData---override number cases', () => {
+            const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getNumberData');
+            autonumber_helperFunctions.getNumberData("backMatter", element, mockIndexedElements)
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
@@ -421,5 +430,18 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
-    })
+    });
+    describe('Test-11 prepareAutoNumberList---------------------', () => {
+        it('Test-11.1 prepareAutoNumberList ', () => {
+            const output = { 
+                frontMatter:
+                    { 'urn:pearson:entity:5af04c31-a733-46df-8224-214aabcf2665': 1,
+                      'urn:pearson:entity:5af04c31-a733-46df-8224-214aabcf26445': '',
+                      'urn:pearson:entity:5af04c31-a733-46df-8224-344aabcf26445': '12',
+                      'urn:pearson:entity:5af04c33-a733-46df-8224-344aabcf26445': '555' }
+                 }
+            const result = autonumber_helperFunctions.prepareAutoNumberList(figureData);
+            expect(result).toStrictEqual(output);
+        });
+    });
 })

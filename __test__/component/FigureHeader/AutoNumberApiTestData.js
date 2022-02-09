@@ -2493,4 +2493,91 @@ export const slateFigures2 = [
         "indexPos": 4,
         "slateEntityUrn": "urn:pearson:entity:7a276aed-c8c0-48d9-b6ec-c5f80c1bb1ea"
     }
-]
+];
+
+export const figureData = {
+	frontMatter:[
+		{
+			"contentUrn": "urn:pearson:entity:5af04c31-a733-46df-8224-214aabcf2665",
+			"displayedlabel": "Figure",
+			"entityUrn": "urn:pearson:entity:5af04c31-a733-46df-8224-214aabcf2665",
+			"figureType": 'image',
+			"imageId": "",
+			"numberedandlabel": true,
+			"parentContainerEntityUrn": "urn:pearson:entity:d55a0b4a-a899-42e7-b72d-81cc06deea10",
+			"path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+			"slateEntityUrn": "urn:pearson:entity:d55a0b4a-a899-42e7-b72d-81cc06deea10",
+			"subType": "imageTextWidth",
+			"title": "",
+			"type": "figure",
+			"versionUrn": "urn:pearson:work:e6db7bfa-30a2-4e82-ab4a-830775c2de18",
+		},
+		{
+			"contentUrn": "urn:pearson:entity:5af04c31-a733-46df-8224-214aabcf26445",
+			"entityUrn": "urn:pearson:entity:5af04c31-a733-46df-8224-214aabcf2665",
+			"figureType": 'image',
+			"imageId": "",
+			"numberedandlabel": false,
+			"parentContainerEntityUrn": "urn:pearson:entity:d55a0b4a-a899-42e7-b72d-81cc06deea10",
+			"path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+			"slateEntityUrn": "urn:pearson:entity:d55a0b4a-a899-42e7-b72d-81cc06deea10",
+			"subType": "imageTextWidth",
+			"title": "",
+			"type": "figure",
+			"versionUrn": "urn:pearson:work:e6db7bfa-30a2-4e82-ab4a-830775c2de18",
+		},
+		{
+			"contentUrn": "urn:pearson:entity:5af04c31-a733-46df-8224-344aabcf26445",
+			"entityUrn": "urn:pearson:entity:5af04c31-a733-46df-8224-214aabcf2665",
+			"figureType": 'image',
+			"imageId": "",
+			"numberedandlabel": true,
+			"manualoverride": {
+				"overridenumbervalue": "12"
+			},
+			"displayedlabel": "Figure",
+			"parentContainerEntityUrn": "urn:pearson:entity:d55a0b4a-a899-42e7-b72d-81cc06deea10",
+			"path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+			"slateEntityUrn": "urn:pearson:entity:d55a0b4a-a899-42e7-b72d-81cc06deea10",
+			"subType": "imageTextWidth",
+			"title": "",
+			"type": "figure",
+			"versionUrn": "urn:pearson:work:e6db7bfa-30a2-4e82-ab4a-830775c2de18",
+		},{
+			"contentUrn": "urn:pearson:entity:5af04c31-a733-46df-8224-344aabcf26445",
+			"entityUrn": "urn:pearson:entity:5af04c31-a733-46df-8224-214aabcf2665",
+			"figureType": 'image',
+			"imageId": "",
+			"numberedandlabel": true,
+			"manualoverride": {
+				"overridenumbervalue": "12"
+			},
+			"displayedlabel": "Figure",
+			"parentContainerEntityUrn": "urn:pearson:entity:d55a0b4a-a899-42e7-b72d-81cc06deea10",
+			"path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+			"slateEntityUrn": "urn:pearson:entity:d55a0b4a-a899-42e7-b72d-81cc06deea10",
+			"subType": "imageTextWidth",
+			"title": "",
+			"type": "figure",
+			"versionUrn": "urn:pearson:work:e6db7bfa-30a2-4e82-ab4a-830775c2de18",
+		},
+		{
+			"contentUrn": "urn:pearson:entity:5af04c33-a733-46df-8224-344aabcf26445",
+			"entityUrn": "urn:pearson:entity:5af04c31-a733-46df-8224-214aabcf2665",
+			"figureType": 'image',
+			"imageId": "",
+			"numberedandlabel": true,
+			"manualoverride": {
+				"resumenumbervalue": "555"
+			},
+			"displayedlabel": "Figure",
+			"parentContainerEntityUrn": "urn:pearson:entity:d55a0b4a-a899-42e7-b72d-81cc06deea10",
+			"path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+			"slateEntityUrn": "urn:pearson:entity:d55a0b4a-a899-42e7-b72d-81cc06deea10",
+			"subType": "imageTextWidth",
+			"title": "",
+			"type": "figure",
+			"versionUrn": "urn:pearson:work:e6db7bfa-30a2-4e82-ab4a-830775c2de18",
+		}
+	]
+}
