@@ -49,6 +49,7 @@ export const onDeleteSuccess = (params) => {
 
     const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
     const autoNumberParams = {
+        element,
         type,
         getState,
         dispatch,

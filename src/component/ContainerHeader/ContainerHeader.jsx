@@ -165,7 +165,6 @@ export const ContainerHeader = (props) => {
         }
     }
 
-    console.log('ssssssssssssssss', state);
     const { labelNumberSetting, labelNumberSettingDropDown, showLabelField, showNumberField, labelDropDown, elementLabelData, elementLabelValue } = state;
     const containerNumber = getContainerNumber(slateAncestors, props.autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);

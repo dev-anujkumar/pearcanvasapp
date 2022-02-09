@@ -150,6 +150,7 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
 export const SIDEBAR = "sidebar"
 export const WORKED_EXAMPLE = "workedexample"
 export const autoNumberContainerTypesAllowed = ['element-aside']
+export const containerElementTypes = ['popup', 'showhide', 'groupedcontent', 'element-aside'];
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive']
 export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO', 'SMART_LINK']
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive']

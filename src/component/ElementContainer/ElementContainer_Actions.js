@@ -18,6 +18,7 @@ import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload } from '../FigureHeader/AutoNumber_helperFunctions';
+import { updateAutoNumberedElement } from './UpdateElements';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
 const { 
@@ -860,12 +861,34 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     let currentSlateData = currentParentData[config.slateManifestURN];
     let elementEntityUrn = "", updatedElement
     let titleHTML = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
-    
+    let dataArr, payloadKeys, numberedandlabel, manualoverride, displayedlabel;
     updatedElement = {
         ...previousData,
         html: {
             title: titleHTML
         }
+    }
+    /** Updation of AutoNumbered Elements */
+    if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
+        dataArr = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
+        payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, dataArr[0], dataArr[1], false);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
+        displayedlabel = previousData.displayedlabel;
+        updatedElement = {
+            ...updatedElement,
+            html : {
+                ...updatedElement.html,
+                title: `<p>${dataArr[0]}</p>`
+            },
+            numberedandlabel : numberedandlabel,
+            displayedlabel : displayedlabel,
+            manualoverride : manualoverride
+        }
+        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete dataToSend.manualoverride : dataToSend;
+        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete dataToSend.displayedlabel : dataToSend;
+        const dataToReturn = updateAutoNumberedElement(autoNumberOption, updatedElement, { displayedlabel: updatedElement?.displayedlabel, manualoverride: updatedElement?.manualoverride })
+        updatedElement = { ...dataToReturn }
     }
     const updateParams = {
         index,
@@ -900,14 +923,8 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         contentUrn: previousData.contentUrn,
         status: updatedSlateLevelData.status
     }
-    // if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
-    if (isAutoNumberingEnabled) {
-        const dataArr = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
-        const payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, dataArr[0], dataArr[1], false);
-        const numberedandlabel = payloadKeys?.numberedandlabel;
-        const manualoverride = payloadKeys?.manualoverride;
-        const displayedlabel = previousData.displayedlabel;
-
+    if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
+        
         dataToSend = {
             ...dataToSend,
             html : {
