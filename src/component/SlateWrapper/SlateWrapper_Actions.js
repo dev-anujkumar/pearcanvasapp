@@ -40,7 +40,7 @@ import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
 import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL
@@ -417,7 +417,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     }
                 });
             }
-
             dispatch(handleAutonumberingOnCreate(type, createdElementData));
         }
         /**------------------------------------------------------------------------------------------------*/
@@ -1302,7 +1301,30 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 _requestData.content[0].sectionType = section;
             }
             if (selection?.element?.type === 'element-aside' && selection?.element?.html?.title) {
-                _requestData.content[0].html = selection.element.html
+                _requestData.content[0].html = selection.element.html;
+
+            }
+
+            // Check for autonumbering parameters needs to send or not in request
+            if (isAutoNumberingEnabled && autoNumberContainerTypesAllowed.includes(selection?.element?.type)) {
+                if (selection?.element.hasOwnProperty(MANUAL_OVERRIDE) && selection?.element[MANUAL_OVERRIDE] !== undefined && Object.keys(selection?.element[MANUAL_OVERRIDE])?.length > 0) {
+                    _requestData = {
+                        "content": [{
+                            ..._requestData.content[0],
+                            'displayedlabel': selection?.element?.displayedlabel,
+                            'manualoverride': selection?.element[MANUAL_OVERRIDE],
+                            'numberedandlabel': selection?.element[NUMBERED_AND_LABEL]
+                        }]
+                    }
+                } else {
+                    _requestData = {
+                        "content": [{
+                            ..._requestData.content[0],
+                            'displayedlabel': selection?.element?.displayedlabel,
+                            'numberedandlabel': selection?.element[NUMBERED_AND_LABEL]
+                        }]
+                    }
+                }
             }
         }
 

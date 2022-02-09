@@ -78,6 +78,31 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
     return numberedElements
 }
 
+
+/**
+ * Get List of Aside Elements on a Slate
+ * @param {*} bodyMatter 
+ * @param {*} imagesList 
+ * @returns 
+ */
+ export const getAsideElementsWrtKey = (bodyMatter, typeKey,  numberedElements = [], parentIndex=[]) => {
+    if (bodyMatter?.length > 0 && typeKey) {
+        bodyMatter?.forEach((element, index) => {
+            if (typeKey.indexOf(element.type) > -1) {
+                if (parentIndex?.length) {
+                    element.indexPos = [...parentIndex];
+                    element.indexPos.push(index);
+                } else {
+                    element.indexPos = index;
+                }
+                element.slateEntityUrn = getSlateEntityUrn();
+                numberedElements.push({ ...element });
+            }
+        })
+    }
+    return numberedElements
+}
+
 export const containerBodyMatter = (container) => {
     let dataToReturn = []
     switch (container.type) {

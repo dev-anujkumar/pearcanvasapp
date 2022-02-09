@@ -14,6 +14,8 @@ export const autoNumber_KeyMapper = {
     'Equation': 'equationsIndex',
     'Audio': 'audioIndex',
     'Video': 'videoIndex',
+    'Aside': 'asideIndex',
+    'Worked Example': 'workedExampleIndex',
     "Interactive": 'interactiveIndex'
 }
 
@@ -41,6 +43,8 @@ export const autoNumber_IndexMapper = {
   'equationsList': 'equationsIndex',
   'audiosList': 'audioIndex',
   'videosList': 'videoIndex',
+  'asidesList': 'asideIndex',
+  'workedExamplesList': 'workedExampleIndex',
   'interactiveList': 'interactiveIndex'
 }
 
@@ -50,7 +54,9 @@ export const autoNumber_ElementTypeKey = {
   'Equation': 'equationsList',
   'Audio': 'audiosList',
   'Video': 'videosList',
-  'Interactive': 'interactiveList'
+  'Interactive': 'interactiveList',
+  'Aside': 'asidesList',
+  'Worked Example': 'workedExamplesList'
 }
 
 export const autoNumber_response_ElementType_mapper = {
@@ -135,16 +141,21 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'AUDIO': 'audiosList',
   'VIDEO': 'videosList',
   'MATHIMAGE': 'equationsList',
+  'CONTAINER': 'asidesList',
+  'WORKED_EXAMPLE': 'workedExamplesList',
   'MMI_ELM': 'interactiveList',
   'INTERACTIVE': 'interactiveList',
   'SMART_LINK': 'interactiveList'
 }
-
+export const SIDEBAR = "sidebar"
+export const WORKED_EXAMPLE = "workedexample"
+export const autoNumberContainerTypesAllowed = ['element-aside']
+export const containerElementTypes = ['popup', 'showhide', 'groupedcontent', 'element-aside'];
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive']
 export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO', 'SMART_LINK']
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive']
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
 export const displayLabelsForAudioVideo = ['Audio', 'Video'];
-export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM'];
-
+export const displayLabelsForContainer = ['Aside', 'Worked Example'];
+export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'CONTAINER', 'WORKED_EXAMPLE'];
 export const autoNumberFieldsPlaceholders = ['Number', 'Label']
