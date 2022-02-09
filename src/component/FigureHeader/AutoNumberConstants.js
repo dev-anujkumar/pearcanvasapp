@@ -138,7 +138,8 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'MMI_ELM': 'interactiveList',
   'INTERACTIVE': 'interactiveList',
   'SMART_LINK': 'interactiveList',
-  'TABLE_EDITOR': 'tablesList'
+  'TABLE_EDITOR': 'tablesList',
+  'MATH_ML_CHEM_EDITOR': 'equationsList'
 }
 
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive', 'tableasmarkup']
@@ -146,6 +147,6 @@ export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUD
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive']
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
 export const displayLabelsForAudioVideo = ['Audio', 'Video'];
-export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'TABLE_EDITOR'];
+export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'TABLE_EDITOR', 'MATH_ML_CHEM_EDITOR'];
 
 export const autoNumberFieldsPlaceholders = ['Number', 'Label']
