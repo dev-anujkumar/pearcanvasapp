@@ -71,7 +71,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
-    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
@@ -126,7 +126,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
         inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
     }
-    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         data = {
             ...data,
             html : {
