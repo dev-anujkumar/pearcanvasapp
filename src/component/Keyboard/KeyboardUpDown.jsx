@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
-import { QUERY_SELECTOR } from './KeyboardWrapper.jsx';
+import { NORMAL_SELECTOR, QUERY_SELECTOR } from './KeyboardWrapper.jsx';
 
 const KeyboardUpDown = (props) => {
     const keyboardUpDown = useRef(null);
@@ -14,10 +14,10 @@ const KeyboardUpDown = (props) => {
     }
 
     const getLastChild = (element) => {
-        if(element.lastChild) {
+        if(element && element.lastChild) {
             return getLastChild(element.lastChild);
         } else {
-            return element.parentNode;
+            return element;
         }
     }
 
@@ -36,38 +36,41 @@ const KeyboardUpDown = (props) => {
             // const firstChild = childElement?.firstChild ? childElement.firstChild : childElement;
             // in case of para firstChild is childElement.first child
             // in case of Image childElement is null;
-            const lastChild = getLastChild(childElement);
-
-            if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
-                // for foot note
-                // add span at last and click on span
-                // childElement.click();
-                const span = document.createElement('span');
-                span.id = "f-e-s"
-                span.innerHTML = "<br>";
-                childElement.firstChild.appendChild(span);
-                span.click();
-            }
-            else if(lastChild.id === "f-e-s") {
-                if(lastChild?.previousSibling?.nodeName !== 'SUP') {
-                    lastChild.parentNode.removeChild(lastChild);
-                    childElement.click();
+            
+            const tinymceChild = getTinymceElement(childElement);
+            const lastChild = getLastChild(tinymceChild);
+            console.log("Last child is ", lastChild, childElement, tinymceChild);
+            if(lastChild) {
+                if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
+                    // for foot note
+                    // add span at last and click on span
+                    // childElement.click();
+                    const span = document.createElement('span');
+                    span.id = "f-e-s"
+                    span.innerHTML = "<br>";
+                    childElement.firstChild.appendChild(span);
+                    span.click();
                 }
-                else {
-                    lastChild.click();
+                else if(lastChild.id === "f-e-s") {
+                    if(lastChild?.previousSibling?.nodeName !== 'SUP') {
+                        lastChild.parentNode.removeChild(lastChild);
+                        childElement.click();
+                    }
+                    else {
+                        lastChild.click();
+                    }
+                }
+                else if (tinymceChild) {
+                    // case of floating placeholder
+                    if(tinymceChild.innerHTML === "<p></p>") {
+                        tinymceChild.innerHTML = '';
+                    }
+                    tinymceChild.click();
+                    tinymceChild.focus();
+                    console.log("Clicking on node 1", tinymceChild);
                 }
             }
-            else if (lastChild?.nodeName === 'LABEL') {
-                // case of floating placeholder
-                if(lastChild?.previousSibling && lastChild?.previousSibling?.innerHTML === "<p></p>") {
-                    lastChild.previousSibling.innerHTML = '';
-                }
-                childElement.firstChild.click();
-                childElement.firstChild.focus();
-            }
-            else if(childElement.className.includes("actTitle-h4") || childElement.className.includes("sceneTitle-h4")
-             || childElement.className.includes("credit-h4")|| childElement.className.includes("characterPS") || 
-             childElement.firstChild){
+            else {
                 childElement.click();
                 childElement.focus();
             }
@@ -85,6 +88,16 @@ const KeyboardUpDown = (props) => {
                 }
             }
         }
+    }
+
+    const getTinymceElement = (element) => {
+        if(element?.id?.startsWith && element.id.startsWith(NORMAL_SELECTOR)){
+            return element;
+        }
+        if(element && element.querySelector) {
+            return element.querySelector(`[id^='${NORMAL_SELECTOR}']`);
+        }
+
     }
 
     const handleKeyDown = (event) => {
