@@ -35,11 +35,12 @@ export const handleAutoNumberingOnCopyPaste = (params) => {
                 }
             });
         }
+        console.log('slateFigures',slateFigures)
         if(operationType == 'copy' || operationType == 'cut'){
-            /**if (containerElements.indexOf(selectedElement?.type) > -1) {
-                updateAutoNumberSequenceOnCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevFselectedElementigures: slateFigures, slateAncestors })
-            }
-            else */
+            // if (containerElements.indexOf(selectedElement?.type) > -1) {
+            //     updateAutoNumberSequenceOnCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: slateFigures, slateAncestors })
+            // }
+            // else 
             if (selectedElement?.type === 'figure') {
                 updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors })
             }
@@ -109,7 +110,7 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
  *  This function resets sequence after SWAP when a container having figure is swapped
  * @param {*} params
  */
-/**
+
 export const updateAutoNumberSequenceOnCopyContainers = (params) => {
     const {
         getState,
@@ -122,51 +123,58 @@ export const updateAutoNumberSequenceOnCopyContainers = (params) => {
     } = params;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
     const labelType = autoNumber_KeyMapperElements[prevFselectedElementigures.displayedlabel]
-    if (slateFigures || slateFigures?.length > 1) {
-        const elementsToSwap = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.containerData.indexOf(prevFselectedElementigures.contentUrn) > -1)
-        const noOfElementsToSwap = elementsToSwap?.length
-        if (noOfElementsToSwap > 0) {
-            const elementUrnToSearch = elementsToSwap[noOfElementsToSwap - 1].contentUrn
+    // if (slateFigures || slateFigures?.length > 1) {
+    //     const elementsToSwap = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.containerData.indexOf(prevFselectedElementigures.contentUrn) > -1)
+    //     const noOfElementsToSwap = elementsToSwap?.length
+    //     if (noOfElementsToSwap > 0) {
+    //         const elementUrnToSearch = elementsToSwap[noOfElementsToSwap - 1].contentUrn
 
-            Object.values(DISPLAYED_LABELS).forEach(label => {
-                const activeLabelElements = slateFigures?.filter(ele => ele.displayedlabel === label)
-                const indexToSearch = activeLabelElements?.indexOf(ele => ele.contentUrn === elementUrnToSearch)
-                if (indexToSearch == (activeLabelElements?.length - 1)) {
-                    const newUrnToSearch = elementsToSwap[0].contentUrn
-                    const indexToSearch2 = activeLabelElements?.indexOf(ele => ele.contentUrn === newUrnToSearch)
-                    const prevElement = activeLabelElements[indexToSearch2 - 1]?.contentUrn
-                    if (prevElement) {
-                        //delete old places
-                        // numberedElements[labelType][figureParentEntityUrn]?.splice(indexToSearch, noOfElementsToSwap)
-                        const refImageIndex = numberedElements[labelType][figureParentEntityUrn].indexOf(ele => ele.contentUrn === nextElement)
-                        numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex + 1, 0, elementsToSwap)
-                        dispatch({
-                            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-                            payload: {
-                                numberedElements
-                            }
-                        });
-                        getAutoNumberSequence(numberedElements, dispatch)
-                    }
+    //         Object.values(DISPLAYED_LABELS).forEach(label => {
+    //             const activeLabelElements = slateFigures?.filter(ele => ele.displayedlabel === label)
+    //             const indexToSearch = activeLabelElements?.indexOf(ele => ele.contentUrn === elementUrnToSearch)
+    //             if (indexToSearch == (activeLabelElements?.length - 1)) {
+    //                 const newUrnToSearch = elementsToSwap[0].contentUrn
+    //                 const indexToSearch2 = activeLabelElements?.indexOf(ele => ele.contentUrn === newUrnToSearch)
+    //                 const prevElement = activeLabelElements[indexToSearch2 - 1]?.contentUrn
+    //                 if (prevElement) {
+    //                     //delete old places
+    //                     // numberedElements[labelType][figureParentEntityUrn]?.splice(indexToSearch, noOfElementsToSwap)
+    //                     const refImageIndex = numberedElements[labelType][figureParentEntityUrn].indexOf(ele => ele.contentUrn === nextElement)
+    //                     numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex + 1, 0, elementsToSwap)
+    //                     dispatch({
+    //                         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+    //                         payload: {
+    //                             numberedElements
+    //                         }
+    //                     });
+    //                     getAutoNumberSequence(numberedElements, dispatch)
+    //                 }
 
-                } else {
-                    const nextElement = activeLabelElements[elementToSearch + 1]?.contentUrn
-                    if (nextElement) {
-                        //delete old places
-                        // numberedElements[labelType][figureParentEntityUrn]?.splice(indexToSearch, noOfElementsToSwap)
-                        const refImageIndex = numberedElements[labelType][figureParentEntityUrn].indexOf(ele => ele.contentUrn === nextElement)
-                        numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, elementsToSwap)
-                        dispatch({
-                            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-                            payload: {
-                                numberedElements
-                            }
-                        });
-                        getAutoNumberSequence(numberedElements, dispatch)
-                    }
-                }
-            })
-        }
-    }
+    //             } else {
+    //                 const nextElement = activeLabelElements[elementToSearch + 1]?.contentUrn
+    //                 if (nextElement) {
+    //                     //delete old places
+    //                     // numberedElements[labelType][figureParentEntityUrn]?.splice(indexToSearch, noOfElementsToSwap)
+    //                     const refImageIndex = numberedElements[labelType][figureParentEntityUrn].indexOf(ele => ele.contentUrn === nextElement)
+    //                     numberedElements[labelType][figureParentEntityUrn]?.splice(refImageIndex, 0, elementsToSwap)
+    //                     dispatch({
+    //                         type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+    //                         payload: {
+    //                             numberedElements
+    //                         }
+    //                     });
+    //                     getAutoNumberSequence(numberedElements, dispatch)
+    //                 }
+    //             }
+    //         })
+    //     }
+    // }
 }
-*/
+
+
+export const getSlateFiguresList = (listOfSlates, currentLabelElements) => {
+    return listOfSlates.reduce((obj, item) => {
+        obj[item] = currentLabelElements.filter(item1 => item1.slateEntityUrn === item).length
+        return obj
+    }, {})
+}

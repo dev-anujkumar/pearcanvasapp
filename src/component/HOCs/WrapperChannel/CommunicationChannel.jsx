@@ -908,6 +908,17 @@ function CommunicationChannel(WrappedComponent) {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
+                if (message?.node) {
+                    let matterType = 'bodymatter'
+                    if (message.node.parentOfParentItem !== "") {
+                        if (message.node.parentOfParentItem === 'backmatter' || message.node.nodeParentLabel === 'backmatter') {
+                            matterType = 'backmatter'
+                        } else if (message.node.parentOfParentItem === 'frontmatter' || message.node.nodeParentLabel === 'frontmatter') {
+                            matterType = 'frontmatter'
+                        }
+                    }
+                    this.props.setSlateMatterType(matterType);
+                }
                 config.isPopupSlate = false;
                 config.figureDataToBeFetched = true;
                 this.props.fetchAudioNarrationForContainer(slateData)

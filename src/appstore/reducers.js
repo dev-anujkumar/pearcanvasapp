@@ -365,7 +365,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             //     ...state,
             //     asideTitleData: action.payload
             // }
-
+            case 'SET_SLATE_MATTER_TYPE':
+                return {
+                    ...state,
+                    slateMatterType: action.payload
+                }
         default:
             return state;
     }
