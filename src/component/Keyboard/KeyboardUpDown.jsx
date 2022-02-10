@@ -67,7 +67,6 @@ const KeyboardUpDown = (props) => {
                     }
                     tinymceChild.click();
                     tinymceChild.focus();
-                    console.log("Clicking on node 1", tinymceChild);
                 }
             }
             else {
