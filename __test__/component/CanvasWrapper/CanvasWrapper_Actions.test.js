@@ -2729,6 +2729,13 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         })
     });
     describe('Test-14- fetchFigureDropdownOptions', () => {
+        let getState = () => {
+            return {
+                autoNumberReducer:{
+                    isAutoNumberingEnabled: true
+                }
+            }
+        }
         it('Test-14.1 fetchFigureDropdownOptions - then Block', async () => {
             let firstResponseData = {
                 "data": {
@@ -2740,7 +2747,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             }
             let dispatch = jest.fn();
             axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
-            await canvasActions.fetchFigureDropdownOptions()(dispatch)
+            await canvasActions.fetchFigureDropdownOptions()(dispatch, getState)
             expect(dispatch).toHaveBeenCalled();
         })
 
@@ -2750,7 +2757,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             }
             let dispatch = jest.fn();
             axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
-            await canvasActions.fetchFigureDropdownOptions()(dispatch)
+            await canvasActions.fetchFigureDropdownOptions()(dispatch, getState)
             expect(dispatch).not.toHaveBeenCalled();
         })
 
@@ -2758,7 +2765,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             let firstResponseData = { }
             let dispatch = jest.fn();
             axios.get.mockImplementation(() => Promise.reject(firstResponseData))
-            await canvasActions.fetchFigureDropdownOptions()(dispatch)
+            await canvasActions.fetchFigureDropdownOptions()(dispatch, getState)
             expect(dispatch).not.toHaveBeenCalled();
         })
     });
