@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
-const NORMAL_SELECTOR = `cypress-`
+export const NORMAL_SELECTOR = `cypress-`
 
 /**
  * function decides to
