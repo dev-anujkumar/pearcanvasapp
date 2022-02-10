@@ -231,7 +231,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(async res =>{
         let parentData = store;
@@ -671,7 +672,8 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
         const newParentData = getState().appStore.slateLevelData;
@@ -774,7 +776,8 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
         if (currentSlateData?.status === 'approved') {

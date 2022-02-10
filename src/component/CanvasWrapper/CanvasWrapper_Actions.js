@@ -343,7 +343,8 @@ export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     return axios.get(figureDropdownOptionsURL, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         let dropdownOptionsObj = response?.data;
@@ -364,7 +365,8 @@ export const getProjectDetails = () => (dispatch, getState) => {
     return axios.get(lobURL, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then (response => {
         dispatch({
@@ -391,7 +393,8 @@ export const getProjectDetails = () => (dispatch, getState) => {
             axios.get(lobPermissionsURL, {
                 headers: {
                     "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (response => {
                 const { elementPermissions } = response.data;
@@ -409,7 +412,8 @@ export const getProjectDetails = () => (dispatch, getState) => {
             axios.get(workflowRoleURL, {
                 headers: {
                     "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }).then(response => {
                 dispatch({
@@ -432,9 +436,10 @@ export const getProjectDetails = () => (dispatch, getState) => {
              axios.get(usageTypeUrl, {
                 headers: {
                     ApiKey:config.STRUCTURE_APIKEY,
-                    PearsonSSOSession:config.ssoToken,
+                    // PearsonSSOSession:config.ssoToken,
                     'Content-Type':'application/json',
-                    Authorization:config.CMDS_AUTHORIZATION
+                    Authorization:config.CMDS_AUTHORIZATION,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (usageTypeResponse => {
                 //console.log("the usage type response is", usageTypeResponse);
@@ -464,7 +469,8 @@ export const getProjectDetails = () => (dispatch, getState) => {
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (discussionResponse => {
                 if(Array.isArray(discussionResponse?.data)) {
@@ -549,7 +555,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => { 
          /* Slate tag issue */
@@ -1140,7 +1147,8 @@ export const fetchAuthUser = () => dispatch => {
     return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}?userName=${config.userId}`, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
         let userInfo = response.data;
@@ -1200,8 +1208,9 @@ export const tcmCosConversionSnapshot = () => dispatch => {
     return axios.patch(`/cypress/trackchanges-srvr/pre-snapshot/${config.projectUrn}`, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken,
-            "Accept": "application/json"
+            // "PearsonSSOSession": config.ssoToken,
+            "Accept": "application/json",
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
         // console.log("response", response)
@@ -1373,7 +1382,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
     .then((response) => {
@@ -1437,7 +1447,8 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
     .then((response) => {
@@ -1614,10 +1625,11 @@ export const setSlateLength = (length) => {
 
 
 export const fetchLearnosityContent = () => dispatch => {
-    return axios.get(`${config.LEARNOSITY_CONTENT_BRIDGE_API}${config.projectEntityUrn}?PearsonSSOSession=${config.ssoToken}`, {
+    return axios.get(`${config.LEARNOSITY_CONTENT_BRIDGE_API}${config.projectEntityUrn}`, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
      if(response.status==200){
@@ -1641,8 +1653,9 @@ export const fetchProjectLFs = () => dispatch => {
         headers: {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken,
-            "x-Roles": "ContentPlanningAdmin"
+            // "PearsonSSOSession": config.ssoToken,
+            "x-Roles": "ContentPlanningAdmin",
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {

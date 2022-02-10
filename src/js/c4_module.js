@@ -53,8 +53,9 @@ ajax.send = function (url, cb, method, data, contentType, arnKey, sync, pubApiKe
     x.setRequestHeader('Content-Type', contentType);
     // x.setRequestHeader('Content-Language', 'en');
     // x.setRequestHeader('x-apikey', xApiKey);
-    x.setRequestHeader('PearsonSSOSession', config_object.ssoToken);
+    // x.setRequestHeader('PearsonSSOSession', config_object.ssoToken);
     // x.setRequestHeader('If-Match', IF_MATCH !== "" ? IF_MATCH : "");
+    x.setRequestHeader('myCloudProxySession', config_object.myCloudProxySession);
     x.setRequestHeader('accept', 'application/json, text/plain, */*');
     x.setRequestHeader('aws-resource', config_object.AWS_RESOURCE);
     x.setRequestHeader('arn', arnKey)

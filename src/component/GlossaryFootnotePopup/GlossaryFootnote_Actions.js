@@ -680,7 +680,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     return axios.put(url, JSON.stringify(data), {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then( async res => {
         let parentData1 = store.getState().appStore.slateLevelData;

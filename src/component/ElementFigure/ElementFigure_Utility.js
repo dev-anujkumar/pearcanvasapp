@@ -40,7 +40,8 @@ export const launchTableSPA = (elementId, parentEntityUrn, sectionType, handleFo
         EPS_API: config.EPS_API,
         PROJECTAPI_ENDPOINT: config.PROJECTAPI_ENDPOINT,
         STRUCTURE_APIKEY: config.STRUCTURE_APIKEY,
-        AlfrescoSiteAPIUrl: config.ALFRESCO_EDIT_METADATA
+        AlfrescoSiteAPIUrl: config.ALFRESCO_EDIT_METADATA,
+        myCloudProxySession: config.myCloudProxySession
     }
     const configAPIKey = JSON.parse(JSON.stringify(tableConfig));
     sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": elementId, editable, slateData, configAPIKey });
