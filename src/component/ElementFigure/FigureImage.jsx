@@ -488,7 +488,7 @@ class FigureImage extends Component {
                 break;
                 case MATH_ML:
                 case BLOCK_CODE:
-                    figureJsx = <BlockMathCode {...this.props} figureTypeData={figureTypeData} onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} />
+                    figureJsx = <BlockMathCode isEnableKeyboard={this.isEnableKeyboard()} {...this.props} figureTypeData={figureTypeData} onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} />
                 break;
                 case TABLE:
                 case MATH_IMAGE:

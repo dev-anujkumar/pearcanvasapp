@@ -594,14 +594,10 @@ class FigureUserInterface extends Component {
 
                                     </KeyboardWrapper>
                                         :
-                                        <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${index}-0`}>
-                                            
                                         <div className='image-label hide-field'>
                                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                             <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
                                         </div>
-
-                                        </KeyboardWrapper>
                                 }
                                 <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${index}-1`}>
                                     <div className="floating-number-group">
