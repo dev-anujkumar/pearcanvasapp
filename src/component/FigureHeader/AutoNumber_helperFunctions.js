@@ -7,7 +7,7 @@ import {
 import {getAutoNumberSequence} from './AutoNumberActions';
 import { findNearestElement } from './AutoNumberCreate_helper';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
-import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE, TABLE_AS_MARKUP } from '../../constants/Element_Constants';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT } from '../../constants/Element_Constants';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL,
@@ -150,6 +150,9 @@ export const getValueOfLabel = (figuretype) => {
             break;
         case TABLE_AS_MARKUP:
             label = 'Table';
+            break;
+        case AUTHORED_TEXT:
+            label = 'Equation';
             break;
         default:
             label = '';
@@ -510,4 +513,43 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
     }
     
     return result;
+}
+
+export const validateLabelNumberChange = (props, previousElementData, removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, text, titleDetails, createLabelNumberTitleModel) => {
+    // Not selecting remove label and number
+    if (props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+        let isValidValues = setAutonumberingValuesForPayload(props.autoNumberOption.option, titleHTML, numberHTML, true);
+        if (!isValidValues) return false;
+    }
+    // Selecting default case 
+    if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+        return true;
+    }
+    let isNumberDifferent = false;
+    let imgNumberValue = '';
+    let overridedNumber = getOverridedNumberValue(previousElementData);
+    let isOverridedLabelDifferent = false;
+    if (overridedNumber && overridedNumber !== '') {
+        isNumberDifferent = overridedNumber?.toString() !== numberHTML?.toString();
+    } else {
+        const figIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
+        imgNumberValue = getNumberData(figIndexParent, previousElementData, props.autoNumberElementsIndex || {});
+        isNumberDifferent = imgNumberValue?.toString() !== numberHTML?.toString();
+    }
+    if (previousElementData.hasOwnProperty('manualoverride') && previousElementData?.manualoverride.hasOwnProperty('overridelabelvalue')) {
+        isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
+    }
+    subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+    if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
+        titleHTML = previousElementData.displayedlabel;
+    }
+    return (
+        titleHTML !== previousElementData.displayedlabel ||
+        createLabelNumberTitleModel(titleDetails.titleHTML, titleDetails.numberHTML, titleDetails.subtitleHTML) !== removeClassesFromHtml(previousElementData.html.title) ||
+        isNumberDifferent ||
+        isOverridedLabelDifferent ||
+        captionHTML !== removeClassesFromHtml(previousElementData.html.captions) ||
+        creditsHTML !== removeClassesFromHtml(previousElementData.html.credits) ||
+        removeClassesFromHtml(text) !== removeClassesFromHtml(previousElementData.html.text)
+    );
 }

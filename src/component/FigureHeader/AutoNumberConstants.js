@@ -22,7 +22,8 @@ export const autoNumber_FigureTypeKeyMapper = {
   'table': 'tableIndex',
   'mathImage': 'equationsIndex',
   'audio': 'audioIndex',
-  'video': 'videoIndex'
+  'video': 'videoIndex',
+  'authoredtext': 'equationsIndex'
 }
 
 export const autoNumber_KeyMapperElements = {
@@ -142,7 +143,7 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'MATH_ML_CHEM_EDITOR': 'equationsList'
 }
 
-export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive', 'tableasmarkup']
+export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive', 'tableasmarkup', 'authoredtext']
 export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO', 'SMART_LINK']
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive']
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
