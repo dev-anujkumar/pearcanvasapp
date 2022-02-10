@@ -717,6 +717,8 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             elementType: dataToUpdate.elementType,
             primaryOption: dataToUpdate.primaryOption,
             secondaryOption: dataToUpdate.secondaryOption,
+            fontStyle: dataToUpdate.fontStyle,
+            bulletIcon: dataToUpdate.bulletIcon,
             toolbar: dataToUpdate.toolbar,
             elementWipType: dataToUpdate.elementWipType,
             tag: "P"
