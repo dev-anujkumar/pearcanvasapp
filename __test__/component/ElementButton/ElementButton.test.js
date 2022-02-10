@@ -18,7 +18,7 @@ describe('Testing Button component with props', () => {
     const component = mount(<Button type={buttonTypes.EDIT_BUTTON_CYPRESSSPLUS} labelText='UL' />)
     expect(component.find('span.btn-element').hasClass('edit-in-cypressPlus')).toBe(false)
   })
-    it('render comment-flag Button component  ', () => {
+    xit('render comment-flag Button component  ', () => {
         const component = mount(<Button type={buttonTypes.COMMENT_FLAG} labelText="UL" />);
         expect(component.find('span.btn-element').hasClass('flag-icon')).toBe(true);
         expect(component.find('svg#Capa_1').exists()).toBe(true);
