@@ -5,8 +5,8 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import {getAutoNumberSequence} from './AutoNumberActions';
-import { findNearestElement } from './AutoNumberCreate_helper';
-import { getImagesInsideSlates } from './slateLevelMediaMapper';
+import { findNearestElement, checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
+import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
 import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT } from '../../constants/Element_Constants';
 const {
     MANUAL_OVERRIDE,
@@ -536,7 +536,7 @@ export const validateLabelNumberChange = (props, previousElementData, removeClas
         imgNumberValue = getNumberData(figIndexParent, previousElementData, props.autoNumberElementsIndex || {});
         isNumberDifferent = imgNumberValue?.toString() !== numberHTML?.toString();
     }
-    if (previousElementData.hasOwnProperty('manualoverride') && previousElementData?.manualoverride.hasOwnProperty('overridelabelvalue')) {
+    if (previousElementData?.hasOwnProperty('manualoverride') && previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) {
         isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
     }
     subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
