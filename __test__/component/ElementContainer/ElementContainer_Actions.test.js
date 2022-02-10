@@ -84,6 +84,7 @@ describe('Tests ElementContainer Actions', () => {
         tcmReducer:{
             tcmSnapshot:[]
         },
+        autoNumberReducer: { isAutoNumberingEnabled: true },
         assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" }
     };
     let initialState2 ={...initialState,
@@ -459,7 +460,8 @@ describe('Tests ElementContainer Actions', () => {
                     glossaryFootnoteValue: { elementWorkId: "4343653" },
                     glossaryFootNoteCurrentValue: "",
                     elementIndex: ""
-                }
+                },
+                autoNumberReducer: { isAutoNumberingEnabled: true }
             };
             let store = mockStore(() => initialStateApproved);
             let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
