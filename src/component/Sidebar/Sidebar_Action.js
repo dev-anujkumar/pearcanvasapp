@@ -709,7 +709,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
                 }
             })
         }
-        if(dataToSend.columnnumber){
+        if(dataToSend.columnnumber || dataToSend.fontstyle || dataToSend.iconcolor){
         let activeElementObject = {
             contentUrn: dataToUpdate.blockListData.contentUrn,
             elementId: dataToUpdate.blockListData.id,
@@ -718,7 +718,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             primaryOption: dataToUpdate.primaryOption,
             secondaryOption: dataToUpdate.secondaryOption,
             fontStyle: dataToUpdate.fontStyle,
-            bulletIcon: dataToUpdate.bulletIcon,
+            bulletIcon: dataToUpdate.iconColor,
             toolbar: dataToUpdate.toolbar,
             elementWipType: dataToUpdate.elementWipType,
             tag: "P"

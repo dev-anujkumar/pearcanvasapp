@@ -64,15 +64,16 @@ export const findElementType = (element, index) => {
     try {
         switch (element.type) {
             case "manifestlist":
+                //temporary code
+                if(!element.fontstyle) element.fontstyle = "fontStyle3";
+                if(!element.iconcolor) element.iconcolor = "iconcolor4";
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
-                    //primaryOption : "primary-column-1",
                     primaryOption: `primary-column-${element.columnnumber}`,
-                    fontStyle: "font-style-1",
-                    bulletIcon: "bullet-color-1",
+                    fontStyle: `font-style-${element.fontstyle[element.fontstyle.length-1]}`,
+                    bulletIcon: `bullet-color-${element.iconcolor[element.iconcolor.length-1]}`,
                     secondaryOption: `secondary-column-${element.columnnumber}`,
                     contentUrn : element.contentUrn
-                    //secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
             case 'element-authoredtext':

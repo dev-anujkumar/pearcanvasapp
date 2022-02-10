@@ -134,7 +134,7 @@ class Sidebar extends Component {
             elementType: this.state.activeElementType,
             primaryOption: value,
             fontStyle: activefontStyle,
-            bulletIcon: activebulletIcon,
+            iconColor: activebulletIcon,
             secondaryOption: secondaryFirstOption,
             elementWipType: this.props.activeElement.elementWipType,
             index: this.props.activeElement.index,
@@ -143,9 +143,7 @@ class Sidebar extends Component {
             toolbar: elementList[this.state.activeElementType][value].toolbar,
             slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
             dataToSend:{
-                columnnumber : value.split('-')[value.split('-').length-1],
-                // fontnumber : activefontStyle?.split('-')[activefontStyle?.split('-').length-1],
-                // bulletnumner: activebulletIcon?.split('-')[activebulletIcon?.split('-').length-1]
+                columnnumber : value.split('-')[value.split('-').length-1]
             },
             asideData:asideData
           }
@@ -168,15 +166,18 @@ class Sidebar extends Component {
         let value = e.target.getAttribute("data-value");
         let primaryOptionValue = this.state.activePrimaryOption;
         let fontValue = this.state.activefontStyle;
-        let bulletValue = this.state.activebulletIcon;
+        let iconColorValue = this.state.activebulletIcon;
         let toolbar = [];
+        let dataToSend = {}
         if(this.state.activeElementType === "manifestlist"){
           if(value?.includes('font')){
                 fontValue = value;
                 toolbar = elementList["fontStyle"][value].toolbar;
+                dataToSend.fontstyle = `fontStyle${fontValue?.split('-')[fontValue?.split('-').length-1]}`;
           } else if(value?.includes('bullet')){
-                bulletValue = value;
+                iconColorValue = value;
                 toolbar = elementList["bulletIcon"][value].toolbar;
+                dataToSend.iconcolor = `iconColor${iconColorValue?.split('-')[iconColorValue?.split('-').length-1]}`;
           }
         }
 
@@ -186,7 +187,7 @@ class Sidebar extends Component {
       this.setState({
         fontBulletElementDropdown: "",
         activefontStyle: fontValue,
-        activebulletIcon: bulletValue,
+        activebulletIcon: iconColorValue,
       });
       const {asideData} = this.props;
       if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
@@ -199,7 +200,7 @@ class Sidebar extends Component {
             elementType: this.state.activeElementType,
             primaryOption: primaryOptionValue,
             fontStyle: fontValue,
-            bulletIcon: bulletValue,
+            iconColor: iconColorValue,
             secondaryOption: secondaryFirstOption,
             elementWipType: this.props.activeElement.elementWipType,
             index: this.props.activeElement.index,
@@ -207,11 +208,7 @@ class Sidebar extends Component {
             blockListElement:true,
             toolbar,
             slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
-            dataToSend:{
-                // columnnumber : primaryOptionValue.split('-')[primaryOptionValue.split('-').length-1],
-                fontstyle : `fontStyle${fontValue?.split('-')[fontValue?.split('-').length-1]}`,
-                iconcolor: `iconColor${bulletValue?.split('-')[bulletValue?.split('-').length-1]}`
-            },
+            dataToSend,
             asideData:asideData
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
@@ -978,7 +975,7 @@ class Sidebar extends Component {
                     {this.state.activeElementType ==="manifestlist" && <div className={`${disableFontBullet}`}>
                     <div className="canvas-sidebar-font-bullet-type">Font Type</div>
                     {this.fontBulletOption("fontStyle")}
-                    <div className="canvas-sidebar-font-bullet-type">Bullet Style</div>
+                    <div className="canvas-sidebar-font-bullet-type">Bullet Color</div>
                     {this.fontBulletOption("bulletIcon")}
                     </div>}
                 </div>
