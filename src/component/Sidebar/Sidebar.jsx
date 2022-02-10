@@ -144,8 +144,8 @@ class Sidebar extends Component {
             slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
             dataToSend:{
                 columnnumber : value.split('-')[value.split('-').length-1],
-                fontnumber : activefontStyle?.split('-')[activefontStyle?.split('-').length-1],
-                bulletnumner: activebulletIcon?.split('-')[activebulletIcon?.split('-').length-1]
+                // fontnumber : activefontStyle?.split('-')[activefontStyle?.split('-').length-1],
+                // bulletnumner: activebulletIcon?.split('-')[activebulletIcon?.split('-').length-1]
             },
             asideData:asideData
           }
@@ -208,9 +208,9 @@ class Sidebar extends Component {
             toolbar,
             slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
             dataToSend:{
-                columnnumber : primaryOptionValue.split('-')[primaryOptionValue.split('-').length-1],
-                fontnumber : fontValue?.split('-')[fontValue?.split('-').length-1],
-                bulletnumner: bulletValue?.split('-')[bulletValue?.split('-').length-1]
+                // columnnumber : primaryOptionValue.split('-')[primaryOptionValue.split('-').length-1],
+                fontstyle : `fontStyle${fontValue?.split('-')[fontValue?.split('-').length-1]}`,
+                iconcolor: `iconColor${bulletValue?.split('-')[bulletValue?.split('-').length-1]}`
             },
             asideData:asideData
           }
@@ -954,8 +954,16 @@ class Sidebar extends Component {
     }  
 
     render = () => {
-        const currentElementIndex = this.props.activeElement?.index;
-        const disableFontBullet = typeof currentElementIndex === "number" ? "" : "disableFontBullet";
+        let currentElementIndex
+        let disableFontBullet
+        if(this.props.asideData?.type === "showhide"){
+            currentElementIndex = this.props.activeElement?.index;
+            disableFontBullet = typeof currentElementIndex === "number" ? "disableFontBullet" : "";
+        }
+        else{
+        currentElementIndex = this.props.activeElement?.index;
+        disableFontBullet = typeof currentElementIndex === "number" ? "" : "disableFontBullet";
+        }
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
